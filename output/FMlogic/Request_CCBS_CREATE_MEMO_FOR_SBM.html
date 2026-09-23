@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_CCBS_CREATE_MEMO_FOR_SBM</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.7rem;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem;margin-bottom:14px}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:18px;border-radius:8px;overflow-x:auto;font-size:.8rem;border-left:3px solid var(--true-red)}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.88rem}
+.callout-warn{border-color:#e65100;background:#FFF3E0}
+.callout-info{border-color:#1565c0;background:#E3F0FD}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_CCBS_CREATE_MEMO_FOR_SBM</h1>
+  <div class="subtitle">Creates a memo in CCBS per subscriber to record an SBM data pack service action. Fan-out is per subscriber (POU + COU). Memo text is composed from subscriber UserText, SOC name (ServiceType=86/FE_OR_CCBS filter), and Channel. memoTypeId from global variable. Uses standard sendEventImmediate dispatch.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: CCBS (CreateMemo)</span>
+    <span class="meta-badge">Pattern: Per-subscriber / sendEventImmediate</span>
+    <span class="meta-badge">RefID: Subscriber RefId</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Author: sakarin-radchapunya</span>
+    <span class="meta-badge">Used in step: 76</span>
+    <span class="meta-badge">Generated: 2026-08-11</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Creates one <strong>CCBS createMemo</strong> per subscriber (POU and COU) to record the SBM data pack service action on the subscriber's account. The memo text is dynamically composed from the subscriber's UserText, the matched offer name (ServiceType=86 with FE_OR_CCBS indicator BRMS or FE), and the order Channel. The memoTypeId is sourced from a global variable (<code>SBM_BUY_DATA_PACK/CreateMemoTypeId</code>) rather than a hardcoded value.</p>
+    <ul style="margin:12px 0 0 20px;line-height:2">
+      <li><strong>Fan-out unit:</strong> Subscriber (POU + COU) — one request per subscriber</li>
+      <li><strong>RefID:</strong> bare subscriber <code>RefId</code> — always emitted in XSLT</li>
+      <li><strong>Backend event:</strong> <code>Events.OMConsumers.OMXFM.Request.CCBS_CREATE_MEMO</code> (not CCBS_CREATE_MEMO_FOR_SBM)</li>
+      <li><strong>entityId:</strong> <code>SubscriberId</code> (the MSISDN or subscriber number)</li>
+      <li><strong>entityTypeId:</strong> <code>"6"</code> — hardcoded subscriber entity type</li>
+      <li><strong>memoText:</strong> composed via XSLT concat of UserText + SOC name + Channel</li>
+      <li><strong>$soc:</strong> <code>SubscriberOffers[ServiceType="86" and ExtendedInfo[Name="FE_OR_CCBS" and (Value="BRMS" or Value="FE")]]/OfferName</code></li>
+      <li><strong>memoTypeId:</strong> <code>$globalVariables/OMX_OM/BizRules/SBM_BUY_DATA_PACK/CreateMemoTypeId</code></li>
+      <li><strong>Dispatch:</strong> <code>Event.Ext.sendEventImmediate</code> — standard immediate send</li>
+      <li><strong>Response:</strong> standard ResponseBase; fan-in via <code>IsAllResponseSuccess</code> helper</li>
+    </ul>
+    <div class="callout callout-warn" style="margin-top:14px">
+      <strong>[MEDIUM] Event name mismatch:</strong> Rule is <code>CCBS_CREATE_MEMO_FOR_SBM</code> but backend event is <code>CCBS_CREATE_MEMO</code> and OPERATION_NAME logs as <code>"CCBS_CREATE_MEMO"</code>. The "_FOR_SBM" suffix exists only in the rule name — not in the event type, logger, or response handler. Ensure monitoring and alerting uses the correct event name.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[MEDIUM] memoTypeId from global variable:</strong> <code>$globalVariables/OMX_OM/BizRules/SBM_BUY_DATA_PACK/CreateMemoTypeId</code> — if this path is absent from the deployment configuration, memoTypeId will be empty and CCBS may reject the memo request. A commented-out alternative using <code>XPath.evalAsString</code> exists in the rule body.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[MEDIUM] $soc can be empty:</strong> If no SubscriberOffer matches ServiceType=86 + FE_OR_CCBS=BRMS/FE for the subscriber, <code>$soc</code> resolves to empty string. The memoText will be sent as <code>"&lt;UserText&gt; [By DatapackService : soc=  ] channel:[ &lt;Channel&gt; ]"</code> — functional but misleading.
+    </div>
+    <div class="callout callout-info">
+      <strong>[LOW] Commented-out typeId XPath.evalAsString (lines 49, 87):</strong> Two commented-out lines exist in both the POU and COU branches — they would have fetched CreateMemoTypeId via <code>XPath.evalAsString</code> with a full XPath expression. The active code reads it directly from <code>$globalVariables</code> in XSLT instead.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_CCBS_CREATE_MEMO_FOR_SBM.rule</code></td><td>117 lines</td></tr>
+      <tr><td>Author</td><td>sakarin-radchapunya</td><td></td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td>true</td><td></td></tr>
+      <tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_CREATE_MEMO</code></td><td>Note: NOT CCBS_CREATE_MEMO_FOR_SBM [MEDIUM]</td></tr>
+      <tr><td>Payload root</td><td><code>ns1:createMemoRequest / ns2:createMemo</code></td><td>Two-level wrapper</td></tr>
+      <tr><td>Schema NS (ns1)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/FM/CreateMemo.xsd</code></td><td>FM wrapper</td></tr>
+      <tr><td>Schema NS (ns2)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/ESB/CreateMemo.xsd</code></td><td>ESB content</td></tr>
+      <tr><td>Fan-out unit</td><td>Subscriber (POU + COU)</td><td>Standard per-subscriber pattern</td></tr>
+      <tr><td>RefID</td><td>Subscriber RefId (bare)</td><td>Always emitted</td></tr>
+      <tr><td>entityId</td><td>SubscriberId</td><td>MSISDN / subscriber number</td></tr>
+      <tr><td>entityTypeId</td><td>"6" (hardcoded)</td><td>Subscriber entity type</td></tr>
+      <tr><td>memoTypeId</td><td>$globalVariables/OMX_OM/BizRules/SBM_BUY_DATA_PACK/CreateMemoTypeId</td><td>Runtime configuration [MEDIUM]</td></tr>
+      <tr><td>Resub guard</td><td><code>Response[ReferenceId == refId &amp;&amp; CompletionStatus==2]</code></td><td>Per-subscriber</td></tr>
+      <tr><td>PurgePendingRequestsBeforeResubmit</td><td>ABSENT</td><td>[LOW] not called</td></tr>
+      <tr><td>PreExecCheck</td><td>Uses <code>nextAct.PreExecCheck</code></td><td>POU: GetXMLForSubscriber; COU: GetXMLForSubscriberInChildOU</td></tr>
+      <tr><td>UserName/Password gate</td><td>Global variable <code>IsEnableUserPass='true'</code></td><td>Same pattern as CCBS_UPDATE_ACCOUNT_NAME_ADDRESS</td></tr>
+      <tr><td>Dispatch</td><td><code>Event.Ext.sendEventImmediate</code></td><td>Standard — NOT IntraActivitySequencing</td></tr>
+      <tr><td>OPERATION_NAME (request)</td><td><code>"CCBS_CREATE_MEMO"</code></td><td>Hardcoded — differs from rule name</td></tr>
+      <tr><td>OPERATION_NAME (response)</td><td><code>"CCBS_CREATE_MEMO"</code></td><td>Hardcoded — same as request</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td><td>Standard — not dedicated</td></tr>
+      <tr><td>Fan-in</td><td><code>RuleFunctions.Helpers.IsAllResponseSuccess(currActivity)</code></td><td>Standard helper</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="card">
+  <div class="card-header">§3 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_CREATE_MEMO_FOR_SBM"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_CREATE_MEMO_FOR_SBM"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 SOC lookup -->
+<div class="card">
+  <div class="card-header">§7 — SOC Offer Lookup &amp; memoText Construction</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">$soc XPath Filter (computed inside XSLT)</h3>
+    <table>
+      <tr><th>Field</th><th>XPath</th><th>Notes</th></tr>
+      <tr><td>$soc (POU)</td><td><code>ParentOU[$iPOU]/Subscriber[$iPSUB]/SubscriberOffers[ServiceType="86" and ExtendedInfo[Name="FE_OR_CCBS" and (Value="BRMS" or Value="FE")]]/OfferName</code></td><td>ServiceType=86 = data pack/VAS; FE_OR_CCBS identifies BRMS-processed or fee-eligible offers</td></tr>
+      <tr><td>$soc (COU)</td><td><code>ParentOU[$iPOU]/ChildOU[$kCOU]/Subscriber[$kCSUB]/SubscriberOffers[ServiceType="86" and ExtendedInfo[Name="FE_OR_CCBS" and (Value="BRMS" or Value="FE")]]/OfferName</code></td><td>Identical filter on COU path</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">memoText concat Pattern</h3>
+    <pre>concat(
+  $sub/SubscriberActivityInfo/UserText,
+  " [By DatapackService : soc= ",
+  $soc,
+  " ] ",
+  "channel:[ ",
+  $orderRequest/OrderData/Channel,
+  " ]"
+)</pre>
+    <p style="margin-top:8px;font-size:.85rem">Example output: <code>Customer request to add data pack [By DatapackService : soc= DATA_BASIC_5GB ] channel:[ WEB ]</code></p>
+    <div class="callout callout-warn" style="margin-top:12px">
+      <strong>Risk: $soc may be empty.</strong> If no SubscriberOffer matches the ServiceType=86 + FE_OR_CCBS=BRMS/FE predicate, the memoText will contain <code>soc= </code> (blank) — the memo is still sent to CCBS. Validate that every subscriber in scope has such an offer before activation.
+    </div>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p style="margin-bottom:10px">Two XSLT variants: POU (params: i, j → iPOU, iPSUB) and COU (params: i, k, j → iPOU, kCOU, kCSUB). Payload structure is identical; only the subscriber XPath differs.</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId (subscriber RefId)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-purple">Credential-gated</span><span class="tree-cond">IsEnableUserPass='true' AND User present</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:createMemoRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:createMemo</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:entityId</span><span class="tree-arrow">←</span><span class="tree-src">$sub/SubscriberId</span><span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:entityTypeId</span><span class="tree-arrow">←</span><span class="tree-src-static">"6" (subscriber)</span><span class="badge badge-green">Always (hardcoded)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:memoText</span><span class="tree-arrow">←</span><span class="tree-src">concat(UserText, " [By DatapackService : soc= ", $soc, " ] ", "channel:[ ", Channel, " ]")</span><span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:memoTypeId</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/OMX_OM/BizRules/SBM_BUY_DATA_PACK/CreateMemoTypeId</span><span class="badge badge-orange">Global var</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 8px">XSLT Variable: $soc (computed inline)</h3>
+    <pre>POU: $orderRequest/OrderData/Customer/ParentOU[$iPOU]/Subscriber[$iPSUB]
+     /SubscriberOffers[ServiceType="86" and ExtendedInfo[Name="FE_OR_CCBS" and (Value="BRMS" or Value="FE")]]/OfferName
+
+COU: $orderRequest/OrderData/Customer/ParentOU[$iPOU]/ChildOU[$kCOU]/Subscriber[$kCSUB]
+     /SubscriberOffers[ServiceType="86" and ExtendedInfo[Name="FE_OR_CCBS" and (Value="BRMS" or Value="FE")]]/OfferName</pre>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_CCBS_CREATE_MEMO_FOR_SBM (rule)
+├── isActResub = (RequestCount > 0 && IsOrderResubmitted)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── chkXPath = nextAct.PreExecCheck
+├── [NOTE: NO Parameter guard / NO PurgePendingRequestsBeforeResubmit]
+├── [POU loop i → j]:
+│   ├── refId = ParentOU[i].Subscriber[j].RefId
+│   ├── [if PreExecCheck length > 0]:
+│   │   ├── sXML = GetXMLForSubscriber(orderRequest, refId)
+│   │   └── chkRes = XPath.execute("/("+chkXPath+")", sXML, ...)
+│   └── [if chkRes == "true"]:
+│       ├── [Resub guard]: Response[ReferenceId==refId && CompletionStatus==2] → reqSuccess
+│       └── [if !reqSuccess]:
+│           ├── // [COMMENTED OUT] typeId = XPath.evalAsString(globalVar XPath)
+│           ├── reqEvent = Event.createEvent(CCBS_CREATE_MEMO, XSLT:
+│           │   ├── entityId = Subscriber[$iPSUB].SubscriberId
+│           │   ├── entityTypeId = "6"
+│           │   ├── memoText = concat(UserText, "[By DatapackService:soc= ", $soc, "] channel:[", Channel, "]")
+│           │   └── memoTypeId = $globalVariables/OMX_OM/BizRules/SBM_BUY_DATA_PACK/CreateMemoTypeId
+│           ├── Event.Ext.sendEventImmediate(reqEvent)
+│           ├── [if AllowWriteLog(OrderType)]: Logger (INFO, OPERATION_NAME="CCBS_CREATE_MEMO")
+│           ├── [if !isActResub]: RequestCount++
+│           └── isSkipped = false
+├── [COU loop i → k → j]:
+│   ├── refId = ParentOU[i].ChildOU[k].Subscriber[j].RefId
+│   ├── [PreExecCheck via GetXMLForSubscriberInChildOU]
+│   └── [if !reqSuccess]:
+│       ├── // [COMMENTED OUT] typeId = XPath.evalAsString(globalVar XPath)
+│       └── [same sendEventImmediate pattern, COU XSLT variant]
+├── [if !isSkipped]:
+│   ├── orderCurrentActivity.Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException
+
+Response_CCBS_CREATE_MEMO_FOR_SBM (rulefunction)
+├── extId = OMXUtils.generateTrackingID()
+├── activityRes = Instance.createInstance(ResponseBase){extId, ResponseCode, ResponseMessage, CompletionStatus, ReferenceId}
+├── currActivity.Response[] ← activityRes
+├── Logger: OPERATION_NAME="CCBS_CREATE_MEMO"  (NOTE: matches request logger name)
+└── return RuleFunctions.Helpers.IsAllResponseSuccess(currActivity)</pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Per-subscriber fan-out across POU and COU. One CreateMemo per subscriber.</td></tr>
+      <tr><td>R2</td><td>RefID = subscriber RefId (always emitted).</td></tr>
+      <tr><td>R3</td><td>Backend event = CCBS_CREATE_MEMO (not CCBS_CREATE_MEMO_FOR_SBM).</td></tr>
+      <tr><td>R4</td><td>entityId = SubscriberId; entityTypeId = "6" (subscriber type, hardcoded).</td></tr>
+      <tr><td>R5</td><td>$soc = SubscriberOffers[ServiceType="86" and ExtendedInfo[Name="FE_OR_CCBS" and (Value="BRMS" or Value="FE")]]/OfferName.</td></tr>
+      <tr><td>R6</td><td>memoText = concat(UserText, " [By DatapackService : soc= ", $soc, " ] ", "channel:[ ", Channel, " ]").</td></tr>
+      <tr><td>R7</td><td>memoTypeId = $globalVariables/OMX_OM/BizRules/SBM_BUY_DATA_PACK/CreateMemoTypeId (must be configured in deployment).</td></tr>
+      <tr><td>R8</td><td>UserName/PassWord gated by global variable IsEnableUserPass='true'.</td></tr>
+      <tr><td>R9</td><td>Fan-in via IsAllResponseSuccess (ResponseCode suffix "000").</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Event name CCBS_CREATE_MEMO diverges from rule name CCBS_CREATE_MEMO_FOR_SBM — monitoring gap</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Align rule name with event name, or document the discrepancy clearly in the event catalog</td></tr>
+      <tr><td>memoTypeId from global variable — empty if not configured</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Add configuration validation at startup; include SBM_BUY_DATA_PACK/CreateMemoTypeId in deployment checklist</td></tr>
+      <tr><td>$soc can resolve to empty string if no matching offer found</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Add XPath guard before send, or accept cosmetic memo with blank SOC field</td></tr>
+      <tr><td>No PurgePendingRequestsBeforeResubmit</td><td><span class="badge badge-blue">[LOW]</span></td><td>Verify CCBS createMemo idempotency for duplicate calls with same subscriber/content</td></tr>
+      <tr><td>Commented-out XPath.evalAsString typeId code (lines 49, 87) — dead code</td><td><span class="badge badge-blue">[LOW]</span></td><td>Remove commented-out lines in modernized code</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule (Response_CCBS_CREATE_MEMO_FOR_SBM)</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td>orderRequest</td><td>Concepts.OrderRequest.OrderRequest</td><td>Order context</td></tr>
+      <tr><td>eventResponse</td><td>Events.OMConsumers.OMXFM.Response.CCBS_CREATE_MEMO</td><td>Backend response event</td></tr>
+      <tr><td>currActivity</td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity state &amp; response list</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.3 ResponseBase Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span><span class="tree-cond">Concepts.FM.Base.ResponseBase</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">$extId (OMXUtils.generateTrackingID())</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.4 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Fan-in function</td><td><code>RuleFunctions.Helpers.IsAllResponseSuccess(currActivity)</code></td></tr>
+      <tr><td>Expected logic</td><td>Returns "true" when all responses have ResponseCode suffix "000"</td></tr>
+      <tr><td>Write-back</td><td>None (ResponseBase only)</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

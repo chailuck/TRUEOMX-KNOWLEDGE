@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>OMX_CAL_PP_EXPIRE_DATE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700}
+.page-header .subtitle{opacity:0.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:0.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.warning-box{background:#FFF8E1;border-left:4px solid #FFC107;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+.info-box{background:#E3F2FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+footer{text-align:center;padding:24px;color:#999;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>OMX_CAL_PP_EXPIRE_DATE</h1>
+  <div class="subtitle">OMX Internal — Calculate PostPaid Plan Contract Dates for Subscriber Offers</div>
+  <div class="meta-row">
+    <span class="meta-badge">Type: OMXOM (Internal Calculation)</span>
+    <span class="meta-badge">No Backend Call</span>
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">Generated: 2026-09-21</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p><strong>OMX_CAL_PP_EXPIRE_DATE</strong> is a pure in-memory calculation rule (no external backend call). It iterates over all Subscriber Offers with ServiceType="80" (PostPaid Plan) across both ParentOU and ChildOU subscribers, and populates contract date/remark parameters within the offer's <code>ParameterInfo[]</code> array.</p>
+    <div class="info-box"><strong>No response rulefunction.</strong> Computation completes within this rule. On success: calls <code>NextActivity</code> and sends audit log. If no qualifying offer found: calls <code>SkipActivity("4")</code>.</div>
+    <div class="warning-box"><strong>Bug — TR_CONTRACT_REMARK in ChildOU:</strong> The ChildOU branch uses <code>$psub</code> (ParentOU subscriber) instead of <code>$csub</code> for the TR_CONTRACT_REMARK XPath lookup. The PP offer name written for ChildOU subscribers will be sourced from the ParentOU subscriber's offers.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXOM.OMX_CAL_PP_EXPIRE_DATE</code></td></tr>
+      <tr><td>Rule type</td><td>OMXOM — internal OMX calculation (no ESB/backend call)</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>None — writes to BE working memory only</td></tr>
+      <tr><td>Target</td><td><code>SubscriberOffers[ServiceType="80"].ParameterInfo[]</code></td></tr>
+      <tr><td>PP offer filter</td><td><code>FE_OR_CCBS</code> ExtendedInfo on offer (FE or CCBS source system)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <div class="code-block">1. Get nextAct PreExecCheck from ProcessConfig
+2. for each ParentOU[p]:
+   for each ParentOU.Subscriber[ps]:
+     for each SubscriberOffers[psof] where ServiceType="80" (implicit):
+       a. Get filter = offer.ExtendedInfo[FE_OR_CCBS]/Value
+       b. If PreExecCheck: evaluate against subscriber+offer XML
+       c. If chkRes=="true":
+          i.  Get ppEffeDate (3-way priority — see §7)
+          ii. For each ParameterInfo:
+              TR_ACTUAL_CONTRACT_START_DATE → effDate + " 00:00:00"
+              TR_CONTRACT_REMARK           → current PP OfferName (FE first, then CCBS, then "-")
+              TR_ORIG_CONTRACT_EXPIRE_DATE → GetPPExpirationDate(effDate, durationMn, billCycle, 0)
+              TR_CONTRACT_TERM             → "0"
+          iii. isSkipped = false
+3. Same loop for ChildOU[c].Subscriber[cs].SubscriberOffers (with bug — see §1)
+4. if (!isSkipped): NextActivity + send audit log
+   else: SkipActivity("4")</div>
+  </div>
+</div>
+
+<!-- §7 Business Logic -->
+<div class="card">
+  <div class="card-header">§7 — ppEffeDate Priority Chain</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Priority</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>1</td><td><code>SubscriberOffers[ServiceType="80" AND FE_OR_CCBS="CCBS"]/ExtendedInfo[Name="PPOriginalEffectiveDate"]/Value</code></td><td>CCBS offer + PPOriginalEffectiveDate ExtInfo present</td></tr>
+      <tr><td>2</td><td><code>SubscriberOffers[ServiceType="80" AND FE_OR_CCBS="FE"]/ExtendedInfo[Name="OfferOriginalEffectiveDate"]/Value</code></td><td>FE offer + OfferOriginalEffectiveDate ExtInfo present</td></tr>
+      <tr><td>3</td><td><code>SubscriberOffers[ServiceType="80" AND FE_OR_CCBS="FE"]/EffectiveDate</code></td><td>FE offer EffectiveDate (fallback)</td></tr>
+    </table>
+    <p style="margin-top:10px">If all three are null → <code>effDate = DateTime.now()</code> (today's date in yyyy-MM-dd).</p>
+    <h4 style="color:var(--true-dark);margin:16px 0 8px">TR_CONTRACT_REMARK — OfferName Priority</h4>
+    <table>
+      <tr><th>Priority</th><th>Source</th></tr>
+      <tr><td>1</td><td><code>SubscriberOffers[ServiceType="80" AND FE_OR_CCBS="FE"]/OfferName</code></td></tr>
+      <tr><td>2</td><td><code>SubscriberOffers[ServiceType="80" AND FE_OR_CCBS="CCBS"]/OfferName</code></td></tr>
+      <tr><td>3</td><td><code>"-"</code> (static default)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <div class="code-block">OMX_CAL_PP_EXPIRE_DATE
+├── [for each qualifying offer]
+│   ├── GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, psub.RefId, offer.Soc, filter)
+│   │   [POU Subscriber path]
+│   ├── GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, csub.RefId, offer.Soc, pOuRefId, filter)
+│   │   [ChildOU Subscriber path]
+│   ├── XPath.execute(PreExecCheck, sXML, ns0=OrderRequest) → chkRes
+│   ├── XPath.evalAsDateTime(ppEffeDate — 3-way priority CCBS/FE date)
+│   ├── XPath.evalAsString(TR_CONTRACT_REMARK — FE/CCBS OfferName)
+│   └── [for TR_ORIG_CONTRACT_EXPIRE_DATE]
+│       ├── RuleFunctions.Helpers.GetPPDurationMonth(ppProps, offer.SocProperties) → durationMn
+│       ├── RuleFunctions.Helpers.GetBillCycle(orderRequest) → billCycle
+│       └── RuleFunctions.Helpers.GetPPExpirationDate(effDate, dateFormat, durationMn, billCycle, 0) → ppExpDate
+├── [if !isSkipped]
+│   ├── RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)
+│   └── Event.Ext.sendEventImmediate(Logger{OPERATION_NAME="OMX_CAL_PP_EXPIRE_DATE", AUDIT_TRACE="OMX_CAL_PP_EXPIRE_DATE Completed."})
+└── [if isSkipped]
+    └── RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</div>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Bug: TR_CONTRACT_REMARK for ChildOU uses $psub (ParentOU sub) instead of $csub</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Fix in migration target: use $csub for ChildOU TR_CONTRACT_REMARK lookup</td></tr>
+      <tr><td>No response rulefunction — activity completes within rule and calls NextActivity directly</td><td><span class="badge badge-blue">[LOW]</span></td><td>Document that this is a synchronous internal rule — no JMS round-trip</td></tr>
+      <tr><td>ServiceType="80" filter is implicit in XPath evaluation, not in loop condition</td><td><span class="badge badge-blue">[LOW]</span></td><td>Verify all PP offers have ServiceType="80" in the order model; add explicit loop condition in migration</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

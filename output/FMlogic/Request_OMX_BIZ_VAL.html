@@ -1,0 +1,570 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_BIZ_VAL</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.8rem;font-weight:700;letter-spacing:0.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:0.85;font-size:0.95rem;margin-bottom:14px}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:3px 12px;font-size:0.78rem}
+.container{max-width:1300px;margin:0 auto;padding:24px}
+.section{background:var(--card);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);margin-bottom:22px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;border-left:5px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header h2{font-size:1rem;font-weight:600}
+.section-num{background:rgba(255,255,255,0.22);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0}
+.section-body{padding:20px}
+.sub-section{margin-bottom:18px}
+.sub-section h3{font-size:0.88rem;font-weight:700;color:var(--true-dark);border-bottom:1px solid #f0d0d0;padding-bottom:4px;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600}
+td{padding:7px 10px;border-bottom:1px solid #F0E0E0;vertical-align:top}
+tr:hover td{background:#FDF5F5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:0.8rem;border-left:3px solid var(--true-red)}
+code.inline{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:0.8rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:0.72rem;font-weight:600}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}
+.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}
+.b-teal{background:#E0F2F1;color:#00695c}
+.b-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;margin-top:1px}
+.flow-body{flex:1}
+.flow-body strong{color:var(--true-dark)}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);border-radius:6px;padding:12px 16px;margin-bottom:12px;font-size:0.82rem}
+.warn-box{background:#FFF3E0;border-left:4px solid var(--warning);border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.82rem}
+.success-box{background:#E8F5E9;border-left:4px solid var(--success);border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.82rem}
+.error-box{background:#FFE0E0;border-left:4px solid var(--true-red);border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.82rem}
+.internal-box{background:#F3E5F5;border-left:4px solid var(--skip);border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.82rem}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nm{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-arrow{color:#6c7086;margin:0 6px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.footer{text-align:center;color:#999;font-size:0.75rem;padding:20px;border-top:1px solid var(--border);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1300px;margin:0 auto">
+    <div class="subtitle">TIBCO BusinessEvents · FM Logic Documentation</div>
+    <h1>Request_OMX_BIZ_VAL</h1>
+    <div class="meta-chips">
+      <span class="chip">Priority: 5</span>
+      <span class="chip">forwardChain: true</span>
+      <span class="chip">Type: Internal OMX Validation Gate (OMXOM)</span>
+      <span class="chip">Pattern: VRF Decision Table Invocation</span>
+      <span class="chip">Author: mranade-T420</span>
+      <span class="chip">File: OMX_BusinessValidations.rule</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><div class="section-num">1</div><h2>§1 — Overview &amp; Purpose</h2></div>
+  <div class="section-body">
+    <div class="internal-box">
+      <strong>Internal OMX Validation Gate (OMXOM) — No External Backend Call</strong><br/>
+      This rule is a <em>business validation checkpoint</em> that invokes an order-type-specific VRF (Virtual Rule Function) decision table before the order proceeds to provisioning. If the validation fails, the order is immediately terminated with a structured error code. No JMS/ESB event is sent to a backend system.
+    </div>
+    <p>The rule serialises the entire order request to XML and invokes the decision table <code class="inline">BusinessValidations_&lt;OrderType&gt;DT</code> (e.g., <code class="inline">BusinessValidations_65DT</code> for PREPAID_CANCEL) via the VRF framework. The decision table evaluates all business constraints for that order type and writes its verdict into <code class="inline">orderRequest.BusinessValidationResult</code> and <code class="inline">orderRequest.BusinessValidationMsg</code>.</p>
+    <table style="margin-top:14px;width:auto">
+      <tr><th>Item</th><th>Value</th></tr>
+      <tr><td>Rule class</td><td><code class="inline">Rules.OMConsumers.OMXOM.OMX_BusinessValidations</code></td></tr>
+      <tr><td>ActivityID</td><td><code class="inline">OMX_BIZ_VAL</code></td></tr>
+      <tr><td>Author</td><td>mranade-T420</td></tr>
+      <tr><td>Backend call</td><td>None — invokes local VRF decision table</td></tr>
+      <tr><td>VRF path</td><td><code class="inline">/DecisionTables/BusinessValidationsVRF</code></td></tr>
+      <tr><td>DT naming pattern</td><td><code class="inline">BusinessValidations_&lt;OrderType&gt;DT</code></td></tr>
+      <tr><td>Completion on pass</td><td><code class="inline">NextActivity</code> (synchronous)</td></tr>
+      <tr><td>Completion on fail</td><td>Activity FAILED + Order FAILED/DELETED</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header"><div class="section-num">2</div><h2>§2 — Rule Metadata &amp; Attributes</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule type</td><td><code class="inline">rule</code></td><td>RETE stateful rule</td></tr>
+      <tr><td>priority</td><td>5</td><td>Standard priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Re-evaluates if working memory changes during execution</td></tr>
+      <tr><td>Namespace</td><td>OMXOM</td><td>Internal OMX — not an external FM rule</td></tr>
+      <tr><td>Response rulefunction</td><td>None</td><td>Synchronous — no async backend call</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><div class="section-num">3</div><h2>§3 — Working Memory — Declared Objects</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code class="inline">orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Root order — serialised for VRF input; BusinessValidationResult/Msg written by VRF</td></tr>
+      <tr><td><code class="inline">orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity — Status and ResponseCode written on failure</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">4</div><h2>§4 — Rule Conditions (WHEN)</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Meaning</th></tr>
+      <tr><td>1</td><td><code class="inline">orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity matches current process step</td></tr>
+      <tr><td>2</td><td><code class="inline">orderCurrentActivity.ActivityID == "OMX_BIZ_VAL"</code></td><td>This rule fires only for the business validation step</td></tr>
+      <tr><td>3</td><td><code class="inline">orderRequest.ProcessFlow.NextActivityID == "OMX_BIZ_VAL"</code></td><td>Process flow confirms this step is next</td></tr>
+      <tr><td>4</td><td><code class="inline">orderCurrentActivity.Status == "WAITING"</code></td><td>Activity has not yet been processed</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header"><div class="section-num">5</div><h2>§5 — Execution Flow Diagram</h2></div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><strong>Serialise order:</strong> <code class="inline">sXML = Instance.serializeUsingDefaults(orderRequest)</code> — serialises the full order object graph to XML for XPath-based PreExecCheck.</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><strong>PreExecCheck (order-level):</strong> If <code class="inline">PreExecCheck</code> is set on the activity, evaluate XPath against the full order XML. If result != "true", skip via <code class="inline">SkipActivity("4")</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><strong>Reset validation state:</strong> <code class="inline">orderRequest.BusinessValidationResult = true</code> and <code class="inline">BusinessValidationMsg = ""</code> — default to passing before DT is invoked.</div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><strong>Extract process name:</strong> Split <code class="inline">ProcessFlow@extId</code> on ":" → use last token as first VRF arg (process name).</div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-body"><strong>Invoke VRF decision table:</strong> <code class="inline">VRF.invokeVRFImplByName("/DecisionTables/BusinessValidationsVRF", "BusinessValidations_"+OrderType+"DT", args)</code> — DT writes result into <code class="inline">BusinessValidationResult</code> / <code class="inline">BusinessValidationMsg</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-body"><strong>Pass path:</strong> If <code class="inline">BusinessValidationResult == true</code> → <code class="inline">NextActivity</code> + success audit log.</div></div>
+    <div class="flow-step"><div class="flow-num">7</div><div class="flow-body"><strong>Fail path — soft:</strong> If <code class="inline">BusinessValidationResult == false</code> and <code class="inline">DeleteOrderFromCache == false</code> → set status FAILED, build error code, persist to DB, log to ErrorLog channel.</div></div>
+    <div class="flow-step"><div class="flow-num">8</div><div class="flow-body"><strong>Fail path — hard:</strong> If <code class="inline">BusinessValidationResult == false</code> and <code class="inline">DeleteOrderFromCache == true</code> → set order status 8, persist to DB, <code class="inline">Instance.deleteInstance(orderRequest)</code>, decrement engine count.</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header"><div class="section-num">6</div><h2>§6 — Rule Action (THEN) — Step-by-Step Logic</h2></div>
+  <div class="section-body">
+
+    <div class="sub-section">
+      <h3>Validation Invocation</h3>
+      <table>
+        <tr><th>Step</th><th>Code</th><th>Detail</th></tr>
+        <tr><td>Serialise</td><td><code class="inline">Instance.serializeUsingDefaults(orderRequest)</code></td><td>Full order XML (order-level, not per-subscriber)</td></tr>
+        <tr><td>PreExecCheck</td><td><code class="inline">XPath.execute("/("+chkXPath+")", sXML, "ns0=...")</code></td><td>Uses full order XML, not subscriber XML</td></tr>
+        <tr><td>Reset result</td><td><code class="inline">BusinessValidationResult=true; BusinessValidationMsg=""</code></td><td>VRF will override on failure</td></tr>
+        <tr><td>Extract process name</td><td><code class="inline">String.split(ProcessFlow@extId, ":")[last]</code></td><td>e.g., "PREPAID_CANCEL"</td></tr>
+        <tr><td>VRF args</td><td><code class="inline">{processName, orderRequest}</code></td><td>Two-element Object array</td></tr>
+        <tr><td>Invoke DT</td><td><code class="inline">VRF.invokeVRFImplByName("/DecisionTables/BusinessValidationsVRF", "BusinessValidations_"+OrderType+"DT", args)</code></td><td>Order-type-specific DT</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>Failure Path — Error Code Construction</h3>
+      <table>
+        <tr><th>Segment</th><th>GlobalVar path</th><th>Default</th><th>Example</th></tr>
+        <tr><td>compNm</td><td><code class="inline">OMX_OM/ComponentName</code></td><td>"OM"</td><td>OM</td></tr>
+        <tr><td>svcCode</td><td><code class="inline">OMX_OM/Services/OMServices</code></td><td>"01"</td><td>01</td></tr>
+        <tr><td>opCode</td><td><code class="inline">OMX_OM/Operations/SubmitOrder</code></td><td>"01"</td><td>01</td></tr>
+        <tr><td>sev</td><td><code class="inline">OMX_COMMON/Severity/High</code></td><td>"03"</td><td>03</td></tr>
+        <tr><td>errCode</td><td><code class="inline">OMX_OM/ResponseCodes/BusinessValidationsFailed</code></td><td>"004"</td><td>004 or "-CUST01"</td></tr>
+        <tr><td colspan="4" style="background:#FFF5F5">Composed: <code class="inline">respCode = compNm+svcCode+opCode+sev+errCode</code> → e.g., <code class="inline">"OM01010300 4"</code> or <code class="inline">"OM010103-CUST01"</code></td></tr>
+      </table>
+      <p style="margin-top:8px">If <code class="inline">BusinessValidationCode</code> is non-empty, errCode = <code class="inline">"-"+BusinessValidationCode</code> (overrides the GlobalVar default).</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>Failure Path — DeleteOrderFromCache Branching</h3>
+      <table>
+        <tr><th>DeleteOrderFromCache</th><th>Actions</th></tr>
+        <tr><td><code class="inline">true</code></td><td>Set orderStatus=8, <code class="inline">SendDataToDB</code>, <code class="inline">Instance.deleteInstance(orderRequest)</code>, <code class="inline">EngineManagement.SetOrderCount(-1)</code> — hard eviction from working memory</td></tr>
+        <tr><td><code class="inline">false</code></td><td>Set activity Status="3" (FAILED), orderStatus=3 (FAILED), <code class="inline">SendDataToDB</code>, log error to ErrorLog channel (if AllowWriteLog)</td></tr>
+      </table>
+      <div class="error-box" style="margin-top:8px">
+        <strong>Hard eviction path:</strong> When <code class="inline">DeleteOrderFromCache=true</code>, the orderRequest concept is permanently removed from the BE working memory. No audit log is written in this path (the log is only in the <code class="inline">else</code> branch). Any RETE rules holding references to <code class="inline">orderRequest</code> will retract immediately.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §7 VRF Decision Table Architecture -->
+<div class="section">
+  <div class="section-header"><div class="section-num">7</div><h2>§7 — VRF Decision Table Architecture</h2></div>
+  <div class="section-body">
+    <div class="info-box">
+      <strong>VRF (Virtual Rule Function)</strong> is a TIBCO BE mechanism for polymorphic rule function dispatch. <code class="inline">invokeVRFImplByName</code> selects a specific implementation of the VRF interface by its registered name — here, the implementation name is derived from the order type, enabling per-order-type validation logic without code branching.
+    </div>
+    <table>
+      <tr><th>Element</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>VRF interface path</td><td><code class="inline">/DecisionTables/BusinessValidationsVRF</code></td><td>Parent VRF definition</td></tr>
+      <tr><td>DT name pattern</td><td><code class="inline">BusinessValidations_&lt;OrderType&gt;DT</code></td><td>One DT per order type (e.g., BusinessValidations_65DT)</td></tr>
+      <tr><td>Args[0]</td><td>Process name (last segment of ProcessFlow extId)</td><td>e.g., "PREPAID_CANCEL"</td></tr>
+      <tr><td>Args[1]</td><td><code class="inline">orderRequest</code></td><td>Full order concept graph</td></tr>
+      <tr><td>Output written</td><td><code class="inline">orderRequest.BusinessValidationResult</code> (boolean)</td><td>true = pass, false = fail</td></tr>
+      <tr><td>Output written</td><td><code class="inline">orderRequest.BusinessValidationMsg</code> (String)</td><td>Human-readable failure reason</td></tr>
+      <tr><td>Output written</td><td><code class="inline">orderRequest.BusinessValidationCode</code> (String)</td><td>Machine-readable code for error code suffix (optional)</td></tr>
+    </table>
+    <div class="warn-box" style="margin-top:12px">
+      <strong>[MEDIUM]</strong> If the DT named <code class="inline">BusinessValidations_&lt;OrderType&gt;DT</code> does not exist in the VRF registry, <code class="inline">invokeVRFImplByName</code> throws a runtime exception. This is caught by the outer <code class="inline">catch</code> and routes to <code class="inline">HandleActivityException</code> — the order fails with a generic exception error rather than a meaningful validation error code. New order types must have a matching DT registered.
+    </div>
+    <p style="margin-top:10px">The commented-out line <code class="inline">VRF.invokeAllVRFImpls(...)</code> shows the original approach was to invoke ALL registered implementations; this was replaced with the targeted <code class="inline">invokeVRFImplByName</code> pattern to allow per-order-type validation rules.</p>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="section">
+  <div class="section-header"><div class="section-num">8</div><h2>§8 — System &amp; Integration Dependencies</h2></div>
+  <div class="section-body">
+
+    <div class="sub-section">
+      <h3>§8.1 Order Type Dependencies</h3>
+      <p>A unique decision table must exist for each order type: <code class="inline">BusinessValidations_&lt;OrderType&gt;DT</code>. For PREPAID_CANCEL this would be <code class="inline">BusinessValidations_65DT</code> (assuming OrderType=65). The DT contains all business rules applicable to that order type — subscriber status requirements, pre-conditions, conflict checks, etc.</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.2 ESB / JMS Channel Dependencies</h3>
+      <table>
+        <tr><th>Direction</th><th>Channel / Event</th><th>Used when</th><th>Routing</th></tr>
+        <tr><td><span class="badge b-log">LOG SUCCESS</span></td><td>Events.OMConsumers.OMXESB.Logger</td><td>Validation passed (AllowWriteLog gate)</td><td><code class="inline">Event.Ext.sendEventImmediate</code></td></tr>
+        <tr><td><span class="badge b-red">LOG FAILURE</span></td><td>Events.OMConsumers.OMXESB.Logger → ErrorLog channel</td><td>Validation failed (AllowWriteLog gate)</td><td><code class="inline">Event.Ext.routeToImmediate(..., "/Channels/LogConnection/ErrorLog", "")</code></td></tr>
+      </table>
+      <div class="warn-box" style="margin-top:8px">
+        Two different routing mechanisms are used for success vs failure logs. Success uses <code class="inline">sendEventImmediate</code>; failure uses <code class="inline">routeToImmediate</code> with explicit ErrorLog channel. Both are gated by <code class="inline">AllowWriteLog</code> — validation failures for certain order types may never be logged to ErrorLog.
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.3 Working Memory Written</h3>
+      <table>
+        <tr><th>Field</th><th>Written when</th><th>Value</th></tr>
+        <tr><td><code class="inline">orderRequest.BusinessValidationResult</code></td><td>Always (before VRF)</td><td>true (reset); VRF may set false</td></tr>
+        <tr><td><code class="inline">orderRequest.BusinessValidationMsg</code></td><td>Always (before VRF)</td><td>"" (reset); VRF may set message</td></tr>
+        <tr><td><code class="inline">orderRequest.ResponseCode</code></td><td>Validation failed</td><td>Composed error code (see §6)</td></tr>
+        <tr><td><code class="inline">orderRequest.ResponseMessage</code></td><td>Validation failed</td><td><code class="inline">BusinessValidationMsg</code> from VRF</td></tr>
+        <tr><td><code class="inline">orderRequest.OrderStatus</code></td><td>Fail (soft=3, hard=8)</td><td>Status code 3 or 8</td></tr>
+        <tr><td><code class="inline">orderCurrentActivity.Status</code></td><td>Validation failed (soft)</td><td>GetActivityStatusString("3",false) → FAILED</td></tr>
+        <tr><td><code class="inline">orderCurrentActivity.ResponseCode</code></td><td>Validation failed</td><td>Same as orderRequest.ResponseCode</td></tr>
+        <tr><td><code class="inline">orderCurrentActivity.ResponseMessage</code></td><td>Validation failed</td><td><code class="inline">BusinessValidationMsg</code></td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.4 Global Variable Dependencies</h3>
+      <table>
+        <tr><th>Path</th><th>Default</th><th>Used for</th></tr>
+        <tr><td><code class="inline">OMX_OM/ComponentName</code></td><td>"OM"</td><td>Error code prefix: component identifier</td></tr>
+        <tr><td><code class="inline">OMX_OM/Services/OMServices</code></td><td>"01"</td><td>Error code: service segment</td></tr>
+        <tr><td><code class="inline">OMX_OM/Operations/SubmitOrder</code></td><td>"01"</td><td>Error code: operation segment</td></tr>
+        <tr><td><code class="inline">OMX_COMMON/Severity/High</code></td><td>"03"</td><td>Error code: severity segment</td></tr>
+        <tr><td><code class="inline">OMX_OM/ResponseCodes/BusinessValidationsFailed</code></td><td>"004"</td><td>Error code: error type segment (overridden by BusinessValidationCode)</td></tr>
+        <tr><td><code class="inline">OMX_COMMON/Component_Name/OMX_CEP</code></td><td>—</td><td>Audit log COMPONENT_NAME</td></tr>
+        <tr><td><code class="inline">OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>—</td><td>Audit log LOG_LEVEL</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §9 (N/A for OMXOM) -->
+<div class="section">
+  <div class="section-header"><div class="section-num">9</div><h2>§9 — Payload Build (Not Applicable)</h2></div>
+  <div class="section-body">
+    <p>This rule performs no outbound messaging. The "payload" is the order request object serialised via <code class="inline">Instance.serializeUsingDefaults</code> and passed to the VRF. The VRF decision table processes this internally — no XML is sent over JMS.</p>
+  </div>
+</div>
+
+<!-- §10 (N/A) -->
+<div class="section">
+  <div class="section-header"><div class="section-num">10</div><h2>§10 — XSLT Field Mapping (Not Applicable)</h2></div>
+  <div class="section-body">
+    <p>No XSLT payload mapping. The two audit log events (success/failure) share the following field structure:</p>
+    <ul class="xslt-tree" style="margin-top:10px">
+      <li><div class="tree-row"><span class="tree-tag">event (success)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ESBUUID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">PROCESS_ID</span><span class="tree-arrow">←</span><span class="tree-src-static">concat(nanoTime, "_RES")</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OPERATION_NAME</span><span class="tree-arrow">←</span><span class="tree-src-static">"/Rules/OMConsumers/OMXOM/OMX_BusinessValidations"</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">AUDIT_TRACE</span><span class="tree-arrow">←</span><span class="tree-src-static">"OMX-OM business validations passed."</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span><span class="tree-arrow">←</span><span class="tree-src-static">&lt;payload/&gt; (empty)</span><span class="badge b-green">Always</span></div></li>
+        </ul>
+      </li>
+      <li style="margin-top:10px"><div class="tree-row"><span class="tree-tag">event (failure)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ESBUUID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">PROCESS_ID</span><span class="tree-arrow">←</span><span class="tree-src-static">concat(nanoTime, "_REQ")</span><span class="badge b-green">Always</span><span class="tree-cond">(uses "_REQ" not "_RES" — unusual for failure log)</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OPERATION_NAME</span><span class="tree-arrow">←</span><span class="tree-src-static">"/Rules/OMConsumers/OMXOM/OMX_BusinessValidations"</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ERROR_CODE</span><span class="tree-arrow">←</span><span class="tree-src">$respCode</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ERROR_MSG</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/BusinessValidationMsg</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span><span class="tree-arrow">←</span><span class="tree-src-static">&lt;payload/&gt; (empty)</span><span class="badge b-green">Always</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header"><div class="section-num">11</div><h2>§11 — Audit Logging</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Path</th><th>Event type</th><th>Routing</th><th>Gated?</th></tr>
+      <tr><td>Validation passed</td><td>Logger (success)</td><td><code class="inline">Event.Ext.sendEventImmediate</code></td><td>Yes — <code class="inline">AllowWriteLog</code></td></tr>
+      <tr><td>Validation failed (soft)</td><td>Logger (failure) → ErrorLog</td><td><code class="inline">Event.Ext.routeToImmediate(..., "/Channels/LogConnection/ErrorLog", "")</code></td><td>Yes — <code class="inline">AllowWriteLog</code></td></tr>
+      <tr><td>Validation failed (hard delete)</td><td>None</td><td>N/A — orderRequest deleted before log</td><td>N/A</td></tr>
+    </table>
+    <div class="warn-box" style="margin-top:10px">
+      The failure log event uses <code class="inline">PROCESS_ID</code> with <code class="inline">"_REQ"</code> suffix (not <code class="inline">"_RES"</code>) — this is inconsistent with most other OMX rules and may cause confusion in log correlation. The failure log also uses <code class="inline">ERROR_CODE</code> / <code class="inline">ERROR_MSG</code> fields (not <code class="inline">AUDIT_TRACE</code>) and routes to the ErrorLog channel rather than the standard Logger.
+    </div>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header"><div class="section-num">12</div><h2>§12 — Activity Status Management</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Outcome</th><th>Activity status</th><th>Order status</th><th>Mechanism</th></tr>
+      <tr><td>PreExecCheck false</td><td>SKIPPED</td><td>unchanged</td><td><code class="inline">SkipActivity("4")</code></td></tr>
+      <tr><td>Validation passed</td><td>COMPLETED (via NextActivity)</td><td>unchanged</td><td><code class="inline">NextActivity(orderRequest, orderCurrentActivity)</code></td></tr>
+      <tr><td>Validation failed (soft)</td><td>FAILED (code "3")</td><td>FAILED (code 3)</td><td><code class="inline">GetActivityStatusString("3", false)</code> + <code class="inline">GetOrderStatusString(3)</code></td></tr>
+      <tr><td>Validation failed (hard delete)</td><td>N/A (order deleted)</td><td>8 (deleted)</td><td><code class="inline">GetOrderStatusString(8)</code> + <code class="inline">Instance.deleteInstance</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header"><div class="section-num">13</div><h2>§13 — Exception / Error Handling</h2></div>
+  <div class="section-body">
+    <pre><span class="kw">catch</span> (Exception ae) {
+    RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</pre>
+    <p style="margin-top:10px">Any exception — including a missing VRF decision table — is caught and handled generically. The order fails without the structured validation error code that would normally be built in the failure path.</p>
+    <div class="warn-box" style="margin-top:8px"><strong>[MEDIUM]:</strong> A missing <code class="inline">BusinessValidations_&lt;OrderType&gt;DT</code> causes a runtime exception, not a clean validation failure. The error is indistinguishable from a code bug unless the exception message is checked in the audit log.</div>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">14</div><h2>§14 — Helper Functions Reference</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Return</th><th>Purpose</th></tr>
+      <tr><td><code class="inline">Instance.serializeUsingDefaults(orderRequest)</code></td><td>String (XML)</td><td>Serialises full order object graph for XPath evaluation</td></tr>
+      <tr><td><code class="inline">VRF.invokeVRFImplByName(path, name, args)</code></td><td>void</td><td>Dispatches to named VRF implementation (decision table)</td></tr>
+      <tr><td><code class="inline">System.getGlobalVariableAsString(path, default)</code></td><td>String</td><td>Reads error code segments from GlobalVars</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.GetActivityStatusString("3", false)</code></td><td>String</td><td>Maps code "3" to FAILED status string</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.GetOrderStatusString(3)</code></td><td>String</td><td>Maps 3 to FAILED order status; 8 to DELETED</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.SendDataToDB(orderRequest)</code></td><td>void</td><td>Persists order to database</td></tr>
+      <tr><td><code class="inline">Instance.deleteInstance(orderRequest)</code></td><td>void</td><td>Evicts order concept from BE working memory (hard delete)</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.EngineManagement.SetOrderCount(-1)</code></td><td>void</td><td>Decrements engine's active order counter after hard delete</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.AllowWriteLog(orderType)</code></td><td>boolean</td><td>Gates audit logging by order type</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)</code></td><td>void</td><td>Advances process flow on validation pass</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.SkipActivity(req, act, "4")</code></td><td>void</td><td>Skips activity if PreExecCheck is false</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.HandleActivityException(req, act, ae, "")</code></td><td>void</td><td>Generic exception handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header"><div class="section-num">15</div><h2>§15 — Function Dependency Tree</h2></div>
+  <div class="section-body">
+    <pre>OMX_BusinessValidations / OMX_BIZ_VAL (rule)
+├── Instance.serializeUsingDefaults(orderRequest)              [BE built-in]
+├── XPath.execute(PreExecCheck, sXML)                          [BE built-in]
+├── VRF.invokeVRFImplByName("/DecisionTables/BusinessValidationsVRF",
+│       "BusinessValidations_"+OrderType+"DT", {processName, orderRequest})
+│   └── [Decision Table]: BusinessValidations_&lt;OrderType&gt;DT
+│       ├── Reads: all fields of orderRequest
+│       └── Writes: BusinessValidationResult, BusinessValidationMsg, BusinessValidationCode
+├── [PASS PATH]
+│   ├── RuleFunctions.Helpers.NextActivity(req, act)          [helper]
+│   ├── RuleFunctions.Helpers.AllowWriteLog(OrderType)        [helper]
+│   └── Event.Ext.sendEventImmediate(Logger — success)        [BE built-in]
+├── [FAIL PATH — soft]
+│   ├── RuleFunctions.Helpers.GetActivityStatusString("3",false) [helper]
+│   ├── RuleFunctions.Helpers.GetOrderStatusString(3)         [helper]
+│   ├── System.getGlobalVariableAsString × 5                  [BE built-in — error code segments]
+│   ├── RuleFunctions.Helpers.SendDataToDB(orderRequest)      [helper]
+│   ├── RuleFunctions.Helpers.AllowWriteLog(OrderType)        [helper]
+│   └── Event.Ext.routeToImmediate(Logger — failure, ErrorLog) [BE built-in]
+├── [FAIL PATH — hard delete]
+│   ├── RuleFunctions.Helpers.GetOrderStatusString(8)         [helper]
+│   ├── RuleFunctions.Helpers.SendDataToDB(orderRequest)      [helper]
+│   ├── Instance.deleteInstance(orderRequest)                 [BE built-in]
+│   └── RuleFunctions.Helpers.EngineManagement.SetOrderCount(-1) [helper]
+├── RuleFunctions.Helpers.SkipActivity(req, act, "4")        [helper — PreExecCheck=false]
+└── RuleFunctions.Helpers.HandleActivityException(...)       [helper]</pre>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">16</div><h2>§16 — Concept Definitions Referenced</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Written by</th></tr>
+      <tr><td><code class="inline">orderRequest.BusinessValidationResult</code></td><td>boolean</td><td>Reset to true in rule; set false by VRF DT on failure</td></tr>
+      <tr><td><code class="inline">orderRequest.BusinessValidationMsg</code></td><td>String</td><td>Reset to "" in rule; set by VRF DT on failure</td></tr>
+      <tr><td><code class="inline">orderRequest.BusinessValidationCode</code></td><td>String</td><td>Set by VRF DT — optional custom error suffix code</td></tr>
+      <tr><td><code class="inline">orderRequest.ResponseCode</code></td><td>String</td><td>Set on failure — composed error code</td></tr>
+      <tr><td><code class="inline">orderRequest.ResponseMessage</code></td><td>String</td><td>Set on failure — BusinessValidationMsg</td></tr>
+      <tr><td><code class="inline">orderRequest.OrderStatus</code></td><td>String</td><td>Set on failure: 3 (FAILED) or 8 (DELETED)</td></tr>
+      <tr><td><code class="inline">orderRequest.DeleteOrderFromCache</code></td><td>boolean</td><td>READ — determines hard vs soft failure path</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header"><div class="section-num">17</div><h2>§17 — Migration Notes &amp; Recommendations</h2></div>
+  <div class="section-body">
+    <div class="sub-section">
+      <h3>Functional Requirements</h3>
+      <table>
+        <tr><th>ID</th><th>Requirement</th></tr>
+        <tr><td>R1</td><td>Invoke order-type-specific business validation rules before provisioning activities begin</td></tr>
+        <tr><td>R2</td><td>Support graceful pass (advance) and structured fail (error code + status update) outcomes</td></tr>
+        <tr><td>R3</td><td>Support two failure modes: soft (order persisted as FAILED) and hard (order evicted from working memory)</td></tr>
+        <tr><td>R4</td><td>Construct structured error response code from configurable GlobalVar segments</td></tr>
+        <tr><td>R5</td><td>Allow per-order-type custom error suffix via BusinessValidationCode field</td></tr>
+        <tr><td>R6</td><td>Log failure to dedicated ErrorLog channel with ERROR_CODE and ERROR_MSG fields</td></tr>
+      </table>
+    </div>
+    <div class="sub-section" style="margin-top:16px">
+      <h3>Design Risks</h3>
+      <table>
+        <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+        <tr><td>Missing DT for order type causes runtime exception instead of clean validation failure</td><td><span class="badge b-orange">MEDIUM</span></td><td>Add startup validation that all active order types have a registered DT; or use <code class="inline">invokeAllVRFImpls</code> as fallback</td></tr>
+        <tr><td>Hard-delete path writes no audit log before evicting order — failure is untraceable if AllowWriteLog is false for that order type</td><td><span class="badge b-orange">MEDIUM</span></td><td>Always write an audit log before hard delete, regardless of AllowWriteLog; or log at a higher severity</td></tr>
+        <tr><td>AllowWriteLog gate on failure path — validation failures for certain order types may not be logged to ErrorLog</td><td><span class="badge b-orange">MEDIUM</span></td><td>Failure logging should bypass AllowWriteLog (failures are always significant); use AllowWriteLog only for success path</td></tr>
+        <tr><td>Failure log uses PROCESS_ID "_REQ" suffix — inconsistent with failure-as-response semantic</td><td><span class="badge b-red">LOW</span></td><td>Change to "_RES" for consistency; update log correlation queries</td></tr>
+        <tr><td>Commented-out <code class="inline">invokeAllVRFImpls</code> and <code class="inline">processID</code> lines — stale code creates confusion</td><td><span class="badge b-red">LOW</span></td><td>Remove commented code; document the design decision in comments</td></tr>
+        <tr><td>Decision table names must exactly match <code class="inline">BusinessValidations_&lt;OrderType&gt;DT</code> — manual naming convention is error-prone</td><td><span class="badge b-red">LOW</span></td><td>Enforce naming convention via CI validation or catalog check</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="section">
+  <div class="section-header"><div class="section-num">18</div><h2>§18 — Full Source Code</h2></div>
+  <div class="section-body">
+    <pre><span class="cm">/**
+ * @description
+ * @author mranade-T420
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXOM.OMX_BusinessValidations</span> {
+    <span class="kw">attribute</span> { priority = <span class="nm">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"OMX_BIZ_VAL"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"OMX_BIZ_VAL"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="kw">try</span> {
+            <span class="ty">String</span> chkXPath = orderCurrentActivity.PreExecCheck;
+            <span class="ty">String</span> chkRes = <span class="st">"true"</span>;
+            <span class="cm">// Serialise full order for XPath PreExecCheck evaluation</span>
+            <span class="ty">String</span> sXML = Instance.serializeUsingDefaults(orderRequest);
+            <span class="kw">if</span>(String.length(orderCurrentActivity.PreExecCheck) > <span class="nm">0</span>)
+                chkRes = XPath.execute(<span class="st">"/("+chkXPath+")"</span>, sXML,
+                    <span class="st">"ns0=www.tibco.com/be/ontology/Concepts/OrderRequest/OrderRequest"</span>);
+
+            <span class="kw">if</span>(String.equals(chkRes, <span class="st">"true"</span>)) {
+                <span class="cm">// Reset validation state before invoking DT</span>
+                orderRequest.BusinessValidationResult = <span class="kw">true</span>;
+                orderRequest.BusinessValidationMsg = <span class="st">""</span>;
+
+                <span class="cm">// Extract process name from ProcessFlow extId (last ":" segment)</span>
+                <span class="ty">String[]</span> prcNm = String.split(orderRequest.ProcessFlow@extId, <span class="st">":"</span>);
+                <span class="ty">Object[]</span> args = {prcNm[(prcNm@length-<span class="nm">1</span>)], orderRequest};
+
+                <span class="cm">// Invoke order-type-specific decision table</span>
+                <span class="cm">// [commented out] VRF.invokeAllVRFImpls("/DecisionTables/BusinessValidationsVRF", args);</span>
+                VRF.invokeVRFImplByName(<span class="st">"/DecisionTables/BusinessValidationsVRF"</span>,
+                    <span class="st">"BusinessValidations_"+orderRequest.OrderData.OrderType+"DT"</span>, args);
+
+                <span class="kw">if</span>(!orderRequest.BusinessValidationResult) {
+                    <span class="cm">// === VALIDATION FAILED ===</span>
+                    orderCurrentActivity.Status = RuleFunctions.Helpers.GetActivityStatusString(<span class="st">"3"</span>, <span class="kw">false</span>);
+                    orderRequest.OrderStatus = RuleFunctions.Helpers.GetOrderStatusString(<span class="nm">3</span>);
+                    <span class="cm">// Build structured error code from GlobalVars</span>
+                    <span class="ty">String</span> compNm = System.getGlobalVariableAsString(<span class="st">"OMX_OM/ComponentName"</span>, <span class="st">"OM"</span>);
+                    <span class="ty">String</span> svcCode = System.getGlobalVariableAsString(<span class="st">"OMX_OM/Services/OMServices"</span>, <span class="st">"01"</span>);
+                    <span class="ty">String</span> opCode = System.getGlobalVariableAsString(<span class="st">"OMX_OM/Operations/SubmitOrder"</span>, <span class="st">"01"</span>);
+                    <span class="ty">String</span> sev = System.getGlobalVariableAsString(<span class="st">"OMX_COMMON/Severity/High"</span>, <span class="st">"03"</span>);
+                    <span class="ty">String</span> errCode = System.getGlobalVariableAsString(<span class="st">"OMX_OM/ResponseCodes/BusinessValidationsFailed"</span>, <span class="st">"004"</span>);
+                    <span class="kw">if</span>(String.length(orderRequest.BusinessValidationCode) > <span class="nm">0</span>)
+                        errCode = <span class="st">"-"+orderRequest.BusinessValidationCode</span>;
+                    <span class="ty">String</span> respCode = compNm+svcCode+opCode+sev+errCode;
+                    orderRequest.ResponseCode = respCode;
+                    orderRequest.ResponseMessage = orderRequest.BusinessValidationMsg;
+                    orderCurrentActivity.ResponseCode = respCode;
+                    orderCurrentActivity.ResponseMessage = orderRequest.BusinessValidationMsg;
+
+                    <span class="kw">if</span>(orderRequest.DeleteOrderFromCache) {
+                        <span class="cm">// HARD DELETE — evict from working memory</span>
+                        orderRequest.OrderStatus = RuleFunctions.Helpers.GetOrderStatusString(<span class="nm">8</span>);
+                        RuleFunctions.Helpers.SendDataToDB(orderRequest);
+                        Instance.deleteInstance(orderRequest);
+                        RuleFunctions.Helpers.EngineManagement.SetOrderCount(-<span class="nm">1</span>);
+                    } <span class="kw">else</span> {
+                        <span class="cm">// SOFT FAIL — persist as FAILED</span>
+                        RuleFunctions.Helpers.SendDataToDB(orderRequest);
+                        <span class="kw">if</span>(RuleFunctions.Helpers.AllowWriteLog(orderRequest.OrderData.OrderType)) {
+                            <span class="ty">long</span> pid = System.nanoTime();
+                            Event.Ext.routeToImmediate(
+                                Event.createEvent(<span class="st">"xslt://{{/Events/OMConsumers/OMXESB/Logger}}"</span>
+                                    <span class="cm">/* §10: PROCESS_ID "_REQ", ERROR_CODE=respCode, ERROR_MSG=BusinessValidationMsg */</span>),
+                                <span class="st">"/Channels/LogConnection/ErrorLog"</span>, <span class="st">""</span>);
+                        }
+                    }
+                } <span class="kw">else</span> {
+                    <span class="cm">// === VALIDATION PASSED ===</span>
+                    RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity);
+                    <span class="kw">if</span>(RuleFunctions.Helpers.AllowWriteLog(orderRequest.OrderData.OrderType)) {
+                        <span class="ty">long</span> pid = System.nanoTime();
+                        Event.Ext.sendEventImmediate(
+                            Event.createEvent(<span class="st">"xslt://{{/Events/OMConsumers/OMXESB/Logger}}"</span>
+                                <span class="cm">/* §10: PROCESS_ID "_RES", AUDIT_TRACE="OMX-OM business validations passed." */</span>));
+                    }
+                }
+            } <span class="kw">else</span> {
+                RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+            }
+        } <span class="kw">catch</span>(Exception ae) {
+            RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</pre>
+  </div>
+</div>
+
+</div>
+<div class="footer">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</div>
+</body>
+</html>

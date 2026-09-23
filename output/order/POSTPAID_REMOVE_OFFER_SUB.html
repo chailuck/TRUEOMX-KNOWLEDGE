@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>POSTPAID_REMOVE_OFFER_SUB — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a2e;line-height:1.6;}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:28px 40px;}
+header h1{font-size:2rem;font-weight:700;letter-spacing:0.5px;}
+header .subtitle{opacity:0.88;font-size:0.98rem;margin-top:6px;}
+header .meta-row{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap;}
+header .meta-chip{background:rgba(255,255,255,0.18);border-radius:20px;padding:4px 14px;font-size:0.82rem;}
+.content{max-width:1600px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,0.07);margin-bottom:28px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 22px;font-weight:600;font-size:1.02rem;border-left:4px solid var(--true-light);}
+.section-body{padding:22px;}
+.tbl-wrap{overflow-x:auto;}
+table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 10px;text-align:left;font-weight:600;white-space:nowrap;}
+td{border-bottom:1px solid var(--border);padding:8px 10px;vertical-align:top;}
+tr:hover td{background:#fdf6f6;}
+tr.has-check td{border-left:3px solid #F9A825;}
+tr.not-found td{opacity:0.8;}
+code{background:#F0F0F0;border-radius:4px;padding:2px 5px;font-family:'Cascadia Code','Consolas',monospace;font-size:0.79rem;color:var(--true-dark);}
+.badge{display:inline-block;border-radius:12px;padding:2px 9px;font-size:0.74rem;font-weight:600;white-space:nowrap;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-amber{background:#FFF8E1;color:#F57F17;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-gray{background:#F5F5F5;color:#666;}
+a{color:var(--true-dark);text-decoration:none;}
+a:hover{color:var(--true-red);text-decoration:underline;}
+details{border:1px solid var(--border);border-radius:8px;margin-bottom:10px;}
+details summary{padding:12px 16px;cursor:pointer;font-weight:600;background:#FFF5F5;border-radius:8px;list-style:none;display:flex;align-items:center;gap:10px;}
+details summary::-webkit-details-marker{display:none;}
+details summary::before{content:'▶';font-size:0.75rem;color:var(--true-red);transition:transform 0.2s;}
+details[open] summary::before{transform:rotate(90deg);}
+details .check-body{padding:16px;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem;background:var(--code-bg);color:var(--code-fg);border-top:1px solid var(--border);overflow-x:auto;white-space:pre-wrap;word-break:break-all;}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.fm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;border-top:3px solid var(--true-red);}
+.fm-card.not-found{border-top-color:#F9A825;opacity:0.85;}
+.fm-card h3{font-size:0.88rem;color:var(--true-dark);font-family:'Cascadia Code','Consolas',monospace;margin-bottom:8px;word-break:break-all;}
+.fm-card .steps-used{font-size:0.78rem;color:#555;margin-bottom:8px;}
+.note-box{background:var(--true-pale);border-left:4px solid var(--true-red);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:0.88rem;}
+.step-num{font-weight:700;color:var(--true-dark);}
+.param-tag{display:inline-block;background:#E3F0FD;color:#1565c0;border-radius:4px;padding:1px 6px;font-size:0.76rem;font-family:'Cascadia Code','Consolas',monospace;margin:1px 2px;}
+.preexec-short{font-size:0.76rem;color:#555;max-width:340px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;display:block;}
+footer{text-align:center;padding:28px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:8px;}
+</style>
+</head>
+<body>
+<header>
+  <div class="subtitle">TRUE Corporation OMX · Order Journey Documentation</div>
+  <h1>POSTPAID_REMOVE_OFFER_SUB</h1>
+  <div class="subtitle">Process Configuration for POSTPAID_REMOVE_OFFER_SUB.</div>
+  <div class="meta-row">
+    <span class="meta-chip">Total Steps: 74</span>
+    <span class="meta-chip">Unique FMs: 55</span>
+    <span class="meta-chip">Entry: CCBS_GET_CUST_ACC_SUB_ID</span>
+    <span class="meta-chip">Not Found: 4 FMs</span>
+    <span class="meta-chip">Generated: 2026-08-14</span>
+  </div>
+</header>
+
+<div class="content">
+
+<!-- §1 Stats -->
+<div class="section">
+  <div class="section-header">§1 — Process Summary</div>
+  <div class="section-body">
+    <table style="width:auto;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Process Name</td><td><code>POSTPAID_REMOVE_OFFER_SUB</code></td></tr>
+      <tr><td>Description</td><td>Process Configuration for POSTPAID_REMOVE_OFFER_SUB.</td></tr>
+      <tr><td>First Activity</td><td><code>POSTPAID_REMOVE_OFFER_SUB:CCBS_GET_CUST_ACC_SUB_ID</code></td></tr>
+      <tr><td>Total Activities</td><td>74</td></tr>
+      <tr><td>Activities with PreExecCheck</td><td>68 of 74</td></tr>
+      <tr><td>Activities without PreExecCheck</td><td>6 (steps 1–5, 68)</td></tr>
+      <tr><td>FM Docs Generated</td><td>70 (4 not found)</td></tr>
+      <tr><td>Not Found FMs</td><td>OMX_OFFER_INCLUSION, OMX_BIZ_VAL, UPDATE_NETWORK_STATUS, STATUS_UPDATE_CREATING_PROFILE</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Order Flow Table -->
+<div class="section">
+  <div class="section-header">§2 — Order Flow Table</div>
+  <div class="section-body">
+    <div class="note-box">Rows with a <span style="border-left:3px solid #F9A825;padding-left:6px;">yellow left border</span> have a <strong>PreExecCheck</strong> — the activity is conditionally executed based on order data.</div>
+    <div class="tbl-wrap">
+    <table id="flow-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Step ID</th>
+          <th>FM (ActivityID)</th>
+          <th>Parameter(s)</th>
+          <th>PreExecCheck</th>
+          <th>Previous</th>
+          <th>Next</th>
+          <th>FM Doc</th>
+        </tr>
+      </thead>
+      <tbody id="flow-tbody"></tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="section">
+  <div class="section-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="section-body" id="preexec-section"></div>
+</div>
+
+<!-- §4 FM Index -->
+<div class="section">
+  <div class="section-header">§4 — FM Documentation Index</div>
+  <div class="section-body">
+    <div class="fm-grid" id="fm-grid"></div>
+  </div>
+</div>
+
+<!-- §5 Note -->
+<div class="section">
+  <div class="section-header">§5 — Sequence Diagram</div>
+  <div class="section-body">
+    <div class="note-box">Sequence diagram omitted — 74 activities exceeds the 60-step readability limit. See the §2 Order Flow Table for the complete activity chain.</div>
+  </div>
+</div>
+
+<!-- §6 Note -->
+<div class="section">
+  <div class="section-header">§6 — Flow Diagram</div>
+  <div class="section-body">
+    <div class="note-box">Flow diagram omitted — 74 activities exceeds the 40-step readability limit. See the §2 Order Flow Table for the complete activity chain.</div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · Order Journey Documentation · POSTPAID_REMOVE_OFFER_SUB</footer>
+
+<script>
+const NOT_FOUND = new Set(["OMX_OFFER_INCLUSION","OMX_BIZ_VAL","UPDATE_NETWORK_STATUS","STATUS_UPDATE_CREATING_PROFILE"]);
+
+// [step, shortExtId, activityId, params[], preExecCheck, prev, next]
+const acts = [
+[1,"CCBS_GET_CUST_ACC_SUB_ID","CCBS_GET_CUST_ACC_SUB_ID",[],
+  "","START","CCBS_GET_CUSTOMER_HEADER"],
+[2,"CCBS_GET_CUSTOMER_HEADER","CCBS_GET_CUSTOMER_HEADER",[],
+  "","CCBS_GET_CUST_ACC_SUB_ID","CCBS_GET_SUBSCRIBER_HEADER"],
+[3,"CCBS_GET_SUBSCRIBER_HEADER","CCBS_GET_SUBSCRIBER_HEADER",[],
+  "","CCBS_GET_CUSTOMER_HEADER","CCBS_GET_ACCOUNT_HEADER"],
+[4,"CCBS_GET_ACCOUNT_HEADER","CCBS_GET_ACCOUNT_HEADER",[],
+  "","CCBS_GET_SUBSCRIBER_HEADER","CCBS_GET_AGREEMENT_HEADER"],
+[5,"CCBS_GET_AGREEMENT_HEADER","CCBS_GET_AGREEMENT_HEADER",[],
+  "","CCBS_GET_ACCOUNT_HEADER","CCBS_GET_SUBS_INFO"],
+[6,"CCBS_GET_SUBS_INFO","CCBS_GET_SUBS_INFO",["ADD_RELATED=Y"],
+  "boolean(//Subscriber[Status !=67 and Status !=76 and Status !=84])",
+  "CCBS_GET_AGREEMENT_HEADER","GET_PROFILE_FROM_CCP_ALL"],
+[7,"GET_PROFILE_FROM_CCP_ALL","GET_PROFILE_FROM_CCP_ALL",[],
+  "substring(//Customer/Account/AccountManagementInfo/AccountSubType/text(),1,2)='HY'",
+  "CCBS_GET_SUBS_INFO","CCBS_RESOLVE_SOC_CODE"],
+[8,"CCBS_RESOLVE_SOC_CODE","CCBS_RESOLVE_SOC_CODE",[],
+  "boolean(//SubscriberOffers[not(Soc/text())])",
+  "GET_PROFILE_FROM_CCP_ALL","CCBS_GOD"],
+[9,"CCBS_GOD","CCBS_GOD",[],
+  "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]])",
+  "CCBS_RESOLVE_SOC_CODE","MVP_CHECK_DEVICES"],
+[10,"MVP_CHECK_DEVICES","MVP_CHECK_DEVICES",[],
+  "boolean(//SubscriberOffers[ExtendedInfo[Name='TR_OFFER_GROUP' and (Value='NETH' or Value='SMRH' or Value='RETH' or Value='RSMH' or Value='REDH')]]) or boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and (OfferName='DGT024' or OfferName='EMP006')])",
+  "CCBS_GOD","OMX_BRMS_DB"],
+[11,"OMX_BRMS_DB","OMX_BRMS_DB",[],
+  "boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']]) and not(starts-with(/ns0:OrderRequest/OrderData/OrderID,'5G-CHILD'))",
+  "MVP_CHECK_DEVICES","CCBS_RESOLVE_SOC_CODE_BRMS"],
+[12,"CCBS_RESOLVE_SOC_CODE_BRMS","CCBS_RESOLVE_SOC_CODE",[],
+  "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='BRMS_REMOVE' or Value='BRMS_ADD')]])",
+  "OMX_BRMS_DB","OMX_RESOLVE_SOC_DATA"],
+[13,"OMX_RESOLVE_SOC_DATA","OMX_RESOLVE_SOC_DATA",[],
+  "","CCBS_RESOLVE_SOC_CODE_BRMS","OMX_CAL_NEXT_BILL_DATE"],
+[14,"OMX_CAL_NEXT_BILL_DATE","OMX_CAL_NEXT_BILL_DATE",[],
+  "boolean(//SubscriberOffers[(ServiceType='86' or ServiceType='87') and DataInfo[PackType='RC'] and ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')] and EffectiveNextBillInd='Y'])",
+  "OMX_RESOLVE_SOC_DATA","OMX_CAL_OFFER_FUT_DATE"],
+[15,"OMX_CAL_OFFER_FUT_DATE","OMX_CAL_OFFER_FUT_DATE",[],
+  "boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]])",
+  "OMX_CAL_NEXT_BILL_DATE","OMX_EXP_FUT_OFFER"],
+[16,"OMX_EXP_FUT_OFFER","OMX_EXP_FUT_OFFER",[],
+  "boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')] and ExtendedInfo[Name='EXP_TYPE' and Value='FUT']])",
+  "OMX_CAL_OFFER_FUT_DATE","OMX_OFFER_INCLUSION"],
+[17,"OMX_OFFER_INCLUSION","OMX_OFFER_INCLUSION",[],
+  "/ns0:OrderRequest/OrderData/Channel/text()!=\"EOC\" and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']]))",
+  "OMX_EXP_FUT_OFFER","SBM_VALIDATE"],
+[18,"SBM_VALIDATE","SBM_VALIDATE",[],
+  "(not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='SBM_PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='SBM_PROVISIONING' and Value!='N']])) and (count(//SubscriberOffers[(ServiceType='86' or ServiceType='87') and ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']]) > 0) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']]))",
+  "OMX_OFFER_INCLUSION","OMX_BIZ_VAL"],
+[19,"OMX_BIZ_VAL","OMX_BIZ_VAL",[],
+  "((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']]))",
+  "SBM_VALIDATE","ATS_ENQUIRY_CAMPAIGN"],
+[20,"ATS_ENQUIRY_CAMPAIGN","ATS_ENQUIRY_CAMPAIGN",[],
+  "not(substring(//OrderData/Channel/text(),string-length(//OrderData/Channel/text())-2)='-MF') and substring(/ns0:OrderRequest/OrderData/Channel/text(),1,3)!='FUT'",
+  "OMX_BIZ_VAL","CCBS_GET_CUST_ACC_SUB_ID_ATS"],
+[21,"CCBS_GET_CUST_ACC_SUB_ID_ATS","CCBS_GET_CUST_ACC_SUB_ID",["SOURCE"],
+  "boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "ATS_ENQUIRY_CAMPAIGN","CCBS_GET_ACCOUNT_HEADER_ATS"],
+[22,"CCBS_GET_ACCOUNT_HEADER_ATS","CCBS_GET_ACCOUNT_HEADER",[],
+  "boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "CCBS_GET_CUST_ACC_SUB_ID_ATS","CCBS_GET_AGREEMENT_HEADER_ATS"],
+[23,"CCBS_GET_AGREEMENT_HEADER_ATS","CCBS_GET_AGREEMENT_HEADER",[],
+  "boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "CCBS_GET_ACCOUNT_HEADER_ATS","CCBS_GET_SUBSCRIBER_HEADER_ATS"],
+[24,"CCBS_GET_SUBSCRIBER_HEADER_ATS","CCBS_GET_SUBSCRIBER_HEADER",[],
+  "boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "CCBS_GET_AGREEMENT_HEADER_ATS","CCBS_GET_CUSTOMER_HEADER_ATS"],
+[25,"CCBS_GET_CUSTOMER_HEADER_ATS","CCBS_GET_CUSTOMER_HEADER",[],
+  "boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "CCBS_GET_SUBSCRIBER_HEADER_ATS","CCBS_GET_SUBS_INFO_ATS"],
+[26,"CCBS_GET_SUBS_INFO_ATS","CCBS_GET_SUBS_INFO",[],
+  "boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "CCBS_GET_CUSTOMER_HEADER_ATS","CCBS_GOD_ATS"],
+[27,"CCBS_GOD_ATS","CCBS_GOD",[],
+  "boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "CCBS_GET_SUBS_INFO_ATS","OMX_GET_OFFER_RATE"],
+[28,"OMX_GET_OFFER_RATE","OMX_GET_OFFER_RATE",[],
+  "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='CCBS')] and ServiceType='80'] and count(//Subscriber/ExtendedInfo[Name='CampaignCode'])>0)",
+  "CCBS_GOD_ATS","ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"],
+[29,"ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN","ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN",[],
+  "count(//BundleInfo[ConvergenceType='MobileSoftBundle'])>0",
+  "OMX_GET_OFFER_RATE","CCBS_RESOLVE_SOC_CODE_ATS"],
+[30,"CCBS_RESOLVE_SOC_CODE_ATS","CCBS_RESOLVE_SOC_CODE",[],
+  "boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN","OMX_RESOLVE_SOC_DATA_ATS"],
+[31,"OMX_RESOLVE_SOC_DATA_ATS","OMX_RESOLVE_SOC_DATA",[],
+  "boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "CCBS_RESOLVE_SOC_CODE_ATS","GET_SPECIAL_OFFER_INDICATOR"],
+[32,"GET_SPECIAL_OFFER_INDICATOR","GET_SPECIAL_OFFER_INDICATOR",["ADD_PROP=TR_MULTISIM_IND"],
+  "((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "OMX_RESOLVE_SOC_DATA_ATS","INTX_GET_MASTER_MINOR_SIM_INFO"],
+[33,"INTX_GET_MASTER_MINOR_SIM_INFO","INTX_GET_MASTER_MINOR_SIM_INFO",[],
+  "count(//SubscriberOffers[ExtendedInfo[Name='TR_MULTISIM_IND' and (Value='RCM' or Value='RES' or Value='RCE' or Value='REE')]]) > 0 and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "GET_SPECIAL_OFFER_INDICATOR","INTX_GET_SIM_INFO_BY_SIM"],
+[34,"INTX_GET_SIM_INFO_BY_SIM","INTX_GET_SIM_INFO_BY_SIM",[],
+  "count(//Subscriber/ExtendedInfo[Name='MSIM_TO_CANCEL']) > 0 and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "INTX_GET_MASTER_MINOR_SIM_INFO","ASRM_INVOKE_MINOR_SIM_RELEASE"],
+[35,"ASRM_INVOKE_MINOR_SIM_RELEASE","ASRM_INVOKE_MINOR_SIM",["ACTIVITY=RELEASE"],
+  "count(//SubscriberOffers[ExtendedInfo[Name='TR_MULTISIM_IND' and (Value='RCM' or Value='RES')] and ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]]) > 0 and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "INTX_GET_SIM_INFO_BY_SIM","AA_GET_SWITCH_FEATURE_OFFER"],
+[36,"AA_GET_SWITCH_FEATURE_OFFER","AA_GET_SWITCH_FEATURE_OFFER",[],
+  "((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "ASRM_INVOKE_MINOR_SIM_RELEASE","SBM_FUP_CHANGE_CAP_MAX"],
+[37,"SBM_FUP_CHANGE_CAP_MAX","SBM_FUP_CHANGE_CAP_MAX",["REMOVE"],
+  "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')] and ExtendedInfo[Name='SPECIAL_OFFER_INDICATOR' and Value='FCA']]) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "AA_GET_SWITCH_FEATURE_OFFER","OMX_CREATE_SUB_OFFER_BAR_SOC"],
+[38,"OMX_CREATE_SUB_OFFER_BAR_SOC","OMX_CREATE_SUB_OFFER_BAR_SOC",[],
+  "boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS'] and ServiceType='85']) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and (boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])]))",
+  "SBM_FUP_CHANGE_CAP_MAX","CCBS_MSIM_CANCEL_SIM"],
+[39,"CCBS_MSIM_CANCEL_SIM","CCBS_MSIM_CANCEL_SIM",[],
+  "count(//Subscriber/ExtendedInfo[Name='MSIM_TO_CANCEL']) > 0 and count(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')] and ExtendedInfo[Name=\"TR_MULTISIM_IND\" and Value='RCM']]) > 0 and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "OMX_CREATE_SUB_OFFER_BAR_SOC","SBM_CANCEL_PACK_PREPAID"],
+[40,"SBM_CANCEL_PACK_PREPAID","SBM_CANCEL_PACK_PREPAID",[],
+  "(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS_REMOVE']]/ServiceType='88') and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "CCBS_MSIM_CANCEL_SIM","CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE"],
+[41,"CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE","CCBS_CHANGE_PACKAGE_SUBSCRIBER",["REMOVE"],
+  "(boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE' or Value='DMC_REMOVE')] and (ServiceType='85' or ServiceType='86' or ServiceType='87' or ServiceType='68')]) and (((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) and boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value!='DMC_REMOVE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and count(//SubscriberOffers[ExtendedInfo[Name='TR_MULTISIM_IND' and (Value='RCM' or Value='RES')]]) = 0) or (boolean(//Subscriber/SubscriberOffers[(ServiceType='85' or ServiceType='86' or ServiceType='68')]) and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS_REMOVE']])) or (boolean(//Subscriber/SubscriberOffers[(ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']) and (ExtendedInfo[Name='SPECIAL_OFFER_INDICATOR' and Value='IOTBU'])]))",
+  "SBM_CANCEL_PACK_PREPAID","MCS_CANCEL_SUBSCRIPTION"],
+[42,"MCS_CANCEL_SUBSCRIPTION","MCS_CANCEL_SUBSCRIPTION",[],
+  "boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='BRMS_REMOVE' or Value='FE')] and ServiceType='69'])",
+  "CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE","SBM_VALIDATE_ATS"],
+[43,"SBM_VALIDATE_ATS","SBM_VALIDATE",[],
+  "boolean(//Subscriber/SubscriberOffers[ServiceType='86']) and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS_REMOVE']])",
+  "MCS_CANCEL_SUBSCRIPTION","OMX_REMOVE_NXTOFR_FROM_PREV_SOC"],
+[44,"OMX_REMOVE_NXTOFR_FROM_PREV_SOC","OMX_REMOVE_NXTOFR_FROM_PREV_SOC",[],
+  "boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')] and (ServiceType='85' or ServiceType='86' or ServiceType='87' or ServiceType='68')]) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "SBM_VALIDATE_ATS","SBM_CANCEL_DATA_PACK_IMMEDIATE"],
+[45,"SBM_CANCEL_DATA_PACK_IMMEDIATE","SBM_CANCEL_DATA_PACK_IMMEDIATE",[],
+  "((not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='SBM_PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='SBM_PROVISIONING' and Value!='N']])) and (boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[(ServiceType='86' or ServiceType='87') and DataInfo[PackType='RC'] and ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]])) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT'] or EffectiveNextBillInd = 'Y'])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']]))) or (boolean(//Subscriber/SubscriberOffers[ServiceType='86' and DataInfo[PackType='RC']]) and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS_REMOVE']]))",
+  "OMX_REMOVE_NXTOFR_FROM_PREV_SOC","SBM_UPDATE_EXPIRED"],
+[46,"SBM_UPDATE_EXPIRED","SBM_UPDATE_EXPIRED",[],
+  "((not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='SBM_PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='SBM_PROVISIONING' and Value!='N']])) and (boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[(ServiceType='86' or ServiceType='87') and DataInfo[PackType='OC'] and ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]]))) or (boolean(//Subscriber/SubscriberOffers[ServiceType='86' and DataInfo[PackType='OC']]) and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS_REMOVE']]))",
+  "SBM_CANCEL_DATA_PACK_IMMEDIATE","SBM_BUY_DATA_PACK"],
+[47,"SBM_BUY_DATA_PACK","SBM_BUY_DATA_PACK",[],
+  "boolean(//Subscriber/SubscriberOffers[ServiceType='86']) and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "SBM_UPDATE_EXPIRED","BL_CREATE_CHARGE"],
+[48,"BL_CREATE_CHARGE","BL_CREATE_CHARGE",[],
+  "boolean(//Subscriber/SubscriberOffers[ServiceType='79']) and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",
+  "SBM_BUY_DATA_PACK","CCBS_CHANGE_PACKAGE_SUBSCRIBER"],
+[49,"CCBS_CHANGE_PACKAGE_SUBSCRIBER","CCBS_CHANGE_PACKAGE_SUBSCRIBER",["ADD"],
+  "boolean(//Subscriber/SubscriberOffers[(ServiceType='85' or ServiceType='86' or ServiceType='68')]) and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='ATS' or Value='BRMS_ADD')]])",
+  "BL_CREATE_CHARGE","UPDATE_NETWORK_STATUS"],
+[50,"UPDATE_NETWORK_STATUS","UPDATE_NETWORK_STATUS",[],
+  "(not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='SBM_PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='SBM_PROVISIONING' and Value!='N']])) and (boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[(ServiceType='86' or ServiceType='87') and ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]])) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and (boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])]))",
+  "CCBS_CHANGE_PACKAGE_SUBSCRIBER","STATUS_UPDATE_CREATING_PROFILE"],
+[51,"STATUS_UPDATE_CREATING_PROFILE","STATUS_UPDATE_CREATING_PROFILE",[],
+  "((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "UPDATE_NETWORK_STATUS","OMX_POPULATE_MSIM_INFO"],
+[52,"OMX_POPULATE_MSIM_INFO","OMX_POPULATE_MSIM_INFO",[],
+  "boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name=\"FE_OR_CCBS\" and Value=\"FE\"] and ExtendedInfo[Name=\"TR_MULTISIM_IND\" and (Value=\"RES\" or Value=\"RCM\")]]) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "STATUS_UPDATE_CREATING_PROFILE","OMX_GET_SRV_TRX_NO"],
+[53,"OMX_GET_SRV_TRX_NO","OMX_GET_SRV_TRX_NO",["CCD"],
+  "not(boolean(//Subscriber/MultiSIMInfo/Minor[Source='FE'])) and not(boolean(//Subscriber/MultiSIMInfo/Master[Source='PREV_MSIM']) or boolean(//Subscriber/MultiSIMInfo/Minor[Source='PREV_MSIM'])) and (not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']])) and (boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE' or Value='BRMS_ADD')]]/SwitchFeature[1]) or boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE' or Value='BRMS_ADD')]]/RelatedOffersArray/SwitchFeature[1])) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and (boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])]))",
+  "OMX_POPULATE_MSIM_INFO","AA_ACTIVATE_SUBS"],
+[54,"AA_ACTIVATE_SUBS","AA_ACTIVATE_SUBS",["CCD"],
+  "not(boolean(//Subscriber/MultiSIMInfo/Minor[Source='FE'])) and not(boolean(//Subscriber/MultiSIMInfo/Master[Source='PREV_MSIM']) or boolean(//Subscriber/MultiSIMInfo/Minor[Source='PREV_MSIM'])) and (not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']])) and (boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE' or Value='BRMS_ADD')]]/SwitchFeature[1]) or boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE' or Value='BRMS_ADD')]]/RelatedOffersArray/SwitchFeature[1])) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and (boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])]))",
+  "OMX_GET_SRV_TRX_NO","OMX_GET_SRV_TRX_NO_MSIM_REMOVE"],
+[55,"OMX_GET_SRV_TRX_NO_MSIM_REMOVE","OMX_GET_SRV_TRX_NO_MSIM",["CCD"],
+  "boolean(//Subscriber/MultiSIMInfo/Minor[Source='FE']) and (not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']])) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and (boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])]))",
+  "AA_ACTIVATE_SUBS","AA_ACTIVATE_SUBS_MSIM_REMOVE"],
+[56,"AA_ACTIVATE_SUBS_MSIM_REMOVE","AA_ACTIVATE_SUBS_MSIM",["CCD","REMOVE"],
+  "boolean(//Subscriber/MultiSIMInfo/Minor[Source='FE']) and (not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']])) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and (boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])]))",
+  "OMX_GET_SRV_TRX_NO_MSIM_REMOVE","OMX_GET_SRV_TRX_NO_MSIM_UPDATE"],
+[57,"OMX_GET_SRV_TRX_NO_MSIM_UPDATE","OMX_GET_SRV_TRX_NO_MSIM",["CCD"],
+  "(boolean(//Subscriber/MultiSIMInfo/Master[Source='PREV_MSIM']) or boolean(//Subscriber/MultiSIMInfo/Minor[Source='PREV_MSIM'])) and count(//Subscriber/SubscriberOffers[ExtendedInfo[Name=\"FE_OR_CCBS\" and Value=\"FE\"] and ExtendedInfo[Name=\"TR_MULTISIM_IND\" and (Value=\"RES\" or Value=\"RCM\")]]) = 0 and ((not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']])) and (boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]]/SwitchFeature[1]) or boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]]/RelatedOffersArray/SwitchFeature[1])) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']]))) and (boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])]))",
+  "AA_ACTIVATE_SUBS_MSIM_REMOVE","AA_ACTIVATE_SUBS_MSIM_UPDATE"],
+[58,"AA_ACTIVATE_SUBS_MSIM_UPDATE","AA_ACTIVATE_SUBS_MSIM",["CCD","UPDATE"],
+  "(boolean(//Subscriber/MultiSIMInfo/Master[Source='PREV_MSIM']) or boolean(//Subscriber/MultiSIMInfo/Minor[Source='PREV_MSIM'])) and count(//Subscriber/SubscriberOffers[ExtendedInfo[Name=\"FE_OR_CCBS\" and Value=\"FE\"] and ExtendedInfo[Name=\"TR_MULTISIM_IND\" and (Value=\"RES\" or Value=\"RCM\")]]) = 0 and (not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']])) and (boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]]/SwitchFeature[1]) or boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]]/RelatedOffersArray/SwitchFeature[1])) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']])) and (boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])]))",
+  "OMX_GET_SRV_TRX_NO_MSIM_UPDATE","AA_CHECK_CONFIRMATION"],
+[59,"AA_CHECK_CONFIRMATION","AA_CHECK_CONFIRMATION",["CCD","UPDATE_NETWORK_STATUS"],
+  "boolean(//Subscriber/MultiSIMInfo) or ((not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']])) and (boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE' or Value='BRMS_ADD')]]/SwitchFeature[1]) or boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE' or Value='BRMS_ADD')]]/RelatedOffersArray/SwitchFeature[1])) and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']]))) and (boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])]))",
+  "AA_ACTIVATE_SUBS_MSIM_UPDATE","PSA_GET_DEVICE_INFO"],
+[60,"PSA_GET_DEVICE_INFO","PSA_GET_DEVICE_INFO",[],
+  "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='IMEI_KNOX' and Value!='']]) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "AA_CHECK_CONFIRMATION","OMX_NOTIFY_KNOX_EVENT_COMPLETE"],
+[61,"OMX_NOTIFY_KNOX_EVENT_COMPLETE","OMX_NOTI_TO_KAFKA",["knoxEvent=COMPLETE"],
+  "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='IMEI_KNOX' and Value!='']]) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "PSA_GET_DEVICE_INFO","PSA_UPDATE_KNOX_STATUS"],
+[62,"PSA_UPDATE_KNOX_STATUS","PSA_UPDATE_KNOX_STATUS",["KNOX_STATUS=COMPLETE"],
+  "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='IMEI_KNOX' and Value!='']]) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "OMX_NOTIFY_KNOX_EVENT_COMPLETE","CCBS_GOD_ALL"],
+[63,"CCBS_GOD_ALL","CCBS_GOD",[],
+  "boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ServiceType='85']) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "PSA_UPDATE_KNOX_STATUS","CREATE_TDS_PROFILE"],
+[64,"CREATE_TDS_PROFILE","CREATE_TDS_PROFILE",[],
+  "boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')] and (ServiceType='85')]) and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "CCBS_GOD_ALL","CRM_CREATE_CLOSE_SR_MOBILE"],
+[65,"CRM_CREATE_CLOSE_SR_MOBILE","CRM_CREATE_CLOSE_SR_MOBILE",["PRODUCT_TYPE=Postpay"],
+  "exists(//OrderData/ExtendedInfo[Name=\"SR_ISSUE\" and Value!='']) and exists(//OrderData/ExtendedInfo[Name=\"SR_RESOLUTION\" and Value!='']) and exists(//OrderData/ExtendedInfo[Name=\"SR_SUBCATEGORY\" and Value!=''])",
+  "CREATE_TDS_PROFILE","PSA_UPDATE_DEVICE"],
+[66,"PSA_UPDATE_DEVICE","PSA_UPDATE_DEVICE",["srType=CANCEL","deviceStatus=COMPLETE"],
+  "boolean(//Subscriber/SubscriberOffers[(ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']) and (contains(SocProperties,'TR_SPECIAL_OFFER_IND=IOTBU'))]) and /ns0:OrderRequest/OrderData/Channel/text()!='FUT'",
+  "CRM_CREATE_CLOSE_SR_MOBILE","TDG_CANCEL_SUBSCRIBER"],
+[67,"TDG_CANCEL_SUBSCRIBER","TDG_CANCEL_SUBSCRIBER",[],
+  "boolean(//Subscriber/SubscriberOffers[(ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']) and (contains(SocProperties,'TR_SPECIAL_OFFER_IND=IOTBU'))]) and /ns0:OrderRequest/OrderData/Channel/text()!='FUT'",
+  "PSA_UPDATE_DEVICE","MCS_GET_PACKCODE"],
+[68,"MCS_GET_PACKCODE","MCS_GET_PACKCODE",[],
+  "","TDG_CANCEL_SUBSCRIBER","MCS_CANCEL_AFTER_SALE"],
+[69,"MCS_CANCEL_AFTER_SALE","MCS_CANCEL_AFTER_SALE",[],
+  "boolean(//Subscriber[ExtendedInfo[Name='MCS_CANCEL_AFS' and Value='Y']])",
+  "MCS_GET_PACKCODE","SMSGATEWAY_SEND_SMS"],
+[70,"SMSGATEWAY_SEND_SMS","SMSGATEWAY_SEND_SMS",[],
+  "boolean(//Subscriber[MSISDN/text()][1] and /ns0:OrderRequest/OrderData/Channel/text()!=\"CCBS\" and /ns0:OrderRequest/OrderData/Channel/text()!=\"OMX\") and boolean(//Subscriber[not(ExtendedInfo[Name='FE_OR_CCBS']) or (ExtendedInfo[Name='FE_OR_CCBS' and Value!='ATS'])])",
+  "MCS_CANCEL_AFTER_SALE","ATS_DEBUNDLE_CAMPAIGN"],
+[71,"ATS_DEBUNDLE_CAMPAIGN","ATS_DEBUNDLE_CAMPAIGN",[],
+  "count(//BundleInfo[ConvergenceAction='DebundleCampaign'] or //BundleInfo[ConvergenceAction='DebundleProductNumber'])>0",
+  "SMSGATEWAY_SEND_SMS","OMX_GET_3CJ_SMS_MESSAGE_TEMPLATE"],
+[72,"OMX_GET_3CJ_SMS_MESSAGE_TEMPLATE","OMX_GET_3CJ_SMS_MESSAGE_TEMPLATE",[],
+  "(count(//BundleInfo[ConvergenceAction='DebundleCampaign'])>0 or count(//BundleInfo[ConvergenceAction='DebundleProductNumber'])>0)",
+  "ATS_DEBUNDLE_CAMPAIGN","SEND_SMS_MESSAGE_3CJ"],
+[73,"SEND_SMS_MESSAGE_3CJ","SEND_SMS_MESSAGE_3CJ",[],
+  "(count(//BundleInfo[ConvergenceAction='DebundleCampaign'])>0 or count(//BundleInfo[ConvergenceAction='DebundleProductNumber'])>0)",
+  "OMX_GET_3CJ_SMS_MESSAGE_TEMPLATE","APIGW_OPT_IN_OUT"],
+[74,"APIGW_OPT_IN_OUT","APIGW_OPT_IN_OUT",["ACTION=0"],
+  "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and contains(SocProperties,'TR_OFFER_GROUP=CBSC')])",
+  "SEND_SMS_MESSAGE_3CJ","END"]
+];
+
+// Unique FMs: track step usage
+const fmMap = new Map(); // fm -> [step numbers]
+acts.forEach(a=>{
+  const [step,,fm] = a;
+  if(!fmMap.has(fm)) fmMap.set(fm,[]);
+  fmMap.get(fm).push(step);
+});
+
+function escape(s){
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
+
+function truncate(s, max){
+  return s.length > max ? s.slice(0,max)+'…' : s;
+}
+
+// Render flow table
+const tbody = document.getElementById('flow-tbody');
+acts.forEach(a=>{
+  const [step, shortId, fm, params, preExec, prev, next] = a;
+  const nf = NOT_FOUND.has(fm);
+  const hasCheck = preExec.length > 0;
+  const tr = document.createElement('tr');
+  if(hasCheck) tr.className = 'has-check';
+  if(nf) tr.classList.add('not-found');
+
+  const fmLink = nf
+    ? `<span class="badge badge-amber">⚠ Not Found</span> <span style="font-family:monospace;font-size:0.82rem;">${escape(fm)}</span>`
+    : `<a href="../FMlogic/Request_${escape(fm)}.html" target="_blank" style="font-family:monospace;font-size:0.82rem;">${escape(fm)}</a>`;
+
+  const paramsHtml = params.length ? params.map(p=>`<span class="param-tag">${escape(p)}</span>`).join(' ') : '—';
+  const checkHtml = hasCheck ? `<span class="preexec-short" title="${escape(preExec)}">${escape(truncate(preExec,80))}</span>` : '<span style="color:#bbb;">—</span>';
+
+  const docBadge = nf
+    ? `<span class="badge badge-amber">⚠ Not Found</span>`
+    : `<a href="../FMlogic/Request_${escape(fm)}.html" target="_blank"><span class="badge badge-green">✓ Generated</span></a>`;
+
+  tr.innerHTML = `
+    <td class="step-num">${step}</td>
+    <td><code>${escape(shortId)}</code></td>
+    <td>${fmLink}</td>
+    <td>${paramsHtml}</td>
+    <td>${checkHtml}</td>
+    <td><code>${escape(prev)}</code></td>
+    <td><code>${escape(next)}</code></td>
+    <td>${docBadge}</td>`;
+  tbody.appendChild(tr);
+});
+
+// Render PreExecCheck details
+const preExecSection = document.getElementById('preexec-section');
+let preExecCount = 0;
+acts.forEach(a=>{
+  const [step, shortId, fm,,preExec] = a;
+  if(!preExec) return;
+  preExecCount++;
+  const nf = NOT_FOUND.has(fm);
+  const d = document.createElement('details');
+  d.innerHTML = `<summary>
+    <span class="step-num">Step ${step}</span>
+    <code>${escape(shortId)}</code>
+    <span style="font-size:0.78rem;color:#555;margin-left:6px;">FM: ${escape(fm)}</span>
+    ${nf?'<span class="badge badge-amber" style="margin-left:6px;">⚠ Not Found</span>':''}
+  </summary>
+  <div class="check-body">${escape(preExec)}</div>`;
+  preExecSection.appendChild(d);
+});
+if(preExecCount===0) preExecSection.innerHTML='<p style="color:#888;">No conditional activities found.</p>';
+
+// Render FM grid
+const fmGrid = document.getElementById('fm-grid');
+fmMap.forEach((steps,fm)=>{
+  const nf = NOT_FOUND.has(fm);
+  const div = document.createElement('div');
+  div.className = 'fm-card'+(nf?' not-found':'');
+  const link = nf
+    ? `<span class="badge badge-amber">⚠ Not Found</span>`
+    : `<a href="../FMlogic/Request_${escape(fm)}.html" target="_blank"><span class="badge badge-green">✓ Generated</span></a>`;
+  div.innerHTML = `
+    <h3>${escape(fm)}</h3>
+    <div class="steps-used">Used in step${steps.length>1?'s':''}: ${steps.join(', ')}</div>
+    ${link}`;
+  fmGrid.appendChild(div);
+});
+</script>
+</body>
+</html>

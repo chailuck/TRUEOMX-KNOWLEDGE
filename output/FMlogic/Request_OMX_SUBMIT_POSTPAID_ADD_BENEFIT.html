@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_OMX_SUBMIT_POSTPAID_ADD_BENEFIT</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;line-height:1.6;font-size:14px;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.page-header h1{font-size:1.8rem;font-weight:700;}
+.page-header .sub{opacity:.85;font-size:.95rem;margin-top:4px;}
+.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 12px;font-size:.78rem;}
+.container{max-width:1300px;margin:0 auto;padding:24px 32px;}
+.section{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:20px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 18px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light);}
+.section-body{padding:18px;}
+table{width:100%;border-collapse:collapse;font-size:.84rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600;}
+td{padding:7px 10px;border-bottom:1px solid #eee;vertical-align:top;}
+tr:hover{background:#FFF8F8;}
+code,pre{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.8rem;white-space:pre-wrap;word-break:break-word;}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.75rem;font-weight:600;}
+.badge-med{background:#FFF3E0;color:#e65100;}
+.badge-low{background:#E3F0FD;color:#1565c0;}
+.badge-ok{background:#E8F5E9;color:#2e7d32;}
+.risk-box{border-left:4px solid var(--true-red);background:var(--true-pale);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;font-size:.85rem;}
+.risk-box.info{border-color:#1565c0;background:#E3F0FD;}
+.risk-box.warn{border-color:#e65100;background:#FFF3E0;}
+.flow-step{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid #eee;}
+.flow-num{min-width:28px;height:28px;background:var(--true-red);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;}
+.flow-text{flex:1;font-size:.86rem;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.74rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+h3{color:var(--true-dark);margin:16px 0 8px;font-size:.95rem;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_OMX_SUBMIT_POSTPAID_ADD_BENEFIT</h1>
+  <div class="sub">Submits a child order to the OMX SubmitOrder service per subscriber, carrying loyalty-filtered offers (TR_SPECIAL_OFFER_IND=LY). ORDER_TYPE driven by activity parameter.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: OMX SubmitOrder (Child Order)</span>
+    <span class="meta-badge">Fan-out: POU + COU subscribers</span>
+    <span class="meta-badge">Event: OMX_CREATE_CHILD_ORDER</span>
+    <span class="meta-badge">Author: DESKTOP-995HR2V</span>
+    <span class="meta-badge">Lines: 134</span>
+    <span class="meta-badge">Step: 83</span>
+    <span class="meta-badge">forwardChain: true</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+<div class="section-header">§1 — Overview &amp; Purpose</div>
+<div class="section-body">
+<p>Submits a child order to the OMX SubmitOrder service for each subscriber, carrying loyalty offers (filtered by <code>TR_SPECIAL_OFFER_IND=LY</code>). Unlike FM calls that target external backends, this FM creates an <strong>internal OMX child order</strong> using the <code>OMX_CREATE_CHILD_ORDER</code> event. The ORDER_TYPE and SBM channel are configurable via activity parameter and global variable. A monotonic <code>childIndex</code> counter is used to construct unique child order IDs across POU and COU subscribers.</p>
+<br>
+<table>
+<tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+<tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_CREATE_CHILD_ORDER</code></td><td>Internal OMX child order submission</td></tr>
+<tr><td>Schema NS (ns)</td><td><code>http://services.omx.truecorp.co.th/SubmitOrder</code></td><td>SubmitOrder service payload</td></tr>
+<tr><td>Payload root</td><td><code>ns:submitOrderRequest</code></td><td></td></tr>
+<tr><td>Fan-out</td><td>POU direct subscribers first, then COU subscribers</td><td>POU→Sub, then POU→COU→Sub</td></tr>
+<tr><td>RefID</td><td>Subscriber RefId (bare)</td><td>Always emitted</td></tr>
+<tr><td>childIndex</td><td>Monotonic counter across ALL subscribers (POU+COU combined)</td><td>Starts at 0; increments before resub check</td></tr>
+<tr><td>orderId</td><td><code>concat(OrderID, "-", childIndex)</code></td><td>Unique child order ID per subscriber</td></tr>
+<tr><td>ORDER_TYPE</td><td>From activity parameter <code>ORDER_TYPE</code></td><td>Emitted as <code>ns:orderType</code></td></tr>
+<tr><td>channel</td><td><code>concat(Channel, "-OMX")</code></td><td>Appends "-OMX" suffix to the channel</td></tr>
+<tr><td>SBM_CHANNEL</td><td><code>globalVariables/OMX_OM/BizRules/Loyalty/SBMChannel</code></td><td>From global variable</td></tr>
+<tr><td>Primary offer filter</td><td>FE_OR_CCBS="FE" AND SocProperties contains "TR_SPECIAL_OFFER_IND=LY"</td><td>Loyalty FE offers</td></tr>
+<tr><td>Secondary offer block</td><td>Gated by existence of CCBS loyalty offers; sends FE ServiceType=86 paid offers</td><td>See §9 for detail</td></tr>
+<tr><td>PurgePendingRequestsBeforeResubmit</td><td>ABSENT</td><td>Not called on resubmit</td></tr>
+<tr><td>Response concept</td><td><code>Concepts.FM.Response.OMX_CreateChildOrder</code></td><td>Dedicated (NOT ResponseBase); captures childOmxTrackingId</td></tr>
+<tr><td>Fan-in</td><td>RequestCount == successResponseCount (suffix "000")</td><td>Standard count-match</td></tr>
+</table>
+
+<div class="risk-box warn">
+<strong>[MEDIUM]</strong> <code>childIndex++</code> happens <em>before</em> the resub guard check. On resubmit, already-completed subscribers are skipped but their <code>childIndex</code> still increments. The <code>orderId</code> suffix (<code>childIndex</code>) for re-sent subscribers may differ from the original run. If the downstream SubmitOrder service requires the same orderId on resubmit, this will cause a mismatch.
+</div>
+<div class="risk-box warn">
+<strong>[MEDIUM]</strong> <code>PurgePendingRequestsBeforeResubmit</code> is absent. If the original child order is still pending when resubmit fires, duplicate child orders may be created.
+</div>
+<div class="risk-box info">
+<strong>[INFO]</strong> This FM creates an internal OMX child order — not a direct call to a backend system like CCBS or NAS. The child order is then processed independently by the OMX child order engine.
+</div>
+</div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+<div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="section-body">
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule file</td><td><code>Request_OMX_SUBMIT_POSTPAID_ADD_BENEFIT.rule</code> (134 lines)</td></tr>
+<tr><td>Author</td><td>DESKTOP-995HR2V</td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>forwardChain</td><td>true</td></tr>
+<tr><td>ActivityID guard</td><td><code>OMX_SUBMIT_POSTPAID_ADD_BENEFIT</code></td></tr>
+<tr><td>Activity param read</td><td><code>ORDER_TYPE</code> → variable <code>param</code></td></tr>
+<tr><td>Global var read</td><td><code>globalVariables/OMX_OM/BizRules/Loyalty/SBMChannel</code></td></tr>
+<tr><td>extId</td><td>Auto-generated by runtime (no explicit OMXUtils:generateTrackingID() in XSLT)</td></tr>
+<tr><td>childIndex</td><td>Starts at 0, increments per subscriber (POU+COU combined)</td></tr>
+<tr><td>POU PreExecCheck</td><td><code>GetXMLForSubscriber(orderRequest, pSubRefId)</code></td></tr>
+<tr><td>COU PreExecCheck</td><td><code>GetXMLForSubscriberInChildOU(orderRequest, cSubRefId, pOuRefId)</code></td></tr>
+<tr><td>OPERATION_NAME</td><td>"OMX_SUBMIT_POSTPAID_ADD_BENEFIT"</td></tr>
+<tr><td>Response concept</td><td><code>Concepts.FM.Response.OMX_CreateChildOrder</code> (dedicated)</td></tr>
+<tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.OMX_CREATE_CHILD_ORDER</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="section">
+<div class="section-header">§3 — Rule Conditions (WHEN)</div>
+<div class="section-body">
+<table>
+<tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_SUBMIT_POSTPAID_ADD_BENEFIT"</code></td><td>FM type guard</td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_SUBMIT_POSTPAID_ADD_BENEFIT"</code></td><td>Process flow alignment</td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+<div class="section-header">§5 — Execution Flow</div>
+<div class="section-body">
+<div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>Init:</strong> <code>isActResub</code> = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted). Read <code>param</code> (ORDER_TYPE). <code>chkXPath</code> = nextAct.PreExecCheck. <code>isSkipped = true</code>. <code>childIndex = 0</code>.</div></div>
+<div class="flow-step"><div class="flow-num">2</div><div class="flow-text"><strong>POU subscriber loop</strong> (POU p → Sub ps): <code>childIndex++</code> (first, before resub guard). Resub guard: skip if Response[ReferenceId==pSubRefId &amp;&amp; CompletionStatus==2]. PreExecCheck. Send <code>OMX_CREATE_CHILD_ORDER</code> event. RequestCount++ if !isActResub. isSkipped = false.</div></div>
+<div class="flow-step"><div class="flow-num">3</div><div class="flow-text"><strong>COU subscriber loop</strong> (POU p → COU c → Sub cs): same — <code>childIndex++</code> first. Resub guard + PreExecCheck + send event + Logger. <code>childIndex</code> continues from where POU left off.</div></div>
+<div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>Completion:</strong> if (!isSkipped) → Status = GetActivityStatusString("1", false); SendDataToDB. Else → SkipActivity("4").</div></div>
+<div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>Exception:</strong> catch(Exception ae) → HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</div></div>
+</div>
+</div>
+
+<!-- §9 Payload -->
+<div class="section">
+<div class="section-header">§9 — Detailed Payload Build</div>
+<div class="section-body">
+
+<h3>9.1 Activity Parameter</h3>
+<table>
+<tr><th>Parameter Key</th><th>Variable</th><th>Effect</th></tr>
+<tr><td>ORDER_TYPE</td><td><code>param</code></td><td>Emitted as <code>ns:orderType</code> in child order — determines the type of child order</td></tr>
+</table>
+
+<h3>9.2 childIndex &amp; orderId</h3>
+<p><code>childIndex</code> starts at 0, increments BEFORE the resub guard check. The child order ID is constructed as:</p>
+<pre>ns:orderId = concat(OrderID, "-", childIndex)</pre>
+<p>Example: main order <code>ORD-123</code> → child orders <code>ORD-123-1</code>, <code>ORD-123-2</code>, etc.</p>
+
+<h3>9.3 Offer Filtering Logic (per subscriber)</h3>
+<table>
+<tr><th>Block</th><th>Condition</th><th>Offers Included</th></tr>
+<tr><td>Primary (always)</td><td><code>FE_OR_CCBS="FE" AND SocProperties contains "TR_SPECIAL_OFFER_IND=LY"</code></td><td>FE loyalty offers — expirationDate, offerName, serviceType, soc</td></tr>
+<tr><td>Secondary (gated)</td><td><code>exists(SubscriberOffers[FE_OR_CCBS="CCBS" AND SocProperties contains "TR_SPECIAL_OFFER_IND=LY"])</code> → then loop FE ServiceType=86 &amp; OfferRate&gt;0</td><td>FE paid data offers when CCBS loyalty offers exist; expirationDate only when RevenueType="OC"</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="section">
+<div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+<div class="section-body">
+<p>Two XSLT variants: POU (param: <code>psub</code>, <code>pSubRefId</code>) and COU (param: <code>csub</code>, <code>cSubRefId</code>). Structure is identical; subscriber reference and RefID param differ.</p>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$pSubRefId / $cSubRefId</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:submitOrderRequest</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:Order</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:channel</span><span class="tree-arrow">←</span><span class="tree-src">concat(Channel, "-OMX")</span><span class="tree-cond">[Always]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:orderId</span><span class="tree-arrow">←</span><span class="tree-src">concat(OrderID, "-", $childIndex)</span><span class="tree-cond">[Always]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:orderType</span><span class="tree-arrow">←</span><span class="tree-src">$param (ORDER_TYPE activity param)</span><span class="tree-cond">[Always]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ExtendedInfo</span><span class="tree-cond">[name="MAIN_TRACKING_ID"]</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:name</span><span class="tree-arrow">←</span><span class="tree-src-static">"MAIN_TRACKING_ID"</span><span class="tree-cond">[Always]</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:value</span><span class="tree-arrow">←</span><span class="tree-src">OMXTrackingId</span><span class="tree-cond">[Always]</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ExtendedInfo</span><span class="tree-cond">[name="SBM_CHANNEL"]</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:name</span><span class="tree-arrow">←</span><span class="tree-src-static">"SBM_CHANNEL"</span><span class="tree-cond">[Always]</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:value</span><span class="tree-arrow">←</span><span class="tree-src">globalVariables/OMX_OM/BizRules/Loyalty/SBMChannel</span><span class="tree-cond">[Always]</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:Customer</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:billCycleNo</span><span class="tree-arrow">←</span><span class="tree-src">Customer/BillCycleNo</span><span class="tree-cond">[Conditional]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:OU</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:subscriber</span><span class="tree-cond">[for-each: $psub/$csub]</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns:activityInfo</span></div>
+                                <ul>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/ActivityReason</span><span class="tree-cond">[Conditional]</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:userText</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/UserText</span><span class="tree-cond">[Conditional]</span></div></li>
+                                </ul>
+                              </li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:offers</span><span class="tree-cond">[PRIMARY: FE_OR_CCBS="FE" AND SocProperties contains "TR_SPECIAL_OFFER_IND=LY" — loop]</span></div>
+                                <ul>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:expirationDate</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[EXP_DATE_VALUE]/Value</span><span class="tree-cond">[Conditional]</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:offerName</span><span class="tree-arrow">←</span><span class="tree-src">OfferName</span><span class="tree-cond">[Conditional]</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:serviceType</span><span class="tree-arrow">←</span><span class="tree-src">ServiceType</span><span class="tree-cond">[Conditional]</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:soc</span><span class="tree-arrow">←</span><span class="tree-src">Soc</span><span class="tree-cond">[Conditional]</span></div></li>
+                                </ul>
+                              </li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:offers</span><span class="tree-cond">[SECONDARY: exists(CCBS LY offers) → FE ServiceType=86 AND OfferRate&gt;0 — loop]</span></div>
+                                <ul>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:expirationDate</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[EXP_DATE_VALUE]/Value</span><span class="tree-cond">[Conditional: only when RevenueType="OC"]</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:offerName</span><span class="tree-arrow">←</span><span class="tree-src">OfferName</span><span class="tree-cond">[Conditional]</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:serviceType</span><span class="tree-arrow">←</span><span class="tree-src">ServiceType</span><span class="tree-cond">[Conditional]</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:soc</span><span class="tree-arrow">←</span><span class="tree-src">Soc</span><span class="tree-cond">[Conditional]</span></div></li>
+                                </ul>
+                              </li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:subscriberGeneralInfo</span></div>
+                                <ul>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:language</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberGeneralInfo/Language</span><span class="tree-cond">[Conditional]</span></div></li>
+                                </ul>
+                              </li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:subscriberNumber</span><span class="tree-arrow">←</span><span class="tree-src">MSISDN</span><span class="tree-cond">[Conditional]</span></div></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<br>
+<p><strong>Legend:</strong> <span style="color:#a6e3a1">Green</span> = XPath from order data | <span style="color:#fab387">Orange</span> = Static literal | <span style="color:#cba6f7;font-style:italic">Purple italic</span> = Condition</p>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+<div class="section-header">§15 — Function Dependency Tree</div>
+<div class="section-body">
+<pre>Request_OMX_SUBMIT_POSTPAID_ADD_BENEFIT (rule)
+├── isActResub = (RequestCount > 0 &amp;&amp; IsOrderResubmitted)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── param = GetActivityParamValueFromKey(orderCurrentActivity, "ORDER_TYPE")
+├── chkXPath = nextAct.PreExecCheck
+├── isSkipped = true; childIndex = 0
+│
+├── [POU loop: POU p → Sub ps]
+│   ├── childIndex++ [BEFORE resub guard!]
+│   ├── pSubRefId = ParentOU[p].Subscriber[ps].RefId
+│   ├── resub guard: Response[ReferenceId==pSubRefId &amp;&amp; CompletionStatus==2] → reqSuccess=true
+│   ├── [if !reqSuccess]:
+│   │   ├── [if PreExecCheck set]: GetXMLForSubscriber(orderRequest, pSubRefId) → XPath.execute
+│   │   └── [if chkRes=="true"]:
+│   │       ├── reqEvent = Event.createEvent(OMX_CREATE_CHILD_ORDER, XSLT):
+│   │       │   ├── RefID = pSubRefId
+│   │       │   ├── channel = concat(Channel, "-OMX")
+│   │       │   ├── orderId = concat(OrderID, "-", childIndex)
+│   │       │   ├── orderType = $param (ORDER_TYPE)
+│   │       │   ├── ExtendedInfo[MAIN_TRACKING_ID] = OMXTrackingId
+│   │       │   ├── ExtendedInfo[SBM_CHANNEL] = globalVars/Loyalty/SBMChannel
+│   │       │   ├── billCycleNo = Customer/BillCycleNo
+│   │       │   ├── subscriber offers [PRIMARY: FE LY]
+│   │       │   ├── subscriber offers [SECONDARY: CCBS LY exists → FE ST=86]
+│   │       │   ├── language, subscriberNumber (MSISDN)
+│   │       │   ├── activityReason, userText
+│   │       ├── sendEventImmediate(reqEvent)
+│   │       ├── isSkipped = false
+│   │       ├── [if !isActResub]: RequestCount++
+│   │       └── Logger (OPERATION_NAME="OMX_SUBMIT_POSTPAID_ADD_BENEFIT")
+│
+├── [COU loop: POU p → COU c → Sub cs]
+│   ├── childIndex++ [BEFORE resub guard!]
+│   ├── cSubRefId = ChildOU[c].Subscriber[cs].RefId
+│   ├── [same resub guard + PreExecCheck (GetXMLForSubscriberInChildOU) + same payload + Logger]
+│   └── [childIndex continues from POU counter]
+│
+├── [if !isSkipped]:
+│   ├── orderCurrentActivity.Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException(orderRequest, orderCurrentActivity, ae, "")
+
+Response_OMX_SUBMIT_POSTPAID_ADD_BENEFIT (rulefunction)
+├── activityRes = Instance.createInstance(OMX_CreateChildOrder){
+│     extId=generateTrackingID(), ResponseCode, ResponseMessage, CompletionStatus, ReferenceId,
+│     childOmxTrackingId ← payload/ns:submitOrderResponse/ns:OMXTrackingId}
+├── currActivity.Response[] ← activityRes
+├── Logger (PROCESS_ID _RES suffix)
+├── successResponseCount = count(Response[tib:right(tib:trim(ResponseCode), 3) = "000"])
+└── return (RequestCount == successResponseCount) ? "true" : "false"</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+<div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="section-body">
+
+<h3>Functional Requirements</h3>
+<table>
+<tr><th>Ref</th><th>Requirement</th></tr>
+<tr><td>R1</td><td>Fan-out: POU direct subscribers first, then COU. One child order per subscriber.</td></tr>
+<tr><td>R2</td><td>childIndex = monotonic counter starting at 0, shared across POU and COU. Increments before resub guard.</td></tr>
+<tr><td>R3</td><td>orderId = concat(OrderID, "-", childIndex). Unique child order ID per subscriber per original run.</td></tr>
+<tr><td>R4</td><td>orderType = activity parameter ORDER_TYPE.</td></tr>
+<tr><td>R5</td><td>channel = concat(Channel, "-OMX"). Always appends "-OMX" suffix.</td></tr>
+<tr><td>R6</td><td>ExtendedInfo MAIN_TRACKING_ID = OMXTrackingId. ExtendedInfo SBM_CHANNEL = globalVars/Loyalty/SBMChannel.</td></tr>
+<tr><td>R7</td><td>Primary offers: FE_OR_CCBS="FE" AND SocProperties contains "TR_SPECIAL_OFFER_IND=LY".</td></tr>
+<tr><td>R8</td><td>Secondary offers: only emitted when exists(CCBS loyalty offers); selects FE ServiceType=86 with OfferRate&gt;0. expirationDate only when RevenueType="OC".</td></tr>
+<tr><td>R9</td><td>Fan-in: RequestCount == successResponseCount (suffix "000").</td></tr>
+<tr><td>R10</td><td>Response captures childOmxTrackingId from submitOrderResponse payload.</td></tr>
+</table>
+
+<h3>Design Risks</h3>
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td>childIndex increments before resub guard — orderId suffix may differ on resubmit vs original</td><td><span class="badge badge-med">[MEDIUM]</span></td><td>Evaluate if downstream SubmitOrder requires idempotent orderId; consider using subscriber RefId in orderId instead of sequential counter</td></tr>
+<tr><td>PurgePendingRequestsBeforeResubmit absent — risk of duplicate child orders on resubmit</td><td><span class="badge badge-med">[MEDIUM]</span></td><td>Add PurgePendingRequestsBeforeResubmit if the SubmitOrder service is not idempotent</td></tr>
+<tr><td>Secondary offer block: CCBS gating and FE ServiceType=86 selection is opaque — business intent unclear from code alone</td><td><span class="badge badge-low">[LOW]</span></td><td>Document the business rule: when is ServiceType=86 a loyalty benefit that needs to go into the child order?</td></tr>
+<tr><td>SBMChannel from global variable — may differ across environments</td><td><span class="badge badge-low">[LOW]</span></td><td>Verify SBMChannel value in each target environment; add to deployment checklist</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+<div class="section-header">§19 — Response Message Rule (Response_OMX_SUBMIT_POSTPAID_ADD_BENEFIT)</div>
+<div class="section-body">
+
+<h3>§19.1 Overview</h3>
+<p>Uses the dedicated <code>Concepts.FM.Response.OMX_CreateChildOrder</code> concept (not ResponseBase). Captures an additional <code>childOmxTrackingId</code> field from the SubmitOrder response payload — allowing the main order to track the child order tracking ID for downstream correlation.</p>
+
+<h3>§19.2 Scope Variables</h3>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td>orderRequest</td><td>Concepts.OrderRequest.OrderRequest</td><td>Order context</td></tr>
+<tr><td>eventResponse</td><td>Events.OMConsumers.OMXFM.Response.OMX_CREATE_CHILD_ORDER</td><td>OMX child order response event</td></tr>
+<tr><td>currActivity</td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity state &amp; response list</td></tr>
+</table>
+
+<h3>§19.3 OMX_CreateChildOrder Concept Construction</h3>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">object (OMX_CreateChildOrder)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">childOmxTrackingId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:submitOrderResponse/ns:OMXTrackingId</span><span class="tree-cond">[Conditional — unique to this FM]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3>§19.4 Fan-in Completion Logic</h3>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+<tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+<tr><td>Return "true"</td><td>All child order submissions completed with ResponseCode suffix "000"</td></tr>
+<tr><td>childOmxTrackingId</td><td>Captured per-response for downstream child order correlation</td></tr>
+</table>
+</div>
+</div>
+
+<div style="text-align:center;color:#999;font-size:.8rem;padding:20px 0;">
+TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &middot; Request_OMX_SUBMIT_POSTPAID_ADD_BENEFIT
+</div>
+</div>
+</body>
+</html>

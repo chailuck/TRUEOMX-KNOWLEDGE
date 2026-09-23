@@ -1,0 +1,724 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_ASRM_GET_UR_DETAILS_MSISDN</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#222;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:36px 40px 28px;}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:6px;}
+.page-header .subtitle{opacity:.85;font-size:.95rem;}
+.meta-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+.pill{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem;}
+.container{max-width:1280px;margin:0 auto;padding:28px 32px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:22px;overflow:hidden;}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;border-left:4px solid var(--true-light);}
+.card-header h2{font-size:1.05rem;font-weight:600;}
+.card-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.875rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left;}
+td{padding:7px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fff8f8;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;border-left:3px solid var(--true-red);overflow-x:auto;}
+code{background:#f3e8e8;color:var(--true-dark);padding:1px 5px;border-radius:3px;}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+.flow-step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0e0e0;}
+.flow-step:last-child{border-bottom:none;}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;}
+.step-content{flex:1;}
+.warn-box{background:#FFF3E0;border-left:4px solid #e65100;border-radius:0 6px 6px 0;padding:10px 14px;margin:8px 0;font-size:.875rem;}
+.info-box{background:#E3F0FD;border-left:4px solid #1565c0;border-radius:0 6px 6px 0;padding:10px 14px;margin:8px 0;font-size:.875rem;}
+.bug-box{background:#FFE0E0;border-left:4px solid var(--true-red);border-radius:0 6px 6px 0;padding:10px 14px;margin:8px 0;font-size:.875rem;}
+.highlight-box{background:#E8F5E9;border-left:4px solid #2e7d32;border-radius:0 6px 6px 0;padding:10px 14px;margin:8px 0;font-size:.875rem;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;}
+.tree-ns{color:#6c7086;font-size:.78rem;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.section-label{color:var(--true-red);font-weight:700;font-size:.8rem;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:20px;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="subtitle">TIBCO BusinessEvents · FM Logic Documentation</div>
+  <h1>Request_ASRM_GET_UR_DETAILS_MSISDN</h1>
+  <div class="subtitle">ASRM — Get Unified Resource Details for MSISDN (NiceLevel, Zone, TRUE_RES, DonorOperator, CompanyCode)</div>
+  <div class="meta-pills">
+    <span class="pill">Priority 5</span>
+    <span class="pill">forwardChain: true</span>
+    <span class="pill">Target: ASRM (Amdocs RM3G)</span>
+    <span class="pill">Pattern: Per-subscriber fan-out</span>
+    <span class="pill">Author: chch</span>
+    <span class="pill">PREPAID_CANCEL Step 4</span>
+    <span class="pill">Generated: 2026-08-20</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header"><h2>§1 — Overview &amp; Purpose</h2></div>
+<div class="card-body">
+<p>
+  <strong>Request_ASRM_GET_UR_DETAILS_MSISDN</strong> queries the ASRM (Amdocs Resource Manager 3G) system
+  for unified resource details about a subscriber's MSISDN. For each subscriber in the order (ParentOU and ChildOU),
+  one <code>ASRM_GET_UNIFIED_RESOURCE_DETAILS</code> event is sent containing the MSISDN as the lookup key.
+</p>
+<br/>
+<div class="highlight-box"><strong>Event type ≠ FM name:</strong> The underlying TIBCO event type is <code>ASRM_GET_UNIFIED_RESOURCE_DETAILS</code>, which is a generic ASRM resource lookup event. The FM name <code>ASRM_GET_UR_DETAILS_MSISDN</code> specifies that the lookup entity type is always "MSISDN". A separate FM exists for SIM lookups.</div>
+<br/>
+<p>The response enriches each subscriber with:</p>
+<ul style="margin:8px 0 0 24px;">
+  <li><strong>NiceLevel</strong> — premium/vanity number classification from ASRM</li>
+  <li><strong>Zone</strong> — geographic pricing zone (RECIPIENT_ZONE preferred over ZONE for MNP; defaults to "1" if blank)</li>
+  <li><strong>TRUE_RES</strong> — whether the MSISDN belongs to TRUE's own network: "Y" or "N" (defaults to "N" if blank)</li>
+  <li><strong>DonorOperator</strong> — the original operator for MNP Port In/Out Reversal orders</li>
+  <li><strong>CompanyCode</strong> — mapped from RECIPIENT_OPERATOR (preferred) or COMPANY attribute</li>
+</ul>
+<br/>
+<table>
+<tr><th>Property</th><th>Value</th></tr>
+<tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_ASRM_GET_UR_DETAILS_MSISDN</code></td></tr>
+<tr><td>Author</td><td>chch</td></tr>
+<tr><td>Backend system</td><td>ASRM (Amdocs Resource Manager 3G)</td></tr>
+<tr><td>ASRM operation</td><td>GetUnifiedResourceDetails (entity type: MSISDN)</td></tr>
+<tr><td>Underlying event</td><td><code>Events.OMConsumers.OMXFM.Request.ASRM_GET_UNIFIED_RESOURCE_DETAILS</code></td></tr>
+<tr><td>Fan-out pattern</td><td>Per-subscriber (ParentOU + ChildOU) — one event per MSISDN</td></tr>
+<tr><td>Correlation</td><td><code>RefID</code> header field ← subscriber <code>RefId</code></td></tr>
+<tr><td>In PREPAID_CANCEL</td><td>Step 4 (ASRM_GET_UR_DETAILS_MSISDN)</td></tr>
+<tr><td>Response concept</td><td><code>Concepts.FM.Response.ASRM_GetURDetailsRes</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+<div class="card-header"><h2>§2 — Rule Metadata &amp; Attributes</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+<tr><td>priority</td><td><code>5</code></td><td>Standard FM request priority</td></tr>
+<tr><td>forwardChain</td><td><code>true</code></td><td>Re-evaluates when working memory changes</td></tr>
+<tr><td>Rule type</td><td>Per-subscriber fan-out</td><td>Sends one event per subscriber with non-blank MSISDN</td></tr>
+<tr><td>Source path</td><td><code>Rules/OMConsumers/OMXFM/Request/Request_ASRM_GET_UR_DETAILS_MSISDN.rule</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+<div class="card-header"><h2>§3 — Working Memory — Declared Objects</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order; source of all subscriber MSISDNs</td></tr>
+<tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current process activity; holds RequestCount and collected Response[] concepts</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 WHEN -->
+<div class="card">
+<div class="card-header"><h2>§4 — Rule Conditions (WHEN)</h2></div>
+<div class="card-body">
+<table>
+<tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Matches activity to process flow</td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "ASRM_GET_UR_DETAILS_MSISDN"</code></td><td>FM-specific gate</td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "ASRM_GET_UR_DETAILS_MSISDN"</code></td><td>Double-check from order side</td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Prevents double-firing</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+<div class="card-header"><h2>§5 — Execution Flow Diagram</h2></div>
+<div class="card-body">
+<div class="flow-step"><div class="step-num">1</div><div class="step-content"><strong>Re-submit check</strong> — <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code></div></div>
+<div class="flow-step"><div class="step-num">2</div><div class="step-content"><strong>Load nextAct</strong> — <code>Instance.getByExtIdByUri(NextActivityName, "/Concepts/OM/ProcessConfig/Activity")</code> for PreExecCheck access</div></div>
+<div class="flow-step"><div class="step-num">3</div><div class="step-content"><strong>ParentOU subscriber loop</strong> — for each subscriber:
+  <ul style="margin-top:6px;padding-left:20px;">
+    <li>Skip if MSISDN is blank</li>
+    <li>Skip if <code>Response[RefId==refId].CompletionStatus==2</code> already (re-submit dedup)</li>
+    <li>Evaluate PreExecCheck per subscriber (GetXMLForSubscriber)</li>
+    <li>If passes: send <code>ASRM_GET_UNIFIED_RESOURCE_DETAILS</code> event with Type="MSISDN", Value=currMSISDN; increment RequestCount; audit log</li>
+  </ul>
+</div></div>
+<div class="flow-step"><div class="step-num">4</div><div class="step-content"><strong>ChildOU subscriber loop</strong> — same logic using <code>GetXMLForSubscriberInChildOU</code> for PreExecCheck</div></div>
+<div class="flow-step"><div class="step-num">5</div><div class="step-content"><strong>Status update</strong> — if any event sent: Status="1" + SendDataToDB; else SkipActivity("4")</div></div>
+<div class="flow-step"><div class="step-num">6</div><div class="step-content"><strong>Exception</strong> — catch → HandleActivityException</div></div>
+</div>
+</div>
+
+<!-- §6 Action Logic -->
+<div class="card">
+<div class="card-header"><h2>§6 — Rule Action (THEN) — Step-by-Step Logic</h2></div>
+<div class="card-body">
+<div class="info-box"><strong>Re-submit dedup:</strong> Before sending a new event, the rule checks whether a successful response (CompletionStatus==2) already exists in <code>currActivity.Response[]</code> for this subscriber's RefId. This prevents duplicate ASRM calls when an order is resubmitted.</div>
+<br/>
+<div class="bug-box"><strong>[LOW]</strong> ChildOU XSLT variant: <code>UserName</code> is emitted if <code>IsEnableUserPass='true'</code> without an inner null guard on <code>$orderRequest/OrderData/User</code>. The ParentOU variant wraps UserName in <code>&lt;xsl:if test="$orderRequest/OrderData/User"&gt;</code>. If the User field is absent, the ChildOU variant sends an empty <code>&lt;UserName/&gt;</code> element.</div>
+<br/>
+<pre><span class="kw">for</span>(<span class="kw">int</span> j=<span class="nu">0</span>; j&lt;iSubCnt; j++) {
+  <span class="ty">String</span> currMSISDN = subscriber[j].MSISDN;
+  <span class="kw">if</span>(BRMS.<span class="fn">IsBlank</span>(currMSISDN)) <span class="kw">continue</span>;  <span class="cm">// skip missing MSISDN</span>
+
+  <span class="ty">String</span> refId = subscriber[j].RefId;
+  <span class="kw">boolean</span> reqSuccess = <span class="kw">false</span>;
+  <span class="kw">for</span>(iResp ...) <span class="cm">// check existing Response[] for CompletionStatus==2 for this refId</span>
+    <span class="kw">if</span>(Response[iResp].ReferenceId == refId &amp;&amp; CompletionStatus==<span class="nu">2</span>) reqSuccess = <span class="kw">true</span>;
+  <span class="kw">if</span>(reqSuccess) <span class="kw">continue</span>;  <span class="cm">// skip if already answered</span>
+
+  <span class="cm">// Evaluate PreExecCheck per subscriber</span>
+  <span class="ty">String</span> chkRes = <span class="st">"true"</span>;
+  <span class="kw">if</span>(nextAct.PreExecCheck.length &gt; <span class="nu">0</span>)
+    chkRes = XPath.<span class="fn">execute</span>(<span class="st">"/("+PreExecCheck+")"</span>, <span class="fn">GetXMLForSubscriber</span>(orderRequest, refId), ns);
+
+  <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+    reqEvent = Event.<span class="fn">createEvent</span>(<span class="st">"xslt://..."</span>);
+    <span class="cm">// → payload: RMEntityIdInfo(Type="MSISDN", Value=currMSISDN)</span>
+    Event.Ext.<span class="fn">sendEventImmediate</span>(reqEvent);
+    <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+    isSkipped = <span class="kw">false</span>;
+    <span class="kw">if</span>(AllowWriteLog) sendAuditLog(...);
+  }
+}</pre>
+</div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="card">
+<div class="card-header"><h2>§7 — Data Extraction</h2></div>
+<div class="card-body">
+<p>No activity Parameters are used to control the request payload. The MSISDN value comes directly from each subscriber concept. The only runtime inputs are:</p>
+<table>
+<tr><th>Source</th><th>Field</th><th>Purpose</th></tr>
+<tr><td>Subscriber concept</td><td><code>Subscriber[j].MSISDN</code></td><td>Lookup key sent as <code>ns:Value</code></td></tr>
+<tr><td>Subscriber concept</td><td><code>Subscriber[j].RefId</code></td><td>Correlation key sent as event header <code>RefID</code></td></tr>
+<tr><td>Static</td><td>"MSISDN"</td><td>Entity type sent as <code>ns:Type</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §8 System & Integration -->
+<div class="card">
+<div class="card-header"><h2>§8 — System &amp; Integration Dependencies</h2></div>
+<div class="card-body">
+
+<div class="section-label">§8.1 — Order Type Dependencies</div>
+<p>Used in any order that needs MSISDN metadata. In PREPAID_CANCEL (step 4): fires for each subscriber with a non-blank MSISDN, subject to the step's PreExecCheck.</p>
+
+<br/><div class="section-label">§8.2 — ESB / JMS Channel Dependencies</div>
+<table>
+<tr><th>Direction</th><th>Channel / Destination</th><th>Protocol</th><th>Purpose</th></tr>
+<tr><td><span class="badge badge-jms">OUTBOUND</span></td><td>OMXFM / ASRM_GET_UNIFIED_RESOURCE_DETAILS</td><td>JMS</td><td>Per-subscriber MSISDN resource detail lookup</td></tr>
+<tr><td><span class="badge badge-log">LOG</span></td><td>OMXESB / Logger</td><td>JMS</td><td>REQ: gated by AllowWriteLog; RES: also gated by AllowWriteLog</td></tr>
+</table>
+<div class="highlight-box">Both request and response audit logs are gated by <code>AllowWriteLog</code> — consistent across this FM.</div>
+
+<br/><div class="section-label">§8.3 — Backend API Details</div>
+<table>
+<tr><th>System</th><th>Operation</th><th>Entity Type Sent</th><th>Schema Namespace</th><th>Correlation</th></tr>
+<tr><td>ASRM (Amdocs RM3G)</td><td>GetUnifiedResourceDetails</td><td>MSISDN</td><td><code>amdocs.rm3g.interfaces.datatypes.RMEntityIdInfo</code></td><td><code>RefID</code> event header ← subscriber RefId</td></tr>
+</table>
+<p style="margin-top:8px;font-size:.875rem;">Response schema: <code>amdocs.rm3g.interfaces.datatypes.UnifiedResourceDetailsInfo</code> with <code>CategoryInfo</code> and <code>AttributesInfo</code> sub-elements.</p>
+
+<br/><div class="section-label">§8.4 — BE Working Memory Dependencies</div>
+<table>
+<tr><th>Field</th><th>Access</th><th>Notes</th></tr>
+<tr><td><code>ParentOU[i].Subscriber[j].MSISDN</code></td><td>READ</td><td>Lookup key — skipped if blank</td></tr>
+<tr><td><code>ParentOU[i].Subscriber[j].RefId</code></td><td>READ</td><td>Correlation key; also used for re-submit dedup</td></tr>
+<tr><td><code>ChildOU[k].Subscriber[j].MSISDN / RefId</code></td><td>READ</td><td>Same as ParentOU</td></tr>
+<tr><td><code>Subscriber[j].ResourceInfo[]</code></td><td>WRITE</td><td>MSISDN_NICE_LEVEL, MSISDN_ZONE, MSISDN_TRUE_RES appended</td></tr>
+<tr><td><code>Subscriber[j].ExtendedInfo[]</code></td><td>WRITE</td><td>DONOR_OPERATOR, COMPANY_CODE appended conditionally</td></tr>
+<tr><td><code>currActivity.Response[]</code></td><td>WRITE</td><td><code>ASRM_GetURDetailsRes</code> concept appended per response</td></tr>
+</table>
+
+<br/><div class="section-label">§8.5 — ExtendedInfo Fields</div>
+<table>
+<tr><th>Key</th><th>Source in ASRM Response</th><th>Condition</th></tr>
+<tr><td><code>DONOR_OPERATOR</code></td><td><code>AttributesInfo[AttrName="DONOR_OPERATOR"]/AttrValue</code></td><td>Only set if ASRM value non-empty AND subscriber doesn't already have DONOR_OPERATOR</td></tr>
+<tr><td><code>COMPANY_CODE</code></td><td>RECIPIENT_OPERATOR (preferred) or COMPANY attribute</td><td>Set if either RECIPIENT_OPERATOR or COMPANY exists in response</td></tr>
+</table>
+
+<br/><div class="section-label">§8.6 — Global Variable Dependencies</div>
+<table>
+<tr><th>Global Variable Path</th><th>Used for</th></tr>
+<tr><td><code>OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>If "true": include UserName/PassWord in event header</td></tr>
+<tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>COMPONENT_NAME in audit log</td></tr>
+<tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>TARGET_SYSTEM in audit log</td></tr>
+<tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>LOG_LEVEL in audit log</td></tr>
+<tr><td><code>OMX_OM/WritePayload</code></td><td>Gates payload inclusion in audit log</td></tr>
+</table>
+
+</div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="card">
+<div class="card-header"><h2>§9 — Detailed Payload Build</h2></div>
+<div class="card-body">
+
+<div class="section-label">§9.1 — XSLT Parameter Binding</div>
+<table>
+<tr><th>XSLT Param</th><th>BE Source</th><th>Notes</th></tr>
+<tr><td><code>$orderRequest</code></td><td><code>orderRequest</code></td><td>Full order concept</td></tr>
+<tr><td><code>$refId</code></td><td><code>subscriber.RefId</code></td><td>Subscriber correlation key; put into <code>&lt;RefID&gt;</code> header field</td></tr>
+<tr><td><code>$globalVariables</code></td><td>BE global variables</td><td>IsEnableUserPass, WritePayload</td></tr>
+<tr><td><code>$currMSISDN</code></td><td><code>subscriber.MSISDN</code></td><td>Lookup value for <code>&lt;ns:Value&gt;</code></td></tr>
+</table>
+
+<br/><div class="section-label">§9.2 — Event Container</div>
+<p>Event: <code>Events.OMConsumers.OMXFM.Request.ASRM_GET_UNIFIED_RESOURCE_DETAILS</code>. No auto-generated extId on the event element itself.</p>
+
+<br/><div class="section-label">§9.3 — JMS / Event Header Fields</div>
+<table>
+<tr><th>Field</th><th>Source</th><th>Condition</th><th>Variant diff</th></tr>
+<tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional</td><td>Same</td></tr>
+<tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional</td><td>Same</td></tr>
+<tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional</td><td>Same</td></tr>
+<tr><td><code>RefID</code></td><td><code>$refId</code></td><td><strong>Always</strong> — correlation key</td><td>Same</td></tr>
+<tr><td><code>UserName</code></td><td><code>$orderRequest/OrderData/User</code></td><td>If IsEnableUserPass="true" AND <strong>User present</strong></td><td><span class="badge badge-red">BUG</span> ChildOU omits User-present inner guard</td></tr>
+<tr><td><code>PassWord</code></td><td><code>$orderRequest/OrderData/Password</code></td><td>If IsEnableUserPass="true" AND Password present</td><td>Same (both have inner guard)</td></tr>
+<tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional</td><td>Same</td></tr>
+</table>
+<div class="bug-box"><strong>[LOW]</strong> ChildOU XSLT: <code>UserName</code> is inside the <code>IsEnableUserPass='true'</code> guard but lacks the inner <code>if($orderRequest/OrderData/User)</code> guard present in the ParentOU variant. When User is absent, ChildOU sends <code>&lt;UserName/&gt;</code> (empty tag).</div>
+
+<br/><div class="section-label">§9.4 — Payload Root</div>
+<p>Namespace: <code>www.tibco.com/plugin/java/xmlSchema/amdocs.rm3g.interfaces.datatypes.RMEntityIdInfo</code> (prefix: <code>ns</code>)</p>
+<p>Root element: <code>&lt;ns:RMEntityIdInfo&gt;</code></p>
+
+<br/><div class="section-label">§9.5 — Core Payload Fields</div>
+<table>
+<tr><th>Element</th><th>Source</th><th>Condition</th></tr>
+<tr><td><code>ns:Type</code></td><td>Static: <code>"MSISDN"</code></td><td>Always</td></tr>
+<tr><td><code>ns:Value</code></td><td><code>$currMSISDN</code></td><td>Always</td></tr>
+</table>
+
+<br/><div class="section-label">§9.6 — Two XSLT Variants (ParentOU vs ChildOU)</div>
+<p>Two nearly identical XSLT stylesheets are embedded inline. The only difference is the UserName null-guard:</p>
+<table>
+<tr><th>Element</th><th>ParentOU Variant (line 54)</th><th>ChildOU Variant (line 94)</th></tr>
+<tr><td><code>UserName</code></td><td><code>&lt;xsl:if test="IsEnableUserPass='true'"&gt;&lt;xsl:if test="User"&gt;&lt;UserName&gt;...&lt;/xsl:if&gt;&lt;/xsl:if&gt;</code></td><td><code>&lt;xsl:if test="IsEnableUserPass='true'"&gt;&lt;UserName&gt;...&lt;/UserName&gt;&lt;/xsl:if&gt;</code> — no inner null guard</td></tr>
+</table>
+
+<br/><div class="section-label">§9.7 — Complete Generated XML Example</div>
+<pre><span class="xt">&lt;event&gt;</span>
+  <span class="xt">&lt;JMSPriority&gt;</span>4<span class="xt">&lt;/JMSPriority&gt;</span>
+  <span class="xt">&lt;JMSCorrelationID&gt;</span>OMX-TRK-20250720-001<span class="xt">&lt;/JMSCorrelationID&gt;</span>
+  <span class="xt">&lt;OrderID&gt;</span>1000001<span class="xt">&lt;/OrderID&gt;</span>
+  <span class="xt">&lt;RefID&gt;</span>SUB-REF-001<span class="xt">&lt;/RefID&gt;</span>   <span class="cm">&lt;!-- always present — correlation key --&gt;</span>
+  <span class="xt">&lt;OrderType&gt;</span>35041<span class="xt">&lt;/OrderType&gt;</span>
+  <span class="xt">&lt;payload&gt;</span>
+    <span class="xt">&lt;ns:RMEntityIdInfo</span> <span class="xa">xmlns:ns</span>=<span class="st">"...RMEntityIdInfo"</span><span class="xt">&gt;</span>
+      <span class="xt">&lt;ns:Type&gt;</span>MSISDN<span class="xt">&lt;/ns:Type&gt;</span>
+      <span class="xt">&lt;ns:Value&gt;</span>0812345678<span class="xt">&lt;/ns:Value&gt;</span>
+    <span class="xt">&lt;/ns:RMEntityIdInfo&gt;</span>
+  <span class="xt">&lt;/payload&gt;</span>
+<span class="xt">&lt;/event&gt;</span></pre>
+
+<br/><div class="section-label">§9.8 — XSLT Stylesheet Source</div>
+<pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">version</span>=<span class="st">"1.0"</span>
+  <span class="xa">xmlns:ns</span>=<span class="st">"www.tibco.com/plugin/java/xmlSchema/amdocs.rm3g.interfaces.datatypes.RMEntityIdInfo"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderRequest"</span><span class="xt">/&gt;</span>   <span class="cm">&lt;!-- full order concept --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"refId"</span><span class="xt">/&gt;</span>         <span class="cm">&lt;!-- subscriber RefId --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"currMSISDN"</span><span class="xt">/&gt;</span>    <span class="cm">&lt;!-- subscriber MSISDN --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderPriority"</span><span class="xt">&gt;</span><span class="xt">&lt;JMSPriority&gt;</span>...<span class="xt">&lt;/JMSPriority&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">&gt;</span><span class="xt">&lt;JMSCorrelationID&gt;</span>...<span class="xt">&lt;/JMSCorrelationID&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/OrderID"</span><span class="xt">&gt;</span><span class="xt">&lt;OrderID&gt;</span>...<span class="xt">&lt;/OrderID&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;RefID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$refId"</span><span class="xt">/&gt;&lt;/RefID&gt;</span>  <span class="cm">&lt;!-- always --&gt;</span>
+      <span class="cm">&lt;!-- ParentOU variant: --&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$globalVariables/IsEnableUserPass='true'"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/User"</span><span class="xt">&gt;</span><span class="xt">&lt;UserName&gt;</span>...<span class="xt">&lt;/UserName&gt;&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/Password"</span><span class="xt">&gt;</span><span class="xt">&lt;PassWord&gt;</span>...<span class="xt">&lt;/PassWord&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="cm">&lt;!-- ChildOU variant: UserName lacks inner User null-guard [BUG] --&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/OrderType"</span><span class="xt">&gt;</span><span class="xt">&lt;OrderType&gt;</span>...<span class="xt">&lt;/OrderType&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns:RMEntityIdInfo&gt;</span>
+          <span class="xt">&lt;ns:Type&gt;</span>MSISDN<span class="xt">&lt;/ns:Type&gt;</span>   <span class="cm">&lt;!-- static --&gt;</span>
+          <span class="xt">&lt;ns:Value&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$currMSISDN"</span><span class="xt">/&gt;&lt;/ns:Value&gt;</span>
+        <span class="xt">&lt;/ns:RMEntityIdInfo&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+
+</div>
+</div>
+
+<!-- §10 Field Mapping Tree -->
+<div class="card">
+<div class="card-header"><h2>§10 — XSLT Field Mapping — Output XML Tree Hierarchy</h2></div>
+<div class="card-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId (subscriber RefId)</span> <span class="badge badge-green">Always</span> <span class="tree-cond">correlation key for fan-in matching</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span> <span class="badge badge-purple">Credential-gated</span> <span class="tree-cond">ParentOU: outer+inner guard; ChildOU: outer guard only [BUG]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span> <span class="badge badge-purple">Credential-gated</span> <span class="tree-cond">both variants have inner guard</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span> <span class="badge badge-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:RMEntityIdInfo</span> <span class="tree-ns">xmlns:ns="...RMEntityIdInfo"</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:Type</span><span class="tree-arrow">←</span><span class="tree-src-static">"MSISDN"</span> <span class="badge badge-green">Always</span> <span class="tree-cond">static — this FM always queries by MSISDN</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:Value</span><span class="tree-arrow">←</span><span class="tree-src">$currMSISDN</span> <span class="badge badge-green">Always</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<br/>
+<p style="font-size:.8rem;color:#666;"><strong>Legend:</strong> <span class="badge badge-green">Always</span> = unconditionally emitted; <span class="badge badge-orange">Conditional</span> = inside xsl:if; <span class="badge badge-purple">Credential-gated</span> = behind IsEnableUserPass global var</p>
+</div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+<div class="card-header"><h2>§11 — Audit Logging</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Phase</th><th>Gate</th><th>PROCESS_ID</th><th>AUDIT_TRACE</th><th>Payload</th></tr>
+<tr><td>Request</td><td><code>AllowWriteLog(OrderType)</code></td><td><code>concat(pid, "_REQ")</code></td><td>"Request Sent for ASRM_GET_UR_DETAILS_MSISDN"</td><td><code>$reqEvent</code> (if WritePayload="true")</td></tr>
+<tr><td>Response</td><td><code>AllowWriteLog(OrderType)</code></td><td><code>concat(pid, "_RES")</code></td><td>"Response received for ASRM_GET_UR_DETAILS_MSISDN"</td><td><code>$eventResponse</code> (if WritePayload="true")</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="card">
+<div class="card-header"><h2>§12 — Activity Status Management</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Condition</th><th>Status</th><th>Action</th></tr>
+<tr><td>At least one event sent</td><td>"1" → PROCESSING</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td></tr>
+<tr><td>No qualifying subscribers (all blank MSISDN or all skipped)</td><td>"4" → SKIPPED</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+<tr><td>Exception</td><td>ERROR</td><td><code>HandleActivityException(...)</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="card">
+<div class="card-header"><h2>§13 — Exception / Error Handling</h2></div>
+<div class="card-body">
+<pre><span class="kw">catch</span> (Exception ae) {
+  RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</pre>
+</div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card">
+<div class="card-header"><h2>§14 — Helper Functions Reference</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Function</th><th>Purpose</th><th>Notes</th></tr>
+<tr><td><code>GetXMLForSubscriber</code></td><td>Serialise a ParentOU subscriber to XML for PreExecCheck evaluation</td><td>Request rule</td></tr>
+<tr><td><code>GetXMLForSubscriberInChildOU</code></td><td>Serialise a ChildOU subscriber to XML for PreExecCheck</td><td>Includes parent OU RefId</td></tr>
+<tr><td><code>BRMS.IsBlank</code></td><td>Null/empty guard on MSISDN and response fields</td><td>Skips blank MSISDNs</td></tr>
+<tr><td><code>AllowWriteLog</code></td><td>Gates both request and response audit logs</td><td>Consistent across both sides</td></tr>
+<tr><td><code>GetActivityStatusString</code></td><td>Formats status string for <code>orderCurrentActivity.Status</code></td><td></td></tr>
+<tr><td><code>SendDataToDB</code></td><td>Persists order state to database</td><td></td></tr>
+<tr><td><code>SkipActivity</code></td><td>Skips the activity with reason code "4"</td><td></td></tr>
+<tr><td><code>HandleActivityException</code></td><td>Standard exception handler</td><td></td></tr>
+<tr><td><code>OMXUtils.generateTrackingID</code></td><td>Generates extId for ASRM_GetURDetailsRes concept</td><td>Response RF</td></tr>
+<tr><td><code>XPath.evalAsBoolean</code></td><td>Guards for DonorOperator, CompanyCode creation</td><td>Response RF</td></tr>
+<tr><td><code>XPath.evalAsInt</code></td><td>Fan-in count: <code>count(Response[ResponseCode ends in "000"])</code></td><td>Response RF</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+<div class="card-header"><h2>§15 — Function Dependency Tree</h2></div>
+<div class="card-body">
+<pre>Request_ASRM_GET_UR_DETAILS_MSISDN (rule)
+├── Instance.getByExtIdByUri [load nextAct for PreExecCheck]
+├── BRMS.IsBlank [MSISDN null guard]
+├── [per subscriber] Response[] scan [re-submit dedup guard]
+├── RuleFunctions.Helpers.GetXMLForSubscriber [ParentOU PreExecCheck]
+│   └── XPath.execute [evaluate PreExecCheck expression]
+├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU [ChildOU PreExecCheck]
+│   └── XPath.execute [evaluate PreExecCheck expression]
+├── Event.Ext.sendEventImmediate [ASRM_GET_UNIFIED_RESOURCE_DETAILS per subscriber]
+│   └── XSLT: params(orderRequest, refId, globalVariables, currMSISDN)
+│        → event(RefID, JMSPriority?, JMSCorrelationID?, OrderID?, UserName?, PassWord?, OrderType?)
+│        → payload: ns:RMEntityIdInfo(Type="MSISDN", Value=currMSISDN)
+├── RuleFunctions.Helpers.AllowWriteLog
+│   └── Event.Ext.sendEventImmediate [OMXESB Logger REQ]
+├── RuleFunctions.Helpers.GetActivityStatusString("1")
+├── RuleFunctions.Helpers.SendDataToDB
+└── RuleFunctions.Helpers.HandleActivityException (on error)
+
+Response_ASRM_GET_UR_DETAILS_MSISDN (rulefunction)
+├── OMXUtils.generateTrackingID [extId for ASRM_GetURDetailsRes]
+├── Instance.createInstance [Concepts.FM.Response.ASRM_GetURDetailsRes]
+│   └── XSLT maps: ResponseCode, ResponseMessage, CompletionStatus, ReferenceId,
+│        URType, URValue, NiceLevel, DonorOperator,
+│        Zone (RECIPIENT_ZONE preferred → else ZONE),
+│        TrueResource
+├── currActivity.Response[] ← gurRes
+├── [for each subscriber matching gurRes.URValue == MSISDN]
+│   ├── Instance.getByExtIdByUri("SUBRI:...MSISDN_NICE_LEVEL") → create if null and NiceLevel not blank
+│   ├── Instance.getByExtIdByUri("SUBRI:...MSISDN_ZONE") → create if null (default "1")
+│   ├── Instance.getByExtIdByUri("SUBRI:...MSISDN_TRUE_RES") → create if null (default "N")
+│   ├── XPath.evalAsBoolean [DonorOperator non-empty AND subscriber.ExtendedInfo[DONOR_OPERATOR] empty]
+│   │   └── Instance.createInstance [SubscriberExtendedInfo DONOR_OPERATOR]
+│   ├── XPath.evalAsBoolean [RECIPIENT_OPERATOR attribute exists in response]
+│   │   └── Instance.createInstance [SubscriberExtendedInfo COMPANY_CODE ← RECIPIENT_OPERATOR]
+│   └── else XPath.evalAsBoolean [COMPANY attribute exists in response]
+│       └── Instance.createInstance [SubscriberExtendedInfo COMPANY_CODE ← COMPANY]
+├── RuleFunctions.Helpers.AllowWriteLog
+│   └── Event.Ext.sendEventImmediate [OMXESB Logger RES]
+├── XPath.evalAsInt [count(Response[tib:right(ResponseCode,3)="000"])]
+└── return "true" if RequestCount == successResponseCount; else "false"</pre>
+</div>
+</div>
+
+<!-- §16 Concepts -->
+<div class="card">
+<div class="card-header"><h2>§16 — Concept Definitions Referenced</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Concept</th><th>Key Fields</th></tr>
+<tr><td><code>Concepts.FM.Response.ASRM_GetURDetailsRes</code></td><td>extId, ResponseCode, ResponseMessage, CompletionStatus, ReferenceId, URType, URValue, NiceLevel, DonorOperator, Zone, TrueResource</td></tr>
+<tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>MSISDN, RefId, @extId, ResourceInfo[], ExtendedInfo[]</td></tr>
+<tr><td><code>Concepts.OrderRequest.OrderElements.ResourceInfo</code></td><td>ResourceName, ValuesArray; extId pattern: <code>SUBRI:{subExtId}:{eventRefId}:{resourceName}</code></td></tr>
+<tr><td><code>Concepts.OrderRequest.OrderElements.ExtendedInfos.SubscriberExtendedInfo</code></td><td>Name, Value; extId pattern: <code>SUBEXT:{subExtId}:{eventRefId}:{infoName}</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+<div class="card-header"><h2>§17 — Migration Notes &amp; Recommendations</h2></div>
+<div class="card-body">
+<div class="section-label">Functional Requirements</div>
+<table>
+<tr><th>#</th><th>Requirement</th></tr>
+<tr><td>R1</td><td>Send one ASRM GetUnifiedResourceDetails request per subscriber (ParentOU + ChildOU) with non-blank MSISDN; evaluate per-subscriber PreExecCheck before sending</td></tr>
+<tr><td>R2</td><td>Skip subscribers that already have a successful response (CompletionStatus==2) with their RefId — re-submit deduplication</td></tr>
+<tr><td>R3</td><td>Payload: <code>RMEntityIdInfo(Type="MSISDN", Value=currMSISDN)</code>; header: <code>RefID=subscriber.RefId</code></td></tr>
+<tr><td>R4</td><td>Response: populate MSISDN_NICE_LEVEL ResourceInfo (skip if NiceLevel blank)</td></tr>
+<tr><td>R5</td><td>Response: populate MSISDN_ZONE ResourceInfo; default to "1" if Zone is blank (OMX-2270: prefer RECIPIENT_ZONE over ZONE)</td></tr>
+<tr><td>R6</td><td>Response: populate MSISDN_TRUE_RES ResourceInfo; default to "N" if TrueResource is blank</td></tr>
+<tr><td>R7</td><td>Response: set DONOR_OPERATOR ExtendedInfo only if ASRM returns non-empty DonorOperator AND subscriber does not already have DONOR_OPERATOR</td></tr>
+<tr><td>R8</td><td>Response: set COMPANY_CODE ExtendedInfo from RECIPIENT_OPERATOR attribute (preferred) or COMPANY attribute (fallback)</td></tr>
+<tr><td>R9</td><td>Fan-in: all requests done when <code>count(Response[ResponseCode ends in "000"]) == RequestCount</code></td></tr>
+</table>
+<br/>
+<div class="section-label">Design Risks</div>
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td>ChildOU XSLT variant: UserName sent as empty tag when User field absent and IsEnableUserPass="true"</td><td><span class="badge badge-orange">[LOW]</span></td><td>Add inner <code>if($orderRequest/OrderData/User)</code> guard to ChildOU variant, matching ParentOU behaviour</td></tr>
+<tr><td>Three commented-out code blocks: old Zone-only logic (pre-OMX-2270), unused ASRM_DONOR_ZONE ExtendedInfo, old DONOR_OPERATOR extId using OMXTrackingId instead of subExtId</td><td><span class="badge badge-orange">[LOW]</span></td><td>Remove dead code; document OMX-2270 change in commit/PR description</td></tr>
+<tr><td>ASRM_DONOR_ZONE ExtendedInfo commented out "not use right now" — intended feature never activated</td><td><span class="badge badge-orange">[LOW]</span></td><td>Remove entirely or implement properly with a parameter gate if ever needed</td></tr>
+<tr><td>COMPANY_CODE priority: RECIPIENT_OPERATOR checked first, then COMPANY — undocumented precedence rule</td><td><span class="badge badge-orange">[LOW]</span></td><td>Document explicitly; verify current ASRM sends only one or the other</td></tr>
+<tr><td>Zone default "1" and TrueResource default "N" are silent — no log when default is applied</td><td><span class="badge badge-orange">[LOW]</span></td><td>Add debug log when default value is applied for observability</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="card">
+<div class="card-header"><h2>§18 — Full Source Code</h2></div>
+<div class="card-body">
+<pre><span class="cm">/**
+ * @description get MSISDN information from ASRM
+ *   Nice number
+ *   Donor operator for MNP Port In/Out Reversal order
+ *   Zone
+ *   True_res=Y/N
+ * @author chch
+ */</span>
+<span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.Request_ASRM_GET_UR_DETAILS_MSISDN {
+  <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+  <span class="kw">declare</span> {
+    Concepts.OrderRequest.OrderRequest orderRequest;
+    Concepts.OM.ProcessConfig.Activity orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="st">"ASRM_GET_UR_DETAILS_MSISDN"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="st">"ASRM_GET_UR_DETAILS_MSISDN"</span>;
+    orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="ty">String</span> operationName = orderCurrentActivity.ActivityID;
+    <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">try</span> {
+      <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+      Concepts.OM.ProcessConfig.Activity nextAct =
+        Instance.<span class="fn">getByExtIdByUri</span>(orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+
+      <span class="cm">// ParentOU subscriber loop</span>
+      <span class="kw">int</span> iPOULen = orderRequest.OrderData.Customer.ParentOU@length;
+      <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nu">0</span>; i&lt;iPOULen; i++) {
+        <span class="kw">int</span> iSubCnt = orderRequest.OrderData.Customer.ParentOU[i].Subscriber@length;
+        <span class="kw">for</span>(<span class="kw">int</span> j=<span class="nu">0</span>; j&lt;iSubCnt; j++) {
+          <span class="ty">String</span> currMSISDN = ...ParentOU[i].Subscriber[j].MSISDN;
+          <span class="kw">if</span>(BRMS.<span class="fn">IsBlank</span>(currMSISDN)) <span class="kw">continue</span>;
+          <span class="ty">String</span> refId = ...ParentOU[i].Subscriber[j].RefId;
+
+          <span class="cm">// Re-submit dedup: check if already have success for this refId</span>
+          <span class="kw">boolean</span> reqSuccess = <span class="kw">false</span>;
+          <span class="kw">for</span>(<span class="kw">int</span> iResp=<span class="nu">0</span>; iResp&lt;orderCurrentActivity.Response@length; iResp++)
+            <span class="kw">if</span>(Response[iResp].ReferenceId==refId &amp;&amp; Response[iResp].CompletionStatus==<span class="nu">2</span>)
+              reqSuccess = <span class="kw">true</span>;
+          <span class="kw">if</span>(reqSuccess) <span class="kw">continue</span>;
+
+          <span class="cm">// Per-subscriber PreExecCheck</span>
+          <span class="ty">String</span> chkRes = <span class="st">"true"</span>;
+          <span class="kw">if</span>(nextAct.PreExecCheck.length &gt; <span class="nu">0</span>) {
+            <span class="ty">String</span> sXML = RuleFunctions.Helpers.<span class="fn">GetXMLForSubscriber</span>(orderRequest, refId);
+            chkRes = XPath.<span class="fn">execute</span>(<span class="st">"/("+PreExecCheck+")"</span>, sXML, ns);
+          }
+
+          <span class="kw">if</span>(chkRes.equals(<span class="st">"true"</span>)) {
+            Events...ASRM_GET_UNIFIED_RESOURCE_DETAILS reqEvent = Event.<span class="fn">createEvent</span>(<span class="st">"xslt://..."</span>);
+            <span class="cm">// → See §9.8 for XSLT (params: orderRequest, refId, globalVariables, currMSISDN)
+            // → payload: ns:RMEntityIdInfo(Type="MSISDN", Value=currMSISDN)
+            // → header: RefID=refId [always], JMSPriority/CorrelationID/OrderID [conditional]</span>
+            Event.Ext.<span class="fn">sendEventImmediate</span>(reqEvent);
+            <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+            isSkipped = <span class="kw">false</span>;
+            <span class="kw">if</span>(AllowWriteLog) sendAuditLog_REQ(...);
+          }
+        }
+
+        <span class="cm">// ChildOU subscriber loop — same logic; uses GetXMLForSubscriberInChildOU</span>
+        <span class="kw">int</span> iCOULen = ...ParentOU[i].ChildOU@length;
+        <span class="kw">for</span>(<span class="kw">int</span> k=<span class="nu">0</span>; k&lt;iCOULen; k++) {
+          <span class="cm">// same pattern; ChildOU XSLT variant has UserName null-guard bug [LOW]</span>
+        }
+      }
+
+      <span class="kw">if</span>(!isSkipped) {
+        orderCurrentActivity.Status = RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+        RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+      } <span class="kw">else</span> {
+        RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+      }
+    } <span class="kw">catch</span> (Exception ae) {
+      RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+    }
+  }
+}</pre>
+</div>
+</div>
+
+<!-- §19 Response RF -->
+<div class="card">
+<div class="card-header"><h2>§19 — Response Message Rule</h2></div>
+<div class="card-body">
+
+<div class="section-label">§19.1 — Overview</div>
+<p>
+  <code>Response_ASRM_GET_UR_DETAILS_MSISDN</code> receives a single ASRM response per subscriber,
+  creates an <code>ASRM_GetURDetailsRes</code> concept, then enriches the matching subscriber with
+  up to three ResourceInfo items (MSISDN_NICE_LEVEL, MSISDN_ZONE, MSISDN_TRUE_RES) and up to two
+  ExtendedInfo items (DONOR_OPERATOR, COMPANY_CODE).
+</p>
+<div class="info-box"><strong>OMX-2270 Zone fix:</strong> The current code (line 24) uses an <code>xsl:choose</code> to prefer <code>RECIPIENT_ZONE</code> over <code>ZONE</code>. The original code (commented out at line 19 and line 23) always used <code>ZONE</code> directly. The RECIPIENT_ZONE is set for MSISDN numbers that have been ported (MNP), ensuring the zone reflects the port destination.</div>
+
+<br/><div class="section-label">§19.2 — Scope Variables</div>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order; subscriber hierarchy to enrich</td></tr>
+<tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.ASRM_GET_UNIFIED_RESOURCE_DETAILS</code></td><td>ASRM reply; contains UnifiedResourceDetailsInfo with CategoryInfo and AttributesInfo</td></tr>
+<tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity; receives ASRM_GetURDetailsRes concepts; holds RequestCount</td></tr>
+</table>
+
+<br/><div class="section-label">§19.3 — ResponseBase Concept Construction (ASRM_GetURDetailsRes)</div>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span> <span class="badge badge-green">Always</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span> <span class="badge badge-orange">Conditional</span> <span class="tree-cond">matches subscriber.RefId for fan-in</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">URType</span><span class="tree-arrow">←</span><span class="tree-src">UnifiedResourceIdInfo/ns1:Type</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">URValue</span><span class="tree-arrow">←</span><span class="tree-src">UnifiedResourceIdInfo/ns1:Value</span> <span class="badge badge-orange">Conditional</span> <span class="tree-cond">matches subscriber.MSISDN for enrichment</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">NiceLevel</span><span class="tree-arrow">←</span><span class="tree-src">CategoryInfo[CategoryType="NICE_LEVEL"]/CategoryValueId</span> <span class="badge badge-green">Always</span> <span class="tree-cond">string() wraps it — empty string if absent</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">DonorOperator</span><span class="tree-arrow">←</span><span class="tree-src">AttributesInfo[AttrName="DONOR_OPERATOR"]/AttrValue</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">Zone</span><span class="tree-arrow">←</span><span class="tree-src">xsl:choose: RECIPIENT_ZONE (OMX-2270) else ZONE</span> <span class="badge badge-green">Always</span> <span class="tree-cond">may be empty string if neither attribute present</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">TrueResource</span><span class="tree-arrow">←</span><span class="tree-src">AttributesInfo[AttrName="TRUE_RES"]/AttrValue</span> <span class="badge badge-green">Always</span> <span class="tree-cond">may be empty string</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<br/><div class="section-label">§19.4 — Subscriber Enrichment (match by gurRes.URValue == subscriber.MSISDN)</div>
+<table>
+<tr><th>Item Created</th><th>extId Pattern</th><th>ResourceName / Name</th><th>Value / ValuesArray</th><th>Condition</th></tr>
+<tr><td>ResourceInfo MSISDN_NICE_LEVEL</td><td><code>SUBRI:{subExtId}:{RefId}:MSISDN_NICE_LEVEL</code></td><td>MSISDN_NICE_LEVEL</td><td>gurRes.NiceLevel</td><td>Only if null AND NiceLevel not blank</td></tr>
+<tr><td>ResourceInfo MSISDN_ZONE</td><td><code>SUBRI:{subExtId}:{RefId}:MSISDN_ZONE</code></td><td>MSISDN_ZONE</td><td>gurRes.Zone if non-empty; else <strong>"1"</strong> (default)</td><td>Only if null (always creates)</td></tr>
+<tr><td>ResourceInfo MSISDN_TRUE_RES</td><td><code>SUBRI:{subExtId}:{RefId}:MSISDN_TRUE_RES</code></td><td>MSISDN_TRUE_RES</td><td>gurRes.TrueResource if non-empty; else <strong>"N"</strong> (default)</td><td>Only if null (always creates)</td></tr>
+<tr><td>ExtendedInfo DONOR_OPERATOR</td><td><code>SUBEXT:{subExtId}:{RefId}:DONOR_OPERATOR</code></td><td>DONOR_OPERATOR</td><td>gurRes.DonorOperator</td><td>Only if DonorOperator non-empty AND subscriber.DONOR_OPERATOR not already set</td></tr>
+<tr><td>ExtendedInfo COMPANY_CODE (from RECIPIENT_OPERATOR)</td><td><code>SUBEXT:{subExtId}:{RefId}:COMPANY_CODE</code></td><td>COMPANY_CODE</td><td>RECIPIENT_OPERATOR AttrValue</td><td>If RECIPIENT_OPERATOR attribute exists in response</td></tr>
+<tr><td>ExtendedInfo COMPANY_CODE (from COMPANY)</td><td><code>SUBEXT:{subExtId}:{RefId}:COMPANY_CODE</code></td><td>COMPANY_CODE</td><td>COMPANY AttrValue</td><td>Else-if: if COMPANY attribute exists and RECIPIENT_OPERATOR did not</td></tr>
+</table>
+
+<br/><div class="section-label">§19.5 — Fan-in Completion Logic</div>
+<table>
+<tr><th>Element</th><th>Value</th></tr>
+<tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+<tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+<tr><td>Returns</td><td><code>"true"</code> when all parallel subscriber responses succeeded; <code>"false"</code> while still waiting</td></tr>
+</table>
+
+<br/><div class="section-label">§19.6 — Response Audit Logging</div>
+<p>Gated by <code>AllowWriteLog(OrderType)</code>. PROCESS_ID suffix "_RES". OPERATION_NAME = "ASRM_GET_UR_DETAILS_MSISDN". Payload: <code>copy-of $eventResponse</code> (if WritePayload="true").</p>
+
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_ASRM_GET_UR_DETAILS_MSISDN</footer>
+</body>
+</html>

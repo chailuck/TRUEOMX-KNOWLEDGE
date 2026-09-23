@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>OMX_OFFER_INCLUSION</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.header h1{font-size:2rem;font-weight:700;letter-spacing:1px;}
+.header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.header .meta{margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;opacity:.9;}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:12px;}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600;}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-purple{background:#F3E5F5;color:var(--skip);}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.callout{padding:12px 16px;border-radius:6px;margin:12px 0;border-left:4px solid;}
+.callout-warning{background:#FFF8E1;border-color:var(--warning);color:#5D4037;}
+.callout-info{background:#E3F2FD;border-color:var(--info);color:#0D47A1;}
+.callout-error{background:#FFEBEE;border-color:var(--true-red);color:var(--true-dark);}
+.callout-success{background:#E8F5E9;border-color:var(--success);color:#1B5E20;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:8px 12px 8px 48px;position:relative;border-left:3px solid var(--border);margin-bottom:6px;}
+.step-list li::before{content:counter(step);position:absolute;left:-16px;top:6px;background:var(--true-red);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+footer{text-align:center;padding:24px;color:#888;font-size:.82rem;}
+h3{font-size:.95rem;font-weight:600;color:var(--true-dark);margin-bottom:8px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>OMX_OFFER_INCLUSION</h1>
+  <div class="subtitle">FM Logic Documentation — Internal Mandatory Related Offer Injection (No Backend Call — Uses CCBS_GOD Response, Populates RelatedOffersArray with SelectedByDefault='Y' Offers)</div>
+  <div class="meta">
+    <span class="meta-item">Rule: Rules.OMConsumers.OMXOM.OMX_OfferInclusion</span>
+    <span class="meta-item">ActivityID: OMX_OFFER_INCLUSION</span>
+    <span class="meta-item">Priority: 5</span>
+    <span class="meta-item">Pattern: Internal Computation (OMXOM) — No External Call</span>
+    <span class="meta-item">Completion: NextActivity or SkipActivity("4")</span>
+    <span class="meta-item">Generated: 2026-09-11</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>OMX_OFFER_INCLUSION</strong> is an <strong>internal OMXOM computation rule</strong> that auto-injects mandatory related offers into each order offer's <code>RelatedOffersArray</code>. It reads the GetOfferDetails (CCBS_GOD) response already in working memory, finds all <code>RelatedOffer</code> entries where <code>SelectedByDefault == 89</code> (ASCII 'Y'), and ensures each one is present in the corresponding order offer. If absent, it creates a new <code>RelatedOffersArray</code> concept and appends it.</p>
+    <p style="margin-top:8px;"><strong>No backend call is made.</strong> It uses the CCBS_GOD response data already stored as <code>GetOfferDetailsRes</code> concepts in working memory. On completion it calls <code>NextActivity</code> (or <code>SkipActivity</code> if PreExecCheck fails).</p>
+    <div class="callout callout-info" style="margin-top:10px;">
+      <strong>Key design notes:</strong>
+      <ul style="margin-left:20px;margin-top:4px;">
+        <li><strong>Prerequisite: CCBS_GOD response in memory.</strong> Collects all Activity entries where ActivityID=="CCBS_GOD" into a list; throws DATA_ISSUE if none found.</li>
+        <li><strong>SelectedByDefault=89 ('Y') gate.</strong> The original RelationType==77 logic was commented out ("Change in logic by TRUE"). Now uses <code>SelectedByDefault</code> field instead.</li>
+        <li><strong>FE_OR_CCBS activity parameter filter.</strong> Activity parameter <code>FE_OR_CCBS</code> restricts which offers to process. If parameter is null → process all offers (no filter).</li>
+        <li><strong>PreExecCheck gate.</strong> Full order XML serialized via <code>Instance.serializeUsingDefaults(orderRequest)</code>, then XPath evaluated. If not "true" → <code>SkipActivity("4")</code> (not NextActivity).</li>
+        <li><strong>Idempotent add: skip if already present.</strong> Checks if manSoc is already in offer's RelatedOffersArray before adding — no duplicates.</li>
+        <li><strong>CUG_ID ParameterInfo:</strong> Subscriber Offer variants include a <code>ParameterInfo[ParamName=CUG_ID]</code> if <code>CUG_IND=Y</code> in the related offer's SocProperties. Agreement Offer variants do not include CUG_ID.</li>
+        <li><strong>Audit Logger: conditional on AllowWriteLog(OrderType).</strong> Unlike OMX_CAL_OFFERS_EFF_DATE, logging here is gated by the order type permission flag.</li>
+        <li><strong>Multiple CCBS_GOD acts:</strong> Iterates over ALL collected CCBS_GOD activity entries (may be more than one).</li>
+      </ul>
+    </div>
+    <table style="margin-top:12px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule file</td><td>OMX_OfferInclusion.rule (OMXOM)</td></tr>
+      <tr><td>ActivityID matched</td><td><code>OMX_OFFER_INCLUSION</code></td></tr>
+      <tr><td>Response rulefunction</td><td><strong>None</strong></td></tr>
+      <tr><td>Backend system</td><td><strong>None</strong> — reads CCBS_GOD working memory only</td></tr>
+      <tr><td>Pattern</td><td>Internal OMXOM rule (reads GOD response, modifies order offers)</td></tr>
+      <tr><td>Completion</td><td><code>NextActivity</code> on success; <code>SkipActivity("4")</code> if PreExecCheck fails</td></tr>
+      <tr><td>Output</td><td>New <code>RelatedOffersArray</code> concepts appended to AgreementOffers and SubscriberOffers</td></tr>
+      <tr><td>Activity parameter</td><td><code>FE_OR_CCBS</code> — offer filter (null = all)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>priority</td><td>5</td><td>Standard</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Standard</td></tr>
+      <tr><td>Rule class</td><td>Internal OMXOM</td><td>File is OMX_OfferInclusion.rule (not Request_) — no JMS dispatch</td></tr>
+      <tr><td>Skip code</td><td><code>"4"</code></td><td>Used when PreExecCheck evaluates to "false" — skips to next step with status "4"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order; read for offers; written by appending RelatedOffersArray concepts</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>PreExecCheck source; activity parameter source; NextActivity/SkipActivity target</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity extId match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_OFFER_INCLUSION"</code></td><td>Constrains to this rule</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_OFFER_INCLUSION"</code></td><td>Double-check</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Ready to process</td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:10px;">
+      <strong>PreExecCheck (within THEN block):</strong><br/>
+      Evaluated via <code>XPath.execute("/("+chkXPath+")", sXML, namespace)</code> where <code>sXML = Instance.serializeUsingDefaults(orderRequest)</code> (full order XML). If check returns "false" → <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code> — no offer injection, no NextActivity.
+    </div>
+  </div>
+</div>
+
+<!-- §5 -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li><strong>Serialize order:</strong> <code>Instance.serializeUsingDefaults(orderRequest)</code> → full XML string for PreExecCheck XPath evaluation.</li>
+      <li><strong>PreExecCheck gate:</strong> If <code>String.length(PreExecCheck) &gt; 0</code> → evaluate XPath against sXML. If result != "true" → <code>SkipActivity("4")</code> and stop.</li>
+      <li><strong>Read activity parameters:</strong> <code>GetActivityParamValueFromKey(orderCurrentActivity, "FE_OR_CCBS")</code> → filter string (may be null).</li>
+      <li><strong>CCBS_GOD prerequisite check:</strong> Collect all ProcessFlow.Activities where ActivityID=="CCBS_GOD" into list. Throw DATA_ISSUE if empty.</li>
+      <li><strong>Triple-nested loop:</strong> For each GOD activity → for each GOD response offer (godSoc) → for each RelatedOffer where <code>SelectedByDefault==89</code> → extract manSoc, manOffNm, manSrvTyp, CUG_IND from SocProperties.</li>
+      <li><strong>PP@POU:</strong> For each ParentOU Agreement Offer matching godSoc AND FE_OR_CCBS filter → check if manSoc in RelatedOffersArray → if not, create RelatedOffersArray concept (Agreement variant, no CUG_ID) and append.</li>
+      <li><strong>Sub@POU:</strong> For each ParentOU Subscriber SubscriberOffer matching godSoc AND FE_OR_CCBS filter → same check/add pattern (Subscriber variant, with CUG_ID if CUG_IND=Y).</li>
+      <li><strong>PP@COU:</strong> For each ChildOU Agreement Offer matching godSoc AND FE_OR_CCBS filter → same as PP@POU (Agreement variant, no CUG_ID).</li>
+      <li><strong>Sub@COU:</strong> For each ChildOU Subscriber SubscriberOffer matching godSoc AND FE_OR_CCBS filter → same as Sub@POU (Subscriber variant, with CUG_ID, but ValuesArray conditional on CUG_ID having a value).</li>
+      <li><strong>Complete:</strong> <code>NextActivity(orderRequest, orderCurrentActivity)</code>; conditionally send Logger audit event if <code>AllowWriteLog(OrderType)</code>.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Annotated Logic</div>
+  <div class="section-body">
+    <pre><code><span class="cm">// Serialize full order for PreExecCheck</span>
+String sXML = Instance.<span class="fn">serializeUsingDefaults</span>(orderRequest);
+Object arrLstGODs = Collections.List.<span class="fn">createArrayList</span>();
+<span class="kw">if</span>(String.<span class="fn">length</span>(PreExecCheck)&gt;<span class="nu">0</span>)
+    chkRes = XPath.<span class="fn">execute</span>(<span class="st">"/("+chkXPath+")"</span>, sXML, <span class="st">"ns0=www.tibco.com/..."</span>);
+
+<span class="kw">if</span>(String.<span class="fn">equals</span>(chkRes,<span class="st">"true"</span>)) {
+    String fe_or_ccbs = Helpers.<span class="fn">GetActivityParamValueFromKey</span>(orderCurrentActivity, <span class="st">"FE_OR_CCBS"</span>);
+    <span class="kw">int</span> selByDefInd = <span class="nu">89</span>;  <span class="cm">// ASCII 'Y'</span>
+
+    <span class="cm">// Collect all CCBS_GOD activities</span>
+    <span class="kw">for</span>(<span class="kw">int</span> iActItr; iActItr &lt; Activities@length; iActItr++)
+        <span class="kw">if</span>(ActivityID==<span class="st">"CCBS_GOD"</span>) Collections.<span class="fn">add</span>(arrLstGODs, act);
+    <span class="kw">if</span>(Collections.<span class="fn">size</span>(arrLstGODs)==<span class="nu">0</span>) <span class="kw">throw</span> Exception(<span class="st">"DATA_ISSUE"</span>, <span class="st">"OMX did not find Get Offer Details response."</span>);
+
+    <span class="kw">for</span>(<span class="kw">int</span> iGOD; iGOD &lt; arrGODs@length; iGOD++) {              <span class="cm">// each GOD act</span>
+        <span class="kw">for</span>(<span class="kw">int</span> iGODResOff; iGODResOff &lt; godAct.Response@length; iGODResOff++) { <span class="cm">// each GOD offer</span>
+            godSoc = godRes.Code; iRelOff = godRes.RelatedOffers@length;
+            <span class="kw">for</span>(<span class="kw">int</span> iRelOff; iRelOff &lt; iRelOff; iRelOff++) {    <span class="cm">// each related offer</span>
+                <span class="kw">if</span>(godRes.RelatedOffers[i].SelectedByDefault == <span class="nu">89</span>) {  <span class="cm">// SelectedByDefault='Y'</span>
+                    manSoc = Code; manOffNm = Name; manSrvTyp = OfferType;
+                    socProperties = SocProperties; cugInd = extract(CUG_IND= ...);
+
+                    <span class="kw">for</span>(iPOU...) {
+                        <span class="cm">// PP@POU: Agreement Offers</span>
+                        <span class="kw">if</span>(fe_or_ccbs==<span class="kw">null</span> || FE_OR_CCBS_match) {
+                            <span class="kw">if</span>(agOff.Soc == godSoc) {
+                                isThere = scan RelatedOffersArray <span class="kw">for</span> manSoc;
+                                <span class="kw">if</span>(!isThere) agOff.RelatedOffersArray += Instance.<span class="fn">createInstance</span>(
+                                    <span class="st">"xslt://RelatedOffersArray (Agreement variant)"</span>);
+                            }
+                        }
+                        <span class="cm">// Sub@POU: Subscriber Offers (same pattern + CUG_ID)</span>
+                        <span class="kw">if</span>(fe_or_ccbs==<span class="kw">null</span> || FE_OR_CCBS_match) {
+                            <span class="kw">if</span>(subOff.Soc == godSoc) {
+                                isThere = scan RelatedOffersArray <span class="kw">for</span> manSoc;
+                                <span class="kw">if</span>(!isThere) subOff.RelatedOffersArray += Instance.<span class="fn">createInstance</span>(
+                                    <span class="st">"xslt://RelatedOffersArray (Subscriber variant + CUG_ID)"</span>);
+                            }
+                        }
+                        <span class="cm">// PP@COU: ChildOU Agreement Offers (same as PP@POU)</span>
+                        <span class="cm">// Sub@COU: ChildOU Subscriber Offers (same as Sub@POU, ValuesArray conditional)</span>
+                    }
+                } <span class="cm">// SelectedByDefault='Y'</span>
+            }
+        }
+    }
+    Helpers.<span class="fn">NextActivity</span>(orderRequest, orderCurrentActivity);
+    <span class="kw">if</span>(Helpers.<span class="fn">AllowWriteLog</span>(OrderType)) { <span class="cm">/* Logger audit */</span> }
+} <span class="kw">else</span> {
+    Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+}</code></pre>
+  </div>
+</div>
+
+<!-- §7 -->
+<div class="section">
+  <div class="section-header">§7 — FE_OR_CCBS Filter &amp; SelectedByDefault Logic</div>
+  <div class="section-body">
+    <h3>§7.1 — FE_OR_CCBS Activity Parameter Filter</h3>
+    <table>
+      <tr><th>FE_OR_CCBS value</th><th>Effect</th></tr>
+      <tr><td><code>null</code> (parameter absent)</td><td>No filter — ALL offers processed regardless of their FE_OR_CCBS tag</td></tr>
+      <tr><td><code>"FE"</code></td><td>Only offer objects where <code>ExtendedInfo[Name='FE_OR_CCBS']/Value == "FE"</code> are processed</td></tr>
+      <tr><td><code>"CCBS"</code></td><td>Only offer objects where <code>ExtendedInfo[Name='FE_OR_CCBS']/Value == "CCBS"</code> are processed</td></tr>
+    </table>
+    <p style="margin-top:8px;color:#555;font-size:.88rem;">The FE_OR_CCBS filter is applied on EACH individual offer object using an inline XPath expression bound to the <code>currOffer</code> concept variable.</p>
+
+    <h3 style="margin-top:16px;">§7.2 — SelectedByDefault Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th><th>Meaning</th></tr>
+      <tr><td><code>godRes.RelatedOffers[i].SelectedByDefault</code></td><td><code>89</code> (int)</td><td>ASCII 'Y' — this related offer must be auto-injected into the order</td></tr>
+      <tr><td>Original logic (commented out)</td><td><code>RelationType == 77</code></td><td>Legacy "mandatory offer relation type" global variable — commented out in current code</td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:8px;">
+      Per code comment: "Change in logic by TRUE, offer relation type not be used any more, use new field SelectedByDefault". The global variable <code>OMX_OM/BizRules/MandatoryOfferRelationType=77</code> is still read but never used in the current conditional check.
+    </div>
+
+    <h3 style="margin-top:16px;">§7.3 — CUG_IND Handling</h3>
+    <p>For each related offer, <code>CUG_IND</code> is extracted from <code>SocProperties</code> via <code>String.substringBefore(String.substringAfter(socProperties, "CUG_IND="), ";")</code>.</p>
+    <table style="margin-top:8px;">
+      <tr><th>CUG_IND value</th><th>Agreement variant</th><th>Subscriber variant (POU)</th><th>Subscriber variant (COU)</th></tr>
+      <tr><td><code>"Y"</code></td><td>No ParameterInfo added</td><td><code>ParameterInfo[CUG_ID]</code> added; ValuesArray always from ExtendedInfo</td><td><code>ParameterInfo[CUG_ID]</code> added; ValuesArray conditional if CUG_ID ExtendedInfo exists</td></tr>
+      <tr><td>Any other / absent</td><td>No ParameterInfo</td><td>No ParameterInfo</td><td>No ParameterInfo</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.1 — Order Type Dependencies</h3>
+    <p>Used in BN_CHANGE_PACKAGE step 9. The PreExecCheck on the activity entry gates whether offer injection runs at all. The <code>FE_OR_CCBS</code> activity parameter determines which offers to scan.</p>
+
+    <h3 style="margin-top:16px;">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Gate</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-teal">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td><code>AllowWriteLog(OrderType)</code></td><td>Completion audit (conditional — some order types skip logging)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.3 — BE Working Memory Dependencies (Read)</h3>
+    <table>
+      <tr><th>Concept path</th><th>Access</th><th>Purpose</th></tr>
+      <tr><td><code>ProcessFlow.Activities[ActivityID=CCBS_GOD]</code></td><td>Read</td><td>Source of offer details and related offers</td></tr>
+      <tr><td><code>CCBS_GOD.Response[*].Code</code></td><td>Read</td><td><code>godSoc</code> — the offer SOC to match against order offers</td></tr>
+      <tr><td><code>CCBS_GOD.Response[*].RelatedOffers[*].SelectedByDefault</code></td><td>Read</td><td>89 ('Y') gate for mandatory injection</td></tr>
+      <tr><td><code>CCBS_GOD.Response[*].RelatedOffers[*].Code, Name, OfferType, SocProperties, RcIndicator</code></td><td>Read</td><td>manSoc, manOffNm, manSrvTyp, CUG_IND source, RcIndicator for the new concept</td></tr>
+      <tr><td><code>ParentOU[*].Agreement.Offers[*].Soc, ExtendedInfo[FE_OR_CCBS], RelatedOffersArray</code></td><td>Read</td><td>Match godSoc; filter; duplicate check</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].Soc, ExtendedInfo[FE_OR_CCBS/CUG_ID], RelatedOffersArray</code></td><td>Read</td><td>Match godSoc; filter; duplicate check; CUG_ID value for ParameterInfo</td></tr>
+      <tr><td><code>ParentOU[*].ChildOU[*].Agreement.Offers[*].Soc, ExtendedInfo[FE_OR_CCBS], RelatedOffersArray</code></td><td>Read</td><td>Same as PP@POU for COU</td></tr>
+      <tr><td><code>ParentOU[*].ChildOU[*].Subscriber[*].SubscriberOffers[*].Soc, ExtendedInfo[FE_OR_CCBS/CUG_ID], RelatedOffersArray</code></td><td>Read</td><td>Same as Sub@POU for COU</td></tr>
+      <tr><td><code>orderCurrentActivity.PreExecCheck</code></td><td>Read</td><td>XPath gate expression</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.4 — BE Working Memory Dependencies (Written)</h3>
+    <table>
+      <tr><th>Concept path</th><th>Written when</th><th>Value</th></tr>
+      <tr><td><code>ParentOU[*].Agreement.Offers[*].RelatedOffersArray</code></td><td>manSoc absent in array</td><td>New RelatedOffersArray concept (Agreement variant)</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].RelatedOffersArray</code></td><td>manSoc absent in array</td><td>New RelatedOffersArray concept (Subscriber variant, with optional CUG_ID ParameterInfo)</td></tr>
+      <tr><td><code>ParentOU[*].ChildOU[*].Agreement.Offers[*].RelatedOffersArray</code></td><td>manSoc absent in array</td><td>New RelatedOffersArray concept (Agreement variant)</td></tr>
+      <tr><td><code>ParentOU[*].ChildOU[*].Subscriber[*].SubscriberOffers[*].RelatedOffersArray</code></td><td>manSoc absent in array</td><td>New RelatedOffersArray concept (Subscriber variant, ValuesArray conditional)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.5 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Variable path</th><th>Default</th><th>Usage</th></tr>
+      <tr><td><code>OMX_OM/BizRules/MandatoryOfferRelationType</code></td><td>77</td><td><strong>Read but not used</strong> — variable <code>manOffRelType</code> is read but the <code>if(RelationType==manOffRelType)</code> block is commented out</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 -->
+<div class="section">
+  <div class="section-header">§9 — Concept Construction — RelatedOffersArray Variants</div>
+  <div class="section-body">
+    <h3>§9.1 — Agreement Offer Variant (PP@POU and PP@COU)</h3>
+    <div class="callout callout-info">Used for both ParentOU and ChildOU Agreement Offers. Same XSLT. No CUG_ID ParameterInfo.</div>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">$manSocExt</span> <span class="tree-cond">(OMXUtils.generateTrackingID())</span> <span class="badge badge-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">OfferName</span><span class="tree-arrow">←</span><span class="tree-src">$manOffNm</span> <span class="tree-cond">(godRes.RelatedOffers[i].Name)</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ServiceType</span><span class="tree-arrow">←</span><span class="tree-src">$manSrvTyp</span> <span class="tree-cond">(godRes.RelatedOffers[i].OfferType)</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Soc</span><span class="tree-arrow">←</span><span class="tree-src">$manSoc</span> <span class="tree-cond">(godRes.RelatedOffers[i].Code)</span> <span class="badge badge-orange">Conditional: $manSoc</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RcIndicator</span><span class="tree-arrow">←</span><span class="tree-src">$godRes/RelatedOffers[n]/RcIndicator</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">SocProperties</span><span class="tree-arrow">←</span><span class="tree-src">$socProperties</span> <span class="badge badge-green">Always</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px;">§9.2 — Subscriber Offer Variant POU (Sub@POU)</h3>
+    <div class="callout callout-info">Used for ParentOU SubscriberOffers. OfferName/ServiceType/Soc are conditional. CUG_ID ParameterInfo has unconditional ValuesArray.</div>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">$manSocExt</span> <span class="badge badge-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">OfferName</span><span class="tree-arrow">←</span><span class="tree-src">$manOffNm</span> <span class="badge badge-orange">Conditional: $manOffNm</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ServiceType</span><span class="tree-arrow">←</span><span class="tree-src">$manSrvTyp</span> <span class="badge badge-orange">Conditional: $manSrvTyp</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Soc</span><span class="tree-arrow">←</span><span class="tree-src">$manSoc</span> <span class="badge badge-orange">Conditional: $manSoc</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ParameterInfo</span> <span class="badge badge-purple">Conditional: $cugInd='Y'</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ParamName</span><span class="tree-arrow">←</span><span class="tree-src-static">"CUG_ID"</span> <span class="badge badge-green">Always (when parent present)</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ValuesArray</span><span class="tree-arrow">←</span><span class="tree-src">$subOff/ExtendedInfo[Name="CUG_ID"]/Value</span> <span class="badge badge-green">Always (when parent present)</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">RcIndicator</span><span class="tree-arrow">←</span><span class="tree-src">$godRes/RelatedOffers[n]/RcIndicator</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">SocProperties</span><span class="tree-arrow">←</span><span class="tree-src">$socProperties</span> <span class="badge badge-green">Always</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px;">§9.3 — Subscriber Offer Variant COU (Sub@COU)</h3>
+    <div class="callout callout-info">Same as Sub@POU but ValuesArray for CUG_ID is also conditional on the ExtendedInfo value existing.</div>
+    <p style="margin-top:4px;color:#555;font-size:.88rem;">Difference vs Sub@POU: <code>&lt;ValuesArray&gt;</code> inside ParameterInfo is wrapped in <code>&lt;xsl:if test="$subOff/ExtendedInfo[Name='CUG_ID']/Value"&gt;</code>. This handles COU subscribers that may not have a CUG_ID ExtendedInfo set yet.</p>
+  </div>
+</div>
+
+<!-- §10 -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Summary (All Four Variants)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Source expression</th><th>Agreement POU/COU</th><th>Sub POU</th><th>Sub COU</th></tr>
+      <tr><td><code>@extId</code></td><td><code>$manSocExt</code> (generateTrackingID)</td><td><span class="badge badge-green">Always</span></td><td><span class="badge badge-green">Always</span></td><td><span class="badge badge-green">Always</span></td></tr>
+      <tr><td><code>OfferName</code></td><td><code>$manOffNm</code></td><td><span class="badge badge-green">Always</span></td><td><span class="badge badge-orange">Cond: $manOffNm</span></td><td><span class="badge badge-orange">Cond: $manOffNm</span></td></tr>
+      <tr><td><code>ServiceType</code></td><td><code>$manSrvTyp</code></td><td><span class="badge badge-green">Always</span></td><td><span class="badge badge-orange">Cond: $manSrvTyp</span></td><td><span class="badge badge-orange">Cond: $manSrvTyp</span></td></tr>
+      <tr><td><code>Soc</code></td><td><code>$manSoc</code></td><td><span class="badge badge-orange">Cond: $manSoc</span></td><td><span class="badge badge-orange">Cond: $manSoc</span></td><td><span class="badge badge-orange">Cond: $manSoc</span></td></tr>
+      <tr><td><code>ParameterInfo[CUG_ID]</code></td><td>from <code>$subOff/ExtendedInfo[CUG_ID]/Value</code></td><td>N/A</td><td><span class="badge badge-purple">Cond: cugInd='Y'</span></td><td><span class="badge badge-purple">Cond: cugInd='Y'</span></td></tr>
+      <tr><td><code>ValuesArray</code> (inside CUG_ID)</td><td>same as above</td><td>N/A</td><td><span class="badge badge-green">Always (under CUG)</span></td><td><span class="badge badge-orange">Cond: CUG_ID value exists</span></td></tr>
+      <tr><td><code>RcIndicator</code></td><td><code>$godRes/RelatedOffers[n]/RcIndicator</code></td><td><span class="badge badge-green">Always</span></td><td><span class="badge badge-green">Always</span></td><td><span class="badge badge-green">Always</span></td></tr>
+      <tr><td><code>SocProperties</code></td><td><code>$socProperties</code></td><td><span class="badge badge-green">Always</span></td><td><span class="badge badge-green">Always</span></td><td><span class="badge badge-green">Always</span></td></tr>
+    </table>
+    <div style="margin-top:12px;font-size:.82rem;color:#555;">
+      <strong>Legend:</strong>
+      <span class="badge badge-green">Always</span> = unconditional emit &nbsp;
+      <span class="badge badge-orange">Cond</span> = inside xsl:if / xsl:choose &nbsp;
+      <span class="badge badge-purple">Cond (outer)</span> = outer xsl:if gates the block
+    </div>
+  </div>
+</div>
+
+<!-- §11 -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Event</th><th>Gate</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th><th>Notes</th></tr>
+      <tr><td>Completion audit</td><td><code>AllowWriteLog(OrderType)</code></td><td><code>"/Rules/OMConsumers/OMXOM/OMX_OfferInclusion"</code></td><td><code>"OMX-OM OfferInclusion Completed."</code></td><td>Conditional — some OrderTypes skip logging</td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:8px;">
+      OPERATION_NAME uses a full path string (not just the ActivityID) — consistent with OMX_CAL_OFFERS_EFF_DATE. The AUDIT_TRACE "OMX-OM OfferInclusion Completed." here is <em>correct</em> for this rule (unlike the OMX_CAL_OFFERS_EFF_DATE where it was wrong). Logger <code>payload</code> is always empty.
+    </div>
+  </div>
+</div>
+
+<!-- §12 -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Action</th><th>Notes</th></tr>
+      <tr><td>PreExecCheck passes (or absent) AND success</td><td><code>NextActivity(orderRequest, orderCurrentActivity)</code></td><td>Normal advancement</td></tr>
+      <tr><td>PreExecCheck evaluates to "false"</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>Skip code "4"; offer injection skipped entirely</td></tr>
+      <tr><td>Exception</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td><td>Standard error handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Exception</th><th>Source</th><th>Handler</th></tr>
+      <tr><td><code>DATA_ISSUE: "OMX did not find Get Offer Details response."</code></td><td>Explicit throw when arrLstGODs is empty (no CCBS_GOD activity found)</td><td>Caught by outer catch → <code>HandleActivityException</code></td></tr>
+      <tr><td>Any other exception</td><td>XPath parse, XSLT createInstance, serialization failure</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §14 -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Helpers.GetActivityParamValueFromKey(orderCurrentActivity, "FE_OR_CCBS")</code></td><td>Read FE_OR_CCBS activity parameter value (returns null if not set)</td></tr>
+      <tr><td><code>Instance.serializeUsingDefaults(orderRequest)</code></td><td>Serialize full order to XML string for PreExecCheck XPath evaluation</td></tr>
+      <tr><td><code>XPath.execute("/("+chkXPath+")", sXML, namespace)</code></td><td>Evaluate PreExecCheck expression against serialized order XML</td></tr>
+      <tr><td><code>XPath.evalAsBoolean(...FE_OR_CCBS_match...)</code></td><td>Inline XPath bound to currOffer variable — evaluates FE_OR_CCBS filter match per offer</td></tr>
+      <tr><td><code>Collections.List.createArrayList()</code></td><td>Create list to collect all CCBS_GOD activity entries</td></tr>
+      <tr><td><code>Collections.add(arrLstGODs, act)</code></td><td>Append each CCBS_GOD activity to list</td></tr>
+      <tr><td><code>Collections.toArray(arrLstGODs)</code></td><td>Convert list to array for indexed iteration</td></tr>
+      <tr><td><code>Instance.createInstance("xslt://{{/Concepts/.../RelatedOffersArray}}...")</code></td><td>Create new RelatedOffersArray concept from XSLT template (4 variants)</td></tr>
+      <tr><td><code>String.substringBefore(String.substringAfter(socProperties,"CUG_IND="),";")</code></td><td>Extract CUG_IND flag from raw SocProperties string</td></tr>
+      <tr><td><code>System.getGlobalVariableAsInt("OMX_OM/BizRules/MandatoryOfferRelationType", 77)</code></td><td>Read legacy global var — value assigned to manOffRelType but the variable is never used in current code</td></tr>
+      <tr><td><code>OMXUtils.generateTrackingID()</code></td><td>Generate unique extId for each new RelatedOffersArray concept</td></tr>
+      <tr><td><code>Helpers.NextActivity(orderRequest, orderCurrentActivity)</code></td><td>Advance flow on success</td></tr>
+      <tr><td><code>Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>Skip this activity (PreExecCheck failed)</td></tr>
+      <tr><td><code>Helpers.AllowWriteLog(OrderType)</code></td><td>Gate for Logger audit event</td></tr>
+      <tr><td><code>Helpers.HandleActivityException(orderRequest, activity, ex, msg)</code></td><td>Error state transition</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><code>OMX_OfferInclusion (rule) [ActivityID: OMX_OFFER_INCLUSION]
+├── try {
+│   ├── Instance.serializeUsingDefaults(orderRequest)              [PreExecCheck XML]
+│   ├── [if PreExecCheck present]
+│   │   └── XPath.execute("/("+chkXPath+")", sXML, ns)            [gate evaluation]
+│   ├── [if chkRes == "true"] {
+│   │   ├── Helpers.GetActivityParamValueFromKey(act, "FE_OR_CCBS")
+│   │   ├── System.getGlobalVariableAsInt(MandatoryOfferRelationType, 77) [unused]
+│   │   ├── Collections.List.createArrayList()
+│   │   ├── [collect CCBS_GOD activities]
+│   │   │   └── Collections.add()
+│   │   ├── [if empty] throw DATA_ISSUE
+│   │   ├── Collections.toArray()
+│   │   ├── [for each GOD act]
+│   │   │   └── [for each GOD response offer]
+│   │   │       └── [for each RelatedOffer where SelectedByDefault==89]
+│   │   │           ├── String.substringBefore(String.substringAfter(socProp,"CUG_IND="),";")
+│   │   │           ├── [for each POU]
+│   │   │           │   ├── [PP@POU: Agreement Offers]
+│   │   │           │   │   ├── XPath.evalAsBoolean() [FE_OR_CCBS match]
+│   │   │           │   │   ├── [if Soc==godSoc] scan RelatedOffersArray for manSoc
+│   │   │           │   │   └── [if !isThere] {
+│   │   │           │   │       ├── OMXUtils.generateTrackingID()
+│   │   │           │   │       └── Instance.createInstance(xslt://RelatedOffersArray [Agreement])
+│   │   │           │   ├── [Sub@POU: Subscriber Offers]
+│   │   │           │   │   ├── XPath.evalAsBoolean() [FE_OR_CCBS match]
+│   │   │           │   │   ├── [if Soc==godSoc] scan RelatedOffersArray
+│   │   │           │   │   └── [if !isThere] {
+│   │   │           │   │       ├── OMXUtils.generateTrackingID()
+│   │   │           │   │       └── Instance.createInstance(xslt://RelatedOffersArray [Sub POU])
+│   │   │           │   ├── [PP@COU: ChildOU Agreement Offers — same as PP@POU]
+│   │   │           │   └── [Sub@COU: ChildOU Subscriber Offers — same as Sub@POU, ValuesArray cond]
+│   │   ├── Helpers.NextActivity()
+│   │   └── [if AllowWriteLog(OrderType)]
+│   │       ├── System.nanoTime()
+│   │       ├── Event.createEvent(xslt://Logger)
+│   │       └── Event.Ext.sendEventImmediate()
+│   } else {
+│       └── Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")
+│   }
+└── catch → Helpers.HandleActivityException()</code></pre>
+  </div>
+</div>
+
+<!-- §16 -->
+<div class="section">
+  <div class="section-header">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Used in</th><th>Key fields</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Both</td><td>ProcessFlow.Activities, OrderData.Customer.ParentOU/ChildOU/Subscriber/Agreement/Offers</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Both</td><td>ActivityID, PreExecCheck, Status, Parameters</td></tr>
+      <tr><td><code>Concepts.FM.Response.GetOfferDetailsRes</code></td><td>Read</td><td>Code (godSoc), RelatedOffers[].SelectedByDefault, RelatedOffers[].Code/Name/OfferType/SocProperties/RcIndicator</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.AgreementOffers</code></td><td>Read</td><td>Soc, ExtendedInfo[FE_OR_CCBS], RelatedOffersArray[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>Read</td><td>Soc, ExtendedInfo[FE_OR_CCBS/CUG_ID], RelatedOffersArray[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.RelatedOffersArray</code></td><td>Created</td><td>extId, OfferName, ServiceType, Soc, ParameterInfo(CUG_ID/ValuesArray), RcIndicator, SocProperties</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Evaluate PreExecCheck against full serialized order XML (serializeUsingDefaults). If false → SkipActivity("4"), no injection.</td></tr>
+      <tr><td>R2</td><td>Read FE_OR_CCBS activity parameter. If null → no filter (process all offers). If set → only process offers where ExtendedInfo[FE_OR_CCBS] matches.</td></tr>
+      <tr><td>R3</td><td>Require CCBS_GOD in ProcessFlow.Activities. Throw DATA_ISSUE if none found.</td></tr>
+      <tr><td>R4</td><td>For each GOD response offer, for each RelatedOffer with SelectedByDefault==89: check and inject if absent. Do NOT inject duplicates.</td></tr>
+      <tr><td>R5</td><td>Process all 4 scopes: PP@POU, Sub@POU, PP@COU, Sub@COU — same pattern per scope.</td></tr>
+      <tr><td>R6</td><td>Agreement variant: OfferName/ServiceType always; Soc conditional. No CUG_ID ParameterInfo.</td></tr>
+      <tr><td>R7</td><td>Subscriber variant: OfferName/ServiceType/Soc all conditional. CUG_ID ParameterInfo if CUG_IND=Y in SocProperties. COU variant also gates ValuesArray on value existence.</td></tr>
+      <tr><td>R8</td><td>Audit log conditional on AllowWriteLog(OrderType) — not unconditional.</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">Design Notes</h3>
+    <table>
+      <tr><th>Note</th><th>Severity</th><th>Detail</th></tr>
+      <tr><td><strong>MandatoryOfferRelationType global var is read but never used</strong></td><td><span class="badge badge-orange">MEDIUM</span></td><td>The old <code>if(RelationType==manOffRelType)</code> block is commented out. The variable is still read from global variables but only serves dead code. Can be removed in migration.</td></tr>
+      <tr><td><strong>Sub@POU vs Sub@COU CUG_ID ValuesArray difference</strong></td><td><span class="badge badge-blue">INFO</span></td><td>POU version: ValuesArray always present inside CUG_ID block. COU version: ValuesArray conditional on value existence. This subtle difference must be preserved.</td></tr>
+      <tr><td><strong>Multiple CCBS_GOD activities supported</strong></td><td><span class="badge badge-blue">INFO</span></td><td>The code collects ALL Activity entries with ActivityID=="CCBS_GOD" and iterates all of them. This handles cases where multiple GOD calls occurred (e.g., for different OUs). Migration must not assume only one.</td></tr>
+      <tr><td><strong>PreExecCheck evaluated on full order XML</strong></td><td><span class="badge badge-blue">INFO</span></td><td>Unlike some rules that evaluate PreExecCheck per-offer, here the full order is serialized once and the XPath is evaluated against it. The XPath namespace is hard-coded to <code>ns0=www.tibco.com/be/ontology/Concepts/OrderRequest/OrderRequest</code>.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Condensed)</div>
+  <div class="section-body">
+    <pre><code><span class="kw">rule</span> Rules.OMConsumers.OMXOM.<span class="ty">OMX_OfferInclusion</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> { <span class="ty">OrderRequest</span> orderRequest; <span class="ty">Activity</span> orderCurrentActivity; }
+    <span class="kw">when</span> { <span class="cm">/* extId / ActivityID=="OMX_OFFER_INCLUSION" / NextActivityID / Status=="WAITING" */</span> }
+    <span class="kw">then</span> {
+        <span class="kw">try</span> {
+            sXML = Instance.<span class="fn">serializeUsingDefaults</span>(orderRequest);
+            chkRes = XPath.<span class="fn">execute</span>(...); <span class="cm">// if PreExecCheck present</span>
+            <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+                fe_or_ccbs = GetActivityParamValueFromKey(<span class="st">"FE_OR_CCBS"</span>);
+                selByDefInd = <span class="nu">89</span>; <span class="cm">// ASCII 'Y'</span>
+                <span class="cm">// Collect all CCBS_GOD acts; throw DATA_ISSUE if none</span>
+                <span class="kw">for</span>(iGOD...) {
+                    <span class="kw">for</span>(iRes...) {  godSoc = godRes.Code;
+                        <span class="kw">for</span>(iRelOff...) {
+                            <span class="kw">if</span>(SelectedByDefault == <span class="nu">89</span>) {
+                                manSoc = Code; manOffNm = Name; manSrvTyp = OfferType;
+                                cugInd = extract CUG_IND <span class="kw">from</span> SocProperties;
+                                <span class="kw">for</span>(iPOU...) {
+                                    <span class="cm">// PP@POU: find agOff.Soc==godSoc + FE_OR_CCBS match → add if !isThere</span>
+                                    <span class="cm">//   Instance.createInstance(xslt://RelatedOffersArray [Agreement])  — see §9.1</span>
+                                    <span class="cm">// Sub@POU: same + CUG_ID ParameterInfo → add if !isThere</span>
+                                    <span class="cm">//   Instance.createInstance(xslt://RelatedOffersArray [Sub POU])    — see §9.2</span>
+                                    <span class="cm">// PP@COU: same as PP@POU for ChildOU Agreement Offers             — see §9.1</span>
+                                    <span class="cm">// Sub@COU: same as Sub@POU, ValuesArray conditional               — see §9.3</span>
+                                }
+                            }
+                        }
+                    }
+                }
+                Helpers.<span class="fn">NextActivity</span>(orderRequest, orderCurrentActivity);
+                <span class="kw">if</span>(AllowWriteLog(OrderType)) { <span class="cm">/* Logger audit — OPERATION_NAME: /Rules/.../OMX_OfferInclusion */</span> }
+            } <span class="kw">else</span> {
+                Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+            }
+        } <span class="kw">catch</span>(<span class="ty">Exception</span> ae) { HandleActivityException; }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<!-- §19: no response rulefunction -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <p><em>Not applicable.</em> This is an internal OMXOM rule with no backend call. It calls <code>NextActivity</code> or <code>SkipActivity</code> synchronously. There is no corresponding response rulefunction.</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · OMX_OFFER_INCLUSION</footer>
+</body>
+</html>

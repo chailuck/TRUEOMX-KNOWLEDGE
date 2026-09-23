@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_MSIM_SWAP_SIM</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:13px;line-height:1.5}
+.hdr{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:28px 40px}
+.hdr h1{font-size:1.6rem;font-weight:700;margin-bottom:4px;word-break:break-all}
+.hdr .sub{opacity:.85;font-size:.9rem;margin-bottom:10px}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.15);border-radius:20px;padding:3px 12px;font-size:.78rem}
+.cont{max-width:1300px;margin:0 auto;padding:20px 32px}
+.sec{background:var(--card);border-radius:10px;margin-bottom:18px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.sec-hdr{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:9px 16px;font-size:.88rem;font-weight:600;border-left:4px solid var(--true-light)}
+.sec-body{padding:14px 16px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:7px 10px;text-align:left;font-weight:600}
+td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre.blk{background:var(--code-bg);color:var(--code-fg);padding:10px 14px;border-radius:6px;font-size:.75rem;overflow-x:auto;white-space:pre-wrap;border-left:3px solid var(--true-red)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600}
+.b-grn{background:#E8F5E9;color:var(--success)}.b-org{background:#FFF3E0;color:var(--warning)}
+.b-pur{background:#F3E5F5;color:var(--skip)}.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-blu{background:#E3F0FD;color:var(--info)}.b-tl{background:#E0F2F1;color:#00695c}
+.step{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.step-n{background:var(--true-red);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.8rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:2px 0 2px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:11px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 5px;border-radius:3px}
+.tree-src-s{color:#fab387;background:rgba(250,179,135,.1);padding:1px 5px;border-radius:3px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.tree-arrow{color:#6c7086;margin:0 4px}
+.warn-box{background:#FFF3E0;border-left:4px solid #e65100;padding:10px 14px;border-radius:4px;margin-bottom:10px;font-size:.83rem}
+footer{text-align:center;padding:16px;color:#888;font-size:.75rem;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>Request_CCBS_MSIM_SWAP_SIM</h1>
+  <div class="sub">Execute SIM swap in CCBS for Multi-SIM (MSIM) subscribers; pre-populates ResourceInfo (OLD_IMEI/IMEI/EID/SIM/IMSI) before dispatch and marks IS_CALLED_MSIM_SWAP_SIM=Y</div>
+  <div class="chips">
+    <span class="chip">Rule Priority: 5</span>
+    <span class="chip">ForwardChain: true</span>
+    <span class="chip">Backend: CCBS (MSim)</span>
+    <span class="chip">Pattern: IntraActivitySequencing</span>
+    <span class="chip">Author: sakarin-radchapunya</span>
+  </div>
+</div>
+<div class="cont">
+
+<div class="sec"><div class="sec-hdr">§1 — Overview &amp; Purpose</div><div class="sec-body">
+<p>This rule fires when the process reaches <code>CCBS_MSIM_SWAP_SIM</code>. It performs the CCBS SIM swap for Multi-SIM (MSIM) subscribers. Before building the request event, it pre-populates the subscriber's ResourceInfo with missing values: OLD_IMEI (from OLD_MIIMEI), IMEI (from NEW_MIIMEI), EID (from NEW_EID), SIM (from NEW_SIM), IMSI (from NEW_IMSI) — only added when not already present. It builds a <code>mSimData/OUList</code> payload containing the subscriber ID, an empty Master MultiSIMInfo placeholder, all ResourceInfo entries, and ActivityReason/UserText. The pattern is <strong>IntraActivitySequencing</strong>. As a side effect, <code>IS_CALLED_MSIM_SWAP_SIM=Y</code> is set in subscriber.ExtendedInfo to gate downstream steps. Two XSLT variants exist: one for POU subscribers (includes RefID), one for ChildOU subscribers (no RefID in header).</p>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§2 — Rule Metadata</div><div class="sec-body">
+<table><tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_MSIM_SWAP_SIM</code></td></tr>
+<tr><td>Priority</td><td>5</td></tr><tr><td>ForwardChain</td><td>true</td></tr>
+<tr><td>Activity ID</td><td>CCBS_MSIM_SWAP_SIM</td></tr>
+<tr><td>Author</td><td>sakarin-radchapunya</td></tr>
+<tr><td>Backend System</td><td>CCBS (Multi-SIM endpoint)</td></tr>
+<tr><td>Dispatch Pattern</td><td>IntraActivitySequencing (assertEvent → ActionRequestEvent → SendFirstRequestEvent)</td></tr>
+<tr><td>Schema</td><td>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/MSim.xsd</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§4 — Rule Conditions (WHEN)</div><div class="sec-body">
+<table><tr><th>#</th><th>Condition</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_MSIM_SWAP_SIM"</code></td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_MSIM_SWAP_SIM"</code></td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§5 — Execution Flow</div><div class="sec-body">
+<div class="step"><div class="step-n">1</div><div>If resubmit: <code>PurgePendingRequestsBeforeResubmit</code></div></div>
+<div class="step"><div class="step-n">2</div><div>Loop POU[i] → Subscriber[j]; evaluate PreExecCheck; check reqSuccess guard</div></div>
+<div class="step"><div class="step-n">3</div><div><strong>Pre-populate ResourceInfo</strong>: Add OLD_IMEI (from OLD_MIIMEI), IMEI (from NEW_MIIMEI), EID (from NEW_EID), SIM (from NEW_SIM), IMSI (from NEW_IMSI) only if missing</div></div>
+<div class="step"><div class="step-n">4</div><div>Build and assert <code>CCBS_MSIM_SWAP_SIM</code> request event; ActionRequestEvent</div></div>
+<div class="step"><div class="step-n">5</div><div>If not resubmit: set <code>IS_CALLED_MSIM_SWAP_SIM=Y</code> in subscriber.ExtendedInfo</div></div>
+<div class="step"><div class="step-n">6</div><div>Repeat for ChildOU[k] → Subscriber[j] (same logic, no pre-populate for ChildOU subscribers)</div></div>
+<div class="step"><div class="step-n">7</div><div>SendFirstRequestEvent → set IN_PROGRESS; or SkipActivity</div></div>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§6 — Data Extraction: Pre-populate ResourceInfo</div><div class="sec-body">
+<table><tr><th>Source ResourceName</th><th>Target ResourceName</th><th>Condition</th></tr>
+<tr><td>OLD_MIIMEI</td><td>OLD_MIIMEI (written as OLD_MIIMEI, not OLD_IMEI)</td><td>not(exists(subscriber/ResourceInfo[OLD_IMEI])) AND OLD_MIIMEI not blank</td></tr>
+<tr><td>NEW_MIIMEI</td><td>MIIMEI</td><td>not(exists(subscriber/ResourceInfo[IMEI])) AND not(exists(MIIMEI)) AND NEW_MIIMEI not blank</td></tr>
+<tr><td>NEW_EID</td><td>EID</td><td>not(exists(subscriber/ResourceInfo[EID])) AND NEW_EID not blank</td></tr>
+<tr><td>NEW_SIM</td><td>SIM</td><td>not(exists(subscriber/ResourceInfo[SIM])) AND NEW_SIM not blank (from first POU subscriber)</td></tr>
+<tr><td>NEW_IMSI</td><td>IMSI</td><td>not(exists(subscriber/ResourceInfo[IMSI])) AND NEW_IMSI not blank (from first POU subscriber)</td></tr>
+</table>
+<div class="warn-box">⚠ The pre-populate step uses <code>OLD_MIIMEI</code> as both the source and destination name (line 64: ResourceName='OLD_MIIMEI'). This appears to write OLD_MIIMEI under the alias/category of "OLD_MIIMEI" rather than the more expected "OLD_IMEI". Migration should clarify intent.</div>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§8 — System &amp; Integration Dependencies</div><div class="sec-body">
+<table><tr><th>Direction</th><th>Event</th><th>Backend</th></tr>
+<tr><td><span class="badge b-org">OUTBOUND</span></td><td>Events.OMConsumers.OMXFM.Request.CCBS_MSIM_SWAP_SIM</td><td>CCBS (MSim API)</td></tr>
+<tr><td><span class="badge b-tl">INBOUND</span></td><td>Events.OMConsumers.OMXFM.Response.CCBS_MSIM_SWAP_SIM</td><td>CCBS</td></tr>
+</table>
+<h4 style="margin:10px 0 6px;color:var(--true-dark)">ExtendedInfo Written</h4>
+<table><tr><th>Name</th><th>Value</th><th>When</th></tr>
+<tr><td>IS_CALLED_MSIM_SWAP_SIM</td><td>Y</td><td>Written to subscriber.ExtendedInfo after each successful dispatch (not resubmit)</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§9 — Payload Build (mSimData)</div><div class="sec-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent / event</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">JMSPriority / JMSCorrelationID / OrderID / CES / OrderType</span><span class="badge b-org">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId</span><span class="badge b-grn">Always (POU variant only)</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="badge b-pur">Credential-gated</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns:mSimData/ns:OUList</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:Subscriber/ns:subscriberId</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberId</span><span class="badge b-grn">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:MultiSIMInfo/ns:Master</span><span class="tree-arrow">←</span><span class="tree-src-s">(empty element)</span><span class="badge b-grn">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns1:ResourceInfo</span><span class="tree-arrow">←</span><span class="tree-src">for-each subscriber/ResourceInfo</span><span class="badge b-org">Conditional</span> <span style="font-size:.75rem;color:#666">Category/Name/Values mapped from ResourceCategory/ResourceName/ValuesArray</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:activityInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:ActivityReason</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberActivityInfo/ActivityReason</span><span class="badge b-org">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:UserText</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberActivityInfo/UserText</span><span class="badge b-org">Conditional</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§11 — Audit Logging</div><div class="sec-body">
+<table><tr><th>Field</th><th>Value</th></tr>
+<tr><td>OPERATION_NAME</td><td>"CCBS_MSIM_SWAP_SIM" (static)</td></tr>
+<tr><td>AUDIT_TRACE</td><td>concat("Request Sent for RefId: ", $refId)</td></tr>
+<tr><td>Guard</td><td>AllowWriteLog(orderType)</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§15 — Function Dependency Tree</div><div class="sec-body">
+<pre class="blk">Request_CCBS_MSIM_SWAP_SIM
+├── RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── RuleFunctions.Helpers.GetXMLForSubscriber(req, refId)               ← POU PreExecCheck
+├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(req, refId, pouRefId) ← ChildOU PreExecCheck
+├── XPath.evalAsBoolean() × 5                                           ← ResourceInfo absence checks
+├── Instance.createInstance() × 5                                       ← Create ResourceInfo concepts
+├── Event.assertEvent(reqEvent)
+├── RuleFunctions.Helpers.IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+├── Instance.createInstance(SubscriberExtendedInfo)                     ← IS_CALLED_MSIM_SWAP_SIM=Y
+├── RuleFunctions.Helpers.AllowWriteLog(orderType)
+├── RuleFunctions.Helpers.IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(req, activity, "4")
+└── RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")</pre>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§17 — Migration Notes</div><div class="sec-body">
+<table><tr><th>#</th><th>Requirement</th></tr>
+<tr><td>R1</td><td>Before calling CCBS, populate missing ResourceInfo: OLD_MIIMEI, MIIMEI, EID, SIM, IMSI from NEW_* variants</td></tr>
+<tr><td>R2</td><td>Build mSimData payload with subscriber ID, empty MultiSIMInfo/Master, full ResourceInfo array, activityInfo</td></tr>
+<tr><td>R3</td><td>After dispatch set IS_CALLED_MSIM_SWAP_SIM=Y on subscriber (gates steps 34 and 27/28)</td></tr>
+<tr><td>R4</td><td>Fan-in via IntraActivitySequencing (assertEvent pattern)</td></tr>
+</table>
+<div class="warn-box">⚠ <strong>ResourceName ambiguity:</strong> The code writes NEW_MIIMEI → MIIMEI (not IMEI). Confirm with data dictionary whether MIIMEI is the correct internal name for IMEI.</div>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§19 — Response Message Rule</div><div class="sec-body">
+<p><strong>§19.1</strong> Creates <code>CCBS_MsimSwapSimRes</code> concept (ResponseCode/ResponseMsg/CompletionStatus/ReferenceId). Fan-in via <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code>.</p>
+<p style="margin-top:8px"><strong>§19.2</strong> Scope: <code>eventResponse: Events.OMConsumers.OMXFM.Response.CCBS_MSIM_SWAP_SIM</code></p>
+<p style="margin-top:6px"><strong>Note:</strong> The success count XPath is commented out — fan-in relies entirely on <code>IntraActivitySequencing.ActionResponseEvent</code> which internally tracks assertEvent/ActionRequestEvent matching. OPERATION_NAME in audit log: <code>"CCBS_MSIM_SWAP_SIM"</code>.</p>
+</div></div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCBS_MSIM_SWAP_SIM</footer>
+</body></html>

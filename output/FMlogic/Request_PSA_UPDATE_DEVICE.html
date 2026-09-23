@@ -1,0 +1,361 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_PSA_UPDATE_DEVICE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem;margin-bottom:14px}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:18px;border-radius:8px;overflow-x:auto;font-size:.8rem;border-left:3px solid var(--true-red)}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.88rem}
+.callout-warn{border-color:#e65100;background:#FFF3E0}
+.callout-info{border-color:#1565c0;background:#E3F0FD}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_PSA_UPDATE_DEVICE</h1>
+  <div class="subtitle">Updates device registration record in PSA per material item (IMEI-ID + MAT_CODE). Fan-out is per Material under MaterialInfo — not per offer. Param-name resolved by priority: PARTNER ExtendedInfo → IoT (CLOUD-SERVICE) → Knox (KNOX) → TPC-ASURION.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: PSA (UpdateDevice)</span>
+    <span class="meta-badge">Pattern: Per-material fan-out</span>
+    <span class="meta-badge">RefID: subRefId:MatCode (2-part)</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Used in step: 70</span>
+    <span class="meta-badge">Generated: 2026-08-11</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Sends one <strong>PSA UpdateDeviceReq</strong> per material item in the subscriber's <code>MaterialInfo.Material[]</code> array. This is the only FM in the Knox/PSA cluster that fans out <strong>per material</strong> rather than per offer. The 2-part RefID (<code>subRefId:MatCode</code>) is used throughout for request correlation and resubmit guard. <code>deviceStatus</code> and <code>srType</code> are read from ProcessConfig Parameters.</p>
+    <ul style="margin:12px 0 0 20px;line-height:2">
+      <li><strong>Fan-out:</strong> per <code>psub.MaterialInfo.Material[]</code> (guarded: <code>if (psub.MaterialInfo != null)</code>)</li>
+      <li><strong>RefID:</strong> <code>subRefId + ":" + material.MatCode</code> (2-part)</li>
+      <li><strong>Payload root:</strong> <code>ns8:UpdateDeviceReq</code> — PSA UpdateDevice schema</li>
+      <li><strong>Key identifiers:</strong> IMEI-ID = MatSerial, MAT_CODE = MatCode</li>
+      <li><strong>param-name priority:</strong> PARTNER > CLOUD-SERVICE > KNOX > TPC-ASURION (see §7)</li>
+      <li><strong>SR-TYPE priority:</strong> sub.ExtendedInfo[SR_TYPE] > ProcessConfig srType Parameter</li>
+      <li><strong>Response:</strong> standard ResponseBase only — no write-back</li>
+    </ul>
+    <div class="callout callout-warn" style="margin-top:14px">
+      <strong>[MEDIUM] param-name may be empty:</strong> If none of the four priority conditions match (no PARTNER, no IOTBU offer, no IMEI_KNOX, no TPC_REFNO), <code>ns8:param-name</code> is omitted entirely — the fallback <code>xsl:otherwise</code> contains only the inner <code>xsl:choose</code> with no final default. PSA behaviour with a missing param-name is untested.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] No explicit Parameter guard:</strong> Unlike Knox FMs, there is no upfront <code>Parameter@length == 0</code> check. If ProcessConfig has no Parameters, <code>deviceStatus</code> and <code>srType</code> will be empty strings — <code>ns8:DEVICE-STATUS</code> is conditional so absent is safe; <code>ns8:SR-TYPE</code> may be omitted if both sources are empty.
+    </div>
+    <div class="callout callout-info">
+      <strong>[INFO] Both POU and COU RefIDs are correct:</strong> POU sends <code>$pMatRefId</code>, COU sends <code>$cMatRefId</code> — both match the resub guard check. No RefID bug here.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_PSA_UPDATE_DEVICE.rule</code></td><td>170 lines</td></tr>
+      <tr><td>Rule namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td><td></td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_PSA_UPDATE_DEVICE.rulefunction</code></td><td>27 lines — standard, no write-back</td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td>true</td><td></td></tr>
+      <tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.PSA_UPDATE_DEVICE</code></td><td>Dedicated event type</td></tr>
+      <tr><td>Payload root</td><td><code>ns8:UpdateDeviceReq</code></td><td>PSA UpdateDevice</td></tr>
+      <tr><td>Schema NS (ns8)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/PSA/UpdateDevice.xsd</code></td><td>Primary payload</td></tr>
+      <tr><td><strong>Fan-out pattern</strong></td><td><strong>Per-Material</strong> — <code>MaterialInfo.Material[]</code></td><td>Unique — NOT per-offer like Knox FMs</td></tr>
+      <tr><td>Material guard</td><td><code>if (psub.MaterialInfo != null)</code></td><td>Skips subscribers without MaterialInfo</td></tr>
+      <tr><td>RefID format</td><td><code>subRefId + ":" + material.MatCode</code></td><td>2-part (no filter/SOC segment)</td></tr>
+      <tr><td>POU RefID</td><td><code>$pMatRefId</code> — correct</td><td><span class="badge badge-green">CORRECT</span></td></tr>
+      <tr><td>COU RefID</td><td><code>$cMatRefId</code> — correct</td><td><span class="badge badge-green">CORRECT</span></td></tr>
+      <tr><td>deviceStatus source</td><td><code>GetActivityParameterValueFromKey(orderCurrentActivity, "deviceStatus")</code></td><td>Read inside loop after PreExecCheck</td></tr>
+      <tr><td>srType source</td><td><code>GetActivityParameterValueFromKey(orderCurrentActivity, "srType")</code></td><td>Override by sub.ExtendedInfo[SR_TYPE] if present</td></tr>
+      <tr><td>Parameter guard</td><td>ABSENT</td><td><span class="badge badge-orange">[LOW]</span> No explicit check</td></tr>
+      <tr><td>POU PreExecCheck builder</td><td><code>GetXMLForSubscriberMaterialInfo(orderRequest, pSubRefId, MatCode|MatSerial)</code></td><td>Material-level context — CORRECT</td></tr>
+      <tr><td>COU PreExecCheck builder</td><td><code>GetXMLForSubscriberMaterialInChildOU(orderRequest, cSubRefId, pOuRefId, MatCode|MatSerial)</code></td><td>Material-level in ChildOU — CORRECT</td></tr>
+      <tr><td>Response write-back</td><td>None</td><td>Standard ResponseBase</td></tr>
+      <tr><td>Resub purge</td><td>ABSENT</td><td>No PurgePendingRequestsBeforeResubmit</td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"PSA_UPDATE_DEVICE"</code></td><td>Hardcoded in both request and response audit</td></tr>
+      <tr><td>Fan-in</td><td><code>RequestCount == successResponseCount</code></td><td>success = ResponseCode suffix "000"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="card">
+  <div class="card-header">§3 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "PSA_UPDATE_DEVICE"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "PSA_UPDATE_DEVICE"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 param-name logic -->
+<div class="card">
+  <div class="card-header">§7 — param-name Priority Logic (ns8:param-name)</div>
+  <div class="card-body">
+    <p>The <code>ns8:param-name</code> value determines which partner/service category PSA routes the update to. Resolution follows a strict priority cascade:</p>
+    <table>
+      <tr><th>Priority</th><th>Condition</th><th>param-name value</th></tr>
+      <tr><td>1 (highest)</td><td><code>string-length(sub.ExtendedInfo[PARTNER]/Value) &gt; 0</code></td><td><code>sub.ExtendedInfo[PARTNER]/Value</code> (subscriber-level explicit partner)</td></tr>
+      <tr><td>2</td><td><code>SubscriberOffers[SocProperties contains "TR_SPECIAL_OFFER_IND=IOTBU"]/RelatedOffersArray[MatSerialRefId == $material/MatSerial]</code></td><td><code>"CLOUD-SERVICE"</code> (IoT/IOTBU offer with matching serial)</td></tr>
+      <tr><td>3</td><td><code>string-length(SubscriberOffers/ExtendedInfo[IMEI_KNOX]/Value) &gt; 0</code></td><td><code>"KNOX"</code> (any offer has Knox IMEI)</td></tr>
+      <tr><td>4</td><td><code>string-length(OrderData/ExtendedInfo[TPC_REFNO]/Value) &gt; 0</code></td><td><code>"TPC-ASURION"</code> (TPC reference number present)</td></tr>
+      <tr><td>5 (default)</td><td>None of the above match</td><td><em>ns8:param-name omitted entirely</em> <span class="badge badge-orange">[MEDIUM]</span></td></tr>
+    </table>
+    <div class="callout callout-warn" style="margin-top:12px">
+      The IOTBU check (priority 2) cross-references both the offer's <code>SocProperties</code> and the offer's <code>RelatedOffersArray[MatSerialRefId == material.MatSerial]</code> — the material being updated must appear in a related-offer entry under an IOTBU offer.
+    </div>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p style="margin-bottom:8px">POU uses <code>$pMatRefId</code>/<code>$psub</code>/<code>$material</code> params; COU uses <code>$cMatRefId</code>/<code>$csub</code>/<code>$material</code> — payload structure identical.</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$pMatRefId / $cMatRefId (subRefId:MatCode)</span><span class="badge badge-green">Always</span><span class="tree-cond">Both POU and COU correct</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="tree-arrow">←</span><span class="tree-src">OrderData/User, Password</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns8:UpdateDeviceReq</span><span class="tree-ns">ns8=http://…/PSA/UpdateDevice.xsd</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:req-trx-id</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:user-info</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:app-user</span><span class="tree-arrow">←</span><span class="tree-src-static">"OMX"</span><span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:channel-access</span><span class="tree-arrow">←</span><span class="tree-src">if DealerCode: concat("OMX-", Channel); else: "OMX"</span><span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:channel-code</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/DealerCode</span><span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:user-code</span><span class="tree-arrow">←</span><span class="tree-src">$sub/SubscriberGeneralInfo/saleId</span><span class="badge badge-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:user-login</span><span class="tree-arrow">←</span><span class="tree-src-static">"ESD_OMXMOBI"</span><span class="badge badge-green">Always</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:key-info [1]</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:name</span><span class="tree-arrow">←</span><span class="tree-src-static">"IMEI-ID"</span><span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:value</span><span class="tree-arrow">←</span><span class="tree-src">$material/MatSerial</span><span class="badge badge-green">Always</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:key-info [2]</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:name</span><span class="tree-arrow">←</span><span class="tree-src-static">"MAT_CODE"</span><span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:value</span><span class="tree-arrow">←</span><span class="tree-src">$material/MatCode</span><span class="badge badge-green">Always</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:params</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:param-name</span><span class="tree-arrow">←</span><span class="tree-src">PARTNER value OR "CLOUD-SERVICE" OR "KNOX" OR "TPC-ASURION"</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">Priority cascade — omitted if none match</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns8:param-info</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns8:REF-NUMBER</span><span class="tree-arrow">←</span><span class="tree-src">TPC_REFNO OR OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns8:SR-TYPE</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[SR_TYPE] OR $srType param</span><span class="badge badge-orange">Conditional</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns8:SR-COMPLETION-DATE</span><span class="tree-arrow">←</span><span class="tree-src">tib:format-dateTime("dd/MM/yyyy HH:mm:ss", SubmissionDate)</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns8:DEVICE-STATUS</span><span class="tree-arrow">←</span><span class="tree-src">$deviceStatus param</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">xsl:if on $deviceStatus; from ProcessConfig</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns8:MOBILE-NUMBER</span><span class="tree-arrow">←</span><span class="tree-src">$sub/MSISDN</span><span class="badge badge-orange">Conditional</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns8:NEW-IMEI-ID</span><span class="tree-arrow">←</span><span class="tree-src">sub.ExtendedInfo[NEW_MAT_SERIAL]/Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">string-length &gt; 0 guard</span></div></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>PSA (Partner Service Access)</td></tr>
+      <tr><td>Operation</td><td>UpdateDeviceReq — update device service/partner registration</td></tr>
+      <tr><td>Schema NS (ns8)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/PSA/UpdateDevice.xsd</code></td></tr>
+      <tr><td>Key 1: IMEI-ID</td><td><code>material.MatSerial</code></td></tr>
+      <tr><td>Key 2: MAT_CODE</td><td><code>material.MatCode</code></td></tr>
+      <tr><td>app-user</td><td>"OMX" (hardcoded)</td></tr>
+      <tr><td>user-login</td><td>"ESD_OMXMOBI" (hardcoded)</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§8.4 Working Memory / ExtendedInfo Fields</h3>
+    <table>
+      <tr><th>Name</th><th>Level</th><th>Direction</th><th>Purpose</th></tr>
+      <tr><td>PARTNER</td><td>Subscriber</td><td>INPUT</td><td>Explicit partner name (highest priority for ns8:param-name)</td></tr>
+      <tr><td>IMEI_KNOX</td><td>Offer</td><td>INPUT</td><td>Determines "KNOX" param-name if present on any offer</td></tr>
+      <tr><td>SR_TYPE</td><td>Subscriber</td><td>INPUT</td><td>Overrides ProcessConfig srType parameter for ns8:SR-TYPE</td></tr>
+      <tr><td>NEW_MAT_SERIAL</td><td>Subscriber</td><td>INPUT</td><td>ns8:NEW-IMEI-ID (device swap/replacement scenario)</td></tr>
+      <tr><td>TPC_REFNO</td><td>OrderData</td><td>INPUT</td><td>Determines "TPC-ASURION" param-name; ns8:REF-NUMBER source</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_PSA_UPDATE_DEVICE (rule)
+├── isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── [NOTE: NO Parameter guard / NO PurgePendingRequestsBeforeResubmit]
+├── [POU loop p → ps]:
+│   ├── if (psub.MaterialInfo != null):
+│   │   ├── [Material loop pmat]:
+│   │   │   ├── pMatRefId = pSubRefId + ":" + material.MatCode
+│   │   │   ├── [Resub guard]: Response[ReferenceId == pMatRefId &amp;&amp; CompletionStatus==2]
+│   │   │   ├── [PreExecCheck]:
+│   │   │   │   ├── if MatCode not blank: GetXMLForSubscriberMaterialInfo(orderRequest, pSubRefId, MatCode)
+│   │   │   │   └── else: GetXMLForSubscriberMaterialInfo(orderRequest, pSubRefId, MatSerial)
+│   │   │   └── [if "true"]:
+│   │   │       ├── deviceStatus = GetActivityParameterValueFromKey(orderCurrentActivity, "deviceStatus")
+│   │   │       ├── srType      = GetActivityParameterValueFromKey(orderCurrentActivity, "srType")
+│   │   │       ├── Event.createEvent(PSA_UPDATE_DEVICE, XSLT: ns8:UpdateDeviceReq, RefID=$pMatRefId)
+│   │   │       ├── Event.Ext.sendEventImmediate(reqEvent)
+│   │   │       └── [if !isActResub]: RequestCount++
+├── [COU loop p → c → cs]:
+│   ├── if (csub.MaterialInfo != null):
+│   │   ├── [Material loop cmat]:
+│   │   │   ├── cMatRefId = cSubRefId + ":" + material.MatCode
+│   │   │   ├── [Resub guard]: Response[ReferenceId == cMatRefId]
+│   │   │   ├── [PreExecCheck]:
+│   │   │   │   ├── if MatCode not blank: GetXMLForSubscriberMaterialInChildOU(cSubRefId, pOuRefId, MatCode)
+│   │   │   │   └── else: GetXMLForSubscriberMaterialInChildOU(cSubRefId, pOuRefId, MatSerial)
+│   │   │   └── [if "true"]:
+│   │   │       ├── deviceStatus = GetActivityParameterValueFromKey(...)
+│   │   │       ├── srType      = GetActivityParameterValueFromKey(...)
+│   │   │       └── Event.createEvent(PSA_UPDATE_DEVICE, XSLT: ns8:UpdateDeviceReq, RefID=$cMatRefId)
+├── [if !isSkipped]:
+│   ├── Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException(orderRequest, orderCurrentActivity, ae, "")
+
+Response_PSA_UPDATE_DEVICE (rulefunction)
+├── activityRes = Instance.createInstance(ResponseBase){extId, ResponseCode, ResponseMessage, CompletionStatus, ReferenceId}
+├── currActivity.Response[] ← activityRes
+├── Logger: OPERATION_NAME="PSA_UPDATE_DEVICE"
+├── successResponseCount = count(Response[tib:right(tib:trim(ResponseCode),3)="000"])
+└── return (RequestCount == successResponseCount) ? "true" : "false"</pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Per-material fan-out across POU and COU. One PSA UpdateDeviceReq per Material[] entry where MaterialInfo != null.</td></tr>
+      <tr><td>R2</td><td>RefID = <code>subRefId + ":" + material.MatCode</code> (2-part). Both POU and COU correct.</td></tr>
+      <tr><td>R3</td><td>Key identifiers: IMEI-ID = material.MatSerial; MAT_CODE = material.MatCode (always sent).</td></tr>
+      <tr><td>R4</td><td>param-name priority: PARTNER ExtendedInfo (1) → "CLOUD-SERVICE" if IOTBU offer match (2) → "KNOX" if any IMEI_KNOX (3) → "TPC-ASURION" if TPC_REFNO (4) → omitted.</td></tr>
+      <tr><td>R5</td><td>SR-TYPE priority: sub.ExtendedInfo[SR_TYPE] if not blank; else ProcessConfig srType Parameter.</td></tr>
+      <tr><td>R6</td><td>REF-NUMBER priority: TPC_REFNO if present; else OMXTrackingId.</td></tr>
+      <tr><td>R7</td><td>SR-COMPLETION-DATE = SubmissionDate formatted as "dd/MM/yyyy HH:mm:ss" (always sent).</td></tr>
+      <tr><td>R8</td><td>DEVICE-STATUS from ProcessConfig Parameter[deviceStatus] (conditional on non-empty).</td></tr>
+      <tr><td>R9</td><td>NEW-IMEI-ID from sub.ExtendedInfo[NEW_MAT_SERIAL] (device swap scenario).</td></tr>
+      <tr><td>R10</td><td>PreExecCheck uses material-level context: MatCode (preferred) or MatSerial if MatCode blank.</td></tr>
+      <tr><td>R11</td><td>Response: standard ResponseBase — no write-back. Fan-in: RequestCount == successResponseCount.</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>param-name omitted if no priority condition matches (PARTNER/IOTBU/KNOX/TPC absent)</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Add explicit default param-name or document that PSA handles absent param-name</td></tr>
+      <tr><td>No Parameter guard — deviceStatus/srType empty strings if ProcessConfig has no Parameters</td><td><span class="badge badge-blue">[LOW]</span></td><td>PSA should handle absent DEVICE-STATUS (conditional); SR-TYPE absence may vary by PSA version</td></tr>
+      <tr><td>No PurgePendingRequestsBeforeResubmit — duplicate update calls possible</td><td><span class="badge badge-blue">[LOW]</span></td><td>Verify PSA UpdateDevice idempotency for same IMEI-ID + MAT_CODE</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule (Response_PSA_UPDATE_DEVICE)</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§19.3 ResponseBase Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span><span class="tree-cond">Concepts.FM.Base.ResponseBase</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.4 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+      <tr><td>Write-back</td><td>None</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_ASRM_INVOKE_MINOR_SIM</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px;}
+.page-header .sub{opacity:.85;margin-top:6px;font-size:.97rem;}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap;}
+.meta-badge{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.82rem;}
+.container{max-width:1300px;margin:0 auto;padding:28px 24px;}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafafa;}
+pre,code{font-family:'Cascadia Code','Consolas','Courier New',monospace;}
+.code-block{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:.82rem;line-height:1.55;border-left:3px solid var(--true-red);}
+.inline-code{background:#f0e6e6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.84em;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.76rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.path-box{border:2px solid var(--border);border-radius:8px;padding:14px 18px;margin:10px 0;}
+.path-a{border-left:4px solid #CC0000;}
+.path-b{border-left:4px solid #1565c0;}
+.path-c{border-left:4px solid #2e7d32;}
+.path-label{font-weight:700;margin-bottom:8px;font-size:.92rem;}
+.path-label-a{color:#CC0000;}
+.path-label-b{color:#1565c0;}
+.path-label-c{color:#2e7d32;}
+.flow-step{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px dashed var(--border);}
+.flow-step:last-child{border-bottom:none;}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:2px;}
+.warn-block{background:#FFF3E0;border-left:3px solid var(--warning);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;}
+.info-block{background:#E3F0FD;border-left:3px solid var(--info);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.tree-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;margin-top:10px;padding:8px 12px;background:#f8f8f8;border-radius:6px;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.str{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nm{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+h3{color:var(--true-dark);font-size:.97rem;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid #f0dede;}
+h4{color:#555;font-size:.88rem;margin:12px 0 6px;}
+p{margin-bottom:8px;}
+ul.plain{padding-left:20px;}
+ul.plain li{margin-bottom:4px;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="sub">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</div>
+  <h1>Request_ASRM_INVOKE_MINOR_SIM</h1>
+  <div class="sub">ASRM Unified Resource Activity — Minor/Secondary SIM Operations (Multi-SIM Cancellation, RIO Old-EID, SubscriberOffer-based)</div>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Backend: ASRM</span>
+    <span class="meta-badge">Channel: OMXFMConnectionRequest</span>
+    <span class="meta-badge">Author: SathidP-PC</span>
+    <span class="meta-badge">Generated: 2026-07-23</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This rule fires when the order orchestration engine reaches an activity with <span class="inline-code">ActivityID = ASRM_INVOKE_MINOR_SIM</span> and status <span class="inline-code">WAITING</span>. Unlike <span class="inline-code">ASRM_INVOKE_SIM</span> (which targets the primary SIM for each subscriber), this rule handles <strong>secondary and additional SIM card operations</strong> via three mutually exclusive dispatch paths, chosen per-subscriber based on subscriber data attributes.</p>
+
+    <div class="info-block"><strong>Three subscriber dispatch paths — evaluated in this priority order:</strong>
+    <ol style="margin-top:6px;padding-left:20px;">
+      <li style="margin-bottom:4px;"><strong style="color:#CC0000">Path A — Multi-SIM (MSIM_TO_CANCEL):</strong> If <span class="inline-code">ExtendedInfo[Name="MSIM_TO_CANCEL"]</span> exists → loop over pipe-delimited SIM ICC IDs, send one request per SIM.</li>
+      <li style="margin-bottom:4px;"><strong style="color:#1565c0">Path B — RIO / Old EID:</strong> Else if <span class="inline-code">ResourceInfo[ResourceName="OLD_EID"]</span> exists → single request sourced from <span class="inline-code">ResourceInfo["OLD_SIM"]</span>.</li>
+      <li><strong style="color:#2e7d32">Path C — SubscriberOffers:</strong> Else → iterate <span class="inline-code">SubscriberOffers[]</span>, dispatch one request per offer that has <span class="inline-code">ParameterInfo["Related SIM"]</span>.</li>
+    </ol></div>
+
+    <div class="warn-block">⚠ <strong>MSRES special skip logic:</strong> For any subscriber with <span class="inline-code">SubscriberActivityInfo/ActivityReason='MSRES'</span> (Mobile SIM Reservation), if the ACTIVITY is <strong>RESERVE</strong>, the subscriber is skipped automatically (reqSuccess=true). This prevents re-reserving an already-reserved SIM.</div>
+
+    <div class="warn-block">⚠ <strong>Per-SIM paired MSISDN key:</strong> The resource Type is determined by <span class="inline-code">ResourceInfo[ResourceName=concat("SIM_PAIR_MSISDN_", $simValue)]</span> — a dynamic key per SIM value. This differs from ASRM_INVOKE_SIM which uses the fixed key <span class="inline-code">SIM_PAIR_MSISDN</span>.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><span class="inline-code">Request_ASRM_INVOKE_MINOR_SIM</span></td></tr>
+      <tr><td>Full Path</td><td><span class="inline-code">Rules.OMConsumers.OMXFM.Request.Request_ASRM_INVOKE_MINOR_SIM</span></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-green">true</span></td></tr>
+      <tr><td>Rule Type</td><td>Request Dispatch — three-path secondary SIM dispatch to ASRM FM</td></tr>
+      <tr><td>Author</td><td>SathidP-PC</td></tr>
+      <tr><td>Backend System</td><td>ASRM (Amdocs Resource Manager)</td></tr>
+      <tr><td>Operation</td><td>UnifiedResourceActivity (secondary/minor SIM card)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type Path</th><th>Role</th></tr>
+      <tr><td><span class="inline-code">orderRequest</span></td><td><span class="inline-code">Concepts.OrderRequest.OrderRequest</span></td><td>Master order — customer hierarchy, subscriber data, OrderType, SubscriberOffers</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity</span></td><td><span class="inline-code">Concepts.OM.ProcessConfig.Activity</span></td><td>Current step — ACTIVITY parameter, Response[], RequestCount, PreExecCheck</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><span class="inline-code">orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</span></td><td>Correlates activity to the order's current execution point</td></tr>
+      <tr><td>2</td><td><span class="inline-code">orderCurrentActivity.ActivityID == "ASRM_INVOKE_MINOR_SIM"</span></td><td>Targets only minor SIM activities</td></tr>
+      <tr><td>3</td><td><span class="inline-code">orderRequest.ProcessFlow.NextActivityID == "ASRM_INVOKE_MINOR_SIM"</span></td><td>Order-level double-check</td></tr>
+      <tr><td>4</td><td><span class="inline-code">orderCurrentActivity.Status == "WAITING"</span></td><td>Only fires on fresh/ready activity</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="step-num">1</div><div><strong>Parameter Parsing</strong> — iterate <span class="inline-code">Parameter[]</span> with <span class="inline-code">tib:tokenize(param,"=")</span> → extract <span class="inline-code">ACTIVITY</span> value (RESERVE / PREACTIVATE / ACTIVATE)</div></div>
+    <div class="flow-step"><div class="step-num">2</div><div><strong>ParentOU Subscriber Loop</strong> — for each <span class="inline-code">ParentOU[i] → Subscriber[j]</span>:
+      <ul class="plain" style="margin-top:6px;">
+        <li>If already has SUCCESS response → skip</li>
+        <li>If <span class="inline-code">ActivityReason='MSRES'</span> AND activityValue='RESERVE' → skip (reqSuccess=true)</li>
+        <li>→ select dispatch path below (A / B / C)</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="step-num">3A</div>
+      <div class="path-box path-a" style="flex:1;">
+        <div class="path-label path-label-a">PATH A — Multi-SIM (MSIM_TO_CANCEL)</div>
+        <p>Condition: <span class="inline-code">exists($currSub/ExtendedInfo[Name="MSIM_TO_CANCEL"])</span></p>
+        <ol style="padding-left:20px;">
+          <li>Run PreExecCheck via <span class="inline-code">GetXMLForSubscriber</span> + <span class="inline-code">XPath.execute</span></li>
+          <li>Read <span class="inline-code">simValues = ExtendedInfo["MSIM_TO_CANCEL"]/Value</span></li>
+          <li>Split by <span class="inline-code">"|"</span> → simValueArray[]</li>
+          <li>For each entry: split by <span class="inline-code">","</span> → take [0] as <span class="inline-code">simValue</span></li>
+          <li>Send one <span class="inline-code">ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span> event per SIM (XSLT with $currSub, $simValue)</li>
+          <li>Send Logger audit event per request</li>
+          <li>Increment RequestCount per request (if not resubmit)</li>
+        </ol>
+      </div>
+    </div>
+    <div class="flow-step"><div class="step-num">3B</div>
+      <div class="path-box path-b" style="flex:1;">
+        <div class="path-label path-label-b">PATH B — RIO / Old EID</div>
+        <p>Condition (else): <span class="inline-code">count($currSub/ResourceInfo[ResourceName="OLD_EID"]) &gt; 0</span></p>
+        <ol style="padding-left:20px;">
+          <li>Run PreExecCheck via <span class="inline-code">GetXMLForSubscriber</span></li>
+          <li>Read <span class="inline-code">simValue = ResourceInfo["OLD_SIM"]/ValuesArray</span></li>
+          <li>Send ONE <span class="inline-code">ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span> event</li>
+          <li>Send Logger audit event</li>
+          <li>Increment RequestCount (if not resubmit)</li>
+        </ol>
+      </div>
+    </div>
+    <div class="flow-step"><div class="step-num">3C</div>
+      <div class="path-box path-c" style="flex:1;">
+        <div class="path-label path-label-c">PATH C — SubscriberOffers</div>
+        <p>Condition (else — no MSIM_TO_CANCEL, no OLD_EID)</p>
+        <ol style="padding-left:20px;">
+          <li>Iterate <span class="inline-code">currSub.SubscriberOffers[]</span> → for each <span class="inline-code">curoffer</span>:</li>
+          <li>Read <span class="inline-code">filter = curoffer.ExtendedInfo["FE_OR_CCBS"]/Value</span></li>
+          <li>Run PreExecCheck via <span class="inline-code">GetXMLForSubscriberOfferFilterWithExtendedInfo(…, curoffer.Soc, filter)</span></li>
+          <li>Read <span class="inline-code">simValue = curoffer.ParameterInfo["Related SIM"]/ValuesArray[1]</span></li>
+          <li>Send <span class="inline-code">ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span> per qualifying offer</li>
+          <li>Send Logger audit event</li>
+          <li>Increment RequestCount (if not resubmit)</li>
+        </ol>
+      </div>
+    </div>
+    <div class="flow-step"><div class="step-num">4</div><div><strong>ChildOU Loop</strong> — same tri-path logic for <span class="inline-code">ParentOU[i] → ChildOU[k] → Subscriber[j]</span> using <span class="inline-code">GetXMLForSubscriberInChildOU</span> / <span class="inline-code">GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</span></div></div>
+    <div class="flow-step"><div class="step-num">5</div><div><strong>Status Update</strong> — if any request sent → Status = IN_PROGRESS; if all paths skipped → SkipActivity("4")</div></div>
+    <div class="flow-step"><div class="step-num">6</div><div><strong>Exception Handling</strong> — catch → HandleActivityException → Status = ERROR</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Path Details</div>
+  <div class="section-body">
+    <h3>MSRES Skip Logic (applied before all paths)</h3>
+    <div class="code-block"><span class="cm">// If subscriber has ActivityReason=MSRES AND this is a RESERVE, treat as already done</span>
+<span class="kw">if</span>(XPath.evalAsBoolean(<span class="str">"$currSub/SubscriberActivityInfo/ActivityReason='MSRES'"</span>)){
+    <span class="kw">if</span>(String.equals(activityValue, <span class="str">"RESERVE"</span>)){
+        reqSuccess = <span class="kw">true</span>;
+    }
+}</code></div>
+
+    <h3>Path A — Multi-SIM (MSIM_TO_CANCEL) Key Logic</h3>
+    <div class="code-block"><span class="kw">if</span>(XPath.evalAsBoolean(<span class="str">"exists($currSub/ExtendedInfo[Name=\"MSIM_TO_CANCEL\"])"</span>)) {
+    <span class="cm">// PreExecCheck via GetXMLForSubscriber</span>
+    String simValues = XPath.evalAsString(<span class="str">"$currSub/ExtendedInfo[Name=\"MSIM_TO_CANCEL\"]/Value"</span>);
+    String[] simValueArray = String.split(simValues, <span class="str">"\\|"</span>);
+    <span class="kw">for</span>(<span class="kw">int</span> iSim=<span class="nm">0</span>; iSim&lt;simValueArray@length; iSim++){
+        String simValue = String.split(simValueArray[iSim], <span class="str">","</span>)[<span class="nm">0</span>];
+        <span class="cm">// send reqEvent2 (XSLT with $currSub, $simValue) — see §9.8</span>
+        orderCurrentActivity.RequestCount++;
+    }
+}</div>
+
+    <h3>Path B — RIO / Old EID Key Logic</h3>
+    <div class="code-block"><span class="kw">else if</span>(XPath.evalAsBoolean(<span class="str">"count($currSub/ResourceInfo[ResourceName='OLD_EID'])&gt;0"</span>)) {
+    <span class="cm">// PreExecCheck via GetXMLForSubscriber</span>
+    String simValue = XPath.evalAsString(<span class="str">"$currSub/ResourceInfo[ResourceName='OLD_SIM']/ValuesArray"</span>);
+    <span class="cm">// send reqEvent2 (XSLT with $currSub, $simValue) — see §9.8</span>
+    orderCurrentActivity.RequestCount++;
+}</div>
+
+    <h3>Path C — SubscriberOffers Key Logic</h3>
+    <div class="code-block"><span class="kw">else</span> {
+    <span class="kw">for</span>(<span class="kw">int</span> iSubOffer=<span class="nm">0</span>; iSubOffer&lt;subOfferLen; iSubOffer++) {
+        Concepts.OrderRequest.OrderElements.SubscriberOffers curoffer = currSub.SubscriberOffers[iSubOffer];
+        String filter = XPath.evalAsString(<span class="str">"$curoffer/ExtendedInfo[Name=\"FE_OR_CCBS\"]/Value"</span>);
+        <span class="cm">// PreExecCheck: GetXMLForSubscriberOfferFilterWithExtendedInfo(…, curoffer.Soc, filter)</span>
+        String simValue = XPath.evalAsString(<span class="str">"$curoffer/ParameterInfo[ParamName=\"Related SIM\"]/ValuesArray[1]"</span>);
+        <span class="cm">// send reqEvent2 (XSLT with $currSub, $simValue) — see §9.8</span>
+        orderCurrentActivity.RequestCount++;
+    }
+}</div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction — Path-Specific SIM Value Sources</div>
+  <div class="section-body">
+    <h3>Activity Parameter</h3>
+    <table>
+      <tr><th>Key</th><th>Method</th><th>Variable</th><th>Values</th></tr>
+      <tr><td><span class="inline-code">ACTIVITY</span></td><td><span class="inline-code">tib:tokenize(param,"=")[2]</span></td><td><span class="inline-code">activityValue</span></td><td>RESERVE / PREACTIVATE / ACTIVATE</td></tr>
+    </table>
+
+    <h3>SIM Value Resolution by Path</h3>
+    <table>
+      <tr><th>Path</th><th>Trigger Condition</th><th>SIM Value Source</th><th>Multiplicity</th></tr>
+      <tr><td><span class="badge badge-red">A — MSIM</span></td><td><span class="inline-code">exists(ExtendedInfo["MSIM_TO_CANCEL"])</span></td><td><span class="inline-code">ExtendedInfo["MSIM_TO_CANCEL"]/Value</span> → split <span class="inline-code">"|"</span> → split <span class="inline-code">","</span>[0]</td><td>One request <strong>per SIM in the list</strong></td></tr>
+      <tr><td><span class="badge badge-blue">B — RIO</span></td><td><span class="inline-code">count(ResourceInfo["OLD_EID"]) &gt; 0</span></td><td><span class="inline-code">ResourceInfo["OLD_SIM"]/ValuesArray</span></td><td>One request per subscriber</td></tr>
+      <tr><td><span class="badge badge-green">C — Offers</span></td><td>else (no MSIM, no OLD_EID)</td><td><span class="inline-code">curoffer.ParameterInfo["Related SIM"]/ValuesArray[1]</span></td><td>One request <strong>per qualifying SubscriberOffer</strong></td></tr>
+    </table>
+
+    <h3>Path A — Pipe-Delimited Parsing</h3>
+    <div class="info-block">
+      <strong>MSIM_TO_CANCEL format:</strong> <span class="inline-code">"ICCID_1|ICCID_2,EXTRA|ICCID_3"</span><br>
+      <code>String.split(simValues, "\\|")</code> → array of tokens<br>
+      <code>String.split(token, ",")[0]</code> → takes first field only (the ICCID/SIM value); anything after comma is discarded
+    </div>
+
+    <h3>Path C — Offer-Level Filter</h3>
+    <p>The <span class="inline-code">filter</span> variable (<span class="inline-code">curoffer.ExtendedInfo["FE_OR_CCBS"]/Value</span>) is passed to <span class="inline-code">GetXMLForSubscriberOfferFilterWithExtendedInfo</span>, which uses it to further filter the XML view of the offer before the PreExecCheck XPath runs. This allows per-offer scoping of the PreExecCheck expression.</p>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.1 — Order Type / Path Dependencies</h3>
+    <table>
+      <tr><th>Condition</th><th>Path</th><th>Requests Sent</th></tr>
+      <tr><td>Subscriber has <span class="inline-code">MSIM_TO_CANCEL</span></td><td>A</td><td>N × number of SIMs in pipe list</td></tr>
+      <tr><td>Subscriber has <span class="inline-code">OLD_EID</span> ResourceInfo</td><td>B</td><td>1 per subscriber</td></tr>
+      <tr><td>Standard SubscriberOffers subscriber</td><td>C</td><td>1 per qualifying offer</td></tr>
+      <tr><td>ActivityReason=MSRES + RESERVE operation</td><td>All</td><td>0 (auto-skipped)</td></tr>
+    </table>
+
+    <h3>§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel URI</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><span class="inline-code">/Channels/OMXFMConnectionRequest</span></td><td><span class="inline-code">ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span></td><td>Minor SIM resource operation</td></tr>
+      <tr><td><span class="badge badge-log">OUTBOUND</span></td><td><span class="inline-code">/Channels/LogConnection</span></td><td><span class="inline-code">AuditLog</span></td><td>Audit trail per request sent</td></tr>
+    </table>
+
+    <h3>§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>System</td><td>ASRM — Amdocs Resource Manager 3G</td></tr>
+      <tr><td>Operation</td><td>UnifiedResourceActivity (minor/secondary SIM)</td></tr>
+      <tr><td>Resource Type</td><td>Dynamic: <span class="inline-code">SIM</span> or <span class="inline-code">STARTER PACK</span> (via per-SIM paired MSISDN key)</td></tr>
+      <tr><td>Schema</td><td><span class="inline-code">amdocs.rm3g.interfaces.datatypes.UnifiedResourceActivityInfo</span></td></tr>
+      <tr><td>Per-SIM paired MSISDN key</td><td><span class="inline-code">concat("SIM_PAIR_MSISDN_", $simValue)</span></td></tr>
+    </table>
+
+    <h3>§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Field</th><th>Direction</th><th>Path</th><th>Purpose</th></tr>
+      <tr><td><span class="inline-code">currSub.SubscriberActivityInfo/ActivityReason</span></td><td><span class="badge badge-blue">READ</span></td><td>All</td><td>MSRES skip guard</td></tr>
+      <tr><td><span class="inline-code">currSub.ExtendedInfo["MSIM_TO_CANCEL"]/Value</span></td><td><span class="badge badge-blue">READ</span></td><td>A</td><td>Pipe-delimited multi-SIM ICC IDs</td></tr>
+      <tr><td><span class="inline-code">currSub.ResourceInfo["OLD_EID"]</span></td><td><span class="badge badge-blue">READ</span></td><td>B</td><td>Path B trigger check</td></tr>
+      <tr><td><span class="inline-code">currSub.ResourceInfo["OLD_SIM"]/ValuesArray</span></td><td><span class="badge badge-blue">READ</span></td><td>B</td><td>RIO SIM value</td></tr>
+      <tr><td><span class="inline-code">currSub.SubscriberOffers[].ExtendedInfo["FE_OR_CCBS"]/Value</span></td><td><span class="badge badge-blue">READ</span></td><td>C</td><td>Offer filter for PreExecCheck scoping</td></tr>
+      <tr><td><span class="inline-code">curoffer.ParameterInfo["Related SIM"]/ValuesArray[1]</span></td><td><span class="badge badge-blue">READ</span></td><td>C</td><td>Offer-linked SIM ICCID</td></tr>
+      <tr><td><span class="inline-code">currSub.ResourceInfo["SIM_PAIR_MSISDN_&lt;simValue&gt;"]/ValuesArray</span></td><td><span class="badge badge-blue">READ</span></td><td>All (in XSLT)</td><td>Per-SIM paired MSISDN for Type selection</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.Status</span></td><td><span class="badge badge-red">WRITE</span></td><td>All</td><td>Set to IN_PROGRESS (1) or SKIPPED (4)</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.RequestCount</span></td><td><span class="badge badge-red">WRITE</span></td><td>All</td><td>Incremented per dispatched request</td></tr>
+    </table>
+
+    <h3>§8.5 — ExtendedInfo / ResourceInfo Fields Required</h3>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Required/Optional</th><th>Purpose</th><th>Path</th></tr>
+      <tr><td><span class="inline-code">ExtendedInfo[Name="MSIM_TO_CANCEL"]/Value</span></td><td>ExtendedInfo</td><td><span class="badge badge-orange">Path selector</span></td><td>Presence routes to Path A</td><td>A</td></tr>
+      <tr><td><span class="inline-code">ResourceInfo[ResourceName="OLD_EID"]</span></td><td>ResourceInfo</td><td><span class="badge badge-orange">Path selector</span></td><td>Presence routes to Path B</td><td>B</td></tr>
+      <tr><td><span class="inline-code">ResourceInfo[ResourceName="OLD_SIM"]/ValuesArray</span></td><td>ResourceInfo</td><td><span class="badge badge-red">Required</span></td><td>SIM value for RIO path</td><td>B</td></tr>
+      <tr><td><span class="inline-code">ExtendedInfo[Name="FE_OR_CCBS"]/Value</span></td><td>ExtendedInfo on offer</td><td><span class="badge badge-orange">Optional</span></td><td>Offer filter for PreExecCheck XML scope</td><td>C</td></tr>
+      <tr><td><span class="inline-code">ParameterInfo[ParamName="Related SIM"]/ValuesArray[1]</span></td><td>ParameterInfo on offer</td><td><span class="badge badge-red">Required</span></td><td>Offer-linked SIM ICCID</td><td>C</td></tr>
+      <tr><td><span class="inline-code">ResourceInfo[ResourceName=concat("SIM_PAIR_MSISDN_", $simValue)]/ValuesArray</span></td><td>ResourceInfo</td><td><span class="badge badge-orange">Optional</span></td><td>Per-SIM paired MSISDN; presence → STARTER PACK type</td><td>All</td></tr>
+      <tr><td><span class="inline-code">SubscriberActivityInfo/ActivityReason</span></td><td>SubscriberActivityInfo</td><td><span class="badge badge-orange">Optional</span></td><td>'MSRES' triggers RESERVE skip</td><td>All</td></tr>
+    </table>
+
+    <h3>§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Global Variable Path</th><th>Purpose</th></tr>
+      <tr><td><span class="inline-code">OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</span></td><td>Include User/Password in request</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/Component_Name/OMX_CEP</span></td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/Component_Name/OMX_FM</span></td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</span></td><td>LOG_LEVEL value</td></tr>
+      <tr><td><span class="inline-code">OMX_OM/WritePayload</span></td><td>Include payload in audit log</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build (XSLT Decomposition)</div>
+  <div class="section-body">
+    <h3>§9.1 — XSLT Parameter Binding</h3>
+    <p>The same XSLT template is used for all three paths. The difference is in how <span class="inline-code">$simValue</span> and <span class="inline-code">$currSub</span> are derived before the call.</p>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th><th>Notes</th></tr>
+      <tr><td><span class="inline-code">$orderRequest</span></td><td>Working memory concept</td><td>Full order request tree</td></tr>
+      <tr><td><span class="inline-code">$refId</span></td><td><span class="inline-code">subscriber.RefId</span></td><td>Per-subscriber correlation key</td></tr>
+      <tr><td><span class="inline-code">$globalVariables</span></td><td>BE global variables</td><td>Credential gate, logging config</td></tr>
+      <tr><td><span class="inline-code">$activityValue</span></td><td>Parsed ACTIVITY parameter</td><td>RESERVE / PREACTIVATE / ACTIVATE</td></tr>
+      <tr><td><span class="inline-code">$currSub</span></td><td>Concept reference: <span class="inline-code">currSub</span></td><td><strong>New vs ASRM_INVOKE_SIM</strong> — passed as param for per-SIM MSISDN lookup in XSLT</td></tr>
+      <tr><td><span class="inline-code">$simValue</span></td><td>Path-specific (see §7)</td><td><strong>New vs ASRM_INVOKE_SIM</strong> — the specific SIM ICCID/EID for this request</td></tr>
+    </table>
+
+    <h3>§9.5 — Resource Type Selection (xsl:choose)</h3>
+    <div class="warn-block">⚠ The Type lookup key is <strong>dynamic per SIM</strong>: <span class="inline-code">concat("SIM_PAIR_MSISDN_", $simValue)</span> — not the fixed <span class="inline-code">SIM_PAIR_MSISDN</span> used by ASRM_INVOKE_SIM.</div>
+    <table>
+      <tr><th>Condition</th><th>ns1:Type Value</th></tr>
+      <tr><td><span class="inline-code">OrderType = "51"</span></td><td><span class="inline-code">STARTER PACK</span></td></tr>
+      <tr><td><span class="inline-code">OrderType != "51" AND string-length($currSub/ResourceInfo[ResourceName=concat("SIM_PAIR_MSISDN_", $simValue)]/ValuesArray) = 0</span></td><td><span class="inline-code">SIM</span></td></tr>
+      <tr><td><span class="inline-code">OrderType != "51" AND string-length($currSub/ResourceInfo[ResourceName=concat("SIM_PAIR_MSISDN_", $simValue)]/ValuesArray) &gt; 0</span></td><td><span class="inline-code">STARTER PACK</span></td></tr>
+    </table>
+
+    <h3>§9.6 — Resource Value</h3>
+    <p>Always directly uses <span class="inline-code">$simValue</span> (no fallback chain unlike ASRM_INVOKE_SIM):</p>
+    <div class="code-block"><span class="xt">&lt;ns1:Value&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$simValue"</span><span class="xt">/&gt;&lt;/ns1:Value&gt;</span></div>
+
+    <h3>§9.8 — XSLT Stylesheet Source (all paths share same template)</h3>
+    <div class="code-block"><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:ns2=</span><span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.rm3g.interfaces.datatypes.UnifiedResourceActivityInfo"</span>
+  <span class="xa">xmlns:ns1=</span><span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.rm3g.interfaces.datatypes.RMEntityIdInfo"</span>
+  <span class="xa">xmlns:xsl=</span><span class="str">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:ns=</span><span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.rm3g.interfaces.datatypes.ActivityInfo"</span>
+  <span class="xa">xmlns:tib=</span><span class="str">"http://www.tibco.com/bw/xslt/custom-functions"</span>
+  <span class="xa">version=</span><span class="str">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"refId"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"activityValue"</span><span class="xt">/&gt;</span>  <span class="cm">&lt;!-- RESERVE / PREACTIVATE / ACTIVATE --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"currSub"</span><span class="xt">/&gt;</span>         <span class="cm">&lt;!-- subscriber concept — for per-SIM pair key lookup --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"simValue"</span><span class="xt">/&gt;</span>       <span class="cm">&lt;!-- the specific SIM ICCID/EID for this request --&gt;</span>
+
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match=</span><span class="str">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="xt">&lt;JMSPriority&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;&lt;/JMSPriority&gt;</span>
+      <span class="xt">&lt;JMSCorrelationID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/JMSCorrelationID&gt;</span>
+      <span class="xt">&lt;OrderID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;&lt;/OrderID&gt;</span>
+      <span class="xt">&lt;RefID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$refId"</span><span class="xt">/&gt;&lt;/RefID&gt;</span>
+      <span class="cm">&lt;!-- Credential gate identical to ASRM_INVOKE_SIM --&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/OrderType"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;OrderType&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;&lt;/OrderType&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns2:UnifiedResourceActivityInfo&gt;</span>
+          <span class="xt">&lt;ns2:Activity&gt;</span>
+            <span class="xt">&lt;ns:ActivityName&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$activityValue"</span><span class="xt">/&gt;&lt;/ns:ActivityName&gt;</span>
+          <span class="xt">&lt;/ns2:Activity&gt;</span>
+          <span class="xt">&lt;ns2:UnifiedResource&gt;</span>
+            <span class="cm">&lt;!-- Type: per-SIM dynamic key: concat("SIM_PAIR_MSISDN_", $simValue) --&gt;</span>
+            <span class="xt">&lt;xsl:choose&gt;</span>
+              <span class="xt">&lt;xsl:when</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/OrderType='51'"</span><span class="xt">&gt;</span>
+                <span class="xt">&lt;ns1:Type&gt;</span>STARTER PACK<span class="xt">&lt;/ns1:Type&gt;</span>
+              <span class="xt">&lt;/xsl:when&gt;</span>
+              <span class="xt">&lt;xsl:when</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/OrderType!='51' and
+                string-length(tib:trim($currSub/ResourceInfo[
+                  ResourceName=concat('SIM_PAIR_MSISDN_', $simValue)]/ValuesArray)) = 0"</span><span class="xt">&gt;</span>
+                <span class="xt">&lt;ns1:Type&gt;</span>SIM<span class="xt">&lt;/ns1:Type&gt;</span>
+              <span class="xt">&lt;/xsl:when&gt;</span>
+              <span class="xt">&lt;xsl:when</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/OrderType!='51' and
+                string-length(tib:trim($currSub/ResourceInfo[
+                  ResourceName=concat('SIM_PAIR_MSISDN_', $simValue)]/ValuesArray)) &gt; 0"</span><span class="xt">&gt;</span>
+                <span class="xt">&lt;ns1:Type&gt;</span>STARTER PACK<span class="xt">&lt;/ns1:Type&gt;</span>
+              <span class="xt">&lt;/xsl:when&gt;</span>
+            <span class="xt">&lt;/xsl:choose&gt;</span>
+            <span class="cm">&lt;!-- Value: always the pre-resolved simValue (no fallback chain) --&gt;</span>
+            <span class="xt">&lt;ns1:Value&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$simValue"</span><span class="xt">/&gt;&lt;/ns1:Value&gt;</span>
+          <span class="xt">&lt;/ns2:UnifiedResource&gt;</span>
+        <span class="xt">&lt;/ns2:UnifiedResourceActivityInfo&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></div>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <p><em>Same XSLT for all three paths — only $simValue and $currSub differ between paths.</em></p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-purple" style="font-size:.7rem">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-purple" style="font-size:.7rem">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span><span class="tree-cond">if OrderType exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns2:UnifiedResourceActivityInfo</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:Activity / ns:ActivityName</span><span class="tree-arrow">←</span><span class="tree-src">$activityValue</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:UnifiedResource</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:Type</span><span class="badge badge-orange" style="font-size:.7rem">Conditional (xsl:choose)</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-cond">when OrderType='51'</span><span class="tree-arrow">→</span><span class="tree-src-static">"STARTER PACK"</span></div></li>
+                              <li><div class="tree-row"><span class="tree-cond">when OrderType≠'51' AND ResourceInfo[concat("SIM_PAIR_MSISDN_",$simValue)]/ValuesArray is empty</span><span class="tree-arrow">→</span><span class="tree-src-static">"SIM"</span></div></li>
+                              <li><div class="tree-row"><span class="tree-cond">when OrderType≠'51' AND ResourceInfo[concat("SIM_PAIR_MSISDN_",$simValue)]/ValuesArray is non-empty</span><span class="tree-arrow">→</span><span class="tree-src-static">"STARTER PACK"</span></div></li>
+                            </ul>
+                          </li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:Value</span><span class="tree-arrow">←</span><span class="tree-src">$simValue</span><span class="badge badge-green" style="font-size:.7rem">Always</span><span class="tree-cond">pre-resolved per path (A=MSIM split, B=OLD_SIM, C=ParameterInfo)</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div class="tree-legend">
+      <span><span style="color:#a6e3a1">■</span> Green = XPath source</span>
+      <span><span style="color:#fab387">■</span> Orange = Static literal</span>
+      <span><span style="color:#cba6f7">■</span> Purple italic = condition / note</span>
+      <span><span class="badge badge-green" style="font-size:.7rem">Always</span> Unconditional</span>
+      <span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span> Inside xsl:choose</span>
+      <span><span class="badge badge-purple" style="font-size:.7rem">Credential-gated</span> Behind IsEnableUserPass</span>
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <p>Logger event uses variable name <span class="inline-code">reqEvent2</span> (not <span class="inline-code">reqEvent</span>) to reference the JMS payload — same structure as ASRM_INVOKE_SIM. All three paths (A, B, C) and their ChildOU counterparts use identical logger XSLT.</p>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><span class="inline-code">ESBUUID</span></td><td><span class="inline-code">$orderRequest/OrderData/OMXTrackingId</span></td><td>If OMXTrackingId exists</td></tr>
+      <tr><td><span class="inline-code">PROCESS_ID</span></td><td><span class="inline-code">concat($pid, "_REQ")</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">OPERATION_NAME</span></td><td><span class="inline-code">$operatorname</span> = <span class="inline-code">ASRM_INVOKE_MINOR_SIM_RESERVE</span> etc.</td><td>Always</td></tr>
+      <tr><td><span class="inline-code">AUDIT_TRACE</span></td><td><span class="inline-code">concat("Request Sent for RefId ", $refId)</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">payload/ns:ServicePayload</span></td><td>copy-of($reqEvent2)</td><td>Only if <span class="inline-code">OMX_OM/WritePayload = "true"</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Trigger</th><th>Code</th><th>Status</th><th>Method</th></tr>
+      <tr><td>Rule fires</td><td>0</td><td><span class="badge badge-blue">WAITING</span></td><td>Pre-condition</td></tr>
+      <tr><td>At least one request sent across any path</td><td>1</td><td><span class="badge badge-orange">IN_PROGRESS</span></td><td><span class="inline-code">GetActivityStatusString("1", false)</span></td></tr>
+      <tr><td>All subscribers skipped (no MSIM, no OLD_EID, no qualifying offers, or MSRES skip)</td><td>4</td><td><span class="badge badge-purple">SKIPPED</span></td><td><span class="inline-code">SkipActivity(…, "4")</span></td></tr>
+      <tr><td>Exception caught</td><td>3</td><td><span class="badge badge-red">ERROR</span></td><td><span class="inline-code">HandleActivityException</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §14 Helpers -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Return</th><th>Path</th><th>Purpose</th></tr>
+      <tr><td><span class="inline-code">GetXMLForSubscriber(orderRequest, refId)</span></td><td>String</td><td>A, B</td><td>Subscriber XML for PreExecCheck</td></tr>
+      <tr><td><span class="inline-code">GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</span></td><td>String</td><td>A, B (ChildOU)</td><td>ChildOU subscriber XML for PreExecCheck</td></tr>
+      <tr><td><span class="inline-code">GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, refId, soc, filter)</span></td><td>String</td><td>C</td><td><strong>New:</strong> offer-scoped XML with FE_OR_CCBS filter for PreExecCheck</td></tr>
+      <tr><td><span class="inline-code">GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, refId, soc, pouRefId, filter)</span></td><td>String</td><td>C (ChildOU)</td><td><strong>New:</strong> ChildOU offer-scoped XML with filter</td></tr>
+      <tr><td><span class="inline-code">AllowWriteLog(orderType)</span></td><td>boolean</td><td>All</td><td>Log filter by order type</td></tr>
+      <tr><td><span class="inline-code">GetActivityStatusString("1", false)</span></td><td>"IN_PROGRESS"</td><td>All</td><td>Status code mapping</td></tr>
+      <tr><td><span class="inline-code">SendDataToDB(orderRequest)</span></td><td>void</td><td>All</td><td>Persist order/activity state</td></tr>
+      <tr><td><span class="inline-code">SkipActivity(orderRequest, activity, "4")</span></td><td>void</td><td>All</td><td>Set SKIPPED, advance next activity pointer</td></tr>
+      <tr><td><span class="inline-code">HandleActivityException(orderRequest, activity, ae, "")</span></td><td>void</td><td>All</td><td>Full error handling chain</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_ASRM_INVOKE_MINOR_SIM (rule)
+├── XPath.evalAsString(tib:tokenize ...)                    [ACTIVITY param parsing]
+├── Per subscriber:
+│   ├── XPath.evalAsBoolean("ActivityReason='MSRES'")       [MSRES skip guard]
+│   ├── XPath.evalAsBoolean("exists(MSIM_TO_CANCEL)")       [Path A selector]
+│   │   ├── RuleFunctions.Helpers.GetXMLForSubscriber(...)
+│   │   ├── XPath.execute(preExecCheck, xml, ns)
+│   │   ├── XPath.evalAsString("MSIM_TO_CANCEL/Value")
+│   │   ├── String.split(simValues, "\\|")
+│   │   ├── String.split(token, ",")[0]
+│   │   ├── Event.createEvent(xslt://ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY) [per SIM]
+│   │   └── Event.Ext.sendEventImmediate(reqEvent2)
+│   ├── XPath.evalAsBoolean("count(OLD_EID)>0")            [Path B selector]
+│   │   ├── RuleFunctions.Helpers.GetXMLForSubscriber(...)
+│   │   ├── XPath.execute(preExecCheck, xml, ns)
+│   │   ├── XPath.evalAsString("OLD_SIM/ValuesArray")
+│   │   ├── Event.createEvent(xslt://ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY)
+│   │   └── Event.Ext.sendEventImmediate(reqEvent2)
+│   └── else [Path C — SubscriberOffers loop]
+│       ├── XPath.evalAsString("FE_OR_CCBS/Value")
+│       ├── RuleFunctions.Helpers.GetXMLForSubscriberOfferFilterWithExtendedInfo(...)
+│       ├── XPath.execute(preExecCheck, xml, ns)
+│       ├── XPath.evalAsString("ParameterInfo[Related SIM]/ValuesArray[1]")
+│       ├── Event.createEvent(xslt://ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY) [per offer]
+│       └── Event.Ext.sendEventImmediate(reqEvent2)
+├── RuleFunctions.Helpers.AllowWriteLog(orderType) [each path]
+│   └── System.getGlobalVariableAsString(OrderTypeFilter)
+├── Event.createEvent(xslt://Logger) [each path]
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(...)
+└── RuleFunctions.Helpers.HandleActivityException(...)</div>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <ul class="plain">
+      <li><strong>R1</strong> — Implement three-path dispatch: MSIM_TO_CANCEL → OLD_EID/OLD_SIM → SubscriberOffers.</li>
+      <li><strong>R2</strong> — Path A must loop over pipe-delimited SIM values, splitting each by comma and taking [0].</li>
+      <li><strong>R3</strong> — Path B sources the SIM value from <span class="inline-code">ResourceInfo["OLD_SIM"]</span>, not from ExtendedInfo.</li>
+      <li><strong>R4</strong> — Path C must iterate SubscriberOffers with per-offer PreExecCheck using FE_OR_CCBS filter.</li>
+      <li><strong>R5</strong> — Resource Type lookup key must be <span class="inline-code">concat("SIM_PAIR_MSISDN_", $simValue)</span> — per-SIM, not fixed.</li>
+      <li><strong>R6</strong> — MSRES + RESERVE subscribers must be auto-skipped before path evaluation.</li>
+      <li><strong>R7</strong> — RequestCount increments per individual request (multiple per subscriber in Path A and C).</li>
+      <li><strong>R8</strong> — Both ParentOU and ChildOU subscriber hierarchies must be supported.</li>
+    </ul>
+    <h3>Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>RequestCount can grow &gt; subscriber count (Path A fan-out per SIM)</td><td><span class="badge badge-red">HIGH</span></td><td>Fan-in response rule must match RequestCount correctly — ensure Response_ASRM_INVOKE_MINOR_SIM handles high counts</td></tr>
+      <tr><td>Three-path logic creates complex branching — migrating to a service requires understanding all three paths</td><td><span class="badge badge-red">HIGH</span></td><td>Create three separate service operations/routes in the target architecture</td></tr>
+      <tr><td>Path C SubscriberOffers loop with per-offer filter XML construction is expensive</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Consider batch/bulk ASRM API if available for offer-level operations</td></tr>
+      <tr><td>MSIM_TO_CANCEL pipe-split format may change</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Document the expected delimiter contract; add validation in the migration service</td></tr>
+      <tr><td>MSRES skip only applies to RESERVE — not PREACTIVATE or ACTIVATE</td><td><span class="badge badge-blue">LOW</span></td><td>This is intentional but easy to miss; document clearly in migration tests</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h3>§19.1 — Overview</h3>
+    <p><span class="inline-code">RuleFunctions.OrderResponse.Response_ASRM_INVOKE_MINOR_SIM</span> — identical structure to <span class="inline-code">Response_ASRM_INVOKE_MSISDN</span> and <span class="inline-code">Response_ASRM_INVOKE_SIM</span>. Creates <span class="inline-code">ASRM_InvokeUnifiedResourceRes</span>, appends to <span class="inline-code">currActivity.Response[]</span>, logs audit (_RES), evaluates fan-in.</p>
+    <h3>§19.4 — Fan-in Completion Logic</h3>
+    <div class="code-block"><span class="kw">int</span> successResponseCount = XPath.evalAsInt(
+    <span class="str">"count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = \"000\"])"</span>);
+<span class="kw">if</span>(currActivity.RequestCount == successResponseCount) <span class="kw">return</span> <span class="str">"true"</span>;
+<span class="kw">else</span> <span class="kw">return</span> <span class="str">"false"</span>;</div>
+    <div class="warn-block">⚠ <strong>Important:</strong> Because Path A can send multiple requests per subscriber (one per SIM in MSIM_TO_CANCEL), <span class="inline-code">RequestCount</span> can be much larger than the subscriber count. The fan-in will only complete when ALL individual SIM operations return ResponseCode ending in "000".</div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#888;font-size:.82rem;border-top:1px solid var(--border);margin-top:8px;">
+  TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-07-23
+</div>
+</div>
+</body>
+</html>

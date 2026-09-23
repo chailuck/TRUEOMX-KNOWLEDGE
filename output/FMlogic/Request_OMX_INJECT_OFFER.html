@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_OMX_INJECT_OFFER</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px 24px;}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:4px;}
+.page-header .subtitle{font-size:0.9rem;opacity:0.88;margin-bottom:14px;}
+.meta-row{display:flex;gap:16px;flex-wrap:wrap;}
+.meta-badge{background:rgba(255,255,255,0.15);border-radius:6px;padding:4px 12px;font-size:0.8rem;}
+main{max-width:1200px;margin:0 auto;padding:28px 20px;}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 18px;font-size:0.9rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:18px 20px;}
+table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;}
+td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:hover td{background:#fafafa;}
+code,pre{font-family:'Cascadia Code','Consolas',monospace;}
+code{background:#f0e6e6;color:var(--true-dark);border-radius:3px;padding:1px 5px;font-size:0.81rem;}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:0.82rem;border-left:3px solid var(--true-red);margin:8px 0;}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:600;}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.callout{border-left:4px solid;padding:10px 14px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.85rem;}
+.callout-info{border-color:var(--info);background:#E3F0FD;color:#0d47a1;}
+.callout-warn{border-color:var(--warning);background:#FFF3E0;color:#bf360c;}
+.callout-success{border-color:var(--success);background:#E8F5E9;color:#1b5e20;}
+.step-list{counter-reset:step;list-style:none;padding:0;}
+.step-list li{counter-increment:step;position:relative;padding-left:36px;margin-bottom:8px;font-size:0.86rem;}
+.step-list li::before{content:counter(step);position:absolute;left:0;top:0;background:var(--true-red);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;line-height:22px;text-align:center;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.81rem;}
+.xslt-tree ul{list-style:none;padding-left:20px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:2px 0 2px 12px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:11px;width:10px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 5px;border-radius:3px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 5px;border-radius:3px;}
+.tree-cond{color:#cba6f7;font-size:0.73rem;margin-left:6px;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.tree-arrow{color:#6c7086;margin:0 5px;}
+footer{text-align:center;font-size:0.76rem;color:#9e9e9e;padding:20px;border-top:1px solid var(--border);margin-top:6px;}
+h3{font-size:0.95rem;color:var(--true-dark);margin-bottom:10px;margin-top:18px;}
+h3:first-child{margin-top:0;}
+p{font-size:0.85rem;margin-bottom:8px;}
+</style>
+</head>
+<body>
+<header class="page-header">
+  <h1>Request_OMX_INJECT_OFFER</h1>
+  <p class="subtitle">In-memory offer injection — creates SubscriberOffers or AgreementOffers from ProcessConfig parameters</p>
+  <div class="meta-row">
+    <span class="meta-badge">Rule: Rules.OMConsumers.OMXOM.OMX_INJECT_OFFER</span>
+    <span class="meta-badge">Type: In-memory enrichment (no backend call)</span>
+    <span class="meta-badge">Author: DESKTOP-KB4BEG4</span>
+    <span class="meta-badge">Generated: 2026-09-18</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 Overview -->
+<section class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>OMX_INJECT_OFFER</strong> is a pure in-memory enrichment rule. It reads offer specification from the <code>Parameter</code> fields of the current Activity (comma-separated key=value pairs), evaluates the runtime PreExecCheck, then creates and appends <code>SubscriberOffers</code> or <code>AgreementOffers</code> concept instances to the live order model in TIBCO BusinessEvents working memory. No ESB call, no JMS event, no response handler.</p>
+    <p>This allows ProcessConfig designers to declaratively inject offers at any point in a flow without writing a new rule per offer. The same rule handles both subscriber-level (<code>level=SUB</code>) and OU-agreement-level (<code>level=OU</code>) injection across POU and COU hierarchies.</p>
+    <div class="callout callout-info">Found in <code>Rules/OMConsumers/OMXOM/</code> (not OMXFM) — this is an OMX orchestration rule, not a functional module that calls an external system.</div>
+  </div>
+</section>
+
+<!-- §2 Metadata -->
+<section class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXOM.OMX_INJECT_OFFER</code></td></tr>
+      <tr><td>Author</td><td>DESKTOP-KB4BEG4</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>None — in-memory only</td></tr>
+      <tr><td>Fan-in</td><td>None — calls <code>NextActivity()</code> directly</td></tr>
+      <tr><td>Response handler</td><td>None</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §3 Working Memory -->
+<section class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order — read for PreExecCheck + mutated by offer injection</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Source of Parameter strings and PreExecCheck XPath</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §4 Rule Conditions -->
+<section class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_INJECT_OFFER"</code></td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_INJECT_OFFER"</code></td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §5 Execution Flow -->
+<section class="section">
+  <div class="section-header">§5 — Execution Flow</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li>Evaluate runtime PreExecCheck from <code>orderCurrentActivity.PreExecCheck</code> via <code>XPath.execute()</code></li>
+      <li>If PreExecCheck fails → <code>SkipActivity("4")</code> and exit</li>
+      <li>Log "InjectOffer Started" via <code>sendEventImmediate(Logger)</code></li>
+      <li>If <code>orderRequest.OrderData.Customer.ParentOU@length == 0</code> → create a default ParentOU + Subscriber</li>
+      <li>Loop <code>iParam</code> over all <code>orderCurrentActivity.Parameter</code> entries</li>
+      <li>Parse each Parameter string (csv) → extract: <code>soc</code>, <code>serviceType</code>, <code>action</code>, <code>offerName</code>, <code>level</code>, <code>checkDup</code>, <code>source</code>, <code>accOpenDate</code>, <code>mapCugId</code>, <code>checkExistingOu</code></li>
+      <li>Validate required params: soc, serviceType, action, level — throw <code>DATA_ISSUE</code> if missing</li>
+      <li>Loop POU (<code>iPOU</code>):<br/>
+        &nbsp;&nbsp;• If <code>level=OU</code>: dedup check → checkExistingOu guard → create AgreementOffers + append to <code>POU.Agreement.Offers</code><br/>
+        &nbsp;&nbsp;• Loop POU Subscriber (<code>ps</code>): if <code>level=SUB</code>: dedup check → create SubscriberOffers + append<br/>
+        &nbsp;&nbsp;• Loop ChildOU (<code>iPCOU</code>): same OU/SUB logic for child hierarchy</li>
+      <li>Call <code>NextActivity(orderRequest, orderCurrentActivity)</code></li>
+      <li>Log "InjectOffer Completed" via <code>sendEventImmediate(Logger)</code></li>
+      <li>Exception → <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></li>
+    </ol>
+  </div>
+</section>
+
+<!-- §7 Data Extraction — Parameter Parsing -->
+<section class="section">
+  <div class="section-header">§7 — Data Extraction — Parameter String Parsing</div>
+  <div class="section-body">
+    <p>Each <code>Parameter</code> value is a comma-delimited <code>key=value</code> string. Multiple Parameter elements are supported (one per offer to inject).</p>
+    <table>
+      <tr><th>Parameter Key</th><th>Required?</th><th>Description</th><th>Example</th></tr>
+      <tr><td><code>soc</code></td><td><span class="badge badge-red">Required</span></td><td>SOC code for the offer</td><td><code>105645</code></td></tr>
+      <tr><td><code>serviceType</code></td><td><span class="badge badge-red">Required</span></td><td>Service type code</td><td><code>85</code></td></tr>
+      <tr><td><code>action</code></td><td><span class="badge badge-red">Required</span></td><td>ADD or REMOVE</td><td><code>ADD</code></td></tr>
+      <tr><td><code>offerName</code></td><td><span class="badge badge-red">Required</span></td><td>Offer name to inject</td><td><code>PROROAM2S</code></td></tr>
+      <tr><td><code>level</code></td><td><span class="badge badge-red">Required</span></td><td><code>SUB</code> = SubscriberOffers; <code>OU</code> = AgreementOffers</td><td><code>SUB</code></td></tr>
+      <tr><td><code>checkDup</code></td><td><span class="badge badge-orange">Optional</span></td><td>1 = skip if CCBS/CRM offer already exists</td><td><code>1</code></td></tr>
+      <tr><td><code>source</code></td><td><span class="badge badge-orange">Optional</span></td><td>FE_OR_CCBS value; defaults to <code>"INJECT_OFFER"</code></td><td><code>BRMS</code></td></tr>
+      <tr><td><code>accOpenDate</code></td><td><span class="badge badge-orange">Optional</span></td><td>Y = derive EffectiveDate from Account.OpenDate; else uses order EffectiveDate</td><td><code>Y</code></td></tr>
+      <tr><td><code>mapCugId</code></td><td><span class="badge badge-orange">Optional</span></td><td>Y = inject CUG ID as ParameterInfo from ORDER ExtendedInfo[GROUP_ID]</td><td><code>Y</code></td></tr>
+      <tr><td><code>checkExistingOu</code></td><td><span class="badge badge-orange">Optional</span></td><td>Y = skip OU-level injection if POU has EXISTING_OU=Y</td><td><code>Y</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">Examples from POSTPAID_BUY_IR_DATA_PACK</h3>
+    <table>
+      <tr><th>Step / extId</th><th>Parameter</th><th>Injects</th></tr>
+      <tr><td>Step 9 — OMX_INJECT_OFFER_IR</td><td><code>soc=105645,serviceType=85,action=ADD,offerName=PROROAM2S,level=SUB,source=BRMS</code></td><td>PROROAM2S IR roaming offer at SUB level</td></tr>
+      <tr><td>Step 10 — OMX_INJECT_OFFER_IDD</td><td><code>soc=41581,serviceType=85,action=ADD,offerName=PROINTL1,level=SUB,source=BRMS</code></td><td>PROINTL1 IDD offer at SUB level</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §8 System Dependencies -->
+<section class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <div class="callout callout-success"><strong>No external system call.</strong> OMX_INJECT_OFFER modifies BE working memory only. The injected offers become visible to all downstream FMs in the same order processing session.</div>
+
+    <h3>§8.2 Logging Events</h3>
+    <table>
+      <tr><th>Direction</th><th>Event</th><th>AUDIT_TRACE</th></tr>
+      <tr><td><span class="badge badge-blue">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td><code>"OMX-OM InjectOffer Started."</code></td></tr>
+      <tr><td><span class="badge badge-blue">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td><code>"OMX-OM InjectOffer Completed."</code></td></tr>
+    </table>
+
+    <h3>§8.4 BE Working Memory — Written Fields</h3>
+    <table>
+      <tr><th>Object</th><th>Field</th><th>Written Value</th></tr>
+      <tr><td>POU.Subscriber[].SubscriberOffers[]</td><td>New concept appended</td><td>OfferName, ServiceType, Soc, Action, EffectiveDate, FE_OR_CCBS ExtendedInfo, optional ParameterInfo (CUG ID)</td></tr>
+      <tr><td>POU.Agreement.Offers[] / COU.Agreement.Offers[]</td><td>New concept appended</td><td>OfferName, ServiceType, Soc, Action, EffectiveDate, FE_OR_CCBS ExtendedInfo, optional ACC_OPEN_DATE ExtendedInfo</td></tr>
+      <tr><td>orderRequest.OrderData.Customer.ParentOU[0]</td><td>Created if absent</td><td>Default ParentOU with RefId from Customer.RefId</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §9 Object Construction -->
+<section class="section">
+  <div class="section-header">§9 — Object Construction (SubscriberOffers / AgreementOffers)</div>
+  <div class="section-body">
+
+    <h3>§9.1 SubscriberOffers (level=SUB)</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">SubscriberOffers</span> <span class="badge badge-green">Always</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">concat(OMXUtils:generateTrackingID(), ':INJECT_OFFER')</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">EffectiveDate</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/EffectiveDate</span> <span class="tree-cond">Conditional: string-length &gt; 0</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OfferName</span> <span class="tree-arrow">←</span> <span class="tree-src-static">param offerName</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ServiceType</span> <span class="tree-arrow">←</span> <span class="tree-src-static">param serviceType</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">Soc</span> <span class="tree-arrow">←</span> <span class="tree-src-static">param soc</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">Action</span> <span class="tree-arrow">←</span> <span class="tree-src-static">param action (ADD/REMOVE)</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ParameterInfo/CUG ID</span> <span class="tree-arrow">←</span> <span class="tree-src">OrderData/ExtendedInfo[GROUP_ID]/Value</span> <span class="tree-cond">Conditional: mapCugId=Y and GROUP_ID exists</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ExtendedInfo/FE_OR_CCBS</span> <span class="tree-arrow">←</span> <span class="tree-src-static">param source (or "INJECT_OFFER" if blank)</span> <span class="badge badge-green">Always</span></div></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px;">§9.2 AgreementOffers (level=OU)</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">AgreementOffers</span> <span class="badge badge-green">Always</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">concat(OMXUtils:generateTrackingID(), ':INJECT_OFFER')</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">EffectiveDate</span> <span class="tree-arrow">←</span> <span class="tree-src">Account.OpenDate (if accOpenDate=Y, with compare-date logic)</span> <span class="tree-cond">Conditional: accOpenDate=Y</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">EffectiveDate</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/EffectiveDate</span> <span class="tree-cond">Conditional: accOpenDate≠Y and string-length &gt; 0</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OfferName / ServiceType / Soc / Action</span> <span class="tree-arrow">←</span> <span class="tree-src-static">params (same as SUB)</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ExtendedInfo/FE_OR_CCBS</span> <span class="tree-arrow">←</span> <span class="tree-src-static">param source (or "INJECT_OFFER")</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ExtendedInfo/ACC_OPEN_DATE = "Y"</span> <span class="tree-arrow">←</span> <span class="tree-src-static">static "Y"</span> <span class="tree-cond">Conditional: accOpenDate=Y</span></div></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px;">§9.3 accOpenDate EffectiveDate Logic (level=OU)</h3>
+    <table>
+      <tr><th>Condition</th><th>EffectiveDate</th></tr>
+      <tr><td>accOpenDate=Y and Account.OpenDate == today</td><td>Account.OpenDate (as-is)</td></tr>
+      <tr><td>accOpenDate=Y and Account.OpenDate &lt; today</td><td><code>today + 'T00:00:00+07:00'</code></td></tr>
+      <tr><td>accOpenDate≠Y and EffectiveDate non-empty</td><td><code>$orderRequest/OrderData/EffectiveDate</code></td></tr>
+      <tr><td>accOpenDate≠Y and EffectiveDate empty</td><td>Field omitted</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §10 XSLT Field Mapping -->
+<section class="section">
+  <div class="section-header">§10 — XSLT Field Mapping</div>
+  <div class="section-body">
+    <p>No JMS event XSLT. Object creation uses inline XSLT for <code>SubscriberOffers</code> and <code>AgreementOffers</code> — see §9. The only XSLT-based event is the Logger (audit log only).</p>
+  </div>
+</section>
+
+<!-- §11 Audit Logging -->
+<section class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Log event</th><th>PROCESS_ID</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th></tr>
+      <tr><td>Start</td><td><code>concat($pid, "_REQ")</code></td><td><code>/Rules/OMConsumers/OMXOM/OMX_InjectOffer</code></td><td><code>OMX-OM InjectOffer Started.</code></td></tr>
+      <tr><td>Complete</td><td><code>concat($pid, "_RES")</code></td><td><code>/Rules/OMConsumers/OMXOM/OMX_InjectOffer</code></td><td><code>OMX-OM InjectOffer Completed.</code></td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:10px;">OPERATION_NAME uses the rule path <code>/Rules/OMConsumers/OMXOM/OMX_InjectOffer</code> (note camelCase, not the rule ActivityID). Audit monitoring queries should match this value.</div>
+  </div>
+</section>
+
+<!-- §12 Activity Status -->
+<section class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Transition</th><th>Condition</th><th>Action</th></tr>
+      <tr><td>WAITING → COMPLETED</td><td>PreExecCheck passes</td><td><code>NextActivity(orderRequest, orderCurrentActivity)</code></td></tr>
+      <tr><td>WAITING → SKIPPED</td><td>PreExecCheck fails</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §13 Exception Handling -->
+<section class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Exception type</th><th>Action</th></tr>
+      <tr><td>Missing param: soc, serviceType, action, or level</td><td><code>DATA_ISSUE</code></td><td>Thrown immediately via <code>Exception.newException</code></td></tr>
+      <tr><td>All other errors</td><td>Any</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §14 Helper Functions -->
+<section class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(s)</code></td><td>Checks if a required param value is blank/null</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.NextActivity(orderRequest, act)</code></td><td>Advances activity state to next step</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.SkipActivity(orderRequest, act, "4")</code></td><td>Marks activity skipped (status="4")</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.HandleActivityException(req, act, ae, "")</code></td><td>Uniform exception handler</td></tr>
+      <tr><td><code>OMXUtils:generateTrackingID()</code></td><td>Generates a unique extId for each created concept</td></tr>
+      <tr><td><code>tib:compare-date(d1, d2)</code></td><td>Date comparison for accOpenDate logic (0=equal, -1=before)</td></tr>
+      <tr><td><code>tib:tokenize(s, "=")</code></td><td>Splits "key=value" into tokens</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §15 Function Dependency Tree -->
+<section class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre>OMX_INJECT_OFFER
+├── XPath.execute(PreExecCheck, sXML, ns)              [PreExecCheck eval]
+├── sendEventImmediate(Logger — Start)
+│
+├── [if ParentOU.length==0]
+│   ├── Instance.createInstance(ParentOU XSLT)
+│   └── Instance.createInstance(Subscriber XSLT)
+│
+├── for iParam over Activity.Parameter
+│   ├── XPath.evalAsString(Parameter[iParam+1])        [param value]
+│   ├── BRMS.IsBlankOrStringNull(paramString)          [required check]
+│   └── String.split(paramString, ",")
+│       └── tib:tokenize(param, "=")[1/2]              [key/value split]
+│
+├── for iPOU over ParentOU
+│   ├── [if level=OU]
+│   │   ├── XPath.evalAsBoolean(OU dedup check)
+│   │   ├── [if checkExistingOu=Y] XPath.evalAsBoolean(EXISTING_OU check)
+│   │   ├── Instance.createInstance(Agreement XSLT)    [if agreement==null]
+│   │   └── Instance.createInstance(AgreementOffers XSLT) → append
+│   ├── for ps over POU.Subscriber
+│   │   └── [if level=SUB]
+│   │       ├── XPath.evalAsBoolean(SUB dedup check)
+│   │       └── Instance.createInstance(SubscriberOffers XSLT) → append
+│   └── for iPCOU over ChildOU
+│       ├── [if level=OU] → same OU logic as POU
+│       └── for ps over ChildOU.Subscriber → same SUB logic
+│
+├── NextActivity(orderRequest, orderCurrentActivity)
+├── sendEventImmediate(Logger — Complete)
+└── HandleActivityException(...)                       [catch]</pre>
+  </div>
+</section>
+
+<!-- §17 Migration Notes -->
+<section class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Parse Activity.Parameter csv string — support multiple Parameter elements (one per offer)</td></tr>
+      <tr><td>R2</td><td>Evaluate runtime PreExecCheck from activity config (not rule WHEN block)</td></tr>
+      <tr><td>R3</td><td>Inject at SUB or OU level based on <code>level</code> param</td></tr>
+      <tr><td>R4</td><td>Dedup guard: skip if CCBS/CRM offer already exists (checkDup=1)</td></tr>
+      <tr><td>R5</td><td>Support POU + COU hierarchy (full 3-level loop)</td></tr>
+      <tr><td>R6</td><td>accOpenDate logic: compare account open date vs today → choose EffectiveDate</td></tr>
+      <tr><td>R7</td><td>Auto-create ParentOU + Subscriber if order has no POU data yet</td></tr>
+      <tr><td>R8</td><td>No backend call — pure working memory mutation; advances via NextActivity()</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Runtime PreExecCheck evaluated from <code>orderCurrentActivity.PreExecCheck</code> — XPath injection possible if parameter is not sanitised</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Validate PreExecCheck expressions at ProcessConfig deployment time</td></tr>
+      <tr><td>Silent skip on dedup (checkDup=1) — no warning log when injection skipped</td><td><span class="badge badge-blue">[LOW]</span></td><td>Add debug-level audit log for skipped injections in migration</td></tr>
+      <tr><td>accOpenDate date comparison uses <code>tib:compare-date</code> — timezone dependent</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Standardise timezone handling in target platform</td></tr>
+      <tr><td>Multiple Parameter elements run sequentially — last param wins for shared variables (offerAction etc.) only within one iParam iteration</td><td><span class="badge badge-blue">[LOW]</span></td><td>Variables reset per iParam — no cross-param bleed</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §18 Full Source Code -->
+<section class="section">
+  <div class="section-header">§18 — Full Source Code</div>
+  <div class="section-body">
+<pre><span style="color:#cba6f7">rule</span> <span style="color:#89b4fa">Rules.OMConsumers.OMXOM.OMX_INJECT_OFFER</span> {
+  <span style="color:#6c7086">// author: DESKTOP-KB4BEG4</span>
+  attribute { priority = 5; forwardChain = true; }
+  declare {
+    Concepts.OrderRequest.OrderRequest orderRequest;
+    Concepts.OM.ProcessConfig.Activity orderCurrentActivity;
+  }
+  when {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == "OMX_INJECT_OFFER";
+    orderRequest.ProcessFlow.NextActivityID == "OMX_INJECT_OFFER";
+    orderCurrentActivity.Status == "WAITING";
+  }
+  then {
+    <span style="color:#6c7086">// 1. Evaluate runtime PreExecCheck from activity config</span>
+    <span style="color:#6c7086">// 2. Log "InjectOffer Started"</span>
+    <span style="color:#6c7086">// 3. Auto-create ParentOU/Subscriber if absent</span>
+    <span style="color:#6c7086">// 4. Loop iParam over Activity.Parameter (csv parse: soc,serviceType,action,offerName,level,...)</span>
+    <span style="color:#6c7086">// 5. Validate required params (DATA_ISSUE if missing)</span>
+    <span style="color:#6c7086">// 6. Loop POU → Subscriber → ChildOU → ChildOU.Subscriber</span>
+    <span style="color:#6c7086">//    level=OU: create AgreementOffers (see §9.2 for XSLT fields)</span>
+    <span style="color:#6c7086">//    level=SUB: create SubscriberOffers (see §9.1 for XSLT fields)</span>
+    <span style="color:#6c7086">//    dedup check via XPath.evalAsBoolean</span>
+    <span style="color:#6c7086">// 7. NextActivity() + Log "InjectOffer Completed"</span>
+    <span style="color:#6c7086">// — No backend call, no fan-in, no response handler —</span>
+  }
+}</pre>
+  </div>
+</section>
+
+<!-- §19 No Response Handler -->
+<section class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <div class="callout callout-info">No response rulefunction exists for <code>OMX_INJECT_OFFER</code>. This rule completes synchronously within the same rule firing: it mutates working memory, calls <code>NextActivity()</code>, and logs completion — all in the <code>then</code> block. No JMS response to wait for.</div>
+  </div>
+</section>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_OMX_INJECT_OFFER · Generated 2026-09-18</footer>
+</body>
+</html>

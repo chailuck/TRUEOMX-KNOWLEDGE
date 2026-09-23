@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PROMISE_TO_PAY — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:2rem;font-weight:700;letter-spacing:.5px}
+.page-header .subtitle{opacity:.85;margin-top:6px;font-size:.95rem}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 14px;border-radius:20px;font-size:.82rem}
+.container{max-width:1300px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+tr.has-precheck td{border-left:4px solid #FFC107}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.55}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 5px;border-radius:3px}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600;white-space:nowrap}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+details{margin:8px 0}
+details summary{cursor:pointer;padding:8px 14px;background:#FFF8E1;border-left:4px solid #FFC107;border-radius:4px;font-weight:500;color:#5D4037}
+details summary:hover{background:#FFF3CD}
+details .detail-body{padding:14px;background:#FFFDE7;border:1px solid #FFE082;border-top:none;border-radius:0 0 4px 4px}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px;margin-top:4px}
+.fm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.fm-card h3{font-size:.95rem;color:var(--true-dark);margin-bottom:8px}
+.fm-card .steps{font-size:.82rem;color:#555;margin-bottom:10px}
+.fm-card a{color:var(--true-red);text-decoration:none;font-size:.88rem;font-weight:500}
+.fm-card a:hover{text-decoration:underline}
+.mermaid-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card);margin-top:4px}
+footer{text-align:center;color:#888;font-size:.8rem;padding:24px;border-top:1px solid var(--border)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+</head>
+<body>
+<div class="page-header">
+  <div class="subtitle">TRUE Corporation OMX · Order Journey Documentation</div>
+  <h1>PROMISE_TO_PAY</h1>
+  <div style="opacity:.85;margin-top:8px;font-size:.95rem">Process Configuration for PROMISE_TO_PAY — Account search, credit/priority update, past-due fetch, and payment arrangement creation in CCBS.</div>
+  <div class="meta-row">
+    <span class="meta-item">Total steps: 4</span>
+    <span class="meta-item">Unique FMs: 4</span>
+    <span class="meta-item">Entry point: CCBS_SEARCH_ACCOUNT_BY_RESOURCE</span>
+    <span class="meta-item">System: CCBS</span>
+    <span class="meta-item">Generated: 2026-09-14</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §2 Order Flow Table -->
+<div class="section">
+  <div class="section-header">§2 — Order Flow</div>
+  <div class="section-body" style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>Step #</th>
+          <th>Step ID</th>
+          <th>FM (ActivityID)</th>
+          <th>Parameter(s)</th>
+          <th>PreExecCheck</th>
+          <th>Previous</th>
+          <th>Next</th>
+          <th>FM Doc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="has-precheck">
+          <td>1</td>
+          <td>CCBS_SEARCH_ACCOUNT_BY_RESOURCE</td>
+          <td><a href="../FMlogic/Request_CCBS_SEARCH_ACCOUNT_BY_RESOURCE.html">CCBS_SEARCH_ACCOUNT_BY_RESOURCE</a></td>
+          <td>—</td>
+          <td><code>string-length(//Subscriber/MSISDN/text()) &gt; 0</code></td>
+          <td>START</td>
+          <td>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-precheck">
+          <td>2</td>
+          <td>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</td>
+          <td><a href="../FMlogic/Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO.html">CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</a></td>
+          <td>—</td>
+          <td><code>count(//Account/CreditLimit/text())&gt;0 or count(//Account/ExtendedInfo[Name='CREDIT_INFO'])&gt;0</code></td>
+          <td>CCBS_SEARCH_ACCOUNT_BY_RESOURCE</td>
+          <td>CCBS_GET_PAST_DUE_INFO</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-precheck">
+          <td>3</td>
+          <td>CCBS_GET_PAST_DUE_INFO</td>
+          <td><a href="../FMlogic/Request_CCBS_GET_PAST_DUE_INFO.html">CCBS_GET_PAST_DUE_INFO</a></td>
+          <td>—</td>
+          <td><code>string-length(//Account/ExtendedInfo[Name='PAST_DUE_AMOUNT']/Value/text())=0</code></td>
+          <td>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</td>
+          <td>CCBS_CREATE_PAYMENT_ARRANGEMENT</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>4</td>
+          <td>CCBS_CREATE_PAYMENT_ARRANGEMENT</td>
+          <td><a href="../FMlogic/Request_CCBS_CREATE_PAYMENT_ARRANGEMENT.html">CCBS_CREATE_PAYMENT_ARRANGEMENT</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>CCBS_GET_PAST_DUE_INFO</td>
+          <td>END</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:12px;font-size:.82rem;color:#888">Rows with a yellow left border have a PreExecCheck condition. Note: 13 additional activities visible in the source XML are commented out and inactive.</p>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="section">
+  <div class="section-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="section-body">
+
+    <details open>
+      <summary>Step 1 — CCBS_SEARCH_ACCOUNT_BY_RESOURCE</summary>
+      <div class="detail-body">
+        <p><strong>FM:</strong> <code>CCBS_SEARCH_ACCOUNT_BY_RESOURCE</code></p>
+        <pre>string-length(//Subscriber/MSISDN/text()) &gt; 0</pre>
+        <p style="margin-top:8px">Skips account search if no MSISDN is present on the subscriber. The order must carry a phone number for the CCBS search to be meaningful.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 2 — CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</summary>
+      <div class="detail-body">
+        <p><strong>FM:</strong> <code>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</code></p>
+        <pre>count(//Account/CreditLimit/text())&gt;0
+or count(//Account/ExtendedInfo[Name='CREDIT_INFO']/Value/text())&gt;0</pre>
+        <p style="margin-top:8px">Only updates credit/management info if the order carries a credit limit or CREDIT_INFO extended attribute. Skips if neither is present.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 3 — CCBS_GET_PAST_DUE_INFO</summary>
+      <div class="detail-body">
+        <p><strong>FM:</strong> <code>CCBS_GET_PAST_DUE_INFO</code></p>
+        <pre>string-length(//Account/ExtendedInfo[Name='PAST_DUE_AMOUNT']/Value/text())=0</pre>
+        <p style="margin-top:8px">Skips the CCBS past-due query if PAST_DUE_AMOUNT has already been populated on the account (e.g., from a prior attempt or upstream enrichment). This is a standard idempotency guard.</p>
+        <p style="margin-top:6px;font-size:.85rem;color:#666"><strong>Note:</strong> This PreExecCheck is evaluated against <code>orderRequest.OrderData</code> in the rule (not the full orderRequest). XPath must be relative to OrderData.</p>
+      </div>
+    </details>
+
+  </div>
+</div>
+
+<!-- §4 FM Documentation Index -->
+<div class="section">
+  <div class="section-header">§4 — FM Documentation Index</div>
+  <div class="section-body">
+    <div class="fm-grid">
+
+      <div class="fm-card">
+        <h3>CCBS_SEARCH_ACCOUNT_BY_RESOURCE</h3>
+        <div class="steps">Used in steps: 1</div>
+        <div style="margin-bottom:8px;font-size:.82rem;color:#666">Single-request, IntraActivitySequencing. Resolves AccountID+CustomerID from MSISDN.</div>
+        <a href="../FMlogic/Request_CCBS_SEARCH_ACCOUNT_BY_RESOURCE.html">→ View FM Documentation</a>
+        <div style="margin-top:8px"><span class="badge badge-green">✓ Generated</span></div>
+      </div>
+
+      <div class="fm-card">
+        <h3>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</h3>
+        <div class="steps">Used in steps: 2</div>
+        <div style="margin-bottom:8px;font-size:.82rem;color:#666">Updates credit limit and priority information for the account in CCBS.</div>
+        <a href="../FMlogic/Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO.html">→ View FM Documentation</a>
+        <div style="margin-top:8px"><span class="badge badge-green">✓ Generated</span></div>
+      </div>
+
+      <div class="fm-card">
+        <h3>CCBS_GET_PAST_DUE_INFO</h3>
+        <div class="steps">Used in steps: 3</div>
+        <div style="margin-bottom:8px;font-size:.82rem;color:#666">Per-account loop. Fetches DueAmount; writes PAST_DUE_AMOUNT to all accounts' ExtendedInfo.</div>
+        <a href="../FMlogic/Request_CCBS_GET_PAST_DUE_INFO.html">→ View FM Documentation</a>
+        <div style="margin-top:8px"><span class="badge badge-green">✓ Generated</span></div>
+      </div>
+
+      <div class="fm-card">
+        <h3>CCBS_CREATE_PAYMENT_ARRANGEMENT</h3>
+        <div class="steps">Used in steps: 4</div>
+        <div style="margin-bottom:8px;font-size:.82rem;color:#666">Per-account loop with reqSuccess guard. Creates PTP arrangement with hardcoded policy constants.</div>
+        <a href="../FMlogic/Request_CCBS_CREATE_PAYMENT_ARRANGEMENT.html">→ View FM Documentation</a>
+        <div style="margin-top:8px"><span class="badge badge-green">✓ Generated</span></div>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="section">
+  <div class="section-header">§5 — Sequence Diagram</div>
+  <div class="section-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+
+    opt string-length(MSISDN)>0
+        O->>CCBS: CCBS_SEARCH_ACCOUNT_BY_RESOURCE
+        CCBS-->>O: AccountNo + CustomerNo
+        Note over O,CCBS: FM: CCBS_SEARCH_ACCOUNT_BY_RESOURCE
+    end
+
+    opt CreditLimit or CREDIT_INFO present
+        O->>CCBS: CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO
+    end
+
+    opt PAST_DUE_AMOUNT not yet populated
+        loop per Account
+            O->>CCBS: CCBS_GET_PAST_DUE_INFO [EntityId=AccountID]
+            CCBS-->>O: DueAmount
+            Note over O,CCBS: FM: CCBS_GET_PAST_DUE_INFO
+        end
+    end
+
+    loop per Account (skip if already succeeded)
+        O->>CCBS: CCBS_CREATE_PAYMENT_ARRANGEMENT [PTPPA | CA | 68 | 78]
+        CCBS-->>O: arrangement confirmed
+        Note over O,CCBS: FM: CCBS_CREATE_PAYMENT_ARRANGEMENT
+    end
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="section">
+  <div class="section-header">§6 — Flow Diagram</div>
+  <div class="section-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1
+
+    S1{"CCBS_SEARCH_ACCOUNT_BY_RESOURCE\n[Conditional: MSISDN present]"}
+    S1 -->|"MSISDN present\n→ search CCBS"| S1A["Search CCBS by MSISDN\nFM: CCBS_SEARCH_ACCOUNT_BY_RESOURCE\n→ writes AccountID + CustomerID"]
+    S1 -->|"No MSISDN\n→ skip"| S2
+
+    S1A --> S2
+
+    S2{"CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO\n[Conditional: CreditLimit or CREDIT_INFO]"}
+    S2 -->|"Credit data present\n→ update"| S2A["Update credit/priority info\nFM: CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO"]
+    S2 -->|"No credit data\n→ skip"| S3
+
+    S2A --> S3
+
+    S3{"CCBS_GET_PAST_DUE_INFO\n[Conditional: PAST_DUE_AMOUNT empty]"}
+    S3 -->|"Not yet populated\n→ fetch per account"| S3A["Fetch DueAmount per Account\nFM: CCBS_GET_PAST_DUE_INFO\n→ writes PAST_DUE_AMOUNT to all accounts"]
+    S3 -->|"Already populated\n→ skip"| S4
+
+    S3A --> S4
+
+    S4["Create Payment Arrangement per Account\nFM: CCBS_CREATE_PAYMENT_ARRANGEMENT\nPolicy: PTPPA | RESUME | CA\nIntervalType=68 | Indicator=78"]
+
+    S4 --> END([END])
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Warnings -->
+<div class="section">
+  <div class="section-header">Warnings &amp; Observations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Severity</th><th>Activity</th><th>Issue</th></tr>
+      <tr><td><span class="badge badge-orange">[MEDIUM]</span></td><td>CCBS_CREATE_PAYMENT_ARRANGEMENT</td><td><code>Account[1]/AccountID</code> used inside per-account loop — may always reference first account for multi-account orders</td></tr>
+      <tr><td><span class="badge badge-orange">[MEDIUM]</span></td><td>CCBS_GET_PAST_DUE_INFO</td><td>Event type has double prefix: <code>CCBS_CCBS_GET_PAST_DUE_INFO</code> — verify ESB channel configuration</td></tr>
+      <tr><td><span class="badge badge-blue">[LOW]</span></td><td>CCBS_GET_PAST_DUE_INFO</td><td><code>LogicalDate</code> concept read into scope but never used in payload (dead code / TODO)</td></tr>
+      <tr><td><span class="badge badge-blue">[LOW]</span></td><td>CCBS_CREATE_PAYMENT_ARRANGEMENT</td><td>All business constants hardcoded (PTPPA, RESUME, CA, 68, 78) — not configurable from ProcessConfig</td></tr>
+      <tr><td><span class="badge badge-blue">[LOW]</span></td><td>CCBS_SEARCH_ACCOUNT_BY_RESOURCE</td><td><code>isActResub</code> computed but <code>PurgePendingRequestsBeforeResubmit</code> never called</td></tr>
+      <tr><td><span class="badge badge-blue">[NOTE]</span></td><td>CCBS_GET_PAST_DUE_INFO</td><td>PreExecCheck evaluated against <code>orderRequest.OrderData</code> not full <code>orderRequest</code></td></tr>
+      <tr><td><span class="badge badge-blue">[NOTE]</span></td><td>Source XML</td><td>13 activities in ProcessConfig XML are commented out — only 4 steps are active</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · Order Journey Documentation · PROMISE_TO_PAY</footer>
+</body>
+</html>

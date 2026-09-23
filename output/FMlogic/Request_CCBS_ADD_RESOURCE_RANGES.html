@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_ADD_RESOURCE_RANGES</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700}
+.page-header .subtitle{opacity:.85;margin-top:6px;font-size:.95rem}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:.78rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas','Courier New',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px 20px;border-radius:6px;overflow-x:auto;font-size:.8rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{background:#F3E5E5;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.82rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600;white-space:nowrap}
+.b-red{background:#FFE0E0;color:var(--true-dark)}.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}.b-jms{background:#FFE0B2;color:#E65100}
+.severity-high{background:#FFEBEE;color:#b71c1c;padding:2px 7px;border-radius:4px;font-size:.72rem;font-weight:700}
+.severity-med{background:#FFF3E0;color:#e65100;padding:2px 7px;border-radius:4px;font-size:.72rem;font-weight:700}
+.severity-low{background:#F3E5F5;color:#6a1b9a;padding:2px 7px;border-radius:4px;font-size:.72rem;font-weight:700}
+.severity-info{background:#E3F0FD;color:#1565c0;padding:2px 7px;border-radius:4px;font-size:.72rem;font-weight:700}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nu{color:#fab387}.fn{color:#f38ba8}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.warn-box{background:#FFF3E0;border-left:4px solid #e65100;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:.85rem}
+.crit-box{background:#FFEBEE;border-left:4px solid #b71c1c;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:.85rem}
+.info-box{background:#E3F0FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:.85rem}
+.step-flow{counter-reset:step-cnt}
+.step-flow li{counter-increment:step-cnt;padding:6px 0 6px 36px;position:relative}
+.step-flow li::before{content:counter(step-cnt);position:absolute;left:0;top:5px;width:24px;height:24px;background:var(--true-red);color:#fff;border-radius:50%;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center}
+h2{font-size:1.05rem;color:var(--true-dark);margin:8px 0 12px;padding-bottom:4px;border-bottom:1px solid #F5E6E6}
+h3{font-size:.95rem;color:#424242;margin:12px 0 8px}
+footer{text-align:center;padding:24px;color:#9e9e9e;font-size:.78rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.75rem;opacity:.7;margin-bottom:4px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_CCBS_ADD_RESOURCE_RANGES</h1>
+  <div class="subtitle">Adds resource ranges for each subscriber (POU and COU) via CCBS AddResourceRanges — per-subscriber dispatch with Action=ADD filter and ValuesArray tokenization</div>
+  <div class="meta-row">
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">ForwardChain: true</span>
+    <span class="meta-chip">Backend: CCBS (ResourceRanges)</span>
+    <span class="meta-chip">Dispatch: Per-Subscriber (POU → COU)</span>
+    <span class="meta-chip">Fan-in: ActionResponseEvent helper</span>
+    <span class="meta-chip">Generated: 2026-09-14</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header">§1 — Overview &amp; Purpose</div>
+<div class="card-body">
+<p>This rule dispatches <strong>CCBS AddResourceRanges</strong> requests for every subscriber across all Parent OUs and Child OUs. Unlike agreement-based FMs, this operates on the <strong>Subscriber</strong> model — one request per subscriber per OU level. ResourceRangeInfo entries with <code>Action=="ADD"</code> are batched into a single request per subscriber.</p>
+<ul style="margin:10px 0 10px 20px;line-height:2">
+  <li>Iterates POU → POU.Subscriber, then COU → COU.Subscriber</li>
+  <li>PreExecCheck evaluated per subscriber using <code>GetXMLForSubscriber</code> (POU) or <code>GetXMLForSubscriberInChildOU</code> (COU)</li>
+  <li>Filters <code>ResourceRangeInfo</code> where <code>Action=="ADD"</code> → collects into <code>addRangeArray</code></li>
+  <li><code>ValuesArray</code> tokenized on <code>"-"</code> → emits multiple <code>ns3:Values</code> elements per resource</li>
+  <li>isActResub guard: <code>PurgePendingRequestsBeforeResubmit</code> if applicable</li>
+  <li><code>logicalDateVal</code> read from LogicalDate concept but never used in XSLT — dead code</li>
+</ul>
+<div class="crit-box"><strong>BUG (HIGH) — COU event type mismatch (line 113):</strong> The COU request event is typed as <code>Events.OMConsumers.OMXFM.Request.<strong>CCBS_CHANGE_RESOURCE_RANGES</strong></code> instead of <code>CCBS_ADD_RESOURCE_RANGES</code>. The XSLT template still uses the correct CCBS_ADD_RESOURCE_RANGES event, but the BE runtime may route this to the wrong channel.</div>
+<div class="warn-box"><strong>BUG (MEDIUM) — No empty-array guard:</strong> The rule dispatches even when <code>addRangeArray@length == 0</code> (no ADD ranges qualify). An empty AddResourceRangesRequest may be sent to CCBS.</div>
+<div class="warn-box"><strong>AUDIT_TRACE inconsistency (LOW):</strong> POU trace says "CCBS_CHANGE_ADD_RANGES" (wrong name); COU trace has typo "ChidOU" (missing 'l').</div>
+<div class="warn-box"><strong>Dead code (MEDIUM) — logicalDateVal:</strong> Read from LogicalDate concept but never passed to XSLT.</div>
+</div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+<div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="card-body">
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_ADD_RESOURCE_RANGES</code></td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>forwardChain</td><td>true</td></tr>
+<tr><td>Backend system</td><td>CCBS — AddResourceRanges</td></tr>
+<tr><td>Dispatch pattern</td><td>Per-Subscriber (POU subscribers, then COU subscribers)</td></tr>
+<tr><td>Range filter</td><td><code>ResourceRangeInfo.Action == "ADD"</code></td></tr>
+<tr><td>Response rulefunction</td><td><code>Response_CCBS_ADD_RESOURCE_RANGES</code></td></tr>
+<tr><td>Fan-in mechanism</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> helper</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+<div class="card-header">§3 — Working Memory — Declared Objects</div>
+<div class="card-body">
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order including ParentOU/ChildOU/Subscriber/ResourceRangeInfo</td></tr>
+<tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity — matched by ActivityID, extId, Status</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="card">
+<div class="card-header">§4 — Rule Conditions (WHEN)</div>
+<div class="card-body">
+<table>
+<tr><th>#</th><th>Condition</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_ADD_RESOURCE_RANGES"</code></td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_ADD_RESOURCE_RANGES"</code></td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+<div class="card-header">§5 — Execution Flow Diagram</div>
+<div class="card-body">
+<ol class="step-flow" style="list-style:none">
+  <li>Check isActResub → <code>PurgePendingRequestsBeforeResubmit</code> if true</li>
+  <li>Read LogicalDate → <code>logicalDateVal</code> (dead code — not used)</li>
+  <li><strong>POU loop</strong>: for each POU → for each Subscriber:
+    <ul style="margin:4px 0 4px 20px">
+      <li>Evaluate PreExecCheck via <code>GetXMLForSubscriber(orderRequest, refId)</code></li>
+      <li>If passes: filter <code>ResourceRangeInfo[Action=="ADD"]</code> → <code>addRangeArray</code></li>
+      <li>Create/assert event → ActionRequestEvent → Logger → <code>isSkipped=false</code></li>
+    </ul>
+  </li>
+  <li><strong>COU loop</strong>: for each COU → for each Subscriber:
+    <ul style="margin:4px 0 4px 20px">
+      <li>Evaluate PreExecCheck via <code>GetXMLForSubscriberInChildOU(orderRequest, refId, parentOU.RefId)</code></li>
+      <li>Same filter/dispatch (with CCBS_CHANGE_RESOURCE_RANGES type bug)</li>
+    </ul>
+  </li>
+  <li>If !isSkipped → <code>SendFirstRequestEvent</code> + Status="1" + <code>SendDataToDB</code>; else <code>SkipActivity("4")</code></li>
+</ol>
+</div>
+</div>
+
+<!-- §6 Rule Action Logic -->
+<div class="card">
+<div class="card-header">§6 — Rule Action (THEN) — Key Logic Details</div>
+<div class="card-body">
+<h3>6.1 Range Filtering</h3>
+<p>For each subscriber, iterates <code>sub.ResourceRangeInfo[]</code> and collects entries where <code>rangeInfo.Action == "ADD"</code> into <code>addRangeInfos</code> list → converted to typed <code>addRangeArray</code>.</p>
+<div class="warn-box">No guard on <code>addRangeArray@length &gt; 0</code> before dispatch — an empty array triggers a CCBS call with no ResourceInfo elements.</div>
+
+<h3>6.2 XSLT Dispatch (POU vs COU differences)</h3>
+<table>
+<tr><th>Aspect</th><th>POU scope</th><th>COU scope</th></tr>
+<tr><td>PreExecCheck helper</td><td><code>GetXMLForSubscriber(orderRequest, refId)</code></td><td><code>GetXMLForSubscriberInChildOU(orderRequest, refId, parentOU.RefId)</code></td></tr>
+<tr><td>Event type declared</td><td><code>CCBS_ADD_RESOURCE_RANGES</code></td><td><span class="severity-high">CCBS_CHANGE_RESOURCE_RANGES</span> (bug!)</td></tr>
+<tr><td>XSLT template ref</td><td><code>CCBS_ADD_RESOURCE_RANGES</code></td><td><code>CCBS_ADD_RESOURCE_RANGES</code> (correct)</td></tr>
+<tr><td>Credential guard</td><td>Double-guarded: IsEnableUserPass='true' AND User/Password exist</td><td>Single-guarded: IsEnableUserPass='true' only</td></tr>
+<tr><td>AUDIT_TRACE</td><td>"Request Sent for <strong>CCBS_CHANGE_ADD_RANGES</strong> for add resourceRangeInfo"</td><td>"Request Sent for CCBS_ADD_RESOURCE_RANGES for add resourceRangeInfo <strong>ChidOU</strong>"</td></tr>
+</table>
+
+<h3>6.3 ValuesArray Tokenization</h3>
+<p>Resource range values are stored as a hyphen-delimited string in <code>ValuesArray</code>. The XSLT tokenizes this: <code>tib:tokenize(ValuesArray, "-")</code> → emits one <code>ns3:Values</code> element per token.</p>
+</div>
+</div>
+
+<!-- §8 Integration Dependencies -->
+<div class="card">
+<div class="card-header">§8 — System &amp; Integration Dependencies</div>
+<div class="card-body">
+<h3>8.1 ESB / JMS Channel Dependencies</h3>
+<table>
+<tr><th>Direction</th><th>Event</th><th>Purpose</th></tr>
+<tr><td><span class="badge b-jms">OUTBOUND</span></td><td><code>CCBS_ADD_RESOURCE_RANGES</code></td><td>Add resource ranges request per subscriber</td></tr>
+<tr><td><span class="badge" style="background:#F1F8E9;color:#558B2F">LOG</span></td><td><code>Logger</code></td><td>Audit per dispatch</td></tr>
+</table>
+
+<h3>8.2 Backend API</h3>
+<table>
+<tr><th>System</th><th>Operation</th><th>Schema</th></tr>
+<tr><td>CCBS</td><td>AddResourceRanges</td><td><code>amdocs.csm3g.datatypes.AddResourceRangesRequest.xsd</code> (ns1)<br>SubscriberIdInfo: <code>amdocs.csm3g.datatypes.SubscriberIdInfo</code> (ns)<br>ResourceInfo: <code>amdocs.csm3g.datatypes.ResourceInfo</code> (ns3)<br>ActivityInfo: <code>amdocs.csm3g.datatypes.ActivityInfo</code> (ns2)</td></tr>
+</table>
+
+<h3>8.3 ExtendedInfo / Concept Fields Used</h3>
+<table>
+<tr><th>Field</th><th>Source</th><th>Usage</th></tr>
+<tr><td>Subscriber.RefId</td><td>sub.RefId</td><td>Correlation key (RefID in event)</td></tr>
+<tr><td>Subscriber.SubscriberId</td><td>sub.SubscriberId</td><td>SubscriberIdInfo.SubscrNumber</td></tr>
+<tr><td>Subscriber.MSISDN</td><td>sub.MSISDN</td><td>ns3:ResrcScopeId per resource</td></tr>
+<tr><td>ResourceRangeInfo.Action</td><td>rangeInfo.Action</td><td>Filter condition (=="ADD")</td></tr>
+<tr><td>ResourceRangeInfo.effectiveDate</td><td>rangeInfo.effectiveDate</td><td>ns3:EffectiveDate (conditional)</td></tr>
+<tr><td>ResourceRangeInfo.expirationDate</td><td>rangeInfo.expirationDate</td><td>ns3:ExpirationDate (conditional)</td></tr>
+<tr><td>ResourceRangeInfo.ResourceName</td><td>rangeInfo.ResourceName</td><td>ns3:Name (conditional)</td></tr>
+<tr><td>ResourceRangeInfo.ValuesArray</td><td>rangeInfo.ValuesArray</td><td>Tokenized on "-" → ns3:Values[*]</td></tr>
+<tr><td>SubscriberActivityInfo.ActivityReason</td><td>sub.SubscriberActivityInfo.ActivityReason</td><td>ns2:ActivityReason or default "CREQ"</td></tr>
+<tr><td>SubscriberActivityInfo.UserText</td><td>sub.SubscriberActivityInfo.UserText</td><td>ns2:UserText (conditional)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §9 Detailed Payload -->
+<div class="card">
+<div class="card-header">§9 — Detailed Payload Build</div>
+<div class="card-body">
+<h3>9.1 XSLT Parameters</h3>
+<table>
+<tr><th>Param</th><th>Source</th></tr>
+<tr><td><code>$orderRequest</code></td><td>orderRequest concept</td></tr>
+<tr><td><code>$refId</code></td><td>sub.RefId (subscriber reference)</td></tr>
+<tr><td><code>$globalVariables</code></td><td>global variables</td></tr>
+<tr><td><code>$sub</code></td><td>current Subscriber concept</td></tr>
+<tr><td><code>$addRangeArray</code></td><td>typed array of ADD ResourceRangeInfo</td></tr>
+</table>
+
+<h3>9.2 Output XML Tree (POU Variant)</h3>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent → event</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId (sub.RefId)</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="tree-cond">if IsEnableUserPass='true' AND User exists</span><span class="badge b-purple">Credential-gated</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="tree-cond">if IsEnableUserPass='true' AND Password exists</span><span class="badge b-purple">Credential-gated</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">if exists</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="tree-cond">if exists</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">payload → ns1:AddResourceRangesRequest</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns:SubscriberIdInfo</span><span class="badge b-green">Always</span></div>
+            <ul><li><div class="tree-row"><span class="tree-tag">ns:SubscrNumber</span><span class="tree-arrow">←</span><span class="tree-src">$sub/SubscriberId</span><span class="tree-cond">if exists</span><span class="badge b-orange">Conditional</span></div></li></ul>
+          </li>
+          <li><div class="tree-row"><span class="tree-tag">ns3:ResourceInfo[*]</span><span class="tree-cond">foreach $addRangeArray/elements</span><span class="badge b-orange">Conditional</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns3:EffectiveDate</span><span class="tree-arrow">←</span><span class="tree-src">effectiveDate</span><span class="tree-cond">if exists</span><span class="badge b-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns3:ExpirationDate</span><span class="tree-arrow">←</span><span class="tree-src">expirationDate</span><span class="tree-cond">if exists</span><span class="badge b-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns3:Name</span><span class="tree-arrow">←</span><span class="tree-src">ResourceName</span><span class="tree-cond">if exists</span><span class="badge b-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns3:ResrcScopeId</span><span class="tree-arrow">←</span><span class="tree-src">$sub/MSISDN</span><span class="tree-cond">if exists</span><span class="badge b-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns3:Values[*]</span><span class="tree-arrow">←</span><span class="tree-src">tib:tokenize(ValuesArray, "-") → each token</span><span class="badge b-green">Always (per token)</span></div></li>
+            </ul>
+          </li>
+          <li><div class="tree-row"><span class="tree-tag">ns2:ActivityInfo</span><span class="badge b-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns2:ActivityReason</span><span class="tree-arrow">←</span><span class="tree-src">ActivityReason or "CREQ"</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns2:UserText</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/UserText</span><span class="tree-cond">if exists</span><span class="badge b-orange">Conditional</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+<div class="card-header">§11 — Audit Logging</div>
+<div class="card-body">
+<table>
+<tr><th>Scope</th><th>AUDIT_TRACE value</th><th>Issue</th></tr>
+<tr><td>POU request</td><td>"Request Sent for CCBS_CHANGE_ADD_RANGES for add resourceRangeInfo"</td><td><span class="severity-low">LOW</span> Wrong operation name "CCBS_CHANGE_ADD_RANGES"</td></tr>
+<tr><td>COU request</td><td>"Request Sent for CCBS_ADD_RESOURCE_RANGES for add resourceRangeInfo ChidOU"</td><td><span class="severity-low">LOW</span> Typo "ChidOU"</td></tr>
+<tr><td>Response (RF)</td><td>"Response received for CCBS_ADD_RESOURCE_RANGES"</td><td>Correct</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §12 Status -->
+<div class="card">
+<div class="card-header">§12 — Activity Status Management</div>
+<div class="card-body">
+<table>
+<tr><th>Condition</th><th>Result</th></tr>
+<tr><td>At least one request dispatched</td><td><code>SendFirstRequestEvent</code> + Status="1" + <code>SendDataToDB</code></td></tr>
+<tr><td>No subscriber qualified</td><td><code>SkipActivity("4")</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §13 Exception -->
+<div class="card">
+<div class="card-header">§13 — Exception Handling</div>
+<div class="card-body">
+<p>All errors caught by <code>catch(Exception ae)</code> → <code>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code>.</p>
+</div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card">
+<div class="card-header">§14 — Helper Functions Reference</div>
+<div class="card-body">
+<table>
+<tr><th>Function</th><th>Purpose</th></tr>
+<tr><td><code>GetXMLForSubscriber(orderRequest, refId)</code></td><td>Builds XML for POU subscriber PreExecCheck evaluation</td></tr>
+<tr><td><code>GetXMLForSubscriberInChildOU(orderRequest, refId, parentRefId)</code></td><td>Builds XML for COU subscriber PreExecCheck evaluation</td></tr>
+<tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)</code></td><td>Clears pending requests for resubmit</td></tr>
+<tr><td><code>IntraActivitySequencing.ActionRequestEvent(event, activity)</code></td><td>Registers request; increments RequestCount</td></tr>
+<tr><td><code>IntraActivitySequencing.SendFirstRequestEvent(activity)</code></td><td>Dispatches first queued request</td></tr>
+<tr><td><code>SkipActivity(orderRequest, activity, "4")</code></td><td>Marks activity skipped</td></tr>
+<tr><td><code>SendDataToDB(orderRequest)</code></td><td>Persists state</td></tr>
+<tr><td><code>HandleActivityException(...)</code></td><td>Error handler</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+<div class="card-header">§15 — Function Dependency Tree</div>
+<div class="card-body">
+<pre>Request_CCBS_ADD_RESOURCE_RANGES (rule)
+├── RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId)                        [POU]
+├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(orderRequest, refId, parentRefId)  [COU]
+├── Event.createEvent("xslt://CCBS_ADD_RESOURCE_RANGES") × N subscribers (POU)
+├── Event.createEvent("xslt://CCBS_ADD_RESOURCE_RANGES") × N subscribers (COU — type bug)
+├── Event.assertEvent(reqEvent)
+├── RuleFunctions.Helpers.IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+├── Event.Ext.sendEventImmediate(Logger event) × N dispatches
+├── RuleFunctions.Helpers.IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(orderRequest, activity, "4")
+└── RuleFunctions.Helpers.HandleActivityException(orderRequest, activity, ae, "")</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+<div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="card-body">
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td>COU event type declared as CCBS_CHANGE_RESOURCE_RANGES instead of CCBS_ADD_RESOURCE_RANGES</td><td><span class="severity-high">HIGH</span></td><td>Fix line 113 to use CCBS_ADD_RESOURCE_RANGES event type</td></tr>
+<tr><td>No guard on addRangeArray@length &gt; 0 — empty request dispatched to CCBS</td><td><span class="severity-med">MEDIUM</span></td><td>Add <code>if(addRangeArray@length &gt; 0)</code> guard before dispatch</td></tr>
+<tr><td>logicalDateVal dead code — read but never used</td><td><span class="severity-med">MEDIUM</span></td><td>Remove dead code or add logicalDateVal to XSLT if needed</td></tr>
+<tr><td>AUDIT_TRACE inconsistency (POU wrong name, COU typo)</td><td><span class="severity-low">LOW</span></td><td>Standardize AUDIT_TRACE strings</td></tr>
+<tr><td>Credential guard inconsistency (POU double-guarded, COU single-guarded)</td><td><span class="severity-low">LOW</span></td><td>Align credential guard to match POU pattern in COU XSLT</td></tr>
+<tr><td>No reqSuccess check — no protection against duplicate dispatch on resubmit</td><td><span class="severity-med">MEDIUM</span></td><td>Add per-subscriber reqSuccess check before dispatch</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="card">
+<div class="card-header">§18 — Full Source Code (Condensed)</div>
+<div class="card-body">
+<pre><span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.Request_CCBS_ADD_RESOURCE_RANGES {
+  <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+  <span class="kw">declare</span> { Concepts.OrderRequest.OrderRequest orderRequest; Concepts.OM.ProcessConfig.Activity orderCurrentActivity; }
+  <span class="kw">when</span> { <span class="cm">/* ActivityID=="CCBS_ADD_RESOURCE_RANGES", Status=="WAITING" */</span> }
+  <span class="kw">then</span> {
+    <span class="kw">try</span> {
+      <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+      Concepts.OM.ProcessConfig.Activity nextAct = Instance.getByExtIdByUri(...);
+      <span class="kw">if</span>(isActResub) RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity);
+      String logicalDateVal = logicalDateRes.LogicalDate;  <span class="cm">// Dead code</span>
+      <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+      <span class="kw">for</span>(<span class="kw">int</span> pou = ...) {
+        ParentOU parentOU = ...;
+        <span class="cm">// POU subscribers</span>
+        <span class="kw">for</span>(<span class="kw">int</span> pous = ...) {
+          Subscriber sub = parentOU.Subscriber[pous];
+          String sXML = RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, sub.RefId);
+          <span class="cm">// PreExecCheck evaluation</span>
+          <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+            <span class="cm">// Collect ResourceRangeInfo[Action=="ADD"] → addRangeArray</span>
+            Events.OMConsumers.OMXFM.Request.CCBS_ADD_RESOURCE_RANGES reqEvent = Event.createEvent(
+              <span class="st">"xslt://{{/Events/OMConsumers/OMXFM/Request/CCBS_ADD_RESOURCE_RANGES}}"</span>
+              <span class="cm">/* XSLT: builds AddResourceRangesRequest — see §9 */</span>);
+            Event.assertEvent(reqEvent);
+            RuleFunctions.Helpers.IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity);
+            Event.Ext.sendEventImmediate(<span class="cm">/* Logger — AUDIT_TRACE: "CCBS_CHANGE_ADD_RANGES" (typo) */</span>);
+            isSkipped = <span class="kw">false</span>;
+          }
+        }
+        <span class="cm">// COU subscribers</span>
+        <span class="kw">for</span>(<span class="kw">int</span> cou = ...) {
+          <span class="kw">for</span>(<span class="kw">int</span> cous = ...) {
+            Subscriber sub = childOU.Subscriber[cous];
+            String sXML = RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(orderRequest, sub.RefId, parentOU.RefId);
+            <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+              <span class="cm">// BUG: wrong event type below!</span>
+              Events.OMConsumers.OMXFM.Request.<span class="fn">CCBS_CHANGE_RESOURCE_RANGES</span> reqEvent = Event.createEvent(
+                <span class="st">"xslt://{{/Events/OMConsumers/OMXFM/Request/CCBS_ADD_RESOURCE_RANGES}}"</span>
+                <span class="cm">/* XSLT same as POU — see §9 */</span>);
+              <span class="cm">/* Logger — AUDIT_TRACE: "...ChidOU" (typo) */</span>
+              isSkipped = <span class="kw">false</span>;
+            }
+          }
+        }
+      }
+      <span class="kw">if</span>(!isSkipped) { SendFirstRequestEvent; Status=<span class="st">"1"</span>; SendDataToDB; }
+      <span class="kw">else</span> { SkipActivity(<span class="st">"4"</span>); }
+    } <span class="kw">catch</span>(Exception ae) { HandleActivityException(...); }
+  }
+}</pre>
+</div>
+</div>
+
+<!-- §19 Response RF -->
+<div class="card">
+<div class="card-header">§19 — Response Message Rule</div>
+<div class="card-body">
+<h3>§19.1 Overview</h3>
+<p>Standard response handler: constructs a <code>CCBS_AddResourceRangesRes</code> concept, appends to <code>currActivity.Response[]</code>, logs audit trail, and calls <code>ActionResponseEvent</code> for fan-in.</p>
+
+<h3>§19.2 Scope Variables</h3>
+<table>
+<tr><th>Variable</th><th>Type</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td></tr>
+<tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_ADD_RESOURCE_RANGES</code></td></tr>
+<tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td></tr>
+</table>
+
+<h3>§19.3 ResponseBase Concept Construction</h3>
+<p>Creates <code>Concepts.FM.Response.CCBS_AddResourceRangesRes</code> (specific type, not generic ResponseBase):</p>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject → CCBS_AddResourceRangesRes</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">if exists</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">if exists</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">if exists</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">if exists</span></div></li>
+    </ul>
+  </li>
+</ul>
+
+<h3>§19.4 Fan-in Completion</h3>
+<table>
+<tr><th>Mechanism</th><th>Value</th></tr>
+<tr><td>Method</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+<tr><td>Return "true"</td><td>All dispatched requests responded</td></tr>
+<tr><td>Return "false"</td><td>Still waiting</td></tr>
+</table>
+
+<h3>§19.5 Response Audit</h3>
+<p>AUDIT_TRACE: <code>"Response received for CCBS_ADD_RESOURCE_RANGES"</code> (static, correct)</p>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCBS_ADD_RESOURCE_RANGES</footer>
+</body>
+</html>

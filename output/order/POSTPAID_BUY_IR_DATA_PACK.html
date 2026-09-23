@@ -1,0 +1,884 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>POSTPAID_BUY_IR_DATA_PACK — Order Journey</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+<style>
+:root {
+  --true-red:#CC0000; --true-dark:#8B0000; --true-deep:#5C0000; --true-light:#FF5252;
+  --true-pale:#FFF5F5; --success:#2e7d32; --warning:#e65100; --info:#1565c0;
+  --skip:#6a1b9a; --bg:#F9F9F9; --card:#FFFFFF; --border:#E0E0E0;
+  --code-bg:#1e1e2e; --code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;line-height:1.5}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;letter-spacing:.5px}
+.page-header .subtitle{opacity:.85;margin-top:6px;font-size:.95rem}
+.meta-row{display:flex;gap:24px;margin-top:16px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);padding:4px 14px;border-radius:20px;font-size:.85rem}
+.container{max-width:1400px;margin:0 auto;padding:24px 20px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;white-space:nowrap}
+td{padding:9px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fdf5f5}
+tr.conditional td:first-child{border-left:3px solid #F9A825}
+tr.conditional{background:#FFFDE7}
+code{background:var(--code-bg);color:var(--code-fg);padding:2px 7px;border-radius:4px;font-size:.8rem;font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px;border-radius:6px;overflow-x:auto;font-size:.8rem;border-left:3px solid var(--true-red)}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-ok{background:#E8F5E9;color:var(--success)}
+.badge-warn{background:#FFF3E0;color:var(--warning)}
+.badge-new{background:#E3F0FD;color:var(--info)}
+.badge-skip{background:#F3E5F5;color:var(--skip)}
+a{color:var(--true-dark);text-decoration:none}
+a:hover{text-decoration:underline;color:var(--true-red)}
+details{margin-bottom:10px;border:1px solid var(--border);border-radius:6px;overflow:hidden}
+details summary{padding:10px 16px;background:#FFF5F5;cursor:pointer;font-weight:500;color:var(--true-dark)}
+details summary:hover{background:#FFE0E0}
+details .detail-body{padding:14px 16px;background:#fff}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.fm-card{border:1px solid var(--border);border-radius:8px;padding:14px;background:#fff}
+.fm-card h4{color:var(--true-dark);font-size:.88rem;margin-bottom:6px;word-break:break-all}
+.fm-card .steps{font-size:.78rem;color:#666;margin-bottom:8px}
+.mermaid-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)}
+.skip-note{background:#F3E5F5;border:1px solid #ce93d8;border-radius:8px;padding:16px 20px;color:var(--skip)}
+footer{text-align:center;padding:20px;color:#888;font-size:.82rem}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · Order Journey Documentation</div>
+  <h1>POSTPAID_BUY_IR_DATA_PACK</h1>
+  <div class="subtitle">Process Configuration for POSTPAID_BUY_IR_DATA_PACK.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Total steps: 41</span>
+    <span class="meta-badge">Unique FMs: 37</span>
+    <span class="meta-badge">Entry point: CCBS_GET_CUST_ACC_SUB_ID</span>
+    <span class="meta-badge">Generated: 2026-09-18</span>
+    <span class="meta-badge">New FMs: OMX_INJECT_OFFER, OMX_CAL_NO_OF_IDD_AND_IR</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §2 Order Flow Table -->
+<div class="section">
+  <div class="section-header">§2 — Order Flow (41 Steps)</div>
+  <div class="section-body" style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Step ID</th>
+          <th>FM (ActivityID)</th>
+          <th>Parameter(s)</th>
+          <th>PreExecCheck</th>
+          <th>Previous</th>
+          <th>Next</th>
+          <th>FM Doc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>CCBS_GET_CUST_ACC_SUB_ID</td>
+          <td><a href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html">CCBS_GET_CUST_ACC_SUB_ID</a></td>
+          <td>—</td><td>—</td><td>START</td><td>CCBS_GET_CUSTOMER_HEADER</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>2</td><td>CCBS_GET_CUSTOMER_HEADER</td>
+          <td><a href="../FMlogic/Request_CCBS_GET_CUSTOMER_HEADER.html">CCBS_GET_CUSTOMER_HEADER</a></td>
+          <td>—</td><td>—</td><td>CCBS_GET_CUST_ACC_SUB_ID</td><td>BLACKLIST_CHECK_BLACKLIST</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>3</td><td>BLACKLIST_CHECK_BLACKLIST</td>
+          <td><a href="../FMlogic/Request_BLACKLIST_CHECK_BLACKLIST.html">BLACKLIST_CHECK_BLACKLIST</a></td>
+          <td>—</td><td><code>CustomerTypeInfo/Type != "70"</code></td>
+          <td>CCBS_GET_CUSTOMER_HEADER</td><td>BLACKLIST_CHECK_COLL_BY_ID_NUM</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>4</td><td>BLACKLIST_CHECK_COLL_BY_ID_NUM</td>
+          <td><a href="../FMlogic/Request_BLACKLIST_CHECK_COLL_BY_ID_NUM.html">BLACKLIST_CHECK_COLL_BY_ID_NUM</a></td>
+          <td>—</td><td><code>CustomerTypeInfo/Type != "70"</code></td>
+          <td>BLACKLIST_CHECK_BLACKLIST</td><td>BLACKLIST_CHECK_FRAUD</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>5</td><td>BLACKLIST_CHECK_FRAUD</td>
+          <td><a href="../FMlogic/Request_BLACKLIST_CHECK_FRAUD.html">BLACKLIST_CHECK_FRAUD</a></td>
+          <td>—</td><td><code>CustomerTypeInfo/Type != "70"</code></td>
+          <td>BLACKLIST_CHECK_COLL_BY_ID_NUM</td><td>CCBS_GET_ACCOUNT_HEADER</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>6</td><td>CCBS_GET_ACCOUNT_HEADER</td>
+          <td><a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></td>
+          <td>—</td><td>—</td><td>BLACKLIST_CHECK_FRAUD</td><td>CCBS_GET_AGREEMENT_HEADER</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>7</td><td>CCBS_GET_AGREEMENT_HEADER</td>
+          <td><a href="../FMlogic/Request_CCBS_GET_AGREEMENT_HEADER.html">CCBS_GET_AGREEMENT_HEADER</a></td>
+          <td>—</td><td>—</td><td>CCBS_GET_ACCOUNT_HEADER</td><td>CCBS_GET_SUBS_INFO</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>8</td><td>CCBS_GET_SUBS_INFO</td>
+          <td><a href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">CCBS_GET_SUBS_INFO</a></td>
+          <td>—</td><td><code>boolean(//Subscriber[Status!=67 and Status!=76 and Status!=84])</code></td>
+          <td>CCBS_GET_AGREEMENT_HEADER</td><td>OMX_INJECT_OFFER_IR</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>9</td><td>OMX_INJECT_OFFER_IR</td>
+          <td><a href="../FMlogic/Request_OMX_INJECT_OFFER.html">OMX_INJECT_OFFER</a> <span class="badge badge-new">★ New</span></td>
+          <td><code>soc=105645,serviceType=85,action=ADD,offerName=PROROAM2S,level=SUB,source=BRMS</code></td>
+          <td><code>not(TR_IR_FLAG=Y in CCBS) and not(OFFER_TYPE=IDD in FE)</code></td>
+          <td>CCBS_GET_SUBS_INFO</td><td>OMX_INJECT_OFFER_IDD</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>10</td><td>OMX_INJECT_OFFER_IDD</td>
+          <td><a href="../FMlogic/Request_OMX_INJECT_OFFER.html">OMX_INJECT_OFFER</a> <span class="badge badge-new">★ New</span></td>
+          <td><code>soc=41581,serviceType=85,action=ADD,offerName=PROINTL1,level=SUB,source=BRMS</code></td>
+          <td><code>not(TR_IDD_FLAG=Y in CCBS)</code></td>
+          <td>OMX_INJECT_OFFER_IR</td><td>OMX_CAL_NO_OF_IDD_AND_IR</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>11</td><td>OMX_CAL_NO_OF_IDD_AND_IR</td>
+          <td><a href="../FMlogic/Request_OMX_CAL_NO_OF_IDD_AND_IR.html">OMX_CAL_NO_OF_IDD_AND_IR</a> <span class="badge badge-new">★ New</span></td>
+          <td>—</td>
+          <td><code>not(CCBS IR_FLAG) and not(FE IDD) or not(CCBS IDD_FLAG)</code></td>
+          <td>OMX_INJECT_OFFER_IDD</td><td>CCBS_RESOLVE_SOC_CODE</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>12</td><td>CCBS_RESOLVE_SOC_CODE</td>
+          <td><a href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></td>
+          <td>—</td><td><code>boolean(//SubscriberOffers[not(Soc/text())])</code></td>
+          <td>OMX_CAL_NO_OF_IDD_AND_IR</td><td>CCBS_GOD</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>13</td><td>CCBS_GOD</td>
+          <td><a href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></td>
+          <td>—</td><td><code>FE_OR_CCBS=FE or BRMS</code></td>
+          <td>CCBS_RESOLVE_SOC_CODE</td><td>OMX_BRMS_DB</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>14</td><td>OMX_BRMS_DB</td>
+          <td><a href="../FMlogic/Request_OMX_BRMS_DB.html">OMX_BRMS_DB</a></td>
+          <td>—</td><td><code>SubscriberOffers[1] and FE_OR_CCBS=FE</code></td>
+          <td>CCBS_GOD</td><td>CCBS_RESOLVE_SOC_CODE_BRMS</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>15</td><td>CCBS_RESOLVE_SOC_CODE_BRMS</td>
+          <td><a href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></td>
+          <td>—</td><td><code>FE_OR_CCBS=BRMS or BRMS_REMOVE</code></td>
+          <td>OMX_BRMS_DB</td><td>CCBS_GOD_BRMS</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>16</td><td>CCBS_GOD_BRMS</td>
+          <td><a href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></td>
+          <td>—</td><td><code>FE_OR_CCBS=BRMS or BRMS_REMOVE</code></td>
+          <td>CCBS_RESOLVE_SOC_CODE_BRMS</td><td>OMX_RESOLVE_SOC_DATA</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>17</td><td>OMX_RESOLVE_SOC_DATA</td>
+          <td><a href="../FMlogic/Request_OMX_RESOLVE_SOC_DATA.html">OMX_RESOLVE_SOC_DATA</a></td>
+          <td>—</td><td>—</td><td>CCBS_GOD_BRMS</td><td>OMX_GET_FUT_INFO_BY_SUB</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>18</td><td>OMX_GET_FUT_INFO_BY_SUB</td>
+          <td><a href="../FMlogic/Request_OMX_GET_FUT_INFO_BY_SUB.html">OMX_GET_FUT_INFO_BY_SUB</a></td>
+          <td>—</td><td>—</td><td>OMX_RESOLVE_SOC_DATA</td><td>OMX_CAL_OFFER_FUT_DATE</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>19</td><td>OMX_CAL_OFFER_FUT_DATE</td>
+          <td><a href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">OMX_CAL_OFFER_FUT_DATE</a></td>
+          <td><code>CAL_PARAM_EXP=Y</code></td>
+          <td><code>SubscriberOffers[1] and FE/BRMS/BRMS_REMOVE</code></td>
+          <td>OMX_GET_FUT_INFO_BY_SUB</td><td>OMX_OFFER_INCLUSION</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>20</td><td>OMX_OFFER_INCLUSION</td>
+          <td><a href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">OMX_OFFER_INCLUSION</a></td>
+          <td>—</td><td><code>Channel!="EOC" and EFF_TYPE!=FUT or LOGICALDATE_PROV</code></td>
+          <td>OMX_CAL_OFFER_FUT_DATE</td><td>CCBS_OFFER_EXCLUSION</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>21</td><td>CCBS_OFFER_EXCLUSION</td>
+          <td><a href="../FMlogic/Request_CCBS_OFFER_EXCLUSION.html">CCBS_OFFER_EXCLUSION</a></td>
+          <td>—</td><td><code>EFF_TYPE!=FUT or LOGICALDATE_PROV</code></td>
+          <td>OMX_OFFER_INCLUSION</td><td>OMX_GET_OFFER_RATE</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>22</td><td>OMX_GET_OFFER_RATE</td>
+          <td><a href="../FMlogic/Request_OMX_GET_OFFER_RATE.html">OMX_GET_OFFER_RATE</a></td>
+          <td>—</td><td><code>FE/BRMS ServiceType=85 or 68</code></td>
+          <td>CCBS_OFFER_EXCLUSION</td><td>BL_LIST_UNINVOICED_CHARGES</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>23</td><td>BL_LIST_UNINVOICED_CHARGES</td>
+          <td><a href="../FMlogic/Request_BL_LIST_UNINVOICED_CHARGES.html">BL_LIST_UNINVOICED_CHARGES</a></td>
+          <td>—</td><td><code>FE/BRMS ServiceType=85/86/87, OfferRate&gt;0, EFF_TYPE!=FUT</code></td>
+          <td>OMX_GET_OFFER_RATE</td><td>INTX_GET_TOTAL_OBLIGATION_INFO</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>24</td><td>INTX_GET_TOTAL_OBLIGATION_INFO</td>
+          <td><a href="../FMlogic/Request_INTX_GET_TOTAL_OBLIGATION_INFO.html">INTX_GET_TOTAL_OBLIGATION_INFO</a></td>
+          <td>—</td><td><code>Channel excl. + Subscriber status + sum(OfferRate)&gt;0</code></td>
+          <td>BL_LIST_UNINVOICED_CHARGES</td><td>AA_GET_SWITCH_FEATURE_OFFER</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>25</td><td>AA_GET_SWITCH_FEATURE_OFFER</td>
+          <td><a href="../FMlogic/Request_AA_GET_SWITCH_FEATURE_OFFER.html">AA_GET_SWITCH_FEATURE_OFFER</a></td>
+          <td>—</td><td><code>EFF_TYPE!=FUT or LOGICALDATE_PROV</code></td>
+          <td>INTX_GET_TOTAL_OBLIGATION_INFO</td><td>GET_SPECIAL_OFFER_INDICATOR</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>26</td><td>GET_SPECIAL_OFFER_INDICATOR</td>
+          <td><a href="../FMlogic/Request_GET_SPECIAL_OFFER_INDICATOR.html">GET_SPECIAL_OFFER_INDICATOR</a></td>
+          <td><code>ADD_PROP=TR_MULTISIM_IND</code></td>
+          <td><code>EFF_TYPE!=FUT or LOGICALDATE_PROV</code></td>
+          <td>AA_GET_SWITCH_FEATURE_OFFER</td><td>OMX_SEARCH_FUT</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>27</td><td>OMX_SEARCH_FUT</td>
+          <td><a href="../FMlogic/Request_OMX_SEARCH_FUT.html">OMX_SEARCH_FUT</a></td>
+          <td><code>STATUS=1 | ORDER_TYPE=12</code></td>
+          <td><code>FE/BRMS ServiceType=85/86/87, OfferRate&gt;0</code></td>
+          <td>GET_SPECIAL_OFFER_INDICATOR</td><td>OMX_BIZ_VAL</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>28</td><td>OMX_BIZ_VAL</td>
+          <td><a href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></td>
+          <td>—</td><td>—</td><td>OMX_SEARCH_FUT</td><td>OMX_GET_SRV_TRX_NO</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>29</td><td>OMX_GET_SRV_TRX_NO</td>
+          <td><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></td>
+          <td><code>CCD</code></td>
+          <td><code>not(MultiSIM Minor FE) and not(PREV_MSIM) and PROVISIONING!=N and SwitchFeature and EFF_TYPE!=FUT</code></td>
+          <td>OMX_BIZ_VAL</td><td>AA_ACTIVATE_SUBS</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>30</td><td>AA_ACTIVATE_SUBS</td>
+          <td><a href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a></td>
+          <td><code>CCD</code></td>
+          <td><code>similar: MultiSIM + PROVISIONING!=N + SwitchFeature</code></td>
+          <td>OMX_GET_SRV_TRX_NO</td><td>OMX_CAL_CREDIT_LIMIT_FOR_IR</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>31</td><td>OMX_CAL_CREDIT_LIMIT_FOR_IR</td>
+          <td><a href="../FMlogic/Request_OMX_CAL_CREDIT_LIMIT_FOR_IR.html">OMX_CAL_CREDIT_LIMIT_FOR_IR</a></td>
+          <td>—</td><td><code>CAL_CR_FLG=Y and Type=73 and CreditLimitWaiverInd!='U'</code></td>
+          <td>AA_ACTIVATE_SUBS</td><td>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>32</td><td>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</td>
+          <td><a href="../FMlogic/Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO.html">CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</a></td>
+          <td>—</td><td><code>CAL_CR_FLG=Y and IS_CHANGE_CREDIT_LIMIT=Y and PersonalCreditLimit&gt;0</code></td>
+          <td>OMX_CAL_CREDIT_LIMIT_FOR_IR</td><td>SBM_BUY_DATA_PACK</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>33</td><td>SBM_BUY_DATA_PACK</td>
+          <td><a href="../FMlogic/Request_SBM_BUY_DATA_PACK.html">SBM_BUY_DATA_PACK</a></td>
+          <td>—</td><td><code>SBM_PROVISIONING!=N and FE/BRMS ServiceType=86 EFF_TYPE!=FUT or ServiceType=87</code></td>
+          <td>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</td><td>OMX_ADD_FUT_OFFER</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>34</td><td>OMX_ADD_FUT_OFFER</td>
+          <td><a href="../FMlogic/Request_OMX_ADD_FUT_OFFER.html">OMX_ADD_FUT_OFFER</a></td>
+          <td>—</td><td><code>SubscriberOffers[1] and FE/BRMS EFF_TYPE=FUT and not(RELATED_OFFER)</code></td>
+          <td>SBM_BUY_DATA_PACK</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>35</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td>
+          <td><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td>
+          <td><code>REMOVE</code></td>
+          <td><code>not(EFF_ORD_DT) and BRMS_REMOVE ServiceType=85/86/87/68 and not(LOGICALDATE_PROV)</code></td>
+          <td>OMX_ADD_FUT_OFFER</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>36</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td>
+          <td><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td>
+          <td><code>ADD</code></td>
+          <td><code>not(EFF_ORD_DT) and FE/BRMS ServiceType=85/86/87/68 and not(LOGICALDATE_PROV)</code></td>
+          <td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td><td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>37</td><td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td><a href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></td>
+          <td>—</td><td><code>EFF_TYPE!=FUT or LOGICALDATE_PROV</code></td>
+          <td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td>OMX_EXP_FUT_OFFER</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>38</td><td>OMX_EXP_FUT_OFFER</td>
+          <td><a href="../FMlogic/Request_OMX_EXP_FUT_OFFER.html">OMX_EXP_FUT_OFFER</a></td>
+          <td>—</td><td><code>FE/BRMS EFF_TYPE!=FUT and EXP_TYPE=FUT</code></td>
+          <td>STATUS_UPDATE_CREATING_PROFILE</td><td>AA_CHECK_CONFIRMATION</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>39</td><td>AA_CHECK_CONFIRMATION</td>
+          <td><a href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a></td>
+          <td><code>CCD | UPDATE_NETWORK_STATUS</code></td>
+          <td><code>MultiSIMInfo or PROVISIONING!=N + SwitchFeature + EFF_TYPE!=FUT</code></td>
+          <td>OMX_EXP_FUT_OFFER</td><td>SMSGATEWAY_SEND_SMS</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>40</td><td>SMSGATEWAY_SEND_SMS</td>
+          <td><a href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></td>
+          <td>—</td><td><code>MSISDN exists and (Channel not CCBS/OMX or SFF+ServiceType=68/85)</code></td>
+          <td>AA_CHECK_CONFIRMATION</td><td>CVSS_UPDATE_SUBSCRIBER_COUNT</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td>41</td><td>CVSS_UPDATE_SUBSCRIBER_COUNT</td>
+          <td><a href="../FMlogic/Request_CVSS_UPDATE_SUBSCRIBER_COUNT.html">CVSS_UPDATE_SUBSCRIBER_COUNT</a></td>
+          <td>—</td><td><code>EVAL_CREDIT_FLG=Y and EFF_TYPE!=FUT</code></td>
+          <td>SMSGATEWAY_SEND_SMS</td><td>END</td>
+          <td><span class="badge badge-ok">✓ Generated</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="section">
+  <div class="section-header">§3 — Conditional Execution Rules (PreExecCheck) — 34 conditional steps</div>
+  <div class="section-body">
+    <details><summary>Steps 3–5 — BLACKLIST_CHECK_* (CustomerType guard)</summary>
+      <div class="detail-body">
+        <p><strong>Applies to:</strong> BLACKLIST_CHECK_BLACKLIST (3), BLACKLIST_CHECK_COLL_BY_ID_NUM (4), BLACKLIST_CHECK_FRAUD (5)</p>
+        <pre>CustomerTypeInfo/Type != "70"</pre>
+        <p style="margin-top:8px;font-size:.85rem">Skip all three blacklist checks if the customer is a corporate type (Type=70).</p>
+      </div>
+    </details>
+    <details><summary>Step 8 — CCBS_GET_SUBS_INFO (active subscriber guard)</summary>
+      <div class="detail-body">
+        <pre>boolean(//Subscriber[Status!=67 and Status!=76 and Status!=84])</pre>
+        <p style="margin-top:8px;font-size:.85rem">Only fetch subscriber info if at least one subscriber is not terminated/suspended/inactive (67=terminated, 76=suspended, 84=inactive).</p>
+      </div>
+    </details>
+    <details><summary>Step 9 — OMX_INJECT_OFFER_IR (inject IR roaming offer)</summary>
+      <div class="detail-body">
+        <p><strong>FM:</strong> <a href="../FMlogic/Request_OMX_INJECT_OFFER.html">OMX_INJECT_OFFER</a> | <strong>Injects:</strong> soc=105645, PROROAM2S</p>
+        <pre>not(boolean(SubscriberOffers[FE_OR_CCBS='CCBS' and contains(SocProperties,'TR_IR_FLAG=Y')]))
+and not(boolean(SubscriberOffers[FE_OR_CCBS='FE' and OFFER_TYPE='IDD']))</pre>
+        <p style="margin-top:8px;font-size:.85rem">Inject IR offer only when subscriber has neither a CCBS IR flag nor a FE IDD offer.</p>
+      </div>
+    </details>
+    <details><summary>Step 10 — OMX_INJECT_OFFER_IDD (inject IDD offer)</summary>
+      <div class="detail-body">
+        <p><strong>FM:</strong> <a href="../FMlogic/Request_OMX_INJECT_OFFER.html">OMX_INJECT_OFFER</a> | <strong>Injects:</strong> soc=41581, PROINTL1</p>
+        <pre>not(boolean(SubscriberOffers[FE_OR_CCBS='CCBS' and contains(SocProperties,'TR_IDD_FLAG=Y')]))</pre>
+        <p style="margin-top:8px;font-size:.85rem">Inject IDD offer only when subscriber has no existing CCBS IDD flag.</p>
+      </div>
+    </details>
+    <details><summary>Step 11 — OMX_CAL_NO_OF_IDD_AND_IR (calculate IDD/IR counts)</summary>
+      <div class="detail-body">
+        <p><strong>FM:</strong> <a href="../FMlogic/Request_OMX_CAL_NO_OF_IDD_AND_IR.html">OMX_CAL_NO_OF_IDD_AND_IR</a></p>
+        <pre>not(CCBS IR_FLAG=Y) and not(FE OFFER_TYPE=IDD) or not(CCBS IDD_FLAG=Y)</pre>
+        <p style="margin-top:8px;font-size:.85rem">Calculate IDD/IR subscriber counts if any subscriber still lacks IR or IDD coverage.</p>
+      </div>
+    </details>
+    <details><summary>Step 12 — CCBS_RESOLVE_SOC_CODE (resolve missing SOC codes)</summary>
+      <div class="detail-body">
+        <pre>boolean(//SubscriberOffers[not(Soc/text())])</pre>
+      </div>
+    </details>
+    <details><summary>Steps 13,16 — CCBS_GOD (FE/BRMS/BRMS_REMOVE guard)</summary>
+      <div class="detail-body">
+        <p>Step 13: <code>FE_OR_CCBS=FE or BRMS</code> | Step 16: <code>FE_OR_CCBS=BRMS or BRMS_REMOVE</code></p>
+      </div>
+    </details>
+    <details><summary>Step 14 — OMX_BRMS_DB (BRMS decision engine)</summary>
+      <div class="detail-body">
+        <pre>SubscriberOffers[1] and FE_OR_CCBS=FE</pre>
+      </div>
+    </details>
+    <details><summary>Step 15 — CCBS_RESOLVE_SOC_CODE_BRMS (resolve SOC for BRMS offers)</summary>
+      <div class="detail-body">
+        <pre>FE_OR_CCBS=BRMS or BRMS_REMOVE</pre>
+      </div>
+    </details>
+    <details><summary>Step 19 — OMX_CAL_OFFER_FUT_DATE (calculate future offer date)</summary>
+      <div class="detail-body">
+        <p><strong>Parameter:</strong> CAL_PARAM_EXP=Y</p>
+        <pre>SubscriberOffers[1] and FE_OR_CCBS=(FE or BRMS or BRMS_REMOVE)</pre>
+      </div>
+    </details>
+    <details><summary>Steps 20,25,26,37 — EFF_TYPE!=FUT guard</summary>
+      <div class="detail-body">
+        <p>Common pattern across multiple steps:</p>
+        <pre>EFF_TYPE != 'FUT' or LOGICALDATE_PROV = 'Y'</pre>
+        <p style="margin-top:8px;font-size:.85rem">Execute only for non-future-dated offers (or if logical-date provisioning is enabled).</p>
+      </div>
+    </details>
+    <details><summary>Step 21 — CCBS_OFFER_EXCLUSION</summary>
+      <div class="detail-body">
+        <pre>EFF_TYPE != 'FUT' or LOGICALDATE_PROV = 'Y'</pre>
+      </div>
+    </details>
+    <details><summary>Step 22 — OMX_GET_OFFER_RATE (ServiceType=85/68)</summary>
+      <div class="detail-body">
+        <pre>SubscriberOffers[FE_OR_CCBS='FE' or FE_OR_CCBS='BRMS'][ServiceType='85' or ServiceType='68']</pre>
+      </div>
+    </details>
+    <details><summary>Step 23 — BL_LIST_UNINVOICED_CHARGES</summary>
+      <div class="detail-body">
+        <pre>FE/BRMS ServiceType in (85,86,87) and OfferRate > 0 and EFF_TYPE != FUT</pre>
+      </div>
+    </details>
+    <details><summary>Step 24 — INTX_GET_TOTAL_OBLIGATION_INFO</summary>
+      <div class="detail-body">
+        <pre>Channel not in (CCBS,OMX,...) and Subscriber.Status = active and sum(OfferRate) > 0</pre>
+      </div>
+    </details>
+    <details><summary>Step 27 — OMX_SEARCH_FUT</summary>
+      <div class="detail-body">
+        <p><strong>Parameter:</strong> STATUS=1 | ORDER_TYPE=12</p>
+        <pre>FE/BRMS ServiceType in (85,86,87) and OfferRate > 0</pre>
+      </div>
+    </details>
+    <details><summary>Steps 29,30 — OMX_GET_SRV_TRX_NO / AA_ACTIVATE_SUBS (AA activation guard)</summary>
+      <div class="detail-body">
+        <pre>not(MultiSIM Minor FE) and not(PREV_MSIM=Y) and PROVISIONING != 'N'
+and SwitchFeature exists and EFF_TYPE != 'FUT'</pre>
+      </div>
+    </details>
+    <details><summary>Step 31 — OMX_CAL_CREDIT_LIMIT_FOR_IR</summary>
+      <div class="detail-body">
+        <pre>CAL_CR_FLG = 'Y' and CustomerType/Type = '73' and CreditLimitWaiverInd != 'U'</pre>
+      </div>
+    </details>
+    <details><summary>Step 32 — CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</summary>
+      <div class="detail-body">
+        <pre>CAL_CR_FLG = 'Y' and IS_CHANGE_CREDIT_LIMIT = 'Y' and PersonalCreditLimit > 0</pre>
+      </div>
+    </details>
+    <details><summary>Step 33 — SBM_BUY_DATA_PACK</summary>
+      <div class="detail-body">
+        <pre>SBM_PROVISIONING != 'N'
+and ((FE/BRMS ServiceType = '86' and EFF_TYPE != 'FUT') or ServiceType = '87')</pre>
+      </div>
+    </details>
+    <details><summary>Step 34 — OMX_ADD_FUT_OFFER (add future offer)</summary>
+      <div class="detail-body">
+        <pre>SubscriberOffers[1] and FE_OR_CCBS in (FE,BRMS)
+and EFF_TYPE = 'FUT' and not(RELATED_OFFER)</pre>
+      </div>
+    </details>
+    <details><summary>Steps 35,36 — CCBS_CHANGE_PACKAGE_SUBSCRIBER REMOVE/ADD</summary>
+      <div class="detail-body">
+        <p>Step 35 (REMOVE): <pre>not(EFF_ORD_DT) and BRMS_REMOVE ServiceType in (85,86,87,68) and not(LOGICALDATE_PROV)</pre></p>
+        <p>Step 36 (ADD): <pre>not(EFF_ORD_DT) and FE/BRMS ServiceType in (85,86,87,68) and not(LOGICALDATE_PROV)</pre></p>
+      </div>
+    </details>
+    <details><summary>Step 38 — OMX_EXP_FUT_OFFER</summary>
+      <div class="detail-body">
+        <pre>FE/BRMS EFF_TYPE != 'FUT' and EXP_TYPE = 'FUT'</pre>
+      </div>
+    </details>
+    <details><summary>Step 39 — AA_CHECK_CONFIRMATION</summary>
+      <div class="detail-body">
+        <p><strong>Parameter:</strong> CCD | UPDATE_NETWORK_STATUS</p>
+        <pre>MultiSIMInfo exists or (PROVISIONING != 'N' and SwitchFeature exists and EFF_TYPE != 'FUT')</pre>
+      </div>
+    </details>
+    <details><summary>Step 40 — SMSGATEWAY_SEND_SMS</summary>
+      <div class="detail-body">
+        <pre>MSISDN exists and (Channel not in (CCBS,OMX) or (SFF=Y and ServiceType in (68,85)))</pre>
+      </div>
+    </details>
+    <details><summary>Step 41 — CVSS_UPDATE_SUBSCRIBER_COUNT</summary>
+      <div class="detail-body">
+        <pre>EVAL_CREDIT_FLG = 'Y' and EFF_TYPE != 'FUT'</pre>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- §4 FM Documentation Index -->
+<div class="section">
+  <div class="section-header">§4 — FM Documentation Index (37 Unique FMs)</div>
+  <div class="section-body">
+    <div class="fm-grid">
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html">CCBS_GET_CUST_ACC_SUB_ID</a></h4><div class="steps">Steps: 1</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_CUSTOMER_HEADER.html">CCBS_GET_CUSTOMER_HEADER</a></h4><div class="steps">Steps: 2</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_BLACKLIST_CHECK_BLACKLIST.html">BLACKLIST_CHECK_BLACKLIST</a></h4><div class="steps">Steps: 3</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_BLACKLIST_CHECK_COLL_BY_ID_NUM.html">BLACKLIST_CHECK_COLL_BY_ID_NUM</a></h4><div class="steps">Steps: 4</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_BLACKLIST_CHECK_FRAUD.html">BLACKLIST_CHECK_FRAUD</a></h4><div class="steps">Steps: 5</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></h4><div class="steps">Steps: 6</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_AGREEMENT_HEADER.html">CCBS_GET_AGREEMENT_HEADER</a></h4><div class="steps">Steps: 7</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">CCBS_GET_SUBS_INFO</a></h4><div class="steps">Steps: 8</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card" style="border-color:#1565c0"><h4><a href="../FMlogic/Request_OMX_INJECT_OFFER.html">OMX_INJECT_OFFER</a> <span class="badge badge-new">★ New</span></h4><div class="steps">Steps: 9, 10</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card" style="border-color:#1565c0"><h4><a href="../FMlogic/Request_OMX_CAL_NO_OF_IDD_AND_IR.html">OMX_CAL_NO_OF_IDD_AND_IR</a> <span class="badge badge-new">★ New</span></h4><div class="steps">Steps: 11</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></h4><div class="steps">Steps: 12, 15</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></h4><div class="steps">Steps: 13, 16</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_BRMS_DB.html">OMX_BRMS_DB</a></h4><div class="steps">Steps: 14</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_RESOLVE_SOC_DATA.html">OMX_RESOLVE_SOC_DATA</a></h4><div class="steps">Steps: 17</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_GET_FUT_INFO_BY_SUB.html">OMX_GET_FUT_INFO_BY_SUB</a></h4><div class="steps">Steps: 18</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">OMX_CAL_OFFER_FUT_DATE</a></h4><div class="steps">Steps: 19</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">OMX_OFFER_INCLUSION</a></h4><div class="steps">Steps: 20</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_OFFER_EXCLUSION.html">CCBS_OFFER_EXCLUSION</a></h4><div class="steps">Steps: 21</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_GET_OFFER_RATE.html">OMX_GET_OFFER_RATE</a></h4><div class="steps">Steps: 22</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_BL_LIST_UNINVOICED_CHARGES.html">BL_LIST_UNINVOICED_CHARGES</a></h4><div class="steps">Steps: 23</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_INTX_GET_TOTAL_OBLIGATION_INFO.html">INTX_GET_TOTAL_OBLIGATION_INFO</a></h4><div class="steps">Steps: 24</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_AA_GET_SWITCH_FEATURE_OFFER.html">AA_GET_SWITCH_FEATURE_OFFER</a></h4><div class="steps">Steps: 25</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_GET_SPECIAL_OFFER_INDICATOR.html">GET_SPECIAL_OFFER_INDICATOR</a></h4><div class="steps">Steps: 26</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_SEARCH_FUT.html">OMX_SEARCH_FUT</a></h4><div class="steps">Steps: 27</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></h4><div class="steps">Steps: 28</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></h4><div class="steps">Steps: 29</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a></h4><div class="steps">Steps: 30</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_CAL_CREDIT_LIMIT_FOR_IR.html">OMX_CAL_CREDIT_LIMIT_FOR_IR</a></h4><div class="steps">Steps: 31</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO.html">CCBS_CHANGE_ACCTG_MGMT_INFO</a></h4><div class="steps">Steps: 32</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_SBM_BUY_DATA_PACK.html">SBM_BUY_DATA_PACK</a></h4><div class="steps">Steps: 33</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_ADD_FUT_OFFER.html">OMX_ADD_FUT_OFFER</a></h4><div class="steps">Steps: 34</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></h4><div class="steps">Steps: 35, 36</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></h4><div class="steps">Steps: 37</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_EXP_FUT_OFFER.html">OMX_EXP_FUT_OFFER</a></h4><div class="steps">Steps: 38</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a></h4><div class="steps">Steps: 39</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></h4><div class="steps">Steps: 40</div><span class="badge badge-ok">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CVSS_UPDATE_SUBSCRIBER_COUNT.html">CVSS_UPDATE_SUBSCRIBER_COUNT</a></h4><div class="steps">Steps: 41</div><span class="badge badge-ok">✓ Generated</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="section">
+  <div class="section-header">§5 — Sequence Diagram (Mermaid)</div>
+  <div class="section-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+    participant BL as BLACKLIST
+    participant OMX as OMX(internal)
+    participant AA as AA
+    participant BLX as BL
+    participant INTX as INTX
+    participant GET as GET
+    participant SBM as SBM
+    participant STATUS as STATUS
+    participant SMS as SMSGATEWAY
+    participant CVSS as CVSS
+
+    O->>CCBS: CCBS_GET_CUST_ACC_SUB_ID
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_CUST_ACC_SUB_ID
+
+    O->>CCBS: CCBS_GET_CUSTOMER_HEADER
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_CUSTOMER_HEADER
+
+    opt CustomerTypeInfo/Type != "70"
+        O->>BL: BLACKLIST_CHECK_BLACKLIST
+        BL-->>O: response
+        Note over O,BL: FM: BLACKLIST_CHECK_BLACKLIST
+    end
+
+    opt CustomerTypeInfo/Type != "70"
+        O->>BL: BLACKLIST_CHECK_COLL_BY_ID_NUM
+        BL-->>O: response
+        Note over O,BL: FM: BLACKLIST_CHECK_COLL_BY_ID_NUM
+    end
+
+    opt CustomerTypeInfo/Type != "70"
+        O->>BL: BLACKLIST_CHECK_FRAUD
+        BL-->>O: response
+        Note over O,BL: FM: BLACKLIST_CHECK_FRAUD
+    end
+
+    O->>CCBS: CCBS_GET_ACCOUNT_HEADER
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_ACCOUNT_HEADER
+
+    O->>CCBS: CCBS_GET_AGREEMENT_HEADER
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_AGREEMENT_HEADER
+
+    opt Subscriber Status not in (67,76,84)
+        O->>CCBS: CCBS_GET_SUBS_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_SUBS_INFO
+    end
+
+    opt not(TR_IR_FLAG=Y) and not(FE OFFER_TYPE=IDD)
+        O->>OMX: OMX_INJECT_OFFER_IR [soc=105645,PROROAM2S]
+        OMX-->>O: (in-memory)
+        Note over O,OMX: FM: OMX_INJECT_OFFER (IR)
+    end
+
+    opt not(TR_IDD_FLAG=Y in CCBS)
+        O->>OMX: OMX_INJECT_OFFER_IDD [soc=41581,PROINTL1]
+        OMX-->>O: (in-memory)
+        Note over O,OMX: FM: OMX_INJECT_OFFER (IDD)
+    end
+
+    opt not(IR_FLAG) or not(IDD_FLAG)
+        O->>OMX: OMX_CAL_NO_OF_IDD_AND_IR
+        OMX-->>O: (in-memory)
+        Note over O,OMX: FM: OMX_CAL_NO_OF_IDD_AND_IR
+    end
+
+    opt SubscriberOffers missing Soc
+        O->>CCBS: CCBS_RESOLVE_SOC_CODE
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_RESOLVE_SOC_CODE
+    end
+
+    opt FE_OR_CCBS=FE or BRMS
+        O->>CCBS: CCBS_GOD
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GOD
+    end
+
+    opt SubscriberOffers[1] and FE_OR_CCBS=FE
+        O->>OMX: OMX_BRMS_DB
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_BRMS_DB
+    end
+
+    opt FE_OR_CCBS=BRMS or BRMS_REMOVE
+        O->>CCBS: CCBS_RESOLVE_SOC_CODE_BRMS
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_RESOLVE_SOC_CODE
+    end
+
+    opt FE_OR_CCBS=BRMS or BRMS_REMOVE
+        O->>CCBS: CCBS_GOD_BRMS
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GOD
+    end
+
+    O->>OMX: OMX_RESOLVE_SOC_DATA
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_RESOLVE_SOC_DATA
+
+    O->>OMX: OMX_GET_FUT_INFO_BY_SUB
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_GET_FUT_INFO_BY_SUB
+
+    opt SubscriberOffers[1] and FE/BRMS present
+        O->>OMX: OMX_CAL_OFFER_FUT_DATE [CAL_PARAM_EXP=Y]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_CAL_OFFER_FUT_DATE
+    end
+
+    opt Channel!="EOC" and EFF_TYPE!=FUT or LOGICALDATE_PROV
+        O->>OMX: OMX_OFFER_INCLUSION
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_OFFER_INCLUSION
+    end
+
+    opt EFF_TYPE!=FUT or LOGICALDATE_PROV
+        O->>CCBS: CCBS_OFFER_EXCLUSION
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_OFFER_EXCLUSION
+    end
+
+    opt FE/BRMS ServiceType=85 or 68
+        O->>OMX: OMX_GET_OFFER_RATE
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_OFFER_RATE
+    end
+
+    opt FE/BRMS ST=85/86/87, OfferRate>0, EFF_TYPE!=FUT
+        O->>BLX: BL_LIST_UNINVOICED_CHARGES
+        BLX-->>O: response
+        Note over O,BLX: FM: BL_LIST_UNINVOICED_CHARGES
+    end
+
+    opt Channel excl + Status active + sum(OfferRate)>0
+        O->>INTX: INTX_GET_TOTAL_OBLIGATION_INFO
+        INTX-->>O: response
+        Note over O,INTX: FM: INTX_GET_TOTAL_OBLIGATION_INFO
+    end
+
+    opt EFF_TYPE!=FUT or LOGICALDATE_PROV
+        O->>AA: AA_GET_SWITCH_FEATURE_OFFER
+        AA-->>O: response
+        Note over O,AA: FM: AA_GET_SWITCH_FEATURE_OFFER
+    end
+
+    opt EFF_TYPE!=FUT or LOGICALDATE_PROV
+        O->>GET: GET_SPECIAL_OFFER_INDICATOR [ADD_PROP=TR_MULTISIM_IND]
+        GET-->>O: response
+        Note over O,GET: FM: GET_SPECIAL_OFFER_INDICATOR
+    end
+
+    opt FE/BRMS ST=85/86/87, OfferRate>0
+        O->>OMX: OMX_SEARCH_FUT [STATUS=1 | ORDER_TYPE=12]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_SEARCH_FUT
+    end
+
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL
+
+    opt not(MultiSIM) and PROVISIONING!=N and SwitchFeature and EFF_TYPE!=FUT
+        O->>OMX: OMX_GET_SRV_TRX_NO [CCD]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+    end
+
+    opt PROVISIONING!=N and SwitchFeature
+        O->>AA: AA_ACTIVATE_SUBS [CCD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_ACTIVATE_SUBS
+    end
+
+    opt CAL_CR_FLG=Y and Type=73 and CreditLimitWaiverInd!='U'
+        O->>OMX: OMX_CAL_CREDIT_LIMIT_FOR_IR
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_CAL_CREDIT_LIMIT_FOR_IR
+    end
+
+    opt CAL_CR_FLG=Y and IS_CHANGE_CREDIT_LIMIT=Y and PersonalCreditLimit>0
+        O->>CCBS: CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO
+    end
+
+    opt SBM_PROVISIONING!=N and FE/BRMS ST=86/87
+        O->>SBM: SBM_BUY_DATA_PACK
+        SBM-->>O: response
+        Note over O,SBM: FM: SBM_BUY_DATA_PACK
+    end
+
+    opt SubscriberOffers[1] and FE/BRMS EFF_TYPE=FUT
+        O->>OMX: OMX_ADD_FUT_OFFER
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFER
+    end
+
+    opt BRMS_REMOVE ST=85/86/87/68 and not(LOGICALDATE_PROV)
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE [REMOVE]
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER
+    end
+
+    opt FE/BRMS ST=85/86/87/68 and not(LOGICALDATE_PROV)
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER [ADD]
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER
+    end
+
+    opt EFF_TYPE!=FUT or LOGICALDATE_PROV
+        O->>STATUS: STATUS_UPDATE_CREATING_PROFILE
+        STATUS-->>O: response
+        Note over O,STATUS: FM: STATUS_UPDATE_CREATING_PROFILE
+    end
+
+    opt FE/BRMS EFF_TYPE!=FUT and EXP_TYPE=FUT
+        O->>OMX: OMX_EXP_FUT_OFFER
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_EXP_FUT_OFFER
+    end
+
+    opt MultiSIMInfo or PROVISIONING!=N and SwitchFeature
+        O->>AA: AA_CHECK_CONFIRMATION [CCD | UPDATE_NETWORK_STATUS]
+        AA-->>O: response
+        Note over O,AA: FM: AA_CHECK_CONFIRMATION
+    end
+
+    opt MSISDN exists and Channel check
+        O->>SMS: SMSGATEWAY_SEND_SMS
+        SMS-->>O: response
+        Note over O,SMS: FM: SMSGATEWAY_SEND_SMS
+    end
+
+    opt EVAL_CREDIT_FLG=Y and EFF_TYPE!=FUT
+        O->>CVSS: CVSS_UPDATE_SUBSCRIBER_COUNT
+        CVSS-->>O: response
+        Note over O,CVSS: FM: CVSS_UPDATE_SUBSCRIBER_COUNT
+    end
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="section">
+  <div class="section-header">§6 — Flow Diagram (Mermaid)</div>
+  <div class="section-body">
+    <div class="skip-note">
+      <strong>Flowchart omitted</strong> — this process has 41 activities, which exceeds the 40-step readability limit for Mermaid flowchart TD diagrams. See the sequence diagram above (§5) or the flow table (§2) for the full step-by-step flow.
+    </div>
+  </div>
+</div>
+
+<!-- §7 Key Business Logic Notes -->
+<div class="section">
+  <div class="section-header">§7 — Key Business Logic Notes</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:12px">IR/IDD Injection Sub-flow (Steps 9–11)</h3>
+    <p style="margin-bottom:12px">POSTPAID_BUY_IR_DATA_PACK uses a unique auto-injection pattern where the orchestrator proactively adds IR and IDD offers to the subscriber's working memory if they don't already exist:</p>
+    <table style="margin-bottom:20px">
+      <thead><tr><th>Step</th><th>Action</th><th>Guard</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>9 OMX_INJECT_OFFER_IR</td><td>Inject PROROAM2S (soc=105645)</td><td>No TR_IR_FLAG=Y (CCBS) and no FE IDD offer</td><td>SubscriberOffers += PROROAM2S at SUB level</td></tr>
+        <tr><td>10 OMX_INJECT_OFFER_IDD</td><td>Inject PROINTL1 (soc=41581)</td><td>No TR_IDD_FLAG=Y (CCBS)</td><td>SubscriberOffers += PROINTL1 at SUB level</td></tr>
+        <tr><td>11 OMX_CAL_NO_OF_IDD_AND_IR</td><td>Count subscribers needing IDD/IR</td><td>Any subscriber still lacks coverage</td><td>POU.NumberOfIDD, POU.NumberOfIR written</td></tr>
+      </tbody>
+    </table>
+    <p style="margin-bottom:12px;font-size:.87rem">Both inject rules use <code>source=BRMS</code> → injected offers carry <code>FE_OR_CCBS=BRMS</code>. These offers then flow into subsequent CCBS_RESOLVE_SOC_CODE_BRMS / CCBS_GOD_BRMS steps (15–16).</p>
+
+    <h3 style="color:var(--true-dark);margin-bottom:12px;margin-top:20px">Credit Limit Adjustment for IR (Steps 31–32)</h3>
+    <p style="font-size:.87rem">If the customer's credit limit needs to be raised to cover international roaming costs (CAL_CR_FLG=Y, CustomerType=73), steps 31–32 calculate and apply a new personal credit limit via CCBS before provisioning begins.</p>
+
+    <h3 style="color:var(--true-dark);margin-bottom:12px;margin-top:20px">Future-dated Offer Handling (Steps 19, 34, 38)</h3>
+    <p style="font-size:.87rem">The flow handles future-effective offers in three separate steps: date calculation (19), storage of FUT offers (34), and expiry of existing FUT offers that are now superseded (38). Steps 35–36 (CCBS_CHANGE_PACKAGE_SUBSCRIBER) are skipped for future-dated offers.</p>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents Order Journey Documentation &middot; Generated 2026-09-18</footer>
+
+</body>
+</html>

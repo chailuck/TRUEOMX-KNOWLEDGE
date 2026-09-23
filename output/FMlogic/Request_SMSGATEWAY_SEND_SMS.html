@@ -1,0 +1,998 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_SMSGATEWAY_SEND_SMS</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#222;font-size:14px;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px;}
+.page-header .subtitle{opacity:.85;margin-top:6px;font-size:.95rem;}
+.meta-row{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.8rem;}
+.toc{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:18px 24px;margin:24px 40px;max-width:700px;}
+.toc h3{color:var(--true-dark);margin-bottom:10px;font-size:.95rem;text-transform:uppercase;letter-spacing:.5px;}
+.toc ol{padding-left:20px;line-height:2;}
+.toc a{color:var(--true-dark);text-decoration:none;}
+.toc a:hover{text-decoration:underline;}
+.section{margin:0 40px 32px;}
+.card{background:var(--card);border-radius:8px;border:1px solid var(--border);overflow:hidden;margin-bottom:20px;}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 18px;font-weight:600;font-size:.9rem;border-left:4px solid var(--true-light);}
+.card-body{padding:18px;}
+table{width:100%;border-collapse:collapse;font-size:.86rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;}
+td{padding:8px 12px;border-bottom:1px solid #F0E0E0;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FFF8F8;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.8rem;line-height:1.5;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:2px 6px;border-radius:4px;font-size:.82rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.callout{background:var(--true-pale);border-left:4px solid var(--true-red);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:.88rem;}
+.callout-warn{background:#FFF8E1;border-left:4px solid #FFC107;padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:.88rem;}
+.callout-info{background:#E3F0FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:.88rem;}
+.step-flow{counter-reset:step;}
+.step-flow .step{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start;}
+.step-flow .step-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0;margin-top:2px;}
+.step-flow .step-body{flex:1;}
+h2.section-title{color:var(--true-dark);font-size:1.1rem;font-weight:700;margin-bottom:14px;padding-bottom:6px;border-bottom:2px solid var(--true-pale);}
+h2.section-title span{color:var(--true-red);margin-right:8px;}
+details summary{cursor:pointer;font-weight:600;padding:8px 0;color:var(--true-dark);}
+details[open] summary{margin-bottom:8px;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.8rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;}
+.tree-ns{color:#6c7086;font-size:.78rem;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+footer{text-align:center;padding:24px;color:#999;font-size:.8rem;border-top:1px solid var(--border);margin-top:40px;}
+.variant-header{background:#2d1b2d;color:#cba6f7;padding:10px 16px;font-weight:600;font-size:.85rem;border-radius:6px 6px 0 0;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.str{color:#a6e3a1;}.cm{color:#6c7086;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="subtitle">TIBCO BusinessEvents · OMXFM External Rule</div>
+  <h1>Request_SMSGATEWAY_SEND_SMS</h1>
+  <div class="subtitle">Sends SMS notifications to subscribers via SMS Gateway; dual-loop (ChildOU + ParentOU); three XSLT variants; subscriber writeback in response.</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: SMS Gateway</span>
+    <span class="meta-chip">Type: External OMXFM (Async JMS)</span>
+    <span class="meta-chip">Author: awalia-t420</span>
+    <span class="meta-chip">Schema: ns:SMSRequest</span>
+    <span class="meta-chip">Sections: 19</span>
+    <span class="meta-chip">Generated: 2026-09-09</span>
+  </div>
+</div>
+
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#s1">Overview &amp; Purpose</a></li>
+    <li><a href="#s2">Rule Metadata &amp; Attributes</a></li>
+    <li><a href="#s3">Working Memory — Declared Objects</a></li>
+    <li><a href="#s4">Rule Conditions (WHEN)</a></li>
+    <li><a href="#s5">Execution Flow Diagram</a></li>
+    <li><a href="#s6">Rule Action (THEN) — Step-by-Step Logic</a></li>
+    <li><a href="#s7">Offer Classification &amp; offerSMSType Encoding</a></li>
+    <li><a href="#s8">System &amp; Integration Dependencies</a></li>
+    <li><a href="#s9">Detailed Payload Build</a></li>
+    <li><a href="#s10">XSLT Field Mapping — Output XML Tree</a></li>
+    <li><a href="#s11">Audit Logging</a></li>
+    <li><a href="#s12">Activity Status Management</a></li>
+    <li><a href="#s13">Exception / Error Handling</a></li>
+    <li><a href="#s14">Helper Functions Reference</a></li>
+    <li><a href="#s15">Function Dependency Tree</a></li>
+    <li><a href="#s16">Concept Definitions Referenced</a></li>
+    <li><a href="#s17">Migration Notes &amp; Recommendations</a></li>
+    <li><a href="#s18">Full Source Code</a></li>
+    <li><a href="#s19">Response Message Rule</a></li>
+  </ol>
+</div>
+
+<!-- §1 -->
+<div class="section" id="s1">
+  <h2 class="section-title"><span>§1</span>Overview &amp; Purpose</h2>
+  <div class="card">
+    <div class="card-header">Purpose</div>
+    <div class="card-body">
+      <p>Constructs and dispatches <code>ns:SMSRequest</code> JMS events to the SMS Gateway to notify subscribers of order-related changes (price plan adds/changes, IDD/IR roaming activation, discount and topping additions/removals).</p>
+      <div class="callout" style="margin-top:12px;">
+        <strong>Architecture summary:</strong> Two outer loops (ChildOU Subscriber and ParentOU Subscriber) each classify the subscriber's offers then send one or more SMS events — one per qualifying offer type. Three distinct XSLT variants produce the payload depending on context. The response RF uniquely writes <code>ResponseCode</code>/<code>ResponseMsg</code> back to the Subscriber concept.
+      </div>
+      <table style="margin-top:14px;">
+        <thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Rule class</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_SMSGATEWAY_SEND_SMS</code></td></tr>
+          <tr><td>Target backend</td><td>SMS Gateway</td></tr>
+          <tr><td>Protocol</td><td>Async JMS via <code>/Channels/OMXFMConnectionRequest</code></td></tr>
+          <tr><td>Destination</td><td><code>SMSGATEWAY_SEND_SMS</code></td></tr>
+          <tr><td>Event type</td><td><code>Events.OMConsumers.OMXFM.Request.SMSGATEWAY_SEND_SMS</code></td></tr>
+          <tr><td>Payload schema</td><td><code>ns:SMSRequest</code> (SMSRequest.xsd; namespace <code>http://www.tibco.com/schemas/SMSService/Resources/Schema.xsd</code>)</td></tr>
+          <tr><td>Schema prefix</td><td><code>pfx</code> / <code>ns</code></td></tr>
+          <tr><td>RefID source</td><td><code>subscriber.RefId</code> — one per subscriber context</td></tr>
+          <tr><td>Dispatch method</td><td><code>Event.Ext.sendEventImmediate</code> (direct, no IntraActivitySequencing)</td></tr>
+          <tr><td>Fan-in</td><td><code>successResponseCount == RequestCount</code></td></tr>
+          <tr><td>Response concept</td><td><code>Concepts.FM.Response.SMSGATEWAY_SendSMSRes</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §2 -->
+<div class="section" id="s2">
+  <h2 class="section-title"><span>§2</span>Rule Metadata &amp; Attributes</h2>
+  <div class="card">
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Field</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>Rule name</td><td><code>Request_SMSGATEWAY_SEND_SMS</code></td></tr>
+          <tr><td>Namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td></tr>
+          <tr><td>Author</td><td>awalia-t420</td></tr>
+          <tr><td>Priority</td><td>5 (default)</td></tr>
+          <tr><td>Forward-chain</td><td>false</td></tr>
+          <tr><td>Rule category</td><td>OMXFM External — Async JMS request</td></tr>
+          <tr><td>File size</td><td>~288.7 KB (largest OMXFM rule — three XSLT variants inline)</td></tr>
+          <tr><td>Trigger event</td><td><code>Events.System.OrderCurrentActivity</code> — activity matches <code>SMSGATEWAY_SEND_SMS</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §3 -->
+<div class="section" id="s3">
+  <h2 class="section-title"><span>§3</span>Working Memory — Declared Objects</h2>
+  <div class="card">
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Variable</th><th>Type</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order context; supplies Customer hierarchy, OrderData, OrderType</td></tr>
+          <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OrderCurrentActivity</code></td><td>Current FM activity; tracks RequestCount and Response array for fan-in</td></tr>
+          <tr><td><code>nextAct</code></td><td><code>Concepts.ProcessActivity</code></td><td>Activity config; supplies PreExecCheck</td></tr>
+          <tr><td><code>globalVariables</code></td><td><code>Concepts.GlobalVariables</code></td><td>System config: OMX_COMMON paths, WritePayload flag, component names</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §4 -->
+<div class="section" id="s4">
+  <h2 class="section-title"><span>§4</span>Rule Conditions (WHEN)</h2>
+  <div class="card">
+    <div class="card-body">
+      <table>
+        <thead><tr><th>#</th><th>Condition</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><code>orderCurrentActivity.ActivityID == "SMSGATEWAY_SEND_SMS"</code></td><td>Rule scope — only fires for this FM</td></tr>
+          <tr><td>2</td><td><code>orderCurrentActivity.Status == "IN_PROGRESS"</code></td><td>Activity must be active</td></tr>
+          <tr><td>3</td><td><code>orderRequest != null</code></td><td>Order context must exist</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §5 -->
+<div class="section" id="s5">
+  <h2 class="section-title"><span>§5</span>Execution Flow Diagram</h2>
+  <div class="card">
+    <div class="card-body">
+      <div class="step-flow">
+        <div class="step"><div class="step-num">1</div><div class="step-body"><strong>Outer loop — ChildOU path</strong>: iterate <code>ParentOU[i] → ChildOU[k] → Subscriber[j]</code></div></div>
+        <div class="step"><div class="step-num">2</div><div class="step-body"><strong>ResSuccess check</strong>: skip subscriber if prior response already has <code>CompletionStatus=2</code> for this RefId</div></div>
+        <div class="step"><div class="step-num">3</div><div class="step-body"><strong>GetXMLForSubscriber</strong>: extract subscriber XML for PreExecCheck evaluation</div></div>
+        <div class="step"><div class="step-num">4</div><div class="step-body"><strong>PreExecCheck gate</strong>: skip subscriber if gate returns false</div></div>
+        <div class="step"><div class="step-num">5</div><div class="step-body"><strong>Offer classification</strong>: scan subscriber offers → classify into pp / contract / rmvx / iddOffL / irOffL / discOffL / toppOffL buckets</div></div>
+        <div class="step"><div class="step-num">6</div><div class="step-body"><strong>Date/duration calculations</strong>: ppEffDT from EffectiveDate or OfferOriginalEffectiveDate (Bangkok TZ); GetPPDurationMonth; GetBillCycle; GetPPExpirationDate; Thai month conversion for Language=TH</div></div>
+        <div class="step"><div class="step-num">7</div><div class="step-body"><strong>Per-offer SMS dispatch (ChildOU Offer variant)</strong>: for each qualifying IDD/IR/Discount/Topping offer → set <code>offerSMSType</code> → send XSLT variant ①; <code>RequestCount++</code>; audit if <code>AllowWriteLog</code></div></div>
+        <div class="step"><div class="step-num">8</div><div class="step-body"><strong>Outer loop — ParentOU path</strong>: iterate <code>ParentOU[i] → Subscriber[j]</code> (lines ~508+)</div></div>
+        <div class="step"><div class="step-num">9</div><div class="step-body"><strong>Same ResSuccess / PreExecCheck / offer-classification logic</strong> for ParentOU subscribers</div></div>
+        <div class="step"><div class="step-num">10</div><div class="step-body"><strong>Branch by OrderType</strong>:
+          <ul style="margin-top:6px;padding-left:20px;">
+            <li>OrderType ∈ {3,69,70,11018} AND qualifying offers → <strong>ParentOU Offer variant ②</strong>: <code>RequestCount++</code>; audit unconditionally</li>
+            <li>Otherwise → <strong>Generic PP-only variant ③</strong>: <code>RequestCount++</code>; audit if <code>AllowWriteLog</code></li>
+          </ul>
+        </div></div>
+        <div class="step"><div class="step-num">11</div><div class="step-body"><strong>Fan-in wait</strong>: response RF counts successful responses; when <code>successResponseCount == RequestCount</code> → activity completes</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 -->
+<div class="section" id="s6">
+  <h2 class="section-title"><span>§6</span>Rule Action (THEN) — Step-by-Step Logic</h2>
+
+  <div class="card">
+    <div class="card-header">Loop 1 — ChildOU Subscriber (lines 27–507)</div>
+    <div class="card-body">
+      <p>Triple-nested loop: <code>for i in ParentOU → for k in ChildOU → for j in Subscriber</code></p>
+      <table style="margin-top:10px;">
+        <thead><tr><th>Sub-step</th><th>Logic</th></tr></thead>
+        <tbody>
+          <tr><td>Get RefId</td><td><code>String refId = subscriber.RefId;</code></td></tr>
+          <tr><td>Skip check</td><td>Scan <code>orderCurrentActivity.Response[]</code>: if any entry has <code>ReferenceId == refId &amp;&amp; CompletionStatus==2</code> → set <code>reqSuccess=true</code> → skip</td></tr>
+          <tr><td>XML extraction</td><td><code>GetXMLForSubscriber(orderRequest, refId)</code></td></tr>
+          <tr><td>PreExecCheck</td><td>If <code>nextAct.PreExecCheck.length &gt; 0</code>: evaluate XPath against subscriber XML; skip if not "true"</td></tr>
+          <tr><td>Language</td><td>From <code>SubscriberGeneralInfo.Language</code>; default "TH"</td></tr>
+          <tr><td>PP classification</td><td>SubscriberOffer where <code>ServiceType='80'</code> AND (<code>FE_OR_CCBS=FE</code> or blank) → <code>pp</code> offer name; <code>subscriberPP</code> object</td></tr>
+          <tr><td>Contract classification</td><td>SubscriberOffer where <code>TR_CONTRACT_IND=Y</code> AND (<code>FE_OR_CCBS=FE/BRMS/blank</code>) → <code>contract</code> offer name</td></tr>
+          <tr><td>RMVX</td><td>OfferName = <code>RMVX00000000001</code> → store <code>rmvxProps</code> for duration calculation</td></tr>
+          <tr><td>IDD/IR/Discount/Topping</td><td>For FE/BRMS/BRMS_REMOVE or (OrderType=11018 + INJECT_OFFER): classify into <code>iddOffL</code>, <code>irOffL</code>, <code>discOffL</code>, <code>toppOffL</code> lists (see §7)</td></tr>
+          <tr><td>Date calculations</td><td>ppEffDT = EffectiveDate ?? OfferOriginalEffectiveDate (Bangkok); GetPPDurationMonth(rmvxProps, subscriberPP); GetBillCycle; GetPPExpirationDate</td></tr>
+          <tr><td>Per-offer send</td><td>For each offer in iddOffL/irOffL/discOffL/toppOffL: build <code>offerSMSType</code> string → dispatch XSLT variant ①; <code>RequestCount++</code> (if !isActResub); <code>isSkipped=false</code>; audit if AllowWriteLog</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">Loop 2 — ParentOU Subscriber (lines 508–~1050)</div>
+    <div class="card-body">
+      <p>Double-nested loop: <code>for i in ParentOU → for j in Subscriber</code></p>
+      <div class="callout-info">Same ResSuccess / PreExecCheck / offer-classification logic as Loop 1. Key difference: branch by OrderType at point of dispatch.</div>
+      <table style="margin-top:10px;">
+        <thead><tr><th>Branch</th><th>Condition</th><th>Variant</th><th>Audit</th></tr></thead>
+        <tbody>
+          <tr><td>Offer SMS</td><td>OrderType ∈ {3,69,70,11018} AND qualifying offers present</td><td>XSLT variant ② (ParentOU offer)</td><td>Unconditional (bug: should be gated)</td></tr>
+          <tr><td>Generic PP SMS</td><td>Otherwise (OrderType not in set, or no qualifying offers)</td><td>XSLT variant ③ (PP-only)</td><td>Gated by <code>AllowWriteLog(OrderType)</code></td></tr>
+        </tbody>
+      </table>
+      <div class="callout-warn" style="margin-top:12px;"><strong>Bug:</strong> XSLT variant ② (lines 474–485) sends the audit log unconditionally — no <code>AllowWriteLog(OrderType)</code> guard. Variants ① and ③ both correctly gate the audit. This means OrderType 3/69/70/11018 always generates audit entries regardless of the AllowWriteLog policy.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">isActResub guard</div>
+    <div class="card-body">
+      <p>If <code>isActResub == true</code> (the activity is being resubmitted), <code>RequestCount++</code> is skipped for each dispatch. This prevents double-counting on retry scenarios. <code>isSkipped = false</code> is still set.</p>
+    </div>
+  </div>
+</div>
+
+<!-- §7 -->
+<div class="section" id="s7">
+  <h2 class="section-title"><span>§7</span>Offer Classification &amp; offerSMSType Encoding</h2>
+  <div class="card">
+    <div class="card-header">Offer classification rules (per subscriber offer)</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Class</th><th>Inclusion criteria</th><th>List variable</th></tr></thead>
+        <tbody>
+          <tr><td>Price Plan</td><td><code>ServiceType='80'</code> AND (FE_OR_CCBS=FE or blank)</td><td><code>pp</code> (offer name), <code>subscriberPP</code> (object)</td></tr>
+          <tr><td>Contract</td><td><code>TR_CONTRACT_IND=Y</code> AND (FE_OR_CCBS=FE/BRMS/blank)</td><td><code>contract</code> (offer name), <code>contractDesc</code></td></tr>
+          <tr><td>RMVX</td><td><code>OfferName='RMVX00000000001'</code></td><td><code>rmvxProps</code> (for duration)</td></tr>
+          <tr><td>IDD</td><td><code>TR_IDD_FLAG=Y</code> OR (OrderType=11018 AND OfferName='PROINTL1')</td><td><code>iddOffL</code></td></tr>
+          <tr><td>IR (International Roaming)</td><td><code>TR_IR_FLAG=Y</code> OR (OrderType=11018 AND OfferName='PROROAM2S')</td><td><code>irOffL</code></td></tr>
+          <tr><td>Discount</td><td><code>ServiceType='68'</code></td><td><code>discOffL</code></td></tr>
+          <tr><td>Topping</td><td>Offer has <code>ExtendedInfo[SMS_IND]</code></td><td><code>toppOffL</code></td></tr>
+        </tbody>
+      </table>
+      <div class="callout-info" style="margin-top:10px;">Guard for IDD/IR/Discount/Topping: offer must have <code>FE_OR_CCBS ∈ {FE, BRMS, BRMS_REMOVE}</code> OR (<code>OrderType=11018</code> AND offer has <code>ExtendedInfo[INJECT_OFFER]</code>). Plain PP and Contract offers are always classified regardless.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">offerSMSType string encoding (ChildOU Offer variant ①)</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Offer type</th><th>Condition</th><th>offerSMSType value</th></tr></thead>
+        <tbody>
+          <tr><td rowspan="4">IDD</td><td>EXP_TYPE=IM (immediate expiry) or no EFF_TYPE</td><td><code>REMOVE_IDD_IM</code></td></tr>
+          <tr><td>EXP_TYPE=FUT (future expiry)</td><td><code>REMOVE_IDD_FUT</code></td></tr>
+          <tr><td>EFF_TYPE=IM (immediate effective)</td><td><code>ADD_IDD_IM</code></td></tr>
+          <tr><td>EFF_TYPE=FUT (future effective)</td><td><code>ADD_IDD_FUT</code></td></tr>
+          <tr><td rowspan="4">IR</td><td>EXP_TYPE=IM</td><td><code>REMOVE_IR_IM</code></td></tr>
+          <tr><td>EXP_TYPE=FUT</td><td><code>REMOVE_IR_FUT</code></td></tr>
+          <tr><td>EFF_TYPE=IM</td><td><code>ADD_IR_IM</code></td></tr>
+          <tr><td>EFF_TYPE=FUT</td><td><code>ADD_IR_FUT</code></td></tr>
+          <tr><td rowspan="2">Discount</td><td>Offer has expiry date</td><td><code>ADD_DISCOUNT_EXPIRE</code></td></tr>
+          <tr><td>No expiry</td><td><code>ADD_DISCOUNT</code></td></tr>
+          <tr><td rowspan="4">Topping</td><td>ADD + RC (recurring charge)</td><td><code>ADD_{TOPPING_TYPE}_RC</code></td></tr>
+          <tr><td>ADD + OC (one-charge)</td><td><code>ADD_{TOPPING_TYPE}_OC</code></td></tr>
+          <tr><td>REMOVE + RC</td><td><code>REMOVE_{TOPPING_TYPE}_RC</code></td></tr>
+          <tr><td>REMOVE + OC</td><td><code>REMOVE_{TOPPING_TYPE}_OC</code></td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px;font-size:.85rem;color:#555;"><code>{TOPPING_TYPE}</code> = the value of <code>ExtendedInfo[SMS_IND]/Value</code> from the offer.</p>
+    </div>
+  </div>
+</div>
+
+<!-- §8 -->
+<div class="section" id="s8">
+  <h2 class="section-title"><span>§8</span>System &amp; Integration Dependencies</h2>
+
+  <div class="card">
+    <div class="card-header">§8.1 Order Type Dependencies</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>OrderType</th><th>SMS behavior</th></tr></thead>
+        <tbody>
+          <tr><td>3, 69, 70</td><td>IDD/IR/Discount/Topping offer SMS (ParentOU variant ②)</td></tr>
+          <tr><td>11018</td><td>Same as above + INJECT_OFFER and special IDD/IR offer detection (PROINTL1 / PROROAM2S)</td></tr>
+          <tr><td>All others</td><td>Generic PP-only SMS (variant ③); IDD/IR/Discount/Topping SMS blocked by AllowWriteLog gate</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§8.2 ESB / JMS Channel Dependencies</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Protocol</th></tr></thead>
+        <tbody>
+          <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>/Channels/OMXFMConnectionRequest</code></td><td><code>SMSGATEWAY_SEND_SMS</code></td><td>JMS async</td></tr>
+          <tr><td><span class="badge badge-teal">INBOUND</span></td><td>Response channel</td><td><code>SMSGATEWAY_SendSMSRes</code></td><td>JMS async reply</td></tr>
+          <tr><td><span class="badge badge-blue">LOG</span></td><td><code>/Events/OMConsumers/OMXESB/Logger</code></td><td>Audit logger</td><td>Async event</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§8.3 Backend API Details</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Field</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>System</td><td>SMS Gateway</td></tr>
+          <tr><td>Operation</td><td>Send SMS notification</td></tr>
+          <tr><td>Request schema</td><td><code>ns:SMSRequest</code> from <code>_SharedResources/Schemas/ESB/SMSRequest.xsd</code></td></tr>
+          <tr><td>Namespace URI</td><td><code>http://www.tibco.com/schemas/SMSService/Resources/Schema.xsd</code></td></tr>
+          <tr><td>Super event</td><td><code>/Events/Base/OMXRequestBaseEvent</code></td></tr>
+          <tr><td>Correlation</td><td><code>JMSCorrelationID = OMXTrackingId</code>; <code>RefID = subscriber.RefId</code></td></tr>
+          <tr><td>Response concept</td><td><code>Concepts.FM.Response.SMSGATEWAY_SendSMSRes</code> (ResponseCode, ResponseMessage, CompletionStatus, ReferenceId)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§8.4 BE Working Memory Dependencies</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Concept field</th><th>Access</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>orderRequest.OrderData.Customer.ParentOU[].ChildOU[].Subscriber[]</code></td><td>READ</td><td>Subscriber loop iteration (ChildOU path)</td></tr>
+          <tr><td><code>orderRequest.OrderData.Customer.ParentOU[].Subscriber[]</code></td><td>READ</td><td>Subscriber loop iteration (ParentOU path)</td></tr>
+          <tr><td><code>subscriber.RefId</code></td><td>READ</td><td>RefID for correlation and fan-in</td></tr>
+          <tr><td><code>subscriber.SubscriberOffers[]</code></td><td>READ</td><td>Offer classification</td></tr>
+          <tr><td><code>subscriber.ResponseCode</code></td><td>WRITE</td><td>Written back from response RF</td></tr>
+          <tr><td><code>subscriber.ResponseMsg</code></td><td>WRITE</td><td>Written back from response RF</td></tr>
+          <tr><td><code>orderCurrentActivity.RequestCount</code></td><td>READ/WRITE</td><td>Fan-in counter; incremented per dispatch</td></tr>
+          <tr><td><code>orderCurrentActivity.Response[]</code></td><td>READ</td><td>Prior response check for skip logic</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§8.5 ExtendedInfo Fields Required</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Key name</th><th>Required?</th><th>Used for</th></tr></thead>
+        <tbody>
+          <tr><td><code>FE_OR_CCBS</code></td><td>Optional</td><td>Offer eligibility gate (FE/BRMS/BRMS_REMOVE)</td></tr>
+          <tr><td><code>TR_IDD_FLAG</code></td><td>Optional</td><td>Classify offer as IDD</td></tr>
+          <tr><td><code>TR_IR_FLAG</code></td><td>Optional</td><td>Classify offer as IR</td></tr>
+          <tr><td><code>TR_CONTRACT_IND</code></td><td>Optional</td><td>Identify contract offer</td></tr>
+          <tr><td><code>SMS_IND</code></td><td>Optional</td><td>Classify as topping; value = TOPPING_TYPE string</td></tr>
+          <tr><td><code>EFF_TYPE</code></td><td>Optional</td><td>Offer activity type (IM/FUT) for ADD SMS types</td></tr>
+          <tr><td><code>EXP_TYPE</code></td><td>Optional</td><td>Offer activity type (IM/FUT) for REMOVE SMS types</td></tr>
+          <tr><td><code>INJECT_OFFER</code></td><td>Optional</td><td>OrderType=11018 special offer flag</td></tr>
+          <tr><td><code>OfferActivityDate</code></td><td>Optional</td><td>FUT flag for PP SMS type → "FUTPP"</td></tr>
+          <tr><td><code>BILL_DESCRIPTION</code></td><td>Optional</td><td>Preferred PP description for Param #2 (variant ③)</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§8.6 Global Variable Dependencies</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Path</th><th>Used for</th></tr></thead>
+        <tbody>
+          <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+          <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+          <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+          <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Conditional payload inclusion in audit</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §9 -->
+<div class="section" id="s9">
+  <h2 class="section-title"><span>§9</span>Detailed Payload Build</h2>
+
+  <div class="card">
+    <div class="card-header">§9.1 XSLT Parameter Binding — Three Variants</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Parameter</th><th>Variant ① ChildOU Offer</th><th>Variant ② ParentOU Offer</th><th>Variant ③ Generic PP</th></tr></thead>
+        <tbody>
+          <tr><td><code>i, k, j</code></td><td>POU/COU/Sub indices ✓</td><td>i/j only</td><td>i/j only</td></tr>
+          <tr><td><code>refId</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td><code>orderRequest</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td><code>pp</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td><code>contract</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td><code>socDesc</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td><code>address</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td><code>contractDesc</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td><code>currentDate</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td><code>ppExpDate</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td><code>ppEffDate</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+          <tr><td><code>durationMn</code></td><td>✓</td><td>✓</td><td>—</td></tr>
+          <tr><td><code>offerSMSType</code></td><td>✓ (offer type string)</td><td>—</td><td>—</td></tr>
+          <tr><td><code>offerEffDate</code></td><td>✓</td><td>—</td><td>—</td></tr>
+          <tr><td><code>offerExpDate</code></td><td>✓</td><td>—</td><td>—</td></tr>
+          <tr><td><code>rcPrice</code></td><td>✓</td><td>—</td><td>—</td></tr>
+          <tr><td><code>permanentCreditLimit</code></td><td>✓</td><td>—</td><td>—</td></tr>
+          <tr><td><code>subscriberPP</code></td><td>—</td><td>—</td><td>✓ (for FUTPP detection)</td></tr>
+          <tr><td><code>currPPDesc</code></td><td>—</td><td>—</td><td>✓</td></tr>
+          <tr><td><code>currPPExp</code></td><td>—</td><td>—</td><td>✓</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§9.2 Event Container Construction</div>
+    <div class="card-body">
+      <p><code>Event.createEvent("xslt://{{/Events/OMConsumers/OMXFM/Request/SMSGATEWAY_SEND_SMS}}...")</code></p>
+      <p style="margin-top:8px;">The extId is NOT set explicitly — the event channel generates a correlation ID from <code>JMSCorrelationID = OMXTrackingId</code>.</p>
+      <p style="margin-top:4px;">Response RF generates extId via <code>OMXUtils.generateTrackingID()</code> passed as explicit XSLT param.</p>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§9.3 JMS / Event Header Fields</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Field</th><th>Source XPath</th><th>Condition</th></tr></thead>
+        <tbody>
+          <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td>If OrderPriority present</td></tr>
+          <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>If OMXTrackingId present</td></tr>
+          <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td>If OrderID present</td></tr>
+          <tr><td><code>RefID</code></td><td><code>$refId</code></td><td>Always (variant ①); if refId present (variants ②③)</td></tr>
+          <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>If OrderType present</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§9.4 ns:SMSRequest Payload Fields</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>XML element</th><th>Source / Logic</th><th>Variants</th></tr></thead>
+        <tbody>
+          <tr><td><code>ns:MSISDN</code></td><td>If starts-with MSISDN "0" → <code>concat("66", substring-after(MSISDN, "0"))</code> else MSISDN as-is</td><td>All</td></tr>
+          <tr><td><code>ns:CustomerType</code></td><td><code>$orderRequest/OrderData/Customer/CustomerTypeInfo/Type</code></td><td>All</td></tr>
+          <tr><td><code>ns:Language</code></td><td>Subscriber <code>SubscriberGeneralInfo/Language</code>; default "TH"</td><td>All</td></tr>
+          <tr><td><code>ns:OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>All</td></tr>
+          <tr><td><code>ns:PricePlan</code></td><td>①②: if durationMn&gt;0 → "NXTPP" else pp<br/>③: if subscriberPP has OfferActivityDate=FUT → "FUTPP" else pp</td><td>All (logic differs)</td></tr>
+          <tr><td><code>ns:CompanyCode</code></td><td><code>subscriber.SubscriberType</code></td><td>All</td></tr>
+          <tr><td><code>ns:ProductType</code></td><td>Empty string <code>""</code></td><td>All</td></tr>
+          <tr><td><code>ns:Proposition</code></td><td><code>$contract</code> (contract offer name)</td><td>All</td></tr>
+          <tr><td><code>ns:MessageType</code></td><td>Empty string <code>""</code></td><td>All</td></tr>
+          <tr><td><code>ns:Channel</code></td><td><code>$orderRequest/OrderData/Channel</code></td><td>All; if Channel present</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§9.5 ns:ParamList — Named Parameters</div>
+    <div class="card-body">
+      <div class="callout-info">Param names use both numeric strings ("1"–"10") and word keys ("ppEffDate", "offer", etc.). Variant ① has the most params; variant ③ uses currPPDesc/currPPExp instead of offer* fields.</div>
+      <table style="margin-top:10px;">
+        <thead><tr><th>Param name</th><th>Value / Logic</th><th>Variants</th></tr></thead>
+        <tbody>
+          <tr><td><code>"1"</code> — CustomerName</td><td>If CustomerType=73 (individual): FirstName + " " + LastName (if LastName non-empty) else FirstName; else OrgName</td><td>All</td></tr>
+          <tr><td><code>"2"</code> — socDesc</td><td>①②: <code>$socDesc</code><br/>③: PP BILL_DESCRIPTION ExtendedInfo if present, else <code>$socDesc</code></td><td>All (③ differs)</td></tr>
+          <tr><td><code>"3"</code> — BillCycleNo</td><td><code>$orderRequest/OrderData/Customer/BillCycleNo</code></td><td>All</td></tr>
+          <tr><td><code>"4"</code> — address</td><td><code>$address</code></td><td>All</td></tr>
+          <tr><td><code>"5"</code> — MSISDN</td><td>Raw MSISDN (no 0→66 conversion here; only ns:MSISDN element is converted)</td><td>All</td></tr>
+          <tr><td><code>"6"</code> — contract</td><td><code>$contract</code></td><td>All</td></tr>
+          <tr><td><code>"7"</code> — contractDesc</td><td><code>$contractDesc</code></td><td>All</td></tr>
+          <tr><td><code>"8"</code> — Identification</td><td><code>$orderRequest/OrderData/Customer/CustomerGeneralInfo/Identification</code></td><td>All</td></tr>
+          <tr><td><code>"9"</code> — currentDate</td><td><code>$currentDate</code></td><td>All</td></tr>
+          <tr><td><code>"10"</code> — ppExpDate</td><td><code>$ppExpDate</code></td><td>All</td></tr>
+          <tr><td><code>"ppEffDate"</code></td><td><code>$ppEffDate</code></td><td>All</td></tr>
+          <tr><td><code>"offer"</code></td><td><code>$offerSMSType</code></td><td>① only</td></tr>
+          <tr><td><code>"offerEffDate"</code></td><td><code>$offerEffDate</code></td><td>① only</td></tr>
+          <tr><td><code>"offerExpDate"</code></td><td><code>$offerExpDate</code></td><td>① only</td></tr>
+          <tr><td><code>"rcPrice"</code></td><td><code>$rcPrice</code></td><td>① only</td></tr>
+          <tr><td><code>"permanentCreditLimit"</code></td><td><code>$permanentCreditLimit</code></td><td>① only</td></tr>
+          <tr><td><code>"currPPDesc"</code></td><td><code>$currPPDesc</code></td><td>③ only</td></tr>
+          <tr><td><code>"currPPExp"</code></td><td><code>$currPPExp</code></td><td>③ only</td></tr>
+        </tbody>
+      </table>
+      <div class="callout-warn" style="margin-top:10px;"><strong>Note:</strong> Param #5 uses the raw MSISDN (not the 0→66 converted form). Only <code>ns:MSISDN</code> at the top of the payload receives the conversion. This is intentional — the SMS Gateway needs the full E.164 number for routing, while Param #5 is a display value.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§9.7 Complete Generated XML Example (Variant ① — ChildOU IDD Offer ADD)</div>
+    <div class="card-body">
+<pre>&lt;payload&gt;
+  &lt;ns:SMSRequest&gt;
+    &lt;ns:MSISDN&gt;<span class="str">66891234567</span>&lt;/ns:MSISDN&gt;              <span class="cm">// 0→66 converted</span>
+    &lt;ns:CustomerType&gt;<span class="str">73</span>&lt;/ns:CustomerType&gt;
+    &lt;ns:Language&gt;<span class="str">TH</span>&lt;/ns:Language&gt;
+    &lt;ns:OrderType&gt;<span class="str">3</span>&lt;/ns:OrderType&gt;
+    &lt;ns:PricePlan&gt;<span class="str">PREPAID_PP_BASIC</span>&lt;/ns:PricePlan&gt;    <span class="cm">// durationMn=0</span>
+    &lt;ns:CompanyCode&gt;<span class="str">TRUE</span>&lt;/ns:CompanyCode&gt;
+    &lt;ns:ProductType&gt;&lt;/ns:ProductType&gt;
+    &lt;ns:Proposition&gt;<span class="str">CONTRACT_X</span>&lt;/ns:Proposition&gt;
+    &lt;ns:MessageType&gt;&lt;/ns:MessageType&gt;
+    &lt;ns:ParamList&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">1</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">สมชาย ใจดี</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">2</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">แพ็คเกจพื้นฐาน</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">3</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">15</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">4</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">กรุงเทพ</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">5</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">0891234567</span>&lt;/ns:value&gt;&lt;/ns:Param&gt; <span class="cm">// raw MSISDN</span>
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">6</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">CONTRACT_X</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">7</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">สัญญา 1 ปี</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">8</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">1234567890123</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">9</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">01 ม.ค. 68</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">10</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">31 ธ.ค. 68</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">ppEffDate</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">01 ม.ค. 68</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">offer</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">ADD_IDD_IM</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">offerEffDate</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">01 ม.ค. 68</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">offerExpDate</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">31 ธ.ค. 68</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">rcPrice</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">199</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+      &lt;ns:Param&gt;&lt;ns:name&gt;<span class="str">permanentCreditLimit</span>&lt;/ns:name&gt;&lt;ns:value&gt;<span class="str">1000</span>&lt;/ns:value&gt;&lt;/ns:Param&gt;
+    &lt;/ns:ParamList&gt;
+    &lt;ns:Channel&gt;<span class="str">WEB</span>&lt;/ns:Channel&gt;
+  &lt;/ns:SMSRequest&gt;
+&lt;/payload&gt;</pre>
+    </div>
+  </div>
+</div>
+
+<!-- §10 -->
+<div class="section" id="s10">
+  <h2 class="section-title"><span>§10</span>XSLT Field Mapping — Output XML Tree Hierarchy</h2>
+  <div class="card">
+    <div class="card-body">
+      <div style="background:var(--code-bg);border-radius:8px;padding:16px;overflow-x:auto;">
+        <ul class="xslt-tree">
+          <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">event</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">if OrderPriority present</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">if OMXTrackingId present</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">if OrderID present</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId</span><span class="tree-cond">Always (①); if refId present (②③)</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">if OrderType present</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:SMSRequest</span><span class="tree-ns">xmlns:ns="http://www.tibco.com/.../Schema.xsd"</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:MSISDN</span><span class="tree-arrow">←</span><span class="tree-src">if starts-with MSISDN "0" → concat("66", substring-after) else MSISDN as-is</span><span class="tree-cond">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:CustomerType</span><span class="tree-arrow">←</span><span class="tree-src">Customer/CustomerTypeInfo/Type</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:Language</span><span class="tree-arrow">←</span><span class="tree-src">Subscriber/SubscriberGeneralInfo/Language ?? "TH"</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:PricePlan</span><span class="tree-arrow">←</span><span class="tree-src">①②: durationMn&gt;0 → "NXTPP" else $pp</span><span class="tree-cond">③: subscriberPP/EI[OfferActivityDate=FUT] → "FUTPP" else $pp</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:CompanyCode</span><span class="tree-arrow">←</span><span class="tree-src">subscriber.SubscriberType</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:ProductType</span><span class="tree-arrow">←</span><span class="tree-src-static">""</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:Proposition</span><span class="tree-arrow">←</span><span class="tree-src">$contract</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:MessageType</span><span class="tree-arrow">←</span><span class="tree-src-static">""</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:ParamList</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=1]</span><span class="tree-arrow">←</span><span class="tree-src">CustomerType=73 → Sub FirstName+LastName; else OrgName</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=2]</span><span class="tree-arrow">←</span><span class="tree-src">①②: $socDesc; ③: PP BILL_DESCRIPTION ?? $socDesc</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=3]</span><span class="tree-arrow">←</span><span class="tree-src">Customer/BillCycleNo</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=4]</span><span class="tree-arrow">←</span><span class="tree-src">$address</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=5]</span><span class="tree-arrow">←</span><span class="tree-src">subscriber.MSISDN</span><span class="tree-cond">(raw — NOT converted)</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=6]</span><span class="tree-arrow">←</span><span class="tree-src">$contract</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=7]</span><span class="tree-arrow">←</span><span class="tree-src">$contractDesc</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=8]</span><span class="tree-arrow">←</span><span class="tree-src">CustomerGeneralInfo/Identification</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=9]</span><span class="tree-arrow">←</span><span class="tree-src">$currentDate</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=10]</span><span class="tree-arrow">←</span><span class="tree-src">$ppExpDate</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=ppEffDate]</span><span class="tree-arrow">←</span><span class="tree-src">$ppEffDate</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=offer]</span><span class="tree-arrow">←</span><span class="tree-src">$offerSMSType</span><span class="tree-cond">Variant ① only</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=offerEffDate]</span><span class="tree-arrow">←</span><span class="tree-src">$offerEffDate</span><span class="tree-cond">Variant ① only</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=offerExpDate]</span><span class="tree-arrow">←</span><span class="tree-src">$offerExpDate</span><span class="tree-cond">Variant ① only</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=rcPrice]</span><span class="tree-arrow">←</span><span class="tree-src">$rcPrice</span><span class="tree-cond">Variant ① only</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=permanentCreditLimit]</span><span class="tree-arrow">←</span><span class="tree-src">$permanentCreditLimit</span><span class="tree-cond">Variant ① only</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=currPPDesc]</span><span class="tree-arrow">←</span><span class="tree-src">$currPPDesc</span><span class="tree-cond">Variant ③ only</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:Param[name=currPPExp]</span><span class="tree-arrow">←</span><span class="tree-src">$currPPExp</span><span class="tree-cond">Variant ③ only</span></div></li>
+                            </ul>
+                          </li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:Channel</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Channel</span><span class="tree-cond">if Channel present</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+      <div style="margin-top:12px;font-size:.8rem;color:#666;">
+        <strong>Legend:</strong>
+        <span class="tree-src" style="margin:0 6px;">XPath source</span>
+        <span class="tree-src-static" style="margin:0 6px;">Static literal</span>
+        <span class="tree-cond" style="margin:0 6px;">Condition / note</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §11 -->
+<div class="section" id="s11">
+  <h2 class="section-title"><span>§11</span>Audit Logging</h2>
+  <div class="card">
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Audit point</th><th>Gate condition</th><th>AUDIT_TRACE value</th><th>Note</th></tr></thead>
+        <tbody>
+          <tr><td>Request (variant ①)</td><td><code>AllowWriteLog(OrderType)</code></td><td><code>concat("Request Sent for RefId", $refId)</code></td><td><span class="badge badge-orange">Bug: missing space before $refId</span></td></tr>
+          <tr><td>Request (variant ②)</td><td><strong>Unconditional</strong></td><td><code>concat("Request Sent for RefId", $refId)</code></td><td><span class="badge badge-red">Bug: no AllowWriteLog gate</span></td></tr>
+          <tr><td>Request (variant ③)</td><td><code>AllowWriteLog(OrderType)</code></td><td><code>concat("Request Sent for RefId", $refId)</code></td><td>Consistent with ①</td></tr>
+          <tr><td>Response RF</td><td><code>AllowWriteLog(OrderType)</code></td><td><code>concat("Response received for RefId ", eventResponse/RefID)</code></td><td>Space before RefID present in response</td></tr>
+        </tbody>
+      </table>
+      <div class="callout-warn" style="margin-top:12px;">
+        <strong>Two bugs:</strong>
+        <ol style="margin:8px 0 0 20px;">
+          <li><strong>Missing space</strong>: all three request AUDIT_TRACE values use <code>"Request Sent for RefId"</code> + refId (no space separator). The log entry will read "Request Sent for RefId123456" instead of "Request Sent for RefId 123456".</li>
+          <li><strong>Variant ② always logs</strong>: OrderType 3/69/70/11018 offer SMS audit is emitted regardless of <code>AllowWriteLog</code> policy. Variants ① and ③ correctly gate the audit.</li>
+        </ol>
+      </div>
+      <table style="margin-top:14px;">
+        <thead><tr><th>Audit field</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>ESBUUID</td><td>OMXTrackingId</td></tr>
+          <tr><td>PROCESS_ID</td><td><code>concat(pid, "_REQ")</code> (request) / <code>concat(pid, "_RES")</code> (response)</td></tr>
+          <tr><td>COMPONENT_NAME</td><td><code>globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"SMSGATEWAY_SEND_SMS"</code></td></tr>
+          <tr><td>TARGET_SYSTEM</td><td><code>globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+          <tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+          <tr><td>payload</td><td>Conditional on <code>WritePayload="true"</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §12 -->
+<div class="section" id="s12">
+  <h2 class="section-title"><span>§12</span>Activity Status Management</h2>
+  <div class="card">
+    <div class="card-body">
+      <p>This rule does not directly modify activity status. Status transitions are managed by the response RF (fan-in completion → activity moves to COMPLETED) and the orchestration layer.</p>
+      <table style="margin-top:10px;">
+        <thead><tr><th>Flag</th><th>Set when</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>isSkipped</code></td><td>Set <code>false</code> after each dispatch</td><td>Tracks whether activity sent any requests</td></tr>
+          <tr><td><code>isActResub</code></td><td>Checked before RequestCount++</td><td>Prevents double-count on resubmission</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §13 -->
+<div class="section" id="s13">
+  <h2 class="section-title"><span>§13</span>Exception / Error Handling</h2>
+  <div class="card">
+    <div class="card-body">
+      <p>Standard OMXFM exception pattern: <code>HandleActivityException</code> is called in the catch block with the exception detail. The activity transitions to an error state, and the orchestrator can trigger retry/resubmission logic.</p>
+      <p style="margin-top:8px;">The <code>reqSuccess</code> skip check (checking <code>CompletionStatus==2</code> for prior responses) is the per-subscriber resumption guard against duplicate SMS sends.</p>
+    </div>
+  </div>
+</div>
+
+<!-- §14 -->
+<div class="section" id="s14">
+  <h2 class="section-title"><span>§14</span>Helper Functions Reference</h2>
+  <div class="card">
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Function</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>RuleFunctions.Helpers.AllowWriteLog(OrderType)</code></td><td>Returns boolean — true if this OrderType should generate audit logs. Used for both request and response audit gating.</td></tr>
+          <tr><td><code>RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId)</code></td><td>Extracts subscriber XML blob for PreExecCheck XPath evaluation</td></tr>
+          <tr><td><code>RuleFunctions.Helpers.GetPPDurationMonth(rmvxProps, subscriberPP)</code></td><td>Calculates remaining PP duration in months (uses RMVX offer data)</td></tr>
+          <tr><td><code>RuleFunctions.Helpers.GetBillCycle(orderRequest)</code></td><td>Retrieves billing cycle number</td></tr>
+          <tr><td><code>RuleFunctions.Helpers.GetPPExpirationDate(subscriberPP, durationMn)</code></td><td>Calculates PP expiration date from effective date + duration</td></tr>
+          <tr><td><code>RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(str)</code></td><td>Null/blank string check</td></tr>
+          <tr><td><code>OMXUtils.generateTrackingID()</code></td><td>Used in response RF to generate extId for ResponseBase concept instance</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §15 -->
+<div class="section" id="s15">
+  <h2 class="section-title"><span>§15</span>Function Dependency Tree</h2>
+  <div class="card">
+    <div class="card-body">
+<pre>Request_SMSGATEWAY_SEND_SMS (rule)
+├── RuleFunctions.Helpers.AllowWriteLog(OrderType)
+│   └── [OrderType whitelist check]
+├── RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId)
+│   └── [XPath subscriber extraction]
+├── RuleFunctions.Helpers.GetPPDurationMonth(rmvxProps, subscriberPP)
+├── RuleFunctions.Helpers.GetBillCycle(orderRequest)
+├── RuleFunctions.Helpers.GetPPExpirationDate(subscriberPP, durationMn)
+├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(str)
+├── XPath.execute(preExecCheck, sXML, ns0=...)
+└── Event.Ext.sendEventImmediate(reqEvent) × N
+
+Response_SMSGATEWAY_SEND_SMS (rulefunction)
+├── RuleFunctions.Helpers.AllowWriteLog(OrderType)    ← response also gated
+├── OMXUtils.generateTrackingID()                     ← response extId
+├── Instance.createInstance("xslt://{{ResponseBase}}...")
+├── Instance.getByExtIdByUri("SUB:"+JMSCorrelationID+":"+RefID)
+│   └── fallback: "CSUB:"+JMSCorrelationID+":"+RefID
+├── sub.ResponseCode = eventResponse.ResponseCode      ← writeback
+├── sub.ResponseMsg = eventResponse.ResponseMsg        ← writeback
+└── XPath.evalAsInt(count(Response[right(trim(ResponseCode),3)="000"]))</pre>
+    </div>
+  </div>
+</div>
+
+<!-- §16 -->
+<div class="section" id="s16">
+  <h2 class="section-title"><span>§16</span>Concept Definitions Referenced</h2>
+  <div class="card">
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Concept</th><th>Key fields used</th></tr></thead>
+        <tbody>
+          <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>RefId, MSISDN, SubscriberType, SubscriberGeneralInfo.Language, SubscriberOffers[], SubscriberName, ResponseCode (writeback), ResponseMsg (writeback)</td></tr>
+          <tr><td><code>Concepts.FM.Response.SMSGATEWAY_SendSMSRes</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId</td></tr>
+          <tr><td><code>Concepts.OrderCurrentActivity</code></td><td>ActivityID, Status, RequestCount, Response[]</td></tr>
+          <tr><td><code>Concepts.ProcessActivity</code></td><td>PreExecCheck</td></tr>
+          <tr><td><code>Concepts.GlobalVariables</code></td><td>OMX_COMMON.*, OMX_OM.WritePayload</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §17 -->
+<div class="section" id="s17">
+  <h2 class="section-title"><span>§17</span>Migration Notes &amp; Recommendations</h2>
+  <div class="card">
+    <div class="card-header">Functional Requirements</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+        <tbody>
+          <tr><td>R1</td><td>SMS must be sent once per qualifying offer per subscriber (not once per order)</td></tr>
+          <tr><td>R2</td><td>MSISDN in <code>ns:MSISDN</code> element must use E.164 format (66-prefix); Param #5 retains raw format</td></tr>
+          <tr><td>R3</td><td>Fan-in must complete when all dispatched requests have received <code>ResponseCode</code> ending in "000"</td></tr>
+          <tr><td>R4</td><td><code>AllowWriteLog(OrderType)</code> must gate BOTH request and response audit logging</td></tr>
+          <tr><td>R5</td><td>ResponseCode and ResponseMsg must be written back to the Subscriber concept after response</td></tr>
+          <tr><td>R6</td><td>Resubmission (isActResub=true) must not increment RequestCount</td></tr>
+          <tr><td>R7</td><td>Thai date formatting (month conversion) must apply when Language="TH"</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <div class="card" style="margin-top:16px;">
+    <div class="card-header">Design Risks</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr><td>Variant ② audit always logs (no AllowWriteLog gate)</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Add AllowWriteLog gate consistently across all three variants in migration target</td></tr>
+          <tr><td>Missing space in AUDIT_TRACE: <code>"Request Sent for RefId"</code> + refId</td><td><span class="badge badge-blue">LOW</span></td><td>Use <code>concat("Request Sent for RefId ", $refId)</code> in rewrite</td></tr>
+          <tr><td>Param #5 uses raw MSISDN while ns:MSISDN uses 66-prefix — easy to confuse</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Document clearly in API contract for SMS Gateway; verify gateway expectation for each field</td></tr>
+          <tr><td>Three XSLT variants for essentially the same payload structure; drift risk</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Consolidate into single configurable payload builder in migration; variant differences are parameterizable</td></tr>
+          <tr><td>288.7 KB rule file — maintenance risk</td><td><span class="badge badge-red">HIGH</span></td><td>Break into smaller composable units in migration: offer-classifier, date-calculator, SMS-dispatcher</td></tr>
+          <tr><td>Subscriber concept writeback creates tight coupling between SMSGATEWAY response and order data model</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Use dedicated SMS result concept or event correlation in migration rather than writing back to Subscriber</td></tr>
+          <tr><td>allLanguage=TH hardcoded default — internationalization risk</td><td><span class="badge badge-blue">LOW</span></td><td>Verify SMS Gateway supports other language codes and test accordingly</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §18 -->
+<div class="section" id="s18">
+  <h2 class="section-title"><span>§18</span>Full Source Code</h2>
+  <div class="card">
+    <div class="card-header">Request_SMSGATEWAY_SEND_SMS.rule (key sections)</div>
+    <div class="card-body">
+<pre><span class="cm">// Rule: Rules.OMConsumers.OMXFM.Request.Request_SMSGATEWAY_SEND_SMS</span>
+<span class="cm">// Author: awalia-t420 | ~1050 lines | 288.7 KB</span>
+
+<span class="kw">declare</span>:
+  orderRequest : <span class="ty">Concepts.OrderRequest.OrderRequest</span>
+  orderCurrentActivity : <span class="ty">Concepts.OrderCurrentActivity</span>
+  nextAct : <span class="ty">Concepts.ProcessActivity</span>
+
+<span class="kw">when</span>:
+  orderCurrentActivity.ActivityID == <span class="str">"SMSGATEWAY_SEND_SMS"</span>
+
+<span class="kw">then</span>:
+  <span class="cm">// ─── Loop 1: ChildOU Subscriber (lines 27–507) ───</span>
+  <span class="kw">for</span>( <span class="ty">int</span> i=<span class="nu">0</span> ; i&lt;ParentOU@length ; i++ ) {
+    <span class="kw">for</span>( <span class="ty">int</span> k=<span class="nu">0</span> ; k&lt;ChildOU@length ; k++ ) {
+      <span class="kw">for</span>( <span class="ty">int</span> j=<span class="nu">0</span> ; j&lt;Subscriber@length ; j++ ) {
+        <span class="ty">String</span> refId = subscriber.RefId;
+        <span class="cm">// ResSuccess check, GetXMLForSubscriber, PreExecCheck, offer classification...</span>
+        <span class="cm">// For each qualifying offer → offerSMSType → send Variant ①</span>
+        <span class="cm">/* XSLT Variant ①: see §9.8 — builds ns:SMSRequest with offerSMSType, offerEffDate,</span>
+           <span class="cm">offerExpDate, rcPrice, permanentCreditLimit params */</span>
+        Event.Ext.sendEventImmediate(reqEvent);
+        <span class="kw">if</span>(!isActResub) { orderCurrentActivity.RequestCount++; }
+        isSkipped = <span class="kw">false</span>;
+        <span class="kw">if</span>(RuleFunctions.Helpers.<span class="fn">AllowWriteLog</span>(orderRequest.OrderData.OrderType)) {
+          <span class="cm">/* Audit log event (gated) */</span>
+          Event.Ext.sendEventImmediate(<span class="cm">/* AUDIT_TRACE = "Request Sent for RefId" + refId */</span>);
+        }
+      }
+    }
+  }
+
+  <span class="cm">// ─── Loop 2: ParentOU Subscriber (lines 508–~1050) ───</span>
+  <span class="kw">for</span>( <span class="ty">int</span> i=<span class="nu">0</span> ; i&lt;ParentOU@length ; i++ ) {
+    <span class="kw">for</span>( <span class="ty">int</span> j=<span class="nu">0</span> ; j&lt;Subscriber@length ; j++ ) {
+      <span class="ty">String</span> refId = orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].RefId;
+      <span class="cm">// Same ResSuccess / PreExecCheck / offer-classification logic</span>
+      <span class="kw">if</span>(orderType ∈ {<span class="nu">3</span>,<span class="nu">69</span>,<span class="nu">70</span>,<span class="nu">11018</span>} &amp;&amp; qualifyingOffers) {
+        <span class="cm">/* XSLT Variant ②: see §9.8 — ParentOU/Subscriber path; no offer-specific params */</span>
+        Event.Ext.sendEventImmediate(reqEvent);                    <span class="cm">// Variant ②</span>
+        <span class="kw">if</span>(!isActResub) { orderCurrentActivity.RequestCount++; }
+        <span class="cm">/* Audit log — BUG: no AllowWriteLog gate here */</span>
+        Event.Ext.sendEventImmediate(<span class="cm">/* audit (unconditional) */</span>);
+      } <span class="kw">else</span> {
+        <span class="cm">/* XSLT Variant ③: see §9.8 — PP-only; adds currPPDesc, currPPExp; PricePlan uses FUTPP */</span>
+        Event.Ext.sendEventImmediate(reqEvent);                    <span class="cm">// Variant ③</span>
+        <span class="kw">if</span>(!isActResub) { orderCurrentActivity.RequestCount++; }
+        <span class="kw">if</span>(RuleFunctions.Helpers.<span class="fn">AllowWriteLog</span>(orderRequest.OrderData.OrderType)) {
+          Event.Ext.sendEventImmediate(<span class="cm">/* audit (gated) */</span>);
+        }
+      }
+    }
+  }</pre>
+    </div>
+  </div>
+</div>
+
+<!-- §19 -->
+<div class="section" id="s19">
+  <h2 class="section-title"><span>§19</span>Response Message Rule</h2>
+
+  <div class="card">
+    <div class="card-header">§19.1 Overview</div>
+    <div class="card-body">
+      <p>Parses the SMS Gateway reply, creates a <code>SMSGATEWAY_SendSMSRes</code> concept instance, gates audit logging via <code>AllowWriteLog</code>, writes response data back to the originating Subscriber concept, and drives fan-in completion.</p>
+      <div class="callout" style="margin-top:10px;">
+        <strong>Unique among OMXFM response RFs:</strong> both request AND response audit are gated by <code>AllowWriteLog(OrderType)</code>. Additionally, the response RF writes <code>ResponseCode</code> and <code>ResponseMsg</code> back to the <code>Subscriber</code> concept — no other OMXFM response RF does this.
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§19.2 Scope Variables</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Variable</th><th>Type</th><th>Role</th></tr></thead>
+        <tbody>
+          <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order context for audit and Subscriber lookup</td></tr>
+          <tr><td><code>eventResponse</code></td><td><code>Concepts.FM.Response.SMSGATEWAY_SendSMSRes</code></td><td>Inbound response from SMS Gateway</td></tr>
+          <tr><td><code>currActivity</code></td><td><code>Concepts.OrderCurrentActivity</code></td><td>Activity state; provides RequestCount and Response array</td></tr>
+          <tr><td><code>JMSCorrelationID</code></td><td>String</td><td>Used to build Subscriber concept extId for writeback lookup</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§19.3 ResponseBase Concept Construction</div>
+    <div class="card-body">
+      <div style="background:var(--code-bg);border-radius:8px;padding:16px;overflow-x:auto;">
+        <ul class="xslt-tree">
+          <li><div class="tree-row"><span class="tree-tag">createObject</span><span class="tree-cond">Instance.createInstance("xslt://{{/Concepts/FM/Response/SMSGATEWAY_SendSMSRes}}")</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span><span class="tree-cond">Always — explicit extId generation</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMessage</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ReferenceId</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§19.4 Subscriber Concept Writeback</div>
+    <div class="card-body">
+      <p>After appending the response concept, the RF looks up the originating Subscriber via:</p>
+<pre><span class="ty">Concepts.OrderRequest.OrderElements.Subscriber</span> sub =
+  Instance.<span class="fn">getByExtIdByUri</span>(<span class="str">"SUB:"</span> + JMSCorrelationID + <span class="str">":"</span> + RefID);
+<span class="kw">if</span>(sub == <span class="kw">null</span>) {
+  sub = Instance.<span class="fn">getByExtIdByUri</span>(<span class="str">"CSUB:"</span> + JMSCorrelationID + <span class="str">":"</span> + RefID);
+}
+<span class="kw">if</span>(sub != <span class="kw">null</span>) {
+  sub.ResponseCode = eventResponse.ResponseCode;
+  sub.ResponseMsg  = eventResponse.ResponseMsg;
+}</pre>
+      <div class="callout-info" style="margin-top:10px;">The <code>CSUB:</code> fallback handles ChildOU Subscriber scenarios where the extId was created with the CSUB prefix. Primary lookup uses <code>SUB:</code> (ParentOU Subscriber path).</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§19.5 Response Completion Logic</div>
+    <div class="card-body">
+      <table>
+        <thead><tr><th>Expression</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>successResponseCount = XPath.evalAsInt("count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = '000'])")</code></td><td>Count successful responses (last 3 chars of ResponseCode = "000")</td></tr>
+          <tr><td><code>currActivity.RequestCount == successResponseCount</code></td><td>Fan-in complete: all dispatched SMS requests have returned success</td></tr>
+        </tbody>
+      </table>
+      <div class="callout" style="margin-top:10px;">When the fan-in condition is met → the orchestrator moves the activity to COMPLETED and continues the order flow.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-header">§19.6 Response Audit Logging</div>
+    <div class="card-body">
+      <div class="callout" style="margin-bottom:10px;"><strong>Unique:</strong> Response audit is gated by <code>AllowWriteLog(OrderType)</code> — same as request audit. No other OMXFM response RF applies this gate to the response log.</div>
+      <table>
+        <thead><tr><th>Audit field</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td>PROCESS_ID</td><td><code>concat(pid, "_RES")</code></td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"SMSGATEWAY_SEND_SMS"</code></td></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>concat("Response received for RefId ", $eventResponse/RefID)</code> — note: space present before RefID</td></tr>
+          <tr><td>payload</td><td>Conditional on <code>WritePayload="true"</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <strong>TRUE Corporation OMX</strong> · TIBCO BusinessEvents FM Logic Documentation<br/>
+  Request_SMSGATEWAY_SEND_SMS · Generated 2026-09-09
+</footer>
+
+</body>
+</html>

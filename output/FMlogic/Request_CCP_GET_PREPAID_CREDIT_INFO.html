@@ -1,0 +1,819 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCP_GET_PREPAID_CREDIT_INFO</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.8rem;font-weight:700;letter-spacing:0.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:0.85;font-size:0.95rem;margin-bottom:14px}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:3px 12px;font-size:0.78rem}
+.container{max-width:1300px;margin:0 auto;padding:24px 24px}
+.section{background:var(--card);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);margin-bottom:22px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;border-left:5px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header h2{font-size:1rem;font-weight:600}
+.section-num{background:rgba(255,255,255,0.22);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0}
+.section-body{padding:20px}
+.sub-section{margin-bottom:18px}
+.sub-section h3{font-size:0.88rem;font-weight:700;color:var(--true-dark);border-bottom:1px solid #f0d0d0;padding-bottom:4px;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600}
+td{padding:7px 10px;border-bottom:1px solid #F0E0E0;vertical-align:top}
+tr:hover td{background:#FDF5F5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:0.8rem;border-left:3px solid var(--true-red)}
+code.inline{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:0.8rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:0.72rem;font-weight:600}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}
+.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}
+.b-teal{background:#E0F2F1;color:#00695c}
+.b-jms{background:#FFE0B2;color:#E65100}
+.b-db{background:#E8EAF6;color:#3949AB}
+.b-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;margin-top:1px}
+.flow-body{flex:1}
+.flow-body strong{color:var(--true-dark)}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);border-radius:6px;padding:12px 16px;margin-bottom:12px;font-size:0.82rem}
+.warn-box{background:#FFF3E0;border-left:4px solid var(--warning);border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.82rem}
+.success-box{background:#E8F5E9;border-left:4px solid var(--success);border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.82rem}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nm{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+/* XSLT tree */
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+details summary{cursor:pointer;font-weight:600;color:var(--true-dark);padding:4px 0}
+.footer{text-align:center;color:#999;font-size:0.75rem;padding:20px;border-top:1px solid var(--border);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1300px;margin:0 auto">
+    <div class="subtitle">TIBCO BusinessEvents · FM Logic Documentation</div>
+    <h1>Request_CCP_GET_PREPAID_CREDIT_INFO</h1>
+    <div class="meta-chips">
+      <span class="chip">Priority: 5</span>
+      <span class="chip">forwardChain: true</span>
+      <span class="chip">Target: CCP (Charging Control Platform)</span>
+      <span class="chip">Pattern: Per-Subscriber Fan-Out</span>
+      <span class="chip">Author: jninan-t420</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><div class="section-num">1</div><h2>§1 — Overview &amp; Purpose</h2></div>
+  <div class="section-body">
+    <p>Retrieves prepaid account credit information from <strong>CCP (Charging Control Platform)</strong> for every subscriber in the order. For each subscriber the rule fires a <code class="inline">GetPrepaidCreditInfoRequest</code> JMS event containing the MSISDN and order channel. The response handler (<code class="inline">Response_CCP_GET_PREPAID_CREDIT_INFO</code>) populates financial balance fields, updates the subscriber's price plan offer (unless the order type is in the <em>PricePlanFromCCBS</em> exclusion list), sets the subscriber's UI language, and writes eight <code class="inline">ExtendedInfo</code> keys for downstream activities.</p>
+    <div class="info-box" style="margin-top:12px">
+      <strong>Business Purpose:</strong> Before cancelling or modifying a prepaid subscription, OMX must know the subscriber's current credit balance, promotional allowances, price plan, and VAS status so they can be correctly applied to the refund, cancellation, or port-out flow.
+    </div>
+    <table style="margin-top:12px;width:auto">
+      <tr><th>Item</th><th>Value</th></tr>
+      <tr><td>Rule class</td><td><code class="inline">Rules.OMConsumers.OMXFM.Request.Request_CCP_GET_PREPAID_CREDIT_INFO</code></td></tr>
+      <tr><td>Author</td><td>jninan-t420</td></tr>
+      <tr><td>Target system</td><td>CCP — Charging Control Platform</td></tr>
+      <tr><td>Operation</td><td>GetPrepaidCreditInfo</td></tr>
+      <tr><td>Schema namespace</td><td><code class="inline">http://services.omx.truecorp.co.th/FM/GetPrepaidCreditInfoRequest</code></td></tr>
+      <tr><td>Response namespace</td><td><code class="inline">http://services.omx.truecorp.co.th/FM/GetPrepaidCreditInfoResponse</code></td></tr>
+      <tr><td>Response concept extId prefix</td><td><code class="inline">GPCIR:{OMXTrackingId}:{RefID}</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code class="inline">RequestCount == Response@length</code> (all responses, success or failure)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header"><div class="section-num">2</div><h2>§2 — Rule Metadata &amp; Attributes</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule type</td><td><code class="inline">rule</code></td><td>Stateful RETE-based rule; fires when all WHEN conditions match</td></tr>
+      <tr><td>priority</td><td>5</td><td>Standard FM request priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Rule re-evaluates if working memory changes during execution</td></tr>
+      <tr><td>Rule file</td><td>Request_CCP_GET_PREPAID_CREDIT_INFO.rule</td><td>Under Rules/OMConsumers/OMXFM/Request/</td></tr>
+      <tr><td>Response file</td><td>Response_CCP_GET_PREPAID_CREDIT_INFO.rulefunction</td><td>Under RuleFunctions/OrderResponse/</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><div class="section-num">3</div><h2>§3 — Working Memory — Declared Objects</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code class="inline">orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Root order object — holds customer hierarchy, order type, channel, tracking ID</td></tr>
+      <tr><td><code class="inline">orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity definition — holds Status, RequestCount, Response array, PreExecCheck</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">4</div><h2>§4 — Rule Conditions (WHEN)</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Meaning</th></tr>
+      <tr><td>1</td><td><code class="inline">orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>The activity object matches the order's current scheduled step</td></tr>
+      <tr><td>2</td><td><code class="inline">orderCurrentActivity.ActivityID == "CCP_GET_PREPAID_CREDIT_INFO"</code></td><td>This rule only fires for the CCP credit-info activity</td></tr>
+      <tr><td>3</td><td><code class="inline">orderRequest.ProcessFlow.NextActivityID == "CCP_GET_PREPAID_CREDIT_INFO"</code></td><td>Process flow pointer confirms this FM is next</td></tr>
+      <tr><td>4</td><td><code class="inline">orderCurrentActivity.Status == "WAITING"</code></td><td>Activity is in WAITING state — prevents duplicate firing</td></tr>
+    </table>
+    <div class="info-box" style="margin-top:10px">All four conditions must be true simultaneously. The double check (ActivityID on both the concept and the process flow) ensures the rule does not fire for homonymous activities in other process configs.</div>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header"><div class="section-num">5</div><h2>§5 — Execution Flow Diagram</h2></div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><strong>Resubmit flag:</strong> Compute <code class="inline">isActResub = (RequestCount&gt;0 &amp;&amp; IsOrderResubmitted)</code> — if true, RequestCount will not be incremented again.</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><strong>Load next activity:</strong> Fetch the Activity concept by extId to read <code class="inline">PreExecCheck</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><strong>ParentOU loop:</strong> Iterate all ParentOU subscribers. For each: check resubmit dedup guard → evaluate PreExecCheck → send CCP request event → audit log → increment RequestCount.</div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><strong>ChildOU loop:</strong> Identical logic for ChildOU subscribers nested within each ParentOU.</div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-body"><strong>Skip / activate:</strong> If no request was sent (<code class="inline">isSkipped=true</code>), call <code class="inline">SkipActivity("4")</code>; otherwise set status to "IN_PROGRESS" and persist order via <code class="inline">SendDataToDB</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-body"><strong>Exception:</strong> Any uncaught exception is routed to <code class="inline">HandleActivityException</code>.</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header"><div class="section-num">6</div><h2>§6 — Rule Action (THEN) — Step-by-Step Logic</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Step</th><th>Code path</th><th>Detail</th></tr>
+      <tr><td>Resubmit check</td><td><code class="inline">isActResub</code></td><td><code class="inline">RequestCount&gt;0 &amp;&amp; IsOrderResubmitted</code></td></tr>
+      <tr><td>Dedup guard (per subscriber)</td><td><code class="inline">Response[iResp].ReferenceId==refId &amp;&amp; CompletionStatus==2</code></td><td>Skip subscriber if a successful response already exists</td></tr>
+      <tr><td>PreExecCheck</td><td><code class="inline">GetXMLForSubscriber / GetXMLForSubscriberInChildOU</code></td><td>XPath evaluated against subscriber XML; skip if result != "true"</td></tr>
+      <tr><td>Send CCP event</td><td><code class="inline">Event.Ext.sendEventImmediate(reqEvent)</code></td><td>XSLT builds <code class="inline">GetPrepaidCreditInfoRequest</code> with MSISDN + OrderChannel</td></tr>
+      <tr><td>Audit log</td><td><code class="inline">AllowWriteLog gate</code></td><td>Static AUDIT_TRACE: <em>"Request Sent for CCP_GET_PREPAID_CREDIT_INFO"</em></td></tr>
+      <tr><td>RequestCount</td><td><code class="inline">if(!isActResub) orderCurrentActivity.RequestCount++</code></td><td>Incremented after audit log (consistent with CDB pattern)</td></tr>
+      <tr><td>Status transition</td><td><code class="inline">GetActivityStatusString("1", false)</code></td><td>Sets activity to "IN_PROGRESS"</td></tr>
+      <tr><td>Persist</td><td><code class="inline">SendDataToDB(orderRequest)</code></td><td>Writes updated order state to database</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header"><div class="section-num">7</div><h2>§7 — Data Extraction</h2></div>
+  <div class="section-body">
+    <p>No pipe-delimited or encoded parsing is performed in the request rule. The XSLT reads scalar fields directly from the order request:</p>
+    <table style="margin-top:10px">
+      <tr><th>Field extracted</th><th>Source XPath</th><th>Usage</th></tr>
+      <tr><td>MSISDN</td><td><code class="inline">$orderRequest/OrderData/Customer/ParentOU[i]/Subscriber[j]/MSISDN</code></td><td>Payload element <code class="inline">&lt;ns:MSISDN&gt;</code></td></tr>
+      <tr><td>OrderChannel</td><td><code class="inline">$orderRequest/OrderData/Channel</code></td><td>Payload element <code class="inline">&lt;ns:OrderChannel&gt;</code></td></tr>
+      <tr><td>RefId</td><td><code class="inline">Subscriber[j].RefId</code></td><td>Event header <code class="inline">&lt;RefID&gt;</code> and dedup key</td></tr>
+      <tr><td>OrderType</td><td><code class="inline">$orderRequest/OrderData/OrderType</code></td><td>Event header <code class="inline">&lt;OrderType&gt;</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="section">
+  <div class="section-header"><div class="section-num">8</div><h2>§8 — System &amp; Integration Dependencies</h2></div>
+  <div class="section-body">
+
+    <div class="sub-section">
+      <h3>§8.1 Order Type Dependencies</h3>
+      <p>This FM fires for any order type that includes the <code class="inline">CCP_GET_PREPAID_CREDIT_INFO</code> activity in its ProcessConfig, including but not limited to <strong>PREPAID_CANCEL</strong>, prepaid port-out, and prepaid swap flows. The response handler has an additional gate via GlobalVar <code class="inline">OMX_OM/OrderTypes/PricePlanFromCCBS</code> (default <em>,53,60,68,</em>) — for order types <strong>53 (PreToPost)</strong>, <strong>60 (MNPPrepaidPortOut)</strong>, and <strong>68 (SwapSIM)</strong>, the price plan is taken from CCBS instead of CCP; CCP data is still stored in ExtendedInfo but the SubscriberOffers update is skipped.</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.2 ESB / JMS Channel Dependencies</h3>
+      <table>
+        <tr><th>Direction</th><th>Event type</th><th>Destination (inferred)</th><th>Purpose</th></tr>
+        <tr><td><span class="badge b-orange">OUTBOUND</span></td><td>Events.OMConsumers.OMXFM.Request.CCP_GET_PREPAID_CREDIT_INFO</td><td>CCP JMS request queue</td><td>Send GetPrepaidCreditInfoRequest to CCP</td></tr>
+        <tr><td><span class="badge b-log">LOG</span></td><td>Events.OMConsumers.OMXESB.Logger</td><td>Audit log destination</td><td>Request/response audit trail</td></tr>
+        <tr><td><span class="badge b-blue">INBOUND</span></td><td>Events.OMConsumers.OMXFM.Response.CCP_GET_PREPAID_CREDIT_INFO</td><td>CCP JMS response queue</td><td>Receive GetPrepaidCreditInfoResponse from CCP</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.3 Backend API Details</h3>
+      <table>
+        <tr><th>System</th><th>Operation</th><th>Schema</th><th>Protocol</th></tr>
+        <tr><td>CCP</td><td>GetPrepaidCreditInfo</td><td><code class="inline">http://services.omx.truecorp.co.th/FM/GetPrepaidCreditInfoRequest</code></td><td>JMS via ESB FM channel</td></tr>
+      </table>
+      <p style="margin-top:8px">Correlation: <code class="inline">JMSCorrelationID = OMXTrackingId</code>; per-subscriber matching via <code class="inline">RefID</code>.</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.4 BE Working Memory Dependencies</h3>
+      <table>
+        <tr><th>Concept</th><th>Access</th><th>Fields</th></tr>
+        <tr><td>OrderRequest</td><td>READ</td><td>OrderData.OMXTrackingId, OrderData.OrderType, OrderData.Channel, OrderData.Customer.ParentOU[].Subscriber[], IsOrderResubmitted, OrderPriority</td></tr>
+        <tr><td>Activity (current)</td><td>READ/WRITE</td><td>Status (WRITE), RequestCount (WRITE), Response[] (READ dedup), PreExecCheck (READ)</td></tr>
+        <tr><td>Activity (next)</td><td>READ</td><td>PreExecCheck XPath expression</td></tr>
+        <tr><td>Subscriber</td><td>READ/WRITE (response)</td><td>SubscriberOffers[] (WRITE), SubscriberGeneralInfo.Language (WRITE), ExtendedInfo[] (WRITE)</td></tr>
+        <tr><td>CCP_GET_PREPAID_CREDIT_INFO (response concept)</td><td>WRITE</td><td>See §19.3 — extId=GPCIR:..., 14 financial/status fields</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.5 ExtendedInfo Fields Written (Response Handler)</h3>
+      <table>
+        <tr><th>Name</th><th>Source field</th><th>Target subscriber</th><th>Notes</th></tr>
+        <tr><td><code class="inline">MAIN_CREDIT</code></td><td>ns:CreditBalance</td><td>subscriber + subscriberTarget</td><td>Main prepaid balance</td></tr>
+        <tr><td><code class="inline">PROMO_CREDIT</code></td><td>ns:ATB</td><td>subscriber only</td><td>Available Topup Balance (promotional)</td></tr>
+        <tr><td><code class="inline">BONUS_CREDIT</code></td><td>ns:CallingBonus</td><td>subscriber only</td><td>Voice calling bonus</td></tr>
+        <tr><td><code class="inline">DATA_CREDIT</code></td><td>ns:DataBonus</td><td>subscriber only</td><td>Data bonus allowance</td></tr>
+        <tr><td><code class="inline">MMS_CREDIT</code></td><td>ns:MMSBonus</td><td>subscriber only</td><td>MMS bonus allowance</td></tr>
+        <tr><td><code class="inline">CDB_STATUS</code></td><td>ns:Status</td><td>subscriber only</td><td>CCP account status (naming: "CDB_" prefix despite CCP source)</td></tr>
+        <tr><td><code class="inline">CDB_VAS</code></td><td>ns:VAS</td><td>subscriber + subscriberTarget</td><td>VAS flag from CCP</td></tr>
+        <tr><td><code class="inline">CDB_CONVERGENCE</code></td><td>ns:Convergence</td><td>subscriber + subscriberTarget</td><td>Convergence flag from CCP</td></tr>
+        <tr><td><code class="inline">PRICEPLAN_CCP</code></td><td>ns:Priceplan</td><td>subscriberTarget only</td><td>Stored separately for _src subscriber scenarios</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.6 Global Variable Dependencies</h3>
+      <table>
+        <tr><th>Path</th><th>Default</th><th>Used for</th></tr>
+        <tr><td><code class="inline">OMX_OM/OrderTypes/PricePlanFromCCBS</code></td><td><em>,53,60,68,</em></td><td>Skip SubscriberOffers update when OrderType in list</td></tr>
+        <tr><td><code class="inline">OMX_COMMON/Component_Name/OMX_CEP</code></td><td>—</td><td>Audit log COMPONENT_NAME</td></tr>
+        <tr><td><code class="inline">OMX_COMMON/Component_Name/OMX_FM</code></td><td>—</td><td>Audit log TARGET_SYSTEM</td></tr>
+        <tr><td><code class="inline">OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>—</td><td>Audit log LOG_LEVEL</td></tr>
+        <tr><td><code class="inline">OMX_OM/WritePayload</code></td><td>"true"/"false"</td><td>Gates payload inclusion in audit log</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §9 Detailed Payload Build -->
+<div class="section">
+  <div class="section-header"><div class="section-num">9</div><h2>§9 — Detailed Payload Build</h2></div>
+  <div class="section-body">
+
+    <div class="sub-section">
+      <h3>§9.1 XSLT Parameter Binding</h3>
+      <table>
+        <tr><th>Parameter</th><th>Bound from</th></tr>
+        <tr><td><code class="inline">$orderRequest</code></td><td>Rule variable — the root OrderRequest concept</td></tr>
+        <tr><td><code class="inline">$i</code> / <code class="inline">$j</code></td><td>ParentOU loop index / Subscriber loop index</td></tr>
+        <tr><td><code class="inline">$p</code> / <code class="inline">$q</code></td><td>ChildOU loop index / ChildOU-Subscriber loop index (ChildOU variant only)</td></tr>
+        <tr><td><code class="inline">$POUIterator</code></td><td><code class="inline">number($i)+1</code> — 1-based ParentOU index for XPath</td></tr>
+        <tr><td><code class="inline">$SubscriberIterator</code></td><td><code class="inline">number($j)+1</code> — 1-based Subscriber index for XPath</td></tr>
+        <tr><td><code class="inline">$COUIterator</code></td><td><code class="inline">number($p)+1</code> — 1-based ChildOU index (ChildOU variant only)</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§9.2 Event Container Construction</h3>
+      <p>The event is created via <code class="inline">Event.createEvent("xslt://{{/Events/OMConsumers/OMXFM/Request/CCP_GET_PREPAID_CREDIT_INFO}}...")</code>. No explicit <code class="inline">extId</code> is set on the outbound event — the correlation is maintained through <code class="inline">JMSCorrelationID</code> and <code class="inline">RefID</code>.</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>§9.3 JMS / Event Header Fields</h3>
+      <table>
+        <tr><th>Header field</th><th>Source</th><th>Conditional?</th></tr>
+        <tr><td><code class="inline">JMSPriority</code></td><td><code class="inline">$orderRequest/OrderPriority</code></td><td><span class="badge b-orange">Conditional</span> xsl:if present</td></tr>
+        <tr><td><code class="inline">JMSCorrelationID</code></td><td><code class="inline">$orderRequest/OrderData/OMXTrackingId</code></td><td><span class="badge b-orange">Conditional</span></td></tr>
+        <tr><td><code class="inline">OrderID</code></td><td><code class="inline">$orderRequest/OrderData/OrderID</code></td><td><span class="badge b-orange">Conditional</span></td></tr>
+        <tr><td><code class="inline">RefID</code></td><td><code class="inline">ParentOU[i]/Subscriber[j]/RefId</code></td><td><span class="badge b-orange">Conditional</span></td></tr>
+        <tr><td><code class="inline">OrderType</code></td><td><code class="inline">$orderRequest/OrderData/OrderType</code></td><td><span class="badge b-orange">Conditional</span></td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§9.4 Payload Root Element</h3>
+      <p>Namespace: <code class="inline">xmlns:ns="http://services.omx.truecorp.co.th/FM/GetPrepaidCreditInfoRequest"</code><br/>Root: <code class="inline">&lt;ns:GetPrepaidCreditInfoRequest&gt;</code></p>
+    </div>
+
+    <div class="sub-section">
+      <h3>§9.5 Conditional Fields</h3>
+      <p>All header fields are wrapped in <code class="inline">xsl:if</code> guards — absent values (null OrderPriority, null OrderID) produce no output element. This is identical to the CDB pattern.</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>§9.6 Core Payload Block</h3>
+      <table>
+        <tr><th>XML element</th><th>Source</th><th>Required?</th></tr>
+        <tr><td><code class="inline">&lt;ns:MSISDN&gt;</code></td><td>Subscriber[i].MSISDN (no xsl:if — always emitted)</td><td><span class="badge b-green">Always</span></td></tr>
+        <tr><td><code class="inline">&lt;ns:OrderChannel&gt;</code></td><td><code class="inline">$orderRequest/OrderData/Channel</code> (no xsl:if)</td><td><span class="badge b-green">Always</span></td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§9.7 Complete Generated XML Example</h3>
+      <pre><span class="xt">&lt;createEvent&gt;</span>
+  <span class="xt">&lt;event&gt;</span>
+    <span class="xt">&lt;JMSPriority&gt;</span><span class="nm">5</span><span class="xt">&lt;/JMSPriority&gt;</span>
+    <span class="xt">&lt;JMSCorrelationID&gt;</span><span class="st">OMX20241201120000001</span><span class="xt">&lt;/JMSCorrelationID&gt;</span>
+    <span class="xt">&lt;OrderID&gt;</span><span class="st">ORD-12345678</span><span class="xt">&lt;/OrderID&gt;</span>
+    <span class="xt">&lt;RefID&gt;</span><span class="st">REF001</span><span class="xt">&lt;/RefID&gt;</span>
+    <span class="xt">&lt;OrderType&gt;</span><span class="nm">65</span><span class="xt">&lt;/OrderType&gt;</span>
+    <span class="xt">&lt;payload&gt;</span>
+      <span class="xt">&lt;ns:GetPrepaidCreditInfoRequest</span>
+        <span class="xa">xmlns:ns</span>=<span class="st">"http://services.omx.truecorp.co.th/FM/GetPrepaidCreditInfoRequest"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ns:MSISDN&gt;</span><span class="st">0812345678</span><span class="xt">&lt;/ns:MSISDN&gt;</span>
+        <span class="xt">&lt;ns:OrderChannel&gt;</span><span class="st">CS</span><span class="xt">&lt;/ns:OrderChannel&gt;</span>
+      <span class="xt">&lt;/ns:GetPrepaidCreditInfoRequest&gt;</span>
+    <span class="xt">&lt;/payload&gt;</span>
+  <span class="xt">&lt;/event&gt;</span>
+<span class="xt">&lt;/createEvent&gt;</span></pre>
+    </div>
+
+    <div class="sub-section">
+      <h3>§9.8 XSLT Stylesheet Source</h3>
+      <details open>
+        <summary>ParentOU Variant ① — Subscriber in ParentOU</summary>
+        <pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+    <span class="xa">xmlns:ns</span>=<span class="st">"http://services.omx.truecorp.co.th/FM/GetPrepaidCreditInfoRequest"</span>
+    <span class="xa">xmlns:xsd</span>=<span class="st">"http://www.w3.org/2001/XMLSchema"</span>
+    <span class="xa">version</span>=<span class="st">"1.0"</span> <span class="xa">exclude-result-prefixes</span>=<span class="st">"xsl ns xsd"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:output</span> <span class="xa">method</span>=<span class="st">"xml"</span><span class="xt">/&gt;</span>
+  <span class="cm">&lt;!-- i=ParentOU index, j=Subscriber index --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"i"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"j"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"POUIterator"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"SubscriberIterator"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;</span>
+      <span class="xt">&lt;event&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderPriority"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;JMSPriority&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;&lt;/JMSPriority&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;JMSCorrelationID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/JMSCorrelationID&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/OrderID"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;OrderID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;&lt;/OrderID&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:variable</span> <span class="xa">name</span>=<span class="st">"POUIterator"</span> <span class="xa">select</span>=<span class="st">"number($i)+1"</span><span class="xt">/&gt;</span>
+        <span class="xt">&lt;xsl:variable</span> <span class="xa">name</span>=<span class="st">"SubscriberIterator"</span> <span class="xa">select</span>=<span class="st">"number($j)+1"</span><span class="xt">/&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/Customer/ParentOU[$POUIterator]/Subscriber[$SubscriberIterator]/RefId"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;RefID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/Customer/ParentOU[$POUIterator]/Subscriber[$SubscriberIterator]/RefId"</span><span class="xt">/&gt;&lt;/RefID&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/OrderType"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;OrderType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;&lt;/OrderType&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;payload&gt;</span>
+          <span class="xt">&lt;ns:GetPrepaidCreditInfoRequest&gt;</span>
+            <span class="xt">&lt;ns:MSISDN&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/Customer/ParentOU[$POUIterator]/Subscriber[$SubscriberIterator]/MSISDN"</span><span class="xt">/&gt;&lt;/ns:MSISDN&gt;</span>
+            <span class="xt">&lt;ns:OrderChannel&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/Channel"</span><span class="xt">/&gt;&lt;/ns:OrderChannel&gt;</span>
+          <span class="xt">&lt;/ns:GetPrepaidCreditInfoRequest&gt;</span>
+        <span class="xt">&lt;/payload&gt;</span>
+      <span class="xt">&lt;/event&gt;</span>
+    <span class="xt">&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+      </details>
+      <details style="margin-top:10px">
+        <summary>ChildOU Variant ② — Subscriber in ChildOU (differences highlighted)</summary>
+        <table>
+          <tr><th>Difference</th><th>ParentOU Variant ①</th><th>ChildOU Variant ②</th></tr>
+          <tr><td>Extra params</td><td><code class="inline">$i, $j, $POUIterator, $SubscriberIterator</code></td><td>Adds <code class="inline">$p, $q, $COUIterator</code></td></tr>
+          <tr><td>MSISDN XPath</td><td><code class="inline">ParentOU[$POUIterator]/Subscriber[$SubscriberIterator]/MSISDN</code></td><td><code class="inline">ParentOU[$POUIterator]/ChildOU[$COUIterator]/Subscriber[$SubscriberIterator]/MSISDN</code></td></tr>
+          <tr><td>RefID XPath</td><td><code class="inline">ParentOU[$POUIterator]/Subscriber[$SubscriberIterator]/RefId</code></td><td><code class="inline">ParentOU[$POUIterator]/ChildOU[$COUIterator]/Subscriber[$SubscriberIterator]/RefId</code></td></tr>
+          <tr><td>OrderChannel</td><td colspan="2">Identical — both use <code class="inline">$orderRequest/OrderData/Channel</code></td></tr>
+        </table>
+      </details>
+    </div>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="section">
+  <div class="section-header"><div class="section-num">10</div><h2>§10 — XSLT Field Mapping — Output XML Tree Hierarchy</h2></div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge b-orange">Conditional</span><span class="tree-cond">if $orderRequest/OrderPriority</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-orange">Conditional</span><span class="tree-cond">if $orderRequest/OrderData/OMXTrackingId</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge b-orange">Conditional</span><span class="tree-cond">if $orderRequest/OrderData/OrderID</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">ParentOU[$i+1]/Subscriber[$j+1]/RefId</span><span class="badge b-orange">Conditional</span><span class="tree-cond">if RefId node exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge b-orange">Conditional</span><span class="tree-cond">if $orderRequest/OrderData/OrderType</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge b-green">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:GetPrepaidCreditInfoRequest</span><span class="tree-ns">xmlns:ns="http://services.omx.truecorp.co.th/FM/GetPrepaidCreditInfoRequest"</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:MSISDN</span><span class="tree-arrow">←</span><span class="tree-src">ParentOU[$i+1]/Subscriber[$j+1]/MSISDN</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:OrderChannel</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Channel</span><span class="badge b-green">Always</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:14px;font-size:0.78rem;color:#666"><strong>Legend:</strong> <span class="tree-src" style="display:inline-block">green = XPath from working memory</span> &nbsp; <span class="tree-src-static" style="display:inline-block">orange = static literal</span> &nbsp; <span class="badge b-green">Always</span> always emitted &nbsp; <span class="badge b-orange">Conditional</span> inside xsl:if &nbsp; <span class="tree-cond" style="display:inline-block;font-size:0.78rem">purple = condition expression</span></p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header"><div class="section-num">11</div><h2>§11 — Audit Logging</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Log event</th><th>Field</th><th>Value</th></tr>
+      <tr><td rowspan="7"><span class="badge b-log">REQUEST</span> Logger event</td><td>ESBUUID</td><td>OMXTrackingId</td></tr>
+      <tr><td>PROCESS_ID</td><td><code class="inline">concat(nanoTime, "_REQ")</code></td></tr>
+      <tr><td>COMPONENT_NAME</td><td>GlobalVar OMX_COMMON/Component_Name/OMX_CEP</td></tr>
+      <tr><td>OPERATION_NAME</td><td><em>"CCP_GET_PREPAID_CREDIT_INFO"</em> (static)</td></tr>
+      <tr><td>TARGET_SYSTEM</td><td>GlobalVar OMX_COMMON/Component_Name/OMX_FM</td></tr>
+      <tr><td>AUDIT_TRACE</td><td><em>"Request Sent for CCP_GET_PREPAID_CREDIT_INFO"</em> (static — no RefId, unlike CDB)</td></tr>
+      <tr><td>payload</td><td>Conditional on <code class="inline">WritePayload="true"</code> — copy of reqEvent</td></tr>
+      <tr><td rowspan="4"><span class="badge b-log">RESPONSE</span> Logger event</td><td>PROCESS_ID</td><td><code class="inline">concat(nanoTime, "_RES")</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><em>"CCP_GET_PREPAID_CREDIT_INFO"</em></td></tr>
+      <tr><td>AUDIT_TRACE</td><td><em>"Response received for CCP_GET_PREPAID_CREDIT_INFO"</em></td></tr>
+      <tr><td>payload</td><td>Conditional on WritePayload — copy of eventResponse</td></tr>
+    </table>
+    <div class="warn-box" style="margin-top:10px"><strong>Note:</strong> Unlike the CDB request audit log which includes <code class="inline">RefId</code> in AUDIT_TRACE, the CCP log uses a static string without the RefId. This makes it harder to correlate individual subscriber requests in the audit log.</div>
+  </div>
+</div>
+
+<!-- §12 Activity Status Management -->
+<div class="section">
+  <div class="section-header"><div class="section-num">12</div><h2>§12 — Activity Status Management</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Transition</th><th>Function</th><th>Code</th><th>Meaning</th></tr>
+      <tr><td>WAITING → IN_PROGRESS</td><td>GetActivityStatusString("1", false)</td><td>"1"</td><td>At least one request sent successfully</td></tr>
+      <tr><td>WAITING → SKIPPED</td><td>SkipActivity(orderRequest, orderCurrentActivity, "4")</td><td>"4"</td><td>All subscribers passed PreExecCheck as false or already had successful responses</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header"><div class="section-num">13</div><h2>§13 — Exception / Error Handling</h2></div>
+  <div class="section-body">
+    <p>The entire <code class="inline">try</code> block wrapping both loops is caught by:</p>
+    <pre><span class="kw">catch</span> ( Exception ae ){
+    RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</pre>
+    <p style="margin-top:10px"><code class="inline">HandleActivityException</code> marks the activity as FAILED, logs the error, and escalates to order-level error handling. The empty string fourth argument means no additional context message is appended.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">14</div><h2>§14 — Helper Functions Reference</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Return</th><th>Purpose</th></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.GetXMLForSubscriber</code></td><td>String (XML)</td><td>Serialises the subscriber sub-tree for XPath PreExecCheck evaluation (ParentOU)</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.GetXMLForSubscriberInChildOU</code></td><td>String (XML)</td><td>Serialises the ChildOU subscriber sub-tree for PreExecCheck evaluation</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.AllowWriteLog</code></td><td>boolean</td><td>Gates audit logging based on OrderType</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.GetActivityStatusString</code></td><td>String</td><td>Maps numeric status code to status string constant</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.SendDataToDB</code></td><td>void</td><td>Persists order state to database after activity status change</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.SkipActivity</code></td><td>void</td><td>Marks activity as skipped and advances process flow</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.HandleActivityException</code></td><td>void</td><td>Handles uncaught exceptions — marks activity FAILED and escalates</td></tr>
+      <tr><td><code class="inline">OMXUtils.generateTrackingID</code></td><td>String</td><td>Generates unique extId for new concept instances (used in response)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header"><div class="section-num">15</div><h2>§15 — Function Dependency Tree</h2></div>
+  <div class="section-body">
+    <pre>Request_CCP_GET_PREPAID_CREDIT_INFO (rule)
+├── Instance.getByExtIdByUri(nextActivityName)              [BE built-in]
+├── RuleFunctions.Helpers.GetXMLForSubscriber               [helper]
+├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU      [helper]
+├── XPath.execute(PreExecCheck, xml)                        [BE built-in]
+├── Event.createEvent("xslt://...CCP_GET_PREPAID_CREDIT_INFO")  [BE built-in]
+│   └── XSLT: GetPrepaidCreditInfoRequest builder
+├── Event.Ext.sendEventImmediate(reqEvent)                  [BE built-in]
+├── RuleFunctions.Helpers.AllowWriteLog(OrderType)          [helper]
+├── Event.createEvent("xslt://...Logger")                   [BE built-in]
+├── Event.Ext.sendEventImmediate(logEvent)                  [BE built-in]
+├── RuleFunctions.Helpers.GetActivityStatusString("1",false) [helper]
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)        [helper]
+├── RuleFunctions.Helpers.SkipActivity(req, act, "4")       [helper]
+└── RuleFunctions.Helpers.HandleActivityException(...)      [helper]
+
+Response_CCP_GET_PREPAID_CREDIT_INFO (rulefunction)
+├── Instance.createInstance("xslt://...CCP_GET_PREPAID_CREDIT_INFO")  [BE built-in]
+│   └── XSLT: ResponseBase concept builder (GPCIR: extId)
+├── Instance.getByExtIdByUri("SUB:..."  fallback "CSUB:...")  [BE built-in]
+├── String.endsWith(RefID, "_src")                          [BE built-in]
+├── Instance.getByExtIdByUri("SUB:..._src stripped" ...)    [BE built-in]
+├── XPath.evalAsBoolean(Priceplan string-length > 0)        [BE built-in]
+├── System.getGlobalVariableAsString("PricePlanFromCCBS")   [BE built-in]
+├── String.contains(usedPPFromCCBS, OrderType)              [BE built-in]
+├── Instance.createInstance("xslt://...SubscriberOffers")   [BE built-in]
+│   └── XSLT: ppOff builder (SUBOF: extId, ServiceType=80, FE_OR_CCBS=CCP)
+├── Instance.createInstance("xslt://...SubscriberExtendedInfo") × 8 [BE built-in]
+│   └── XSLT: ExtendedInfo builders (MAIN_CREDIT, PROMO_CREDIT, BONUS_CREDIT,
+│       DATA_CREDIT, MMS_CREDIT, CDB_STATUS, CDB_VAS, CDB_CONVERGENCE)
+├── OMXUtils.generateTrackingID()                           [Java extension]
+├── RuleFunctions.Helpers.AllowWriteLog(OrderType)          [helper]
+└── Event.createEvent("xslt://...Logger")                   [BE built-in]</pre>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">16</div><h2>§16 — Concept Definitions Referenced</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Key fields</th></tr>
+      <tr><td><code class="inline">Concepts.FM.Response.CCP_GET_PREPAID_CREDIT_INFO</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId, MSISDN, PricePlan, CreditBalance, ATB, CallingBonus, DataBonus, MMSBonus, Status, VAS, Convergence, DefLang</td></tr>
+      <tr><td><code class="inline">Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>extId (SUBOF:...), OfferName (priceplan), ServiceType="80", ExtendedInfo (FE_OR_CCBS="CCP")</td></tr>
+      <tr><td><code class="inline">Concepts.OrderRequest.OrderElements.ExtendedInfos.SubscriberExtendedInfo</code></td><td>extId (UUID), Name (key), Value</td></tr>
+      <tr><td><code class="inline">Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>RefId, MSISDN, SubscriberOffers[], SubscriberGeneralInfo.Language, ExtendedInfo[]</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header"><div class="section-num">17</div><h2>§17 — Migration Notes &amp; Recommendations</h2></div>
+  <div class="section-body">
+    <div class="sub-section">
+      <h3>Functional Requirements</h3>
+      <table>
+        <tr><th>ID</th><th>Requirement</th></tr>
+        <tr><td>R1</td><td>Retrieve prepaid credit balance, bonus credits, price plan, VAS and convergence flags from CCP for each subscriber</td></tr>
+        <tr><td>R2</td><td>Support fan-out to multiple subscribers (ParentOU and ChildOU) in a single activity</td></tr>
+        <tr><td>R3</td><td>Gate price plan update by GlobalVar exclusion list (PricePlanFromCCBS) to avoid overriding CCBS-sourced price plans</td></tr>
+        <tr><td>R4</td><td>Normalise subscriber UI language from CCP DefLang code (1→TH, 2→EN, else→EN)</td></tr>
+        <tr><td>R5</td><td>Handle <code class="inline">_src</code> subscriber pattern — propagate select financial fields to source subscriber in swap/port scenarios</td></tr>
+        <tr><td>R6</td><td>Write 8 ExtendedInfo keys (MAIN_CREDIT, PROMO_CREDIT, BONUS_CREDIT, DATA_CREDIT, MMS_CREDIT, CDB_STATUS, CDB_VAS, CDB_CONVERGENCE) for downstream consumption</td></tr>
+        <tr><td>R7</td><td>Idempotent fan-out — deduplicate requests via CompletionStatus==2 guard</td></tr>
+        <tr><td>R8</td><td>Pass OrderChannel to CCP for routing decisions</td></tr>
+      </table>
+    </div>
+    <div class="sub-section" style="margin-top:16px">
+      <h3>Design Risks</h3>
+      <table>
+        <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+        <tr><td><code class="inline">Status</code> field in ResponseBase XSLT reads <code class="inline">$activityRes/Status</code> (self-reference on new concept) — field will always be empty</td><td><span class="badge b-orange">MEDIUM</span></td><td>Fix XSLT to read <code class="inline">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:Status</code>; verify if <code class="inline">CDB_STATUS</code> ExtendedInfo is the workaround relied on downstream</td></tr>
+        <tr><td>ExtendedInfo keys <code class="inline">CDB_STATUS</code>, <code class="inline">CDB_VAS</code>, <code class="inline">CDB_CONVERGENCE</code> use "CDB_" prefix despite being sourced from CCP — creates naming confusion with CDB_GET_PROFILE data</td><td><span class="badge b-orange">MEDIUM</span></td><td>Audit downstream consumers of these keys; rename to CCP_ prefix in modern system if no shared consumers conflict</td></tr>
+        <tr><td>Fan-in uses <code class="inline">Response@length</code> — failed responses satisfy fan-in and processing continues without error gate</td><td><span class="badge b-orange">MEDIUM</span></td><td>Add ResponseCode success check in modern replacement; or implement compensation logic for failed subscribers</td></tr>
+        <tr><td><code class="inline">_src</code> subscriber cross-reference lookup only triggered at function level — if eventResponse.RefID ends in "_src", the base subscriber may not be found if SUB:/CSUB: lookup fails silently</td><td><span class="badge b-red">LOW</span></td><td>Add null-check logging for subscriberTarget; ensure test coverage for swap/port order types</td></tr>
+        <tr><td>PricePlanFromCCBS GlobalVar has hardcoded default <em>,53,60,68,</em> — new order types requiring CCBS price plan must be added to GlobalVar config</td><td><span class="badge b-red">LOW</span></td><td>Document GlobalVar as a required configuration parameter; validate at startup</td></tr>
+        <tr><td>Request audit AUDIT_TRACE is static (no RefId) — harder to correlate individual subscriber logs</td><td><span class="badge b-red">LOW</span></td><td>Add RefId to AUDIT_TRACE in modern system for per-subscriber traceability</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="section">
+  <div class="section-header"><div class="section-num">18</div><h2>§18 — Full Source Code</h2></div>
+  <div class="section-body">
+    <pre><span class="cm">/**
+ * @description
+ * @author jninan-t420
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_CCP_GET_PREPAID_CREDIT_INFO</span> {
+    <span class="kw">attribute</span> {
+        priority = <span class="nm">5</span>;
+        forwardChain = <span class="kw">true</span>;
+    }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"CCP_GET_PREPAID_CREDIT_INFO"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"CCP_GET_PREPAID_CREDIT_INFO"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="ty">boolean</span> isActResub = (orderCurrentActivity.RequestCount&gt;<span class="nm">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">try</span> {
+            <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct = Instance.getByExtIdByUri(
+                orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="ty">int</span> iPOULen = orderRequest.OrderData.Customer.ParentOU@length;
+            <span class="ty">String</span> pouRefId = <span class="st">""</span>;
+            <span class="ty">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="cm">// *** ParentOU Loop ***</span>
+            <span class="kw">for</span> (<span class="ty">int</span> i=<span class="nm">0</span>; i&lt;iPOULen; i++) {
+                pouRefId = orderRequest.OrderData.Customer.ParentOU[i].RefId;
+                <span class="ty">int</span> iSubscriberLen = orderRequest.OrderData.Customer.ParentOU[i].Subscriber@length;
+                <span class="kw">for</span>(<span class="ty">int</span> j=<span class="nm">0</span>; j&lt;iSubscriberLen; j++) {
+                    <span class="ty">String</span> refId = orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].RefId;
+                    <span class="ty">boolean</span> reqSuccess = <span class="kw">false</span>;
+                    <span class="cm">// Resubmit dedup guard</span>
+                    <span class="kw">for</span>(<span class="ty">int</span> iResp=<span class="nm">0</span>; iResp&lt;orderCurrentActivity.Response@length; iResp++)
+                        <span class="kw">if</span>(String.equals(orderCurrentActivity.Response[iResp].ReferenceId, refId)
+                            &amp;&amp; orderCurrentActivity.Response[iResp].CompletionStatus==<span class="nm">2</span>)
+                            reqSuccess = <span class="kw">true</span>;
+                    <span class="kw">if</span>(!reqSuccess) {
+                        <span class="ty">String</span> chkRes = <span class="st">"true"</span>;
+                        <span class="kw">if</span>(String.length(nextAct.PreExecCheck) &gt; <span class="nm">0</span>) {
+                            <span class="ty">String</span> sXML = RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId);
+                            chkRes = XPath.execute(<span class="st">"/("+nextAct.PreExecCheck+")"</span>, sXML,
+                                <span class="st">"ns0=www.tibco.com/be/ontology/Concepts/OrderRequest/OrderRequest"</span>);
+                        }
+                        <span class="kw">if</span>(String.equals(chkRes, <span class="st">"true"</span>)) {
+                            <span class="ty">Events.OMConsumers.OMXFM.Request.CCP_GET_PREPAID_CREDIT_INFO</span> reqEvent =
+                                Event.createEvent(<span class="st">"xslt://{{/Events/OMConsumers/OMXFM/Request/CCP_GET_PREPAID_CREDIT_INFO}}"</span>
+                                    <span class="cm">/* §9.8 ParentOU Variant ①: GetPrepaidCreditInfoRequest with MSISDN + OrderChannel */</span>);
+                            Event.Ext.sendEventImmediate(reqEvent);
+                            <span class="kw">if</span>(RuleFunctions.Helpers.AllowWriteLog(orderRequest.OrderData.OrderType)) {
+                                <span class="ty">long</span> pid = System.nanoTime();
+                                Event.Ext.sendEventImmediate(Event.createEvent(<span class="st">"xslt://{{/Events/OMConsumers/OMXESB/Logger}}"</span>
+                                    <span class="cm">/* AUDIT_TRACE="Request Sent for CCP_GET_PREPAID_CREDIT_INFO" */</span>));
+                            }
+                            <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                            isSkipped = <span class="kw">false</span>;
+                        }
+                    }
+                }
+                <span class="cm">// *** ChildOU Loop ***</span>
+                <span class="ty">int</span> iCOULen = orderRequest.OrderData.Customer.ParentOU[i].ChildOU@length;
+                <span class="kw">for</span>(<span class="ty">int</span> p=<span class="nm">0</span>; p&lt;iCOULen; p++) {
+                    iSubscriberLen = orderRequest.OrderData.Customer.ParentOU[i].ChildOU[p].Subscriber@length;
+                    <span class="kw">for</span>(<span class="ty">int</span> q=<span class="nm">0</span>; q&lt;iSubscriberLen; q++) {
+                        <span class="cm">/* identical dedup guard + PreExecCheck + send logic for ChildOU subscriber */</span>
+                        <span class="cm">/* §9.8 ChildOU Variant ②: adds COUIterator to XPath — MSISDN + OrderChannel same */</span>
+                    }
+                }
+            }
+            <span class="kw">if</span>(!isSkipped) {
+                orderCurrentActivity.Status = RuleFunctions.Helpers.GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+                RuleFunctions.Helpers.SendDataToDB(orderRequest);
+            } <span class="kw">else</span> {
+                RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+            }
+        } <span class="kw">catch</span>(Exception ae) {
+            RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="section">
+  <div class="section-header"><div class="section-num">19</div><h2>§19 — Response Message Rule</h2></div>
+  <div class="section-body">
+
+    <div class="sub-section">
+      <h3>§19.1 Overview</h3>
+      <p><code class="inline">Response_CCP_GET_PREPAID_CREDIT_INFO</code> receives the CCP reply for a single subscriber, creates the <code class="inline">CCP_GET_PREPAID_CREDIT_INFO</code> response concept, enriches the subscriber with financial balance fields and price plan data, normalises the UI language, and returns <code class="inline">"true"</code> when all parallel subscriber requests are complete. It contains the richest enrichment logic of any FM response handler in the PREPAID_CANCEL flow.</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>§19.2 Scope Variables</h3>
+      <table>
+        <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+        <tr><td><code class="inline">orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Root order; provides OMXTrackingId and subscriber hierarchy</td></tr>
+        <tr><td><code class="inline">eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.CCP_GET_PREPAID_CREDIT_INFO</td><td>Inbound CCP response event</td></tr>
+        <tr><td><code class="inline">currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity — receives response concept; drives fan-in counter</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§19.3 ResponseBase Concept Construction</h3>
+      <p>Concept type: <code class="inline">Concepts.FM.Response.CCP_GET_PREPAID_CREDIT_INFO</code><br/>
+      ExtId: <code class="inline">GPCIR:{eventResponse.JMSCorrelationID}:{eventResponse.RefID}</code></p>
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">concat("GPCIR:", $eventResponse/JMSCorrelationID, ":", $eventResponse/RefID)</span><span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">MSISDN</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:MSISDN</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">PricePlan</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:Priceplan</span><span class="badge b-orange">Conditional</span><span class="tree-cond">(note: source field is ns:Priceplan, target is PricePlan)</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CreditBalance</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:CreditBalance</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ATB</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:ATB</span><span class="badge b-orange">Conditional</span><span class="tree-cond">(Available Topup Balance — promotional credit)</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CallingBonus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:CallingBonus</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">DataBonus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:DataBonus</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">MMSBonus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:MMSBonus</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">Status</span><span class="tree-arrow">←</span><span class="tree-src-static">$activityRes/Status</span><span class="badge b-orange">Conditional</span><span class="tree-cond">⚠ BUG: reads self-referencing $activityRes (always empty) — should read $eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:Status</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">VAS</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:VAS</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">Convergence</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:Convergence</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">DefLang</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:DefLang</span><span class="badge b-orange">Conditional</span><span class="tree-cond">"1"→TH, "2"→EN, else→EN used later for Language field</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <div class="sub-section" style="margin-top:16px">
+      <h3>§19.4 Post-Construction Enrichment Logic</h3>
+      <table>
+        <tr><th>Step</th><th>Logic</th><th>Detail</th></tr>
+        <tr><td>1</td><td>Subscriber lookup</td><td><code class="inline">SUB:{OMXTrackingId}:{RefID}</code> → fallback <code class="inline">CSUB:{OMXTrackingId}:{RefID}</code></td></tr>
+        <tr><td>2</td><td>_src pattern</td><td>If <code class="inline">RefID.endsWith("_src")</code>, look up target subscriber by <code class="inline">SUB:{OMXTrackingId}:{RefID before "_src"}</code> → fallback CSUB</td></tr>
+        <tr><td>3</td><td>Priceplan gate</td><td>If <code class="inline">ns:Priceplan</code> string-length > 0 AND OrderType NOT in PricePlanFromCCBS list → update <code class="inline">SubscriberOffers</code> with ServiceType="80", FE_OR_CCBS="CCP"</td></tr>
+        <tr><td>4</td><td>Language normalisation</td><td>DefLang "1"→ Language="TH"; "2" or else → Language="EN" (written to SubscriberGeneralInfo)</td></tr>
+        <tr><td>5</td><td>ExtendedInfo writes (subscriber)</td><td>8 keys: MAIN_CREDIT, PROMO_CREDIT, BONUS_CREDIT, DATA_CREDIT, MMS_CREDIT, CDB_STATUS, CDB_VAS, CDB_CONVERGENCE</td></tr>
+        <tr><td>6</td><td>SubscriberTarget writes</td><td>4 keys: MAIN_CREDIT, CDB_VAS, CDB_CONVERGENCE, PRICEPLAN_CCP; also Language normalisation</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§19.5 Response Completion Logic (Fan-In)</h3>
+      <div class="success-box">
+        <strong>Fan-in condition:</strong> <code class="inline">currActivity.RequestCount == currActivity.Response@length</code><br/>
+        Returns <code class="inline">"true"</code> when the number of recorded responses equals the number of requests sent — regardless of ResponseCode. Failed responses count as satisfying fan-in.
+      </div>
+      <div class="warn-box">
+        <strong>Risk:</strong> Unlike ASRM/INTX which only count <code class="inline">tib:right(ResponseCode,3)="000"</code> successes, this implementation advances the activity even when some subscribers returned errors. Downstream activities may operate on incomplete data.
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3>§19.6 Response XSLT Source</h3>
+      <details>
+        <summary>ResponseBase XSLT (CCP_GET_PREPAID_CREDIT_INFO concept)</summary>
+        <pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+    <span class="xa">xmlns:ns</span>=<span class="st">"http://services.omx.truecorp.co.th/FM/GetPrepaidCreditInfoResponse"</span>
+    <span class="xa">xmlns:xsd</span>=<span class="st">"http://www.w3.org/2001/XMLSchema"</span>
+    <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"extId"</span><span class="xt">/&gt;</span>         <span class="cm">&lt;!-- "GPCIR:{JMSCorrelationID}:{RefID}" --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"eventResponse"</span><span class="xt">/&gt;</span>  <span class="cm">&lt;!-- inbound CCP response event --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"activityRes"</span><span class="xt">/&gt;</span>   <span class="cm">&lt;!-- ⚠ self-reference on new concept (Status field reads from here) --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createObject&gt;</span>
+      <span class="xt">&lt;object&gt;</span>
+        <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="st">"extId"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$extId"</span><span class="xt">/&gt;</span>
+        <span class="xt">&lt;/xsl:attribute&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/ResponseCode"</span><span class="xt">&gt;&lt;ResponseCode&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/ResponseCode"</span><span class="xt">/&gt;&lt;/ResponseCode&gt;&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/ResponseMsg"</span><span class="xt">&gt;&lt;ResponseMessage&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/ResponseMsg"</span><span class="xt">/&gt;&lt;/ResponseMessage&gt;&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/CompletionStatus"</span><span class="xt">&gt;&lt;CompletionStatus&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/CompletionStatus"</span><span class="xt">/&gt;&lt;/CompletionStatus&gt;&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/RefID"</span><span class="xt">&gt;&lt;ReferenceId&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/RefID"</span><span class="xt">/&gt;&lt;/ReferenceId&gt;&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:MSISDN"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;MSISDN&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:MSISDN"</span><span class="xt">/&gt;&lt;/MSISDN&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:Priceplan"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;PricePlan&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:Priceplan"</span><span class="xt">/&gt;&lt;/PricePlan&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:CreditBalance"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;CreditBalance&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:CreditBalance"</span><span class="xt">/&gt;&lt;/CreditBalance&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:ATB"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ATB&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:ATB"</span><span class="xt">/&gt;&lt;/ATB&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:CallingBonus"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;CallingBonus&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:CallingBonus"</span><span class="xt">/&gt;&lt;/CallingBonus&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:DataBonus"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;DataBonus&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:DataBonus"</span><span class="xt">/&gt;&lt;/DataBonus&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:MMSBonus"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;MMSBonus&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:MMSBonus"</span><span class="xt">/&gt;&lt;/MMSBonus&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="cm">&lt;!-- ⚠ BUG: reads $activityRes/Status (self-ref, always empty) --&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$activityRes/Status"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;Status&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$activityRes/Status"</span><span class="xt">/&gt;&lt;/Status&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:VAS"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;VAS&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:VAS"</span><span class="xt">/&gt;&lt;/VAS&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:Convergence"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;Convergence&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:Convergence"</span><span class="xt">/&gt;&lt;/Convergence&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:DefLang"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;DefLang&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/payload/ns:GetPrepaidCreditInfoResponse/ns:DefLang"</span><span class="xt">/&gt;&lt;/DefLang&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;/object&gt;</span>
+    <span class="xt">&lt;/createObject&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+      </details>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+<div class="footer">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</div>
+</body>
+</html>

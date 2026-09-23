@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_CREATE_SUBS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px;}
+.page-header .sub{opacity:.85;margin-top:6px;font-size:.97rem;}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap;}
+.meta-badge{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.82rem;}
+.container{max-width:1300px;margin:0 auto;padding:28px 24px;}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafafa;}
+pre,code{font-family:'Cascadia Code','Consolas','Courier New',monospace;}
+.code-block{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:.82rem;line-height:1.55;border-left:3px solid var(--true-red);}
+.inline-code{background:#f0e6e6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.84em;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.76rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.flow-step{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px dashed var(--border);}
+.flow-step:last-child{border-bottom:none;}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:2px;}
+.warn-block{background:#FFF3E0;border-left:3px solid var(--warning);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;}
+.info-block{background:#E3F0FD;border-left:3px solid var(--info);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;}
+.success-block{background:#E8F5E9;border-left:3px solid var(--success);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.tree-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;margin-top:10px;padding:8px 12px;background:#f8f8f8;border-radius:6px;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.str{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nm{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+h3{color:var(--true-dark);font-size:.97rem;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid #f0dede;}
+h4{color:#555;font-size:.88rem;margin:12px 0 6px;}
+p{margin-bottom:8px;}
+ul.plain{padding-left:20px;}
+ul.plain li{margin-bottom:4px;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="sub">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</div>
+  <h1>Request_CCBS_CREATE_SUBS</h1>
+  <div class="sub">CCBS Create Subscriber — Sequential Per-Subscriber Provisioning via IntraActivitySequencing</div>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Backend: CCBS</span>
+    <span class="meta-badge">Channel: OMXFMConnectionRequest</span>
+    <span class="meta-badge">Author: awalia-t420</span>
+    <span class="meta-badge">Generated: 2026-07-27</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This rule fires when the order reaches <span class="inline-code">ActivityID = CCBS_CREATE_SUBS</span> and status <span class="inline-code">WAITING</span>. It provisions a new subscriber record in CCBS for each <span class="inline-code">Subscriber</span> in the order (across ParentOU and ChildOU levels) by sending a <span class="inline-code">createSubscriberRequest</span> per subscriber. The CCBS response returns the permanent <span class="inline-code">SubscriberId</span> (subscriber number) and <span class="inline-code">OfferInstanceId</span> values that are written back to working memory.</p>
+
+    <div class="warn-block">
+      <strong>Critical architectural difference — IntraActivitySequencing:</strong> Unlike ASRM/CCBS_GOD rules that use <span class="inline-code">Event.Ext.sendEventImmediate()</span> for parallel fan-out, this rule uses <span class="inline-code">Event.assertEvent()</span> + <span class="inline-code">IntraActivitySequencing.ActionRequestEvent()</span> per subscriber, then <span class="inline-code">IntraActivitySequencing.SendFirstRequestEvent()</span> at the end. This implements <strong>sequential</strong> subscriber processing — CCBS receives one subscriber at a time, and the next request is sent only after the previous response is received. Fan-in is driven by <span class="inline-code">IntraActivitySequencing.ActionResponseEvent(currActivity)</span> in the response handler.
+    </div>
+
+    <div class="info-block"><strong>Per-subscriber context assembled before dispatch:</strong>
+      <ul class="plain" style="margin-top:6px;">
+        <li><strong>subPP</strong> — The subscriber's price plan offer (ServiceType='80' offer)</li>
+        <li><strong>imeiExists</strong> — XPath: <span class="inline-code">exists(ResourceInfo[ResourceName='IMEI'][1]) and not(exists(SubscriberOffers[Soc='55042'][1]))</span></li>
+        <li><strong>addDummy</strong> — <span class="inline-code">Parameter[1]='ADD_DUMMY_IMEI'</span> flag for dummy IMEI injection</li>
+        <li><strong>addRangeArray</strong> — <span class="inline-code">ResourceRangeInfo[]</span> entries with <span class="inline-code">Action='ADD'</span> (BN number resource ranges)</li>
+        <li><strong>logicalDateVal</strong> — from <span class="inline-code">Concepts.OM.LogicalDate.LogicalDate</span></li>
+      </ul>
+    </div>
+
+    <div class="success-block"><strong>Response writes back two critical identifiers:</strong>
+      <ul class="plain" style="margin-top:6px;">
+        <li><span class="inline-code">subscriber.SubscriberId</span> — The permanent CCBS subscriber number, extracted from <span class="inline-code">CreateNewActivateSubscriberResponse/SubscriberIdsInfo/SubscriberId/SubscrNumber</span></li>
+        <li><span class="inline-code">SubscriberOffers[o].OfferInstanceId</span> and <span class="inline-code">RelatedOffersArray[k].OfferInstanceId</span> — Matched by SOC code from the <span class="inline-code">ReopenedOffers[]</span> array in the response</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><span class="inline-code">Request_CCBS_CREATE_SUBS</span></td></tr>
+      <tr><td>Full Path</td><td><span class="inline-code">Rules.OMConsumers.OMXFM.Request.Request_CCBS_CREATE_SUBS</span></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-green">true</span></td></tr>
+      <tr><td>Rule Type</td><td>Sequential fan-out via IntraActivitySequencing — one createSubscriberRequest per subscriber</td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Backend System</td><td>CCBS — Amdocs CSM 3G Subscriber Management</td></tr>
+      <tr><td>Operation</td><td>createSubscriberRequest / CreateNewActivateSubscriberResponse</td></tr>
+      <tr><td>Dispatch mechanism</td><td><span class="badge badge-red">Event.assertEvent + IntraActivitySequencing</span> (sequential, not parallel fan-out)</td></tr>
+      <tr><td>Resubmission guard</td><td><span class="badge badge-orange">Yes — per subscriber, checks CompletionStatus==2</span></td></tr>
+      <tr><td>Resubmission purge</td><td><span class="badge badge-orange">Yes — PurgePendingRequestsBeforeResubmit on isActResub</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type Path</th><th>Role</th></tr>
+      <tr><td><span class="inline-code">orderRequest</span></td><td><span class="inline-code">Concepts.OrderRequest.OrderRequest</span></td><td>Master order — Subscriber hierarchy iterated; SubscriberId and OfferInstanceId written back</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity</span></td><td><span class="inline-code">Concepts.OM.ProcessConfig.Activity</span></td><td>PreExecCheck, Parameter[1], IntraActivitySequencing queue, Response[]</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><span class="inline-code">orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</span></td><td>Correlates activity to order execution point</td></tr>
+      <tr><td>2</td><td><span class="inline-code">orderCurrentActivity.ActivityID == "CCBS_CREATE_SUBS"</span></td><td>Targets only this activity type</td></tr>
+      <tr><td>3</td><td><span class="inline-code">orderRequest.ProcessFlow.NextActivityID == "CCBS_CREATE_SUBS"</span></td><td>Order-level double-check</td></tr>
+      <tr><td>4</td><td><span class="inline-code">orderCurrentActivity.Status == "WAITING"</span></td><td>Only fires on fresh/ready activity</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="step-num">1</div><div><strong>Init</strong> — <span class="inline-code">isActResub = (RequestCount&gt;0 &amp;&amp; IsOrderResubmitted)</span>; init <span class="inline-code">alSOCs</span>, <span class="inline-code">alPropVal</span> lists; read <span class="inline-code">LogicalDate</span>; if resubmit → <span class="inline-code">PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</span></div></div>
+    <div class="flow-step"><div class="step-num">2</div><div><strong>ParentOU Subscriber loop</strong> — for each <span class="inline-code">Subscriber[j]</span>:
+      <ul class="plain" style="margin-top:6px;">
+        <li>Resubmission guard: check <span class="inline-code">Response[].ReferenceId==refId &amp;&amp; CompletionStatus==2</span></li>
+        <li>If not already done: run per-subscriber PreExecCheck via <span class="inline-code">GetXMLForSubscriber(orderRequest, refId)</span></li>
+        <li>If PreExecCheck passes: assemble per-subscriber context (subPP, imeiExists, addDummy, addRangeArray)</li>
+        <li><span class="inline-code">Event.assertEvent(reqEvent)</span> + <span class="inline-code">IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)</span></li>
+        <li>Send audit log; <span class="inline-code">isSkipped=false</span></li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="step-num">3</div><div><strong>ChildOU Subscriber loop</strong> — same as step 2 using <span class="inline-code">GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</span></div></div>
+    <div class="flow-step"><div class="step-num">4</div><div><strong>After all loops</strong> — if not skipped: <span class="inline-code">IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)</span> → fires the first queued request; set Status = IN_PROGRESS; SendDataToDB</div></div>
+    <div class="flow-step"><div class="step-num">5</div><div><strong>Skipped path</strong> — if no subscribers dispatched: <span class="inline-code">SkipActivity(…, "4")</span> → SKIPPED</div></div>
+    <div class="flow-step"><div class="step-num">6</div><div><strong>Exception</strong> — catch → <span class="inline-code">HandleActivityException</span> → ERROR</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Key Logic</div>
+  <div class="section-body">
+    <h3>IntraActivitySequencing Dispatch Pattern</h3>
+    <div class="code-block"><span class="cm">// For each subscriber that passes PreExecCheck:</span>
+<span class="ty">Events.OMConsumers.OMXFM.Request.CCBS_CREATE_SUBS</span> reqEvent =
+    Event.createEvent(<span class="str">"xslt://{{/Events/OMConsumers/OMXFM/Request/CCBS_CREATE_SUBS}}"</span> + <span class="cm">/* XSLT */</span>);
+
+Event.assertEvent(reqEvent);                                 <span class="cm">// queue into IntraActivitySequencing</span>
+<span class="cm">// (NOT sendEventImmediate — queued for sequential dispatch)</span>
+RuleFunctions.Helpers.IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity);
+
+<span class="cm">// After ALL subscriber loops complete:</span>
+RuleFunctions.Helpers.IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity);
+<span class="cm">// → sends ONLY the first queued event; subsequent events fire one-by-one as responses arrive</span></div>
+
+    <h3>Per-Subscriber Pre-Processing Checks</h3>
+    <div class="code-block"><span class="cm">// 1. subPP — price plan offer (ServiceType='80')</span>
+<span class="ty">Concepts.OrderRequest.OrderElements.SubscriberOffers</span> subPP = <span class="kw">null</span>;
+<span class="kw">for</span>(<span class="ty">int</span> k=<span class="nm">0</span>; k&lt;iSubOffLen; k++) {
+    <span class="kw">if</span>(String.equals(SubscriberOffers[k].ServiceType, <span class="str">"80"</span>))
+        subPP = SubscriberOffers[k];  <span class="cm">// last match wins</span>
+}
+
+<span class="cm">// 2. imeiExists — IMEI present but SOC 55042 (IMEI SOC) not yet on subscriber</span>
+<span class="ty">boolean</span> imeiExists = XPath.evalAsBoolean(
+    <span class="str">"exists($sub/ResourceInfo[ResourceName='IMEI'][1]) and not(exists($sub/SubscriberOffers[Soc='55042'][1]))"</span>);
+
+<span class="cm">// 3. addDummy — ADD_DUMMY_IMEI parameter</span>
+<span class="ty">boolean</span> addDummy = XPath.evalAsBoolean(
+    <span class="str">"$orderCurrentActivity/Parameter[1]='ADD_DUMMY_IMEI'"</span>);
+
+<span class="cm">// 4. addRangeArray — BN number resource ranges with Action='ADD'</span>
+<span class="ty">Object</span> addRangeInfos = Collections.List.createArrayList();
+<span class="kw">for</span>(<span class="ty">int</span> r=<span class="nm">0</span>; r&lt;sub.ResourceRangeInfo@length; r++) {
+    <span class="kw">if</span>(String.equals(<span class="str">"ADD"</span>, sub.ResourceRangeInfo[r].Action))
+        Collections.add(addRangeInfos, sub.ResourceRangeInfo[r]);
+}</div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction — Per-Subscriber Context Assembly</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Source</th><th>Purpose / Notes</th></tr>
+      <tr><td><span class="inline-code">refId</span></td><td><span class="inline-code">Subscriber[j].RefId</span></td><td>Correlation key — used in PreExecCheck XML context and as response ReferenceId</td></tr>
+      <tr><td><span class="inline-code">subPP</span></td><td>First <span class="inline-code">SubscriberOffers[k]</span> where <span class="inline-code">ServiceType='80'</span></td><td>Price Plan offer — passed to XSLT; may be null if no PP offer on subscriber</td></tr>
+      <tr><td><span class="inline-code">imeiExists</span></td><td>XPath on <span class="inline-code">$sub</span>: <span class="inline-code">exists(ResourceInfo[ResourceName='IMEI']) and not(exists(SubscriberOffers[Soc='55042']))</span></td><td>Controls IMEI field inclusion in payload; false if IMEI SOC already present</td></tr>
+      <tr><td><span class="inline-code">addDummy</span></td><td><span class="inline-code">orderCurrentActivity.Parameter[1]='ADD_DUMMY_IMEI'</span></td><td>If true, XSLT injects a dummy IMEI into the request</td></tr>
+      <tr><td><span class="inline-code">addRangeArray</span></td><td><span class="inline-code">sub.ResourceRangeInfo[]</span> where <span class="inline-code">Action='ADD'</span></td><td>BN (number) resource ranges to include in subscriber creation; typed array</td></tr>
+      <tr><td><span class="inline-code">logicalDateVal</span></td><td><span class="inline-code">Concepts.OM.LogicalDate.LogicalDate</span></td><td>Used for contract/service start date calculations in XSLT</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.1 — Order Type Dependencies</h3>
+    <table>
+      <tr><th>Scenario</th><th>Effect</th></tr>
+      <tr><td>isActResub=true (resubmit)</td><td>PurgePendingRequestsBeforeResubmit clears queued events; prior successful subscribers (CompletionStatus=2) skipped</td></tr>
+      <tr><td>ServiceType='80' offer on subscriber</td><td><span class="inline-code">subPP</span> set → passed to XSLT for price plan context in subscriber creation</td></tr>
+      <tr><td><span class="inline-code">ResourceInfo[ResourceName='IMEI']</span> exists without SOC 55042</td><td>IMEI included in CCBS request payload (<span class="inline-code">imeiExists=true</span>)</td></tr>
+      <tr><td><span class="inline-code">Parameter[1]='ADD_DUMMY_IMEI'</span></td><td>Dummy IMEI value injected into request (for workflows requiring IMEI but real IMEI not yet available)</td></tr>
+      <tr><td><span class="inline-code">ResourceRangeInfo[].Action='ADD'</span> present</td><td>Number ranges passed to CCBS for BN subscriber creation</td></tr>
+    </table>
+
+    <h3>§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel URI</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND (queued)</span></td><td><span class="inline-code">/Channels/OMXFMConnectionRequest</span></td><td><span class="inline-code">Events.OMConsumers.OMXFM.Request.CCBS_CREATE_SUBS</span></td><td>Create subscriber in CCBS — sequential per-subscriber</td></tr>
+      <tr><td><span class="badge badge-log">OUTBOUND</span></td><td><span class="inline-code">/Channels/LogConnection</span></td><td><span class="inline-code">Events.OMConsumers.OMXESB.Logger</span></td><td>Request audit per subscriber</td></tr>
+    </table>
+
+    <h3>§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>System</td><td>CCBS — Amdocs CSM 3G Subscriber Management</td></tr>
+      <tr><td>Operation</td><td>createSubscriberRequest / CreateNewActivateSubscriberResponse</td></tr>
+      <tr><td>Request schema namespace</td><td><span class="inline-code">http://services.omx.truecorp.co.th/FMServices/createSubscriberRequest</span> (inferred from response ns)</td></tr>
+      <tr><td>Response schema namespace</td><td><span class="inline-code">http://services.omx.truecorp.co.th/FMServices/createSubscriberResponse</span></td></tr>
+      <tr><td>Key response element</td><td><span class="inline-code">ns:createSubscriberResponse/ns:CreateNewActivateSubscriberResponse</span></td></tr>
+      <tr><td>SubscriberId source</td><td><span class="inline-code">ns:SubscriberIdsInfo/ns:SubscriberId/ns:SubscrNumber</span></td></tr>
+      <tr><td>OfferInstanceId source</td><td><span class="inline-code">ns:ReopenedOffers[]/ns:NewOfferInstanceId</span> matched by <span class="inline-code">ns:Soc</span></td></tr>
+      <tr><td>Response concept</td><td><span class="inline-code">Concepts.FM.Response.CCBSCreateSubsRes</span> (has SocInstance[] array)</td></tr>
+      <tr><td>Dispatch mechanism</td><td><strong>Sequential</strong> via IntraActivitySequencing (assertEvent, not sendEventImmediate)</td></tr>
+      <tr><td>Fan-in</td><td><span class="inline-code">IntraActivitySequencing.ActionResponseEvent(currActivity)</span> → true when all queued requests responded</td></tr>
+    </table>
+
+    <h3>§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Field / Path</th><th>Direction</th><th>Phase</th><th>Purpose</th></tr>
+      <tr><td><span class="inline-code">Subscriber[j].RefId</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>Correlation key; passed to XSLT and used as ReferenceId</td></tr>
+      <tr><td><span class="inline-code">Subscriber[j].SubscriberOffers[k].ServiceType</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>Find price plan (='80')</td></tr>
+      <tr><td><span class="inline-code">Subscriber[j].ResourceInfo[ResourceName='IMEI']</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>imeiExists gate</td></tr>
+      <tr><td><span class="inline-code">Subscriber[j].SubscriberOffers[Soc='55042']</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>IMEI SOC already present check</td></tr>
+      <tr><td><span class="inline-code">Subscriber[j].ResourceRangeInfo[].Action</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>BN number range entries for dispatch</td></tr>
+      <tr><td><span class="inline-code">Concepts.OM.LogicalDate.LogicalDate</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>Logical date for XSLT date fields</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.Parameter[1]</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>ADD_DUMMY_IMEI flag</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.Response[].ReferenceId / CompletionStatus</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>Resubmission guard</td></tr>
+      <tr><td><span class="inline-code">Subscriber[j].SubscriberId</span></td><td><span class="badge badge-red">WRITE</span></td><td>Response</td><td>Permanent CCBS subscriber number</td></tr>
+      <tr><td><span class="inline-code">Subscriber[j].ResponseCode</span></td><td><span class="badge badge-red">WRITE</span></td><td>Response</td><td>CCBS response code for this subscriber</td></tr>
+      <tr><td><span class="inline-code">Subscriber[j].ResponseMsg</span></td><td><span class="badge badge-red">WRITE</span></td><td>Response</td><td>CCBS response message</td></tr>
+      <tr><td><span class="inline-code">Subscriber[j].SubscriberOffers[o].OfferInstanceId</span></td><td><span class="badge badge-red">WRITE</span></td><td>Response</td><td>CCBS offer instance ID, matched by SOC code</td></tr>
+      <tr><td><span class="inline-code">SubscriberOffers[o].RelatedOffersArray[k].OfferInstanceId</span></td><td><span class="badge badge-red">WRITE</span></td><td>Response</td><td>CCBS offer instance ID for related offers, matched by SOC</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.Status</span></td><td><span class="badge badge-red">WRITE</span></td><td>Request</td><td>IN_PROGRESS or SKIPPED</td></tr>
+    </table>
+
+    <h3>§8.5 — XSLT Parameters for createSubscriberRequest</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th><th>Notes</th></tr>
+      <tr><td><span class="inline-code">$orderRequest</span></td><td>Working memory concept</td><td>Full order tree</td></tr>
+      <tr><td><span class="inline-code">$globalVariables</span></td><td>BE global variables</td><td>Credentials, logging config</td></tr>
+      <tr><td><span class="inline-code">$sub</span></td><td><span class="inline-code">Subscriber[j]</span></td><td>The specific subscriber being created in this call</td></tr>
+      <tr><td><span class="inline-code">$subPP</span></td><td><span class="inline-code">SubscriberOffers where ServiceType='80'</span></td><td>Price plan offer; may be null</td></tr>
+      <tr><td><span class="inline-code">$logicalDate</span></td><td><span class="inline-code">Concepts.OM.LogicalDate.LogicalDate</span></td><td>Logical date string</td></tr>
+      <tr><td><span class="inline-code">$imeiExists</span></td><td>XPath boolean result</td><td>Controls IMEI payload inclusion</td></tr>
+      <tr><td><span class="inline-code">$addDummy</span></td><td>XPath boolean on Parameter[1]</td><td>Controls dummy IMEI injection</td></tr>
+      <tr><td><span class="inline-code">$addRangeArray</span></td><td><span class="inline-code">ResourceRangeInfo[] where Action='ADD'</span></td><td>BN number ranges for subscriber</td></tr>
+      <tr><td><span class="inline-code">$refId</span></td><td><span class="inline-code">Subscriber[j].RefId</span></td><td>Correlation key for JMS correlation</td></tr>
+    </table>
+
+    <h3>§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><span class="inline-code">OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</span></td><td>Include User/Password in request</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/Component_Name/OMX_CEP</span></td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/Component_Name/OMX_FM</span></td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><span class="inline-code">OMX_OM/WritePayload</span></td><td>Include payload in audit</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+    <h3>§9.1 — Key JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><span class="inline-code">JMSPriority</span></td><td><span class="inline-code">$orderRequest/OrderPriority</span></td><td>If exists</td></tr>
+      <tr><td><span class="inline-code">JMSCorrelationID</span></td><td><span class="inline-code">$orderRequest/OrderData/OMXTrackingId</span></td><td>If exists</td></tr>
+      <tr><td><span class="inline-code">RefId</span></td><td><span class="inline-code">$refId</span> (= Subscriber.RefId)</td><td>Always — subscriber correlation key</td></tr>
+      <tr><td><span class="inline-code">OrderID</span></td><td><span class="inline-code">$orderRequest/OrderData/OrderID</span></td><td>If exists</td></tr>
+      <tr><td><span class="inline-code">UserName / PassWord</span></td><td><span class="inline-code">$orderRequest/OrderData/User / Password</span></td><td>IsEnableUserPass='true'</td></tr>
+      <tr><td><span class="inline-code">OrderType</span></td><td><span class="inline-code">$orderRequest/OrderData/OrderType</span></td><td>If exists</td></tr>
+    </table>
+
+    <h3>§9.2 — Request Payload Structure (createSubscriberRequest)</h3>
+    <div class="info-block"><strong>Schema:</strong> <span class="inline-code">http://services.omx.truecorp.co.th/FMServices/createSubscriberRequest</span><br>
+    The payload wraps a <span class="inline-code">ns:createSubscriberRequest</span> containing:
+    <ul class="plain" style="margin-top:6px;">
+      <li><span class="inline-code">ns:CreateNewActivateSubscriberRequest</span> — main subscriber object with MSISDN, IMSI, SIM ICC-ID</li>
+      <li>Subscriber profile fields from orderRequest (MSISDN, plan, IMEI if imeiExists/addDummy)</li>
+      <li>Price plan offer details from <span class="inline-code">$subPP</span></li>
+      <li>Subscriber offers list (all SubscriberOffers)</li>
+      <li>BN resource ranges from <span class="inline-code">$addRangeArray</span></li>
+      <li>LogicalDate-based activation date</li>
+    </ul></div>
+
+    <h3>§9.3 — IMEI Handling Logic</h3>
+    <div class="code-block"><span class="cm">// imeiExists = true → sub has ResourceInfo[ResourceName='IMEI'] AND SOC 55042 not present</span>
+<span class="cm">// addDummy   = true → Parameter[1]='ADD_DUMMY_IMEI'</span>
+
+<span class="cm">// In XSLT (inferred):</span>
+<span class="cm">// If imeiExists=true  → include actual IMEI from ResourceInfo[ResourceName='IMEI']/ValuesArray</span>
+<span class="cm">// If addDummy=true    → include dummy IMEI placeholder</span>
+<span class="cm">// If neither          → no IMEI in payload</span>
+
+<span class="cm">// SOC '55042' is the IMEI-related SOC; if already present, skip IMEI inclusion</span></div>
+  </div>
+</div>
+
+<!-- §11 Audit -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <p><strong>Request audit</strong> — sent per-subscriber after <span class="inline-code">ActionRequestEvent</span>. <span class="inline-code">OPERATION_NAME = "CCBS_CREATE_SUBS"</span> (static). <span class="inline-code">AUDIT_TRACE</span> includes the subscriber's <span class="inline-code">RefId</span>.</p>
+    <p><strong>Response audit</strong> — always sent (no AllowWriteLog gate unlike other rules). <span class="inline-code">OPERATION_NAME = "CCBS_CREATE_SUBS"</span>. <span class="inline-code">AUDIT_TRACE = "Response received for CCBS_CREATE_SUBS"</span>.</p>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Trigger</th><th>Code</th><th>Status</th><th>Method</th></tr>
+      <tr><td>Rule fires</td><td>0</td><td><span class="badge badge-blue">WAITING</span></td><td>Pre-condition</td></tr>
+      <tr><td>At least one subscriber queued and SendFirstRequestEvent called</td><td>1</td><td><span class="badge badge-orange">IN_PROGRESS</span></td><td><span class="inline-code">GetActivityStatusString("1", false)</span></td></tr>
+      <tr><td>No subscribers dispatched (all skipped/filtered)</td><td>4</td><td><span class="badge badge-purple">SKIPPED</span></td><td><span class="inline-code">SkipActivity(…, "4")</span></td></tr>
+      <tr><td>Exception caught</td><td>3</td><td><span class="badge badge-red">ERROR</span></td><td><span class="inline-code">HandleActivityException</span></td></tr>
+      <tr><td>All sequential responses received</td><td>2</td><td><span class="badge badge-green">COMPLETED</span></td><td><span class="inline-code">IntraActivitySequencing.ActionResponseEvent → "true"</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_CCBS_CREATE_SUBS (rule)
+├── Instance.getByExtIdByUri(NextActivityName, "/Concepts/OM/ProcessConfig/Activity")
+├── Instance.getByExtIdByUri("LogicalDate", "/Concepts/OM/LogicalDate")
+├── [if isActResub] IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity)
+├── Per ParentOU.Subscriber[j] loop:
+│   ├── Resubmission guard: Response[].ReferenceId==refId &amp;&amp; CompletionStatus==2
+│   ├── GetXMLForSubscriber(orderRequest, refId)           [PreExecCheck context]
+│   ├── XPath.execute("/(PreExecCheck)", sXML, ns)
+│   ├── Per-subscriber context assembly:
+│   │   ├── Scan SubscriberOffers for ServiceType='80' → subPP
+│   │   ├── XPath.evalAsBoolean(imeiExists expression)
+│   │   ├── XPath.evalAsBoolean(addDummy expression)
+│   │   └── Collect ResourceRangeInfo[Action='ADD'] → addRangeArray
+│   ├── Event.createEvent(xslt://CCBS_CREATE_SUBS)        [per subscriber — §9]
+│   ├── Event.assertEvent(reqEvent)                        [queue in IntraActivitySequencing]
+│   ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+│   └── Event.createEvent(xslt://Logger)                  [audit log]
+├── Per ParentOU.ChildOU.Subscriber[j] loop:
+│   └── [same as above, using GetXMLForSubscriberInChildOU]
+├── IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)
+├── GetActivityStatusString("1", false)
+├── SendDataToDB(orderRequest)
+├── SkipActivity(...)
+└── HandleActivityException(...)
+
+Response_CCBS_CREATE_SUBS (rulefunction)
+├── Instance.createInstance(xslt://CCBSCreateSubsRes)
+│   ├── Base fields: ResponseCode, ResponseMsg, CompletionStatus, ReferenceId
+│   └── SocInstance[] ← ns:ReopenedOffers: OfferInstanceId←ns:NewOfferInstanceId, Soc←ns:Soc
+├── currActivity.Response[n] = activityRes
+├── Match subscriber by eventResponse.RefID:
+│   └── For ParentOU.Subscriber[j] where RefId==RefID:
+│       ├── subscriber.SubscriberId ← XPath(SubscriberIdsInfo/SubscriberId/SubscrNumber)
+│       ├── subscriber.ResponseCode ← eventResponse.ResponseCode
+│       ├── subscriber.ResponseMsg  ← eventResponse.ResponseMsg
+│       └── OfferInstanceId mapping:
+│           ├── For each SocInstance[s] matching SubscriberOffers[o].Soc (OfferInstanceId==0)
+│           │   └── SubscriberOffers[o].OfferInstanceId = SocInstance[s].OfferInstanceId
+│           └── For each SocInstance[s] matching RelatedOffersArray[k].Soc (OfferInstanceId==0)
+│               └── RelatedOffersArray[k].OfferInstanceId = SocInstance[s].OfferInstanceId
+├── Same for ChildOU.Subscriber[j]
+├── Event.createEvent(xslt://Logger)                       [no AllowWriteLog gate]
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → "true" / "false"</div>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <ul class="plain">
+      <li><strong>R1</strong> — Iterate all Subscribers (ParentOU + ChildOU); skip those already successfully created (CompletionStatus=2 on prior response for same RefId).</li>
+      <li><strong>R2</strong> — For each subscriber: evaluate PreExecCheck, assemble subPP (ServiceType='80' offer), imeiExists, addDummy, addRangeArray (Action='ADD' ranges), logicalDate.</li>
+      <li><strong>R3</strong> — IMEI: include in payload if <span class="inline-code">imeiExists=true</span>; use dummy if <span class="inline-code">addDummy=true</span>; exclude if neither. SOC '55042' presence on subscriber prevents duplicate IMEI inclusion.</li>
+      <li><strong>R4</strong> — Dispatch must be <strong>sequential</strong> (IntraActivitySequencing): only one outstanding CCBS request at a time; next fires after previous response.</li>
+      <li><strong>R5</strong> — On resubmit: purge pending queue first (<span class="inline-code">PurgePendingRequestsBeforeResubmit</span>).</li>
+      <li><strong>R6</strong> — Response: write <span class="inline-code">SubscriberId</span> from <span class="inline-code">SubscriberIdsInfo/SubscriberId/SubscrNumber</span> to matching subscriber.</li>
+      <li><strong>R7</strong> — Response: map <span class="inline-code">OfferInstanceId</span> from <span class="inline-code">ReopenedOffers[]</span> to all matching SubscriberOffers and RelatedOffersArray entries by SOC code (only if current OfferInstanceId==0).</li>
+      <li><strong>R8</strong> — Fan-in: activity completes when all queued subscribers have received responses (IntraActivitySequencing manages this; not a simple RequestCount comparison).</li>
+    </ul>
+
+    <h3>Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>IntraActivitySequencing is a proprietary TIBCO BE sequencing framework — no direct equivalent in most target platforms</td><td><span class="badge badge-red">HIGH</span></td><td>Migration must implement explicit sequential orchestration (e.g., a state machine, or saga pattern) with the same single-in-flight-at-a-time guarantee</td></tr>
+      <tr><td>SubscriberId is the downstream key for all subsequent CCBS operations — loss or mis-routing of this value breaks the entire subscriber lifecycle</td><td><span class="badge badge-red">HIGH</span></td><td>Implement idempotency check: if CCBS returns a subscriber already exists response, retrieve the existing SubscriberId rather than failing</td></tr>
+      <tr><td>OfferInstanceId write-back only fills positions where OfferInstanceId==0 — resubmit scenarios may leave some positions with stale data if SOC matching fails</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Add explicit check: log warnings when ReopenedOffers SOC doesn't match any offer on the subscriber</td></tr>
+      <tr><td>imeiExists + addDummy logic involves three-way condition — complex XSLT branching that must be faithfully reproduced</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Unit test all three branches: (a) real IMEI present, (b) dummy IMEI, (c) no IMEI. Verify SOC 55042 guard.</td></tr>
+      <tr><td>BN resource ranges (addRangeArray) may be absent on most orders — migration must gracefully handle empty array</td><td><span class="badge badge-blue">LOW</span></td><td>Test with and without ResourceRangeInfo entries</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h3>§19.1 — Overview</h3>
+    <p><span class="inline-code">RuleFunctions.OrderResponse.Response_CCBS_CREATE_SUBS</span>:</p>
+    <ol style="padding-left:20px;margin-top:6px;">
+      <li>Creates <span class="inline-code">CCBSCreateSubsRes</span> concept with base response fields and <span class="inline-code">SocInstance[]</span> from <span class="inline-code">ReopenedOffers</span></li>
+      <li>Matches response to subscriber by <span class="inline-code">eventResponse.RefID == Subscriber.RefId</span></li>
+      <li>Writes <span class="inline-code">SubscriberId</span>, <span class="inline-code">ResponseCode</span>, <span class="inline-code">ResponseMsg</span> to matched subscriber</li>
+      <li>Maps <span class="inline-code">OfferInstanceId</span> from <span class="inline-code">SocInstance[]</span> to SubscriberOffers and RelatedOffersArray by SOC match</li>
+      <li>Sends response audit log (no AllowWriteLog gate)</li>
+      <li>Returns <span class="inline-code">"true"</span> or <span class="inline-code">"false"</span> via <span class="inline-code">IntraActivitySequencing.ActionResponseEvent(currActivity)</span></li>
+    </ol>
+
+    <h3>§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><span class="inline-code">orderRequest</span></td><td><span class="inline-code">Concepts.OrderRequest.OrderRequest</span></td><td>Written with SubscriberId and OfferInstanceId values</td></tr>
+      <tr><td><span class="inline-code">eventResponse</span></td><td><span class="inline-code">Events.OMConsumers.OMXFM.Response.CCBS_CREATE_SUBS</span></td><td>Contains createSubscriberResponse payload</td></tr>
+      <tr><td><span class="inline-code">currActivity</span></td><td><span class="inline-code">Concepts.OM.ProcessConfig.Activity</span></td><td>Response[] appended; IntraActivitySequencing state</td></tr>
+    </table>
+
+    <h3>§19.3 — CCBSCreateSubsRes Concept Fields</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">$extId (OMXUtils.generateTrackingID())</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">SocInstance[]</span><span class="badge badge-orange" style="font-size:.7rem">Repeated</span><span class="tree-cond">xsl:for-each ns:ReopenedOffers</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">OfferInstanceId</span><span class="tree-arrow">←</span><span class="tree-src">ns:NewOfferInstanceId</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">Soc</span><span class="tree-arrow">←</span><span class="tree-src">ns:Soc</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>§19.4 — Response Completion Logic</h3>
+    <div class="code-block"><span class="cm">// IntraActivitySequencing manages sequential fan-in</span>
+<span class="cm">// (old commented-out logic was: count(Subscriber) == count(Subscriber/SubscriberId[non-blank]))</span>
+<span class="kw">if</span>(RuleFunctions.Helpers.IntraActivitySequencing.ActionResponseEvent(currActivity))
+    <span class="kw">return</span> <span class="str">"true"</span>;   <span class="cm">// all queued subscribers have responded</span>
+<span class="kw">else</span>
+    <span class="kw">return</span> <span class="str">"false"</span>;  <span class="cm">// still waiting; next request will fire automatically</span></div>
+    <div class="info-block"><span class="inline-code">ActionResponseEvent</span> handles two things at once: it marks the current request as complete in the sequencing queue AND fires the next queued request event (if any). When the last queued request is processed, it returns <span class="inline-code">true</span>.</div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#888;font-size:.82rem;border-top:1px solid var(--border);margin-top:8px;">
+  TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-07-27
+</div>
+</div>
+</body>
+</html>

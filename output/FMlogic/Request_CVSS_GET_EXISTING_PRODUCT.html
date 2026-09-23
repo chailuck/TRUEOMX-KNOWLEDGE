@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CVSS_GET_EXISTING_PRODUCT</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+.callout.critical{border-color:#B71C1C;background:#FFEBEE}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CVSS_GET_EXISTING_PRODUCT</h1>
+  <div class="subtitle">CVSS Existing Product Count — minimal fire-and-forget with Account.ProductCount write-back</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: CVSS</span>
+    <span class="meta-chip">Author: awalia-t420</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: FIRE-AND-FORGET (no IntraActivitySequencing)</span>
+    <span class="meta-chip">Fan-in: RequestCount count</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>CVSS_GET_EXISTING_PRODUCT</strong> retrieves the count of existing CVSS products for each Account. The result updates <code>Account.ProductCount</code>, which is consumed by downstream credit evaluation logic.
+    </div>
+    <div class="callout critical">
+      <strong>Fire-and-forget pattern:</strong> Uses <code>Event.Ext.sendEventImmediate(reqEvent)</code> + manual <code>RequestCount++</code>. Fan-in uses the OLD count-based pattern: <code>count("000" responses) == RequestCount</code> — NOT IntraActivitySequencing.
+    </div>
+    <div class="callout info">
+      <strong>Minimal payload:</strong> Only two fields — <code>ban</code> (Account.AccountID) and <code>productId=1</code> (hardcoded). No account subtype, no customer details.
+    </div>
+    <div class="callout success">
+      <strong>Response write-back:</strong> Looks up Account by extId pattern <code>"A:"+JMSCorrelationID+":"+RefID</code> and sets <code>acct.ProductCount</code> from response <code>count</code> field.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CVSS_GET_EXISTING_PRODUCT</code></td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>CVSS</td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> — FIRE-AND-FORGET</td></tr>
+      <tr><td>RequestCount</td><td>Manually: <code>if(!isActResub) RequestCount++</code></td></tr>
+      <tr><td>Fan-in</td><td>OLD pattern: <code>count($currActivity/Response[ResponseCode suffix "000"]) == RequestCount</code></td></tr>
+      <tr><td>Iteration target</td><td><code>Customer.Account[]</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CVSS_GetExistingProductRes</code></td></tr>
+      <tr><td>Payload operation</td><td><code>ns:GetExistingProductRequest / ns:getExistingProduct</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic Patterns -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>productId hardcoded</td><td><code>ns:productId</code> always = 1. CVSS uses this to identify a specific product type to count. Not configurable from order data.</td></tr>
+      <tr><td>Account lookup in response</td><td><code>Instance.getByExtIdByUri("A:"+eventResponse.JMSCorrelationID+":"+eventResponse.RefID, "/Concepts/OrderRequest/OrderElements/Account")</code> — constructs a specific extId pattern to locate the Account concept in working memory.</td></tr>
+      <tr><td>ProductCount write-back</td><td><code>acct.ProductCount = XPath.evalAsInt(count from response)</code> — only if acct != null.</td></tr>
+      <tr><td>Response extra fields</td><td>CVSS_GetExistingProductRes has 7 fields (std 4 + result_count + statusCode + statusMessage). Only result_count is written to the order model (as ProductCount).</td></tr>
+      <tr><td>No IntraActivitySequencing</td><td>Neither the request nor the response uses IntraActivitySequencing. Fan-in is count-based — different from most other FMs which migrated to ActionResponseEvent.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+<pre><code>createEvent → event
+├── JMSPriority         ← $orderRequest/OrderPriority               [Conditional]
+├── JMSCorrelationID    ← $orderRequest/OrderData/OMXTrackingId      [Conditional]
+├── OrderID             ← $orderRequest/OrderData/OrderID            [Conditional]
+├── RefID               ← $refId (Account[i].RefId)                  [Always]
+├── OrderType           ← $orderRequest/OrderData/OrderType          [Conditional]
+└── payload → ns:GetExistingProductRequest
+    └── ns:getExistingProduct
+        ├── ns:ban      ← Account[(number($i)+1)]/AccountID          [Always]
+        └── ns:productId← 1                                          [Hardcoded]
+
+NOTE: No CES field in this FM. No customer details. Minimal payload.
+NOTE: JMSCorrelationID from OMXTrackingId (not @extId as in other FMs).</code></pre>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_CVSS_GET_EXISTING_PRODUCT
+├── Instance.getByExtIdByUri(NextActivityName, Activity) → nextAct
+├── for each Account[i]:
+│   ├── [skip if CompletionStatus==2 response exists for RefId]
+│   ├── if PreExecCheck.length > 0: GetXMLForAccount(orderRequest, refId) → XPath
+│   └── if chkRes == "true":
+│       ├── Event.createEvent(CVSS_GET_EXISTING_PRODUCT, XSLT with refId, i params)
+│       ├── Event.Ext.sendEventImmediate(reqEvent)  ← FIRE-AND-FORGET
+│       ├── sendEventImmediate(Logger REQ)  [with refId in AUDIT_TRACE]
+│       ├── if(!isActResub): RequestCount++
+│       └── isSkipped = false
+├── if !isSkipped:
+│   ├── GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+└── else: SkipActivity("4")
+
+Response_CVSS_GET_EXISTING_PRODUCT
+├── OMXUtils.generateTrackingID() → extId
+├── Instance.createInstance(CVSS_GetExistingProductRes:
+│   ResponseCode, ResponseMsg, CompletionStatus, ReferenceId,
+│   result_count, statusCode, statusMessage)
+│   → currActivity.Response[n]
+├── acct = Instance.getByExtIdByUri("A:"+JMSCorrelationID+":"+RefID, Account)
+├── if acct != null:
+│   └── acct.ProductCount = XPath.evalAsInt(response count field)
+├── sendEventImmediate(Logger RES)
+└── OLD fan-in: count($currActivity/Response[ResponseCode suffix "000"]) == RequestCount
+    → "true" if all responses successful; "false" otherwise
+    [NOT IntraActivitySequencing.ActionResponseEvent]</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Uses OLD fan-in pattern (count "000" responses == RequestCount) — inconsistent with other FMs that migrated to IntraActivitySequencing</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Migrate to IntraActivitySequencing in a future refactor; document the inconsistency</td>
+      </tr>
+      <tr>
+        <td>Account lookup uses extId pattern "A:"+JMSCorrelationID+":"+RefID — requires specific extId format at account concept creation time</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document Account concept extId format; ensure it is consistent with CVSS response correlation</td>
+      </tr>
+      <tr>
+        <td>productId hardcoded to 1 — undocumented constant. If CVSS changes product IDs, this breaks silently</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Externalise productId to global variable or order parameter</td>
+      </tr>
+      <tr>
+        <td>result_count, statusCode, statusMessage are captured in the response concept but only ProductCount is written back to the order — the other fields are available for debugging but not persisted</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Consider logging statusCode/statusMessage on non-success responses in migration</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>CVSS_GetExistingProductRes (7 fields: std 4 + result_count + statusCode + statusMessage)</td><td>Always</td></tr>
+      <tr><td><code>Account.ProductCount</code></td><td><code>response.count</code> (XPath.evalAsInt)</td><td>Account found by extId "A:"+JMSCorrelationID+":"+RefID AND acct != null</td></tr>
+    </table>
+    <div class="callout warn" style="margin-top:12px">
+      <strong>Fan-in:</strong> OLD count-based pattern — <code>count(Response[tib:right(tib:trim(ResponseCode), 3) = "000"]) == RequestCount</code>. Returns "true" when all requests have "000" suffix in ResponseCode.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

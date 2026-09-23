@@ -1,0 +1,900 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MOVE_SUBSCRIBER_NO_PROVISIONING</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#212121}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+.page-header .subtitle{opacity:.85;margin-top:6px;font-size:1rem}
+.meta-row{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.18);border-radius:20px;padding:4px 14px;font-size:.82rem}
+.container{max-width:1400px;margin:0 auto;padding:24px 20px}
+.card{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;white-space:nowrap}
+td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+tr.has-check td{border-left:3px solid #FFB300}
+tr.not-found td{background:#FFF8E1}
+code,pre{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:12px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);font-size:.78rem;line-height:1.4}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.73rem;font-weight:600;white-space:nowrap}
+.badge-gen{background:#E8F5E9;color:#2e7d32}.badge-notfound{background:#FFF3E0;color:#e65100}
+.badge-new{background:#E3F0FD;color:#1565c0}.badge-exists{background:#E8F5E9;color:#2e7d32}
+.badge-internal{background:#F3E5F5;color:#6a1b9a}
+.step-num{font-weight:700;color:var(--true-dark);text-align:center;min-width:32px}
+.fm-link{color:var(--true-dark);font-weight:600;text-decoration:none}
+.fm-link:hover{color:var(--true-red);text-decoration:underline}
+.param-val{color:#1565c0;font-size:.8rem}
+.check-yes{color:#e65100;font-weight:600;font-size:.8rem}
+.check-no{color:#9E9E9E;font-size:.8rem}
+.prev-next{color:#666;font-size:.8rem}
+details summary{cursor:pointer;font-weight:600;color:var(--true-dark);padding:8px 0;list-style:none}
+details summary::before{content:'▶ ';font-size:.8rem}
+details[open] summary::before{content:'▼ ';font-size:.8rem}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.fm-card{border:1px solid var(--border);border-radius:8px;padding:14px;background:var(--card)}
+.fm-card-title{font-weight:700;color:var(--true-dark);font-size:.9rem;margin-bottom:6px}
+.fm-card-steps{font-size:.8rem;color:#666;margin-bottom:8px}
+.phase-header{background:#F5E6E6;color:var(--true-dark);font-weight:700;padding:6px 10px;font-size:.82rem;letter-spacing:.5px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="subtitle">TRUE Corporation OMX · Order Journey Documentation</div>
+  <h1>MOVE_SUBSCRIBER_NO_PROVISIONING</h1>
+  <p style="margin-top:8px;opacity:.9">Change Owner to Indy — moves a subscriber from a SOURCE account/OU to a new or existing TARGET account/OU without network provisioning changes</p>
+  <div class="meta-row">
+    <span class="meta-chip">Total Steps: 57</span>
+    <span class="meta-chip">Unique FMs: 47</span>
+    <span class="meta-chip">Entry Point: OMX_CREATE_SOURCE_STRUCTURE</span>
+    <span class="meta-chip">Generated: 2026-09-23</span>
+    <span class="meta-chip">New FM Docs: 7</span>
+    <span class="meta-chip">Not Found: 4</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §2 Order Flow Table -->
+<div class="card">
+<div class="card-header">§2 — Order Flow Table (57 Steps)</div>
+<div class="card-body" style="overflow-x:auto">
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>Step ID</th>
+  <th>FM (ActivityID)</th>
+  <th>Parameter(s)</th>
+  <th>PreExecCheck</th>
+  <th>Previous</th>
+  <th>Next</th>
+  <th>FM Doc</th>
+</tr>
+</thead>
+<tbody>
+<!-- Phase: SOURCE Structure Setup -->
+<tr><td colspan="8" class="phase-header">▶ Phase 1 — SOURCE Account/Subscriber Data Collection</td></tr>
+<tr>
+  <td class="step-num">1</td>
+  <td><code>OMX_CREATE_SOURCE_STRUCTURE</code></td>
+  <td>OMX_CREATE_SOURCE_STRUCTURE</td>
+  <td>—</td>
+  <td class="check-no">—</td>
+  <td class="prev-next">START</td>
+  <td class="prev-next">CCBS_GET_CUST_ACC_SUB_ID_SOURCE</td>
+  <td><span class="badge badge-internal">⚙ Internal</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">2</td>
+  <td><code>CCBS_GET_CUST_ACC_SUB_ID_SOURCE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html">CCBS_GET_CUST_ACC_SUB_ID</a></td>
+  <td><span class="param-val">SOURCE</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">1</td><td class="prev-next">3</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">3</td>
+  <td><code>CCBS_GET_CUSTOMER_HEADER_SOURCE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_CUSTOMER_HEADER.html">CCBS_GET_CUSTOMER_HEADER</a></td>
+  <td><span class="param-val">SOURCE</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">2</td><td class="prev-next">4</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">4</td>
+  <td><code>CCBS_GET_ACCOUNT_HEADER_SOURCE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></td>
+  <td><span class="param-val">SOURCE</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">3</td><td class="prev-next">5</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">5</td>
+  <td><code>CCBS_GET_SUBSCRIBER_HEADER_SOURCE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_SUBSCRIBER_HEADER.html">CCBS_GET_SUBSCRIBER_HEADER</a></td>
+  <td><span class="param-val">SOURCE</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">4</td><td class="prev-next">6</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">6</td>
+  <td><code>CCBS_GET_SUBS_INFO_SOURCE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">CCBS_GET_SUBS_INFO</a></td>
+  <td><span class="param-val">SOURCE</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">5</td><td class="prev-next">7</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<!-- Phase: TARGET Data Collection -->
+<tr><td colspan="8" class="phase-header">▶ Phase 2 — TARGET Account/Subscriber Data Collection</td></tr>
+<tr class="has-check">
+  <td class="step-num">7</td>
+  <td><code>CCBS_GET_CUSTOMER_HEADER_TARGET</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_CUSTOMER_HEADER.html">CCBS_GET_CUSTOMER_HEADER</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">6</td><td class="prev-next">8</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">8</td>
+  <td><code>CCBS_GET_ACCOUNT_HEADER_TARGET</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">7</td><td class="prev-next">9</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">9</td>
+  <td><code>CCBS_GET_AGREEMENT_INFO_TARGET</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_AGREEMENT_INFO.html">CCBS_GET_AGREEMENT_INFO</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">8</td><td class="prev-next">10</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<!-- Phase: Validation -->
+<tr><td colspan="8" class="phase-header">▶ Phase 3 — Business Validation &amp; Offer Assessment</td></tr>
+<tr>
+  <td class="step-num">10</td>
+  <td><code>CCBS_RESOLVE_SOC_CODE_GOD</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></td>
+  <td>—</td>
+  <td class="check-no">—</td>
+  <td class="prev-next">9</td><td class="prev-next">11</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">11</td>
+  <td><code>CCBS_GOD</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">10</td><td class="prev-next">12</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr>
+  <td class="step-num">12</td>
+  <td><code>OMX_OFFER_INCLUSION</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">OMX_OFFER_INCLUSION</a></td>
+  <td>—</td>
+  <td class="check-no">—</td>
+  <td class="prev-next">11</td><td class="prev-next">13</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">13</td>
+  <td><code>GET_SPECIAL_OFFER_INDICATOR_SOURCE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_GET_SPECIAL_OFFER_INDICATOR.html">GET_SPECIAL_OFFER_INDICATOR</a></td>
+  <td><span class="param-val">SOURCE</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">12</td><td class="prev-next">14</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">14</td>
+  <td><code>CCBS_OFFER_POOLING_POOLED</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_OFFER_POOLING_POOLED.html">CCBS_OFFER_POOLING_POOLED</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">13</td><td class="prev-next">15</td>
+  <td><span class="badge badge-new">★ New Doc</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">15</td>
+  <td><code>INTX_GET_PRODUCT_PREFERENCE_LIST</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_INTX_GET_PRODUCT_PREFERENCE_LIST.html">INTX_GET_PRODUCT_PREFERENCE_LIST</a></td>
+  <td><span class="param-val">SUBSTATUS=ACTIVEORSUSPEND | BUSINESSLINE=MOBILE | COMPANYCODE=ALL | CUSTOMERSEGMENT=INDIVIDUAL</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">14</td><td class="prev-next">16</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">16</td>
+  <td><code>CVSS_GET_MAX_ALLOW_ONLY_SUB</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CVSS_GET_MAX_ALLOW_ONLY_SUB.html">CVSS_GET_MAX_ALLOW_ONLY_SUB</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">15</td><td class="prev-next">17</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">17</td>
+  <td><code>CVSS_GET_VALIDATE_APPROVE_CODE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CVSS_GET_VALIDATE_APPROVE_CODE.html">CVSS_GET_VALIDATE_APPROVE_CODE</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">16</td><td class="prev-next">18</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr>
+  <td class="step-num">18</td>
+  <td><code>OMX_BIZ_VAL</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></td>
+  <td>—</td>
+  <td class="check-no">—</td>
+  <td class="prev-next">17</td><td class="prev-next">19</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr>
+  <td class="step-num">19</td>
+  <td><code>OMX_CAL_ORDER</code></td>
+  <td>OMX_CAL_ORDER</td>
+  <td>—</td>
+  <td class="check-no">—</td>
+  <td class="prev-next">18</td><td class="prev-next">20</td>
+  <td><span class="badge badge-internal">⚙ Internal</span></td>
+</tr>
+<!-- Phase: Future Order + Source Info -->
+<tr><td colspan="8" class="phase-header">▶ Phase 4 — Future Order &amp; Source Subscriber Info</td></tr>
+<tr class="has-check">
+  <td class="step-num">20</td>
+  <td><code>OMX_ADD_FUT_ORDER</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_ADD_FUT_ORDER.html">OMX_ADD_FUT_ORDER</a></td>
+  <td><span class="param-val">FINALLY=Y</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">19</td><td class="prev-next">21</td>
+  <td><span class="badge badge-new">★ New Doc</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">21</td>
+  <td><code>INTX_GET_SUBSCRIBER_INFO_SOURCE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_INTX_GET_SUBSCRIBER_INFO.html">INTX_GET_SUBSCRIBER_INFO</a></td>
+  <td><span class="param-val">SOURCE</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">20</td><td class="prev-next">22</td>
+  <td><span class="badge badge-new">★ New Doc</span></td>
+</tr>
+<tr>
+  <td class="step-num">22</td>
+  <td><code>OMX_POPULATE_TARGET_STRUCTURE_SOURCE</code></td>
+  <td>OMX_POPULATE_TARGET_STRUCTURE</td>
+  <td><span class="param-val">SOURCE</span></td>
+  <td class="check-no">—</td>
+  <td class="prev-next">21</td><td class="prev-next">23</td>
+  <td><span class="badge badge-internal">⚙ Internal</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">23</td>
+  <td><code>CCBS_GET_AGREEMENT_HEADER_SOURCE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_AGREEMENT_HEADER.html">CCBS_GET_AGREEMENT_HEADER</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">22</td><td class="prev-next">24</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">24</td>
+  <td><code>GET_SPECIAL_OFFER_INDICATOR_TARGET</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_GET_SPECIAL_OFFER_INDICATOR.html">GET_SPECIAL_OFFER_INDICATOR</a></td>
+  <td><span class="param-val">TARGET</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">23</td><td class="prev-next">25</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<!-- Phase: Source Cancellation -->
+<tr><td colspan="8" class="phase-header">▶ Phase 5 — SOURCE Account Cleanup &amp; Cancellation</td></tr>
+<tr class="has-check">
+  <td class="step-num">25</td>
+  <td><code>SBM_FUP_CHANGE_MEMBER_REMOVE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_SBM_FUP_CHANGE_MEMBER.html">SBM_FUP_CHANGE_MEMBER</a></td>
+  <td><span class="param-val">REMOVE</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">24</td><td class="prev-next">26</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">26</td>
+  <td><code>CVSS_GET_EXISTING_PRODUCT_SOURCE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CVSS_GET_EXISTING_PRODUCT.html">CVSS_GET_EXISTING_PRODUCT</a></td>
+  <td><span class="param-val">SOURCE</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">25</td><td class="prev-next">27</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">27</td>
+  <td><code>CVSS_CANCEL_SUBS_SOURCE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CVSS_CANCEL_SUBS.html">CVSS_CANCEL_SUBS</a></td>
+  <td><span class="param-val">SOURCE</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">26</td><td class="prev-next">28</td>
+  <td><span class="badge badge-new">★ New Doc</span></td>
+</tr>
+<!-- Phase: TARGET Account Creation -->
+<tr><td colspan="8" class="phase-header">▶ Phase 6 — TARGET Account Creation (Conditional)</td></tr>
+<tr class="has-check">
+  <td class="step-num">28</td>
+  <td><code>CCBS_CREATE_CUST_WITH_CYCLE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_CREATE_CUST_WITH_CYCLE.html">CCBS_CREATE_CUST_WITH_CYCLE</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">27</td><td class="prev-next">29</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">29</td>
+  <td><code>CCBS_CREATE_PARENT_OU</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_CREATE_PARENT_OU.html">CCBS_CREATE_PARENT_OU</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">28</td><td class="prev-next">30</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">30</td>
+  <td><code>CCBS_CREATE_AGREE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_CREATE_AGREE.html">CCBS_CREATE_AGREE</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">29</td><td class="prev-next">31</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">31</td>
+  <td><code>CCBS_CREATE_ACCT</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_CREATE_ACCT.html">CCBS_CREATE_ACCT</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">30</td><td class="prev-next">32</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<!-- Phase: Subscriber Move -->
+<tr><td colspan="8" class="phase-header">▶ Phase 7 — Subscriber Move Execution</td></tr>
+<tr class="has-check">
+  <td class="step-num">32</td>
+  <td><code>CCBS_REMOVE_OFFER_SUBSCRIBER_POST</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_REMOVE_OFFER_SUBSCRIBER_POST.html">CCBS_REMOVE_OFFER_SUBSCRIBER_POST</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">31</td><td class="prev-next">33</td>
+  <td><span class="badge badge-new">★ New Doc</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">33</td>
+  <td><code>CCBS_MOVE_SUB</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_MOVE_SUB.html">CCBS_MOVE_SUB</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">32</td><td class="prev-next">34</td>
+  <td><span class="badge badge-new">★ New Doc</span></td>
+</tr>
+<tr>
+  <td class="step-num">34</td>
+  <td><code>OMX_UPDATE_SUBID_FUTORDER</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_UPDATE_SUBID_FUTORDER.html">OMX_UPDATE_SUBID_FUTORDER</a></td>
+  <td>—</td>
+  <td class="check-no">—</td>
+  <td class="prev-next">33</td><td class="prev-next">35</td>
+  <td><span class="badge badge-new">★ New Doc</span></td>
+</tr>
+<!-- Phase: Post-Move TARGET Profile -->
+<tr><td colspan="8" class="phase-header">▶ Phase 8 — Post-Move: TARGET Profile &amp; Package Setup</td></tr>
+<tr class="has-check">
+  <td class="step-num">35</td>
+  <td><code>CCBS_GET_CUSTOMER_HEADER</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_CUSTOMER_HEADER.html">CCBS_GET_CUSTOMER_HEADER</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">34</td><td class="prev-next">36</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr>
+  <td class="step-num">36</td>
+  <td><code>OMX_BRMS</code></td>
+  <td>OMX_BRMS</td>
+  <td>—</td>
+  <td class="check-no">—</td>
+  <td class="prev-next">35</td><td class="prev-next">37</td>
+  <td><span class="badge badge-internal">⚙ Internal</span></td>
+</tr>
+<tr>
+  <td class="step-num">37</td>
+  <td><code>CCBS_RESOLVE_SOC_CODE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></td>
+  <td>—</td>
+  <td class="check-no">—</td>
+  <td class="prev-next">36</td><td class="prev-next">38</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">38</td>
+  <td><code>CCBS_CHANGE_PACKAGE_SUBSCRIBER</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td>
+  <td><span class="param-val">ADD</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">37</td><td class="prev-next">39</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">39</td>
+  <td><code>CCBS_GET_SUBS_INFO</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">CCBS_GET_SUBS_INFO</a></td>
+  <td><span class="param-val">TARGET</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">38</td><td class="prev-next">40</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<!-- Phase: SBM FUP -->
+<tr><td colspan="8" class="phase-header">▶ Phase 9 — SBM FUP Group &amp; Member Setup</td></tr>
+<tr class="has-check">
+  <td class="step-num">40</td>
+  <td><code>SBM_FUP_CREATE_GROUP</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_SBM_FUP_CREATE_GROUP.html">SBM_FUP_CREATE_GROUP</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">39</td><td class="prev-next">41</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">41</td>
+  <td><code>SBM_FUP_CHANGE_TOPPING</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_SBM_FUP_CHANGE_TOPPING.html">SBM_FUP_CHANGE_TOPPING</a></td>
+  <td><span class="param-val">ADD</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">40</td><td class="prev-next">42</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">42</td>
+  <td><code>SBM_FUP_CHANGE_VARIABLE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_SBM_FUP_CHANGE_VARIABLE.html">SBM_FUP_CHANGE_VARIABLE</a></td>
+  <td><span class="param-val">ADD</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">41</td><td class="prev-next">43</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">43</td>
+  <td><code>SBM_FUP_CHANGE_MEMBER</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_SBM_FUP_CHANGE_MEMBER.html">SBM_FUP_CHANGE_MEMBER</a></td>
+  <td><span class="param-val">ADD</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">42</td><td class="prev-next">44</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<!-- Phase: Credit Check -->
+<tr><td colspan="8" class="phase-header">▶ Phase 10 — Credit Profile &amp; Status Update</td></tr>
+<tr>
+  <td class="step-num">44</td>
+  <td><code>STATUS_UPDATE_CREATING_PROFILE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></td>
+  <td>—</td>
+  <td class="check-no">—</td>
+  <td class="prev-next">43</td><td class="prev-next">45</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">45</td>
+  <td><code>CVSS_GET_AUTO_APPROVE_CODE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CVSS_GET_AUTO_APPROVE_CODE.html">CVSS_GET_AUTO_APPROVE_CODE</a></td>
+  <td><span class="param-val">requestType=MV</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">44</td><td class="prev-next">46</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">46</td>
+  <td><code>CVSS_CREDIT_CHECK_NEW</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CVSS_CREDIT_CHECK.html">CVSS_CREDIT_CHECK</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">45</td><td class="prev-next">47</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">47</td>
+  <td><code>ODS_GET_CREDIT_CLASS_CREDIT_LIMIT</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_ODS_GET_CREDIT_CLASS_CREDIT_LIMIT.html">ODS_GET_CREDIT_CLASS_CREDIT_LIMIT</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">46</td><td class="prev-next">48</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">48</td>
+  <td><code>CCBS_UPD_CREDIT_CLASS_NEW</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_UPD_CREDIT_CLASS.html">CCBS_UPD_CREDIT_CLASS</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">47</td><td class="prev-next">49</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">49</td>
+  <td><code>CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT_FOR_ODS</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT.html">CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">48</td><td class="prev-next">50</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">50</td>
+  <td><code>CVSS_GET_EXISTING_PRODUCT</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CVSS_GET_EXISTING_PRODUCT.html">CVSS_GET_EXISTING_PRODUCT</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">49</td><td class="prev-next">51</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">51</td>
+  <td><code>CVSS_CREDIT_CHECK_EXIST</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CVSS_CREDIT_CHECK.html">CVSS_CREDIT_CHECK</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">50</td><td class="prev-next">52</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">52</td>
+  <td><code>CCBS_UPD_CREDIT_CLASS_EXIST</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_UPD_CREDIT_CLASS.html">CCBS_UPD_CREDIT_CLASS</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">51</td><td class="prev-next">53</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">53</td>
+  <td><code>CVSS_UPDATE_SUBSCRIBER_COUNT</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CVSS_UPDATE_SUBSCRIBER_COUNT.html">CVSS_UPDATE_SUBSCRIBER_COUNT</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">52</td><td class="prev-next">54</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<!-- Phase: Finalization -->
+<tr><td colspan="8" class="phase-header">▶ Phase 11 — Finalization: Offer Injection &amp; MCS</td></tr>
+<tr class="has-check">
+  <td class="step-num">54</td>
+  <td><code>OMX_INJECT_OFFER_ADD_ITEMIZE0</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_INJECT_OFFER.html">OMX_INJECT_OFFER</a></td>
+  <td><span class="param-val">soc=13102425 | serviceType=85 | action=ADD | offerName=ITMBLS02 | level=OU | checkDup=1</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">53</td><td class="prev-next">55</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">55</td>
+  <td><code>CCBS_UPDATE_AGREEMENT_ON_UNIT</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_UPDATE_AGREEMENT_ON_UNIT.html">CCBS_UPDATE_AGREEMENT_ON_UNIT</a></td>
+  <td>—</td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">54</td><td class="prev-next">56</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr>
+  <td class="step-num">56</td>
+  <td><code>MCS_GET_PACKCODE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_MCS_GET_PACKCODE.html">MCS_GET_PACKCODE</a></td>
+  <td>—</td>
+  <td class="check-no">—</td>
+  <td class="prev-next">55</td><td class="prev-next">57</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">57</td>
+  <td><code>MCS_CANCEL_AFTER_SALE</code></td>
+  <td><a class="fm-link" href="../FMlogic/Request_MCS_CANCEL_AFTER_SALE.html">MCS_CANCEL_AFTER_SALE</a></td>
+  <td><span class="param-val">MAP_OLD_SUB=SOURCE_SUB</span></td>
+  <td class="check-yes">✓ Yes</td>
+  <td class="prev-next">56</td><td class="prev-next">END</td>
+  <td><span class="badge badge-exists">✓ Generated</span></td>
+</tr>
+</tbody>
+</table>
+<p style="margin-top:10px;font-size:.8rem;color:#666">Rows with yellow left border have a PreExecCheck (conditional execution). ⚙ Internal = OMX internal function with no external rule file.</p>
+</div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="card">
+<div class="card-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+<div class="card-body">
+<p style="margin-bottom:12px;font-size:.88rem">The following 43 of 57 steps have a <code>&lt;ns0:PreExecCheck&gt;</code> condition. The full XPath expressions are in the source ProcessConfig XML at <code>SupportingFiles/Configs/ProcessConfig/MOVE_SUBSCRIBER_NO_PROVISIONING.xml</code>. Key patterns identified:</p>
+<table>
+<tr><th>Steps</th><th>Pattern Description</th><th>Typical Purpose</th></tr>
+<tr><td>2–6, 35</td><td>SOURCE_OR_TARGET discriminator</td><td>Execute only for SOURCE-tagged subscribers/OUs</td></tr>
+<tr><td>7–9, 23</td><td>TARGET account existence check</td><td>Execute only if TARGET account/OU exists</td></tr>
+<tr><td>13, 24</td><td>Offer indicator parameter routing</td><td>Route SOURCE vs TARGET special offer lookups</td></tr>
+<tr><td>14</td><td>GoldenDB + SOC availability</td><td>Execute pooling only if poolable SOCs exist</td></tr>
+<tr><td>20</td><td>Future order eligibility</td><td>FINALLY=Y flag + order type check</td></tr>
+<tr><td>21</td><td>SOURCE subscriber filter</td><td>SOURCE_OR_TARGET=SOURCE</td></tr>
+<tr><td>25, 40–43</td><td>SBM FUP group membership</td><td>Check group/member eligibility</td></tr>
+<tr><td>27</td><td>CVSS cancel eligibility</td><td>SOURCE account with cancellable subscribers</td></tr>
+<tr><td>28–31</td><td>TARGET account creation gates</td><td>Create only if not already existing</td></tr>
+<tr><td>32–33</td><td>Offer removal / move eligibility</td><td>SOURCE subscriber has offers to remove</td></tr>
+<tr><td>45–53</td><td>Credit class/limit update gates</td><td>New vs existing account credit profile conditions</td></tr>
+<tr><td>54–55, 57</td><td>Offer/agreement finalization</td><td>Post-move offer injection and MCS cancel</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 FM Documentation Index -->
+<div class="card">
+<div class="card-header">§4 — FM Documentation Index (47 Unique ActivityIDs)</div>
+<div class="card-body">
+<div class="fm-grid">
+<div class="fm-card"><div class="fm-card-title">CCBS_OFFER_POOLING_POOLED</div><div class="fm-card-steps">Step: 14</div><a class="fm-link" href="../FMlogic/Request_CCBS_OFFER_POOLING_POOLED.html">View Doc</a> <span class="badge badge-new">★ New</span></div>
+<div class="fm-card"><div class="fm-card-title">OMX_ADD_FUT_ORDER</div><div class="fm-card-steps">Step: 20</div><a class="fm-link" href="../FMlogic/Request_OMX_ADD_FUT_ORDER.html">View Doc</a> <span class="badge badge-new">★ New</span></div>
+<div class="fm-card"><div class="fm-card-title">INTX_GET_SUBSCRIBER_INFO</div><div class="fm-card-steps">Step: 21</div><a class="fm-link" href="../FMlogic/Request_INTX_GET_SUBSCRIBER_INFO.html">View Doc</a> <span class="badge badge-new">★ New</span></div>
+<div class="fm-card"><div class="fm-card-title">CVSS_CANCEL_SUBS</div><div class="fm-card-steps">Step: 27</div><a class="fm-link" href="../FMlogic/Request_CVSS_CANCEL_SUBS.html">View Doc</a> <span class="badge badge-new">★ New</span></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_REMOVE_OFFER_SUBSCRIBER_POST</div><div class="fm-card-steps">Step: 32</div><a class="fm-link" href="../FMlogic/Request_CCBS_REMOVE_OFFER_SUBSCRIBER_POST.html">View Doc</a> <span class="badge badge-new">★ New</span></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_MOVE_SUB</div><div class="fm-card-steps">Step: 33</div><a class="fm-link" href="../FMlogic/Request_CCBS_MOVE_SUB.html">View Doc</a> <span class="badge badge-new">★ New</span></div>
+<div class="fm-card"><div class="fm-card-title">OMX_UPDATE_SUBID_FUTORDER</div><div class="fm-card-steps">Step: 34</div><a class="fm-link" href="../FMlogic/Request_OMX_UPDATE_SUBID_FUTORDER.html">View Doc</a> <span class="badge badge-new">★ New</span></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_GET_CUST_ACC_SUB_ID</div><div class="fm-card-steps">Step: 2</div><a class="fm-link" href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_GET_CUSTOMER_HEADER</div><div class="fm-card-steps">Steps: 3, 7, 35</div><a class="fm-link" href="../FMlogic/Request_CCBS_GET_CUSTOMER_HEADER.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_GET_ACCOUNT_HEADER</div><div class="fm-card-steps">Steps: 4, 8</div><a class="fm-link" href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_GET_SUBSCRIBER_HEADER</div><div class="fm-card-steps">Step: 5</div><a class="fm-link" href="../FMlogic/Request_CCBS_GET_SUBSCRIBER_HEADER.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_GET_SUBS_INFO</div><div class="fm-card-steps">Steps: 6, 39</div><a class="fm-link" href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_GET_AGREEMENT_INFO</div><div class="fm-card-steps">Step: 9</div><a class="fm-link" href="../FMlogic/Request_CCBS_GET_AGREEMENT_INFO.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_RESOLVE_SOC_CODE</div><div class="fm-card-steps">Steps: 10, 37</div><a class="fm-link" href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_GOD</div><div class="fm-card-steps">Step: 11</div><a class="fm-link" href="../FMlogic/Request_CCBS_GOD.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">OMX_OFFER_INCLUSION</div><div class="fm-card-steps">Step: 12</div><a class="fm-link" href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">GET_SPECIAL_OFFER_INDICATOR</div><div class="fm-card-steps">Steps: 13, 24</div><a class="fm-link" href="../FMlogic/Request_GET_SPECIAL_OFFER_INDICATOR.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">INTX_GET_PRODUCT_PREFERENCE_LIST</div><div class="fm-card-steps">Step: 15</div><a class="fm-link" href="../FMlogic/Request_INTX_GET_PRODUCT_PREFERENCE_LIST.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CVSS_GET_MAX_ALLOW_ONLY_SUB</div><div class="fm-card-steps">Step: 16</div><a class="fm-link" href="../FMlogic/Request_CVSS_GET_MAX_ALLOW_ONLY_SUB.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CVSS_GET_VALIDATE_APPROVE_CODE</div><div class="fm-card-steps">Step: 17</div><a class="fm-link" href="../FMlogic/Request_CVSS_GET_VALIDATE_APPROVE_CODE.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">OMX_BIZ_VAL</div><div class="fm-card-steps">Step: 18</div><a class="fm-link" href="../FMlogic/Request_OMX_BIZ_VAL.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_GET_AGREEMENT_HEADER</div><div class="fm-card-steps">Step: 23</div><a class="fm-link" href="../FMlogic/Request_CCBS_GET_AGREEMENT_HEADER.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">SBM_FUP_CHANGE_MEMBER</div><div class="fm-card-steps">Steps: 25, 43</div><a class="fm-link" href="../FMlogic/Request_SBM_FUP_CHANGE_MEMBER.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CVSS_GET_EXISTING_PRODUCT</div><div class="fm-card-steps">Steps: 26, 50</div><a class="fm-link" href="../FMlogic/Request_CVSS_GET_EXISTING_PRODUCT.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_CREATE_CUST_WITH_CYCLE</div><div class="fm-card-steps">Step: 28</div><a class="fm-link" href="../FMlogic/Request_CCBS_CREATE_CUST_WITH_CYCLE.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_CREATE_PARENT_OU</div><div class="fm-card-steps">Step: 29</div><a class="fm-link" href="../FMlogic/Request_CCBS_CREATE_PARENT_OU.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_CREATE_AGREE</div><div class="fm-card-steps">Step: 30</div><a class="fm-link" href="../FMlogic/Request_CCBS_CREATE_AGREE.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_CREATE_ACCT</div><div class="fm-card-steps">Step: 31</div><a class="fm-link" href="../FMlogic/Request_CCBS_CREATE_ACCT.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_CHANGE_PACKAGE_SUBSCRIBER</div><div class="fm-card-steps">Step: 38</div><a class="fm-link" href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">SBM_FUP_CREATE_GROUP</div><div class="fm-card-steps">Step: 40</div><a class="fm-link" href="../FMlogic/Request_SBM_FUP_CREATE_GROUP.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">SBM_FUP_CHANGE_TOPPING</div><div class="fm-card-steps">Step: 41</div><a class="fm-link" href="../FMlogic/Request_SBM_FUP_CHANGE_TOPPING.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">SBM_FUP_CHANGE_VARIABLE</div><div class="fm-card-steps">Step: 42</div><a class="fm-link" href="../FMlogic/Request_SBM_FUP_CHANGE_VARIABLE.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">STATUS_UPDATE_CREATING_PROFILE</div><div class="fm-card-steps">Step: 44</div><a class="fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CVSS_GET_AUTO_APPROVE_CODE</div><div class="fm-card-steps">Step: 45</div><a class="fm-link" href="../FMlogic/Request_CVSS_GET_AUTO_APPROVE_CODE.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CVSS_CREDIT_CHECK</div><div class="fm-card-steps">Steps: 46, 51</div><a class="fm-link" href="../FMlogic/Request_CVSS_CREDIT_CHECK.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">ODS_GET_CREDIT_CLASS_CREDIT_LIMIT</div><div class="fm-card-steps">Step: 47</div><a class="fm-link" href="../FMlogic/Request_ODS_GET_CREDIT_CLASS_CREDIT_LIMIT.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_UPD_CREDIT_CLASS</div><div class="fm-card-steps">Steps: 48, 52</div><a class="fm-link" href="../FMlogic/Request_CCBS_UPD_CREDIT_CLASS.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT</div><div class="fm-card-steps">Step: 49</div><a class="fm-link" href="../FMlogic/Request_CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CVSS_UPDATE_SUBSCRIBER_COUNT</div><div class="fm-card-steps">Step: 53</div><a class="fm-link" href="../FMlogic/Request_CVSS_UPDATE_SUBSCRIBER_COUNT.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">OMX_INJECT_OFFER</div><div class="fm-card-steps">Step: 54</div><a class="fm-link" href="../FMlogic/Request_OMX_INJECT_OFFER.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">CCBS_UPDATE_AGREEMENT_ON_UNIT</div><div class="fm-card-steps">Step: 55</div><a class="fm-link" href="../FMlogic/Request_CCBS_UPDATE_AGREEMENT_ON_UNIT.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">MCS_GET_PACKCODE</div><div class="fm-card-steps">Step: 56</div><a class="fm-link" href="../FMlogic/Request_MCS_GET_PACKCODE.html">View Doc</a></div>
+<div class="fm-card"><div class="fm-card-title">MCS_CANCEL_AFTER_SALE</div><div class="fm-card-steps">Step: 57</div><a class="fm-link" href="../FMlogic/Request_MCS_CANCEL_AFTER_SALE.html">View Doc</a></div>
+<div class="fm-card" style="background:#FFF8E1"><div class="fm-card-title" style="color:#666">OMX_CREATE_SOURCE_STRUCTURE</div><div class="fm-card-steps">Step: 1</div><span class="badge badge-internal">⚙ Internal</span></div>
+<div class="fm-card" style="background:#FFF8E1"><div class="fm-card-title" style="color:#666">OMX_CAL_ORDER</div><div class="fm-card-steps">Step: 19</div><span class="badge badge-internal">⚙ Internal</span></div>
+<div class="fm-card" style="background:#FFF8E1"><div class="fm-card-title" style="color:#666">OMX_POPULATE_TARGET_STRUCTURE</div><div class="fm-card-steps">Step: 22</div><span class="badge badge-internal">⚙ Internal</span></div>
+<div class="fm-card" style="background:#FFF8E1"><div class="fm-card-title" style="color:#666">OMX_BRMS</div><div class="fm-card-steps">Step: 36</div><span class="badge badge-internal">⚙ Internal</span></div>
+</div>
+</div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="card">
+<div class="card-header">§5 — Sequence Diagram (Key Integration Points)</div>
+<div class="card-body">
+<p style="margin-bottom:12px;font-size:.85rem">Showing primary system interactions across the 11 phases. Conditional steps (with PreExecCheck) are wrapped in <code>opt</code> blocks.</p>
+<div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)">
+<div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+    participant OMX as OMX_Internal
+    participant INTX as INTX
+    participant CVSS as CVSS
+    participant SBM as SBM
+    participant ODS as ODS
+    participant MCS as MCS
+
+    O->>OMX: OMX_CREATE_SOURCE_STRUCTURE
+    OMX-->>O: response
+    opt SOURCE exists
+        O->>CCBS: CCBS_GET_CUST_ACC_SUB_ID_SOURCE [SOURCE]
+        CCBS-->>O: response
+        O->>CCBS: CCBS_GET_CUSTOMER_HEADER_SOURCE [SOURCE]
+        CCBS-->>O: response
+        O->>CCBS: CCBS_GET_ACCOUNT_HEADER_SOURCE [SOURCE]
+        CCBS-->>O: response
+        O->>CCBS: CCBS_GET_SUBSCRIBER_HEADER_SOURCE [SOURCE]
+        CCBS-->>O: response
+        O->>CCBS: CCBS_GET_SUBS_INFO_SOURCE [SOURCE]
+        CCBS-->>O: response
+    end
+    opt TARGET exists
+        O->>CCBS: CCBS_GET_CUSTOMER_HEADER_TARGET
+        CCBS-->>O: response
+        O->>CCBS: CCBS_GET_ACCOUNT_HEADER_TARGET
+        CCBS-->>O: response
+        O->>CCBS: CCBS_GET_AGREEMENT_INFO_TARGET
+        CCBS-->>O: response
+    end
+    O->>CCBS: CCBS_RESOLVE_SOC_CODE_GOD
+    CCBS-->>O: response
+    opt CCBS_GOD condition
+        O->>CCBS: CCBS_GOD
+        CCBS-->>O: response
+    end
+    O->>OMX: OMX_OFFER_INCLUSION
+    OMX-->>O: response
+    opt SOURCE offer indicators
+        O->>CCBS: GET_SPECIAL_OFFER_INDICATOR_SOURCE [SOURCE]
+        CCBS-->>O: response
+    end
+    opt poolable SOCs exist
+        O->>CCBS: CCBS_OFFER_POOLING_POOLED
+        CCBS-->>O: pooling response
+        Note over O,CCBS: GoldenDB=Y → routes to CES instead
+    end
+    opt INTX product pref
+        O->>INTX: INTX_GET_PRODUCT_PREFERENCE_LIST
+        INTX-->>O: response
+    end
+    opt CVSS validation
+        O->>CVSS: CVSS_GET_MAX_ALLOW_ONLY_SUB
+        CVSS-->>O: response
+        O->>CVSS: CVSS_GET_VALIDATE_APPROVE_CODE
+        CVSS-->>O: response
+    end
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    O->>OMX: OMX_CAL_ORDER
+    OMX-->>O: response
+    opt future order eligible
+        O->>OMX: OMX_ADD_FUT_ORDER [FINALLY=Y]
+        OMX-->>O: response
+        Note over O,OMX: POU subscribers only
+    end
+    opt SOURCE subscriber info
+        O->>INTX: INTX_GET_SUBSCRIBER_INFO [SOURCE]
+        INTX-->>O: response
+        Note over O,INTX: Populates InitActDate + l9TmvActDate
+    end
+    O->>OMX: OMX_POPULATE_TARGET_STRUCTURE [SOURCE]
+    OMX-->>O: response
+    opt agreement header
+        O->>CCBS: CCBS_GET_AGREEMENT_HEADER_SOURCE
+        CCBS-->>O: response
+    end
+    opt TARGET offer indicators
+        O->>CCBS: GET_SPECIAL_OFFER_INDICATOR_TARGET [TARGET]
+        CCBS-->>O: response
+    end
+    opt SBM FUP REMOVE
+        O->>SBM: SBM_FUP_CHANGE_MEMBER_REMOVE [REMOVE]
+        SBM-->>O: response
+    end
+    opt CVSS existing product SOURCE
+        O->>CVSS: CVSS_GET_EXISTING_PRODUCT_SOURCE [SOURCE]
+        CVSS-->>O: response
+        O->>CVSS: CVSS_CANCEL_SUBS_SOURCE [SOURCE]
+        CVSS-->>O: response
+        Note over O,CVSS: Account-level cancel; source=EOC|MNP_INT|MNP_EXT|CCBS
+    end
+    opt TARGET account creation
+        O->>CCBS: CCBS_CREATE_CUST_WITH_CYCLE
+        CCBS-->>O: response
+        O->>CCBS: CCBS_CREATE_PARENT_OU
+        CCBS-->>O: response
+        O->>CCBS: CCBS_CREATE_AGREE
+        CCBS-->>O: response
+        O->>CCBS: CCBS_CREATE_ACCT
+        CCBS-->>O: response
+    end
+    opt remove SOURCE offers
+        O->>CCBS: CCBS_REMOVE_OFFER_SUBSCRIBER_POST
+        CCBS-->>O: response
+        Note over O,CCBS: Uses CCBS_UPDATE_SUBSCRIBER event type
+    end
+    opt move subscriber
+        O->>CCBS: CCBS_MOVE_SUB
+        CCBS-->>O: response
+        Note over O,CCBS: 4 OrderType variants; updates SubscriberId in memory
+    end
+    O->>OMX: OMX_UPDATE_SUBID_FUTORDER
+    OMX-->>O: response
+    Note over O,OMX: Uses Event.sendEvent (not immediate)
+    opt post-move profile
+        O->>CCBS: CCBS_GET_CUSTOMER_HEADER
+        CCBS-->>O: response
+    end
+    O->>OMX: OMX_BRMS
+    OMX-->>O: response
+    O->>CCBS: CCBS_RESOLVE_SOC_CODE
+    CCBS-->>O: response
+    opt change package
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER [ADD]
+        CCBS-->>O: response
+    end
+    opt get TARGET subs info
+        O->>CCBS: CCBS_GET_SUBS_INFO [TARGET]
+        CCBS-->>O: response
+    end
+    opt SBM FUP setup
+        O->>SBM: SBM_FUP_CREATE_GROUP
+        SBM-->>O: response
+        O->>SBM: SBM_FUP_CHANGE_TOPPING [ADD]
+        SBM-->>O: response
+        O->>SBM: SBM_FUP_CHANGE_VARIABLE [ADD]
+        SBM-->>O: response
+        O->>SBM: SBM_FUP_CHANGE_MEMBER [ADD]
+        SBM-->>O: response
+    end
+    O->>OMX: STATUS_UPDATE_CREATING_PROFILE
+    OMX-->>O: response
+    opt credit profile (new account)
+        O->>CVSS: CVSS_GET_AUTO_APPROVE_CODE [requestType=MV]
+        CVSS-->>O: response
+        O->>CVSS: CVSS_CREDIT_CHECK_NEW
+        CVSS-->>O: response
+        O->>ODS: ODS_GET_CREDIT_CLASS_CREDIT_LIMIT
+        ODS-->>O: response
+        O->>CCBS: CCBS_UPD_CREDIT_CLASS_NEW
+        CCBS-->>O: response
+        O->>CCBS: CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT_FOR_ODS
+        CCBS-->>O: response
+    end
+    opt credit profile (existing account)
+        O->>CVSS: CVSS_GET_EXISTING_PRODUCT
+        CVSS-->>O: response
+        O->>CVSS: CVSS_CREDIT_CHECK_EXIST
+        CVSS-->>O: response
+        O->>CCBS: CCBS_UPD_CREDIT_CLASS_EXIST
+        CCBS-->>O: response
+        O->>CVSS: CVSS_UPDATE_SUBSCRIBER_COUNT
+        CVSS-->>O: response
+    end
+    opt offer injection
+        O->>OMX: OMX_INJECT_OFFER_ADD_ITEMIZE0
+        OMX-->>O: response
+        O->>CCBS: CCBS_UPDATE_AGREEMENT_ON_UNIT
+        CCBS-->>O: response
+    end
+    O->>MCS: MCS_GET_PACKCODE
+    MCS-->>O: response
+    opt MCS cancel
+        O->>MCS: MCS_CANCEL_AFTER_SALE [MAP_OLD_SUB=SOURCE_SUB]
+        MCS-->>O: response
+    end
+</div>
+</div>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#666;font-size:.82rem">TRUE Corporation OMX · Order Journey Documentation · MOVE_SUBSCRIBER_NO_PROVISIONING · Generated 2026-09-23</div>
+</div>
+</body>
+</html>

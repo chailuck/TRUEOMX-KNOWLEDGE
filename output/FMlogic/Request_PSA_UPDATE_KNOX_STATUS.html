@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_PSA_UPDATE_KNOX_STATUS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem;margin-bottom:14px}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:18px;border-radius:8px;overflow-x:auto;font-size:.8rem;border-left:3px solid var(--true-red)}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:.78rem}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.88rem}
+.callout-warn{border-color:#e65100;background:#FFF3E0}
+.callout-info{border-color:#1565c0;background:#E3F0FD}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_PSA_UPDATE_KNOX_STATUS</h1>
+  <div class="subtitle">Updates device Knox enrollment status in PSA per qualifying subscriber offer (IMEI from ExtendedInfo, status from ProcessConfig KNOX_STATUS parameter); response handler overwrites DEVICE_STATUS ExtendedInfo on the matched offer.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: PSA (updateKnoxStatus)</span>
+    <span class="meta-badge">Pattern: Per-offer fan-out</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Author: DESKTOP-995HR2V</span>
+    <span class="meta-badge">Used in step: 67</span>
+    <span class="meta-badge">Generated: 2026-08-07</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Sends one <strong>PSA updateKnoxStatusReq</strong> per qualifying subscriber offer, updating the device's Knox enrollment status. The target Knox status is read from the ProcessConfig <code>Parameter[KNOX_STATUS]</code> key. The response handler writes the new status back into the matched offer's <code>ExtendedInfo[DEVICE_STATUS]</code>, <em>overwriting</em> the value previously set by PSA_GET_DEVICE_INFO.</p>
+    <ul style="margin:12px 0 0 20px;line-height:2">
+      <li><strong>Parameter guard:</strong> throws <code>DATA_ISSUE</code> if no Parameter entries — KNOX_STATUS is mandatory</li>
+      <li><strong>knoxStatus:</strong> <code>GetActivityParameterValueFromKey(orderCurrentActivity, "KNOX_STATUS")</code></li>
+      <li><strong>Payload:</strong> IMEI from <code>ExtendedInfo[IMEI_KNOX]</code> + status from <code>$knoxStatus</code> + channel-access="OMX"</li>
+      <li><strong>Audit OPERATION_NAME:</strong> <code>concat("PSA_UPDATE_KNOX_STATUS_", $knoxStatus)</code> — includes Knox status value</li>
+      <li><strong>Response write-back:</strong> overwrites existing <code>ExtendedInfo[DEVICE_STATUS].Value = knoxStatus</code></li>
+    </ul>
+    <div class="callout callout-warn" style="margin-top:14px" style="border-color:#CC0000;background:#FFF0F0">
+      <strong>[HIGH] COU XSLT sends wrong RefID:</strong> The COU variant passes <code>$cSubRefId</code> as the XSLT parameter name (<code>RefID = $cSubRefId</code>) instead of the correctly computed <code>offerRefId</code>. This means COU events carry only the bare subscriber RefId (e.g., <code>"SUB002"</code>) with no <code>Soc</code> or <code>filter</code> segments. The response handler's <code>String.split(RefID, ":")</code> then produces empty <code>soc</code> and <code>source</code> parts, so no offer is ever matched and <strong>DEVICE_STATUS is never updated for any COU subscriber offer</strong>. PSA still receives and processes the request, but the working-memory write-back silently fails.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[MEDIUM] COU PreExecCheck context mismatch:</strong> COU uses <code>GetXMLForSubscriberInChildOU</code> (subscriber-level context, no offer or filter) while POU uses <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code> (offer-level). PreExecCheck referencing offer data or FE_OR_CCBS will behave inconsistently.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] No PurgePendingRequestsBeforeResubmit:</strong> Duplicate PSA update calls possible on resubmit.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_PSA_UPDATE_KNOX_STATUS.rule</code></td><td>157 lines</td></tr>
+      <tr><td>Rule namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td><td></td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_PSA_UPDATE_KNOX_STATUS.rulefunction</code></td><td>117 lines — write-back logic</td></tr>
+      <tr><td>Author</td><td>DESKTOP-995HR2V</td><td></td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td>true</td><td></td></tr>
+      <tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.PSA_UPDATE_KNOX_STATUS</code></td><td>Dedicated event type</td></tr>
+      <tr><td>Payload root</td><td><code>ns:updateKnoxStatusReq</code></td><td>PSA Knox status update</td></tr>
+      <tr><td>Schema NS (ns)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/PSA/UpdateKnoxStatusRequest.xsd</code></td><td>Request</td></tr>
+      <tr><td>Schema NS (ns1)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/PSA/UserInfoType.xsd</code></td><td>user-info</td></tr>
+      <tr><td>Parameter guard</td><td><code>Parameter@length == 0</code> → DATA_ISSUE exception</td><td>Mandatory parameter enforcement</td></tr>
+      <tr><td>knoxStatus source</td><td><code>GetActivityParameterValueFromKey(orderCurrentActivity, "KNOX_STATUS")</code></td><td>From ProcessConfig Parameter</td></tr>
+      <tr><td>Audit OPERATION_NAME</td><td><code>concat("PSA_UPDATE_KNOX_STATUS_", $knoxStatus)</code></td><td>Includes Knox status value for traceability</td></tr>
+      <tr><td>offerRefId (POU)</td><td><code>pSubRefId + ":" + offer.Soc + ":" + filter</code></td><td>Correct 3-part key</td></tr>
+      <tr><td>offerRefId (COU)</td><td>COU XSLT sends <code>$cSubRefId</code> as RefID param</td><td><span class="badge badge-red">[HIGH]</span> Bug: should be <code>$offerRefId</code></td></tr>
+      <tr><td>IMEI source</td><td><code>ExtendedInfo[IMEI_KNOX]/Value</code></td><td>Same as PSA_GET_DEVICE_INFO</td></tr>
+      <tr><td>channel-access</td><td><code>"OMX"</code></td><td>Hardcoded</td></tr>
+      <tr><td>Resub purge</td><td><strong>ABSENT</strong></td><td>No PurgePendingRequestsBeforeResubmit</td></tr>
+      <tr><td>POU PreExecCheck builder</td><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code></td><td>Correct</td></tr>
+      <tr><td>COU PreExecCheck builder</td><td><code>GetXMLForSubscriberInChildOU</code></td><td><span class="badge badge-orange">[MEDIUM]</span> Subscriber-level only</td></tr>
+      <tr><td>Response write-back</td><td><code>ExtendedInfo[DEVICE_STATUS].Value = knoxStatus</code></td><td>Overwrites existing entry (not append)</td></tr>
+      <tr><td>Fan-in</td><td><code>RequestCount == successResponseCount</code></td><td>success = ResponseCode suffix "000"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="card">
+  <div class="card-header">§3 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "PSA_UPDATE_KNOX_STATUS"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "PSA_UPDATE_KNOX_STATUS"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 POU vs COU Variants -->
+<div class="card">
+  <div class="card-header">§4 — POU vs COU XSLT Variants</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>POU XSLT</th><th>COU XSLT</th><th>Diff</th></tr>
+      <tr><td>XSLT param name for correlation</td><td><code>offerRefId</code></td><td><code>cSubRefId</code></td><td><span class="badge badge-red">[HIGH]</span> COU uses wrong param name</td></tr>
+      <tr><td>RefID value emitted</td><td><code>$offerRefId</code> = <code>subRefId:Soc:filter</code></td><td><code>$cSubRefId</code> = bare subscriber RefId</td><td>COU RefID missing Soc and filter segments</td></tr>
+      <tr><td>ns:imei</td><td><code>ExtendedInfo[IMEI_KNOX]/Value</code></td><td><code>ExtendedInfo[IMEI_KNOX]/Value</code></td><td>Identical</td></tr>
+      <tr><td>ns:status-knox</td><td><code>$knoxStatus</code></td><td><code>$knoxStatus</code></td><td>Identical</td></tr>
+      <tr><td>ns1:channel-access</td><td><code>"OMX"</code></td><td><code>"OMX"</code></td><td>Identical</td></tr>
+      <tr><td>PreExecCheck builder</td><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code></td><td><code>GetXMLForSubscriberInChildOU</code></td><td><span class="badge badge-orange">[MEDIUM]</span> Different context</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Mapping -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p style="margin-bottom:8px">POU and COU XSLTs share identical payload structure — only <code>RefID</code> differs (see §4).</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$offerRefId (POU) / $cSubRefId (COU — BUG)</span><span class="badge badge-green">Always</span><span class="tree-cond">[HIGH] COU sends bare subscriber RefId</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:updateKnoxStatusReq</span><span class="tree-ns">ns=http://…/PSA/UpdateKnoxStatusRequest.xsd</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:order</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:data</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns:imei</span><span class="tree-arrow">←</span><span class="tree-src">$offer/ExtendedInfo[IMEI_KNOX]/Value</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:status-knox</span><span class="tree-arrow">←</span><span class="tree-src">$knoxStatus</span><span class="badge badge-green">Always</span><span class="tree-cond">from ProcessConfig Parameter[KNOX_STATUS]</span></div></li>
+                            </ul>
+                          </li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:user-info</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns1:channel-access</span><span class="tree-arrow">←</span><span class="tree-src-static">"OMX"</span><span class="badge badge-green">Always</span></div></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>PSA (Partner Service Access)</td></tr>
+      <tr><td>Operation</td><td>updateKnoxStatusReq — update device Knox enrollment status</td></tr>
+      <tr><td>Request schema NS (ns)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/PSA/UpdateKnoxStatusRequest.xsd</code></td></tr>
+      <tr><td>IMEI source</td><td><code>ExtendedInfo[IMEI_KNOX]/Value</code></td></tr>
+      <tr><td>Knox status source</td><td><code>ProcessConfig Parameter[KNOX_STATUS]</code> — varies per workflow step</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§8.5 ExtendedInfo Fields</h3>
+    <table>
+      <tr><th>Name</th><th>Direction</th><th>Purpose</th></tr>
+      <tr><td>FE_OR_CCBS</td><td>INPUT</td><td>filter segment in offerRefId</td></tr>
+      <tr><td>IMEI_KNOX</td><td>INPUT</td><td>ns:imei in PSA request</td></tr>
+      <tr><td>DEVICE_STATUS</td><td>OUTPUT (overwrite)</td><td>Overwritten with knoxStatus on successful response match</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_PSA_UPDATE_KNOX_STATUS (rule)
+├── isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── [Parameter guard]: if(Parameter@length == 0) throw DATA_ISSUE
+├── knoxStatus = GetActivityParameterValueFromKey(orderCurrentActivity, "KNOX_STATUS")
+├── [NOTE: NO PurgePendingRequestsBeforeResubmit]
+├── [POU loop p → ps → psof]:
+│   ├── filter = XPath.evalAsString(offer/ExtendedInfo[FE_OR_CCBS]/Value)
+│   ├── offerRefId = pSubRefId + ":" + offer.Soc + ":" + filter
+│   ├── [Resub guard]: scan Response[] for CompletionStatus==2 &amp;&amp; ReferenceId==offerRefId
+│   ├── [if !reqSuccess]:
+│   │   ├── [if PreExecCheck]: GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, pSubRefId, offer.Soc, filter)
+│   │   └── [if "true"]:
+│   │       ├── Event.createEvent(PSA_UPDATE_KNOX_STATUS, XSLT: ns:updateKnoxStatusReq, RefID=$offerRefId)
+│   │       ├── Event.Ext.sendEventImmediate(reqEvent)
+│   │       ├── isSkipped = false; [if !isActResub]: RequestCount++
+│   │       └── Logger: OPERATION_NAME=concat("PSA_UPDATE_KNOX_STATUS_", knoxStatus)
+├── [COU loop p → c → cs → csof]:
+│   ├── offerRefId = cSubRefId + ":" + offer.Soc + ":" + filter (computed correctly in BE)
+│   ├── [if PreExecCheck]: GetXMLForSubscriberInChildOU(orderRequest, cSubRefId, pOuRefId) ← [MEDIUM]
+│   └── Event.createEvent(PSA_UPDATE_KNOX_STATUS, XSLT: RefID=$cSubRefId) ← [HIGH] BUG: should be $offerRefId
+├── [if !isSkipped]:
+│   ├── Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException(orderRequest, orderCurrentActivity, ae, "")
+
+Response_PSA_UPDATE_KNOX_STATUS (rulefunction)
+├── activityRes = Instance.createInstance(ResponseBase) {extId, ResponseCode, ResponseMessage, CompletionStatus, ReferenceId}
+├── currActivity.Response[] ← activityRes
+├── refIDs = String.split(eventResponse.RefID, ":")
+│   ├── refIDs[0] = subRefId  (empty soc/source for COU due to [HIGH] bug)
+│   ├── refIDs[1] = soc
+│   └── refIDs[2] = source
+├── knoxStatus = GetActivityParameterValueFromKey(currActivity, "KNOX_STATUS")
+├── [POU loop]: find subscriber[RefId==subRefId] → find offer[Soc==soc] → verify feOrCcbs==source
+│   └── for each ExtendedInfo: if Name=="DEVICE_STATUS" → Value = knoxStatus; break
+├── [COU loop]: same pattern — BUT RefID has no ":" → soc="" → no offer match → write-back NEVER occurs [HIGH]
+├── Event.Ext.sendEventImmediate(Logger: OPERATION_NAME=concat("PSA_UPDATE_KNOX_STATUS_", knoxStatus))
+├── successResponseCount = count(Response[tib:right(tib:trim(ResponseCode),3)="000"])
+└── return (RequestCount == successResponseCount) ? "true" : "false"</pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Per-offer fan-out across POU and COU. One PSA updateKnoxStatusReq per qualifying offer.</td></tr>
+      <tr><td>R2</td><td>KNOX_STATUS from ProcessConfig Parameter[KNOX_STATUS] key — mandatory (DATA_ISSUE thrown if no Parameters).</td></tr>
+      <tr><td>R3</td><td>Payload: IMEI = IMEI_KNOX ExtendedInfo; status-knox = knoxStatus; channel-access = "OMX".</td></tr>
+      <tr><td>R4</td><td>Audit OPERATION_NAME includes Knox status value: <code>concat("PSA_UPDATE_KNOX_STATUS_", knoxStatus)</code>.</td></tr>
+      <tr><td>R5</td><td>Response write-back: overwrites (not appends) existing ExtendedInfo[DEVICE_STATUS].Value with knoxStatus.</td></tr>
+      <tr><td>R6</td><td>POU RefID = <code>subRefId:Soc:filter</code> (correct). COU RefID = bare <code>cSubRefId</code> (bug — see R7).</td></tr>
+      <tr><td>R7</td><td><strong>[BUG]</strong> COU XSLT passes <code>$cSubRefId</code> as RefID instead of the computed <code>offerRefId</code>. Fix: change COU XSLT <code>&lt;RefID&gt;$cSubRefId&lt;/RefID&gt;</code> to <code>&lt;RefID&gt;$offerRefId&lt;/RefID&gt;</code> and align XSLT param name.</td></tr>
+      <tr><td>R8</td><td>Fan-in: RequestCount == count(Response[ResponseCode suffix "000"]).</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>COU XSLT sends RefID = bare cSubRefId — response correlation fails; DEVICE_STATUS never updated for COU offers</td><td><span class="badge badge-red">[HIGH]</span></td><td>Fix COU XSLT: pass <code>$offerRefId</code> as RefID (same as POU). Align XSLT param name to <code>offerRefId</code>.</td></tr>
+      <tr><td>COU PreExecCheck uses subscriber-level context (GetXMLForSubscriberInChildOU) instead of offer-level</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Align to GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo for consistent PreExecCheck behavior</td></tr>
+      <tr><td>No PurgePendingRequestsBeforeResubmit</td><td><span class="badge badge-blue">[LOW]</span></td><td>Verify PSA idempotency for duplicate updateKnoxStatus with same IMEI</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule (Response_PSA_UPDATE_KNOX_STATUS)</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§19.3 ResponseBase Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span><span class="tree-cond">Concepts.FM.Base.ResponseBase</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">Msg→Message</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.4 Response Write-back Logic</h3>
+    <p>After creating ResponseBase, matches the offer and overwrites <code>ExtendedInfo[DEVICE_STATUS]</code>:</p>
+    <pre style="margin-top:10px">refIDs = String.split(eventResponse.RefID, ":")  // POU: ["subRefId","soc","filter"] / COU: ["subRefId"] — BUG
+subRefId = refIDs[0]; soc = refIDs[1]; source = refIDs[2]
+knoxStatus = GetActivityParameterValueFromKey(currActivity, "KNOX_STATUS")
+
+for each subscriber[RefId == subRefId]:
+  for each offer[Soc == soc]:
+    if feOrCcbs == source:
+      for each ExtendedInfo[Name == "DEVICE_STATUS"]:
+        ExtendedInfo[l].Value = knoxStatus   // OVERWRITE (not append)
+        break</pre>
+    <div class="callout callout-warn" style="margin-top:10px">
+      <strong>[HIGH] COU write-back never executes:</strong> <code>refIDs[1]</code> (soc) will be empty/null when RefID has no ":" — no offer matches, write-back loop body never runs.
+    </div>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.5 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PREPAID_SWAP_SIM — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.9rem;font-weight:700}
+header p{opacity:.85;margin-top:6px;font-size:.95rem}
+.meta-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px}
+.meta-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.8rem;font-weight:600}
+main{max-width:1400px;margin:32px auto;padding:0 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:28px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:7px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+.precheck-row td{border-left:4px solid #F9A825;background:#FFFDE7}
+.precheck-row:hover td{background:#FFF8E1}
+.nf-row td{border-left:4px solid #9E9E9E;background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:14px;overflow-x:auto;font-size:.8rem;line-height:1.5;border-left:3px solid var(--true-red)}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-amber{background:#FFF3E0;color:var(--warning)}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-grey{background:#EEEEEE;color:#555}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-new{background:linear-gradient(90deg,#FFD700,#FFA000);color:#3E2000;font-weight:800;font-size:.72rem}
+.fm-link{color:var(--true-dark);text-decoration:none;font-weight:600}
+.fm-link:hover{text-decoration:underline;color:var(--true-red)}
+details>summary{cursor:pointer;padding:10px 14px;background:#FFF8E1;border-radius:6px;font-weight:600;color:#5D4037;border-left:3px solid #F9A825;user-select:none}
+details[open]>summary{border-bottom:1px solid #FFE082;border-radius:6px 6px 0 0}
+.detail-body{padding:14px;background:#FFFDE7;border-radius:0 0 6px 6px}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(270px,1fr));gap:14px}
+.fm-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px}
+.fm-card-title{font-weight:700;font-size:.88rem;color:var(--true-dark);word-break:break-all}
+.fm-card-steps{font-size:.78rem;color:#555;margin-top:3px}
+.fm-card-link{display:inline-block;margin-top:8px;font-size:.78rem}
+.mermaid-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)}
+.phase-table th{background:#EDE7F6;color:#311B92}
+footer{text-align:center;padding:32px;color:#777;font-size:.82rem;border-top:1px solid var(--border);margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <div style="font-size:.78rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX &rsaquo; Order Journey</div>
+  <h1>PREPAID_SWAP_SIM</h1>
+  <p>Process Configuration for PREPAID_SWAP_SIM.</p>
+  <div class="meta-row">
+    <span class="meta-pill">28 Steps</span>
+    <span class="meta-pill">24 Unique FMs</span>
+    <span class="meta-pill">Entry: OMX_CREATE_SOURCE_STRUCTURE</span>
+    <span class="meta-pill">★ 1 New FM Doc</span>
+    <span class="meta-pill">⚠ 2 Internal Functions</span>
+    <span class="meta-pill">Generated: 2026-09-23</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 -->
+<div class="card">
+  <div class="card-header">§1 — Process Overview</div>
+  <div class="card-body">
+    <p>Prepaid SIM swap flow supporting both <strong>physical SIM swap</strong> and <strong>eSIM RIO swap</strong> paths. SOURCE subscriber data is read from CRM; TARGET subscriber is validated against ASRM &amp; INTX. For eSIM, OMX computes a Luhn checksum (OMX_CAL_CHK_SUM ★) then triggers SM-DP+ download and confirm. Physical SIM swap bypasses the eSIM path via PreExecCheck. SIM lifecycle (RELEASE → RESERVE → ACTIVATE) is managed through ASRM. CRM order is created mid-flow after eSIM confirmation. Ends with SMS notification.</p>
+    <table style="margin-top:16px;width:auto">
+      <tr><th>Phase</th><th>Steps</th><th>Description</th></tr>
+      <tr><td>Source Discovery</td><td>1–3</td><td>Create source structure; read CRM asset data for SOURCE subscriber</td></tr>
+      <tr><td>SIM &amp; Resource Discovery</td><td>4–8</td><td>Retrieve unified resource details; reserve SIM (eSIM RIO); get SIM info from INTX</td></tr>
+      <tr><td>Business Validation</td><td>9–12</td><td>Business rules validation; CAT offer lookup; CCP prepaid credit info</td></tr>
+      <tr><td>TARGET Population</td><td>13–16</td><td>Populate TARGET structure; CAT_GOD for TARGET; get service trx no; AA provisioning</td></tr>
+      <tr><td>eSIM Checksum</td><td>17</td><td>Compute ICC_ID Luhn checksum → ICC_ID_CHG_SUM (gates SMDP+ steps)</td></tr>
+      <tr><td>eSIM Download</td><td>18–19</td><td>SM-DP+ profile download &amp; confirm (eSIM RIO swap only)</td></tr>
+      <tr><td>CRM Order &amp; Status</td><td>20–21</td><td>Create SwapSim order in CRM; update status to CREATING_PROFILE</td></tr>
+      <tr><td>SIM Lifecycle</td><td>22–25</td><td>ASRM: release old SIM, reserve new SIM, activate new SIM, update attributes</td></tr>
+      <tr><td>Charge &amp; Notification</td><td>26–28</td><td>BL charge for SIM swap fee; send SMS; update pending partial order</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Flow Table -->
+<div class="card">
+  <div class="card-header">§2 — Order Flow (28 Steps)</div>
+  <div class="card-body" style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>Step</th><th>Step ID</th><th>FM (ActivityID)</th><th>Parameter(s)</th>
+          <th>PreExecCheck</th><th>Previous</th><th>Next</th><th>FM Doc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="nf-row">
+          <td>1</td><td>OMX_CREATE_SOURCE_STRUCTURE</td>
+          <td>OMX_CREATE_SOURCE_STRUCTURE</td><td>—</td>
+          <td>—</td><td>START</td><td>CRM_GET_LAST_ASSET_ROOT</td>
+          <td><span class="badge badge-grey">⚠ Not Found</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>2</td><td>CRM_GET_LAST_ASSET_ROOT</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">CRM_GET_LAST_ASSET_ROOT</a></td><td>—</td>
+          <td><code>MSISDN!='' and SOURCE</code></td><td>OMX_CREATE_SOURCE_STRUCTURE</td><td>CRM_GET_ASSET_COMPONENT_LIST</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>3</td><td>CRM_GET_ASSET_COMPONENT_LIST</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">CRM_GET_ASSET_COMPONENT_LIST</a></td><td>—</td>
+          <td><code>SOURCE_OR_TARGET='SOURCE'</code></td><td>CRM_GET_LAST_ASSET_ROOT</td><td>ASRM_GET_UR_DETAILS_MSISDN</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>4</td><td>ASRM_GET_UR_DETAILS_MSISDN</td>
+          <td><a class="fm-link" href="../FMlogic/Request_ASRM_GET_UR_DETAILS_MSISDN.html">ASRM_GET_UR_DETAILS_MSISDN</a></td><td>—</td>
+          <td><code>SOURCE_OR_TARGET='TARGET'</code></td><td>CRM_GET_ASSET_COMPONENT_LIST</td><td>ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>5</td><td>ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST</td>
+          <td><a class="fm-link" href="../FMlogic/Request_ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST.html">ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST</a></td>
+          <td><code>DEALERCODE=70000776</code></td>
+          <td><code>TARGET and NEW_PMATCHID present and ICC_ID absent</code></td>
+          <td>ASRM_GET_UR_DETAILS_MSISDN</td><td>INTX_GET_SIM_INFO_BY_ICCID_RIO</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>6</td><td>INTX_GET_SIM_INFO_BY_ICCID_RIO</td>
+          <td><a class="fm-link" href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_ICCID.html">INTX_GET_SIM_INFO_BY_ICCID</a></td>
+          <td><code>PROJ=RIO_SWAP</code></td>
+          <td><code>TARGET and NEW_PMATCHID present</code></td>
+          <td>ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST</td><td>INTX_GET_SIM_INFO_BY_MSISDN</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>7</td><td>INTX_GET_SIM_INFO_BY_MSISDN</td>
+          <td><a class="fm-link" href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_MSISDN.html">INTX_GET_SIM_INFO_BY_MSISDN</a></td><td>—</td>
+          <td><code>SOURCE_OR_TARGET='TARGET'</code></td><td>INTX_GET_SIM_INFO_BY_ICCID_RIO</td><td>INTX_GET_SIM_INFO_BY_SIM</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>8</td><td>INTX_GET_SIM_INFO_BY_SIM</td>
+          <td><a class="fm-link" href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_SIM.html">INTX_GET_SIM_INFO_BY_SIM</a></td><td>—</td>
+          <td><code>SOURCE_OR_TARGET='TARGET'</code></td><td>INTX_GET_SIM_INFO_BY_MSISDN</td><td>OMX_BIZ_VAL</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>9</td><td>OMX_BIZ_VAL</td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></td><td>—</td>
+          <td>—</td><td>INTX_GET_SIM_INFO_BY_SIM</td><td>CAT_GOD</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>10</td><td>CAT_GOD</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td><td>—</td>
+          <td><code>count(Offers)&gt;0 or count(SubscriberOffers)&gt;0</code></td><td>OMX_BIZ_VAL</td><td>CCP_GET_PREPAID_CREDIT_INFO</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>11</td><td>CCP_GET_PREPAID_CREDIT_INFO</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">CCP_GET_PREPAID_CREDIT_INFO</a></td><td>—</td>
+          <td><code>SOURCE_OR_TARGET='SOURCE'</code></td><td>CAT_GOD</td><td>CAT_GOD_B</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>12</td><td>CAT_GOD_B</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td><td>—</td>
+          <td><code>FE_OR_CCBS='CCP' offers</code></td><td>CCP_GET_PREPAID_CREDIT_INFO</td><td>OMX_POPULATE_TARGET_STRUCTURE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="nf-row">
+          <td>13</td><td>OMX_POPULATE_TARGET_STRUCTURE</td>
+          <td>OMX_POPULATE_TARGET_STRUCTURE</td><td>—</td>
+          <td>—</td><td>CAT_GOD_B</td><td>CAT_GOD_TARGET</td>
+          <td><span class="badge badge-grey">⚠ Not Found</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>14</td><td>CAT_GOD_TARGET</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td><td>—</td>
+          <td><code>SOURCE_OR_TARGET='TARGET'</code></td><td>OMX_POPULATE_TARGET_STRUCTURE</td><td>OMX_GET_SRV_TRX_NO</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>15</td><td>OMX_GET_SRV_TRX_NO</td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></td>
+          <td><code>SSP | TARGET</code></td>
+          <td>—</td><td>CAT_GOD_TARGET</td><td>AA_PREPAID_PROVISIONING</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>16</td><td>AA_PREPAID_PROVISIONING</td>
+          <td><a class="fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">AA_PREPAID_PROVISIONING</a></td>
+          <td><code>SSP | TARGET</code></td>
+          <td><code>SOURCE_OR_TARGET='TARGET'</code></td><td>OMX_GET_SRV_TRX_NO</td><td>OMX_CAL_CHK_SUM</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row" style="background:#FFF8E1;border-left:4px solid #F9A825">
+          <td>17</td><td>OMX_CAL_CHK_SUM</td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_CAL_CHK_SUM.html">OMX_CAL_CHK_SUM</a> <span class="badge badge-new">★ NEW</span></td><td>—</td>
+          <td><code>TARGET and NEW_PMATCHID and not SMDP_COMFIRMED=Y</code></td>
+          <td>AA_PREPAID_PROVISIONING</td><td>SMDP_PLUS_DOWNLOAD</td>
+          <td><span class="badge badge-new">★ NEW</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>18</td><td>SMDP_PLUS_DOWNLOAD</td>
+          <td><a class="fm-link" href="../FMlogic/Request_SMDP_PLUS.html">SMDP_PLUS</a></td>
+          <td><code>PROJ=ESIM</code></td>
+          <td><code>TARGET and ICC_ID_CHG_SUM present and not SMDP_COMFIRMED=Y</code></td>
+          <td>OMX_CAL_CHK_SUM</td><td>SMDP_PLUS_CONFIRM</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>19</td><td>SMDP_PLUS_CONFIRM</td>
+          <td><a class="fm-link" href="../FMlogic/Request_SMDP_PLUS_CONFIRM.html">SMDP_PLUS_CONFIRM</a></td>
+          <td><code>PROJ=ESIM</code></td>
+          <td><code>TARGET and ICC_ID_CHG_SUM present and not SMDP_COMFIRMED=Y</code></td>
+          <td>SMDP_PLUS_DOWNLOAD</td><td>CRM_CREATE_ORDER_PREPAID</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>20</td><td>CRM_CREATE_ORDER_PREPAID</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">CRM_CREATE_ORDER_PREPAID</a></td>
+          <td><code>command=SwapSim | orderType=C | listOfLineItemAction=Add | listOfLineItemStatus=Active | mappingValueFrom=SOURCE | USE_ROWID_CRM=N</code></td>
+          <td><code>SOURCE_OR_TARGET='TARGET'</code></td><td>SMDP_PLUS_CONFIRM</td><td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>21</td><td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td><a class="fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></td><td>—</td>
+          <td>—</td><td>CRM_CREATE_ORDER_PREPAID</td><td>ASRM_INVOKE_SIM_RELEASE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>22</td><td>ASRM_INVOKE_SIM_RELEASE</td>
+          <td><a class="fm-link" href="../FMlogic/Request_ASRM_INVOKE_SIM.html">ASRM_INVOKE_SIM</a></td>
+          <td><code>ACTIVITY=RELEASE</code></td>
+          <td><code>SOURCE_OR_TARGET='SOURCE'</code></td><td>STATUS_UPDATE_CREATING_PROFILE</td><td>ASRM_INVOKE_SIM_RESERVE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>23</td><td>ASRM_INVOKE_SIM_RESERVE</td>
+          <td><a class="fm-link" href="../FMlogic/Request_ASRM_INVOKE_SIM.html">ASRM_INVOKE_SIM</a></td>
+          <td><code>ACTIVITY=RESERVE</code></td>
+          <td><code>TARGET and count(NEW_PMATCHID)=0</code></td><td>ASRM_INVOKE_SIM_RELEASE</td><td>ASRM_INVOKE_SIM_ACTIVATE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>24</td><td>ASRM_INVOKE_SIM_ACTIVATE</td>
+          <td><a class="fm-link" href="../FMlogic/Request_ASRM_INVOKE_SIM.html">ASRM_INVOKE_SIM</a></td>
+          <td><code>ACTIVITY=ACTIVATE</code></td>
+          <td><code>SOURCE_OR_TARGET='TARGET'</code></td><td>ASRM_INVOKE_SIM_RESERVE</td><td>ASRM_UPDATE_ATTRIBUTE_SIM</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>25</td><td>ASRM_UPDATE_ATTRIBUTE_SIM</td>
+          <td><a class="fm-link" href="../FMlogic/Request_ASRM_UPDATE_ATTRIBUTE_SIM.html">ASRM_UPDATE_ATTRIBUTE_SIM</a></td>
+          <td><code>EXPIRE_SELF=-1</code></td>
+          <td><code>TARGET and NEW_PMATCHID present</code></td><td>ASRM_INVOKE_SIM_ACTIVATE</td><td>BL_CREATE_CHARGE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>26</td><td>BL_CREATE_CHARGE</td>
+          <td><a class="fm-link" href="../FMlogic/Request_BL_CREATE_CHARGE.html">BL_CREATE_CHARGE</a></td><td>—</td>
+          <td><code>TARGET and ServiceType=79 (FE/BRMS)</code></td><td>ASRM_UPDATE_ATTRIBUTE_SIM</td><td>SMSGATEWAY_SEND_SMS</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>27</td><td>SMSGATEWAY_SEND_SMS</td>
+          <td><a class="fm-link" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></td><td>—</td>
+          <td>—</td><td>BL_CREATE_CHARGE</td><td>OMX_UPDATE_PENDING_PARTIAL_ORDER</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>28</td><td>OMX_UPDATE_PENDING_PARTIAL_ORDER</td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_UPDATE_PENDING_PARTIAL_ORDER.html">OMX_UPDATE_PENDING_PARTIAL_ORDER</a></td><td>—</td>
+          <td><code>SOURCE_OR_TARGET='TARGET'</code></td><td>SMSGATEWAY_SEND_SMS</td><td>END</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:10px;font-size:.8rem;color:#666">
+      <span style="border-left:4px solid #F9A825;padding-left:6px">Amber border = PreExecCheck present</span> &nbsp;
+      <span style="border-left:4px solid #9E9E9E;padding-left:6px">Grey border = internal OMX function (no rule file)</span> &nbsp;
+      <span class="badge badge-new">★ NEW</span> = FM doc generated this run
+    </p>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck -->
+<div class="card">
+  <div class="card-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="card-body">
+
+    <details style="margin-bottom:10px">
+      <summary>Step 2 — CRM_GET_LAST_ASSET_ROOT &nbsp;<span class="badge badge-green">FM: CRM_GET_LAST_ASSET_ROOT</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/MSISDN/text() != ""
+and //Subscriber/SOURCE_OR_TARGET/text() = 'SOURCE'</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Retrieves last asset root from CRM when processing the SOURCE subscriber with a known MSISDN.</p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 3 — CRM_GET_ASSET_COMPONENT_LIST &nbsp;<span class="badge badge-green">FM: CRM_GET_ASSET_COMPONENT_LIST</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'SOURCE'</code></pre></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 4 — ASRM_GET_UR_DETAILS_MSISDN &nbsp;<span class="badge badge-green">FM: ASRM_GET_UR_DETAILS_MSISDN</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'</code></pre></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 5 — ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST &nbsp;<span class="badge badge-green">FM: ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'
+and count(//Subscriber/ResourceInfo[ResourceName='NEW_PMATCHID']) &gt; 0
+and count(//Subscriber/ExtendedInfo[Name='ICC_ID']) = 0</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Reserves a SIM from ASRM unified resource pool for eSIM RIO swap when NEW_PMATCHID is specified but ICC_ID not yet known.</p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 6 — INTX_GET_SIM_INFO_BY_ICCID_RIO &nbsp;<span class="badge badge-green">FM: INTX_GET_SIM_INFO_BY_ICCID</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'
+and count(//Subscriber/ResourceInfo[ResourceName='NEW_PMATCHID']) &gt; 0</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Gets SIM info by ICCID from INTX for eSIM RIO swap. PROJ=RIO_SWAP parameter identifies the swap scenario.</p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 7 — INTX_GET_SIM_INFO_BY_MSISDN &nbsp;<span class="badge badge-green">FM: INTX_GET_SIM_INFO_BY_MSISDN</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'</code></pre></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 8 — INTX_GET_SIM_INFO_BY_SIM &nbsp;<span class="badge badge-green">FM: INTX_GET_SIM_INFO_BY_SIM</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'</code></pre></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 10 — CAT_GOD &nbsp;<span class="badge badge-green">FM: CAT_GOD</span></summary>
+      <div class="detail-body"><pre><code>count(//Offers) &gt; 0 or count(//SubscriberOffers) &gt; 0</code></pre></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 11 — CCP_GET_PREPAID_CREDIT_INFO &nbsp;<span class="badge badge-green">FM: CCP_GET_PREPAID_CREDIT_INFO</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'SOURCE'</code></pre></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 12 — CAT_GOD_B &nbsp;<span class="badge badge-green">FM: CAT_GOD</span></summary>
+      <div class="detail-body"><pre><code>count(//Subscriber/SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and Value='CCP']) &gt; 0</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Second CAT_GOD invocation for CCP-type offers specifically.</p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 14 — CAT_GOD_TARGET &nbsp;<span class="badge badge-green">FM: CAT_GOD</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Third CAT_GOD invocation scoped to the TARGET subscriber.</p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 16 — AA_PREPAID_PROVISIONING &nbsp;<span class="badge badge-green">FM: AA_PREPAID_PROVISIONING</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'</code></pre></div>
+    </details>
+
+    <details style="margin-bottom:10px" open>
+      <summary>Step 17 — OMX_CAL_CHK_SUM ★ NEW &nbsp;<span class="badge badge-new">FM: OMX_CAL_CHK_SUM</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'
+and count(//Subscriber/ResourceInfo[ResourceName='NEW_PMATCHID']) &gt; 0
+and //Subscriber/ExtendedInfo[Name='SMDP_COMFIRMED']/Value/text() != 'Y'</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Computes Luhn checksum for ICC_ID and stores <code>ICC_ID_CHG_SUM</code> ExtendedInfo. Only runs on eSIM swap (NEW_PMATCHID present) when not already confirmed. <strong>The ICC_ID_CHG_SUM value created here gates both SMDP_PLUS_DOWNLOAD (step 18) and SMDP_PLUS_CONFIRM (step 19).</strong></p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 18 — SMDP_PLUS_DOWNLOAD &nbsp;<span class="badge badge-green">FM: SMDP_PLUS</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'
+and count(//Subscriber/ExtendedInfo[Name='ICC_ID_CHG_SUM']) &gt; 0
+and //Subscriber/ExtendedInfo[Name='SMDP_COMFIRMED']/Value/text() != 'Y'</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Downloads eSIM profile to device via SM-DP+ server. Requires ICC_ID_CHG_SUM from step 17.</p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 19 — SMDP_PLUS_CONFIRM &nbsp;<span class="badge badge-green">FM: SMDP_PLUS_CONFIRM</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'
+and count(//Subscriber/ExtendedInfo[Name='ICC_ID_CHG_SUM']) &gt; 0
+and //Subscriber/ExtendedInfo[Name='SMDP_COMFIRMED']/Value/text() != 'Y'</code></pre></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 20 — CRM_CREATE_ORDER_PREPAID &nbsp;<span class="badge badge-green">FM: CRM_CREATE_ORDER_PREPAID</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Parameters: <code>command=SwapSim | orderType=C | listOfLineItemAction=Add | listOfLineItemStatus=Active | mappingValueFrom=SOURCE | USE_ROWID_CRM=N</code></p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 22 — ASRM_INVOKE_SIM_RELEASE &nbsp;<span class="badge badge-green">FM: ASRM_INVOKE_SIM</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'SOURCE'</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Releases the old SIM (SOURCE) from ASRM inventory.</p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 23 — ASRM_INVOKE_SIM_RESERVE &nbsp;<span class="badge badge-green">FM: ASRM_INVOKE_SIM</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'
+and count(//Subscriber/ResourceInfo[ResourceName='NEW_PMATCHID']) = 0</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Reserves the new SIM in ASRM. Skipped when NEW_PMATCHID present (eSIM RIO swap — SIM was pre-reserved in step 5).</p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 24 — ASRM_INVOKE_SIM_ACTIVATE &nbsp;<span class="badge badge-green">FM: ASRM_INVOKE_SIM</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'</code></pre></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 25 — ASRM_UPDATE_ATTRIBUTE_SIM &nbsp;<span class="badge badge-green">FM: ASRM_UPDATE_ATTRIBUTE_SIM</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'
+and count(//Subscriber/ResourceInfo[ResourceName='NEW_PMATCHID']) &gt; 0</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Updates SIM attributes on ASRM with EXPIRE_SELF=-1. Only for eSIM path.</p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 26 — BL_CREATE_CHARGE &nbsp;<span class="badge badge-green">FM: BL_CREATE_CHARGE</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'
+and count(//Subscriber/SubscriberOffers[ServiceType='79']
+          [ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]]) &gt; 0</code></pre>
+      <p style="margin-top:8px;font-size:.85rem">Creates billing charge for SIM swap fee (ServiceType=79).</p></div>
+    </details>
+
+    <details style="margin-bottom:10px">
+      <summary>Step 28 — OMX_UPDATE_PENDING_PARTIAL_ORDER &nbsp;<span class="badge badge-green">FM: OMX_UPDATE_PENDING_PARTIAL_ORDER</span></summary>
+      <div class="detail-body"><pre><code>//Subscriber/SOURCE_OR_TARGET/text() = 'TARGET'</code></pre></div>
+    </details>
+
+  </div>
+</div>
+
+<!-- §4 FM Index -->
+<div class="card">
+  <div class="card-header">§4 — FM Documentation Index (24 Unique ActivityIDs)</div>
+  <div class="card-body">
+    <div class="fm-grid">
+      <div class="fm-card" style="border-left:3px solid #9E9E9E">
+        <div class="fm-card-title">OMX_CREATE_SOURCE_STRUCTURE</div>
+        <div class="fm-card-steps">Steps: 1</div>
+        <span class="badge badge-grey">⚠ Internal — Not Found</span>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">CRM_GET_LAST_ASSET_ROOT</div>
+        <div class="fm-card-steps">Steps: 2</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">Request_CRM_GET_LAST_ASSET_ROOT.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">CRM_GET_ASSET_COMPONENT_LIST</div>
+        <div class="fm-card-steps">Steps: 3</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">Request_CRM_GET_ASSET_COMPONENT_LIST.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">ASRM_GET_UR_DETAILS_MSISDN</div>
+        <div class="fm-card-steps">Steps: 4</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_ASRM_GET_UR_DETAILS_MSISDN.html">Request_ASRM_GET_UR_DETAILS_MSISDN.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST</div>
+        <div class="fm-card-steps">Steps: 5</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST.html">Request_ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">INTX_GET_SIM_INFO_BY_ICCID</div>
+        <div class="fm-card-steps">Steps: 6</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_ICCID.html">Request_INTX_GET_SIM_INFO_BY_ICCID.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">INTX_GET_SIM_INFO_BY_MSISDN</div>
+        <div class="fm-card-steps">Steps: 7</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_MSISDN.html">Request_INTX_GET_SIM_INFO_BY_MSISDN.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">INTX_GET_SIM_INFO_BY_SIM</div>
+        <div class="fm-card-steps">Steps: 8</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_SIM.html">Request_INTX_GET_SIM_INFO_BY_SIM.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">OMX_BIZ_VAL</div>
+        <div class="fm-card-steps">Steps: 9</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_OMX_BIZ_VAL.html">Request_OMX_BIZ_VAL.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">CAT_GOD</div>
+        <div class="fm-card-steps">Steps: 10, 12, 14</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_CAT_GOD.html">Request_CAT_GOD.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">CCP_GET_PREPAID_CREDIT_INFO</div>
+        <div class="fm-card-steps">Steps: 11</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">Request_CCP_GET_PREPAID_CREDIT_INFO.html</a>
+      </div>
+      <div class="fm-card" style="border-left:3px solid #9E9E9E">
+        <div class="fm-card-title">OMX_POPULATE_TARGET_STRUCTURE</div>
+        <div class="fm-card-steps">Steps: 13</div>
+        <span class="badge badge-grey">⚠ Internal — Not Found</span>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">OMX_GET_SRV_TRX_NO</div>
+        <div class="fm-card-steps">Steps: 15</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">Request_OMX_GET_SRV_TRX_NO.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">AA_PREPAID_PROVISIONING</div>
+        <div class="fm-card-steps">Steps: 16</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">Request_AA_PREPAID_PROVISIONING.html</a>
+      </div>
+      <div class="fm-card" style="border-left:3px solid #FFA000;background:#FFFDE7">
+        <div class="fm-card-title" style="color:#5D4037">OMX_CAL_CHK_SUM <span class="badge badge-new">★ NEW</span></div>
+        <div class="fm-card-steps">Steps: 17</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_OMX_CAL_CHK_SUM.html">Request_OMX_CAL_CHK_SUM.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">SMDP_PLUS</div>
+        <div class="fm-card-steps">Steps: 18</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_SMDP_PLUS.html">Request_SMDP_PLUS.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">SMDP_PLUS_CONFIRM</div>
+        <div class="fm-card-steps">Steps: 19</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_SMDP_PLUS_CONFIRM.html">Request_SMDP_PLUS_CONFIRM.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">CRM_CREATE_ORDER_PREPAID</div>
+        <div class="fm-card-steps">Steps: 20</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">Request_CRM_CREATE_ORDER_PREPAID.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">STATUS_UPDATE_CREATING_PROFILE</div>
+        <div class="fm-card-steps">Steps: 21</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">Request_STATUS_UPDATE_CREATING_PROFILE.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">ASRM_INVOKE_SIM</div>
+        <div class="fm-card-steps">Steps: 22, 23, 24</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_ASRM_INVOKE_SIM.html">Request_ASRM_INVOKE_SIM.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">ASRM_UPDATE_ATTRIBUTE_SIM</div>
+        <div class="fm-card-steps">Steps: 25</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_ASRM_UPDATE_ATTRIBUTE_SIM.html">Request_ASRM_UPDATE_ATTRIBUTE_SIM.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">BL_CREATE_CHARGE</div>
+        <div class="fm-card-steps">Steps: 26</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_BL_CREATE_CHARGE.html">Request_BL_CREATE_CHARGE.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">SMSGATEWAY_SEND_SMS</div>
+        <div class="fm-card-steps">Steps: 27</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">Request_SMSGATEWAY_SEND_SMS.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">OMX_UPDATE_PENDING_PARTIAL_ORDER</div>
+        <div class="fm-card-steps">Steps: 28</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_OMX_UPDATE_PENDING_PARTIAL_ORDER.html">Request_OMX_UPDATE_PENDING_PARTIAL_ORDER.html</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="card">
+  <div class="card-header">§5 — Sequence Diagram (Mermaid)</div>
+  <div class="card-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant OMX as OMX (internal)
+    participant CRM as CRM
+    participant ASRM as ASRM
+    participant INTX as INTX
+    participant CAT as CAT
+    participant CCP as CCP
+    participant AA as AA
+    participant SMDP as SMDP
+    participant BL as BL
+    participant SMS as SMSGATEWAY
+
+    O->>OMX: OMX_CREATE_SOURCE_STRUCTURE
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_CREATE_SOURCE_STRUCTURE ⚠ NF
+    opt MSISDN!='' and SOURCE
+        O->>CRM: CRM_GET_LAST_ASSET_ROOT
+        CRM-->>O: response
+        Note over O,CRM: FM: CRM_GET_LAST_ASSET_ROOT
+    end
+    opt SOURCE
+        O->>CRM: CRM_GET_ASSET_COMPONENT_LIST
+        CRM-->>O: response
+        Note over O,CRM: FM: CRM_GET_ASSET_COMPONENT_LIST
+    end
+    opt TARGET
+        O->>ASRM: ASRM_GET_UR_DETAILS_MSISDN
+        ASRM-->>O: response
+        Note over O,ASRM: FM: ASRM_GET_UR_DETAILS_MSISDN
+    end
+    opt TARGET and NEW_PMATCHID and ICC_ID absent
+        O->>ASRM: ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST [DEALERCODE=70000776]
+        ASRM-->>O: response
+        Note over O,ASRM: FM: ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST
+    end
+    opt TARGET and NEW_PMATCHID present
+        O->>INTX: INTX_GET_SIM_INFO_BY_ICCID_RIO [PROJ=RIO_SWAP]
+        INTX-->>O: response
+        Note over O,INTX: FM: INTX_GET_SIM_INFO_BY_ICCID
+    end
+    opt TARGET
+        O->>INTX: INTX_GET_SIM_INFO_BY_MSISDN
+        INTX-->>O: response
+        Note over O,INTX: FM: INTX_GET_SIM_INFO_BY_MSISDN
+    end
+    opt TARGET
+        O->>INTX: INTX_GET_SIM_INFO_BY_SIM
+        INTX-->>O: response
+        Note over O,INTX: FM: INTX_GET_SIM_INFO_BY_SIM
+    end
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL
+    opt count(Offers)>0 or count(SubscriberOffers)>0
+        O->>CAT: CAT_GOD
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+    opt SOURCE
+        O->>CCP: CCP_GET_PREPAID_CREDIT_INFO
+        CCP-->>O: response
+        Note over O,CCP: FM: CCP_GET_PREPAID_CREDIT_INFO
+    end
+    opt FE_OR_CCBS=CCP offers
+        O->>CAT: CAT_GOD_B
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+    O->>OMX: OMX_POPULATE_TARGET_STRUCTURE
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_POPULATE_TARGET_STRUCTURE ⚠ NF
+    opt TARGET
+        O->>CAT: CAT_GOD_TARGET
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+    O->>OMX: OMX_GET_SRV_TRX_NO [SSP|TARGET]
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+    opt TARGET
+        O->>AA: AA_PREPAID_PROVISIONING [SSP|TARGET]
+        AA-->>O: response
+        Note over O,AA: FM: AA_PREPAID_PROVISIONING
+    end
+    opt TARGET and NEW_PMATCHID and SMDP_COMFIRMED!=Y
+        O->>OMX: OMX_CAL_CHK_SUM
+        OMX-->>O: ICC_ID_CHG_SUM written
+        Note over O,OMX: FM: OMX_CAL_CHK_SUM ★ NEW
+    end
+    opt TARGET and ICC_ID_CHG_SUM present and SMDP_COMFIRMED!=Y
+        O->>SMDP: SMDP_PLUS_DOWNLOAD [PROJ=ESIM]
+        SMDP-->>O: response
+        Note over O,SMDP: FM: SMDP_PLUS
+    end
+    opt TARGET and ICC_ID_CHG_SUM present and SMDP_COMFIRMED!=Y
+        O->>SMDP: SMDP_PLUS_CONFIRM [PROJ=ESIM]
+        SMDP-->>O: response
+        Note over O,SMDP: FM: SMDP_PLUS_CONFIRM
+    end
+    opt TARGET
+        O->>CRM: CRM_CREATE_ORDER_PREPAID [command=SwapSim|orderType=C]
+        CRM-->>O: response
+        Note over O,CRM: FM: CRM_CREATE_ORDER_PREPAID
+    end
+    O->>OMX: STATUS_UPDATE_CREATING_PROFILE
+    OMX-->>O: response
+    Note over O,OMX: FM: STATUS_UPDATE_CREATING_PROFILE
+    opt SOURCE
+        O->>ASRM: ASRM_INVOKE_SIM_RELEASE [ACTIVITY=RELEASE]
+        ASRM-->>O: response
+        Note over O,ASRM: FM: ASRM_INVOKE_SIM
+    end
+    opt TARGET and no NEW_PMATCHID
+        O->>ASRM: ASRM_INVOKE_SIM_RESERVE [ACTIVITY=RESERVE]
+        ASRM-->>O: response
+        Note over O,ASRM: FM: ASRM_INVOKE_SIM
+    end
+    opt TARGET
+        O->>ASRM: ASRM_INVOKE_SIM_ACTIVATE [ACTIVITY=ACTIVATE]
+        ASRM-->>O: response
+        Note over O,ASRM: FM: ASRM_INVOKE_SIM
+    end
+    opt TARGET and NEW_PMATCHID present
+        O->>ASRM: ASRM_UPDATE_ATTRIBUTE_SIM [EXPIRE_SELF=-1]
+        ASRM-->>O: response
+        Note over O,ASRM: FM: ASRM_UPDATE_ATTRIBUTE_SIM
+    end
+    opt TARGET and ServiceType=79
+        O->>BL: BL_CREATE_CHARGE
+        BL-->>O: response
+        Note over O,BL: FM: BL_CREATE_CHARGE
+    end
+    O->>SMS: SMSGATEWAY_SEND_SMS
+    SMS-->>O: response
+    Note over O,SMS: FM: SMSGATEWAY_SEND_SMS
+    opt TARGET
+        O->>OMX: OMX_UPDATE_PENDING_PARTIAL_ORDER
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_UPDATE_PENDING_PARTIAL_ORDER
+    end
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="card">
+  <div class="card-header">§6 — Process Flow Diagram (Mermaid)</div>
+  <div class="card-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1[OMX_CREATE_SOURCE_STRUCTURE\nFM: internal]
+    S1 --> S2{CRM_GET_LAST_ASSET_ROOT\nFM: CRM_GET_LAST_ASSET_ROOT\nConditional: MSISDN!='' and SOURCE}
+    S2 --> S3{CRM_GET_ASSET_COMPONENT_LIST\nFM: CRM_GET_ASSET_COMPONENT_LIST\nConditional: SOURCE}
+    S3 --> S4{ASRM_GET_UR_DETAILS_MSISDN\nFM: ASRM_GET_UR_DETAILS_MSISDN\nConditional: TARGET}
+    S4 --> S5{ASRM_GET_RESERVE_UNIFIED_RESOURCE_LIST\nDEALERCODE=70000776\nConditional: TARGET+NEW_PMATCHID+no ICC_ID}
+    S5 --> S6{INTX_GET_SIM_INFO_BY_ICCID_RIO\nPROJ=RIO_SWAP\nConditional: TARGET+NEW_PMATCHID}
+    S6 --> S7{INTX_GET_SIM_INFO_BY_MSISDN\nConditional: TARGET}
+    S7 --> S8{INTX_GET_SIM_INFO_BY_SIM\nConditional: TARGET}
+    S8 --> S9[OMX_BIZ_VAL]
+    S9 --> S10{CAT_GOD\nConditional: Offers present}
+    S10 --> S11{CCP_GET_PREPAID_CREDIT_INFO\nConditional: SOURCE}
+    S11 --> S12{CAT_GOD_B\nConditional: CCP offers}
+    S12 --> S13[OMX_POPULATE_TARGET_STRUCTURE\nFM: internal]
+    S13 --> S14{CAT_GOD_TARGET\nConditional: TARGET}
+    S14 --> S15[OMX_GET_SRV_TRX_NO\nSSP-TARGET]
+    S15 --> S16{AA_PREPAID_PROVISIONING\nSSP-TARGET\nConditional: TARGET}
+    S16 --> S17{OMX_CAL_CHK_SUM ★\nConditional: TARGET+NEW_PMATCHID+not SMDP_COMFIRMED}
+    S17 --> S18{SMDP_PLUS_DOWNLOAD\nPROJ=ESIM\nConditional: ICC_ID_CHG_SUM present}
+    S18 --> S19{SMDP_PLUS_CONFIRM\nPROJ=ESIM\nConditional: ICC_ID_CHG_SUM present}
+    S19 --> S20{CRM_CREATE_ORDER_PREPAID\ncommand=SwapSim\nConditional: TARGET}
+    S20 --> S21[STATUS_UPDATE_CREATING_PROFILE]
+    S21 --> S22{ASRM_INVOKE_SIM_RELEASE\nACTIVITY=RELEASE\nConditional: SOURCE}
+    S22 --> S23{ASRM_INVOKE_SIM_RESERVE\nACTIVITY=RESERVE\nConditional: TARGET+no NEW_PMATCHID}
+    S23 --> S24{ASRM_INVOKE_SIM_ACTIVATE\nACTIVITY=ACTIVATE\nConditional: TARGET}
+    S24 --> S25{ASRM_UPDATE_ATTRIBUTE_SIM\nEXPIRE_SELF=-1\nConditional: TARGET+NEW_PMATCHID}
+    S25 --> S26{BL_CREATE_CHARGE\nConditional: ServiceType=79}
+    S26 --> S27[SMSGATEWAY_SEND_SMS]
+    S27 --> S28{OMX_UPDATE_PENDING_PARTIAL_ORDER\nConditional: TARGET}
+    S28 --> END([END])
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default',sequence:{mirrorActors:false},flowchart:{curve:'basis'}});</script>
+
+</main>
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &middot; PREPAID_SWAP_SIM &middot; 2026-09-23</footer>
+</body>
+</html>

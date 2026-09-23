@@ -1,0 +1,474 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PREPAID_SUSPEND — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#333;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:2rem;font-weight:700;letter-spacing:.3px}
+.page-header p{opacity:.85;margin-top:8px;font-size:.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.82rem}
+.content{max-width:1500px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+tr.conditional td{border-left:3px solid #f9a825;background:#FFFDE7}
+tr.conditional:hover td{background:#FFF9C4}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red)}
+code{background:#f0e8e8;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85em}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-amber{background:#FFF8E1;color:#e65100}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-gray{background:#F5F5F5;color:#616161}
+.step-num{display:inline-flex;align-items:center;justify-content:center;background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;font-size:.78rem;font-weight:700;flex-shrink:0}
+.fm-link{color:var(--true-red);text-decoration:none;font-weight:600}
+.fm-link:hover{text-decoration:underline}
+.section-num{color:var(--true-red);font-weight:700;margin-right:6px}
+details{margin-bottom:10px}
+summary{cursor:pointer;padding:10px 14px;background:#FFF8E1;border-left:3px solid #f9a825;border-radius:0 6px 6px 0;font-weight:600;list-style:none;display:flex;align-items:center;gap:10px}
+summary::before{content:'▶';font-size:.7rem;color:var(--warning)}
+details[open] summary::before{content:'▼'}
+details .detail-body{padding:14px;background:#fffef0;border:1px solid #f0e070;border-top:none;border-radius:0 0 6px 6px}
+.diagram-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.fm-card{border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)}
+.fm-card h4{color:var(--true-dark);margin-bottom:8px;font-size:.95rem;word-break:break-all}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default',sequence:{width:200},flowchart:{htmlLabels:true}});</script>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.78rem;opacity:.7;margin-bottom:8px">TRUE Corporation OMX &rsaquo; Order Journey Documentation</div>
+  <h1>PREPAID_SUSPEND</h1>
+  <p>Prepaid subscriber suspension order journey — full flow from asset retrieval through AA provisioning and confirmation</p>
+  <div class="meta-row">
+    <span class="meta-chip">14 Steps</span>
+    <span class="meta-chip">12 Unique FMs</span>
+    <span class="meta-chip">Entry: CRM_GET_LAST_ASSET_ROOT</span>
+    <span class="meta-chip">Generated: 2026-09-16</span>
+    <span class="meta-chip">6 Conditional Steps</span>
+  </div>
+</div>
+<div class="content">
+
+<!-- §2 Order Flow Table -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§2</span> Order Flow</div>
+  <div class="card-body" style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Step ID</th>
+          <th>FM (ActivityID)</th>
+          <th>Parameter(s)</th>
+          <th>PreExecCheck</th>
+          <th>Previous</th>
+          <th>Next</th>
+          <th>FM Doc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="step-num">1</span></td>
+          <td><code>CRM_GET_LAST_ASSET_ROOT</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">CRM_GET_LAST_ASSET_ROOT</a></td>
+          <td><code>customerAddressFlag=Y</code></td>
+          <td>—</td>
+          <td>START</td>
+          <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">2</span></td>
+          <td><code>CRM_GET_ASSET_COMPONENT_LIST</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">CRM_GET_ASSET_COMPONENT_LIST</a></td>
+          <td><code>STATUS=Active</code></td>
+          <td>—</td>
+          <td>CRM_GET_LAST_ASSET_ROOT</td>
+          <td>CAT_GOD</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">3</span></td>
+          <td><code>CAT_GOD</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td>
+          <td>—</td>
+          <td><code>count(//Offers) &gt; 0 or count(//SubscriberOffers) &gt; 0</code></td>
+          <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+          <td>OMX_BIZ_VAL</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">4</span></td>
+          <td><code>OMX_BIZ_VAL</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>CAT_GOD</td>
+          <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">5</span></td>
+          <td><code>CCP_GET_PREPAID_CREDIT_INFO</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">CCP_GET_PREPAID_CREDIT_INFO</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>OMX_BIZ_VAL</td>
+          <td>CAT_GOD_B</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">6</span></td>
+          <td><code>CAT_GOD_B</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td>
+          <td>—</td>
+          <td><code>//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='CCP'</code></td>
+          <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+          <td>OMX_ADD_SUBSCRIBER_OFFER</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">7</span></td>
+          <td><code>OMX_ADD_SUBSCRIBER_OFFER</code></td>
+          <td>OMX_ADD_SUBSCRIBER_OFFER</td>
+          <td><code>50412</code></td>
+          <td>—</td>
+          <td>CAT_GOD_B</td>
+          <td>SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND</td>
+          <td><span class="badge badge-amber">⚠ Not Found</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">8</span></td>
+          <td><code>SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND.html">SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND</a></td>
+          <td>—</td>
+          <td><code>/ns0:OrderRequest/OrderData/Channel/text()="DWH_SIMBOX"</code></td>
+          <td>OMX_ADD_SUBSCRIBER_OFFER</td>
+          <td>OMX_SEND_SMS3CJ</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">9</span></td>
+          <td><code>OMX_SEND_SMS3CJ</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_SEND_SMS3CJ.html">OMX_SEND_SMS3CJ</a></td>
+          <td>—</td>
+          <td><code>count(//Subscriber//ExtendedInfo[Name/text()='SMS_MSG' and Value/text()!='']) &gt; 0</code></td>
+          <td>SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND</td>
+          <td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">10</span></td>
+          <td><code>STATUS_UPDATE_CREATING_PROFILE</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>OMX_SEND_SMS3CJ</td>
+          <td>CRM_CREATE_ORDER_PREPAID</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">11</span></td>
+          <td><code>CRM_CREATE_ORDER_PREPAID</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">CRM_CREATE_ORDER_PREPAID</a></td>
+          <td><code>command=Suspend | orderType=S | listOfRootLineItemAction=Update | ...</code></td>
+          <td><code>//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='OMX'</code></td>
+          <td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td>OMX_GET_SRV_TRX_NO</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">12</span></td>
+          <td><code>OMX_GET_SRV_TRX_NO</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></td>
+          <td><code>SUS</code></td>
+          <td>—</td>
+          <td>CRM_CREATE_ORDER_PREPAID</td>
+          <td>AA_PREPAID_PROVISIONING</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">13</span></td>
+          <td><code>AA_PREPAID_PROVISIONING</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">AA_PREPAID_PROVISIONING</a></td>
+          <td><code>SUS</code></td>
+          <td>—</td>
+          <td>OMX_GET_SRV_TRX_NO</td>
+          <td>AA_CHECK_CONFIRMATION</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">14</span></td>
+          <td><code>AA_CHECK_CONFIRMATION</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a></td>
+          <td><code>SUS | UPDATE_NETWORK_STATUS</code></td>
+          <td>—</td>
+          <td>AA_PREPAID_PROVISIONING</td>
+          <td>END</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:10px;font-size:.8rem"><span style="display:inline-block;width:14px;height:14px;background:#FFFDE7;border-left:3px solid #f9a825;margin-right:6px;vertical-align:middle"></span>Highlighted rows have a PreExecCheck — conditional execution.</p>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§3</span> Conditional Execution Rules (PreExecCheck)</div>
+  <div class="card-body">
+    <details>
+      <summary><span class="step-num">3</span>&nbsp; CAT_GOD — <em>Catalog lookup (first pass)</em> &nbsp;<a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Skips CAT_GOD if no Offers or SubscriberOffers are present on the subscriber.</p>
+        <pre>count(//Offers) &gt; 0 or count(//SubscriberOffers) &gt; 0</pre>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-num">6</span>&nbsp; CAT_GOD_B — <em>Catalog lookup (CCP path)</em> &nbsp;<a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Only executes the second CAT_GOD call when the subscriber's price-plan routing is CCP. This is the CCP-specific offer retrieval for prepaid suspension.</p>
+        <pre>//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='CCP'</pre>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-num">8</span>&nbsp; SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND — <em>SMS template fetch (DWH_SIMBOX only)</em> &nbsp;<a class="fm-link" href="../FMlogic/Request_SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>The SMS notification flow is only triggered when the order originates from the DWH_SIMBOX channel. All other channels bypass SMS.</p>
+        <pre>/ns0:OrderRequest/OrderData/Channel/text()="DWH_SIMBOX"</pre>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-num">9</span>&nbsp; OMX_SEND_SMS3CJ — <em>SMS send (message present)</em> &nbsp;<a class="fm-link" href="../FMlogic/Request_OMX_SEND_SMS3CJ.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Sends the SMS only if a non-empty SMS_MSG ExtendedInfo was successfully populated by the template fetch step.</p>
+        <pre>count(//Subscriber//ExtendedInfo[Name/text()='SMS_MSG' and Value/text()!='']) &gt; 0</pre>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-num">11</span>&nbsp; CRM_CREATE_ORDER_PREPAID — <em>CRM order (OMX path only)</em> &nbsp;<a class="fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Creates a CRM Suspend order only when the subscriber is on the OMX (own platform) route. CCP-routed subscribers skip this step.</p>
+        <pre>//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='OMX'</pre>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- §4 FM Documentation Index -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§4</span> FM Documentation Index</div>
+  <div class="card-body">
+    <div class="grid-4">
+      <div class="fm-card">
+        <h4>CRM_GET_LAST_ASSET_ROOT</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 1</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>CRM_GET_ASSET_COMPONENT_LIST</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 2</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>CAT_GOD</h4>
+        <p style="font-size:.8rem;color:#666">Used in steps: 3, 6</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>OMX_BIZ_VAL</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 4</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_OMX_BIZ_VAL.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>CCP_GET_PREPAID_CREDIT_INFO</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 5</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>OMX_ADD_SUBSCRIBER_OFFER</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 7</p>
+        <p style="margin-top:6px"><span class="badge badge-amber">⚠ Rule file not found</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 8</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND.html">View FM Doc</a> &nbsp;<span class="badge badge-blue">Generated</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>OMX_SEND_SMS3CJ</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 9</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_OMX_SEND_SMS3CJ.html">View FM Doc</a> &nbsp;<span class="badge badge-blue">Generated</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>STATUS_UPDATE_CREATING_PROFILE</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 10</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>CRM_CREATE_ORDER_PREPAID</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 11</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>OMX_GET_SRV_TRX_NO</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 12</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>AA_PREPAID_PROVISIONING</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 13</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">View FM Doc</a> &nbsp;<span class="badge badge-blue">Generated</span></p>
+      </div>
+      <div class="fm-card">
+        <h4>AA_CHECK_CONFIRMATION</h4>
+        <p style="font-size:.8rem;color:#666">Used in step: 14</p>
+        <p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§5</span> Sequence Diagram</div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CRM as CRM
+    participant CAT as CAT
+    participant OMX as OMX
+    participant CCP as CCP
+    participant SMS3CJ as SMS3CJ
+    participant STATUS as STATUS
+    participant AA as AA
+
+    O->>CRM: CRM_GET_LAST_ASSET_ROOT [customerAddressFlag=Y]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_GET_LAST_ASSET_ROOT
+
+    O->>CRM: CRM_GET_ASSET_COMPONENT_LIST [STATUS=Active]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_GET_ASSET_COMPONENT_LIST
+
+    opt count(Offers)>0 or count(SubscriberOffers)>0
+        O->>CAT: CAT_GOD
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL
+
+    O->>CCP: CCP_GET_PREPAID_CREDIT_INFO
+    CCP-->>O: response
+    Note over O,CCP: FM: CCP_GET_PREPAID_CREDIT_INFO
+
+    opt FE_OR_CCBS='CCP'
+        O->>CAT: CAT_GOD_B
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+
+    O->>OMX: OMX_ADD_SUBSCRIBER_OFFER [50412]
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_ADD_SUBSCRIBER_OFFER
+
+    opt Channel="DWH_SIMBOX"
+        O->>SMS3CJ: SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND
+        SMS3CJ-->>O: response
+        Note over O,SMS3CJ: FM: SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND
+    end
+
+    opt SMS_MSG present and non-empty
+        O->>OMX: OMX_SEND_SMS3CJ
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_SEND_SMS3CJ
+    end
+
+    O->>STATUS: STATUS_UPDATE_CREATING_PROFILE
+    STATUS-->>O: response
+    Note over O,STATUS: FM: STATUS_UPDATE_CREATING_PROFILE
+
+    opt FE_OR_CCBS='OMX'
+        O->>CRM: CRM_CREATE_ORDER_PREPAID [command=Suspend|orderType=S]
+        CRM-->>O: response
+        Note over O,CRM: FM: CRM_CREATE_ORDER_PREPAID
+    end
+
+    O->>OMX: OMX_GET_SRV_TRX_NO [SUS]
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+
+    O->>AA: AA_PREPAID_PROVISIONING [SUS]
+    AA-->>O: response
+    Note over O,AA: FM: AA_PREPAID_PROVISIONING
+
+    O->>AA: AA_CHECK_CONFIRMATION [SUS|UPDATE_NETWORK_STATUS]
+    AA-->>O: response
+    Note over O,AA: FM: AA_CHECK_CONFIRMATION
+      </div>
+    </div>
+    <p style="margin-top:8px;font-size:.8rem;color:#666">Conditional steps wrapped in <code>opt</code> blocks. 14 activities — diagram rendered in full.</p>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§6</span> Flow Diagram</div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1[CRM_GET_LAST_ASSET_ROOT\nFM: CRM_GET_LAST_ASSET_ROOT\nparam: customerAddressFlag=Y]
+    S1 --> S2[CRM_GET_ASSET_COMPONENT_LIST\nFM: CRM_GET_ASSET_COMPONENT_LIST\nparam: STATUS=Active]
+    S2 --> S3{CAT_GOD\nFM: CAT_GOD\nConditional: count Offers}
+    S3 --> S4[OMX_BIZ_VAL\nFM: OMX_BIZ_VAL]
+    S4 --> S5[CCP_GET_PREPAID_CREDIT_INFO\nFM: CCP_GET_PREPAID_CREDIT_INFO]
+    S5 --> S6{CAT_GOD_B\nFM: CAT_GOD\nConditional: FE_OR_CCBS=CCP}
+    S6 --> S7[OMX_ADD_SUBSCRIBER_OFFER\nparam: 50412\nRule not found]
+    S7 --> S8{SMS3CJ_GET_TEMPLATE\nFM: SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND\nConditional: Channel=DWH_SIMBOX}
+    S8 --> S9{OMX_SEND_SMS3CJ\nFM: OMX_SEND_SMS3CJ\nConditional: SMS_MSG present}
+    S9 --> S10[STATUS_UPDATE_CREATING_PROFILE\nFM: STATUS_UPDATE_CREATING_PROFILE]
+    S10 --> S11{CRM_CREATE_ORDER_PREPAID\nFM: CRM_CREATE_ORDER_PREPAID\nConditional: FE_OR_CCBS=OMX}
+    S11 --> S12[OMX_GET_SRV_TRX_NO\nFM: OMX_GET_SRV_TRX_NO\nparam: SUS]
+    S12 --> S13[AA_PREPAID_PROVISIONING\nFM: AA_PREPAID_PROVISIONING\nparam: SUS]
+    S13 --> S14[AA_CHECK_CONFIRMATION\nFM: AA_CHECK_CONFIRMATION\nparam: SUS|UPDATE_NETWORK_STATUS]
+    S14 --> END([END])
+
+    style S3 fill:#FFF9C4,stroke:#f9a825
+    style S6 fill:#FFF9C4,stroke:#f9a825
+    style S8 fill:#FFF9C4,stroke:#f9a825
+    style S9 fill:#FFF9C4,stroke:#f9a825
+    style S11 fill:#FFF9C4,stroke:#f9a825
+    style S7 fill:#FFE0E0,stroke:#CC0000
+      </div>
+    </div>
+    <p style="margin-top:8px;font-size:.8rem;color:#666">Diamond shapes = conditional steps (PreExecCheck). Red-bordered node = rule file not found. 14 activities — flowchart rendered in full.</p>
+  </div>
+</div>
+
+</div><!-- /content -->
+<footer>TRUE Corporation OMX &middot; Order Journey Documentation &middot; PREPAID_SUSPEND &middot; Generated 2026-09-16</footer>
+</body>
+</html>

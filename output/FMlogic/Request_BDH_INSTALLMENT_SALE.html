@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_BDH_INSTALLMENT_SALE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem;margin-bottom:14px}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:18px;border-radius:8px;overflow-x:auto;font-size:.8rem;border-left:3px solid var(--true-red)}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.88rem}
+.callout-warn{border-color:#e65100;background:#FFF3E0}
+.callout-info{border-color:#1565c0;background:#E3F0FD}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_BDH_INSTALLMENT_SALE</h1>
+  <div class="subtitle">Registers an installment sale contract with BDH per subscriber. Sends one InstallmentSaleReq per POU/COU subscriber containing the contract offer (TR_CONTRACT_IND=Y) and its CT_INST related offer details.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: BDH (InstallmentSale)</span>
+    <span class="meta-badge">Pattern: Per-subscriber fan-out</span>
+    <span class="meta-badge">RefID: bare subRefId (conditional)</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Author: CHAYATORN-PC</span>
+    <span class="meta-badge">Used in step: 73</span>
+    <span class="meta-badge">Generated: 2026-08-11</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Sends one <strong>BDH InstallmentSaleReq</strong> per subscriber (POU and COU). The payload registers a device installment sale contract with BDH, linking the subscriber's MSISDN/SubscriberId to their contract offer (<code>TR_CONTRACT_IND=Y</code>) and its CT_INST installment-type related offer.</p>
+    <ul style="margin:12px 0 0 20px;line-height:2">
+      <li><strong>Fan-out:</strong> per subscriber — one request per POU subscriber, one per COU subscriber</li>
+      <li><strong>RefID:</strong> bare <code>subRefId</code> (POU: <code>$psub/RefId</code>, COU: <code>$csub/RefId</code>) — conditionally emitted via <code>xsl:if</code></li>
+      <li><strong>Offer filter:</strong> <code>SubscriberOffers[TR_CONTRACT_IND=Y]</code> → <code>RelatedOffersArray[TR_OFFER_GROUP=CT_INST]</code></li>
+      <li><strong>AccountNo:</strong> cross-referenced via <code>Account[RefId=$sub/AccountRefId]/AccountID</code></li>
+      <li><strong>Response:</strong> standard ResponseBase — no write-back; also updates <code>currActivity.ResponseCode/ResponseMessage</code></li>
+    </ul>
+    <div class="callout-info callout" style="margin-top:14px">
+      <strong>[INFO] Commented-out batch design (lines 123–136):</strong> The original implementation (commented out) would have batched all subscribers from an OU into a single <code>InstallmentSaleReq</code> with a <code>for-each</code> loop, using <code>pOuRefId</code> as RefID. The active code sends one request per subscriber instead. The dead code references the <code>arrLstSubs</code> ArrayList that is still constructed (but never populated) at the top of the rule body.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] No Parameter guard:</strong> No upfront <code>if(Parameter@length == 0)</code> check. This FM does not use ProcessConfig Parameters, so this has no functional impact.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] No PurgePendingRequestsBeforeResubmit:</strong> Verify BDH idempotency for duplicate InstallmentSale registrations on the same subscriber.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] arrLstSubs created but never used:</strong> <code>Object arrLstSubs = Collections.List.createArrayList()</code> is declared at line 30 — a holdover from the batch design. It is never populated in the active code and generates an unused variable warning. Safe to remove.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_BDH_INSTALLMENT_SALE.rule</code></td><td>150 lines (incl. commented-out batch block)</td></tr>
+      <tr><td>Rule namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td><td></td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_BDH_INSTALLMENT_SALE.rulefunction</code></td><td>32 lines — standard + activity-level ResponseCode update</td></tr>
+      <tr><td>Author</td><td>CHAYATORN-PC</td><td></td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td>true</td><td></td></tr>
+      <tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.BDH_INSTALLMENT_SALE</code></td><td>Dedicated</td></tr>
+      <tr><td>Payload root</td><td><code>ns1:InstallmentSaleReq</code></td><td>BDH InstallmentSale schema</td></tr>
+      <tr><td>Schema NS (ns1)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/BDH/InstallmentSale.xsd</code></td><td></td></tr>
+      <tr><td>Fan-out pattern</td><td>Per-subscriber (POU + COU)</td><td>Standard per-sub pattern</td></tr>
+      <tr><td>RefID (POU)</td><td><code>$psub/RefId</code> (conditional)</td><td>Emitted only if RefId is non-empty</td></tr>
+      <tr><td>RefID (COU)</td><td><code>$csub/RefId</code> (conditional)</td><td>Same guard</td></tr>
+      <tr><td>Resub guard</td><td><code>Response[ReferenceId == subRefId &amp;&amp; CompletionStatus==2]</code></td><td>Subscriber-level</td></tr>
+      <tr><td>event/@extId</td><td><code>OMXUtils:generateTrackingID()</code></td><td>Set in XSLT</td></tr>
+      <tr><td>Parameter guard</td><td>ABSENT</td><td>[LOW] Not needed — FM uses no Parameters</td></tr>
+      <tr><td>POU PreExecCheck builder</td><td><code>GetXMLForSubscriber(orderRequest, pSubRefId)</code></td><td>Subscriber-level</td></tr>
+      <tr><td>COU PreExecCheck builder</td><td><code>GetXMLForSubscriberInChildOU(orderRequest, cSubRefId, pOuRefId)</code></td><td>Subscriber-level in ChildOU</td></tr>
+      <tr><td>Response write-back</td><td>None (ResponseBase only)</td><td>Also sets <code>currActivity.ResponseCode/ResponseMessage</code></td></tr>
+      <tr><td>Resub purge</td><td>ABSENT</td><td>[LOW] No PurgePendingRequestsBeforeResubmit</td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"BDH_INSTALLMENT_SALE"</code></td><td>Hardcoded</td></tr>
+      <tr><td>Fan-in</td><td><code>RequestCount == successResponseCount</code></td><td>success = ResponseCode suffix "000"</td></tr>
+      <tr><td>Dead code</td><td>Lines 123–136 (commented-out batch design)</td><td>[INFO] Safe to remove</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="card">
+  <div class="card-header">§3 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "BDH_INSTALLMENT_SALE"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "BDH_INSTALLMENT_SALE"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>BDH (Bundled Device/Hardware)</td></tr>
+      <tr><td>Operation</td><td>InstallmentSaleReq — register installment sale contract</td></tr>
+      <tr><td>Schema NS (ns1)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/BDH/InstallmentSale.xsd</code></td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§8.5 ExtendedInfo Fields</h3>
+    <table>
+      <tr><th>Name</th><th>Level</th><th>Direction</th><th>Purpose</th></tr>
+      <tr><td>TSM_ORDER_NO</td><td>OrderData</td><td>INPUT</td><td><code>ns1:saleOrderId</code> — external TSM order reference (conditional)</td></tr>
+      <tr><td>devicePaymentType</td><td>Subscriber</td><td>INPUT</td><td><code>ns1:saleDetails/ns1:devicePaymentType</code> (conditional)</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§8.4 Offer Cross-Reference Logic</h3>
+    <table>
+      <tr><th>Target Field</th><th>XPath Filter</th><th>Purpose</th></tr>
+      <tr><td>ns1:productOfferingId/Name/Seq</td><td><code>SubscriberOffers[TR_CONTRACT_IND=Y]/RelatedOffersArray[TR_OFFER_GROUP=CT_INST]</code></td><td>CT_INST installment offer under the contract offer</td></tr>
+      <tr><td>ns1:mainProductOfferingId/Name/Seq</td><td><code>SubscriberOffers[TR_CONTRACT_IND=Y]</code></td><td>Contract offer itself (parent)</td></tr>
+      <tr><td>ns1:accountNo</td><td><code>OrderData/Customer/Account[RefId=$sub/AccountRefId]/AccountID</code></td><td>AccountID cross-referenced via subscriber's AccountRefId</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p style="margin-bottom:8px">POU uses <code>$psub</code>; COU uses <code>$csub</code> — payload structure identical. All offer XPath filters use <code>contains(SocProperties,"TR_CONTRACT_IND=Y")</code> and <code>contains(SocProperties,"TR_OFFER_GROUP=CT_INST")</code>.</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$psub/RefId (or $csub/RefId)</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">xsl:if test="$psub/RefId" — omitted if RefId empty</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:InstallmentSaleReq</span><span class="tree-cond">ns1=.../BDH/InstallmentSale.xsd</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:saleInfoList</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:saleOrderId</span><span class="tree-arrow">←</span><span class="tree-src">OrderData/ExtendedInfo[TSM_ORDER_NO]/Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">External TSM order number</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:omxOrderId</span><span class="tree-arrow">←</span><span class="tree-src">OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:accountNo</span><span class="tree-arrow">←</span><span class="tree-src">Account[RefId=$sub/AccountRefId]/AccountID</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">Cross-referenced by subscriber's AccountRefId</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:subscriberNo</span><span class="tree-arrow">←</span><span class="tree-src">$sub/SubscriberId</span><span class="badge badge-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:productOfferingId</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers[TR_CONTRACT_IND=Y]/RelatedOffersArray[TR_OFFER_GROUP=CT_INST]/Soc</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">CT_INST installment offer SOC</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:productOfferName</span><span class="tree-arrow">←</span><span class="tree-src">...RelatedOffersArray[CT_INST]/OfferName</span><span class="badge badge-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:productOfferingSeq</span><span class="tree-arrow">←</span><span class="tree-src">...RelatedOffersArray[CT_INST]/OfferInstanceId</span><span class="badge badge-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:saleDetails</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns1:mainProductOfferingId</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers[TR_CONTRACT_IND=Y]/Soc</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">Contract offer SOC (parent)</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns1:mainProductOfferingName</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers[TR_CONTRACT_IND=Y]/OfferName</span><span class="badge badge-orange">Conditional</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns1:mainProductOfferingSeq</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers[TR_CONTRACT_IND=Y]/OfferInstanceId</span><span class="badge badge-orange">Conditional</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns1:devicePaymentType</span><span class="tree-arrow">←</span><span class="tree-src">$sub/ExtendedInfo[devicePaymentType]/Value</span><span class="badge badge-orange">Conditional</span></div></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_BDH_INSTALLMENT_SALE (rule)
+├── isActResub = (RequestCount > 0 && IsOrderResubmitted)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── arrLstSubs = Collections.List.createArrayList()   ← UNUSED (dead code from batch design)
+├── [NOTE: NO Parameter guard / NO PurgePendingRequestsBeforeResubmit]
+├── [POU loop p → ps]:
+│   ├── [Resub guard]: Response[ReferenceId == pSubRefId && CompletionStatus==2]
+│   ├── [PreExecCheck]: GetXMLForSubscriber(orderRequest, pSubRefId)
+│   └── [if chkRes=="true"]:
+│       ├── Event.createEvent(BDH_INSTALLMENT_SALE, XSLT: ns1:InstallmentSaleReq, RefID=$psub/RefId)
+│       ├── Event.Ext.sendEventImmediate(reqEvent)
+│       ├── isSkipped = false
+│       ├── [if !isActResub]: RequestCount++
+│       └── Logger: OPERATION_NAME="BDH_INSTALLMENT_SALE"
+├── [COU loop p → c → cs]:
+│   ├── [Resub guard]: Response[ReferenceId == cSubRefId && CompletionStatus==2]
+│   ├── [PreExecCheck]: GetXMLForSubscriberInChildOU(cSubRefId, pOuRefId)
+│   └── Event.createEvent(BDH_INSTALLMENT_SALE, XSLT: RefID=$csub/RefId)
+├── [NOTE: Dead code block (commented-out): lines 123–136]
+│   └── Original batch design: one request per OU with for-each over arrLstSubs
+├── [if !isSkipped]: SendDataToDB / SkipActivity
+└── [catch]: HandleActivityException
+
+Response_BDH_INSTALLMENT_SALE (rulefunction)
+├── activityRes = Instance.createInstance(ResponseBase){extId, ResponseCode, ResponseMessage, CompletionStatus, ReferenceId}
+├── currActivity.Response[] ← activityRes
+├── currActivity.ResponseCode ← eventResponse.ResponseCode   ← activity-level update
+├── currActivity.ResponseMessage ← eventResponse.ResponseMsg ← activity-level update
+├── Logger: OPERATION_NAME="BDH_INSTALLMENT_SALE"
+├── successResponseCount = count(Response[tib:right(tib:trim(ResponseCode),3)="000"])
+└── return (RequestCount == successResponseCount) ? "true" : "false"</pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Per-subscriber fan-out across POU and COU. One InstallmentSaleReq per subscriber.</td></tr>
+      <tr><td>R2</td><td>RefID = bare subRefId (conditional via xsl:if — omitted if subscriber RefId is empty).</td></tr>
+      <tr><td>R3</td><td>Offer lookup: <code>SubscriberOffers[TR_CONTRACT_IND=Y]</code> for main contract; <code>RelatedOffersArray[TR_OFFER_GROUP=CT_INST]</code> for installment offer under that contract.</td></tr>
+      <tr><td>R4</td><td>AccountNo cross-referenced: <code>Account[RefId=$sub/AccountRefId]/AccountID</code>.</td></tr>
+      <tr><td>R5</td><td>ns1:saleOrderId = OrderData/ExtendedInfo[TSM_ORDER_NO]/Value (conditional).</td></tr>
+      <tr><td>R6</td><td>ns1:devicePaymentType = sub.ExtendedInfo[devicePaymentType]/Value (conditional).</td></tr>
+      <tr><td>R7</td><td>Response handler also sets currActivity.ResponseCode and currActivity.ResponseMessage (activity-level sync).</td></tr>
+      <tr><td>R8</td><td>Fan-in: RequestCount == successResponseCount (ResponseCode suffix "000").</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Dead code block (batch design, lines 123–136) still in source</td><td><span class="badge badge-blue">[LOW]</span></td><td>Remove commented-out batch XSLT block and arrLstSubs declaration to reduce confusion</td></tr>
+      <tr><td>No PurgePendingRequestsBeforeResubmit</td><td><span class="badge badge-blue">[LOW]</span></td><td>Verify BDH InstallmentSale idempotency for duplicate calls on same subscriber</td></tr>
+      <tr><td>CT_INST/TR_CONTRACT_IND XPath may match multiple offers — first-match XPath result only</td><td><span class="badge badge-blue">[LOW]</span></td><td>Confirm only one TR_CONTRACT_IND=Y offer per subscriber; add specific qualifier if multiple possible</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule (Response_BDH_INSTALLMENT_SALE)</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§19.3 ResponseBase Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span><span class="tree-cond">Concepts.FM.Base.ResponseBase</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">activityRes/@extId (pre-generated OMXUtils:generateTrackingID())</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:12px;font-size:.88rem"><strong>Additional:</strong> <code>currActivity.ResponseCode = eventResponse.ResponseCode</code> and <code>currActivity.ResponseMessage = eventResponse.ResponseMsg</code> are also set directly on the activity concept (not just in ResponseBase).</p>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.4 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+      <tr><td>Write-back</td><td>None (ResponseBase only)</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

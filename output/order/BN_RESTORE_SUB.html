@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BN_RESTORE_SUB — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:13px;line-height:1.5}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:28px 40px}
+.page-header h1{font-size:2rem;font-weight:700;margin-bottom:4px}
+.subtitle{opacity:.85;font-size:.95rem;margin-bottom:12px}
+.meta-row{display:flex;gap:16px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:3px 14px;font-size:.8rem}
+.container{max-width:1300px;margin:0 auto;padding:20px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:20px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 18px;font-size:.9rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:16px 18px}
+table{width:100%;border-collapse:collapse;font-size:.83rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr.has-check td:first-child{border-left:3px solid #FBC02D}
+tr:hover td{background:#fafafa}
+.step-id{font-family:'Cascadia Code','Consolas',monospace;font-size:.78rem;color:#555}
+.fm-link{color:var(--true-red);text-decoration:none;font-weight:600}
+.fm-link:hover{text-decoration:underline}
+pre.xp{background:var(--code-bg);color:var(--code-fg);padding:6px 10px;border-radius:4px;font-size:.72rem;margin:0;white-space:pre-wrap;word-break:break-all;max-width:380px;border-left:2px solid var(--true-red)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600}
+.badge-yes{background:#E8F5E9;color:var(--success)}
+details summary{cursor:pointer;padding:8px 14px;background:#FFF8E1;border-radius:6px;margin-bottom:8px;font-weight:600;font-size:.85rem}
+details summary:hover{background:#FFF3E0}
+details[open] summary{border-radius:6px 6px 0 0}
+.details-body{background:#FFFDE7;border:1px solid #FFE082;border-top:none;padding:12px 14px;border-radius:0 0 6px 6px;margin-bottom:8px}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;margin-top:4px}
+.fm-card{border:1px solid var(--border);border-radius:8px;padding:12px 14px;background:var(--card)}
+.fm-card h4{font-size:.88rem;color:var(--true-dark);margin-bottom:4px}
+.fm-card .steps-label{font-size:.75rem;color:#666;margin-bottom:6px}
+.toc{display:flex;gap:10px;flex-wrap:wrap;padding:10px 16px;background:var(--true-pale);border-radius:8px;margin-bottom:16px}
+.toc a{color:var(--true-red);text-decoration:none;font-size:.82rem;font-weight:600}
+.toc a:hover{text-decoration:underline}
+.mermaid-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)}
+footer{text-align:center;padding:18px;color:#888;font-size:.78rem;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>BN_RESTORE_SUB</h1>
+  <div class="subtitle">Process Configuration for BN_RESTORE_SUB — Restores suspended subscribers, retrieves customer/account IDs, and updates account collection fix info</div>
+  <div class="meta-row">
+    <span class="meta-chip">Total Steps: 4</span>
+    <span class="meta-chip">Unique FMs: 4</span>
+    <span class="meta-chip">Entry: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</span>
+    <span class="meta-chip">Generated: 2026-09-22</span>
+  </div>
+</div>
+
+<div class="container">
+<div class="toc">
+  <a href="#flow">§2 Flow Table</a>
+  <a href="#preexec">§3 PreExecCheck Details</a>
+  <a href="#fmindex">§4 FM Index</a>
+  <a href="#diag">§5 Sequence Diagram</a>
+</div>
+
+<!-- §2 ORDER FLOW TABLE -->
+<div class="section" id="flow">
+  <div class="section-header">§2 — Order Flow Table (4 Steps)</div>
+  <div class="section-body">
+    <div style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Step ID</th>
+          <th>FM (ActivityID)</th>
+          <th>Parameter(s)</th>
+          <th>PreExecCheck</th>
+          <th>Prev</th>
+          <th>Next</th>
+          <th>FM Doc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td style="font-weight:700;color:var(--true-dark)">1</td>
+          <td><span class="step-id">CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</span></td>
+          <td><a href="../FMlogic/Request_CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE.html" class="fm-link" target="_blank">CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</a></td>
+          <td><span style="color:#ccc">—</span></td>
+          <td><span style="color:#ccc">—</span></td>
+          <td><span class="step-id">START</span></td>
+          <td><span class="step-id">CCBS_RESTORE_SUBSCRIBERS</span></td>
+          <td><a href="../FMlogic/Request_CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE.html" class="badge badge-yes" target="_blank">Doc ↗</a></td>
+        </tr>
+        <tr>
+          <td style="font-weight:700;color:var(--true-dark)">2</td>
+          <td><span class="step-id">CCBS_RESTORE_SUBSCRIBERS</span></td>
+          <td><a href="../FMlogic/Request_CCBS_RESTORE_SUBSCRIBERS.html" class="fm-link" target="_blank">CCBS_RESTORE_SUBSCRIBERS</a></td>
+          <td><span style="color:#ccc">—</span></td>
+          <td><span style="color:#ccc">—</span></td>
+          <td><span class="step-id">CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</span></td>
+          <td><span class="step-id">CCBS_GET_CUST_ACC_SUB_ID</span></td>
+          <td><a href="../FMlogic/Request_CCBS_RESTORE_SUBSCRIBERS.html" class="badge badge-yes" target="_blank">Doc ↗</a></td>
+        </tr>
+        <tr class="has-check">
+          <td style="font-weight:700;color:var(--true-dark)">3</td>
+          <td><span class="step-id">CCBS_GET_CUST_ACC_SUB_ID</span></td>
+          <td><a href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html" class="fm-link" target="_blank">CCBS_GET_CUST_ACC_SUB_ID</a></td>
+          <td><span style="color:#ccc">—</span></td>
+          <td><pre class="xp">boolean(//Subscriber[ExtendedInfo[Name='COLLECTION_WAIVER' and (Value='N' or Value='Y')]]) and not(exists(//Account/AccountID))</pre></td>
+          <td><span class="step-id">CCBS_RESTORE_SUBSCRIBERS</span></td>
+          <td><span class="step-id">CCBS_UPDATE_ACCOUNT_FIX_INFO</span></td>
+          <td><a href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html" class="badge badge-yes" target="_blank">Doc ↗</a></td>
+        </tr>
+        <tr class="has-check">
+          <td style="font-weight:700;color:var(--true-dark)">4</td>
+          <td><span class="step-id">CCBS_UPDATE_ACCOUNT_FIX_INFO</span></td>
+          <td><a href="../FMlogic/Request_CCBS_UPDATE_ACCOUNT_FIX_INFO.html" class="fm-link" target="_blank">CCBS_UPDATE_ACCOUNT_FIX_INFO</a></td>
+          <td><span style="color:#ccc">—</span></td>
+          <td><pre class="xp">boolean(//Subscriber[ExtendedInfo[Name='COLLECTION_WAIVER' and (Value='N' or Value='Y')]])</pre></td>
+          <td><span class="step-id">CCBS_GET_CUST_ACC_SUB_ID</span></td>
+          <td><span class="step-id">END</span></td>
+          <td><a href="../FMlogic/Request_CCBS_UPDATE_ACCOUNT_FIX_INFO.html" class="badge badge-yes" target="_blank">Doc ↗</a></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- §3 PREEXECCHECK DETAILS -->
+<div class="section" id="preexec">
+  <div class="section-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="section-body">
+    <details>
+      <summary>Step 3 — CCBS_GET_CUST_ACC_SUB_ID &nbsp;<span style="color:#888;font-size:.8rem;font-weight:400">FM: CCBS_GET_CUST_ACC_SUB_ID</span></summary>
+      <div class="details-body">
+        <div style="margin-bottom:8px;font-size:.82rem"><strong>FM:</strong> <a href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html" class="fm-link" target="_blank">CCBS_GET_CUST_ACC_SUB_ID</a></div>
+        <div style="margin-bottom:6px;font-size:.82rem"><strong>Logic:</strong> Execute only when at least one subscriber has COLLECTION_WAIVER (Y or N) AND the Account/AccountID is not yet populated. This ensures the account lookup is only triggered when needed for collection processing.</div>
+        <pre class="xp" style="max-width:100%">boolean(//Subscriber[ExtendedInfo[Name='COLLECTION_WAIVER' and (Value='N' or Value='Y')]]) and not(exists(//Account/AccountID))</pre>
+      </div>
+    </details>
+    <details>
+      <summary>Step 4 — CCBS_UPDATE_ACCOUNT_FIX_INFO &nbsp;<span style="color:#888;font-size:.8rem;font-weight:400">FM: CCBS_UPDATE_ACCOUNT_FIX_INFO</span></summary>
+      <div class="details-body">
+        <div style="margin-bottom:8px;font-size:.82rem"><strong>FM:</strong> <a href="../FMlogic/Request_CCBS_UPDATE_ACCOUNT_FIX_INFO.html" class="fm-link" target="_blank">CCBS_UPDATE_ACCOUNT_FIX_INFO</a></div>
+        <div style="margin-bottom:6px;font-size:.82rem"><strong>Logic:</strong> Execute only when at least one subscriber has COLLECTION_WAIVER (Y or N). No AccountID check — runs regardless of whether step 3 ran, as long as COLLECTION_WAIVER is present. Step 3's AccountID check is a pre-condition for retrieving the account; step 4's update always runs if COLLECTION_WAIVER is set.</div>
+        <pre class="xp" style="max-width:100%">boolean(//Subscriber[ExtendedInfo[Name='COLLECTION_WAIVER' and (Value='N' or Value='Y')]])</pre>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- §4 FM INDEX -->
+<div class="section" id="fmindex">
+  <div class="section-header">§4 — FM Documentation Index (4 Unique ActivityIDs)</div>
+  <div class="section-body">
+    <div class="fm-grid">
+      <div class="fm-card">
+        <h4><a href="../FMlogic/Request_CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE.html" class="fm-link" target="_blank">CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</a></h4>
+        <div class="steps-label">Steps: 1</div>
+        <a href="../FMlogic/Request_CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE.html" class="badge badge-yes" target="_blank" style="font-size:.75rem">Open Doc ↗</a>
+      </div>
+      <div class="fm-card">
+        <h4><a href="../FMlogic/Request_CCBS_RESTORE_SUBSCRIBERS.html" class="fm-link" target="_blank">CCBS_RESTORE_SUBSCRIBERS</a></h4>
+        <div class="steps-label">Steps: 2</div>
+        <a href="../FMlogic/Request_CCBS_RESTORE_SUBSCRIBERS.html" class="badge badge-yes" target="_blank" style="font-size:.75rem">Open Doc ↗</a>
+      </div>
+      <div class="fm-card">
+        <h4><a href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html" class="fm-link" target="_blank">CCBS_GET_CUST_ACC_SUB_ID</a></h4>
+        <div class="steps-label">Steps: 3</div>
+        <a href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html" class="badge badge-yes" target="_blank" style="font-size:.75rem">Open Doc ↗</a>
+      </div>
+      <div class="fm-card">
+        <h4><a href="../FMlogic/Request_CCBS_UPDATE_ACCOUNT_FIX_INFO.html" class="fm-link" target="_blank">CCBS_UPDATE_ACCOUNT_FIX_INFO</a></h4>
+        <div class="steps-label">Steps: 4</div>
+        <a href="../FMlogic/Request_CCBS_UPDATE_ACCOUNT_FIX_INFO.html" class="badge badge-yes" target="_blank" style="font-size:.75rem">Open Doc ↗</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 SEQUENCE DIAGRAM -->
+<div class="section" id="diag">
+  <div class="section-header">§5 — Sequence Diagram</div>
+  <div class="section-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+
+    O->>CCBS: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE
+
+    O->>CCBS: CCBS_RESTORE_SUBSCRIBERS
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_RESTORE_SUBSCRIBERS
+
+    opt COLLECTION_WAIVER present and Account/AccountID absent
+        O->>CCBS: CCBS_GET_CUST_ACC_SUB_ID
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_CUST_ACC_SUB_ID
+    end
+
+    opt COLLECTION_WAIVER present
+        O->>CCBS: CCBS_UPDATE_ACCOUNT_FIX_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_UPDATE_ACCOUNT_FIX_INFO
+    end
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · BN_RESTORE_SUB Order Journey · Generated 2026-09-22</footer>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+</body>
+</html>

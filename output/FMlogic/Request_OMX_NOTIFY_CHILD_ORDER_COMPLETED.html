@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>OMX_NOTIFY_CHILD_ORDER_COMPLETED</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:#212121;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:36px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.02em}
+.page-header .sub{opacity:.85;font-size:.95rem;margin-top:6px}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:.82rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 24px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FFF8F8}
+code,pre{font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;border-left:3px solid var(--true-red);white-space:pre-wrap;word-break:break-word}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:700}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-green{background:#E8F5E9;color:var(--success)}
+.b-orange{background:#FFF3E0;color:var(--warning)}
+.b-blue{background:#E3F0FD;color:var(--info)}
+.b-purple{background:#F3E5F5;color:var(--skip)}
+.b-teal{background:#E0F2F1;color:#00695c}
+.b-grey{background:#F5F5F5;color:#555}
+.risk-high{background:#FFEBEE;border-left:3px solid #c62828;padding:8px 12px;border-radius:4px;margin:6px 0}
+.risk-med{background:#FFF8E1;border-left:3px solid #f9a825;padding:8px 12px;border-radius:4px;margin:6px 0}
+.risk-low{background:#E8F5E9;border-left:3px solid #2e7d32;padding:8px 12px;border-radius:4px;margin:6px 0}
+.flow-steps{counter-reset:step}
+.flow-step{display:flex;gap:14px;padding:10px 0;border-bottom:1px solid var(--border)}
+.flow-step:last-child{border-bottom:none}
+.step-num{flex-shrink:0;width:28px;height:28px;border-radius:50%;background:var(--true-red);color:#fff;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem}
+.callout{background:var(--true-pale);border-left:4px solid var(--true-red);padding:12px 16px;border-radius:4px;margin:10px 0;font-size:.88rem}
+.callout-warn{background:#FFF3E0;border-left:4px solid var(--warning);padding:12px 16px;border-radius:4px;margin:10px 0;font-size:.88rem}
+.callout-info{background:#E3F0FD;border-left:4px solid var(--info);padding:12px 16px;border-radius:4px;margin:10px 0;font-size:.88rem}
+/* XSLT tree */
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.tree-arrow{color:#6c7086;margin:0 6px}
+/* Syntax colours */
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nm{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+footer{text-align:center;padding:24px;font-size:.8rem;color:#888;border-top:1px solid var(--border);margin-top:8px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>OMX_NOTIFY_CHILD_ORDER_COMPLETED</h1>
+  <div class="sub">Terminal step — sends OMX_CHILD_ORDERS_CONFIRMATION back to parent order to signal that the child subscriber order has completed</div>
+  <div class="meta-row">
+    <span class="meta-chip">Author: DESKTOP-995HR2V</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">ForwardChain: true</span>
+    <span class="meta-chip">Target: Parent Order (via OMX_CHILD_ORDERS_CONFIRMATION)</span>
+    <span class="meta-chip">Namespace: Rules.OMConsumers.OMXOM</span>
+    <span class="meta-chip">Lines: 119</span>
+    <span class="meta-chip">Generated: 2026-08-03</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><code>OMX_NOTIFY_CHILD_ORDER_COMPLETED</code> is the final activity in the ACTIVATION_CREATE_SUBSCRIBER process (step 36 of 36). Unlike all preceding FM steps that send requests to backend systems and wait for responses, this rule sends a <strong>response event</strong> — <code>Events.OMConsumers.OMXFM.Response.OMX_CHILD_ORDERS_CONFIRMATION</code> — back to the parent order orchestrator to signal that the subscriber-level child order has finished all its processing.</p>
+    <div class="callout-info">
+      <strong>Architecture pattern — Child Order Notification:</strong> In OMX, a subscriber-level child order is orchestrated independently. When all its activities complete, it sends <code>OMX_CHILD_ORDERS_CONFIRMATION</code> carrying the <code>mainOmxTrackingId</code> (parent order's tracking ID) and this child order's own <code>childOmxTrackingId</code>. The parent order listens for these events and counts how many child orders have reported success.
+    </div>
+    <div class="callout">
+      <strong>No backend request / no fan-in wait:</strong> This rule does NOT send a JMS request to a backend system. It dispatches the confirmation event and immediately advances to <code>NextActivity()</code> — which terminates the process. There is no response rulefunction.
+    </div>
+    <div class="callout-warn">
+      <strong>Non-standard file location &amp; naming:</strong> This rule lives under <code>Rules/OMConsumers/OMXOM/</code> (not OMXFM) and has no <code>Request_</code> prefix. It is an internal OMX orchestration rule, not an FM dispatcher.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name (full)</td><td><code>Rules.OMConsumers.OMXOM.OMX_NOTIFY_CHILD_ORDER_COMPLETED</code></td></tr>
+      <tr><td>File</td><td><code>Rules/OMConsumers/OMXOM/OMX_NOTIFY_CHILD_ORDER_COMPLETED.rule</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Author</td><td>DESKTOP-995HR2V (machine hostname — person unknown)</td></tr>
+      <tr><td>Lines</td><td>119</td></tr>
+      <tr><td>Event dispatched (OUTBOUND)</td><td><code>Events.OMConsumers.OMXFM.Response.OMX_CHILD_ORDERS_CONFIRMATION</code></td></tr>
+      <tr><td>Response rulefunction</td><td><em>None — fire-and-forget notification</em></td></tr>
+      <tr><td>Target</td><td>Parent order orchestrator (via OMX_CHILD_ORDERS_CONFIRMATION response event)</td></tr>
+      <tr><td>Correlation</td><td>MAIN_TRACKING_ID (parent order) + OMXTrackingId (this child order)</td></tr>
+      <tr><td>Completion action</td><td><code>NextActivity()</code> — advances process to END immediately</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order graph — Customer, POU, ChildOU, Subscriber, OrderData (incl. MAIN_TRACKING_ID)</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity state — Response[], PreExecCheck, Status</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Binds activity to active step</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_NOTIFY_CHILD_ORDER_COMPLETED"</code></td><td>Guards this rule</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_NOTIFY_CHILD_ORDER_COMPLETED"</code></td><td>Double-check process pointer</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Fires only in WAITING state</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow</div>
+  <div class="section-body">
+    <div class="flow-steps">
+      <div class="flow-step"><div class="step-num">1</div><div><strong>Setup:</strong> isSkipped=true; read chkXPath from PreExecCheck</div></div>
+      <div class="flow-step"><div class="step-num">2</div><div><strong>POU Subscriber loop:</strong> for each POU[p] → Subscriber[ps]; reqSuccess check (Response[].ReferenceId==psub.RefId AND CompletionStatus==2); PreExecCheck via GetXMLForSubscriber; read MAIN_TRACKING_ID from ExtendedInfo; dispatch OMX_CHILD_ORDERS_CONFIRMATION (POU variant); audit log; isSkipped=false</div></div>
+      <div class="flow-step"><div class="step-num">3</div><div><strong>COU Subscriber loop:</strong> for each POU[p] → ChildOU[c] → Subscriber[cs]; reqSuccess check (Response[].ReferenceId==csub.RefId AND CompletionStatus==2); PreExecCheck via GetXMLForSubscriberInChildOU; read MAIN_TRACKING_ID; dispatch OMX_CHILD_ORDERS_CONFIRMATION (COU variant); audit log; isSkipped=false</div></div>
+      <div class="flow-step"><div class="step-num">4</div><div><strong>Completion:</strong> if(!isSkipped) → <code>NextActivity(orderRequest, orderCurrentActivity)</code> → process advances to END; else → <code>SkipActivity("4")</code>; catch → HandleActivityException</div></div>
+    </div>
+    <div class="callout-info" style="margin-top:12px"><strong>NextActivity() vs SetStatus(1)+SendDataToDB:</strong> All earlier FM steps set Status=1 and call SendDataToDB to remain in-flight while waiting for backend responses. This final step calls <code>NextActivity()</code> directly because there is no backend response to wait for — the confirmation event is fire-and-forget.</div>
+  </div>
+</div>
+
+<!-- §6 Key Logic -->
+<div class="section">
+  <div class="section-header">§6 — Key Logic Details</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin:0 0 8px">MAIN_TRACKING_ID Extraction</h3>
+    <pre><span class="kw">String</span> mainOmxTrackingId = XPath.evalAsString(
+    <span class="st">"$orderRequest/OrderData/ExtendedInfo[Name='MAIN_TRACKING_ID']/Value"</span>
+);
+<span class="cm">// This is the tracking ID of the parent order that spawned this child order.</span>
+<span class="cm">// It is set by the parent orchestrator before launching this child process.</span></pre>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">Two Dispatch Paths</h3>
+    <table>
+      <tr><th>Path</th><th>Loop</th><th>Subscriber Var</th><th>RefId</th><th>PreExecCheck Helper</th></tr>
+      <tr><td>POU Subscriber</td><td>POU[p] → Subscriber[ps]</td><td><code>psub</code></td><td><code>psub.RefId</code></td><td><code>GetXMLForSubscriber(orderRequest, pSubRefId)</code></td></tr>
+      <tr><td>COU Subscriber</td><td>POU[p] → ChildOU[c] → Subscriber[cs]</td><td><code>csub</code></td><td><code>csub.RefId</code></td><td><code>GetXMLForSubscriberInChildOU(orderRequest, cSubRefId, pOuRefId)</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">Subscriber Fields Read from Concept</h3>
+    <p>Unlike request FMs that read subscriber data for outbound backend payloads, this rule reads subscriber fields to populate the <em>completion notification</em>. These fields reflect the final state of the subscriber after all processing:</p>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Purpose in Notification</th></tr>
+      <tr><td><code>psub/csub.RefId</code></td><td>Subscriber concept</td><td>subRefId — correlates to the subscriber in the parent order</td></tr>
+      <tr><td><code>psub/csub.SubscriberId</code></td><td>Subscriber concept</td><td>subscriberId — the CCBS subscriber entity ID</td></tr>
+      <tr><td><code>psub/csub.ResponseCode</code></td><td>Subscriber concept (aggregate)</td><td>subResponseCode — this subscriber's aggregate completion code</td></tr>
+      <tr><td><code>psub/csub.ResponseMsg</code></td><td>Subscriber concept (aggregate)</td><td>subResponseMsg — this subscriber's completion message</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">JMSCorrelationID Behaviour</h3>
+    <div class="callout-warn">The event's <code>JMSCorrelationID</code> is set to <code>OMXUtils:generateTrackingID()</code> — a fresh random ID, <strong>not</strong> the mainOmxTrackingId or the child's OMXTrackingId. The parent order likely identifies its child completions via topic subscription + the <code>mainOmxTrackingId</code> field in the payload (not via JMS correlation). This is a design pattern to note for migration.</div>
+
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin:0 0 10px">§8.1 Event Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge b-orange">[OUTBOUND]</span></td><td><code>Events.OMConsumers.OMXFM.Response.OMX_CHILD_ORDERS_CONFIRMATION</code></td><td>Child order completion notification to parent order — per subscriber (POU and COU)</td></tr>
+      <tr><td><span class="badge b-blue">[OUTBOUND]</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Audit log (sendEventImmediate)</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:.87rem">There is no inbound response event. This activity does not wait for a backend reply.</p>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§8.2 BE Working Memory — Reads</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Used for</th></tr>
+      <tr><td><code>orderRequest.OrderData.ExtendedInfo[MAIN_TRACKING_ID]</code></td><td>ExtendedInfo</td><td>mainOmxTrackingId — parent order's tracking ID; placed in payload and audit TRACE</td></tr>
+      <tr><td><code>orderRequest.OrderData.OMXTrackingId</code></td><td>OrderData</td><td>childOmxTrackingId (in payload); ESBUUID (in audit)</td></tr>
+      <tr><td><code>subscriber.RefId</code></td><td>Subscriber concept</td><td>subRefId in confirmation payload</td></tr>
+      <tr><td><code>subscriber.SubscriberId</code></td><td>Subscriber concept</td><td>subscriberId in confirmation payload</td></tr>
+      <tr><td><code>subscriber.ResponseCode</code></td><td>Subscriber concept</td><td>subResponseCode in confirmation payload</td></tr>
+      <tr><td><code>subscriber.ResponseMsg</code></td><td>Subscriber concept</td><td>subResponseMsg in confirmation payload</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§8.3 Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Used for</th></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>Gates payload in audit log</td></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>LOG_LEVEL in audit</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build — OMX_CHILD_ORDERS_CONFIRMATION</div>
+  <div class="section-body">
+    <p>Both POU and COU paths produce the same schema — the only difference is the subscriber variable name (<code>$psub</code> vs <code>$csub</code>).</p>
+
+    <h3 style="color:var(--true-dark);margin:10px 0 8px">§9.1 Confirmation Event Fields</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent → event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src-static">2</span><span class="badge b-grey">Always — hardcoded</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge b-grey">Always — fresh random ID</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src-static">"000"</span><span class="badge b-grey">Always — hardcoded</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMsg</span><span class="tree-arrow">←</span><span class="tree-src-static">"SUCCESS"</span><span class="badge b-grey">Always — hardcoded</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">mainOmxTrackingId</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[MAIN_TRACKING_ID].Value</span><span class="badge b-grey">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">childOmxTrackingId</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.OMXTrackingId</span><span class="tree-cond">[Conditional: if present]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">subRefId</span><span class="tree-arrow">←</span><span class="tree-src">subscriber.RefId</span><span class="tree-cond">[Conditional: if present]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">subscriberId</span><span class="tree-arrow">←</span><span class="tree-src">subscriber.SubscriberId</span><span class="tree-cond">[Conditional: if present]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">subResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">subscriber.ResponseCode</span><span class="tree-cond">[Conditional: if present]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">subResponseMsg</span><span class="tree-arrow">←</span><span class="tree-src">subscriber.ResponseMsg</span><span class="tree-cond">[Conditional: if present]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">§9.2 Illustrative Generated XML</h3>
+    <pre><span class="xt">&lt;event&gt;</span>
+  <span class="xt">&lt;CompletionStatus&gt;</span>2<span class="xt">&lt;/CompletionStatus&gt;</span>
+  <span class="xt">&lt;JMSCorrelationID&gt;</span>a8f3b921-4c7d-...&lt;/JMSCorrelationID&gt;  <span class="cm">&lt;!-- random UUID --&gt;</span>
+  <span class="xt">&lt;ResponseCode&gt;</span>000<span class="xt">&lt;/ResponseCode&gt;</span>
+  <span class="xt">&lt;ResponseMsg&gt;</span>SUCCESS<span class="xt">&lt;/ResponseMsg&gt;</span>
+  <span class="xt">&lt;mainOmxTrackingId&gt;</span>TRK-PARENT-20260103-001<span class="xt">&lt;/mainOmxTrackingId&gt;</span>
+  <span class="xt">&lt;childOmxTrackingId&gt;</span>TRK-CHILD-20260103-007<span class="xt">&lt;/childOmxTrackingId&gt;</span>
+  <span class="xt">&lt;subRefId&gt;</span>REF-SUB-001<span class="xt">&lt;/subRefId&gt;</span>
+  <span class="xt">&lt;subscriberId&gt;</span>9876543<span class="xt">&lt;/subscriberId&gt;</span>
+  <span class="xt">&lt;subResponseCode&gt;</span>000<span class="xt">&lt;/subResponseCode&gt;</span>
+  <span class="xt">&lt;subResponseMsg&gt;</span>Activation complete<span class="xt">&lt;/subResponseMsg&gt;</span>
+<span class="xt">&lt;/event&gt;</span></pre>
+  </div>
+</div>
+
+<!-- §11 Audit -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>OPERATION_NAME</td><td>"OMX_NOTIFY_CHILD_ORDER_COMPLETED"</td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>concat("Notify Sent for OmxTrackingID ", $mainOmxTrackingId)</code> — includes the parent order tracking ID</td></tr>
+      <tr><td>PROCESS_ID</td><td>concat(nanoTime, "_REQ")</td></tr>
+      <tr><td>Dispatch</td><td>sendEventImmediate (always)</td></tr>
+      <tr><td>Payload in audit</td><td>Gated by <code>OMX_OM/WritePayload="true"</code></td></tr>
+    </table>
+    <div class="callout" style="margin-top:10px">The AUDIT_TRACE includes <code>mainOmxTrackingId</code> (parent's ID) — use this to correlate child notifications with parent order log entries when troubleshooting.</div>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Call</th><th>Result</th></tr>
+      <tr><td>At least one subscriber notified (isSkipped=false)</td><td><code>NextActivity(orderRequest, orderCurrentActivity)</code></td><td>Process advances to END — no in-flight wait</td></tr>
+      <tr><td>No subscribers dispatched (isSkipped=true)</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>Activity skipped</td></tr>
+    </table>
+    <div class="callout-info" style="margin-top:10px"><strong>Difference from all earlier steps:</strong> This step calls <code>NextActivity()</code> rather than <code>GetActivityStatusString("1")+SendDataToDB()</code>. It does not remain in-flight waiting for a backend response — the process completes immediately after dispatching the notification.</div>
+  </div>
+</div>
+
+<!-- §13 Exception -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <pre><span class="kw">catch</span> (Exception ae) {
+    RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</pre>
+    <p>Standard exception wrapper — sets activity to error status and propagates to process error handler.</p>
+  </div>
+</div>
+
+<!-- §15 Function Dependency -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre>OMX_NOTIFY_CHILD_ORDER_COMPLETED
+├── [POU Subscriber loop]
+│   ├── GetXMLForSubscriber(orderRequest, pSubRefId)           — PreExecCheck
+│   ├── XPath.execute() — chkRes
+│   ├── XPath.evalAsString() — mainOmxTrackingId (MAIN_TRACKING_ID)
+│   ├── Event.createEvent() — OMX_CHILD_ORDERS_CONFIRMATION (POU variant)
+│   ├── Event.Ext.sendEventImmediate() — confirmation event
+│   ├── System.nanoTime() — pid
+│   ├── Event.createEvent() — Logger
+│   └── Event.Ext.sendEventImmediate() — audit logger
+├── [COU Subscriber loop]
+│   ├── GetXMLForSubscriberInChildOU(orderRequest, cSubRefId, pOuRefId)  — PreExecCheck
+│   ├── XPath.execute() — chkRes
+│   ├── XPath.evalAsString() — mainOmxTrackingId
+│   ├── Event.createEvent() — OMX_CHILD_ORDERS_CONFIRMATION (COU variant)
+│   ├── Event.Ext.sendEventImmediate() — confirmation event
+│   ├── System.nanoTime() — pid
+│   ├── Event.createEvent() — Logger
+│   └── Event.Ext.sendEventImmediate() — audit logger
+├── [completion — immediate, no wait]
+│   └── NextActivity(orderRequest, orderCurrentActivity)
+├── [skip path]
+│   └── SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]
+    └── HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin:0 0 10px">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Send OMX_CHILD_ORDERS_CONFIRMATION per subscriber (POU and COU) when this child order completes</td></tr>
+      <tr><td>R2</td><td>Payload must include mainOmxTrackingId (parent), childOmxTrackingId (self), subRefId, subscriberId, subResponseCode, subResponseMsg</td></tr>
+      <tr><td>R3</td><td>ResponseCode and CompletionStatus are hardcoded "000" and 2 — this rule always reports success regardless of individual activity outcomes</td></tr>
+      <tr><td>R4</td><td>Process terminates immediately after dispatch — no backend response waiting</td></tr>
+      <tr><td>R5</td><td>MAIN_TRACKING_ID must be present in OrderData.ExtendedInfo before this step is reached</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">Design Risks</h3>
+    <div class="risk-high"><strong>[HIGH] Hardcoded ResponseCode="000" and CompletionStatus=2 — always reports SUCCESS</strong> — This rule sends "000"/"SUCCESS" unconditionally, regardless of whether earlier activities actually succeeded or had errors. If any prior step failed and was handled gracefully, the parent order will still receive a success notification. The <code>subResponseCode</code> from the subscriber concept may reflect actual status, but the top-level ResponseCode is always "000". Mitigation: in migration, drive the notification's ResponseCode from the subscriber's aggregate ResponseCode.</div>
+    <div class="risk-med"><strong>[MEDIUM] JMSCorrelationID is a fresh random ID</strong> — The parent order cannot use JMS correlation to route this response. It must filter by <code>mainOmxTrackingId</code> inside the payload. If the parent subscribes via a JMS topic selector on correlation ID, it will miss these messages. Verify the parent's subscription mechanism before migration.</div>
+    <div class="risk-med"><strong>[MEDIUM] Author field is a machine hostname, not a person</strong> — No human owner identified for this rule. Ownership must be established for change management.</div>
+    <div class="risk-low"><strong>[LOW] No RequestCount mechanism</strong> — Unlike other FMs, this rule does not use RequestCount++. There is nothing preventing the same subscriber from being notified twice if the rule fires more than once (e.g., on resubmit). The reqSuccess check (CompletionStatus==2) provides some idempotency guard.</div>
+    <div class="risk-low"><strong>[LOW] MAIN_TRACKING_ID absent edge case</strong> — If MAIN_TRACKING_ID is not populated (e.g., for a standalone order with no parent), mainOmxTrackingId will be empty string. The audit TRACE will log "Notify Sent for OmxTrackingID " (blank). Add a guard or warning log.</div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

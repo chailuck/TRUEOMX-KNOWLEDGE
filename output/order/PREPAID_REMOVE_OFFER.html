@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PREPAID_REMOVE_OFFER — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#333;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:2rem;font-weight:700;letter-spacing:.3px}
+.page-header p{opacity:.85;margin-top:8px;font-size:.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.82rem}
+.content{max-width:1500px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+tr.conditional td{border-left:3px solid #f9a825;background:#FFFDE7}
+tr.conditional:hover td{background:#FFF9C4}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red)}
+code{background:#f0e8e8;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85em}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-amber{background:#FFF8E1;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.step-num{display:inline-flex;align-items:center;justify-content:center;background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;font-size:.78rem;font-weight:700;flex-shrink:0}
+.fm-link{color:var(--true-red);text-decoration:none;font-weight:600}
+.fm-link:hover{text-decoration:underline}
+.section-num{color:var(--true-red);font-weight:700;margin-right:6px}
+details{margin-bottom:10px}
+summary{cursor:pointer;padding:10px 14px;background:#FFF8E1;border-left:3px solid #f9a825;border-radius:0 6px 6px 0;font-weight:600;list-style:none;display:flex;align-items:center;gap:10px}
+summary::before{content:'▶';font-size:.7rem;color:var(--warning)}
+details[open] summary::before{content:'▼'}
+details .detail-body{padding:14px;background:#fffef0;border:1px solid #f0e070;border-top:none;border-radius:0 0 6px 6px}
+.diagram-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)}
+.grid-4{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.fm-card{border:1px solid var(--border);border-radius:8px;padding:14px;background:var(--card)}
+.fm-card h4{color:var(--true-dark);margin-bottom:6px;font-size:.9rem;word-break:break-all}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.78rem;opacity:.7;margin-bottom:8px">TRUE Corporation OMX &rsaquo; Order Journey Documentation</div>
+  <h1>PREPAID_REMOVE_OFFER</h1>
+  <p>Process Configuration for PREPAID_REMOVE_OFFER — remove prepaid offers including future-dated and BRMS-driven removals across FE, CCP, CCBS, and BRMS_REMOVE routing paths</p>
+  <div class="meta-row">
+    <span class="meta-chip">19 Steps</span>
+    <span class="meta-chip">18 Unique FMs</span>
+    <span class="meta-chip">Entry: CRM_GET_LAST_ASSET_ROOT</span>
+    <span class="meta-chip">Generated: 2026-09-16</span>
+    <span class="meta-chip">15 Conditional Steps</span>
+  </div>
+</div>
+<div class="content">
+
+<!-- §2 Order Flow Table -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§2</span> Order Flow</div>
+  <div class="card-body" style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Step ID</th>
+          <th>FM (ActivityID)</th>
+          <th>Parameter(s)</th>
+          <th>PreExecCheck</th>
+          <th>Previous</th>
+          <th>Next</th>
+          <th>FM Doc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><span class="step-num">1</span></td>
+          <td><code>CRM_GET_LAST_ASSET_ROOT</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">CRM_GET_LAST_ASSET_ROOT</a></td>
+          <td><code>customerAddressFlag=Y</code></td>
+          <td>—</td>
+          <td>START</td>
+          <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">2</span></td>
+          <td><code>CRM_GET_ASSET_COMPONENT_LIST</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">CRM_GET_ASSET_COMPONENT_LIST</a></td>
+          <td><code>STATUS=Active</code></td>
+          <td>—</td>
+          <td>CRM_GET_LAST_ASSET_ROOT</td>
+          <td>GET_PROFILE_FROM_CCP_ALL</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">3</span></td>
+          <td><code>GET_PROFILE_FROM_CCP_ALL</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_GET_PROFILE_FROM_CCP_ALL.html">GET_PROFILE_FROM_CCP_ALL</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+          <td>OMX_BRMS_DB</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">4</span></td>
+          <td><code>OMX_BRMS_DB</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_BRMS_DB.html">OMX_BRMS_DB</a></td>
+          <td>—</td>
+          <td><code>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']])</code></td>
+          <td>GET_PROFILE_FROM_CCP_ALL</td>
+          <td>CAT_GOD</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">5</span></td>
+          <td><code>CAT_GOD</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td>
+          <td>—</td>
+          <td><code>count(//Offers) &gt; 0 or count(//SubscriberOffers) &gt; 0</code></td>
+          <td>OMX_BRMS_DB</td>
+          <td>OMX_BIZ_VAL</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">6</span></td>
+          <td><code>OMX_BIZ_VAL</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>CAT_GOD</td>
+          <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr>
+          <td><span class="step-num">7</span></td>
+          <td><code>CCP_GET_PREPAID_CREDIT_INFO</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">CCP_GET_PREPAID_CREDIT_INFO</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>OMX_BIZ_VAL</td>
+          <td>CAT_GOD_B</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">8</span></td>
+          <td><code>CAT_GOD_B</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td>
+          <td>—</td>
+          <td><code>//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='CCP'</code></td>
+          <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+          <td>OMX_CAL_OFFER_FUT_DATE</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">9</span></td>
+          <td><code>OMX_CAL_OFFER_FUT_DATE</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">OMX_CAL_OFFER_FUT_DATE</a></td>
+          <td>—</td>
+          <td><code>boolean(//SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]])</code></td>
+          <td>CAT_GOD_B</td>
+          <td>OMX_EXP_FUT_OFFER</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">10</span></td>
+          <td><code>OMX_EXP_FUT_OFFER</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_EXP_FUT_OFFER.html">OMX_EXP_FUT_OFFER</a></td>
+          <td><code>ORDERTYPE=70 | USE_ROWID_CRM=Y</code></td>
+          <td><code>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')] and ExtendedInfo[Name='EXP_TYPE' and Value='FUT']])</code></td>
+          <td>OMX_CAL_OFFER_FUT_DATE</td>
+          <td>OMX_CREATE_SUB_OFFER_BAR_SOC</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">11</span></td>
+          <td><code>OMX_CREATE_SUB_OFFER_BAR_SOC</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_CREATE_SUB_OFFER_BAR_SOC.html">OMX_CREATE_SUB_OFFER_BAR_SOC</a></td>
+          <td>—</td>
+          <td><code>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS'] and ServiceType='85']) and (not(EXP_TYPE) or EXP_TYPE!='FUT')</code></td>
+          <td>OMX_EXP_FUT_OFFER</td>
+          <td>SBM_CANCEL_PACK_PREPAID</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">12</span></td>
+          <td><code>SBM_CANCEL_PACK_PREPAID</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_SBM_CANCEL_PACK_PREPAID.html">SBM_CANCEL_PACK_PREPAID</a></td>
+          <td>—</td>
+          <td><code>FE_OR_CCBS='BRMS_REMOVE' and (not(EXP_TYPE) or EXP_TYPE!='FUT')</code></td>
+          <td>OMX_CREATE_SUB_OFFER_BAR_SOC</td>
+          <td>CRM_CREATE_ORDER_PREPAID</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">13</span></td>
+          <td><code>CRM_CREATE_ORDER_PREPAID</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">CRM_CREATE_ORDER_PREPAID</a></td>
+          <td><code>command=AddRemoveOffer | orderType=A | listOfRootLineItemAction=Update | listOfLineItemAction=Delete | listOfLineItemStatus=Inactive | USE_ROWID_CRM=N</code></td>
+          <td><code>FE_OR_CCBS='FE' and (not(EXP_TYPE) or EXP_TYPE!='FUT')</code></td>
+          <td>SBM_CANCEL_PACK_PREPAID</td>
+          <td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">14</span></td>
+          <td><code>STATUS_UPDATE_CREATING_PROFILE</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></td>
+          <td>—</td>
+          <td><code>not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])</code></td>
+          <td>CRM_CREATE_ORDER_PREPAID</td>
+          <td>OMX_GET_SRV_TRX_NO</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">15</span></td>
+          <td><code>OMX_GET_SRV_TRX_NO</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></td>
+          <td><code>CCD</code></td>
+          <td><code>(PROVISIONING absent or PROVISIONING!='N') and (not(EXP_TYPE) or EXP_TYPE!='FUT')</code></td>
+          <td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td>AA_PREPAID_PROVISIONING</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">16</span></td>
+          <td><code>AA_PREPAID_PROVISIONING</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">AA_PREPAID_PROVISIONING</a></td>
+          <td><code>CCD</code></td>
+          <td><code>(PROVISIONING absent or PROVISIONING!='N') and (not(EXP_TYPE) or EXP_TYPE!='FUT')</code></td>
+          <td>OMX_GET_SRV_TRX_NO</td>
+          <td>AA_CHECK_CONFIRMATION</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">17</span></td>
+          <td><code>AA_CHECK_CONFIRMATION</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a></td>
+          <td><code>CCD | UPDATE_NETWORK_STATUS</code></td>
+          <td><code>(PROVISIONING absent or PROVISIONING!='N') and (not(EXP_TYPE) or EXP_TYPE!='FUT')</code></td>
+          <td>AA_PREPAID_PROVISIONING</td>
+          <td>SMSGATEWAY_SEND_SMS</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">18</span></td>
+          <td><code>SMSGATEWAY_SEND_SMS</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></td>
+          <td>—</td>
+          <td><code>MSISDN present and Channel!="CCBS" and Channel!="OMX" and (not(EXP_TYPE) or EXP_TYPE!='FUT')</code></td>
+          <td>AA_CHECK_CONFIRMATION</td>
+          <td>APIGW_OPT_IN_OUT</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+        <tr class="conditional">
+          <td><span class="step-num">19</span></td>
+          <td><code>APIGW_OPT_IN_OUT</code></td>
+          <td><a class="fm-link" href="../FMlogic/Request_APIGW_OPT_IN_OUT.html">APIGW_OPT_IN_OUT</a></td>
+          <td><code>ACTION=0</code></td>
+          <td><code>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and contains(SocProperties,'TR_OFFER_GROUP=CBSC')])</code></td>
+          <td>SMSGATEWAY_SEND_SMS</td>
+          <td>END</td>
+          <td><span class="badge badge-green">✓ Exists</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:10px;font-size:.8rem"><span style="display:inline-block;width:14px;height:14px;background:#FFFDE7;border-left:3px solid #f9a825;margin-right:6px;vertical-align:middle"></span>Highlighted rows have a PreExecCheck — conditional execution. 15 of 19 steps are conditional.</p>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§3</span> Conditional Execution Rules (PreExecCheck)</div>
+  <div class="card-body">
+
+    <details>
+      <summary><span class="step-num">4</span>&nbsp; OMX_BRMS_DB &nbsp;<a class="fm-link" href="../FMlogic/Request_OMX_BRMS_DB.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>BRMS decision query only runs when the subscriber has offers <em>and</em> those offers are on the FE (own network) route. CCP/CCBS subscribers skip BRMS evaluation.</p>
+        <pre>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']])</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">5</span>&nbsp; CAT_GOD — <em>first catalog pass</em> &nbsp;<a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Catalog lookup skipped when the subscriber has no offers at all.</p>
+        <pre>count(//Offers) > 0 or count(//SubscriberOffers) > 0</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">8</span>&nbsp; CAT_GOD_B — <em>CCP catalog pass</em> &nbsp;<a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Second catalog call only for CCP-routed subscribers.</p>
+        <pre>//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='CCP'</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">9</span>&nbsp; OMX_CAL_OFFER_FUT_DATE &nbsp;<a class="fm-link" href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Future-date calculation runs only for FE or BRMS_REMOVE routes with offers present.</p>
+        <pre>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]])</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">10</span>&nbsp; OMX_EXP_FUT_OFFER — <em>expire future offer</em> &nbsp;<a class="fm-link" href="../FMlogic/Request_OMX_EXP_FUT_OFFER.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Only executes when the offer to remove is future-dated (EXP_TYPE=FUT) and on the FE or BRMS_REMOVE path.</p>
+        <pre>boolean(//Subscriber/SubscriberOffers[1]
+  and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS_REMOVE')]
+    and ExtendedInfo[Name='EXP_TYPE' and Value='FUT']])</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">11</span>&nbsp; OMX_CREATE_SUB_OFFER_BAR_SOC — <em>CCBS bar-SOC creation</em> &nbsp;<a class="fm-link" href="../FMlogic/Request_OMX_CREATE_SUB_OFFER_BAR_SOC.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Executes for CCBS ServiceType=85 offers that are not future-dated.</p>
+        <pre>boolean(//Subscriber/SubscriberOffers[1]
+  and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS'] and ServiceType='85'])
+  and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']]))
+       or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']]))</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">12</span>&nbsp; SBM_CANCEL_PACK_PREPAID &nbsp;<a class="fm-link" href="../FMlogic/Request_SBM_CANCEL_PACK_PREPAID.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>SBM pack cancellation only for BRMS_REMOVE route (non-future-dated).</p>
+        <pre>(//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='BRMS_REMOVE')
+and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']]))
+     or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']]))</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">13</span>&nbsp; CRM_CREATE_ORDER_PREPAID — <em>FE path only</em> &nbsp;<a class="fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>CRM order created only on the FE route, non-future-dated offers.</p>
+        <pre>(//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='FE')
+and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']]))
+     or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']]))</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">14</span>&nbsp; STATUS_UPDATE_CREATING_PROFILE &nbsp;<a class="fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Status update skipped entirely for future-dated offers (no provisioning needed until the future date).</p>
+        <pre>not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']]))
+or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">15</span>&nbsp; OMX_GET_SRV_TRX_NO &nbsp;<a class="fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Service transaction number fetch skipped when PROVISIONING=N or offer is future-dated.</p>
+        <pre>(not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']]))
+ or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']]))
+and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']]))
+     or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']]))</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">16</span>&nbsp; AA_PREPAID_PROVISIONING &nbsp;<a class="fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>AA provisioning skipped when PROVISIONING=N or offer is future-dated (same gate as OMX_GET_SRV_TRX_NO).</p>
+        <pre>(not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']]))
+ or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']]))
+and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']]))
+     or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']]))</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">17</span>&nbsp; AA_CHECK_CONFIRMATION &nbsp;<a class="fm-link" href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>Same gate as AA_PREPAID_PROVISIONING — confirmation only runs when provisioning ran.</p>
+        <pre>(not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']]))
+ or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']]))
+and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']]))
+     or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']]))</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">18</span>&nbsp; SMSGATEWAY_SEND_SMS &nbsp;<a class="fm-link" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>SMS confirmation skipped for CCBS/OMX channel orders and future-dated offers.</p>
+        <pre>boolean(//Subscriber[MSISDN/text()][1]
+  and /ns0:OrderRequest/OrderData/Channel/text()!="CCBS"
+  and /ns0:OrderRequest/OrderData/Channel/text()!="OMX")
+and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE']]))
+     or boolean(//SubscriberOffers[ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']]))</pre>
+      </div>
+    </details>
+
+    <details>
+      <summary><span class="step-num">19</span>&nbsp; APIGW_OPT_IN_OUT &nbsp;<a class="fm-link" href="../FMlogic/Request_APIGW_OPT_IN_OUT.html">FM Doc</a></summary>
+      <div class="detail-body">
+        <p>API Gateway opt-out only for FE subscribers whose offer's SocProperties contains the CBSC offer group (TR_OFFER_GROUP=CBSC).</p>
+        <pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and contains(SocProperties,'TR_OFFER_GROUP=CBSC')])</pre>
+      </div>
+    </details>
+
+  </div>
+</div>
+
+<!-- §4 FM Documentation Index -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§4</span> FM Documentation Index</div>
+  <div class="card-body">
+    <div class="grid-4">
+      <div class="fm-card"><h4>CRM_GET_LAST_ASSET_ROOT</h4><p style="font-size:.8rem;color:#666">Step: 1</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>CRM_GET_ASSET_COMPONENT_LIST</h4><p style="font-size:.8rem;color:#666">Step: 2</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>GET_PROFILE_FROM_CCP_ALL</h4><p style="font-size:.8rem;color:#666">Step: 3</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_GET_PROFILE_FROM_CCP_ALL.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>OMX_BRMS_DB</h4><p style="font-size:.8rem;color:#666">Step: 4</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_OMX_BRMS_DB.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>CAT_GOD</h4><p style="font-size:.8rem;color:#666">Steps: 5, 8</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>OMX_BIZ_VAL</h4><p style="font-size:.8rem;color:#666">Step: 6</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_OMX_BIZ_VAL.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>CCP_GET_PREPAID_CREDIT_INFO</h4><p style="font-size:.8rem;color:#666">Step: 7</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>OMX_CAL_OFFER_FUT_DATE</h4><p style="font-size:.8rem;color:#666">Step: 9</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>OMX_EXP_FUT_OFFER</h4><p style="font-size:.8rem;color:#666">Step: 10</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_OMX_EXP_FUT_OFFER.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>OMX_CREATE_SUB_OFFER_BAR_SOC</h4><p style="font-size:.8rem;color:#666">Step: 11</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_OMX_CREATE_SUB_OFFER_BAR_SOC.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>SBM_CANCEL_PACK_PREPAID</h4><p style="font-size:.8rem;color:#666">Step: 12</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_SBM_CANCEL_PACK_PREPAID.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>CRM_CREATE_ORDER_PREPAID</h4><p style="font-size:.8rem;color:#666">Step: 13</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>STATUS_UPDATE_CREATING_PROFILE</h4><p style="font-size:.8rem;color:#666">Step: 14</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>OMX_GET_SRV_TRX_NO</h4><p style="font-size:.8rem;color:#666">Step: 15</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>AA_PREPAID_PROVISIONING</h4><p style="font-size:.8rem;color:#666">Step: 16</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>AA_CHECK_CONFIRMATION</h4><p style="font-size:.8rem;color:#666">Step: 17</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>SMSGATEWAY_SEND_SMS</h4><p style="font-size:.8rem;color:#666">Step: 18</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+      <div class="fm-card"><h4>APIGW_OPT_IN_OUT</h4><p style="font-size:.8rem;color:#666">Step: 19</p><p style="margin-top:6px"><a class="fm-link" href="../FMlogic/Request_APIGW_OPT_IN_OUT.html">View FM Doc</a> &nbsp;<span class="badge badge-green">Exists</span></p></div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§5</span> Sequence Diagram</div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CRM as CRM
+    participant CCP as CCP
+    participant BRMS as BRMS
+    participant CAT as CAT
+    participant OMX as OMX
+    participant SBM as SBM
+    participant STATUS as STATUS
+    participant AA as AA
+    participant SMS as SMSGATEWAY
+    participant APIGW as APIGW
+
+    O->>CRM: CRM_GET_LAST_ASSET_ROOT [customerAddressFlag=Y]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_GET_LAST_ASSET_ROOT
+
+    O->>CRM: CRM_GET_ASSET_COMPONENT_LIST [STATUS=Active]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_GET_ASSET_COMPONENT_LIST
+
+    O->>CCP: GET_PROFILE_FROM_CCP_ALL
+    CCP-->>O: response
+    Note over O,CCP: FM: GET_PROFILE_FROM_CCP_ALL
+
+    opt SubscriberOffers present and FE_OR_CCBS=FE
+        O->>BRMS: OMX_BRMS_DB
+        BRMS-->>O: response
+        Note over O,BRMS: FM: OMX_BRMS_DB
+    end
+
+    opt count(Offers)>0 or count(SubscriberOffers)>0
+        O->>CAT: CAT_GOD
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL
+
+    O->>CCP: CCP_GET_PREPAID_CREDIT_INFO
+    CCP-->>O: response
+    Note over O,CCP: FM: CCP_GET_PREPAID_CREDIT_INFO
+
+    opt FE_OR_CCBS='CCP'
+        O->>CAT: CAT_GOD_B
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+
+    opt SubscriberOffers and FE_OR_CCBS=FE/BRMS_REMOVE
+        O->>OMX: OMX_CAL_OFFER_FUT_DATE
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_CAL_OFFER_FUT_DATE
+    end
+
+    opt FE_OR_CCBS=FE/BRMS_REMOVE and EXP_TYPE=FUT
+        O->>OMX: OMX_EXP_FUT_OFFER [ORDERTYPE=70|USE_ROWID_CRM=Y]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_EXP_FUT_OFFER
+    end
+
+    opt CCBS+ServiceType=85 and EXP_TYPE!=FUT
+        O->>OMX: OMX_CREATE_SUB_OFFER_BAR_SOC
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_CREATE_SUB_OFFER_BAR_SOC
+    end
+
+    opt FE_OR_CCBS=BRMS_REMOVE and EXP_TYPE!=FUT
+        O->>SBM: SBM_CANCEL_PACK_PREPAID
+        SBM-->>O: response
+        Note over O,SBM: FM: SBM_CANCEL_PACK_PREPAID
+    end
+
+    opt FE_OR_CCBS=FE and EXP_TYPE!=FUT
+        O->>CRM: CRM_CREATE_ORDER_PREPAID [command=AddRemoveOffer|orderType=A]
+        CRM-->>O: response
+        Note over O,CRM: FM: CRM_CREATE_ORDER_PREPAID
+    end
+
+    opt EXP_TYPE!=FUT
+        O->>STATUS: STATUS_UPDATE_CREATING_PROFILE
+        STATUS-->>O: response
+        Note over O,STATUS: FM: STATUS_UPDATE_CREATING_PROFILE
+    end
+
+    opt PROVISIONING!=N and EXP_TYPE!=FUT
+        O->>OMX: OMX_GET_SRV_TRX_NO [CCD]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+    end
+
+    opt PROVISIONING!=N and EXP_TYPE!=FUT
+        O->>AA: AA_PREPAID_PROVISIONING [CCD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_PREPAID_PROVISIONING
+    end
+
+    opt PROVISIONING!=N and EXP_TYPE!=FUT
+        O->>AA: AA_CHECK_CONFIRMATION [CCD|UPDATE_NETWORK_STATUS]
+        AA-->>O: response
+        Note over O,AA: FM: AA_CHECK_CONFIRMATION
+    end
+
+    opt MSISDN present and Channel!=CCBS/OMX and EXP_TYPE!=FUT
+        O->>SMS: SMSGATEWAY_SEND_SMS
+        SMS-->>O: response
+        Note over O,SMS: FM: SMSGATEWAY_SEND_SMS
+    end
+
+    opt FE_OR_CCBS=FE and CBSC in SocProperties
+        O->>APIGW: APIGW_OPT_IN_OUT [ACTION=0]
+        APIGW-->>O: response
+        Note over O,APIGW: FM: APIGW_OPT_IN_OUT
+    end
+      </div>
+    </div>
+    <p style="margin-top:8px;font-size:.8rem;color:#666">19 activities — diagram rendered in full. Note: <code>BRMS</code> participant represents the OMX BRMS DB integration.</p>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§6</span> Flow Diagram</div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1[CRM_GET_LAST_ASSET_ROOT\nparam: customerAddressFlag=Y]
+    S1 --> S2[CRM_GET_ASSET_COMPONENT_LIST\nparam: STATUS=Active]
+    S2 --> S3[GET_PROFILE_FROM_CCP_ALL]
+    S3 --> S4{OMX_BRMS_DB\nConditional: FE_OR_CCBS=FE}
+    S4 --> S5{CAT_GOD\nConditional: count Offers}
+    S5 --> S6[OMX_BIZ_VAL]
+    S6 --> S7[CCP_GET_PREPAID_CREDIT_INFO]
+    S7 --> S8{CAT_GOD_B\nConditional: FE_OR_CCBS=CCP}
+    S8 --> S9{OMX_CAL_OFFER_FUT_DATE\nConditional: FE or BRMS_REMOVE}
+    S9 --> S10{OMX_EXP_FUT_OFFER\nConditional: EXP_TYPE=FUT}
+    S10 --> S11{OMX_CREATE_SUB_OFFER_BAR_SOC\nConditional: CCBS+ST=85+not FUT}
+    S11 --> S12{SBM_CANCEL_PACK_PREPAID\nConditional: BRMS_REMOVE+not FUT}
+    S12 --> S13{CRM_CREATE_ORDER_PREPAID\nparam: command=AddRemoveOffer\nConditional: FE+not FUT}
+    S13 --> S14{STATUS_UPDATE_CREATING_PROFILE\nConditional: EXP_TYPE!=FUT}
+    S14 --> S15{OMX_GET_SRV_TRX_NO\nparam: CCD\nConditional: PROVISIONING!=N+not FUT}
+    S15 --> S16{AA_PREPAID_PROVISIONING\nparam: CCD\nConditional: PROVISIONING!=N+not FUT}
+    S16 --> S17{AA_CHECK_CONFIRMATION\nparam: CCD+UPDATE_NETWORK_STATUS\nConditional: PROVISIONING!=N+not FUT}
+    S17 --> S18{SMSGATEWAY_SEND_SMS\nConditional: MSISDN+Channel!=CCBS/OMX+not FUT}
+    S18 --> S19{APIGW_OPT_IN_OUT\nparam: ACTION=0\nConditional: FE+CBSC}
+    S19 --> END([END])
+
+    style S4 fill:#FFF9C4,stroke:#f9a825
+    style S5 fill:#FFF9C4,stroke:#f9a825
+    style S8 fill:#FFF9C4,stroke:#f9a825
+    style S9 fill:#FFF9C4,stroke:#f9a825
+    style S10 fill:#FFF9C4,stroke:#f9a825
+    style S11 fill:#FFF9C4,stroke:#f9a825
+    style S12 fill:#FFF9C4,stroke:#f9a825
+    style S13 fill:#FFF9C4,stroke:#f9a825
+    style S14 fill:#FFF9C4,stroke:#f9a825
+    style S15 fill:#FFF9C4,stroke:#f9a825
+    style S16 fill:#FFF9C4,stroke:#f9a825
+    style S17 fill:#FFF9C4,stroke:#f9a825
+    style S18 fill:#FFF9C4,stroke:#f9a825
+    style S19 fill:#FFF9C4,stroke:#f9a825
+      </div>
+    </div>
+    <p style="margin-top:8px;font-size:.8rem;color:#666">Diamond shapes = conditional (PreExecCheck). 15 of 19 steps are conditional. Note the <code>FUT</code> guard appearing on most steps from step 9 onward — future-dated offers skip all provisioning.</p>
+  </div>
+</div>
+
+</div><!-- /content -->
+<footer>TRUE Corporation OMX &middot; Order Journey Documentation &middot; PREPAID_REMOVE_OFFER &middot; Generated 2026-09-16</footer>
+</body>
+</html>

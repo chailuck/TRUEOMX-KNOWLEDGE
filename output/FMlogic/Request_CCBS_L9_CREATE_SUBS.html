@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request_CCBS_L9_CREATE_SUBS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;margin-bottom:6px;font-family:'Cascadia Code',monospace}
+.breadcrumb{opacity:.7;font-size:0.82rem;margin-bottom:8px}
+.subtitle{opacity:.85;font-size:0.93rem;max-width:820px}
+.meta-row{display:flex;gap:12px;margin-top:14px;flex-wrap:wrap}
+.meta-pill{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 14px;font-size:0.8rem}
+.content{max-width:1300px;margin:0 auto;padding:24px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 20px;font-weight:600;border-left:4px solid var(--true-light);font-size:0.97rem}
+.card-body{padding:18px 20px}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre-wrap;margin-top:8px}
+table{width:100%;border-collapse:collapse;font-size:0.83rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left}
+td{padding:7px 10px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600;margin:1px}
+.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}
+.b-blue{background:#E3F0FD;color:#1565c0}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-purple{background:#F3E5F5;color:#6a1b9a}
+.b-teal{background:#E0F2F1;color:#00695c}
+.b-jms{background:#FFE0B2;color:#E65100}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:600;color:var(--true-dark);padding:5px 0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-attr{color:#f9e2af}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.74rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.note{background:#FFF8E1;border-left:4px solid #FFC107;padding:10px 14px;border-radius:4px;font-size:0.85rem;margin:8px 0}
+.warn{background:#FFF3E0;border-left:4px solid var(--warning);padding:10px 14px;border-radius:4px;font-size:0.85rem;margin:8px 0}
+footer{text-align:center;padding:16px;font-size:0.78rem;color:#888;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb">OMX-OM / Rules / OMConsumers / OMXFM / Request</div>
+  <h1>Request_CCBS_L9_CREATE_SUBS</h1>
+  <div class="subtitle">Creates a new postpaid subscriber in CCBS using the L9 (TNP) API — L9CreateNewActivateSubscriber. Handles full subscriber provisioning including name, address, resources, SOC offers, payment channels, BN resource ranges, and MNP fields.</div>
+  <div class="meta-row">
+    <span class="meta-pill">Priority: 5</span>
+    <span class="meta-pill">ForwardChain: true</span>
+    <span class="meta-pill">Pattern: IntraActivitySequencing</span>
+    <span class="meta-pill">Backend: CCBS (L9 API)</span>
+    <span class="meta-pill">Scope: ParentOU + ChildOU Subscribers</span>
+  </div>
+</div>
+<div class="content">
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Creates new postpaid subscribers for TNP (True Move H) order types via the CCBS <strong>L9CreateNewActivateSubscriber</strong> operation. Unlike the standard <code>CCBS_CREATE_SUBS</code>, this L9 variant sends enriched subscriber data in a single request — name (INDY/CORP), address, all resource types (MSISDN, IMSI, SIM, IMEI, BN ranges), SOC offers (contract + PP + dummy IMEI), payment channels, and MNP porting fields.</p>
+    <p style="margin-top:8px">The rule iterates all ParentOU subscribers then all ChildOU subscribers. For each, it computes the sequence allocation count (<code>GetSequenceValueRequest</code>) based on the price plan offer (ServiceType=80) and contract SOC count before constructing the full request payload.</p>
+    <p style="margin-top:8px">Uses <strong>IntraActivitySequencing</strong> (<code>Event.assertEvent</code> + <code>ActionRequestEvent</code>) for fan-in. Resubmit-safe via <code>PurgePendingRequestsBeforeResubmit</code>.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_L9_CREATE_SUBS</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Activity ID</td><td>CCBS_L9_CREATE_SUBS</td></tr>
+      <tr><td>Backend System</td><td>CCBS</td></tr>
+      <tr><td>API Operation</td><td>L9CreateNewActivateSubscriber</td></tr>
+      <tr><td>Request Schema</td><td><code>http://services.omx.truecorp.co.th/FMServices/L9CreateSubscriberRequest</code></td></tr>
+      <tr><td>Response Schema</td><td><code>http://services.omx.truecorp.co.th/FMServices/L9CreateSubscriberResponse</code></td></tr>
+      <tr><td>Pattern</td><td>IntraActivitySequencing</td></tr>
+      <tr><td>Iteration Scope</td><td>ParentOU.Subscriber[j] → ChildOU[m].Subscriber[j]</td></tr>
+      <tr><td>Response Concept</td><td><code>Concepts.FM.Response.CCBSCreateSubsRes</code></td></tr>
+      <tr><td>Response Event</td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_L9_CREATE_SUBS</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§3 — Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Full order request with customer/subscriber hierarchy</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity — CCBS_L9_CREATE_SUBS</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:0.85rem">Local variables (in THEN):</p>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Purpose</th></tr>
+      <tr><td><code>isActResub</code></td><td>boolean</td><td>True when RequestCount &gt; 0 AND IsOrderResubmitted</td></tr>
+      <tr><td><code>nextAct</code></td><td>Activity</td><td>Next activity (for PreExecCheck retrieval)</td></tr>
+      <tr><td><code>logicalDateRes</code></td><td>Concepts.OM.LogicalDate</td><td>System logical date singleton</td></tr>
+      <tr><td><code>subPP</code></td><td>SubscriberOffers</td><td>Price plan offer (ServiceType=80) if present</td></tr>
+      <tr><td><code>imeiExists</code></td><td>boolean</td><td>True if IMEI resource present AND SOC 55042 absent</td></tr>
+      <tr><td><code>dummySocCount</code></td><td>int</td><td>1 if imeiExists, else 0 (adds dummy IMEI SOC slot)</td></tr>
+      <tr><td><code>contractSocCount</code></td><td>int</td><td>count(SubscriberOffers[contains(SocProperties,'TR_CONTRACT_IND=Y')])</td></tr>
+      <tr><td><code>addRangeInfos</code></td><td>ArrayList</td><td>ResourceRangeInfo items with Action=ADD (BN ranges)</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <pre>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName
+orderCurrentActivity.ActivityID == "CCBS_L9_CREATE_SUBS"
+orderRequest.ProcessFlow.NextActivityID == "CCBS_L9_CREATE_SUBS"
+orderCurrentActivity.Status == "WAITING"</pre>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol style="font-size:0.87rem;padding-left:20px;line-height:2">
+      <li>If resubmit: <code>PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code></li>
+      <li>Read <code>LogicalDate</code> singleton</li>
+      <li>Loop ParentOU[i].Subscriber[j]:</li>
+      <li style="list-style:none;padding-left:20px">a. Skip if RefId already has CompletionStatus=2 in Response array</li>
+      <li style="list-style:none;padding-left:20px">b. Evaluate PreExecCheck via <code>GetXMLForSubscriber(orderRequest, refId)</code></li>
+      <li style="list-style:none;padding-left:20px">c. Find PP offer (ServiceType=80), compute imeiExists, dummySocCount, contractSocCount, addRangeArray</li>
+      <li style="list-style:none;padding-left:20px">d. Build and assert CCBS_L9_CREATE_SUBS event</li>
+      <li style="list-style:none;padding-left:20px">e. <code>IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)</code></li>
+      <li style="list-style:none;padding-left:20px">f. Fire audit logger</li>
+      <li style="list-style:none;padding-left:20px">g. <code>isSkipped = false</code></li>
+      <li>Loop ChildOU[m].Subscriber[j]: same logic via <code>GetXMLForSubscriberInChildOU</code></li>
+      <li>If not isSkipped: <code>SendFirstRequestEvent</code> + set IN_PROGRESS; else: <code>SkipActivity("4")</code></li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h4 style="color:var(--true-dark);margin-bottom:8px">§8.2 ESB / JMS Channel</h4>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge b-jms">OUTBOUND</span></td><td>CCBS_L9_CREATE_SUBS</td><td>CCBS JMS queue</td><td>L9CreateNewActivateSubscriber request</td></tr>
+      <tr><td><span class="badge b-jms">OUTBOUND</span></td><td>Logger</td><td>Audit log</td><td>Request audit trail</td></tr>
+    </table>
+    <h4 style="color:var(--true-dark);margin-top:14px;margin-bottom:8px">§8.5 ExtendedInfo Fields</h4>
+    <table>
+      <tr><th>Key</th><th>Required?</th><th>Usage</th></tr>
+      <tr><td>DEALER_APP</td><td>Optional</td><td>L9DealerApp field in SubscriberGeneralInfo</td></tr>
+      <tr><td>DONOR_OPERATOR</td><td>Optional</td><td>L9DonorOperator when not MNP channel</td></tr>
+      <tr><td>DONOR_ZONE</td><td>Optional</td><td>L9DonorZone when not MNP channel</td></tr>
+      <tr><td>PORT_IND</td><td>Optional</td><td>L9PortInd when not MNP channel</td></tr>
+      <tr><td>PROJECT_CODE</td><td>Optional</td><td>L9ProjectCode in SubscriberGeneralInfo</td></tr>
+      <tr><td>OLD_BAN_DATE</td><td>Optional</td><td>L9RFActDate (OrderType 126/127/129 only)</td></tr>
+      <tr><td>OLD_BAN</td><td>Optional</td><td>L9RFBan (when non-empty)</td></tr>
+      <tr><td>REC_OPERATOR</td><td>Optional</td><td>L9RecOperator when not MNP channel</td></tr>
+      <tr><td>REC_ZONE</td><td>Optional</td><td>L9RecZone when not MNP channel</td></tr>
+      <tr><td>DONOR_ACCOUNT_ID</td><td>Optional</td><td>L9TMVBan (OrderType 8/9/15/16 only)</td></tr>
+      <tr><td>CHG_SPLIT_TYPE</td><td>Optional</td><td>ChargeDistributionDetailsInfo DR→Primary / RS→Secondary</td></tr>
+    </table>
+    <h4 style="color:var(--true-dark);margin-top:14px;margin-bottom:8px">§8.6 Global Variable Dependencies</h4>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><code>$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>Gate for UserName/PassWord inclusion</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+      <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Gate for payload inclusion in audit log</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§9 — Detailed Payload Build</div>
+  <div class="card-body">
+    <h4 style="color:var(--true-dark);margin-bottom:6px">§9.1 XSLT Parameters</h4>
+    <table>
+      <tr><th>Parameter</th><th>Bound from</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>OrderRequest concept</td></tr>
+      <tr><td><code>$i</code></td><td>ParentOU index (0-based)</td></tr>
+      <tr><td><code>$j</code></td><td>Subscriber index (0-based)</td></tr>
+      <tr><td><code>$iOU</code></td><td>$i + 1 (1-based)</td></tr>
+      <tr><td><code>$iSubscriber</code></td><td>$j + 1 (1-based)</td></tr>
+      <tr><td><code>$imeiExists</code></td><td>XPath.evalAsBoolean — IMEI present AND SOC 55042 absent</td></tr>
+      <tr><td><code>$subPP</code></td><td>SubscriberOffers[ServiceType='80'][0]</td></tr>
+      <tr><td><code>$dummySocCount</code></td><td>1 if imeiExists, else 0</td></tr>
+      <tr><td><code>$contractSocCount</code></td><td>count(SubscriberOffers[contains(SocProperties,'TR_CONTRACT_IND=Y')])</td></tr>
+      <tr><td><code>$addRangeArray</code></td><td>ResourceRangeInfo items with Action=ADD</td></tr>
+      <tr><td><code>$acctRefId</code></td><td>Subscriber.AccountRefId</td></tr>
+      <tr><td><code>$globalVariables</code></td><td>BE global variables</td></tr>
+    </table>
+
+    <h4 style="color:var(--true-dark);margin-top:14px;margin-bottom:6px">§9.4 GetSequenceValueRequest</h4>
+    <div class="note">The sequence counter pre-allocates sequence numbers for SOC entries. <code>incrementByCount = count($subPP) + count($subPP/RelatedOffersArray) + $dummySocCount + $contractSocCount</code></div>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>sequenceName</td><td><code>"SOC_SEQ_NO"</code> (hardcoded)</td></tr>
+      <tr><td>incrementByCount</td><td>PP offers + PP RelatedOffers + dummy IMEI (0/1) + contract SOCs</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree</div>
+  <div class="card-body">
+<ul class="xslt-tree">
+  <li><span class="tree-row"><span class="tree-tag">createEvent</span></span>
+    <ul>
+      <li><span class="tree-row"><span class="tree-tag">event</span></span>
+        <ul>
+          <li><span class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge b-orange">Conditional</span></span></li>
+          <li><span class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-orange">Conditional</span></span></li>
+          <li><span class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge b-orange">Conditional</span></span></li>
+          <li><span class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">ParentOU[$iOU]/Subscriber[$iSubscriber]/RefId</span><span class="badge b-orange">Conditional</span></span></li>
+          <li><span class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="tree-cond">if IsEnableUserPass='true' and User present</span></span></li>
+          <li><span class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="tree-cond">if IsEnableUserPass='true' and Password present</span></span></li>
+          <li><span class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge b-orange">Conditional</span></span></li>
+          <li><span class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="badge b-orange">Conditional</span></span></li>
+          <li><span class="tree-row"><span class="tree-tag">payload</span></span>
+            <ul>
+              <li><span class="tree-row"><span class="tree-tag">ns:L9CreateSubscriber</span></span>
+                <ul>
+                  <li><span class="tree-row"><span class="tree-tag">ns2:GetSequenceValueRequest</span></span>
+                    <ul>
+                      <li><span class="tree-row"><span class="tree-tag">ns2:sequenceName</span><span class="tree-arrow">←</span><span class="tree-src-static">"SOC_SEQ_NO"</span><span class="badge b-green">Always</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns2:incrementByCount</span><span class="tree-arrow">←</span><span class="tree-src">count($subPP) + count($subPP/RelatedOffersArray) + $dummySocCount + $contractSocCount</span></span></li>
+                    </ul>
+                  </li>
+                  <li><span class="tree-row"><span class="tree-tag">ns:L9CreateNewActivateSubscriberRequest</span></span>
+                    <ul>
+                      <li><span class="tree-row"><span class="tree-tag">ns:CustomerIdInfo/ns:customerNo</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/CustomerId</span><span class="badge b-green">Always</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:ExternalIdInfo/ns:externalId</span><span class="tree-arrow">←</span><span class="tree-src">Subscriber[$iSubscriber]/MSISDN</span><span class="badge b-green">Always</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:UnitIdInfo/ns:chNodeId</span><span class="tree-arrow">←</span><span class="tree-src">ParentOU[$iOU]/OUId</span><span class="badge b-green">Always</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:SubscriberTypeInfo/ns:subscriberType</span><span class="tree-arrow">←</span><span class="tree-src">Subscriber.SubscriberType</span><span class="badge b-green">Always</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns4:SubscriberGeneralInfo</span></span>
+                        <ul>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:DealerCode</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/DealerCode</span><span class="badge b-orange">Conditional</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:EffectiveDate</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberGeneralInfo/EffectiveDate</span><span class="tree-cond">if trim != ''</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9DealerApp</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[DEALER_APP]/Value</span><span class="badge b-orange">Conditional</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9DonorOperator</span><span class="tree-arrow">←</span><span class="tree-src">MNPInfo/DonorOperator OR ExtendedInfo[DONOR_OPERATOR]</span><span class="tree-cond">Channel=MNP or ExtendedInfo exists</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9DonorZone</span><span class="tree-arrow">←</span><span class="tree-src">MNPInfo/DonorZoneCode OR ExtendedInfo[DONOR_ZONE]</span><span class="tree-cond">Channel=MNP or ExtendedInfo exists</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9IMSIAlias</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberGeneralInfo/IMSIAlias</span><span class="badge b-orange">Conditional</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9PortInd</span><span class="tree-arrow">←</span><span class="tree-src-static">73</span> <span class="tree-cond">Channel=MNP</span> <span>/ </span><span class="tree-src">ExtendedInfo[PORT_IND]</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9ProjectCode</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[PROJECT_CODE]/Value</span><span class="badge b-orange">Conditional</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9ProofDate</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberGeneralInfo/ProofDate</span><span class="tree-cond">if trim != ''</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9ProofDoc</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberGeneralInfo/ProofDoc</span><span class="badge b-orange">Conditional</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9RFActDate</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[OLD_BAN_DATE]</span><span class="tree-cond">OrderType 126/127/129 only</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9RFBan</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[OLD_BAN]/Value</span><span class="tree-cond">if trim != ''</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9RecOperator</span><span class="tree-arrow">←</span><span class="tree-src">MNPInfo/RCPOperator OR ExtendedInfo[REC_OPERATOR]</span><span class="tree-cond">Channel=MNP or ExtendedInfo exists</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9RecZone</span><span class="tree-arrow">←</span><span class="tree-src">MNPInfo/RCPZoneCode OR ExtendedInfo[REC_ZONE]</span><span class="tree-cond">Channel=MNP or ExtendedInfo exists</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9SaleId</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberGeneralInfo/saleId</span><span class="badge b-orange">Conditional</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9SmsInd</span><span class="tree-arrow">←</span><span class="tree-src-static">89</span> <span class="tree-cond">SMSInd=Y</span> <span>/ </span><span class="tree-src-static">78</span> <span class="tree-cond">SMSInd=N</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9SmsLanguage</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberGeneralInfo/smsLang</span><span class="badge b-orange">Conditional</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9SplitPeriod</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberGeneralInfo/SplitPeriod</span><span class="badge b-orange">Conditional</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9TMVActDate</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberGeneralInfo/InitActDate</span><span class="tree-cond">OrderType 8/9/15/16/53/54</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:L9TMVBan</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[DONOR_ACCOUNT_ID]</span><span class="tree-cond">OrderType 8/9/15/16</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:Language</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberGeneralInfo/Language</span><span class="badge b-orange">Conditional</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:PrimResourceTp</span><span class="tree-arrow">←</span><span class="tree-src-static">"MS"</span><span class="tree-cond">Compensation Number resource present</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns4:PrimResourceVal</span><span class="tree-arrow">←</span><span class="tree-src">ResourceInfo[Compensation Number]/ValuesArray</span><span class="tree-cond">Compensation Number resource present</span></span></li>
+                        </ul>
+                      </li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:NameInfo</span> <span class="badge b-blue">linkType=83 — Primary name</span></span>
+                        <ul>
+                          <li><span class="tree-cond">nameType: INDY→73, CORP→66, other→0</span></li>
+                          <li>nameElement1–10 mapped per INDY (Title/First/Middle/Last/Marital/Fax/Email/Gender/IdType/Id) vs CORP (OrgName/BranchCode/BranchName/StoreId/Fax/Email/IdType/Id)</li>
+                          <li><span class="tree-row"><span class="tree-tag">ns:linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">83</span></span></li>
+                        </ul>
+                      </li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:NameInfo</span> <span class="badge b-blue">linkType=72 — Contact info</span></span>
+                        <ul>
+                          <li>nameType: 69; nameElement1-10: Language/PrefContactNumber/HomePhone/BizPhone/privatePhone/AuthFirstName/AuthLastName/AuthPersonalId/POAName/POAPersonalId</li>
+                          <li><span class="tree-row"><span class="tree-tag">ns:linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">72</span></span></li>
+                        </ul>
+                      </li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:NameInfo</span> <span class="badge b-blue">linkType=72 — SubscriberName2</span><span class="tree-cond">if SubscriberName2 present</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:AddressInfo</span> <span class="tree-cond">if Tumbon/Amphur/City/Zip all non-empty</span></span>
+                        <ul>
+                          <li>addressType INDY/CORP/0; addressElement1-15 → HouseNo/Moo/RoomNo/Floor/BuildingName/Soi/StreetName/Tumbon/Amphur/City/Zip/Country/TimeAtAddress/TypeOfAccomodation/subSoi</li>
+                          <li><span class="tree-row"><span class="tree-tag">ns:linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">83</span></span></li>
+                        </ul>
+                      </li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:AddressInfo</span> <span class="badge b-teal">SubscriberAddress2</span><span class="tree-cond">if Address2 Tumbon/Amphur/City/Zip present</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:offer</span></span>
+                        <ul>
+                          <li><span class="tree-row"><span class="tree-tag">ns:srvAgrInfo</span> <span class="tree-cond">for each contract SOC (TR_CONTRACT_IND=Y)</span></span><ul><li>dealerCode, deployMode, effectiveDate, expirationDate, name, relatedOffers, serviceType, soc, ParameterInfo</li></ul></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns:srvAgrInfo</span> <span class="tree-cond">for PP offer (ServiceType=80) from $subPP</span></span></li>
+                          <li><span class="tree-row"><span class="tree-tag">ns:srvAgrInfo</span> <span class="tree-cond">if $imeiExists="true"</span></span><ul><li><span class="tree-tag">ns:name</span><span class="tree-src-static">"Dummy IMEI offer"</span>, <span class="tree-tag">ns:serviceType</span><span class="tree-src-static">85</span>, <span class="tree-tag">ns:soc</span><span class="tree-src-static">"55042"</span></li></ul></li>
+                        </ul>
+                      </li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:LogicalResourceInfo</span> <span class="tree-cond">Compensation Number</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:LogicalResourceInfo</span> <span class="tree-cond">ResourceCategory=R</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:LogicalResourceInfo</span> <span class="tree-cond">ResourceName=MSISDN</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:LogicalResourceInfo</span> <span class="tree-cond">ResourceName=IMSI</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:PhysicalResourceInfo</span> <span class="tree-cond">ResourceCategory=E</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:PhysicalResourceInfo</span> <span class="tree-cond">ResourceName=IMEI</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:PhysicalResourceInfo</span> <span class="tree-cond">ResourceName=SIM</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:ParameterInfo</span> <span class="tree-cond">for ServiceType=80 ParameterInfo items</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:ParameterInfo</span> <span class="tree-cond">for ServiceType=80 RelatedOffersArray ParameterInfo</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:ParameterInfo</span> <span class="tree-cond">for contract SOC ParameterInfo items</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:DefaultRCPayChannelInfo/ns:payChannelId</span><span class="tree-arrow">←</span><span class="tree-src">PayChannelIdPrimary if present, else Account[AccountRefId]/AccountID</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:DefaultOCPayChannelInfo</span> <span class="tree-cond">same fallback logic</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:PrimaryEventPayChannelIdInfo</span> <span class="tree-cond">same fallback logic</span></span></li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:ChargeDistributionDetailsInfo</span> <span class="tree-cond">for $subPP when ServiceType=80 present</span></span>
+                        <ul>
+                          <li>CHG_SPLIT_TYPE=DR → targetPayChannelId = PayChannelIdPrimary</li>
+                          <li>CHG_SPLIT_TYPE=RS → targetPayChannelId = PayChannelIdSecondary</li>
+                          <li>Default → PayChannelIdPrimary or AccountID</li>
+                        </ul>
+                      </li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:ResourceRangeList</span> <span class="tree-cond">for each addRangeArray element — BN number ranges</span></span>
+                        <ul>
+                          <li>ns3:EffectiveDate, ns3:ExpirationDate, ns3:Name, ns3:ResrcScopeId (MSISDN), ns3:Values (tokenize by "-")</li>
+                        </ul>
+                      </li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:ActivityInfo</span></span>
+                        <ul>
+                          <li><span class="tree-tag">ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/ActivityReason if non-empty, else</span><span class="tree-src-static">"CREQ"</span></li>
+                          <li><span class="tree-tag">ns:userText</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/UserText</span><span class="badge b-orange">Conditional</span></li>
+                        </ul>
+                      </li>
+                      <li><span class="tree-row"><span class="tree-tag">ns:ActivityDateInfo/ns:activityDate</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/EffectiveDate</span><span class="tree-cond">if trim != ''</span></span></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="font-size:0.78rem;color:#666;margin-top:10px"><span class="badge b-green">Always</span> = always emitted &nbsp; <span class="badge b-orange">Conditional</span> = inside xsl:if &nbsp; <span style="color:#cba6f7;font-style:italic">italic</span> = xsl:if / xsl:choose condition</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§11 — Audit Logging</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>ESBUUID</td><td>OMXTrackingId [Conditional]</td></tr>
+      <tr><td>PROCESS_ID</td><td>concat(pid, "_REQ")</td></tr>
+      <tr><td>COMPONENT_NAME</td><td>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</td></tr>
+      <tr><td>OPERATION_NAME</td><td>"CCBS_L9_CREATE_SUBS"</td></tr>
+      <tr><td>TARGET_SYSTEM</td><td>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</td></tr>
+      <tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+      <tr><td>AUDIT_TRACE</td><td>"Request Sent for CCBS_L9_CREATE_SUBS"</td></tr>
+      <tr><td>AUDIT_TS</td><td>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</td></tr>
+      <tr><td>payload/ServicePayload</td><td>copy of reqEvent [Conditional: WritePayload=true]</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§12 — Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Condition</th><th>Status Set</th></tr>
+      <tr><td>At least one subscriber sent</td><td>IN_PROGRESS (via SendFirstRequestEvent)</td></tr>
+      <tr><td>All subscribers skipped (PreExecCheck false)</td><td>SKIPPED via SkipActivity("4")</td></tr>
+      <tr><td>Resubmit: RequestCount &gt; 0 and IsOrderResubmitted</td><td>Pending requests purged before re-send</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_CCBS_L9_CREATE_SUBS
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)  [if resubmit]
+├── GetXMLForSubscriber(orderRequest, refId)
+├── GetXMLForSubscriberInChildOU(orderRequest, refId, POURefId)
+├── XPath.execute("/(preExecCheck)", sXML, ...)
+├── XPath.evalAsBoolean(imeiExists check)
+├── Event.assertEvent(reqEvent)
+├── IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+├── Event.Ext.sendEventImmediate(Logger)
+├── IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── GetActivityStatusString("1", false)
+├── SendDataToDB(orderRequest)
+├── SkipActivity(req, activity, "4")
+└── HandleActivityException(req, activity, ae, "")</pre>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Requirement / Risk</th><th>Severity</th></tr>
+      <tr><td>R1</td><td>L9 API is a TNP-specific CCBS variant — verify availability on target platform; standard createSubscriber and L9 may have different response schemas</td><td><span class="badge b-red">HIGH</span></td></tr>
+      <tr><td>R2</td><td>SOC_SEQ_NO GetSequenceValueRequest pre-allocates sequence numbers — must replicate on new platform or redesign SOC sequencing</td><td><span class="badge b-red">HIGH</span></td></tr>
+      <tr><td>R3</td><td>IMEI dummy SOC (55042) injection logic — hardcoded; must document and carry over the business rule</td><td><span class="badge b-orange">MEDIUM</span></td></tr>
+      <tr><td>R4</td><td>MNP fields (DonorOperator, DonorZone, RecOperator, RecZone, PortInd=73) sourced from either Channel=MNP path (MNPInfo) or ExtendedInfo — dual sourcing must be preserved</td><td><span class="badge b-orange">MEDIUM</span></td></tr>
+      <tr><td>R5</td><td>CHG_SPLIT_TYPE DR/RS split for charge distribution — requires PayChannelIdPrimary and PayChannelIdSecondary to both be present</td><td><span class="badge b-orange">MEDIUM</span></td></tr>
+      <tr><td>R6</td><td>activityReason defaults to "CREQ" when SubscriberActivityInfo is absent — migration should preserve this default</td><td><span class="badge b-blue">LOW</span></td></tr>
+      <tr><td>R7</td><td>OrderType-specific fields (L9RFActDate for 126/127/129; L9TMVActDate/L9TMVBan for 8/9/15/16) — ensure order type mapping is complete in migration</td><td><span class="badge b-orange">MEDIUM</span></td></tr>
+      <tr><td>R8</td><td>BN Resource ranges (addRangeArray) tokenized by "-" — business number range format must be preserved</td><td><span class="badge b-blue">LOW</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule</div>
+  <div class="card-body">
+    <h4 style="color:var(--true-dark);margin-bottom:6px">§19.1 Overview</h4>
+    <p style="font-size:0.86rem">Parses the L9CreateSubscriberResponse, writes the new <code>SubscriberId</code> back to each matched subscriber (ParentOU and ChildOU by RefId), creates a <code>CCBSCreateSubsRes</code> concept, logs audit, and drives fan-in completion.</p>
+
+    <h4 style="color:var(--true-dark);margin-top:12px;margin-bottom:6px">§19.2 Scope Variables</h4>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Full order — subscriber SubscriberId written back</td></tr>
+      <tr><td><code>eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.CCBS_L9_CREATE_SUBS</td><td>Response event with ResponseCode, RefID, payload</td></tr>
+      <tr><td><code>currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Accumulates Response objects; holds RequestCount</td></tr>
+    </table>
+
+    <h4 style="color:var(--true-dark);margin-top:12px;margin-bottom:6px">§19.3 Write-back to Subscriber</h4>
+    <table>
+      <tr><th>Target Field</th><th>Source XPath</th></tr>
+      <tr><td>Subscriber.SubscriberId</td><td><code>payload/xsd3:L9CreateSubscriberResponse/xsd3:L9CreateNewActivateSubscriberResponse/xsd3:SubscriberIdsInfo/xsd3:SubscriberId/xsd3:SubscrNumber</code></td></tr>
+      <tr><td>Subscriber.ResponseCode</td><td><code>eventResponse.ResponseCode</code></td></tr>
+      <tr><td>Subscriber.ResponseMsg</td><td><code>eventResponse.ResponseMsg</code></td></tr>
+    </table>
+    <p style="font-size:0.83rem;margin-top:8px">Match by <code>Subscriber.RefId == eventResponse.RefID</code> for both ParentOU and ChildOU.</p>
+
+    <h4 style="color:var(--true-dark);margin-top:12px;margin-bottom:6px">§19.3 ResponseBase Concept (CCBSCreateSubsRes)</h4>
+    <ul class="xslt-tree" style="background:var(--code-bg);padding:14px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <li><span class="tree-row"><span class="tree-tag">createObject</span></span>
+        <ul>
+          <li><span class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span><span class="badge b-green">Always</span></span>
+            <ul>
+              <li><span class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge b-orange">Conditional</span></span></li>
+              <li><span class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge b-orange">Conditional</span></span></li>
+              <li><span class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge b-orange">Conditional</span></span></li>
+              <li><span class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge b-orange">Conditional</span></span></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h4 style="color:var(--true-dark);margin-top:12px;margin-bottom:6px">§19.4 Fan-in Completion Logic</h4>
+    <pre>successResponseCount = count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])
+if(currActivity.RequestCount == successResponseCount) → return "true"
+else → return "false"</pre>
+    <p style="font-size:0.84rem;margin-top:6px">Success = last 3 characters of ResponseCode are "000". All subscribers must succeed before "true" is returned.</p>
+
+    <h4 style="color:var(--true-dark);margin-top:12px;margin-bottom:6px">§19.5 Response Audit Log</h4>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>PROCESS_ID</td><td>concat(pid, "_RES")</td></tr>
+      <tr><td>OPERATION_NAME</td><td>"CCBS_L9_CREATE_SUBS"</td></tr>
+      <tr><td>AUDIT_TRACE</td><td>"Response received for CCBS_L9_CREATE_SUBS"</td></tr>
+      <tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+      <tr><td>payload</td><td>copy of $eventResponse [Conditional: WritePayload=true]</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

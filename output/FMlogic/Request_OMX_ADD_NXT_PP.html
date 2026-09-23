@@ -1,0 +1,161 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Request_OMX_ADD_NXT_PP</title><style>:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}*{box-sizing:border-box;margin:0;padding:0}body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}header h1{font-size:1.7rem;font-weight:700}header p{opacity:.85;margin-top:6px;font-size:.95rem}.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}.meta-pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.8rem}main{max-width:1200px;margin:0 auto;padding:28px 24px}.section{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:22px;overflow:hidden}.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}.section-body{padding:20px}table{width:100%;border-collapse:collapse;font-size:.88rem}th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}tr:last-child td{border-bottom:none}tr:hover td{background:#fafafa}pre,code{font-family:"Cascadia Code","Consolas",monospace}pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);line-height:1.5}code{background:#f0e8e8;color:var(--true-dark);padding:2px 6px;border-radius:4px;font-size:.84rem}.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}.badge-jms{background:#FFE0B2;color:#E65100}.badge-log{background:#F1F8E9;color:#558B2F}.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.9rem}.callout-info{border-left-color:var(--info);background:#EEF4FF}.callout-warn{border-left-color:var(--warning);background:#FFF8EF}.flow-step{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--border)}.flow-step:last-child{border-bottom:none}.step-num{background:var(--true-red);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;margin-top:2px}footer{text-align:center;padding:20px;font-size:.8rem;color:#888;border-top:1px solid var(--border);margin-top:10px}h3{color:var(--true-dark);font-size:.95rem;margin-bottom:10px}ul.plain{padding-left:20px}ul.plain li{margin-bottom:4px;font-size:.9rem}</style></head>
+<body><header><h1>Request_OMX_ADD_NXT_PP</h1><p>OMX Add Next Price Plan &mdash; Schedule Future SOC Change Across All Offer Contexts</p><div class="meta-row"><span class="meta-pill">Priority: 5</span><span class="meta-pill">forwardChain: true</span><span class="meta-pill">Author: warawich-nb</span><span class="meta-pill">Pattern: IntraActivitySequencing (per-offer)</span><span class="meta-pill">Event: OMX_ADD_FUTURE</span><span class="meta-pill">futureType: NXTPP</span><span class="meta-pill">Generated: 2026-07-27</span></div></header><main>
+
+<div class="section"><div class="section-header">§1 &mdash; Overview &amp; Purpose</div><div class="section-body"><p>This rule schedules a "Next Price Plan" (NXTPP) future SOC change for each offer in the order that has a <code>SocProperties</code>-encoded next price plan. It iterates across four contexts &mdash; POU Agreement, POU Subscriber, COU Agreement, and COU Subscriber &mdash; and sends one <code>OMX_ADD_FUTURE</code> JMS event per qualifying offer. The effective date is computed from the logical date, bill cycle, and a duration extracted from SocProperties.</p><div class="callout"><strong>Event type note:</strong> The JMS request event is <code>Events.OMConsumers.OMXFM.Request.OMX_ADD_FUTURE</code>, not OMX_ADD_NXT_PP. The same event type is shared with <code>OMX_ADD_NEXT_OFFER</code> (distinguished by <code>futureType</code> field: "NXTPP" here vs "NXTOFFER" there).</div><div class="callout-info callout"><strong>LogicalDate concept:</strong> Before iterating, reads <code>/Concepts/OM/LogicalDate</code> to support simulated date testing. If <code>LogicalDate.LogicalDate</code> is non-blank, uses that date; otherwise falls back to <code>DateTime.now()</code>.</div><div class="callout-warn callout"><strong>FE_OR_CCBS filter:</strong> Subscriber-level offers (POU Sub, COU Sub) are only processed when <code>FE_OR_CCBS = "FE"</code>. Agreement-level offers (POU Agreement, COU Agreement) are processed regardless of FE_OR_CCBS value.</div></div></div>
+
+<div class="section"><div class="section-header">§2 &mdash; Rule Metadata &amp; Attributes</div><div class="section-body"><table><tr><th>Attribute</th><th>Value</th></tr><tr><td>Rule Name</td><td><code>Request_OMX_ADD_NXT_PP</code></td></tr><tr><td>Priority</td><td>5</td></tr><tr><td>forwardChain</td><td>true</td></tr><tr><td>Author</td><td>warawich-nb</td></tr><tr><td>JMS Event type dispatched</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_ADD_FUTURE</code> (shared with OMX_ADD_NEXT_OFFER)</td></tr><tr><td>Request schema (root)</td><td><code>ns3:futureOrderWithSoc</code> (FutureOrderWithSoc.xsd)</td></tr><tr><td>futureType</td><td>"NXTPP" (hardcoded static)</td></tr><tr><td>requestedBy</td><td>"OMX" (hardcoded static)</td></tr><tr><td>requestedByUser</td><td><code>OrderData.Channel</code></td></tr><tr><td>Audit gate</td><td>Conditional on WritePayload global; LOG_LEVEL=INFO (gated by WritePayload global)</td></tr><tr><td>Fan-in helper</td><td><code>IsAllResponseSuccess(currActivity)</code> — shared helper, not inline XPath</td></tr></table></div></div>
+
+<div class="section"><div class="section-header">§4 &mdash; Rule Conditions (WHEN)</div><div class="section-body"><table><tr><th>#</th><th>Condition</th><th>Purpose</th></tr><tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Correlates activity instance</td></tr><tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_ADD_NXT_PP"</code></td><td>Targets this FM only</td></tr><tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_ADD_NXT_PP"</code></td><td>Order-level double-check</td></tr><tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Fresh activity only</td></tr></table></div></div>
+
+<div class="section"><div class="section-header">§5 &mdash; Execution Flow</div><div class="section-body"><div class="flow-step"><div class="step-num">1</div><div>Init: <code>isActResub</code>; read LogicalDate concept; initialise <code>requestedDate</code>, <code>requestedBy="OMX"</code>, <code>requestedByUser=Channel</code>, <code>futureType="NXTPP"</code>, <code>isSkipped=true</code></div></div><div class="flow-step"><div class="step-num">2</div><div>For each <strong>POU Agreement offer</strong>: read <code>FE_OR_CCBS</code> from ExtendedInfo (no FE filter); evaluate PreExecCheck via <code>GetXMLForAgreementOffer</code>; check reqSuccess by OUId; call <code>GetNextPricePlan(socProps)</code> &rarr; skip if blank; <code>GetSocCodeFromName</code> &rarr; skip if blank; compute effectiveDate; build userText; send <code>OMX_ADD_FUTURE</code> (nodeLevel=3, nodeId=pOuId); RequestCount++</div></div><div class="flow-step"><div class="step-num">3</div><div>For each <strong>POU Subscriber offer</strong>: same but FE_OR_CCBS="FE" filter enforced; PreExecCheck via <code>GetXMLForSubscriberOffer</code>; reqSuccess checked by SubscriberId; nodeLevel=5, nodeId=subId; FLG_SMS read for FLG_SMS_WELCOME_SUB extendedInfo</div></div><div class="flow-step"><div class="step-num">4</div><div>For each <strong>COU Agreement offer</strong>: if nxtPPName non-empty &rarr; same pattern; PreExecCheck via <code>GetXMLForAgreementOfferInChildOU</code>; nodeLevel=3, nodeId=cOu.OUId; adds OU_ID and AGR_ID extendedInfo</div></div><div class="flow-step"><div class="step-num">5</div><div>For each <strong>COU Subscriber offer</strong>: FE_OR_CCBS="FE" filter; PreExecCheck via <code>GetXMLForSubscriberOfferInChildOU</code>; nodeLevel=5, nodeId=subId; adds OU_ID extendedInfo (always, not conditional)</div></div><div class="flow-step"><div class="step-num">6</div><div>If any event sent &rarr; status IN_PROGRESS + <code>SendDataToDB</code>; else &rarr; <code>SkipActivity("4")</code></div></div><div class="flow-step"><div class="step-num">7</div><div>Exception &rarr; <code>HandleActivityException</code></div></div></div></div>
+
+<div class="section"><div class="section-header">§8 &mdash; System &amp; Integration Dependencies</div><div class="section-body"><h3>§8.1 &mdash; JMS / ESB Channel Dependencies</h3><table><tr><th>Direction</th><th>Event</th><th>Method</th><th>Note</th></tr><tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.OMX_ADD_FUTURE</code></td><td><code>sendEventImmediate</code></td><td>One per qualifying offer; shared event type with OMX_ADD_NEXT_OFFER; distinguished by futureType="NXTPP"</td></tr><tr><td><span class="badge badge-log">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td><code>sendEventImmediate</code></td><td>Per-offer after each send; LOG_LEVEL=INFO; payload conditional on WritePayload</td></tr></table><h3 style="margin-top:18px">§8.2 &mdash; Helper Function Dependencies</h3><table><tr><th>Function</th><th>Purpose</th></tr><tr><td><code>GetNextPricePlan(socProps)</code></td><td>Parses SocProperties to extract next PP offer name; blank return means no NXTPP scheduled</td></tr><tr><td><code>GetNextPricePlanDurationMonth(socProps)</code></td><td>Parses SocProperties for the duration in months until next PP becomes effective</td></tr><tr><td><code>GetNextPricePlanEffectiveDate(logicalDate, billCycleNo, durationMonth)</code></td><td>Computes the future effective date from logical date + bill cycle + duration months</td></tr><tr><td><code>GetSocCodeFromName(orderRequest, nxtPPName)</code></td><td>Looks up SOC code for the next PP name from the order's offer catalog</td></tr><tr><td><code>GetBillCycle(orderRequest)</code></td><td>Returns the customer's bill cycle number for effective date computation</td></tr><tr><td><code>GetXMLForAgreementOffer / GetXMLForAgreementOfferInChildOU</code></td><td>Serialises agreement offer context for per-offer PreExecCheck evaluation</td></tr><tr><td><code>GetXMLForSubscriberOffer / GetXMLForSubscriberOfferInChildOU</code></td><td>Serialises subscriber offer context for per-offer PreExecCheck evaluation</td></tr><tr><td><code>IsAllResponseSuccess(currActivity)</code></td><td>Response fan-in helper: returns "true" when all responses have CompletionStatus=2</td></tr><tr><td><code>BRMS.IsBlankOrStringNull(str)</code></td><td>Null/blank guard used before each continue skip</td></tr></table><h3 style="margin-top:18px">§8.3 &mdash; Concept Dependency</h3><table><tr><th>Concept extId</th><th>Purpose</th></tr><tr><td><code>LogicalDate</code> at path <code>/Concepts/OM/LogicalDate</code></td><td>Provides simulated date for testing effective date calculations; falls back to <code>DateTime.now()</code> if blank</td></tr></table></div></div>
+
+<div class="section"><div class="section-header">§9 &mdash; Request Payload &mdash; futureOrderWithSoc</div><div class="section-body"><div class="callout-info callout">Four XSLT variants (POU-Agreement, POU-Subscriber, COU-Agreement, COU-Subscriber). All share the same root structure; differences are in: <strong>RefID</strong>, <strong>nodeLevel</strong>, <strong>nodeId</strong>, and which <strong>extendedInfo</strong> entries are included.</div><pre>createEvent
++-- JMSPriority          &lt;- OrderPriority                                    [Conditional]
++-- JMSCorrelationID     &lt;- OrderData/OMXTrackingId                          [Conditional]
++-- OrderID              &lt;- OrderData/OrderID                                [Conditional]
++-- RefID                &lt;- agreeRefId (Agreement variant) OR subRefId (Sub variant) [Always]
++-- UserName             &lt;- OrderData/User                                   [Conditional]
++-- PassWord             &lt;- OrderData/Password                               [Conditional]
++-- OrderType            &lt;- OrderData/OrderType                              [Conditional]
++-- payload
+    +-- ns3:futureOrderWithSoc
+        +-- ns:futureOrder
+        |   +-- ns:effectiveDate   &lt;- effectiveDate (computed)               [Always]
+        |   +-- ns:status          &lt;- 1                                      [Always static]
+        |   +-- ns:orderType       &lt;- 2                                      [Always static]
+        |   +-- ns:nodeLevel       &lt;- 3 (Agreement) OR 5 (Subscriber)       [Always]
+        |   +-- ns:nodeId          &lt;- pOuId / cOu.OUId (Agree) OR subId (Sub) [Always]
+        |   +-- ns:requestedDate   &lt;- requestedDate (DateTime.now())        [Always]
+        |   +-- ns:requestedBy     &lt;- "OMX"                                  [Always static]
+        |   +-- ns:dealerCode      &lt;- OrderData/DealerCode                  [Conditional]
+        |   +-- ns:activityReason  &lt;- OUActivityInfo/ActivityReason         [Conditional]
+        |   +-- ns:extendedInfo POU_ID  &lt;- pOuId                            [Conditional: non-empty]
+        |   +-- ns:extendedInfo CUS_ID  &lt;- custId                           [Conditional: non-empty]
+        |   +-- ns:extendedInfo PAGR_ID &lt;- pAgreeId                         [Conditional: non-empty]
+        |   +-- ns:extendedInfo SUB_ID  &lt;- subId            (Sub variants)  [Conditional: non-empty]
+        |   +-- ns:extendedInfo MOBILE_NO &lt;- msisdn         (Sub variants)  [Conditional: non-empty]
+        |   +-- ns:extendedInfo FLG_SMS_WELCOME_SUB (Sub variants, OMX-2896)[Conditional: non-empty]
+        |   +-- ns:extendedInfo OU_ID  &lt;- cOu.OUId          (COU variants)  [Conditional: non-empty]
+        |   +-- ns:extendedInfo AGR_ID &lt;- cOu.Agreement.AgreementId (COU Agree) [Conditional]
+        |   +-- ns:fromOrderId     &lt;- OrderData/OrderID                     [Conditional]
+        |   +-- ns:userText        &lt;- userText (formatted string)           [Always]
+        |   +-- ns:remark          &lt;- currentPP + "-&gt;" + nxtPPName          [Always]
+        |   +-- ns:customerType    &lt;- OMXUtils:asciiCodeToText(CustomerTypeInfo/Type) [Always]
+        |   +-- ns:accountSubtype  &lt;- Account[AgreementRefId=ParentOU[n]/Agreement/RefId]/AccountSubType [Always]
+        |   +-- ns:futureType      &lt;- "NXTPP"                               [Always static]
+        +-- ns2:futureSocs
+            +-- ns2:futureSoc
+                +-- ns2:code        &lt;- nxtPPCode                             [Always]
+                +-- ns2:effectiveDate &lt;- effectiveDate                       [Always]
+                +-- [for-each RelatedOffersArray] ns2:childSoc
+                |   +-- ns2:code    &lt;- RelatedOffer.Soc
+                |   +-- ns2:parameter[] (ParamName, ValuesArray)
+                |   +-- ns2:type    &lt;- ServiceType                           [Conditional]
+                |   +-- ns2:socName &lt;- OfferName                             [Conditional]
+                +-- ns2:type        &lt;- 80                                    [Always static]
+                +-- ns2:subType     &lt;- "NXTPP"                              [Always static]
+                +-- ns2:socName     &lt;- nxtPPName                             [Always]</pre></div></div>
+
+<div class="section"><div class="section-header">§10 &mdash; Key Business Logic Details</div><div class="section-body">
+<h3>§10.1 &mdash; Four Iteration Contexts</h3>
+<table><tr><th>Context</th><th>RefID</th><th>nodeLevel</th><th>nodeId</th><th>FE_OR_CCBS filter</th><th>PreExecCheck helper</th></tr>
+<tr><td>POU Agreement</td><td>pOu.Agreement.RefId</td><td>3</td><td>pOuId</td><td>None (any source)</td><td>GetXMLForAgreementOffer</td></tr>
+<tr><td>POU Subscriber</td><td>subscriberPou.RefId</td><td>5</td><td>subscriberPou.SubscriberId</td><td>FE only</td><td>GetXMLForSubscriberOffer</td></tr>
+<tr><td>COU Agreement</td><td>cOu.Agreement.RefId</td><td>3</td><td>cOu.OUId</td><td>None (any source)</td><td>GetXMLForAgreementOfferInChildOU</td></tr>
+<tr><td>COU Subscriber</td><td>subscriberCou.RefId</td><td>5</td><td>subscriberCou.SubscriberId</td><td>FE only</td><td>GetXMLForSubscriberOfferInChildOU</td></tr></table>
+
+<h3 style="margin-top:18px">§10.2 &mdash; SocProperties-Driven Logic</h3>
+<pre>nxtPPName     = GetNextPricePlan(socProps)           // parsed from Offers[n].SocProperties
+durationMonth = GetNextPricePlanDurationMonth(socProps)
+effectiveDate = GetNextPricePlanEffectiveDate(logicalDate, billCycleNo, durationMonth)
+nxtPPCode     = GetSocCodeFromName(orderRequest, nxtPPName)
+
+Skip (continue) if: nxtPPName is blank OR nxtPPCode is blank</pre>
+
+<h3 style="margin-top:18px">§10.3 &mdash; userText Construction</h3>
+<pre>POU Agreement level:
+  userText = "{AgreementActivityInfo/UserText};NXTPP request by {Channel} on {dateTimeNow};"
+
+Subscriber and COU levels:
+  userText = "{SubscriberActivityInfo/UserText};request by {Channel} on {dateTimeNow};"
+
+Note: POU Agreement includes "NXTPP " prefix in the middle segment; subscriber levels do not.</pre>
+
+<h3 style="margin-top:18px">§10.4 &mdash; LogicalDate Override</h3>
+<pre>Reads /Concepts/OM/LogicalDate concept:
+  if (LogicalDate.LogicalDate is non-blank)
+      logicalDate = DateTime.parseString(LogicalDate.LogicalDate, "yyyy-MM-dd'T'HH:mm:ssXXX")
+  else
+      logicalDate = DateTime.now()
+
+Purpose: allows test environments to simulate future dates without changing system clock.</pre>
+
+<h3 style="margin-top:18px">§10.5 &mdash; remark Format</h3>
+<pre>remark = currentPP + "->" + nxtPPName
+Example: "PP_4G_299->PP_4G_399"</pre>
+</div></div>
+
+<div class="section"><div class="section-header">§12 &mdash; Activity Status Management</div><div class="section-body"><table><tr><th>Trigger</th><th>Code</th><th>Status</th></tr><tr><td>Rule fires initially</td><td>0</td><td>WAITING</td></tr><tr><td>No qualifying offers found</td><td>4</td><td><span class="badge badge-purple">SKIPPED</span></td></tr><tr><td>First event sent</td><td>1</td><td><span class="badge badge-blue">IN_PROGRESS</span></td></tr><tr><td>Exception thrown</td><td>3</td><td><span class="badge badge-red">ERROR</span></td></tr><tr><td>All responses complete</td><td>2</td><td><span class="badge badge-green">COMPLETED</span></td></tr></table></div></div>
+
+<div class="section"><div class="section-header">§15 &mdash; Function Dependency Tree</div><div class="section-body"><pre>Request_OMX_ADD_NXT_PP (rule)
++-- Instance.getByExtIdByUri("LogicalDate", "/Concepts/OM/LogicalDate")
++-- [if LogicalDate non-blank] DateTime.parseString(LogicalDate.LogicalDate, ...)
++-- For each POU Agreement Offer[i]:
+|   +-- ExtendedInfo scan for FE_OR_CCBS (read-only, no filter)
+|   +-- [PreExecCheck] GetXMLForAgreementOffer(orderRequest, agreeRefId, soc)
+|   +--     XPath.execute("/("+chkXPath+")", sXML, ...)
+|   +-- reqSuccess check: Response[ReferenceId=pOu.OUId, CompletionStatus=2]
+|   +-- GetNextPricePlan(socProps)               [blank =&gt; continue]
+|   +-- XPath.evalAsString(AgreementActivityInfo/UserText)
+|   +-- XPath.evalAsString(current-dateTime())
+|   +-- GetNextPricePlanDurationMonth(socProps)
+|   +-- GetBillCycle(orderRequest)
+|   +-- GetNextPricePlanEffectiveDate(logicalDate, billCycleNo, durationMonth)
+|   +-- GetSocCodeFromName(orderRequest, nxtPPName)  [blank =&gt; continue]
+|   +-- Event.createEvent(xslt://OMX_ADD_FUTURE [POU-Agreement variant])
+|   +-- Event.Ext.sendEventImmediate(reqEvent)
+|   +-- [!isActResub] RequestCount++
+|   +-- System.nanoTime()
+|   +-- Event.Ext.sendEventImmediate(Logger)
++-- For each POU Subscriber Offer[j]:
+|   +-- ExtendedInfo scan for FE_OR_CCBS (filter: skip if != FE)
+|   +-- [PreExecCheck] GetXMLForSubscriberOffer(orderRequest, subRefId, soc)
+|   +-- reqSuccess check: Response[ReferenceId=subscriberPou.SubscriberId, CompletionStatus=2]
+|   +-- GetNextPricePlan(socProps) [blank =&gt; skip entire subscriber offer block]
+|   +-- XPath.evalAsString(SubscriberActivityInfo/UserText)
+|   +-- XPath.evalAsString(ExtendedInfo[FLG_SMS]/Value)     [OMX-2896]
+|   +-- GetNextPricePlanDurationMonth + GetBillCycle + GetNextPricePlanEffectiveDate
+|   +-- GetSocCodeFromName [blank =&gt; continue]
+|   +-- Event.createEvent + sendEventImmediate + Logger
++-- For each COU Agreement Offer[k]:
+|   +-- [if nxtPPName non-empty] GetXMLForAgreementOfferInChildOU
+|   +-- reqSuccess check: Response[ReferenceId=cOu.OUId, CompletionStatus=2]
+|   +-- [same PP/code/date helpers] + Event.createEvent + sendEventImmediate + Logger
++-- For each COU Subscriber Offer[m]:
+|   +-- FE filter; GetXMLForSubscriberOfferInChildOU
+|   +-- [same PP/code/date helpers] + Event.createEvent + sendEventImmediate + Logger
++-- GetActivityStatusString("1", false) + SendDataToDB [if !isSkipped]
++-- SkipActivity("4") [if isSkipped]
++-- HandleActivityException(orderRequest, orderCurrentActivity, ae, "")
+
+Response_OMX_ADD_NXT_PP (rulefunction)
++-- Instance.createInstance(xslt://OMX_AddFutureRes)
+|   +-- extId           = OMXUtils.generateTrackingID()
+|   +-- ResponseCode    = eventResponse/ResponseCode        [Conditional]
+|   +-- ResponseMessage = eventResponse/ResponseMsg         [Conditional]
+|   +-- CompletionStatus= eventResponse/CompletionStatus    [Conditional]
+|   +-- ReferenceId     = payload/AddFutureOrderResponse/nodeId [Conditional, from payload]
++-- currActivity.Response[n] = resEvent
++-- System.nanoTime()
++-- Event.Ext.sendEventImmediate(Logger)                    [LOG_LEVEL=INFO]
++-- return IsAllResponseSuccess(currActivity)               [shared helper]</pre></div></div>
+
+<div class="section"><div class="section-header">§17 &mdash; Migration Notes &amp; Recommendations</div><div class="section-body"><h3>Functional Requirements</h3><ul class="plain"><li><strong>R1</strong> &mdash; Four iteration contexts (POU-Agreement, POU-Subscriber, COU-Agreement, COU-Subscriber) each producing one <code>OMX_ADD_FUTURE</code> event per qualifying offer. All four must be preserved.</li><li><strong>R2</strong> &mdash; FE_OR_CCBS filter is applied only at subscriber level (FE only); Agreement-level offers are not filtered and must process regardless of FE_OR_CCBS value.</li><li><strong>R3</strong> &mdash; Skip logic (continue) is triggered when either <code>GetNextPricePlan</code> returns blank OR <code>GetSocCodeFromName</code> returns blank. Both guards must be honoured.</li><li><strong>R4</strong> &mdash; LogicalDate concept support: if present and non-blank, use it as the base date for effective date computation. Required for test environments.</li><li><strong>R5</strong> &mdash; Fan-in via <code>IsAllResponseSuccess</code>: returns "true" when all responses have CompletionStatus=2 (not "000" suffix like most FMs). Verify the helper's exact condition in migration.</li><li><strong>R6</strong> &mdash; <code>ReferenceId</code> in the response concept is sourced from <code>payload/AddFutureOrderResponse/nodeId</code> (payload-level), not from the event header <code>RefID</code> &mdash; unique among this process's response concepts.</li><li><strong>R7</strong> &mdash; OMX-2896: FLG_SMS_WELCOME_SUB extendedInfo must be included in subscriber-level offers when FLG_SMS ExtendedInfo is present (corporate customer SMS welcome flag).</li><li><strong>R8</strong> &mdash; futureType="NXTPP" and ns2:type=80 and ns2:subType="NXTPP" are all static and must not be configurable at runtime (they distinguish this call from OMX_ADD_NEXT_OFFER which uses "NXTOFFER").</li></ul><h3 style="margin-top:16px">Design Risks</h3><table><tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr><tr><td>OMX_ADD_FUTURE event shared with OMX_ADD_NEXT_OFFER &mdash; response routing must distinguish by futureType or by activityId on the response handler</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Verify response handler routing — if shared channel, ensure activityId correlates correctly</td></tr><tr><td>ReferenceId sourced from payload nodeId, not event header RefID &mdash; fan-in correlation differs from other FMs</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Verify IsAllResponseSuccess checks CompletionStatus, not ResponseCode suffix "000"</td></tr><tr><td>LogicalDate concept is a shared working memory concept &mdash; changing it affects all concurrent orders</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Externalise to request-scoped parameter in migration; avoid shared mutable state</td></tr><tr><td>POU Agreement userText has "NXTPP " prefix, subscriber levels do not &mdash; inconsistency across contexts</td><td><span class="badge badge-blue">LOW</span></td><td>Document for downstream consumers; normalise in migration if not intentional</td></tr><tr><td>COU Subscriber always emits OU_ID extendedInfo (not conditional), while COU Agreement emits it conditionally &mdash; asymmetry</td><td><span class="badge badge-blue">LOW</span></td><td>Preserve as-is; verify downstream OMX processing expects unconditional OU_ID for COU sub</td></tr></table></div></div>
+
+<div class="section"><div class="section-header">§19 &mdash; Response Message Rule (Response_OMX_ADD_NXT_PP)</div><div class="section-body"><h3>§19.1 &mdash; Overview</h3><p>Creates one <code>OMX_AddFutureRes</code> concept per response from <code>OMX_ADD_FUTURE</code> event and appends to <code>currActivity.Response[]</code>. Fan-in uses <code>IsAllResponseSuccess(currActivity)</code> shared helper. The <code>ReferenceId</code> is sourced from <code>payload/AddFutureOrderResponse/nodeId</code>, not the event header.</p><h3 style="margin-top:14px">§19.2 &mdash; OMX_AddFutureRes Fields</h3><table><tr><th>Field</th><th>Source</th><th>Note</th></tr><tr><td><code>extId</code></td><td><code>OMXUtils.generateTrackingID()</code></td><td>Standard tracking ID</td></tr><tr><td><code>ResponseCode</code></td><td><code>eventResponse/ResponseCode</code></td><td>Conditional</td></tr><tr><td><code>ResponseMessage</code></td><td><code>eventResponse/ResponseMsg</code></td><td>Conditional</td></tr><tr><td><code>CompletionStatus</code></td><td><code>eventResponse/CompletionStatus</code></td><td>Conditional</td></tr><tr><td><code>ReferenceId</code></td><td><code>payload/ns1:AddFutureOrderResponse/ns1:nodeId</code></td><td>Sourced from payload body (unusual)</td></tr></table><h3 style="margin-top:14px">§19.3 &mdash; Fan-in Logic</h3><pre>return IsAllResponseSuccess(currActivity)
+// Helper checks: all Response entries have CompletionStatus = 2
+// NOT the "000" suffix pattern used by most FMs in this process</pre><div class="callout-warn callout">This is the only FM in this process that uses <code>IsAllResponseSuccess</code> for fan-in rather than inline <code>count(Response[tib:right(tib:trim(ResponseCode),3)="000"])</code>. Verify the helper's exact condition before migration.</div><h3 style="margin-top:14px">§19.4 &mdash; Response Audit</h3><table><tr><th>Field</th><th>Value</th></tr><tr><td>PROCESS_ID</td><td>concat(pid, "_RES")</td></tr><tr><td>OPERATION_NAME</td><td>OMX_ADD_NXT_PP</td></tr><tr><td>LOG_LEVEL</td><td>INFO</td></tr><tr><td>payload</td><td>Conditional on WritePayload global</td></tr></table></div></div>
+
+</main><footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation</footer></body></html>

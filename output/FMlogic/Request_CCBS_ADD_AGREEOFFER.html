@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_CCBS_ADD_AGREEOFFER</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700}
+.page-header .subtitle{opacity:0.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:0.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-always{background:#E8F5E9;color:#2e7d32}
+.badge-cond{background:#FFF3E0;color:#e65100}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.warning-box{background:#FFF8E1;border-left:4px solid #FFC107;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+.info-box{background:#E3F2FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+.success-box{background:#E8F5E9;border-left:4px solid #2e7d32;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#999;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CCBS_ADD_AGREEOFFER</h1>
+  <div class="subtitle">CCBS — Add Agreement Offers to POU and ChildOU Agreements, Including Pooled Offer Instance ID Write-back</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: CCBS</span>
+    <span class="meta-badge">Pattern: assertEvent + IntraActivitySequencing (per Offer)</span>
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">Author: awalia-t420</span>
+    <span class="meta-badge">Generated: 2026-09-21</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p><strong>CCBS_ADD_AGREEOFFER</strong> adds service offers to existing CCBS Agreements for both POU and ChildOU paths. Unlike other ACTIVATION FMs which send one event per OU/account, this rule sends one event <strong>per offer</strong> within each Agreement — meaning a POU with 3 qualifying offers generates 3 separate JMS requests.</p>
+    <div class="info-box"><strong>Three-pass logic per POU iteration:</strong>
+      <ol style="margin-top:8px;padding-left:20px;line-height:2">
+        <li><strong>Pass 1 (SOC deduplication):</strong> Collects unique SOCs from ALL offers (POU+ChildOU RelatedOffersArray) + their BRMS-derived <code>GetSplOffIndForSoc</code> values (PLG/CAP/RPD/CPD etc.) into <code>alSOCs</code>/<code>alPropVal</code> arrays.</li>
+        <li><strong>Pass 2 (POU offers):</strong> Filters POU.Agreement.Offers via PreExecCheck → sends one event per qualifying offer.</li>
+        <li><strong>Pass 3 (ChildOU offers):</strong> Same but for each ChildOU.Agreement.Offers.</li>
+      </ol>
+    </div>
+    <div class="info-box"><strong>Sequence number allocation:</strong> Each event requests a SOC_SEQ_NO sequence increment = count(offers) + count(offers/RelatedOffersArray) via <code>GetSequenceValueRequest</code>. This pre-allocates all sequence slots for the offer set in one call.</div>
+    <div class="success-box"><strong>Pooled offer write-back (response):</strong> For each OfferDetail in the response where SOC is RPD/CPD (pooled), appends <code>AgreementExtendedInfo</code> with Name=<code>POOLED_OFFER_INSTANCE_ID_{soc}</code> and Value=<code>OfferInstanceCode</code> to the matched Agreement's ExtendedInfo.</div>
+    <div class="info-box"><strong>Agreement lookup (response):</strong> Uses <code>Instance.getByExtIdByUri("AG:"+OMXTrackingId+":"+RefID, ...)</code> or <code>"CAG:..."</code> variant to locate the Agreement concept.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_ADD_AGREEOFFER</code></td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>CCBS</td></tr>
+      <tr><td>Event type</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_ADD_AGREEOFFER</code></td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_ADD_AGREEOFFER</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.assertEvent</code> + <code>IntraActivitySequencing</code> per Offer (not per Agreement)</td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Iteration target</td><td><code>Customer.ParentOU[] → Agreement.Offers[] + ChildOU.Agreement.Offers[]</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBS_AddAgreeOfferRes</code></td></tr>
+      <tr><td>Payload operation</td><td><code>ns:addOfferRequest</code> (includes <code>GetSequenceValueRequest</code>)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Special Logic -->
+<div class="card">
+  <div class="card-header">§7 — Key Logic Patterns</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>SOC deduplication (alSOCs/alPropVal)</td><td>Pre-pass across all POU and ChildOU offers collects unique SOCs + BRMS propValue. Used later to insert <code>"Agreement level offer instance ID"</code> parameterInfo for PLG/CAP SOCs only.</td></tr>
+      <tr><td>Per-offer event send</td><td>One <code>CCBS_ADD_AGREEOFFER</code> event sent per qualifying offer (after PreExecCheck filter). High-volume orders with many offers generate many parallel requests.</td></tr>
+      <tr><td>Sequence number pre-allocation</td><td><code>incrementByCount = count(offers/elements) + count(offers/elements/RelatedOffersArray)</code>. Allocates SOC_SEQ_NO slots for all offers in the batch atomically.</td></tr>
+      <tr><td>chargeDistributionDetailsInfo</td><td>For each offer where <code>RCIndicator != 64</code>: sets <code>targetPayChannelId = Account[RefId=$acctRefId].PayChannelId</code> where <code>acctRefId</code> is found by matching <code>Account.AgreementRefId == POU.Agreement.RefId</code>.</td></tr>
+      <tr><td>LargeCustomerIndicator=89 gate</td><td>Includes <code>enclosedClientInfo.logicalDate</code> only when <code>CustomerGeneralInfo.LargeCustomerIndicator=89</code>. logicalDate = offer EffectiveDate if non-empty, else tomorrow (tib:add-to-dateTime 0,0,1...).</td></tr>
+      <tr><td>reqSuccess correlation</td><td>Checks <code>Response[ReferenceId == Agreement.RefId AND CompletionStatus==2]</code> — correct correlation (by Agreement.RefId, not POU.RefId).</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping (POU path shown; ChildOU path identical with ChildOU indices)</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent → event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority / JMSCorrelationID / OrderID</span><span class="tree-arrow">←</span><span class="tree-src">standard order fields</span><span class="badge badge-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">POU[i].Agreement.RefId</span><span class="badge badge-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="tree-arrow">←</span><span class="tree-src">User / Password</span><span class="badge badge-purple">IsEnableUserPass='true'</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType / CES</span><span class="tree-arrow">←</span><span class="tree-src">standard order fields</span><span class="badge badge-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload → ns:addOfferRequest</span></div>
+            <ul>
+              <!-- GetSequenceValueRequest -->
+              <li><div class="tree-row"><span class="tree-tag">ns2:GetSequenceValueRequest</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns2:sequenceName</span><span class="tree-arrow">←</span><span class="tree-src-static">"SOC_SEQ_NO"</span><span class="badge badge-always">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns2:incrementByCount</span><span class="tree-arrow">←</span><span class="tree-src">count(offers/elements) + count(offers/elements/RelatedOffersArray)</span><span class="badge badge-always">Always</span></div></li>
+                </ul>
+              </li>
+              <!-- AddOfferRequest -->
+              <li><div class="tree-row"><span class="tree-tag">ns:AddOfferRequest</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:AgreementIdInfo → agreementNo</span><span class="tree-arrow">←</span><span class="tree-src">POU[i].Agreement.AgreementId</span><span class="badge badge-always">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:services (foreach agrOffer)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:srvAgrInfo</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:dealerCode</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.DealerCode</span><span class="badge badge-always">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:deployMode</span><span class="tree-arrow">←</span><span class="tree-src">agrOffer.DeployMode</span><span class="badge badge-cond">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:effectiveDate / ns:expirationDate</span><span class="tree-arrow">←</span><span class="tree-src">agrOffer.EffectiveDate / ExpirationDate</span><span class="badge badge-cond">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:relatedOffers (foreach RelatedOffersArray)</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">dealerCode, name=OfferName, serviceType [cond], soc</span></div></li>
+                            </ul>
+                          </li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:serviceType</span><span class="tree-arrow">←</span><span class="tree-src">agrOffer.ServiceType</span><span class="badge badge-cond">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:soc</span><span class="tree-arrow">←</span><span class="tree-src">agrOffer.Soc</span><span class="badge badge-always">Always</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <!-- parameterInfo (main offer) -->
+                  <li><div class="tree-row"><span class="tree-tag">ns:parameterInfo (foreach agrOffer.ParameterInfo)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">name ← ParamName; values ← ValuesArray [cond]; soc ← parent Soc; effectiveDate/expirationDate [cond]</span></div></li>
+                    </ul>
+                  </li>
+                  <!-- parameterInfo (related offer) -->
+                  <li><div class="tree-row"><span class="tree-tag">ns:parameterInfo (foreach agrOffer.RelatedOffersArray.ParameterInfo)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">name ← ParamName; values ← ValuesArray [cond]; soc ← RelatedOffer.Soc; effectiveDate/expirationDate [cond]</span></div></li>
+                    </ul>
+                  </li>
+                  <!-- Special parameterInfo: Agreement level offer instance ID -->
+                  <li><div class="tree-row"><span class="tree-tag">ns:parameterInfo (special: "Agreement level offer instance ID")</span><span class="badge badge-cond">Conditional: RelatedOffer SOC in stralSoc AND propValue=PLG or CAP</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">name</span><span class="tree-arrow">←</span><span class="tree-src-static">"Agreement level offer instance ID"</span><span class="badge badge-always">Always (when condition met)</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">soc</span><span class="tree-arrow">←</span><span class="tree-src">$varSoc (matching RelatedOffer SOC)</span></div></li>
+                    </ul>
+                  </li>
+                  <!-- chargeDistributionDetailsInfo -->
+                  <li><div class="tree-row"><span class="tree-tag">ns:chargeDistributionDetailsInfo (foreach offers where RCIndicator != 64)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:soc</span><span class="tree-arrow">←</span><span class="tree-src">offer.Soc</span><span class="badge badge-cond">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:targetPayChannelId</span><span class="tree-arrow">←</span><span class="tree-src">Account[RefId=$acctRefId].PayChannelId</span><span class="badge badge-always">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-cond">acctRefId = Account[AgreementRefId == POU.Agreement.RefId].RefId</span></div></li>
+                    </ul>
+                  </li>
+                  <!-- activityInfo -->
+                  <li><div class="tree-row"><span class="tree-tag">ns:activityInfo</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">activityReason</span><span class="tree-arrow">←</span><span class="tree-src">AgreementActivityInfo.ActivityReason → </span><span class="tree-src-static">"CREQ"</span><span class="badge badge-always">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">userText</span><span class="tree-arrow">←</span><span class="tree-src">AgreementActivityInfo.UserText</span><span class="badge badge-always">Always (empty if missing)</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">enclosedClientInfo → logicalDate</span><span class="tree-arrow">←</span><span class="tree-src">agrOffer.EffectiveDate (if non-empty) → tomorrow date</span><span class="badge badge-cond">Conditional: LargeCustomerIndicator=89</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div class="info-box" style="margin-top:12px"><strong>ChildOU variant:</strong> Identical XSLT structure but uses <code>ParentOU[$var]/ChildOU[$var1]/Agreement.*</code> paths. <code>incrementByCount</code> uses ChildOU agreement offer counts. <code>acctRefId</code> resolves from <code>Account[AgreementRefId=ChildOU.Agreement.RefId]</code>.</div>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <div class="code-block">Request_CCBS_ADD_AGREEOFFER
+├── [if resubmit] IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── for each POU[i]:
+│   ├── clear(alSOCs); clear(alPropVal)
+│   │
+│   ├── [Pass 1: SOC deduplication]
+│   │   ├── for each POU.Agreement.Offers[p] where PreExecCheck passes:
+│   │   │   └── for each RelatedOffersArray[q]: if SOC not in alSOCs:
+│   │   │       ├── alSOCs.add(soc)
+│   │   │       └── alPropVal.add(GetSplOffIndForSoc(orderRequest, soc))
+│   │   └── for each ChildOU[u].Agreement.Offers[v] where PreExecCheck passes:
+│   │       └── for each RelatedOffersArray[w]: if SOC not in alSOCs:
+│   │           ├── alSOCs.add(soc)
+│   │           └── alPropVal.add(GetSplOffIndForSoc(orderRequest, soc))
+│   ├── stralSoc = alSOCs.toArray(); stralPropVal = alPropVal.toArray()
+│   │
+│   ├── [Pass 2: POU offers]
+│   │   ├── if POU.Agreement != null:
+│   │   │   ├── [skip if Response[ReferenceId==Agreement.RefId AND CompletionStatus==2] exists]
+│   │   │   ├── filter POU.Agreement.Offers → offersToAdd via PreExecCheck
+│   │   │   └── for each qualifying offer[iOffer]:
+│   │   │       ├── Event.createEvent(CCBS_ADD_AGREEOFFER, POU XSLT: AgreementId + services + parameterInfo + chargeDistrib + activityInfo)
+│   │   │       ├── Event.assertEvent(agreeEvt)
+│   │   │       ├── IntraActivitySequencing.ActionRequestEvent(agreeEvt, activity)
+│   │   │       └── sendEventImmediate(Logger REQ — OPERATION_NAME="CCBS_ADD_AGREEOFFER")
+│   │
+│   └── [Pass 3: ChildOU offers]
+│       └── for each ChildOU[x]:
+│           ├── if ChildOU.Agreement != null:
+│           │   ├── [skip if Response[ReferenceId==ChildOU.Agreement.RefId AND CompletionStatus==2] exists]
+│           │   ├── filter ChildOU.Agreement.Offers → offersToAdd via PreExecCheck
+│           │   └── for each qualifying offer[iOffer]:
+│           │       ├── Event.createEvent(CCBS_ADD_AGREEOFFER, ChildOU XSLT)
+│           │       ├── Event.assertEvent(agreeEvt)
+│           │       ├── IntraActivitySequencing.ActionRequestEvent(agreeEvt, activity)
+│           │       └── sendEventImmediate(Logger REQ — OPERATION_NAME="CCBS_ADD_AGREEOFFER")
+│
+├── IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── GetActivityStatusString("1", false)
+└── SendDataToDB(orderRequest)
+
+Response_CCBS_ADD_AGREEOFFER
+├── Instance.createInstance(CCBS_AddAgreeOfferRes: ResponseCode, ResponseMessage, CompletionStatus, ReferenceId)
+│   → currActivity.Response[n] = activityRes
+├── agree = Instance.getByExtIdByUri("AG:"+OMXTrackingId+":"+RefID, Agreement)
+│   (fallback: "CAG:"+OMXTrackingId+":"+RefID)
+├── iOffDetLen = count(eventResponse/payload/addOfferResponse/OfferDetails)
+├── sPrefix = global OMX-OM/PoolingPooled/PooledPrefix (default "POOLED_OFFER_INSTANCE_ID")
+├── sPooled = global OMX-OM/PoolingPooled/PooledIndicator (default "RPD,CPD")
+├── for each OfferDetail[i]:
+│   ├── soc = OfferDetails[i]/SocID
+│   └── if BRMS.AnyIn(GetSplOffIndForSoc(orderRequest, soc), sPooled):
+│       └── Instance.createInstance(AgreementExtendedInfo: Name="{sPrefix}_{soc}", Value=OfferDetails[i]/OfferInstanceCode)
+│           → agree.ExtendedInfo[] append
+├── sendEventImmediate(Logger RES — OPERATION_NAME="CCBS_ADD_AGREEOFFER")
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → "true"/"false"</div>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Per-offer fan-out: high-volume orders with many offers generate many parallel requests — fan-in count depends on offer count, not POU count</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Ensure migration target tracks per-offer responses, not per-agreement; test with orders having 10+ offers</td></tr>
+      <tr><td>Pooled offer write-back: Agreement lookup by extId pattern "AG:/CAG:+OMXTrackingId+:+RefID" — tightly coupled to BE Working Memory key scheme</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Replace with explicit lookup by OMXTrackingId+AgreementRefId in migration target storage</td></tr>
+      <tr><td>SOC deduplication (alSOCs) collected in first pass but used only for PLG/CAP parameterInfo injection — if PreExecCheck for SOC collection differs from send-time check, dedup list may be inconsistent</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Review PreExecCheck context objects used in pass 1 vs pass 2; both should use same check</td></tr>
+      <tr><td>LargeCustomerIndicator=89 hardcoded threshold for enclosedClientInfo</td><td><span class="badge badge-blue">[LOW]</span></td><td>Document as business rule constant; make configurable in migration</td></tr>
+      <tr><td>chargeDistributionDetailsInfo: RCIndicator != 64 filter — meaning of 64 undocumented</td><td><span class="badge badge-blue">[LOW]</span></td><td>Investigate CCBS constant; document in migration data dictionary</td></tr>
+      <tr><td>Tomorrow date calculation uses tib:add-to-dateTime — timezone-sensitive</td><td><span class="badge badge-blue">[LOW]</span></td><td>Replace with explicit timezone-aware date arithmetic in migration</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule</div>
+  <div class="card-body">
+    <p>No per-offer field write-back to the Agreement/Offer structures (unlike CCBS_CREATE_ACCT). The response primarily performs pooled offer instance ID write-back for RPD/CPD-type SOCs.</p>
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>CCBS_AddAgreeOfferRes (ResponseCode, ResponseMsg, CompletionStatus, RefID)</td><td>Always (every offer response)</td></tr>
+      <tr><td><code>agree.ExtendedInfo[]</code></td><td>Name=<code>POOLED_OFFER_INSTANCE_ID_{soc}</code>, Value=<code>OfferDetails[i].OfferInstanceCode</code></td><td>Only if SOC's propValue is in sPooled (RPD or CPD)</td></tr>
+    </table>
+    <div class="info-box" style="margin-top:12px">
+      <strong>Agreement lookup pattern:</strong> <code>Instance.getByExtIdByUri("AG:"+OMXTrackingId+":"+RefID, ...)</code> or <code>"CAG:..."</code> fallback. The "AG"/"CAG" prefix distinguishes Agreement vs Child Agreement in Working Memory.<br/><br/>
+      <strong>Global variables:</strong>
+      <ul style="padding-left:20px;margin-top:6px;line-height:2">
+        <li><code>OMX-OM/PoolingPooled/PooledPrefix</code> (default: "POOLED_OFFER_INSTANCE_ID")</li>
+        <li><code>OMX-OM/PoolingPooled/PooledIndicator</code> (default: "RPD,CPD")</li>
+      </ul>
+      Fan-in: <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> — returns "true" when all per-offer requests answered.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

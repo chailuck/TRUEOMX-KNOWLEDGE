@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>OMX_CAL_OFFERS_EFF_DATE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.header h1{font-size:2rem;font-weight:700;letter-spacing:1px;}
+.header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.header .meta{margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;opacity:.9;}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:12px;}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600;}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-purple{background:#F3E5F5;color:var(--skip);}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.callout{padding:12px 16px;border-radius:6px;margin:12px 0;border-left:4px solid;}
+.callout-warning{background:#FFF8E1;border-color:var(--warning);color:#5D4037;}
+.callout-info{background:#E3F2FD;border-color:var(--info);color:#0D47A1;}
+.callout-error{background:#FFEBEE;border-color:var(--true-red);color:var(--true-dark);}
+.callout-success{background:#E8F5E9;border-color:var(--success);color:#1B5E20;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:8px 12px 8px 48px;position:relative;border-left:3px solid var(--border);margin-bottom:6px;}
+.step-list li::before{content:counter(step);position:absolute;left:-16px;top:6px;background:var(--true-red);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+footer{text-align:center;padding:24px;color:#888;font-size:.82rem;}
+h3{font-size:.95rem;font-weight:600;color:var(--true-dark);margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>OMX_CAL_OFFERS_EFF_DATE</h1>
+  <div class="subtitle">FM Logic Documentation — Internal Effective Date Classifier (No Backend Call — Pure Computation, Annotates Offers with IM/BD/FUT, Prerequisite: CCBS_GOD)</div>
+  <div class="meta">
+    <span class="meta-item">Rule: Rules.OMConsumers.OMXOM.OMX_CAL_OFFERS_EFF_DATE</span>
+    <span class="meta-item">Priority: 5</span>
+    <span class="meta-item">Pattern: Internal Computation (OMXOM) — No External Call</span>
+    <span class="meta-item">Completion: NextActivity (self-advancing)</span>
+    <span class="meta-item">Generated: 2026-09-11</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>OMX_CAL_OFFERS_EFF_DATE</strong> is an <strong>internal calculation rule</strong> (OMXOM, not OMXFM) that classifies each offer's effective date relative to the system's LogicalDate. It adds two ExtendedInfo entries to every qualifying offer: <code>OfferActivityDate</code> (IM / BD / FUT) and <code>OfferOriginalEffectiveDate</code> (the raw date string). This classification drives which CCBS operations downstream FMs select (Immediate, Billing Date, or Future activation).</p>
+    <p style="margin-top:8px;"><strong>No backend call is made.</strong> The rule is self-completing — it calls <code>NextActivity</code> directly at the end rather than waiting for a response. There is no corresponding response rulefunction.</p>
+    <div class="callout callout-info" style="margin-top:10px;">
+      <strong>Key design notes:</strong>
+      <ul style="margin-left:20px;margin-top:4px;">
+        <li><strong>Prerequisite: CCBS_GOD must have run.</strong> The rule searches for CCBS_GOD in ProcessFlow.Activities; throws <code>DATA_ISSUE</code> if not found.</li>
+        <li><strong>LogicalDate source:</strong> Reads <code>Concepts.OM.LogicalDate</code> concept — if blank, uses <code>DateTime.now()</code>. Writes the resolved date as <code>OrderData.ExtendedInfo[LOGICAL_DATE]</code>.</li>
+        <li><strong>FUT_TYPE override:</strong> If <code>OrderData.ExtendedInfo[FUT_TYPE]</code> is <code>NXTPP</code> or <code>FUTPP</code> → all offers forced to <code>OfferActivityDate="IM"</code> regardless of dates.</li>
+        <li><strong>ChildOU Agreement filter:</strong> Only processes ChildOU Agreement Offers where <code>FE_OR_CCBS="FE"</code> (skips CCBS-sourced offers). ParentOU Agreement Offers have no such filter.</li>
+        <li><strong>BD/IM + FUT expiry case:</strong> If offer's EffectiveDate is IM or BD but ExpirationDate is FUT → also adds <code>OfferExpActivityDate="FUT"</code>.</li>
+        <li><strong>Wattanachai +1 day adjustment:</strong> If OfferActivityDate="FUT" and the date falls before the logical date's comparison boundary → OfferOriginalEffectiveDate is advanced by +1 day.</li>
+        <li><strong>Agreement ExtendedInfo mirroring:</strong> For Agreement-level offers, also mirrors OfferActivityDate into <code>agreement.ExtendedInfo[OfferActivityDate]</code>.</li>
+        <li><strong>Audit OPERATION_NAME bug:</strong> Logger emits <code>"/Rules/OMConsumers/OMXOM/OMX_CAL_OFFERS_EFF_DATE"</code> (full path) and AUDIT_TRACE says "OMX-OM OfferInclusion Completed." — both are incorrect; should be just the activity name.</li>
+      </ul>
+    </div>
+    <table style="margin-top:12px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule file</td><td>OMX_CAL_OFFERS_EFF_DATE.rule (in OMXOM, not OMXFM)</td></tr>
+      <tr><td>Response rulefunction</td><td><strong>None</strong> — self-completing via <code>NextActivity</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>Backend system</td><td><strong>None</strong> — internal computation only</td></tr>
+      <tr><td>Pattern</td><td>Internal OMXOM rule (pure in-memory computation)</td></tr>
+      <tr><td>Completion</td><td><code>RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)</code></td></tr>
+      <tr><td>Output</td><td>ExtendedInfo annotations on AgreementOffers, SubscriberOffers, ParameterInfo, and Agreement concepts</td></tr>
+      <tr><td>LogicalDate source</td><td><code>Concepts.OM.LogicalDate.LogicalDate</code> or <code>DateTime.now()</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>priority</td><td>5</td><td>Standard</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Standard</td></tr>
+      <tr><td>Rule type</td><td>Internal OMXOM computation</td><td>No ESB/JMS dispatch; no external call; self-advances via NextActivity</td></tr>
+      <tr><td>Resubmit</td><td>N/A — idempotent</td><td>Rule re-classifies all offers on every invocation; no RequestCount or fan-in</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order context; all Offers and ParameterInfo are read and annotated; OrderData.ExtendedInfo is written</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity status management; NextActivity call target</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity extId matches</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_CAL_OFFERS_EFF_DATE"</code></td><td>Constrains to this rule</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_CAL_OFFERS_EFF_DATE"</code></td><td>Double-check via NextActivityID</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity ready to process</td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:10px;">
+      <strong>ProcessConfig PreExecCheck (step 8 gate):</strong><br/>
+      <code>SubscriberOffers[1]</code> exists AND <code>FE_OR_CCBS = FE or BRMS</code>. Evaluated per Subscriber Offer during the internal loop — the <code>nextAct.PreExecCheck</code> is evaluated for each Subscriber Offer individually (not at the rule-when level).
+    </div>
+  </div>
+</div>
+
+<!-- §5 -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li><strong>CCBS_GOD prerequisite check:</strong> Search <code>ProcessFlow.Activities</code> for <code>ActivityID=="CCBS_GOD"</code>. If not found → throw <code>DATA_ISSUE</code>.</li>
+      <li><strong>LogicalDate resolution:</strong> Read <code>Concepts.OM.LogicalDate.LogicalDate</code>. If blank → <code>DateTime.now()</code>; else parse as <code>yyyy-MM-dd'T'HH:mm:ssXXX</code>. Write resolved date as <code>OrderData.ExtendedInfo[LOGICAL_DATE]</code>.</li>
+      <li><strong>FUT_TYPE check:</strong> <code>isFromOmxFuture = ExtendedInfo[FUT_TYPE] in {NXTPP, FUTPP}</code>. If true → all OfferActivityDate values forced to "IM".</li>
+      <li><strong>PP@POU loop</strong> — ParentOU Agreement Offers:
+        <ul style="margin-left:20px;">
+          <li>For each AgreementOffer with Action=ADD or REMOVE: compute OfferActivityDate + OfferOriginalEffectiveDate; check BD/IM+FUT expiry case; mirror to agreement.ExtendedInfo</li>
+          <li>For each AgreementOffer with Action=CHG_PARAM: process each ParameterInfo individually → OfferParamActivityDate + offerParamOriginalEffectiveDate</li>
+        </ul>
+      </li>
+      <li><strong>Sub@POU loop</strong> — ParentOU Subscriber SubscriberOffers:
+        <ul style="margin-left:20px;">
+          <li>Read <code>FE_OR_CCBS</code> filter; call <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code>; evaluate PreExecCheck</li>
+          <li>ADD/REMOVE/no-action → OfferActivityDate + OfferOriginalEffectiveDate; BD/IM+FUT expiry case; Wattanachai +1 day if FUT</li>
+          <li>CHG_PARAM → per ParameterInfo</li>
+        </ul>
+      </li>
+      <li><strong>PP@COU loop</strong> — ChildOU Agreement Offers (only FE_OR_CCBS="FE"):
+        <ul style="margin-left:20px;">
+          <li>Skip if <code>FE_OR_CCBS != "FE"</code> (isSkip=true)</li>
+          <li>Same ADD/REMOVE logic + agreement.ExtendedInfo mirror; CHG_PARAM → ParameterInfo</li>
+        </ul>
+      </li>
+      <li><strong>Sub@COU loop</strong> — ChildOU Subscriber SubscriberOffers:
+        <ul style="margin-left:20px;">
+          <li>Same filter + PreExecCheck pattern as Sub@POU</li>
+        </ul>
+      </li>
+      <li><strong>Complete:</strong> <code>NextActivity(orderRequest, orderCurrentActivity)</code>; send Logger audit event.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Annotated Logic</div>
+  <div class="section-body">
+    <pre><code><span class="cm">// Step 1: CCBS_GOD prerequisite</span>
+godAct = search ProcessFlow.Activities <span class="kw">for</span> ActivityID==<span class="st">"CCBS_GOD"</span>;
+<span class="kw">if</span>(godAct == <span class="kw">null</span>) <span class="kw">throw</span> Exception(<span class="st">"DATA_ISSUE"</span>, <span class="st">"OMX did not find Get Offer Details response."</span>);
+
+<span class="cm">// Step 2: LogicalDate</span>
+logicalDateRes = Instance.<span class="fn">getByExtIdByUri</span>(<span class="st">"LogicalDate"</span>, <span class="st">"/Concepts/OM/LogicalDate"</span>);
+logicalDate = (String.length(logicalDateRes.LogicalDate) &lt;= <span class="nu">0</span>) ? DateTime.<span class="fn">now</span>()
+            : DateTime.<span class="fn">parseString</span>(logicalDateRes.LogicalDate, <span class="st">"yyyy-MM-dd'T'HH:mm:ssXXX"</span>);
+OrderData.ExtendedInfo ← createInstance(LOGICAL_DATE, logicalDate);
+
+<span class="cm">// Step 3: FUT_TYPE check</span>
+<span class="kw">boolean</span> isFromOmxFuture = XPath.evalAsBoolean(<span class="st">"ExtendedInfo[FUT_TYPE] in {NXTPP|FUTPP}"</span>);
+
+<span class="cm">// Step 4-7: Loop all scopes</span>
+<span class="kw">for</span>(iPOU ...) {
+    <span class="cm">// PP@POU: Agreement Offers (no FE_OR_CCBS filter)</span>
+    <span class="kw">for</span>(iPouOffer ...) {
+        agOff.Action = ADD|REMOVE → offerEffectDate = EffectiveDate|ExpirationDate;
+        offerActivityDate.Value = isFromOmxFuture ? <span class="st">"IM"</span> : Helpers.<span class="fn">GetActivityEffectiveType</span>(offerEffectDate, logicalDate);
+        agOff.ExtendedInfo ← [OfferActivityDate, OfferOriginalEffectiveDate];
+        <span class="cm">// BD/IM+FUT special</span>
+        <span class="kw">if</span>(ExpirationDate exists &amp;&amp; (EffDate=IM||BD) &amp;&amp; ExpDate=FUT) agOff.ExtendedInfo ← OfferExpActivityDate=<span class="st">"FUT"</span>;
+        agreement.ExtendedInfo ← AgreementExtendedInfo(OfferActivityDate);
+
+        agOff.Action = CHG_PARAM → <span class="kw">for</span>(iOfferParam) {
+            offerParamActivityDate.Value = isFromOmxFuture ? <span class="st">"IM"</span> : GetActivityEffectiveType(ParameterInfo.EffDate);
+            ParameterInfo.ExtendedInfo ← [offerParamOriginalEffectiveDate, OfferParamActivityDate];
+        }
+    }
+
+    <span class="cm">// Sub@POU: Subscriber Offers (filtered via PreExecCheck)</span>
+    <span class="kw">for</span>(iPouSub...; iPouSubOffer...) {
+        filter = subOff.ExtendedInfo[FE_OR_CCBS].Value;
+        chkRes = XPath.execute(PreExecCheck, GetXMLForSubscriberOfferFilterWithExtendedInfo(...));
+        <span class="kw">if</span>(chkRes != <span class="st">"true"</span>) <span class="kw">continue</span>;
+        subOff.Action = ADD|REMOVE|blank → offerActivityDate; OfferOriginalEffectiveDate;
+        <span class="cm">// Wattanachai: if FUT and CheckOfferDateWillCompareWithLogicalDate → +1 day</span>
+        <span class="kw">if</span>(offerActivityDate=<span class="st">"FUT"</span> &amp;&amp; CheckOfferDate...<span class="st">"B"</span>) OriginalEffDate += 1 day;
+        subOff.Action = CHG_PARAM → per ParameterInfo;
+    }
+
+    <span class="cm">// PP@COU: ChildOU Agreement Offers (FE_OR_CCBS=="FE" only)</span>
+    <span class="kw">for</span>(iCOU...; iCouOffer...) {
+        <span class="kw">if</span>(!FE_OR_CCBS==<span class="st">"FE"</span>) <span class="kw">continue</span>; <span class="cm">// isSkip=true for CCBS-tagged offers</span>
+        <span class="cm">// Same logic as PP@POU, including agreement.ExtendedInfo mirror</span>
+    }
+
+    <span class="cm">// Sub@COU: same as Sub@POU but uses GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</span>
+}
+Helpers.<span class="fn">NextActivity</span>(orderRequest, orderCurrentActivity);
+<span class="cm">/* audit Logger — OPERATION_NAME bug: emits full path; AUDIT_TRACE: "OMX-OM OfferInclusion Completed." */</span></code></pre>
+  </div>
+</div>
+
+<!-- §7 -->
+<div class="section">
+  <div class="section-header">§7 — Effective Date Classification Logic</div>
+  <div class="section-body">
+    <h3>§7.1 — OfferActivityDate Values</h3>
+    <table>
+      <tr><th>Value</th><th>Meaning</th><th>When assigned</th></tr>
+      <tr><td><code>"IM"</code></td><td>Immediate — effective now</td><td>isFromOmxFuture=true (override); or GetActivityEffectiveType returns "IM"</td></tr>
+      <tr><td><code>"BD"</code></td><td>Billing Date — effective at next billing cycle</td><td>GetActivityEffectiveType returns "BD"</td></tr>
+      <tr><td><code>"FUT"</code></td><td>Future — effective at a specified future date</td><td>GetActivityEffectiveType returns "FUT"</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§7.2 — Offer Effective Date Source by Action</h3>
+    <table>
+      <tr><th>Action</th><th>offerEffectDate source</th></tr>
+      <tr><td><code>ADD</code> (or blank for SubscriberOffers)</td><td><code>agOff.EffectiveDate</code> / <code>subOff.EffectiveDate</code></td></tr>
+      <tr><td><code>REMOVE</code></td><td><code>agOff.ExpirationDate</code> / <code>subOff.ExpirationDate</code></td></tr>
+      <tr><td><code>CHG_PARAM</code></td><td><code>ParameterInfo[iOfferParam].EffectiveDate</code> (per-parameter)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§7.3 — FUT_TYPE Override</h3>
+    <table>
+      <tr><th>ExtendedInfo[FUT_TYPE]</th><th>Effect</th></tr>
+      <tr><td><code>NXTPP</code> or <code>FUTPP</code></td><td><code>isFromOmxFuture=true</code> → all OfferActivityDate = "IM" (bypasses GetActivityEffectiveType)</td></tr>
+      <tr><td>Any other / absent</td><td>Standard date comparison via <code>GetActivityEffectiveType(offerEffectDate, logicalDate)</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§7.4 — OfferExpActivityDate="FUT" Special Case</h3>
+    <p>Applied when: <code>ExpirationDate exists</code> AND <code>(EffDate is IM OR (EffDate is BD AND ExpDate is FUT))</code>. Adds <code>OfferExpActivityDate="FUT"</code> to the offer's ExtendedInfo. This supports the scenario where an offer is added with immediate/BD activation but has a future expiration.</p>
+
+    <div class="callout callout-warning" style="margin-top:10px;">
+      <strong>Operator precedence bug in BD condition:</strong> The code reads:<br/>
+      <code>String.equals("IM", effType) || String.equals("BD", effType) &amp;&amp; String.equals("FUT", expType)</code><br/>
+      Due to <code>&amp;&amp;</code> having higher precedence than <code>||</code>, this evaluates as:<br/>
+      <code>IM || (BD &amp;&amp; FUT)</code> — not <code>(IM || BD) &amp;&amp; FUT</code> as likely intended.<br/>
+      Result: if EffDate is IM, OfferExpActivityDate="FUT" is added regardless of ExpirationDate type. This is a latent bug that can cause extra FUT expiry annotations on IM offers.
+    </div>
+
+    <h3 style="margin-top:16px;">§7.5 — Wattanachai +1 Day Adjustment</h3>
+    <p>When <code>OfferActivityDate=="FUT"</code> AND <code>CheckOfferDateWillCompareWithLogicalDate(offerEffectDate, logicalDate, "B")</code> returns true → OfferOriginalEffectiveDate is set to <code>offerEffectDate + 1 day</code> (formatted as <code>yyyy-MM-dd'T'HH:mm:ss.SSSXXX</code>). This applies to both SubscriberOffers in Sub@POU and Sub@COU scopes.</p>
+  </div>
+</div>
+
+<!-- §8 -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.1 — Order Type Dependencies</h3>
+    <p>Used in BN_CHANGE_PACKAGE step 8, only when <code>SubscriberOffers[1]</code> exists and <code>FE_OR_CCBS = FE or BRMS</code>. The classification produced here is consumed by all subsequent CCBS price plan and subscriber change FMs (CCBS_ADD_PP_OU, CCBS_CHANGE_PP_OU, CCBS_CHANGE_PACKAGE_SUBSCRIBER, etc.) which check OfferActivityDate to determine activation timing.</p>
+
+    <h3 style="margin-top:16px;">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-teal">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Completion audit (unconditional)</td></tr>
+    </table>
+    <p style="margin-top:6px;color:#555;font-size:.85rem;">No outbound OMXFM request event. This is a pure in-memory computation rule.</p>
+
+    <h3 style="margin-top:16px;">§8.3 — BE Working Memory Dependencies (Read)</h3>
+    <table>
+      <tr><th>Concept path</th><th>Access</th><th>Purpose</th></tr>
+      <tr><td><code>Concepts.OM.LogicalDate</code></td><td>Read</td><td>LogicalDate string for date classification</td></tr>
+      <tr><td><code>ProcessFlow.Activities[ActivityID=CCBS_GOD]</code></td><td>Read</td><td>Prerequisite check — throws DATA_ISSUE if absent</td></tr>
+      <tr><td><code>OrderData.ExtendedInfo[FUT_TYPE]</code></td><td>Read</td><td>NXTPP/FUTPP override for isFromOmxFuture</td></tr>
+      <tr><td><code>ParentOU[*].Agreement.Offers[*].EffectiveDate / ExpirationDate / Action / ParameterInfo</code></td><td>Read</td><td>PP@POU effective date source</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].EffectiveDate / ExpirationDate / Action / ParameterInfo / ExtendedInfo[FE_OR_CCBS]</code></td><td>Read</td><td>Sub@POU effective date source</td></tr>
+      <tr><td><code>ParentOU[*].ChildOU[*].Agreement.Offers[*].ExtendedInfo[FE_OR_CCBS]</code></td><td>Read</td><td>PP@COU filter (only FE)</td></tr>
+      <tr><td><code>ParentOU[*].ChildOU[*].Subscriber[*].SubscriberOffers[*]</code></td><td>Read</td><td>Sub@COU effective date source</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.4 — BE Working Memory Dependencies (Written)</h3>
+    <table>
+      <tr><th>Concept path</th><th>Written</th><th>Value</th></tr>
+      <tr><td><code>OrderData.ExtendedInfo[LOGICAL_DATE]</code></td><td>Always</td><td>Resolved logicalDate string</td></tr>
+      <tr><td><code>Agreement.Offers[*].ExtendedInfo[OfferActivityDate]</code></td><td>ADD/REMOVE</td><td>"IM" / "BD" / "FUT"</td></tr>
+      <tr><td><code>Agreement.Offers[*].ExtendedInfo[OfferOriginalEffectiveDate]</code></td><td>ADD/REMOVE</td><td>Raw effective/expiration date</td></tr>
+      <tr><td><code>Agreement.Offers[*].ExtendedInfo[OfferExpActivityDate]</code></td><td>BD/IM+FUT case</td><td>"FUT"</td></tr>
+      <tr><td><code>Agreement.ExtendedInfo[OfferActivityDate]</code></td><td>Mirrors offer's value</td><td>"IM" / "BD" / "FUT"</td></tr>
+      <tr><td><code>Agreement.Offers[*].ParameterInfo[*].ExtendedInfo[OfferParamActivityDate]</code></td><td>CHG_PARAM</td><td>"IM" / "BD" / "FUT"</td></tr>
+      <tr><td><code>Agreement.Offers[*].ParameterInfo[*].ExtendedInfo[offerParamOriginalEffectiveDate]</code></td><td>CHG_PARAM</td><td>Raw date</td></tr>
+      <tr><td><code>SubscriberOffers[*].ExtendedInfo[OfferActivityDate]</code></td><td>ADD/REMOVE/blank</td><td>"IM" / "BD" / "FUT"</td></tr>
+      <tr><td><code>SubscriberOffers[*].ExtendedInfo[OfferOriginalEffectiveDate]</code></td><td>ADD/REMOVE/blank</td><td>Raw date (may be +1 day if FUT+Wattanachai)</td></tr>
+      <tr><td><code>SubscriberOffers[*].ExtendedInfo[OfferExpActivityDate]</code></td><td>BD/IM+FUT case</td><td>"FUT"</td></tr>
+      <tr><td><code>SubscriberOffers[*].ParameterInfo[*].ExtendedInfo[OfferParamActivityDate]</code></td><td>CHG_PARAM</td><td>"IM" / "BD" / "FUT"</td></tr>
+      <tr><td><code>SubscriberOffers[*].ParameterInfo[*].ExtendedInfo[offerParamOriginalEffectiveDate]</code></td><td>CHG_PARAM</td><td>Raw date</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.5 — ChildOU FE_OR_CCBS Filter</h3>
+    <div class="callout callout-info">
+      PP@COU Agreement Offers are only processed if <code>ExtendedInfo[FE_OR_CCBS].Value == "FE"</code>. CCBS-sourced offers (tagged "CCBS" by CCBS_GET_AGREEMENT_INFO) are skipped (<code>isSkip=true</code>). ParentOU Agreement Offers have no such filter — all are processed.
+    </div>
+  </div>
+</div>
+
+<!-- §9 — not applicable (no payload) -->
+<div class="section">
+  <div class="section-header">§9 — Payload Build</div>
+  <div class="section-body">
+    <p><em>Not applicable</em> — this rule makes no external backend call and builds no JMS/ESB payload.</p>
+    <p>The only instances created are internal ExtendedInfo concept objects:</p>
+    <ul style="margin-left:20px;margin-top:6px;">
+      <li><code>OrderDataExtendedInfo</code> — LOGICAL_DATE record</li>
+      <li><code>AgreementOffersExtendedInfo</code> — OfferActivityDate, OfferOriginalEffectiveDate, OfferExpActivityDate</li>
+      <li><code>SubscriberOffersExtendedInfo</code> — same for SubscriberOffers scope</li>
+      <li><code>ParameterInfoExtendedInfo</code> — OfferParamActivityDate, offerParamOriginalEffectiveDate</li>
+      <li><code>AgreementExtendedInfo</code> — mirrors OfferActivityDate at Agreement level</li>
+    </ul>
+  </div>
+</div>
+
+<!-- §11 -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Event</th><th>Gate</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th><th>Bug?</th></tr>
+      <tr><td>Completion audit</td><td><strong>Unconditional</strong></td><td><code>"/Rules/OMConsumers/OMXOM/OMX_CAL_OFFERS_EFF_DATE"</code></td><td><code>"OMX-OM OfferInclusion Completed."</code></td><td><span class="badge badge-orange">Both wrong</span> — OPERATION_NAME has full path; AUDIT_TRACE says "OfferInclusion" not "CAL_OFFERS_EFF_DATE"</td></tr>
+    </table>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      The Logger audit OPERATION_NAME should be <code>"OMX_CAL_OFFERS_EFF_DATE"</code> and AUDIT_TRACE should reference the same. The current strings appear copy-pasted from a different rule (OMX_OFFER_INCLUSION). No payload is included in the audit event regardless of WritePayload setting.
+    </div>
+  </div>
+</div>
+
+<!-- §12 -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Action</th><th>Notes</th></tr>
+      <tr><td>Success</td><td><code>RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)</code></td><td>Self-advances to the next step; no separate SendDataToDB or SkipActivity call</td></tr>
+      <tr><td>Exception</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td><td>Standard error handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Exception</th><th>Source</th><th>Handler</th></tr>
+      <tr><td><code>DATA_ISSUE: "OMX did not find Get Offer Details response."</code></td><td>Explicit throw when godAct == null (CCBS_GOD not in Activities)</td><td>Caught by outer try/catch → <code>HandleActivityException</code></td></tr>
+      <tr><td>Any other exception</td><td>Date parse failure, XPath error, etc.</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §14 -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Helpers.GetActivityEffectiveType(offerEffectDate, logicalDate)</code></td><td>Core classifier: compares offer date to logicalDate → returns "IM", "BD", or "FUT"</td></tr>
+      <tr><td><code>Helpers.CheckOfferDateWillCompareWithLogicalDate(offerEffectDate, logicalDate, "B")</code></td><td>Wattanachai: checks if FUT date falls before the logical date boundary → triggers +1 day adjustment</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, subscriberRefId, soc, filter)</code></td><td>Build PreExecCheck XML for Sub@POU (includes FE_OR_CCBS filter value)</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, subscriberRefId, soc, parentRefId, filter)</code></td><td>Build PreExecCheck XML for Sub@COU</td></tr>
+      <tr><td><code>Helpers.NextActivity(orderRequest, orderCurrentActivity)</code></td><td>Advance flow to next step (used instead of SendDataToDB for internal rules)</td></tr>
+      <tr><td><code>Helpers.HandleActivityException(orderRequest, activity, ex, msg)</code></td><td>Error state transition</td></tr>
+      <tr><td><code>Helpers.BRMS.IsBlank()</code></td><td>Null/empty check (used inline in various validations)</td></tr>
+      <tr><td><code>DateTime.parseString(date, pattern)</code></td><td>Parse LogicalDate string from concept</td></tr>
+      <tr><td><code>DateTime.now()</code></td><td>Fallback when LogicalDate concept is blank</td></tr>
+      <tr><td><code>DateTime.addDay(date, 1)</code></td><td>Wattanachai +1 day adjustment</td></tr>
+      <tr><td><code>DateTime.format(date, pattern)</code></td><td>Format adjusted date to string</td></tr>
+      <tr><td><code>OMXUtils.generateTrackingID()</code></td><td>Generate extId for new ExtendedInfo concept instances</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><code>OMX_CAL_OFFERS_EFF_DATE (rule)
+├── try {
+│   ├── [CCBS_GOD prerequisite check]
+│   │   └── throw DATA_ISSUE if godAct == null
+│   ├── Instance.getByExtIdByUri("LogicalDate", "/Concepts/OM/LogicalDate")
+│   ├── DateTime.parseString() OR DateTime.now()                 [LogicalDate resolution]
+│   ├── Instance.createInstance()                                [LOGICAL_DATE ExtendedInfo concept]
+│   ├── XPath.evalAsBoolean()                                    [FUT_TYPE check → isFromOmxFuture]
+│   ├── [ParentOU[i] loop]
+│   │   ├── [PP@POU: Agreement.Offers loop]
+│   │   │   ├── XPath.evalAsString() → agOff.Action
+│   │   │   ├── [ADD/REMOVE]
+│   │   │   │   ├── Instance.createInstance() [AgreementOffersExtendedInfo:OfferActivityDate]
+│   │   │   │   ├── isFromOmxFuture ? "IM" : Helpers.GetActivityEffectiveType()
+│   │   │   │   ├── Instance.createInstance() [AgreementOffersExtendedInfo:OfferOriginalEffectiveDate]
+│   │   │   │   ├── XPath.evalAsBoolean() [ExpirationDate exists?]
+│   │   │   │   │   └── Helpers.GetActivityEffectiveType() x2 [BD/IM+FUT check]
+│   │   │   │   │       └── [if match] Instance.createInstance() [OfferExpActivityDate="FUT"]
+│   │   │   │   └── Instance.createInstance() [AgreementExtendedInfo:OfferActivityDate mirror]
+│   │   │   └── [CHG_PARAM]
+│   │   │       └── [per ParameterInfo]
+│   │   │           ├── Instance.createInstance() [ParameterInfoExtendedInfo:OfferParamActivityDate]
+│   │   │           └── Instance.createInstance() [ParameterInfoExtendedInfo:offerParamOriginalEffectiveDate]
+│   │   ├── [Sub@POU: Subscriber.SubscriberOffers loop]
+│   │   │   ├── XPath.evalAsString() → FE_OR_CCBS filter
+│   │   │   ├── Helpers.GetXMLForSubscriberOfferFilterWithExtendedInfo()
+│   │   │   ├── XPath.execute() [PreExecCheck evaluation]
+│   │   │   ├── [ADD/REMOVE/blank]
+│   │   │   │   ├── Helpers.GetActivityEffectiveType()
+│   │   │   │   ├── [if FUT] Helpers.CheckOfferDateWillCompareWithLogicalDate()
+│   │   │   │   │   └── [if true] DateTime.addDay() + DateTime.format()
+│   │   │   │   └── [BD/IM+FUT case]
+│   │   │   └── [CHG_PARAM → per ParameterInfo, +Wattanachai]
+│   │   ├── [PP@COU: ChildOU.Agreement.Offers (FE_OR_CCBS="FE" only)]
+│   │   │   └── [same as PP@POU pattern]
+│   │   └── [Sub@COU: ChildOU.Subscriber.SubscriberOffers]
+│   │       ├── Helpers.GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo()
+│   │       └── [same as Sub@POU pattern]
+│   ├── Helpers.NextActivity()
+│   ├── System.nanoTime()
+│   ├── Event.createEvent()                                      [Logger audit]
+│   └── Event.Ext.sendEventImmediate()
+└── catch → Helpers.HandleActivityException()</code></pre>
+  </div>
+</div>
+
+<!-- §16 -->
+<div class="section">
+  <div class="section-header">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Used in</th><th>Key fields</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Both</td><td>OrderData.ExtendedInfo[FUT_TYPE/LOGICAL_DATE], ParentOU/ChildOU/Subscriber/Agreement/Offers</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Both</td><td>Status, PreExecCheck (nextAct)</td></tr>
+      <tr><td><code>Concepts.OM.LogicalDate</code></td><td>Read</td><td>LogicalDate (string, may be blank)</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.AgreementOffers</code></td><td>Read &amp; Write</td><td>EffectiveDate, ExpirationDate, Action, ParameterInfo[], ExtendedInfo[] (written: OfferActivityDate, OfferOriginalEffectiveDate, OfferExpActivityDate)</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>Read &amp; Write</td><td>Same fields; also ExtendedInfo[FE_OR_CCBS] read for filtering</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.AgreementParameterInfo</code></td><td>Read &amp; Write</td><td>EffectiveDate, ExtendedInfo[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberParameterInfo</code></td><td>Read &amp; Write</td><td>EffectiveDate, ExtendedInfo[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.ExtendedInfos.*</code></td><td>Created</td><td>OrderDataExtendedInfo, AgreementOffersExtendedInfo, SubscriberOffersExtendedInfo, ParameterInfoExtendedInfo, AgreementExtendedInfo</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Verify CCBS_GOD has run before executing; throw error if absent</td></tr>
+      <tr><td>R2</td><td>Resolve LogicalDate from concept store (with DateTime.now() fallback); store as OrderData.ExtendedInfo[LOGICAL_DATE]</td></tr>
+      <tr><td>R3</td><td>FUT_TYPE=NXTPP or FUTPP → force all offers to OfferActivityDate="IM"</td></tr>
+      <tr><td>R4</td><td>Classify all Agreement Offers at ParentOU level (no FE_OR_CCBS filter); classify only FE-tagged Agreement Offers at ChildOU level</td></tr>
+      <tr><td>R5</td><td>For Subscriber Offers (both POU and COU): apply PreExecCheck filter before classification</td></tr>
+      <tr><td>R6</td><td>ADD/blank offers use EffectiveDate; REMOVE offers use ExpirationDate; CHG_PARAM uses per-ParameterInfo EffectiveDate</td></tr>
+      <tr><td>R7</td><td>Mirror Agreement-level OfferActivityDate to agreement.ExtendedInfo</td></tr>
+      <tr><td>R8</td><td>Wattanachai +1 day: if FUT and CheckOfferDateWillCompareWithLogicalDate("B")=true → advance OriginalEffectiveDate by 1 day</td></tr>
+      <tr><td>R9</td><td>BD/IM + FUT expiry case: add OfferExpActivityDate="FUT" — note operator precedence bug (IM alone currently triggers this)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">Design Notes</h3>
+    <table>
+      <tr><th>Note</th><th>Severity</th><th>Detail</th></tr>
+      <tr><td><strong>Operator precedence bug in OfferExpActivityDate</strong>: <code>IM || (BD &amp;&amp; FUT)</code> when intent is <code>(IM||BD) &amp;&amp; FUT</code></td><td><span class="badge badge-red">HIGH</span></td><td>IM offers with any expiry type will get OfferExpActivityDate="FUT" annotation. This can cause incorrect FUT handling downstream.</td></tr>
+      <tr><td><strong>Audit OPERATION_NAME/TRACE mismatch</strong>: Logger emits path string and "OfferInclusion" text instead of activity name</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Monitoring/troubleshooting impact — audit records for this activity are misidentified in logs</td></tr>
+      <tr><td><strong>LogicalDate concept dependency</strong>: if concept is not loaded, falls back to DateTime.now() silently</td><td><span class="badge badge-blue">INFO</span></td><td>Ensure LogicalDate is always populated in production; a missing LogicalDate causes date classification to use real-time which may differ from intended logical date</td></tr>
+      <tr><td><strong>ChildOU Agreement FE_OR_CCBS="FE" filter</strong>: CCBS-sourced Agreement Offers in ChildOU are not classified</td><td><span class="badge badge-blue">INFO</span></td><td>ParentOU Agreement offers have no such filter. This asymmetry must be preserved in migration.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Condensed)</div>
+  <div class="section-body">
+    <pre><code><span class="kw">rule</span> Rules.OMConsumers.OMXOM.<span class="ty">OMX_CAL_OFFERS_EFF_DATE</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> { <span class="ty">OrderRequest</span> orderRequest; <span class="ty">Activity</span> orderCurrentActivity; }
+    <span class="kw">when</span> { <span class="cm">/* extId / ActivityID / NextActivityID / Status == "WAITING" */</span> }
+    <span class="kw">then</span> {
+        <span class="kw">try</span> {
+            nextAct = <span class="fn">getByExtIdByUri</span>(...);
+            godAct = search Activities <span class="kw">for</span> ActivityID==<span class="st">"CCBS_GOD"</span>;
+            <span class="kw">if</span>(godAct == <span class="kw">null</span>) <span class="kw">throw</span> Exception(<span class="st">"DATA_ISSUE"</span>, <span class="st">"OMX did not find Get Offer Details response."</span>);
+
+            logicalDate = resolve <span class="kw">from</span> LogicalDate concept OR DateTime.<span class="fn">now</span>();
+            OrderData.ExtendedInfo ← createInstance(LOGICAL_DATE);
+
+            <span class="kw">boolean</span> isFromOmxFuture = XPath.evalAsBoolean(<span class="st">"FUT_TYPE in {NXTPP,FUTPP}"</span>);
+
+            <span class="kw">for</span>(iPOU...) {
+                <span class="cm">// PP@POU: all Agreement Offers → OfferActivityDate/OfferOriginalEffectiveDate + OfferExpActivityDate</span>
+                <span class="kw">for</span>(iPouOffer...) {
+                    <span class="cm">// ADD/REMOVE/CHG_PARAM + agreement.ExtendedInfo mirror — see §7</span>
+                }
+                <span class="cm">// Sub@POU: filtered via FE_OR_CCBS + PreExecCheck, Wattanachai +1 day for FUT</span>
+                <span class="kw">for</span>(iPouSub...; iPouSubOffer...) { <span class="cm">/* same logic */</span> }
+                <span class="cm">// PP@COU: only FE_OR_CCBS=="FE" ChildOU Agreement Offers</span>
+                <span class="kw">for</span>(iCOU...; iCouOffer...) { <span class="cm">/* skip if !FE; same PP logic */</span> }
+                <span class="cm">// Sub@COU: ChildOU Subscriber Offers — same as Sub@POU with child XML helper</span>
+                <span class="kw">for</span>(iCouSub...; iCouSubOffer...) { <span class="cm">/* same logic */</span> }
+            }
+
+            Helpers.<span class="fn">NextActivity</span>(orderRequest, orderCurrentActivity);
+            <span class="cm">/* Logger audit (OPERATION_NAME/TRACE incorrectly reference OfferInclusion) */</span>
+        } <span class="kw">catch</span>(<span class="ty">Exception</span> ae) { HandleActivityException; }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<!-- §19: no response rulefunction -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <p><em>Not applicable.</em> This is an internal OMXOM rule that calls <code>NextActivity</code> directly. There is no corresponding response rulefunction. The activity completes synchronously within the rule itself.</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · OMX_CAL_OFFERS_EFF_DATE</footer>
+</body>
+</html>

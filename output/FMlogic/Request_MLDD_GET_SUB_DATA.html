@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_MLDD_GET_SUB_DATA — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}.code-block .xa{color:#f9e2af}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.flow-text{flex:1}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.bug{border-color:#e53935;background:#FFEBEE}
+.callout.purple{border-color:var(--skip);background:#F3E5F5}
+.callout.dead{border-color:#78909c;background:#ECEFF1;color:#455a64}
+details>summary{cursor:pointer;padding:8px 4px;font-weight:600;color:var(--true-dark)}
+details[open]>summary{color:var(--true-red)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_MLDD_GET_SUB_DATA</h1>
+    <div class="subtitle">Per-subscriber parallel device data lookup (MLDD) — retrieves IMEI and device attributes; writes IMEI_MLDD to SubscriberExtendedInfo; POU path normalises MSISDN 0→66</div>
+    <div class="meta-row">
+      <span class="meta-badge">Target: MLDD (Device Data Store)</span>
+      <span class="meta-badge">Pattern: Per-subscriber parallel fan-out</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Author: Chayatorn Pan.</span>
+      <span class="meta-badge">Generated: 2026-08-04</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This FM retrieves device/handset data from the MLDD system for each subscriber (POU and COU) in parallel. It requests a fixed column set — MSISDN, IMSI, IMEI, TAC, PHONE_VENDOR, PHONE_TYPE, GPRS, UMTS, OS_NAME, LTE, WLAN, NFC, FORM — and extracts the <code>IMEI</code> field from the response, writing it as a <code>SubscriberExtendedInfo</code> named <code>IMEI_MLDD</code>. Standard parallel fan-out (not IntraActivitySequencing). Audit logging is conditionally gated by <code>AllowWriteLog(OrderType)</code>.</p>
+    <div class="callout warning">
+      <strong>POU-only MSISDN normalisation:</strong> POU subscriber path replaces a leading "0" with "66" (Thai local → international format) before sending. The COU subscriber path does <em>not</em> apply this transformation — COU MSISDN is sent as-is. This asymmetry may cause MLDD lookups to fail for COU subscribers whose MSISDN is in local format.
+    </div>
+    <div class="callout bug">
+      <strong>[BUG — MEDIUM]:</strong> Response rulefunction accesses <code>subscriber.ExtendedInfo[subscriber.ExtendedInfo@length]</code> (line 26) without a null check on <code>subscriber</code>. If both SUB and CSUB lookups return null (subscriber not found in working memory), this causes a NullPointerException.
+    </div>
+    <div class="callout dead">
+      <strong>[DEAD VARIABLE]:</strong> <code>String extId = eventResponse.JMSCorrelationID+":"+eventResponse.RefID</code> (response line 17) is computed but never used anywhere in the rulefunction.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_MLDD_GET_SUB_DATA.rule</code></td><td>117 lines</td></tr>
+      <tr><td>Response file</td><td><code>Response_MLDD_GET_SUB_DATA.rulefunction</code></td><td>41 lines</td></tr>
+      <tr><td>Author</td><td>Chayatorn Pan.</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td></td></tr>
+      <tr><td>Request event</td><td><code>Events.OMConsumers.OMXFM.Request.MLDD_GET_SUB_DATA</code></td><td>One per subscriber</td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.MLDD_GET_SUB_DATA</code></td><td></td></tr>
+      <tr><td>Request schema NS</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MLDD/GetSubData.xsd</code> (ns)</td><td></td></tr>
+      <tr><td>Response schema NS</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MLDD/GetSubData.xsd</code> (xsd2)</td><td>Same schema; different prefix in response</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td><td>Standard base — no custom concept; no extId on object</td></tr>
+      <tr><td>extId on request event</td><td><code>OMXUtils:generateTrackingID()</code></td><td>Always set</td></tr>
+      <tr><td>Correlation key (RefID)</td><td>Subscriber RefId — <strong>always</strong> (no xsl:if)</td><td></td></tr>
+      <tr><td>reqSuccess dedup key</td><td><code>refId</code> (RefId) — NOT SubscriberId</td><td>Differs from BL_LIST_UNINVOICED_CHARGES</td></tr>
+      <tr><td>Fan-out</td><td>Parallel — <code>Event.Ext.sendEventImmediate</code> per subscriber</td><td>No IntraActivitySequencing</td></tr>
+      <tr><td>Fan-in</td><td>Standard "000" success count == RequestCount</td><td></td></tr>
+      <tr><td>Resubmit handler</td><td>None — no <code>PurgePendingRequestsBeforeResubmit</code></td><td>isActResub only gates RequestCount++</td></tr>
+      <tr><td>Credential gate</td><td>None</td><td>No UserName/PassWord headers</td></tr>
+      <tr><td>Audit gate</td><td><code>AllowWriteLog(OrderData.OrderType)</code></td><td>Conditional — not all order types produce audit logs</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Source of subscribers; OrderType for audit gate</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity state; RequestCount++; Response[] appended</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "MLDD_GET_SUB_DATA"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "MLDD_GET_SUB_DATA"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>isActResub flag</strong> (no purge — isActResub only gates RequestCount++)</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-text"><strong>isSkipped = true</strong></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-text"><strong>POU Subscribers</strong> — for each POU × each Subscriber:
+      <ul style="margin:8px 0 0 16px;line-height:2">
+        <li>reqSuccess check: <code>Response[].ReferenceId == refId AND CompletionStatus==2</code></li>
+        <li>PreExecCheck: <code>GetXMLForSubscriber(orderRequest, refId)</code></li>
+        <li>If passes: normalise MSISDN (0→66 if starts with "0"); send event immediately; conditional audit; RequestCount++; isSkipped=false</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>COU Subscribers</strong> — for each POU × each COU × each Subscriber:
+      <ul style="margin:8px 0 0 16px;line-height:2">
+        <li>Same reqSuccess check and PreExecCheck (<code>GetXMLForSubscriberInChildOU</code>)</li>
+        <li>If passes: use MSISDN as-is (<strong>no 0→66 conversion</strong>); send event immediately; conditional audit; RequestCount++; isSkipped=false</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>Status:</strong> if !isSkipped → <code>GetActivityStatusString("1")</code> + <code>SendDataToDB</code>; else → <code>SkipActivity("4")</code></div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-text"><strong>Exception:</strong> try/catch → <code>HandleActivityException</code></div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> Rule Action (THEN) — Key Details</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§6.1 — MSISDN Normalisation (POU only)</h3>
+    <div class="code-block"><span class="cm">// POU subscriber only:</span>
+<span class="kw">String</span> msisdn = orderRequest...ParentOU[i].Subscriber[j].MSISDN;
+<span class="kw">if</span> (<span class="fn">String.startsWith</span>(msisdn, <span class="str">"0"</span>)) {
+    msisdn = <span class="fn">String.replaceFirst</span>(msisdn, <span class="str">"0"</span>, <span class="str">"66"</span>);  <span class="cm">// local → international</span>
+}
+
+<span class="cm">// COU subscriber: NO conversion — raw MSISDN sent directly</span>
+<span class="kw">String</span> msisdn = orderRequest...ChildOU[p].Subscriber[q].MSISDN;</div>
+    <div class="callout warning" style="margin-top:8px">
+      Thai mobile MSISDNs starting with "0" (e.g. 0812345678) are converted to international format "66812345678" for POU subscribers. COU subscribers bypass this — if their MSISDN is stored in local format, MLDD may fail to look them up.
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§6.2 — reqSuccess Dedup (uses RefId, not SubscriberId)</h3>
+    <div class="code-block"><span class="kw">for</span>(<span class="kw">int</span> iResp=<span class="nu">0</span>; iResp &lt; orderCurrentActivity.Response@length; iResp++)
+    <span class="kw">if</span>(<span class="fn">String.equals</span>(orderCurrentActivity.Response[iResp].ReferenceId, refId)
+        &amp;&amp; orderCurrentActivity.Response[iResp].CompletionStatus==<span class="nu">2</span>)
+        reqSuccess = <span class="kw">true</span>;</div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§6.3 — Conditional Audit Logging</h3>
+    <div class="code-block"><span class="kw">if</span> (<span class="fn">RuleFunctions.Helpers.AllowWriteLog</span>(orderRequest.OrderData.OrderType)) {
+    <span class="kw">long</span> pid = <span class="fn">System.nanoTime</span>();
+    <span class="fn">Event.Ext.sendEventImmediate</span>(auditEvent);
+}</div>
+    <p style="margin-top:8px;font-size:0.88rem"><code>AllowWriteLog</code> takes the OrderType and returns a boolean. Audit logs are only written for qualifying order types — this differs from all previously documented FMs which always log or use the WritePayload gate only.</p>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> Data Extraction</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Transform</th><th>Used For</th></tr>
+      <tr><td><code>refId</code></td><td><code>Subscriber[j].RefId</code></td><td>None</td><td>reqSuccess dedup; RefID header; subscriber lookup in response</td></tr>
+      <tr><td><code>msisdn</code> (POU)</td><td><code>Subscriber[j].MSISDN</code></td><td>0→66 if starts with "0"</td><td><code>ns:MSISDN</code> payload field</td></tr>
+      <tr><td><code>msisdn</code> (COU)</td><td><code>Subscriber[q].MSISDN</code></td><td>None</td><td><code>ns:MSISDN</code> payload field</td></tr>
+      <tr><td>GETCOLUMN</td><td>Hardcoded literal</td><td>None</td><td>Column selection for MLDD</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§8.1 — Order Type Dependencies</h3>
+    <p>Single MLDD backend; no GoldenDB routing. Audit logging suppressed for some order types (controlled by <code>AllowWriteLog</code>).</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>FM JMS</td><td>MLDD_GET_SUB_DATA queue</td><td>Device data lookup per subscriber (parallel)</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td>FM JMS</td><td>MLDD_GET_SUB_DATA response queue</td><td>GetSubDataResponse with device attributes</td></tr>
+      <tr><td><span class="badge badge-log">LOG</span></td><td>OMXESB Logger</td><td>Audit event</td><td>Conditional — only if AllowWriteLog(OrderType) = true</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Backend</td><td>MLDD (Mobile Line Device Data)</td></tr>
+      <tr><td>Operation</td><td>GetSubData</td></tr>
+      <tr><td>Request root</td><td><code>ns:GetSubDataRequest</code></td></tr>
+      <tr><td>Response root</td><td><code>xsd2:GetSubDataResponse/xsd2:User</code></td></tr>
+      <tr><td>MSISDN format</td><td>International (66XXXXXXXXX) for POU; raw for COU</td></tr>
+      <tr><td>GETCOLUMN</td><td><code>MSISDN&amp;IMSI&amp;IMEI&amp;TAC&amp;PHONE_VENDOR&amp;PHONE_TYPE&amp;GPRS&amp;UMTS&amp;OS_NAME&amp;LTE&amp;WLAN&amp;NFC&amp;FORM</code> (hardcoded)</td></tr>
+      <tr><td>Field extracted</td><td><code>xsd2:IMEI</code> only (other columns available but not extracted)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept</th><th>Field</th><th>Access</th><th>Notes</th></tr>
+      <tr><td>OrderRequest</td><td>OrderData.Customer.ParentOU[].Subscriber[].RefId / MSISDN</td><td>READ</td><td>RefId for correlation/dedup; MSISDN normalised for POU</td></tr>
+      <tr><td>OrderRequest</td><td>OrderData.OrderType</td><td>READ</td><td>Passed to AllowWriteLog for audit gate</td></tr>
+      <tr><td>Activity</td><td>RequestCount / Response[] / Status</td><td>READ+WRITTEN</td><td>Standard</td></tr>
+      <tr><td>Subscriber</td><td>ExtendedInfo[]</td><td>WRITTEN</td><td>SubscriberExtendedInfo Name="IMEI_MLDD" appended — no null guard on subscriber</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.5 — ExtendedInfo Fields Written</h3>
+    <table>
+      <tr><th>Type</th><th>Name</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>SubscriberExtendedInfo</td><td>IMEI_MLDD</td><td><code>xsd2:GetSubDataResponse/xsd2:User/xsd2:IMEI</code></td><td>No null guard if IMEI blank; extId not set on SubscriberExtendedInfo object</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>Payload inclusion in audit (secondary gate inside AllowWriteLog block)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§9.1 — XSLT Parameters</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th><th>Notes</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest concept serialized</td><td></td></tr>
+      <tr><td><code>$refId</code></td><td><code>Subscriber[j/q].RefId</code></td><td>Correlation key; always emitted</td></tr>
+      <tr><td><code>$msisdn</code></td><td>POU: MSISDN with 0→66; COU: MSISDN as-is</td><td>Main lookup key for MLDD</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.2 — POU vs COU XSLT Variants</h3>
+    <p>Both variants produce <strong>identical XSLT</strong>. The only difference is the <code>$msisdn</code> parameter value passed from the BE rule (POU applies 0→66 before binding; COU does not). The XSLT stylesheet itself is character-for-character identical in both POU and COU event creates.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Header</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>extId (event attr)</td><td><code>OMXUtils:generateTrackingID()</code></td><td><strong>Always</strong></td></tr>
+      <tr><td>JMSPriority</td><td><code>$orderRequest/OrderPriority</code></td><td><strong>Always</strong> — no xsl:if</td></tr>
+      <tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td><strong>Always</strong> — no xsl:if</td></tr>
+      <tr><td>OrderID</td><td><code>$orderRequest/OrderData/OrderID</code></td><td><strong>Always</strong> — no xsl:if</td></tr>
+      <tr><td>RefID</td><td><code>$refId</code></td><td><strong>Always</strong> — no xsl:if</td></tr>
+      <tr><td>OrderType</td><td><code>$orderRequest/OrderData/OrderType</code></td><td><strong>Always</strong> — no xsl:if</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:8px">All headers are unconditional — no <code>xsl:if</code> wrappers. Even if source values are blank/null, empty XML elements will be emitted. This differs from most other FMs which use conditional headers.</div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.4 — Payload Fields</h3>
+    <table>
+      <tr><th>XML Element</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>ns:GetSubDataRequest</code></td><td>— root</td><td></td></tr>
+      <tr><td><code>ns:MSISDN</code></td><td><code>$msisdn</code></td><td>International format for POU; raw for COU</td></tr>
+      <tr><td><code>ns:GETCOLUMN</code></td><td><code>'MSISDN&amp;IMSI&amp;IMEI&amp;TAC&amp;PHONE_VENDOR&amp;PHONE_TYPE&amp;GPRS&amp;UMTS&amp;OS_NAME&amp;LTE&amp;WLAN&amp;NFC&amp;FORM'</code></td><td>Hardcoded — 13 columns; only IMEI extracted in response</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.5 — Generated XML Example</h3>
+    <div class="code-block"><span class="xt">&lt;event</span> <span class="xa">extId</span>=<span class="str">"TRK-20250804-001"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;JMSPriority&gt;</span>5<span class="xt">&lt;/JMSPriority&gt;</span>
+  <span class="xt">&lt;JMSCorrelationID&gt;</span>OMX-TRK-20250804-001<span class="xt">&lt;/JMSCorrelationID&gt;</span>
+  <span class="xt">&lt;OrderID&gt;</span>ORD-001<span class="xt">&lt;/OrderID&gt;</span>
+  <span class="xt">&lt;RefID&gt;</span>SUB-REF-001<span class="xt">&lt;/RefID&gt;</span>
+  <span class="xt">&lt;OrderType&gt;</span>3<span class="xt">&lt;/OrderType&gt;</span>
+  <span class="xt">&lt;payload&gt;</span>
+    <span class="xt">&lt;ns:GetSubDataRequest</span>
+      <span class="xa">xmlns:ns</span>=<span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MLDD/GetSubData.xsd"</span><span class="xt">&gt;</span>
+      <span class="xt">&lt;ns:MSISDN&gt;</span>66812345678<span class="xt">&lt;/ns:MSISDN&gt;</span>  <span class="cm">&lt;!-- POU: 0→66 normalised --&gt;</span>
+      <span class="xt">&lt;ns:GETCOLUMN&gt;</span>MSISDN&amp;IMSI&amp;IMEI&amp;TAC&amp;PHONE_VENDOR&amp;PHONE_TYPE&amp;GPRS&amp;UMTS&amp;OS_NAME&amp;LTE&amp;WLAN&amp;NFC&amp;FORM<span class="xt">&lt;/ns:GETCOLUMN&gt;</span>
+    <span class="xt">&lt;/ns:GetSubDataRequest&gt;</span>
+  <span class="xt">&lt;/payload&gt;</span>
+<span class="xt">&lt;/event&gt;</span></div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.6 — XSLT Stylesheet Source</h3>
+    <details>
+      <summary>Request XSLT (MLDD_GET_SUB_DATA — POU and COU identical)</summary>
+      <div class="code-block" style="margin-top:8px"><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:OMXUtils</span>=<span class="str">"www.tibco.com/be/custom/OMXUtils"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="str">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:ns</span>=<span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MLDD/GetSubData.xsd"</span>
+  <span class="xa">version</span>=<span class="str">"1.0"</span>
+  <span class="xa">exclude-result-prefixes</span>=<span class="str">"OMXUtils xsl xsd"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"refId"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"msisdn"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="str">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="str">"extId"</span><span class="xt">&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"OMXUtils:generateTrackingID()"</span><span class="xt">/&gt;&lt;/xsl:attribute&gt;</span>
+      <span class="xt">&lt;JMSPriority&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;&lt;/JMSPriority&gt;</span>
+      <span class="xt">&lt;JMSCorrelationID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/JMSCorrelationID&gt;</span>
+      <span class="xt">&lt;OrderID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;&lt;/OrderID&gt;</span>
+      <span class="xt">&lt;RefID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$refId"</span><span class="xt">/&gt;&lt;/RefID&gt;</span>
+      <span class="xt">&lt;OrderType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;&lt;/OrderType&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns:GetSubDataRequest&gt;</span>
+          <span class="xt">&lt;ns:MSISDN&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$msisdn"</span><span class="xt">/&gt;&lt;/ns:MSISDN&gt;</span>
+          <span class="xt">&lt;ns:GETCOLUMN&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"'MSISDN&amp;amp;IMSI&amp;amp;IMEI&amp;amp;TAC&amp;amp;PHONE_VENDOR&amp;amp;PHONE_TYPE&amp;amp;GPRS&amp;amp;UMTS&amp;amp;OS_NAME&amp;amp;LTE&amp;amp;WLAN&amp;amp;NFC&amp;amp;FORM'"</span><span class="xt">/&gt;&lt;/ns:GETCOLUMN&gt;</span>
+        <span class="xt">&lt;/ns:GetSubDataRequest&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></div>
+    </details>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§10</span> XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">JMSPriority</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge badge-green" style="font-size:0.7rem">Always — no xsl:if</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">RefID</span> <span class="tree-arrow">←</span> <span class="tree-src">$refId</span> (subscriber RefId) <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">GetSubDataRequest</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">MSISDN</span> <span class="tree-arrow">←</span> <span class="tree-src">$msisdn</span> <span class="badge badge-orange" style="font-size:0.7rem">POU: 0→66 normalised | COU: raw</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">GETCOLUMN</span> <span class="tree-arrow">←</span> <span class="tree-src-static">'MSISDN&amp;IMSI&amp;IMEI&amp;TAC&amp;PHONE_VENDOR&amp;PHONE_TYPE&amp;GPRS&amp;UMTS&amp;OS_NAME&amp;LTE&amp;WLAN&amp;NFC&amp;FORM'</span> <span class="badge badge-green" style="font-size:0.7rem">Hardcoded literal</span></div></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <p style="margin-top:10px;font-size:0.82rem"><strong>Legend:</strong> All headers unconditional (no xsl:if). MSISDN varies by POU/COU path — same XSLT, different <code>$msisdn</code> parameter binding.</p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header"><span class="num">§11</span> Audit Logging</div>
+  <div class="section-body">
+    <div class="callout info">Both request and response audit events are gated by <code>AllowWriteLog(OrderType)</code>. If this returns false, no audit event is sent — regardless of the WritePayload global variable.</div>
+    <div class="grid2" style="margin-top:12px">
+      <div>
+        <h3 style="color:var(--true-dark);margin-bottom:10px">Request Audit</h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for MLDD_GET_SUB_DATA"</code></td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"MLDD_GET_SUB_DATA"</code></td></tr>
+          <tr><td>Gate</td><td><code>AllowWriteLog(OrderType)</code></td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="color:var(--true-dark);margin-bottom:10px">Response Audit</h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>"Response received for MLDD_GET_SUB_DATA"</code></td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"MLDD_GET_SUB_DATA"</code></td></tr>
+          <tr><td>Gate</td><td><code>AllowWriteLog(OrderType)</code></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header"><span class="num">§12</span> Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Call</th><th>Code</th></tr>
+      <tr><td>At least one subscriber sent</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" (RUNNING)</td></tr>
+      <tr><td>No subscribers qualify</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" (SKIPPED)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header"><span class="num">§13</span> Exception / Error Handling</div>
+  <div class="section-body">
+    <div class="code-block"><span class="kw">catch</span> (Exception ae) {
+    <span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+}</div>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header"><span class="num">§14</span> Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>AllowWriteLog(orderType)</code></td><td>Returns boolean — controls whether audit events are sent for this order type</td></tr>
+      <tr><td><code>GetXMLForSubscriber(req, refId)</code></td><td>POU subscriber XML for PreExecCheck</td></tr>
+      <tr><td><code>GetXMLForSubscriberInChildOU(req, refId, pouRefId)</code></td><td>COU subscriber XML for PreExecCheck</td></tr>
+      <tr><td><code>String.startsWith / String.replaceFirst</code></td><td>MSISDN 0→66 normalisation (POU only)</td></tr>
+      <tr><td><code>OMXUtils:generateTrackingID()</code></td><td>Event extId generation (in XSLT)</td></tr>
+      <tr><td><code>GetActivityStatusString / SendDataToDB / SkipActivity</code></td><td>Activity lifecycle</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§15</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_MLDD_GET_SUB_DATA (rule)
+├── [per POU × Subscriber]:
+│   ├── Response[].ReferenceId == refId AND CompletionStatus==2  [reqSuccess]
+│   ├── GetXMLForSubscriber(orderRequest, refId)  [PreExecCheck]
+│   ├── XPath.execute(preExecCheck, sXML, ns)
+│   ├── String.startsWith(msisdn, "0") + String.replaceFirst → 0→66
+│   ├── Event.createEvent("xslt://MLDD_GET_SUB_DATA")
+│   │   └── OMXUtils:generateTrackingID()  [extId]
+│   ├── Event.Ext.sendEventImmediate(reqEvent)
+│   ├── AllowWriteLog(OrderType)
+│   │   └── Event.Ext.sendEventImmediate(auditEvent)  [conditional]
+│   └── orderCurrentActivity.RequestCount++  [if !isActResub]
+├── [per POU × COU × Subscriber]:
+│   ├── GetXMLForSubscriberInChildOU(req, refId, pouRefId)
+│   ├── (no MSISDN normalisation)
+│   └── (same send + audit pattern)
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(...)  [if isSkipped]
+└── RuleFunctions.Helpers.HandleActivityException(...)  [catch]
+
+Response_MLDD_GET_SUB_DATA (rulefunction)
+├── String extId = JMSCorrelationID+":"+RefID  ← DEAD VARIABLE (never used)
+├── Instance.createInstance("xslt://ResponseBase")  [no extId on object]
+├── currActivity.Response[length] = activityRes
+├── Instance.getByExtIdByUri("SUB:"+OMXTrackingId+":"+RefID)
+│   └── "CSUB:..." fallback if null
+├── XPath.evalAsString(".../xsd2:GetSubDataResponse/xsd2:User/xsd2:IMEI")
+├── subscriber.ExtendedInfo[length] = SubscriberExtendedInfo  ← NO null guard on subscriber!
+│   └── Name="IMEI_MLDD", Value=imei
+├── AllowWriteLog(OrderType)
+│   └── Event.Ext.sendEventImmediate(auditLogEvent)  [conditional]
+└── XPath.evalAsInt("count(Response[tib:right...='000'])") → fan-in</div>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header"><span class="num">§16</span> Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Key Fields</th><th>Role</th></tr>
+      <tr><td><code>Concepts.FM.Base.ResponseBase</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId</td><td>Standard response; no extId set on instance</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.ExtendedInfos.SubscriberExtendedInfo</code></td><td>Name, Value</td><td>Written with Name="IMEI_MLDD"</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>ExtendedInfo[]</td><td>IMEI_MLDD appended — null-unguarded access</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§17</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Fire per-subscriber (POU + COU) in parallel using subscriber RefId for both correlation (RefID header) and reqSuccess dedup.</td></tr>
+      <tr><td>R2</td><td>POU: normalise MSISDN by replacing leading "0" with "66" before sending. COU: send MSISDN as-is.</td></tr>
+      <tr><td>R2a</td><td><strong>[RISK]</strong> Evaluate whether COU subscribers should also receive the 0→66 normalisation. If MLDD expects international format, COU lookups will fail for local-format MSISDNs.</td></tr>
+      <tr><td>R3</td><td>Send fixed GETCOLUMN string: <code>MSISDN&amp;IMSI&amp;IMEI&amp;TAC&amp;PHONE_VENDOR&amp;PHONE_TYPE&amp;GPRS&amp;UMTS&amp;OS_NAME&amp;LTE&amp;WLAN&amp;NFC&amp;FORM</code>.</td></tr>
+      <tr><td>R4</td><td>Request event headers all unconditional — emit even if source value is blank.</td></tr>
+      <tr><td>R5</td><td>No credential gate — no UserName/PassWord.</td></tr>
+      <tr><td>R6</td><td>Audit logging conditional on <code>AllowWriteLog(OrderType)</code> — not all order types produce logs.</td></tr>
+      <tr><td>R7</td><td>Response: extract <code>xsd2:IMEI</code> from <code>xsd2:GetSubDataResponse/xsd2:User</code>; write as SubscriberExtendedInfo Name="IMEI_MLDD".</td></tr>
+      <tr><td>R7a</td><td><strong>[BUG FIX]</strong> Add null guard before accessing <code>subscriber.ExtendedInfo</code> — currently throws NPE if subscriber not found in working memory.</td></tr>
+      <tr><td>R8</td><td>Fan-in: standard "000" count == RequestCount.</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:18px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td><strong>NPE on subscriber.ExtendedInfo access</strong> when SUB/CSUB lookup returns null</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Add <code>if(subscriber != null)</code> guard before line 26 in response rulefunction</td>
+      </tr>
+      <tr>
+        <td><strong>COU MSISDN not normalised</strong> — MLDD lookup may fail for local-format COU MSISDNs</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Determine if COU subscribers can have 0-prefixed MSISDNs; apply same 0→66 transform if so</td>
+      </tr>
+      <tr>
+        <td><strong>All headers unconditional</strong> — blank values emitted as empty XML elements</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Verify MLDD tolerates empty JMSPriority / OrderID elements; add xsl:if guards if not</td>
+      </tr>
+      <tr>
+        <td><strong>GETCOLUMN hardcoded</strong> — adding/removing columns requires code change</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Externalize to global variable or config in migration target</td>
+      </tr>
+      <tr>
+        <td>Dead variable <code>extId</code> computed in response; ResponseBase concept has no extId</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Remove dead variable; if extId needed on ResponseBase, add OMXUtils:generateTrackingID()</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+  <div class="section-header"><span class="num">§18</span> Full Source Code</div>
+  <div class="section-body">
+    <details>
+      <summary>Request_MLDD_GET_SUB_DATA.rule (117 lines — key structure)</summary>
+      <div class="code-block" style="margin-top:8px"><span class="kw">rule</span> <span class="fn">Rules.OMConsumers.OMXFM.Request.Request_MLDD_GET_SUB_DATA</span> {
+  <span class="kw">attribute</span> { priority=<span class="nu">5</span>; forwardChain=<span class="kw">true</span>; }
+  <span class="kw">declare</span> { <span class="ty">OrderRequest</span> orderRequest; <span class="ty">Activity</span> orderCurrentActivity; }
+  <span class="kw">when</span> { <span class="cm">/* standard 4-condition WHEN */</span> }
+  <span class="kw">then</span> {
+    <span class="kw">boolean</span> isActResub = ...; <span class="cm">// no PurgePendingRequestsBeforeResubmit</span>
+    <span class="kw">try</span> {
+      <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+      <span class="cm">/* POU Subscribers */</span>
+      <span class="kw">for</span>(int i ...) { <span class="kw">for</span>(int j ...) {
+        <span class="cm">// reqSuccess: Response[].ReferenceId == refId && CompletionStatus==2</span>
+        <span class="kw">if</span>(!reqSuccess) {
+          chkRes = PreExecCheck via <span class="fn">GetXMLForSubscriber</span>(orderRequest, refId);
+          <span class="kw">if</span>(chkRes == <span class="str">"true"</span>) {
+            msisdn = Subscriber[j].MSISDN;
+            <span class="kw">if</span>(<span class="fn">String.startsWith</span>(msisdn, <span class="str">"0"</span>))
+              msisdn = <span class="fn">String.replaceFirst</span>(msisdn, <span class="str">"0"</span>, <span class="str">"66"</span>);  <span class="cm">// 0→66</span>
+            <span class="cm">// [MLDD_GET_SUB_DATA XSLT — see §9.6]</span>
+            <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+            <span class="kw">if</span>(<span class="fn">AllowWriteLog</span>(OrderType)) { <span class="fn">sendAudit</span>(); }
+            <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+            isSkipped = <span class="kw">false</span>;
+          }
+        }
+      }}
+
+      <span class="cm">/* COU Subscribers — NO 0→66 conversion */</span>
+      <span class="kw">for</span>(int i ...) { <span class="kw">for</span>(int p ...) { <span class="kw">for</span>(int q ...) {
+        chkRes = PreExecCheck via <span class="fn">GetXMLForSubscriberInChildOU</span>(orderRequest, refId, pouRefId);
+        <span class="kw">if</span>(chkRes == <span class="str">"true"</span>) {
+          msisdn = ChildOU[p].Subscriber[q].MSISDN;  <span class="cm">// raw — no normalisation</span>
+          <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+          <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+          isSkipped = <span class="kw">false</span>;
+        }
+      }}}
+
+      <span class="kw">if</span>(!isSkipped) { <span class="fn">GetActivityStatusString</span>(<span class="str">"1"</span>); <span class="fn">SendDataToDB</span>(); }
+      <span class="kw">else</span> { <span class="fn">SkipActivity</span>(<span class="str">"4"</span>); }
+    } <span class="kw">catch</span>(Exception ae) { <span class="fn">HandleActivityException</span>(...); }
+  }
+}</div>
+    </details>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="section">
+  <div class="section-header"><span class="num">§19</span> Response Message Rule</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§19.1 — Overview</h3>
+    <p>Looks up the subscriber by RefID, extracts <code>xsd2:IMEI</code> from the GetSubDataResponse, and appends a <code>SubscriberExtendedInfo</code> with Name="IMEI_MLDD". Audit is gated by <code>AllowWriteLog</code>. Standard "000" fan-in.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>READ — OMXTrackingId + OrderType</td></tr>
+      <tr><td><code>eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.MLDD_GET_SUB_DATA</td><td>Backend response</td></tr>
+      <tr><td><code>currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Response[] appended; fan-in</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.3 — ResponseBase Concept Construction</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="badge badge-red" style="font-size:0.7rem">No @extId — differs from other FMs</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/RefID</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.4 — IMEI Extraction &amp; Write-back</h3>
+    <div class="code-block"><span class="cm">// Dead variable (line 17):</span>
+<span class="kw">String</span> extId = eventResponse.JMSCorrelationID+<span class="str">":"</span>+eventResponse.RefID;  <span class="cm">// NEVER USED</span>
+
+<span class="cm">// Subscriber lookup:</span>
+subscriber = <span class="fn">Instance.getByExtIdByUri</span>(<span class="str">"SUB:"+</span>OMXTrackingId+<span class="str">":"+</span>RefID, Subscriber);
+<span class="kw">if</span>(subscriber == <span class="kw">null</span>)
+    subscriber = <span class="fn">Instance.getByExtIdByUri</span>(<span class="str">"CSUB:"+</span>OMXTrackingId+<span class="str">":"+</span>RefID, Subscriber);
+
+<span class="cm">// IMEI extraction:</span>
+<span class="kw">String</span> imei = <span class="fn">XPath.evalAsString</span>(<span class="str">"$eventResponse/payload/xsd2:GetSubDataResponse/xsd2:User/xsd2:IMEI"</span>);
+
+<span class="cm">// ⚠ NO null check on subscriber — NPE if null:</span>
+subscriber.ExtendedInfo[subscriber.ExtendedInfo@length] =
+    <span class="fn">Instance.createInstance</span>(<span class="str">"xslt://SubscriberExtendedInfo"</span>);
+<span class="cm">// Name="IMEI_MLDD", Value=$imei</span></div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.5 — Fan-in Completion Logic</h3>
+    <div class="code-block"><span class="kw">int</span> successResponseCount = <span class="fn">XPath.evalAsInt</span>(
+    <span class="str">"count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = '000'])"</span>);
+<span class="kw">if</span>(currActivity.RequestCount == successResponseCount) { <span class="kw">return</span> <span class="str">"true"</span>; }
+<span class="kw">else</span> { <span class="kw">return</span> <span class="str">"false"</span>; }</div>
+    <p style="margin-top:8px;font-size:0.88rem">Standard "000" suffix count fan-in.</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

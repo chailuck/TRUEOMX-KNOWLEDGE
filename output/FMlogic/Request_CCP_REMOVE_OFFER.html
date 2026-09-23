@@ -1,0 +1,696 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_CCP_REMOVE_OFFER</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.header h1{font-size:2rem;font-weight:700;letter-spacing:1px;}
+.header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.header .meta{margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;opacity:.9;}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:12px;}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600;}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-purple{background:#F3E5F5;color:var(--skip);}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.callout{padding:12px 16px;border-radius:6px;margin:12px 0;border-left:4px solid;}
+.callout-warning{background:#FFF8E1;border-color:var(--warning);color:#5D4037;}
+.callout-info{background:#E3F2FD;border-color:var(--info);color:#0D47A1;}
+.callout-error{background:#FFEBEE;border-color:var(--true-red);color:var(--true-dark);}
+.callout-success{background:#E8F5E9;border-color:var(--success);color:#1B5E20;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:8px 12px 8px 48px;position:relative;border-left:3px solid var(--border);margin-bottom:6px;}
+.step-list li::before{content:counter(step);position:absolute;left:-16px;top:6px;background:var(--true-red);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+footer{text-align:center;padding:24px;color:#888;font-size:.82rem;}
+h3{font-size:.95rem;font-weight:600;color:var(--true-dark);margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Request_CCP_REMOVE_OFFER</h1>
+  <div class="subtitle">FM Logic Documentation — CCP Price Plan Removal via processModUserIndiPricePlan (IntraActivitySequencing per-SubscriberOffer, FE/CCP credential gate, Shared CCP_ADD_OFFER event)</div>
+  <div class="meta">
+    <span class="meta-item">Rule: Rules.OMConsumers.OMXFM.Request.Request_CCP_REMOVE_OFFER</span>
+    <span class="meta-item">Priority: 5</span>
+    <span class="meta-item">Backend: CCP (action=2 via CCP_ADD_OFFER channel)</span>
+    <span class="meta-item">Pattern: IntraActivitySequencing per-SubscriberOffer</span>
+    <span class="meta-item">Generated: 2026-09-11</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>CCP_REMOVE_OFFER</strong> removes price plan offers from CCP for each subscriber offer in the order, using the <code>processModUserIndiPricePlan</code> API with <code>action=2</code> (removal). It operates on SubscriberOffers from the working memory — both offers originally in the order <em>and</em> offers dynamically added by the preceding <strong>GET_PROFILE_FROM_CCP</strong> activity (which appended grading-tier offers with FE_OR_CCBS=CCP).</p>
+    <p style="margin-top:8px;">Uses the <strong>IntraActivitySequencing</strong> pattern to serialize removal requests one-by-one. The CCP API is shared with the add-offer operation — this FM reuses the <code>CCP_ADD_OFFER</code> event type (same JMS channel/schema) with <code>action=2</code> to indicate removal.</p>
+    <p style="margin-top:8px;">The <code>authReqM</code> credentials section is conditionally populated only when <code>FE_OR_CCBS="FE"</code>; CCP-routed offers (FE_OR_CCBS="CCP") skip the credential block entirely. The <code>cpTransactionId</code> is constructed as a 12-character padded string: <code>tib:left(tib:pad(concat("OMX", Channel), "12", "0"), 12)</code>.</p>
+    <div class="callout callout-error" style="margin-top:10px;">
+      <strong>[HIGH] ChildOU effType operator precedence bug:</strong> The ChildOU XSLT's <code>xsl:choose</code> condition lacks parentheses:<br/>
+      <code>exists(EffectiveDate) or exists(ExpirationDate) and Channel!='TYC20'</code><br/>
+      XPath evaluates <code>and</code> before <code>or</code>, so this reads as:<br/>
+      <code>exists(EffectiveDate) OR (exists(ExpirationDate) AND Channel!='TYC20')</code><br/>
+      The ParentOU variant has the correct parenthesized form. For ChildOU, if EffectiveDate exists, effType=3 regardless of TYC20 channel — which is wrong for TYC20 orders.
+    </div>
+    <table style="margin-top:12px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule file</td><td>Request_CCP_REMOVE_OFFER.rule</td></tr>
+      <tr><td>Response rulefunction</td><td>Response_CCP_REMOVE_OFFER.rulefunction</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>Backend system</td><td>CCP via <code>processModUserIndiPricePlan</code> API (action=2 = remove)</td></tr>
+      <tr><td>Request event type</td><td><code>Events.OMConsumers.OMXFM.Request.CCP_ADD_OFFER</code> (shared — same as CCP_ADD_OFFER FM)</td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.CCP_ADD_OFFER</code> (shared)</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBS_AddAgreeOfferRes</code> (not ResponseBase — custom concept)</td></tr>
+      <tr><td>Payload schema</td><td><code>ns2: http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/CCP_ModUserIndiPricePlanRequest.xsd</code></td></tr>
+      <tr><td>Dispatch scope</td><td>Per SubscriberOffer — ParentOU and ChildOU (triple nested loop)</td></tr>
+      <tr><td>Dispatch pattern</td><td>IntraActivitySequencing (assertEvent → ActionRequestEvent → SendFirstRequestEvent)</td></tr>
+      <tr><td>Idempotency key</td><td><code>subOff.Soc</code> (NOTE: uses Soc field, not OfferName)</td></tr>
+      <tr><td>CCP action code</td><td><code>2</code> (static — removal operation)</td></tr>
+      <tr><td>Credential gate</td><td>FE credentials only if <code>FE_OR_CCBS="FE"</code>; CCP-routed offers skip authReqM credentials</td></tr>
+      <tr><td>Request audit</td><td>Conditional: <code>AllowWriteLog(OrderType)</code>; AUDIT_TRACE includes refId dynamically</td></tr>
+      <tr><td>Response audit</td><td>Unconditional (no AllowWriteLog gate)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>priority</td><td>5</td><td>Standard FM priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Standard</td></tr>
+      <tr><td>Rule type</td><td>IntraActivitySequencing</td><td>PurgePendingRequestsBeforeResubmit → assertEvent → ActionRequestEvent → SendFirstRequestEvent; fan-in via ActionResponseEvent</td></tr>
+      <tr><td>Resubmit</td><td>Yes</td><td>PurgePendingRequestsBeforeResubmit called OUTSIDE try block (before loop); idempotency via CompletionStatus=2 + subOff.Soc</td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:10px;">
+      <strong>Note: PurgePendingRequestsBeforeResubmit is outside the try block</strong> — called at the top of the rule THEN before the try/catch. This means if Purge throws, it's an uncaught exception (no HandleActivityException). All other FMs with IntraActivitySequencing call Purge inside try.
+    </div>
+  </div>
+</div>
+
+<!-- §3 -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order; ParentOU/ChildOU/Subscriber/SubscriberOffer loops; Channel, ExtendedInfo[CCP_USER/CCP_PASSWORD] for credentials</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity — Response[] for idempotency; IntraActivitySequencing queue management</td></tr>
+      <tr><td><code>nextAct</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Loaded by extId; provides PreExecCheck XPath expression</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity extId matches</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCP_REMOVE_OFFER"</code></td><td>Constrains to this FM</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCP_REMOVE_OFFER"</code></td><td>Double-check via NextActivityID</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity ready to process</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li><strong>Resubmit check</strong>: <code>isActResub = RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted</code>; if true → <code>PurgePendingRequestsBeforeResubmit</code> (NOTE: called OUTSIDE try block)</li>
+      <li><strong>Load nextAct</strong>, read PreExecCheck XPath; <code>isSkipped = true</code></li>
+      <li><strong>ParentOU loop</strong> (OU[i] → Subscriber[j] → Offer[k]): for each offer:<br/>
+        • <code>refId = subOff.Soc</code>; <code>filter = subOff/ExtendedInfo[FE_OR_CCBS]/Value</code><br/>
+        • Idempotency: scan Response[] for <code>ReferenceId == refId &amp;&amp; CompletionStatus == 2</code><br/>
+        • PreExecCheck: <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code> → XPath eval<br/>
+        • Build <code>CCP_ADD_OFFER</code> event (action=2); <code>assertEvent</code> → <code>ActionRequestEvent</code><br/>
+        • Conditional audit: <code>if(AllowWriteLog)</code>; AUDIT_TRACE includes refId<br/>
+        • <code>isSkipped = false</code>
+      </li>
+      <li><strong>ChildOU loop</strong> — same pattern with <code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code></li>
+      <li><strong>SendFirstRequestEvent</strong> if any queued; <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code>; else <code>SkipActivity("4")</code></li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Annotated Logic</div>
+  <div class="section-body">
+    <pre><code><span class="kw">boolean</span> isActResub = (RequestCount &gt; <span class="nu">0</span> &amp;&amp; IsOrderResubmitted);
+<span class="cm">// PurgePendingRequestsBeforeResubmit is OUTSIDE try block (unique to this FM)</span>
+<span class="kw">if</span>(isActResub) PurgePendingRequestsBeforeResubmit(orderCurrentActivity);
+
+<span class="kw">try</span> {
+    Activity nextAct = Instance.<span class="fn">getByExtIdByUri</span>(NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+    <span class="kw">String</span> chkXPath = nextAct.PreExecCheck;
+    <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+    <span class="kw">for</span>(<span class="kw">int</span> i...) { <span class="cm">// ParentOU</span>
+        <span class="kw">for</span>(<span class="kw">int</span> j...) { <span class="cm">// Subscriber</span>
+            <span class="kw">for</span>(<span class="kw">int</span> k...) { <span class="cm">// SubscriberOffer</span>
+                <span class="kw">String</span> refId = subOff.Soc; <span class="cm">// Idempotency key: Soc (not OfferName!)</span>
+                <span class="kw">String</span> filter = XPath(subOff/ExtendedInfo[Name=<span class="st">"FE_OR_CCBS"</span>]/Value);
+                <span class="cm">// Idempotency check on Response[]</span>
+                <span class="kw">if</span>(!reqSuccess) {
+                    <span class="kw">String</span> chkRes = <span class="st">"true"</span>;
+                    <span class="kw">if</span>(chkXPath.length &gt; <span class="nu">0</span>) {
+                        sXML = GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, psub.RefId, subOff.OfferName, filter);
+                        chkRes = XPath.execute(<span class="st">"/("+chkXPath+")"</span>, sXML, <span class="st">"ns0=..."</span>);
+                    }
+                    <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+                        <span class="cm">/* CCP_ADD_OFFER XSLT (action=2, params: $orderRequest, $refId, $subOff, $psub) — see §9 */</span>
+                        Event.<span class="fn">assertEvent</span>(reqEvent);
+                        IntraActivitySequencing.<span class="fn">ActionRequestEvent</span>(reqEvent, orderCurrentActivity);
+                        isSkipped = <span class="kw">false</span>;
+                        <span class="kw">if</span>(AllowWriteLog(OrderType)) { <span class="cm">/* Logger — AUDIT_TRACE includes refId */</span> }
+                    }
+                }
+            }
+        }
+        <span class="cm">// ChildOU loop (GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo)</span>
+    }
+
+    <span class="kw">if</span>(!isSkipped) {
+        IntraActivitySequencing.<span class="fn">SendFirstRequestEvent</span>(orderCurrentActivity);
+        orderCurrentActivity.Status = GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+        SendDataToDB(orderRequest);
+    } <span class="kw">else</span> { SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>); }
+} <span class="kw">catch</span>(<span class="ty">Exception</span> ae) { HandleActivityException(...); }</code></pre>
+  </div>
+</div>
+
+<!-- §7 -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction &amp; Pre-Processing</div>
+  <div class="section-body">
+    <h3>§7.1 — Idempotency Key: subOff.Soc</h3>
+    <p><code>refId = subOff.Soc</code> — the idempotency key is the offer's <strong>Soc</strong> field, not <code>OfferName</code>. This is important: GET_PROFILE_FROM_CCP populates dynamically created SubscriberOffers with <code>OfferName = PricePlanName</code>. For those offers to be idempotent in CCP_REMOVE_OFFER, the <code>Soc</code> field must also be set (or Soc and OfferName must be the same). If the dynamically created offers have an empty or different Soc, the idempotency check on resubmit will not work for those offers.</p>
+
+    <h3 style="margin-top:16px;">§7.2 — FE_OR_CCBS Filter</h3>
+    <p><code>filter = XPath.evalAsString("$subOff/ExtendedInfo[Name=\"FE_OR_CCBS\"]/Value", subOff)</code> — determines credential behavior and PreExecCheck routing. Possible values: <code>"FE"</code> (FE-routed, sends credentials) or <code>"CCP"</code> (CCP-routed, dynamically added by GET_PROFILE_FROM_CCP, skips credentials).</p>
+
+    <h3 style="margin-top:16px;">§7.3 — effType Business Logic</h3>
+    <table>
+      <tr><th>Condition</th><th>effType value</th><th>Meaning</th><th>ParentOU</th><th>ChildOU</th></tr>
+      <tr><td>(EffectiveDate OR ExpirationDate) AND Channel != 'TYC20'</td><td>3 = scheduled/future</td><td>Schedule for specific effective/expiry date</td><td>✓ Correct (parenthesized)</td><td><span class="badge badge-red">BUG: missing parens</span></td></tr>
+      <tr><td>Otherwise (incl. TYC20 or no dates)</td><td>2 = immediate</td><td>Immediate removal</td><td>✓ Correct</td><td>✓ Correct (unless EffectiveDate exists)</td></tr>
+    </table>
+    <div class="callout callout-error" style="margin-top:8px;">
+      <strong>[HIGH] ChildOU effType operator precedence bug:</strong><br/>
+      ChildOU condition: <code>exists($subOff/EffectiveDate) or exists($subOff/ExpirationDate) and ($orderRequest/OrderData/Channel!='TYC20')</code><br/>
+      XPath evaluates <code>and</code> before <code>or</code>, so: <code>exists(EffectiveDate) OR (exists(ExpirationDate) AND Channel!='TYC20')</code><br/>
+      ParentOU condition (correct): <code>(exists($subOff/EffectiveDate) or exists($subOff/ExpirationDate)) and ($orderRequest/OrderData/Channel!='TYC20')</code><br/>
+      <br/>
+      <strong>Impact:</strong> For ChildOU subscribers with an EffectiveDate on TYC20 channel, CCP_REMOVE_OFFER will send effType=3 (scheduled) instead of effType=2 (immediate). This causes the removal to be deferred when it should be immediate.
+    </div>
+
+    <h3 style="margin-top:16px;">§7.4 — cpTransactionId Construction</h3>
+    <p><code>tib:left(tib:pad(concat("OMX", Channel), "12", "0"), 12)</code></p>
+    <ul style="margin-left:20px;margin-top:6px;">
+      <li>Concatenates <code>"OMX"</code> + Channel value (e.g., "OMX" + "web" = "OMXweb")</li>
+      <li>Pads to at least 12 chars with "0" fill (e.g., "OMXweb000000")</li>
+      <li>Truncates to exactly 12 chars (e.g., "OMXweb000000")</li>
+      <li>Only emitted when both CCP_USER and CCP_PASSWORD exist in order ExtendedInfo</li>
+    </ul>
+
+    <h3 style="margin-top:16px;">§7.5 — Shared CCP_ADD_OFFER Event</h3>
+    <p>CCP_REMOVE_OFFER uses the same JMS event type as CCP_ADD_OFFER (<code>Events.OMConsumers.OMXFM.Request.CCP_ADD_OFFER</code>). The operation direction is determined solely by the static <code>ns2:action</code> field: <strong>2 = remove</strong>. The add operation uses a different action value. This shared-channel pattern means both operations use the same CCP ESB endpoint and response correlation.</p>
+
+    <h3 style="margin-top:16px;">§7.6 — Credential Gate Logic (FE vs. CCP)</h3>
+    <table>
+      <tr><th>FE_OR_CCBS value</th><th>authReqM appid/password</th><th>cpTransactionId</th><th>Scenario</th></tr>
+      <tr><td><code>"FE"</code></td><td>From <code>ExtendedInfo[CCP_USER]</code> and <code>ExtendedInfo[CCP_PASSWORD]</code> (each conditional)</td><td>Emitted if both CCP_USER and CCP_PASSWORD exist</td><td>FE-originated offer removal</td></tr>
+      <tr><td><code>"CCP"</code> (or other)</td><td>Not emitted (no xsl:if matches)</td><td>Still emitted if CCP_USER and CCP_PASSWORD exist</td><td>CCP grading offer removal (from GET_PROFILE_FROM_CCP)</td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:8px;">
+      The <code>cpTransactionId</code> is emitted whenever CCP_USER and CCP_PASSWORD exist in the order, regardless of FE_OR_CCBS. Only appid and password are gated on <code>FE_OR_CCBS="FE"</code>.
+    </div>
+  </div>
+</div>
+
+<!-- §8 -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.1 — Order Type Dependencies</h3>
+    <p>Operates on SubscriberOffers tagged with FE_OR_CCBS extension info. Consumes offers from the original order AND offers dynamically added by GET_PROFILE_FROM_CCP (FE_OR_CCBS=CCP). Used for PREPAID_REMOVE_PACKAGE orders removing CCP price plans.</p>
+
+    <h3 style="margin-top:16px;">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.CCP_ADD_OFFER</code></td><td>CCP processModUserIndiPricePlan action=2 (remove) per SubscriberOffer (IntraActivitySequencing)</td></tr>
+      <tr><td><span class="badge badge-log">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Request audit (conditional: AllowWriteLog); AUDIT_TRACE includes refId</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Schema</th><th>action</th></tr>
+      <tr><td>CCP</td><td><code>processModUserIndiPricePlan</code></td><td><code>CCP_ModUserIndiPricePlanRequest.xsd</code> (ns2)</td><td><code>2</code> (remove; contrast: add uses action=1)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept path</th><th>Access</th><th>Purpose</th></tr>
+      <tr><td><code>ProcessFlow.NextActivityName</code></td><td>Read</td><td>Load nextAct for PreExecCheck</td></tr>
+      <tr><td><code>nextAct.PreExecCheck</code></td><td>Read</td><td>Dynamic PreExecCheck XPath expression</td></tr>
+      <tr><td><code>ParentOU[*].OUId</code></td><td>Read</td><td>pOuId (available but not in XSLT params)</td></tr>
+      <tr><td><code>ParentOU[*].RefId</code></td><td>Read</td><td>pOuRefId — passed to ChildOU PreExecCheck helper</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].RefId</code></td><td>Read</td><td>psub.RefId — passed to ParentOU PreExecCheck helper</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].MSISDN</code></td><td>Read (via $psub)</td><td>ns2:msisdn in CCP payload</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].Soc</code></td><td>Read</td><td>refId (idempotency key)</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].OfferName</code></td><td>Read (via $subOff)</td><td>ns2:pricePlanCode; also PreExecCheck helper param</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].EffectiveDate</code></td><td>Read (via $subOff)</td><td>ns2:effDate (conditional); effType decision</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].ExpirationDate</code></td><td>Read (via $subOff)</td><td>ns2:expDate (conditional); effType decision</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].ExtendedInfo[]</code></td><td>Read (via $subOff)</td><td>FE_OR_CCBS filter; BAG_ID, BONUS, DURATION_DAYS, BONUS_UNIT, BAG_TYPE for ExtParams</td></tr>
+      <tr><td><code>OrderData.Channel</code></td><td>Read (via $orderRequest)</td><td>cpTransactionId construction; effType TYC20 gate</td></tr>
+      <tr><td><code>OrderData.ExtendedInfo[CCP_USER]</code></td><td>Read (via $orderRequest)</td><td>ns2:appid (FE gate)</td></tr>
+      <tr><td><code>OrderData.ExtendedInfo[CCP_PASSWORD]</code></td><td>Read (via $orderRequest)</td><td>ns2:password (FE gate)</td></tr>
+      <tr><td><code>ChildOU[*].OUId/RefId/Subscriber/SubscriberOffers</code></td><td>Read</td><td>Same as ParentOU equivalents</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.5 — ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Name</th><th>Source</th><th>Required?</th><th>Used for</th></tr>
+      <tr><td><code>FE_OR_CCBS</code></td><td>SubscriberOffer</td><td>Yes (routing)</td><td>FE credential gate in authReqM; PreExecCheck XML construction</td></tr>
+      <tr><td><code>CCP_USER</code></td><td>OrderData</td><td>Conditional</td><td>ns2:appid (FE-gated)</td></tr>
+      <tr><td><code>CCP_PASSWORD</code></td><td>OrderData</td><td>Conditional</td><td>ns2:password (FE-gated)</td></tr>
+      <tr><td><code>BAG_ID</code></td><td>SubscriberOffer</td><td>Optional</td><td>ns2:ExtParam1</td></tr>
+      <tr><td><code>BONUS</code></td><td>SubscriberOffer</td><td>Optional</td><td>ns2:ExtParam2</td></tr>
+      <tr><td><code>DURATION_DAYS</code></td><td>SubscriberOffer</td><td>Optional</td><td>ns2:ExtParam3</td></tr>
+      <tr><td><code>BONUS_UNIT</code></td><td>SubscriberOffer</td><td>Optional</td><td>ns2:ExtParam4</td></tr>
+      <tr><td><code>BAG_TYPE</code></td><td>SubscriberOffer</td><td>Optional</td><td>ns2:ExtParam5</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+    <h3>§9.1 — XSLT Parameters</h3>
+    <table>
+      <tr><th>Param</th><th>Source (ParentOU)</th><th>Source (ChildOU)</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest concept</td><td>orderRequest concept</td></tr>
+      <tr><td><code>$refId</code></td><td><code>subOff.Soc</code></td><td><code>subOff.Soc</code></td></tr>
+      <tr><td><code>$subOff</code></td><td>SubscriberOffers[k]</td><td>SubscriberOffers[k]</td></tr>
+      <tr><td><code>$psub</code></td><td>ParentOU[i].Subscriber[j]</td><td>–</td></tr>
+      <tr><td><code>$csub</code></td><td>–</td><td>ChildOU[p].Subscriber[q]</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§9.2 — Event Container</h3>
+    <p>No extId attribute on the event. Event type: <code>Events.OMConsumers.OMXFM.Request.CCP_ADD_OFFER</code> (reused for removal via action=2).</p>
+
+    <h3 style="margin-top:16px;">§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional: xsl:if</td></tr>
+      <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional: xsl:if</td></tr>
+      <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional: xsl:if</td></tr>
+      <tr><td><code>RefID</code></td><td><code>$refId</code> (= subOff.Soc)</td><td><strong>Always</strong></td></tr>
+      <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional: xsl:if</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§9.4 — Payload Root</h3>
+    <p><code>ns2:processModUserIndiPricePlan / ns2:modUserIndiPricePlanReq</code></p>
+
+    <h3 style="margin-top:16px;">§9.5 — Payload Fields — authReqM Section</h3>
+    <table>
+      <tr><th>Element</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>ns2:appid</code></td><td><code>ExtendedInfo[Name="CCP_USER"]/Value</code></td><td>Double gate: FE_OR_CCBS="FE" AND CCP_USER exists</td></tr>
+      <tr><td><code>ns2:password</code></td><td><code>ExtendedInfo[Name="CCP_PASSWORD"]/Value</code></td><td>Double gate: FE_OR_CCBS="FE" AND CCP_PASSWORD exists</td></tr>
+      <tr><td><code>ns2:cpTransactionId</code></td><td><code>tib:left(tib:pad(concat("OMX", Channel), "12", "0"), 12)</code></td><td>Both CCP_USER and CCP_PASSWORD exist (not FE-gated)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§9.6 — Payload Fields — modUserIndiPricePlanReqM Section</h3>
+    <table>
+      <tr><th>Element</th><th>Source</th><th>Condition</th><th>Notes</th></tr>
+      <tr><td><code>ns2:msisdn</code></td><td><code>$psub/MSISDN</code> (or <code>$csub/MSISDN</code>)</td><td>xsl:if MSISDN exists</td><td>Subscriber MSISDN</td></tr>
+      <tr><td><code>ns2:pricePlanCode</code></td><td><code>$subOff/OfferName</code></td><td>xsl:if OfferName exists</td><td>Price plan code to remove</td></tr>
+      <tr><td><code>ns2:action</code></td><td><code>2</code></td><td>Always (static)</td><td><strong>2 = remove</strong> operation</td></tr>
+      <tr><td><code>ns2:effType</code></td><td>3 or 2</td><td>xsl:choose</td><td>3=scheduled (EffectiveDate/ExpirationDate + non-TYC20); 2=immediate. <span class="badge badge-red">ChildOU BUG</span></td></tr>
+      <tr><td><code>ns2:effDate</code></td><td><code>tib:format-dateTime('yyyy-MM-dd HH-mm-ss', tib:translate-timezone(EffectiveDate, '+07:00'))</code></td><td>EffectiveDate exists</td><td>ICT (UTC+7) conversion; format uses dash separators (not colons) for time</td></tr>
+      <tr><td><code>ns2:expDate</code></td><td>Same as effDate but for ExpirationDate</td><td>ExpirationDate exists</td><td>Same ICT conversion</td></tr>
+      <tr><td><code>ns2:chargeFlag</code></td><td><code>1</code></td><td>Always (static)</td><td>Charge upon removal</td></tr>
+      <tr><td><code>ns2:smsSendFlag</code></td><td><code>0</code></td><td>Always (static)</td><td>Do not send SMS notification</td></tr>
+      <tr><td><code>ns2:ExtParam1</code></td><td><code>ExtendedInfo[Name="BAG_ID"]/Value</code></td><td>Optional</td><td>Bag identifier</td></tr>
+      <tr><td><code>ns2:ExtParam2</code></td><td><code>ExtendedInfo[Name="BONUS"]/Value</code></td><td>Optional</td><td>Bonus value</td></tr>
+      <tr><td><code>ns2:ExtParam3</code></td><td><code>ExtendedInfo[Name="DURATION_DAYS"]/Value</code></td><td>Optional</td><td>Duration in days</td></tr>
+      <tr><td><code>ns2:ExtParam4</code></td><td><code>ExtendedInfo[Name="BONUS_UNIT"]/Value</code></td><td>Optional</td><td>Bonus unit</td></tr>
+      <tr><td><code>ns2:ExtParam5</code></td><td><code>ExtendedInfo[Name="BAG_TYPE"]/Value</code></td><td>Optional</td><td>Bag type identifier</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <h3>ParentOU Variant (params: $orderRequest, $refId, $subOff, $psub)</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span><span class="tree-cond">(no @extId)</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId (subOff.Soc)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns2:processModUserIndiPricePlan</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:modUserIndiPricePlanReq</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:authReqM</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns2:appid</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[CCP_USER]/Value</span><span class="badge badge-purple">FE gate + exists check</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns2:password</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[CCP_PASSWORD]/Value</span><span class="badge badge-purple">FE gate + exists check</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns2:cpTransactionId</span><span class="tree-arrow">←</span><span class="tree-src-static">tib:left(tib:pad(concat("OMX",Channel),"12","0"),12)</span><span class="badge badge-orange">CCP_USER &amp; CCP_PASSWORD exist</span></div></li>
+                            </ul>
+                          </li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:modUserIndiPricePlanReqM</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns2:msisdn</span><span class="tree-arrow">←</span><span class="tree-src">$psub/MSISDN</span><span class="badge badge-orange">Conditional</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns2:pricePlanChgDtoList</span></div>
+                                <ul>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:pricePlanCode</span><span class="tree-arrow">←</span><span class="tree-src">$subOff/OfferName</span><span class="badge badge-orange">Conditional</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:action</span><span class="tree-arrow">←</span><span class="tree-src-static">2</span><span class="badge badge-green">Always (static = remove)</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:effType</span><span class="tree-arrow">←</span><span class="tree-src-static">3 or 2</span><span class="badge badge-orange">xsl:choose</span><span class="tree-cond">3 if (EffDate OR ExpDate) AND Channel!='TYC20' (ParentOU — correct); ChildOU has op-precedence bug</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:effDate</span><span class="tree-arrow">←</span><span class="tree-src">tib:format-dateTime(EffectiveDate→ICT)</span><span class="badge badge-orange">if EffectiveDate exists</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:expDate</span><span class="tree-arrow">←</span><span class="tree-src">tib:format-dateTime(ExpirationDate→ICT)</span><span class="badge badge-orange">if ExpirationDate exists</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:chargeFlag</span><span class="tree-arrow">←</span><span class="tree-src-static">1</span><span class="badge badge-green">Always (static)</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:smsSendFlag</span><span class="tree-arrow">←</span><span class="tree-src-static">0</span><span class="badge badge-green">Always (static)</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:ExtParam1</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[BAG_ID]/Value</span><span class="badge badge-orange">Optional</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:ExtParam2</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[BONUS]/Value</span><span class="badge badge-orange">Optional</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:ExtParam3</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[DURATION_DAYS]/Value</span><span class="badge badge-orange">Optional</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:ExtParam4</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[BONUS_UNIT]/Value</span><span class="badge badge-orange">Optional</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns2:ExtParam5</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[BAG_TYPE]/Value</span><span class="badge badge-orange">Optional</span></div></li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:8px;color:#666;font-size:.85rem;">ChildOU variant: params change to ($orderRequest, $refId, $subOff, $csub); msisdn source changes to $csub/MSISDN; namespace prefix changes from ns2 to ns1; effType condition has operator precedence bug.</p>
+  </div>
+</div>
+
+<!-- §11 -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Event</th><th>Gate</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th><th>Bug?</th></tr>
+      <tr><td>Request audit</td><td><code>AllowWriteLog(OrderType)</code></td><td><code>"CCP_REMOVE_OFFER"</code> ✓</td><td><code>concat("Request Sent for CCP_REMOVE_OFFER for ", $refId)</code> ✓</td><td>None (refId included dynamically)</td></tr>
+      <tr><td>Response audit</td><td>Unconditional (no AllowWriteLog)</td><td><code>"CCP_REMOVE_OFFER"</code> ✓</td><td><code>"Response received for CCP_REMOVE_OFFER"</code> ✓</td><td>None</td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:8px;">
+      Request audit is conditional (AllowWriteLog-gated) while response audit is unconditional — asymmetric gating. The request AUDIT_TRACE is unique among all FMs: it dynamically includes the <code>refId</code> (subOff.Soc), making it easy to trace individual offer operations in audit logs.
+    </div>
+  </div>
+</div>
+
+<!-- §12 -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Action</th><th>Status</th></tr>
+      <tr><td>At least one offer queued and sent</td><td><code>SendFirstRequestEvent</code> → <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" = PROCESSING</td></tr>
+      <tr><td>No offers pass checks</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" = SKIPPED</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <p><strong>Request rule:</strong> Standard <code>catch(Exception ae) → HandleActivityException</code>. However, <code>PurgePendingRequestsBeforeResubmit</code> is called OUTSIDE the try block — if it throws, it propagates uncaught.</p>
+    <p style="margin-top:8px;"><strong>Response RF:</strong> Uses <code>try/finally</code> (no catch). The <code>finally</code> block logs completion. If <code>IntraActivitySequencing.ActionResponseEvent</code> or concept creation throws, the exception propagates after the finally log. This is the only FM response RF with try/finally instead of no try/catch.</p>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      The <code>PurgePendingRequestsBeforeResubmit</code> outside the try block is a defensive design error — it can leave the activity in an inconsistent state if it throws. Compare: SBM_CANCEL_PACK_PREPAID_NEXT calls Purge inside try. The try/finally in the response RF is safer than no try/catch (ensures log completes), but still propagates exceptions upward.
+    </div>
+  </div>
+</div>
+
+<!-- §14 -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)</code></td><td>Clears pending queue on resubmit (called OUTSIDE try block)</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionRequestEvent(event, activity)</code></td><td>Enqueues request event for sequential dispatch</td></tr>
+      <tr><td><code>IntraActivitySequencing.SendFirstRequestEvent(activity)</code></td><td>Sends the first queued event to start dispatch chain</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionResponseEvent(activity)</code></td><td>Fan-in: returns true when all queued requests have been responded to</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, refId, offerName, filter)</code></td><td>Builds PreExecCheck XML for ParentOU subscriber offer</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, refId, offerName, pOuRefId, filter)</code></td><td>Builds PreExecCheck XML for ChildOU subscriber offer</td></tr>
+      <tr><td><code>Helpers.AllowWriteLog(orderType)</code></td><td>Request audit gate (response audit is unconditional)</td></tr>
+      <tr><td><code>Helpers.GetActivityStatusString(code, flag)</code></td><td>Status code translation</td></tr>
+      <tr><td><code>Helpers.SendDataToDB(orderRequest)</code></td><td>Persist order state</td></tr>
+      <tr><td><code>Helpers.SkipActivity(orderRequest, activity, code)</code></td><td>Mark activity skipped</td></tr>
+      <tr><td><code>Helpers.HandleActivityException(orderRequest, activity, ex, msg)</code></td><td>Error state transition</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><code>Request_CCP_REMOVE_OFFER (rule)
+├── [isActResub check]
+│   └── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit()  [OUTSIDE try — uncaught risk]
+├── try {
+│   ├── Instance.getByExtIdByUri()               [load nextAct for PreExecCheck]
+│   ├── [ParentOU/ChildOU/Offer loops]
+│   │   ├── XPath.evalAsString()                 [FE_OR_CCBS filter from subOff]
+│   │   ├── [idempotency check on Response[]]
+│   │   ├── Helpers.GetXMLForSubscriberOfferFilterWithExtendedInfo()   [ParentOU PreExecCheck]
+│   │   ├── Helpers.GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo()  [ChildOU PreExecCheck]
+│   │   ├── XPath.execute()                      [PreExecCheck evaluation]
+│   │   ├── Event.createEvent()                  [CCP_ADD_OFFER XSLT — action=2, see §9]
+│   │   ├── Event.assertEvent()                  [IntraActivitySequencing enqueue]
+│   │   ├── IntraActivitySequencing.ActionRequestEvent()
+│   │   ├── Helpers.AllowWriteLog()              [request audit gate]
+│   │   ├── System.nanoTime()
+│   │   ├── Event.createEvent()                  [Logger XSLT — conditional audit, AUDIT_TRACE includes refId]
+│   │   └── Event.Ext.sendEventImmediate()       [request audit]
+│   ├── IntraActivitySequencing.SendFirstRequestEvent()
+│   ├── Helpers.GetActivityStatusString()
+│   ├── Helpers.SendDataToDB()
+│   └── Helpers.SkipActivity()
+└── catch → Helpers.HandleActivityException()
+
+Response_CCP_REMOVE_OFFER (rulefunction)
+├── Log.getLogger() / Log.log()                  [Java logger — debug start]
+├── try {
+│   ├── Instance.createInstance()                [CCBS_AddAgreeOfferRes XSLT — OMXUtils:generateTrackingID()]
+│   ├── currActivity.Response[] ← activityRes
+│   ├── System.nanoTime()
+│   ├── Event.createEvent()                      [Logger XSLT — UNCONDITIONAL response audit]
+│   ├── Event.Ext.sendEventImmediate()           [response audit]
+│   └── IntraActivitySequencing.ActionResponseEvent(currActivity)
+│       → "true" (queue exhausted)
+│       → "false" (still waiting)
+└── finally {
+    └── Log.log()                                [Java logger — debug complete]
+    }</code></pre>
+  </div>
+</div>
+
+<!-- §16 -->
+<div class="section">
+  <div class="section-header">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Used in</th><th>Key fields</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Both</td><td>OrderData.Channel, ExtendedInfo[CCP_USER/CCP_PASSWORD], ParentOU/ChildOU/Subscriber/SubscriberOffers</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Both</td><td>ActivityID, Status, PreExecCheck, Response[] (idempotency + queue)</td></tr>
+      <tr><td><code>Concepts.FM.Response.CCBS_AddAgreeOfferRes</code></td><td>Response RF</td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId (same fields as ResponseBase but different concept type)</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>Request rule</td><td>Soc (idempotency key), OfferName (pricePlanCode), EffectiveDate, ExpirationDate, ExtendedInfo[FE_OR_CCBS, BAG_ID, BONUS, DURATION_DAYS, BONUS_UNIT, BAG_TYPE]</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>For each SubscriberOffer (across ParentOU and ChildOU), call CCP processModUserIndiPricePlan with action=2 (remove)</td></tr>
+      <tr><td>R2</td><td>Per-offer idempotency: skip if Response[].ReferenceId == subOff.Soc and CompletionStatus == 2</td></tr>
+      <tr><td>R3</td><td>IntraActivitySequencing: queue all qualifying offers then SendFirstRequestEvent; response fan-in via ActionResponseEvent returning "true" when queue exhausted</td></tr>
+      <tr><td>R4</td><td>FE credential gate: emit authReqM.appid and authReqM.password only when FE_OR_CCBS="FE"; emit cpTransactionId whenever CCP_USER and CCP_PASSWORD both exist</td></tr>
+      <tr><td>R5</td><td>effType: 3 (scheduled) when (EffectiveDate OR ExpirationDate) AND channel != 'TYC20'; 2 (immediate) otherwise</td></tr>
+      <tr><td>R6</td><td>Date format for effDate/expDate: 'yyyy-MM-dd HH-mm-ss' after ICT (UTC+7) translation via tib:translate-timezone</td></tr>
+      <tr><td>R7</td><td>Static fields: chargeFlag=1, smsSendFlag=0, action=2</td></tr>
+      <tr><td>R8</td><td>Optional ExtParams 1-5 from offer's BAG_ID, BONUS, DURATION_DAYS, BONUS_UNIT, BAG_TYPE ExtendedInfo</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td><strong>ChildOU effType operator precedence bug:</strong> Missing parentheses in xsl:choose condition. For ChildOU subscribers with EffectiveDate on TYC20 channel, effType=3 (scheduled) is sent instead of effType=2 (immediate). This sends the wrong removal timing to CCP for ChildOU TYC20 orders.</td><td><span class="badge badge-red">HIGH</span></td><td>Add parentheses: <code>(exists($subOff/EffectiveDate) or exists($subOff/ExpirationDate)) and ($orderRequest/OrderData/Channel!='TYC20')</code> (match ParentOU variant)</td></tr>
+      <tr><td><strong>Idempotency key is subOff.Soc, not OfferName:</strong> GET_PROFILE_FROM_CCP creates SubscriberOffers with OfferName=PricePlanName. If Soc is empty for those dynamically-created offers, resubmit idempotency fails — CCP_REMOVE_OFFER will re-send for those offers on resubmit.</td><td><span class="badge badge-red">HIGH</span></td><td>Verify that GET_PROFILE_FROM_CCP's SubscriberOffers creation also sets Soc=PricePlanName; or change CCP_REMOVE_OFFER idempotency key to OfferName for consistency</td></tr>
+      <tr><td><strong>PurgePendingRequestsBeforeResubmit outside try block:</strong> If Purge throws, the exception is uncaught and HandleActivityException is not called, leaving the activity in an inconsistent state.</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Move Purge call inside the try block (match SBM_CANCEL_PACK_PREPAID_NEXT pattern)</td></tr>
+      <tr><td><strong>Response RF try/finally — no catch:</strong> If CCBS_AddAgreeOfferRes creation or ActionResponseEvent throws, exception propagates to BE engine after finally log. No HandleActivityException called — activity stays in stale state.</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Add catch block to call HandleActivityException; convert to standard try/catch/finally pattern</td></tr>
+      <tr><td><strong>Asymmetric audit gating:</strong> Request audit is AllowWriteLog-conditional; response audit is unconditional. In high-volume scenarios, response audit will write more events than requests — could cause audit log asymmetry.</td><td><span class="badge badge-blue">LOW</span></td><td>Decide on consistent gating: either both conditional or both unconditional</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Condensed)</div>
+  <div class="section-body">
+    <pre><code><span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.<span class="ty">Request_CCP_REMOVE_OFFER</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">then</span> {
+        <span class="kw">boolean</span> isActResub = (RequestCount &gt; <span class="nu">0</span> &amp;&amp; IsOrderResubmitted);
+        <span class="cm">// OUTSIDE try block — uncaught if throws</span>
+        <span class="kw">if</span>(isActResub) PurgePendingRequestsBeforeResubmit(orderCurrentActivity);
+        <span class="kw">try</span> {
+            Activity nextAct = Instance.<span class="fn">getByExtIdByUri</span>(NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="kw">String</span> chkXPath = nextAct.PreExecCheck;
+            <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="kw">for</span>(<span class="kw">int</span> i...) { <span class="cm">// ParentOU</span>
+                <span class="kw">for</span>(<span class="kw">int</span> j...) { <span class="cm">// Subscriber</span>
+                    <span class="kw">for</span>(<span class="kw">int</span> k...) { <span class="cm">// SubscriberOffer</span>
+                        <span class="kw">String</span> refId = subOff.Soc; <span class="cm">// idempotency key</span>
+                        <span class="kw">String</span> filter = XPath(subOff/ExtendedInfo[FE_OR_CCBS]/Value);
+                        <span class="cm">// Idempotency check on Response[]</span>
+                        <span class="kw">if</span>(!reqSuccess) {
+                            <span class="kw">if</span>(chkXPath.length &gt; <span class="nu">0</span>) { sXML = GetXMLForSubscriberOfferFilterWithExtendedInfo(...); ... }
+                            <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+                                <span class="cm">/* CCP_ADD_OFFER XSLT action=2 (see §9) */</span>
+                                Event.<span class="fn">assertEvent</span>(reqEvent);
+                                IntraActivitySequencing.<span class="fn">ActionRequestEvent</span>(reqEvent, orderCurrentActivity);
+                                isSkipped = <span class="kw">false</span>;
+                                <span class="kw">if</span>(AllowWriteLog(OrderType)) { <span class="cm">/* Logger — AUDIT_TRACE includes refId */</span> }
+                            }
+                        }
+                    }
+                }
+                <span class="cm">// ChildOU loop (GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo)</span>
+                <span class="cm">// effType condition BUG in ChildOU XSLT — missing parentheses</span>
+            }
+
+            <span class="kw">if</span>(!isSkipped) {
+                IntraActivitySequencing.<span class="fn">SendFirstRequestEvent</span>(orderCurrentActivity);
+                orderCurrentActivity.Status = GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+                SendDataToDB(orderRequest);
+            } <span class="kw">else</span> { SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>); }
+        } <span class="kw">catch</span>(<span class="ty">Exception</span> ae) { HandleActivityException(...); }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<!-- §19 -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule (Response_CCP_REMOVE_OFFER)</div>
+  <div class="section-body">
+    <h3>§19.1 — Overview</h3>
+    <p>Standard IntraActivitySequencing response handler. Creates a <code>CCBS_AddAgreeOfferRes</code> concept (same fields as ResponseBase but a different concept type — likely reused from the CCP_ADD_OFFER FM). Logs unconditionally. Delegates fan-in to <code>ActionResponseEvent</code>.</p>
+    <p style="margin-top:8px;"><strong>Event type consumed:</strong> <code>Events.OMConsumers.OMXFM.Response.CCP_ADD_OFFER</code> (shared with CCP_ADD_OFFER).</p>
+    <p style="margin-top:8px;"><strong>Uses try/finally (no catch)</strong> — unique among all documented response RFs. Java logger used in addition to audit event.</p>
+
+    <h3 style="margin-top:16px;">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order context for audit logging</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCP_ADD_OFFER</code></td><td>CCP response event; carries ResponseCode, RefID, CompletionStatus</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity; Response[] written to; fan-in managed by ActionResponseEvent</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§19.3 — CCBS_AddAgreeOfferRes Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span><span class="tree-cond">(Concepts.FM.Response.CCBS_AddAgreeOfferRes)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object/@extId</span><span class="tree-arrow">←</span><span class="tree-src-static">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px;">§19.4 — Response Completion Logic</h3>
+    <table>
+      <tr><th>Step</th><th>Logic</th></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Return "true"</td><td>Queue exhausted — all enqueued offers have been responded to</td></tr>
+      <tr><td>Return "false"</td><td>Still pending responses in the IntraActivitySequencing queue</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§19.5 — Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td><code>OPERATION_NAME</code></td><td><code>"CCP_REMOVE_OFFER"</code> ✓</td></tr>
+      <tr><td><code>AUDIT_TRACE</code></td><td><code>"Response received for CCP_REMOVE_OFFER"</code> ✓</td></tr>
+      <tr><td>Gate</td><td><strong>Unconditional</strong> (no AllowWriteLog — unlike request audit)</td></tr>
+      <tr><td><code>PROCESS_ID</code></td><td><code>concat($pid, "_RES")</code></td></tr>
+      <tr><td><code>payload</code></td><td>Full <code>$eventResponse</code> copy, gated on <code>WritePayload="true"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCP_REMOVE_OFFER</footer>
+</body>
+</html>

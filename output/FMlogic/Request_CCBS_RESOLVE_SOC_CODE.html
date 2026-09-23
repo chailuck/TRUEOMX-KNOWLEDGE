@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_RESOLVE_SOC_CODE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px;}
+.page-header .sub{opacity:.85;margin-top:6px;font-size:.97rem;}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap;}
+.meta-badge{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.82rem;}
+.container{max-width:1300px;margin:0 auto;padding:28px 24px;}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafafa;}
+pre,code{font-family:'Cascadia Code','Consolas','Courier New',monospace;}
+.code-block{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:.82rem;line-height:1.55;border-left:3px solid var(--true-red);}
+.inline-code{background:#f0e6e6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.84em;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.76rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.path-box{border:2px solid;border-radius:8px;padding:14px 16px;margin:10px 0;}
+.path-a{border-color:#1565c0;background:#E3F0FD;}
+.path-b{border-color:#2e7d32;background:#E8F5E9;}
+.path-label{font-weight:700;margin-bottom:6px;font-size:.88rem;}
+.flow-step{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px dashed var(--border);}
+.flow-step:last-child{border-bottom:none;}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:2px;}
+.warn-block{background:#FFF3E0;border-left:3px solid var(--warning);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;}
+.info-block{background:#E3F0FD;border-left:3px solid var(--info);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;}
+.success-block{background:#E8F5E9;border-left:3px solid var(--success);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.tree-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;margin-top:10px;padding:8px 12px;background:#f8f8f8;border-radius:6px;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.str{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nm{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+h3{color:var(--true-dark);font-size:.97rem;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid #f0dede;}
+h4{color:#555;font-size:.88rem;margin:12px 0 6px;}
+p{margin-bottom:8px;}
+ul.plain{padding-left:20px;}
+ul.plain li{margin-bottom:4px;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="sub">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</div>
+  <h1>Request_CCBS_RESOLVE_SOC_CODE</h1>
+  <div class="sub">CCBS Offer Name → SOC Code Resolution with GoldenDB Dual-Path Dispatch</div>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Backend: CCBS / CES (GoldenDB)</span>
+    <span class="meta-badge">Channel: OMXFMConnectionRequest</span>
+    <span class="meta-badge">Author: mmittal--t420</span>
+    <span class="meta-badge">Generated: 2026-07-27</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This rule fires when the order reaches <span class="inline-code">ActivityID = CCBS_RESOLVE_SOC_CODE</span> and status <span class="inline-code">WAITING</span>. It resolves offer <strong>names</strong> to SOC <strong>codes</strong> for any offer that has an <span class="inline-code">OfferName</span> set but a blank <span class="inline-code">Soc</span> field — across Agreement offers, SubscriberOffers, and their RelatedOffersArrays at all hierarchy levels.</p>
+
+    <div class="success-block">
+      <strong>Key distinction from CCBS_GOD:</strong> CCBS_GOD collects SOC codes (already known) to fetch product catalog details. CCBS_RESOLVE_SOC_CODE collects <em>offer names</em> where the code is still unknown and asks CCBS to return the matching SOC code. This step must run after CCBS_GOD has populated SocProperties to allow the NextPricePlan lookup.
+    </div>
+
+    <div class="info-block"><strong>Dual dispatch path — GoldenDB gate:</strong>
+      <ul class="plain" style="margin-top:6px;">
+        <li><strong>Path A (GoldenDB=Y):</strong> Sends <span class="inline-code">CES_RESOLVE_SOC_CODE</span> event — routes to CES/GoldenDB service. The event element carries an <span class="inline-code">extId</span> attribute generated by <span class="inline-code">OMXUtils:generateTrackingID()</span>.</li>
+        <li><strong>Path B (standard):</strong> Sends <span class="inline-code">CCBS_RESOLVE_SOC_CODE</span> event — routes to CCBS. No extId attribute on event element.</li>
+      </ul>
+      Both paths use the same payload: <span class="inline-code">ns:ResolveSocCodeRequest</span> with N × <span class="inline-code">ns:SocName</span>. RequestCount is incremented once regardless of path.
+    </div>
+
+    <div class="warn-block">⚠ <strong>Resubmission awareness:</strong> Before adding an offer to the batch, the rule checks <span class="inline-code">orderCurrentActivity.Response[]</span> for an existing entry with matching <span class="inline-code">ReferenceId</span> and <span class="inline-code">CompletionStatus==2</span>. If found, the offer is skipped (already resolved in a prior attempt). Agreement-level offers additionally short-circuit via a direct <span class="inline-code">Response@length == 0</span> check before the per-response loop.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><span class="inline-code">Request_CCBS_RESOLVE_SOC_CODE</span></td></tr>
+      <tr><td>Full Path</td><td><span class="inline-code">Rules.OMConsumers.OMXFM.Request.Request_CCBS_RESOLVE_SOC_CODE</span></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-green">true</span></td></tr>
+      <tr><td>Rule Type</td><td>Batch Name-to-Code Resolution — single request with all unresolved offer names</td></tr>
+      <tr><td>Author</td><td>mmittal--t420</td></tr>
+      <tr><td>Backend Systems</td><td>CCBS (standard) / CES GoldenDB (if GoldenDB=Y)</td></tr>
+      <tr><td>Operation</td><td>ResolveSocCode — batch offer name to SOC code lookup</td></tr>
+      <tr><td>Resubmission guard</td><td><span class="badge badge-orange">Yes — per offer, checks CompletionStatus==2</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type Path</th><th>Role</th></tr>
+      <tr><td><span class="inline-code">orderRequest</span></td><td><span class="inline-code">Concepts.OrderRequest.OrderRequest</span></td><td>Master order — all offer levels traversed for name collection and code write-back</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity</span></td><td><span class="inline-code">Concepts.OM.ProcessConfig.Activity</span></td><td>PreExecCheck, RequestCount, Status, Response[], Parameter["SERVICE_TYPE"]</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><span class="inline-code">orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</span></td><td>Correlates activity to order execution point</td></tr>
+      <tr><td>2</td><td><span class="inline-code">orderCurrentActivity.ActivityID == "CCBS_RESOLVE_SOC_CODE"</span></td><td>Targets only this activity type</td></tr>
+      <tr><td>3</td><td><span class="inline-code">orderRequest.ProcessFlow.NextActivityID == "CCBS_RESOLVE_SOC_CODE"</span></td><td>Order-level double-check</td></tr>
+      <tr><td>4</td><td><span class="inline-code">orderCurrentActivity.Status == "WAITING"</span></td><td>Only fires on fresh/ready activity</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="step-num">1</div><div><strong>Init</strong> — <span class="inline-code">isActResub = (RequestCount>0 && IsOrderResubmitted)</span>; init <span class="inline-code">arrLstSOCs = createArrayList()</span></div></div>
+    <div class="flow-step"><div class="step-num">2</div><div><strong>ParentOU Agreement Offers</strong> — filter: <span class="inline-code">!IsBlankOrStringNull(OfferName) &amp;&amp; IsBlankOrStringNull(SocCode)</span>; run per-offer PreExecCheck via <span class="inline-code">GetXMLForAgreementOffer</span>; check resubmission guard; add <span class="inline-code">OfferName</span> to list. Then scan <span class="inline-code">RelatedOffersArray</span> with <span class="inline-code">GetXMLForAgreementRelatedOffer</span> + same guard. Then check NextPricePlan from SocProperties.</div></div>
+    <div class="flow-step"><div class="step-num">3</div><div><strong>ParentOU SubscriberOffers</strong> — filter + PreExecCheck via <span class="inline-code">GetXMLForSubscriberOffer</span>; resubmission guard; add name. RelatedOffersArray via <span class="inline-code">GetXMLForSubscriberRelatedOffer</span>. NextPricePlan check.</div></div>
+    <div class="flow-step"><div class="step-num">4</div><div><strong>ChildOU Agreement + SubscriberOffers</strong> — same as steps 2–3 using <span class="inline-code">GetXMLForAgreementOfferInChildOU</span>, <span class="inline-code">GetXMLForAgreementRelatedOfferInChildOU</span>, <span class="inline-code">GetXMLForSubscriberOfferInChildOU</span>, <span class="inline-code">GetXMLForSubscriberRelatedOfferInChildOU</span></div></div>
+    <div class="flow-step"><div class="step-num">5</div><div><strong>GoldenDB Gate</strong> — if <span class="inline-code">SocNames</span> list is non-empty:
+      <div class="path-box path-a" style="margin-top:8px;">
+        <div class="path-label" style="color:#1565c0;">Path A — GoldenDB=Y</div>
+        Send <span class="inline-code">Events.OMConsumers.OMXFM.Request.CES_RESOLVE_SOC_CODE</span> with event-level extId attribute (tracking ID)
+      </div>
+      <div class="path-box path-b">
+        <div class="path-label" style="color:#2e7d32;">Path B — Standard CCBS</div>
+        Send <span class="inline-code">Events.OMConsumers.OMXFM.Request.CCBS_RESOLVE_SOC_CODE</span> (no extId on event element)
+      </div>
+      Both paths: log audit, <span class="inline-code">isSkipped=false</span>
+    </div></div>
+    <div class="flow-step"><div class="step-num">6</div><div><strong>RequestCount</strong> — if <span class="inline-code">!isActResub</span>: <span class="inline-code">RequestCount++</span> (always ends at 1)</div></div>
+    <div class="flow-step"><div class="step-num">7</div><div><strong>Status</strong> — if sent → IN_PROGRESS; if no names collected → SkipActivity("4") → SKIPPED</div></div>
+    <div class="flow-step"><div class="step-num">8</div><div><strong>Exception</strong> — catch → HandleActivityException → ERROR</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action Details -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Key Logic</div>
+  <div class="section-body">
+    <h3>Offer Collection Filter</h3>
+    <div class="code-block"><span class="cm">// Include only offers where name is known but code is missing</span>
+<span class="kw">if</span>(!BRMS.IsBlankOrStringNull(SocName) &amp;&amp; BRMS.IsBlankOrStringNull(SocCode)) {
+    <span class="cm">// Run PreExecCheck, then resubmission guard</span>
+}
+<span class="cm">// Note: Agreement-level has a faster short-circuit:</span>
+<span class="kw">if</span>(orderCurrentActivity.Response@length == <span class="nm">0</span>) {
+    <span class="cm">// No prior responses — add directly</span>
+    <span class="kw">if</span>(!Collections.contains(arrLstSOCs, SocName)) Collections.add(arrLstSOCs, SocName);
+} <span class="kw">else</span> {
+    <span class="cm">// Check if this offer was already successfully resolved</span>
+    <span class="kw">for</span>(<span class="ty">int</span> iResp=<span class="nm">0</span>; iResp &lt; orderCurrentActivity.Response@length; iResp++) {
+        <span class="kw">if</span>(Response[iResp].ReferenceId == refId &amp;&amp; Response[iResp].CompletionStatus == <span class="nm">2</span>)
+            reqSuccess = <span class="kw">true</span>;
+        <span class="kw">if</span>(!reqSuccess) { Collections.add(arrLstSOCs, SocName); <span class="kw">break</span>; }
+    }
+}</div>
+
+    <h3>NextPricePlan Inclusion</h3>
+    <div class="code-block"><span class="cm">// Run AFTER primary offer check (regardless of whether SocName was blank/non-blank)</span>
+<span class="ty">String</span> nxtPPName = RuleFunctions.Helpers.GetNextPricePlan(socProps);
+<span class="kw">if</span>(!BRMS.IsBlankOrStringNull(nxtPPName)) {
+    <span class="cm">// Only include if GOD hasn't already returned the SocCode for this name</span>
+    <span class="kw">if</span>(BRMS.IsBlank(RuleFunctions.Helpers.GetSocCodeInGodBySocName(orderRequest, nxtPPName))) {
+        <span class="kw">if</span>(!Collections.contains(arrLstSOCs, nxtPPName))
+            Collections.add(arrLstSOCs, nxtPPName);
+    }
+}</div>
+
+    <h3>GoldenDB Dispatch Gate</h3>
+    <div class="code-block"><span class="ty">Object</span>[] SocNames = Collections.toArray(arrLstSOCs);
+<span class="kw">if</span>(SocNames != <span class="kw">null</span> &amp;&amp; Collections.size(arrLstSOCs) &gt; <span class="nm">0</span>) {
+    <span class="kw">if</span>(!BRMS.IsBlankOrStringNull(orderRequest.OrderData.GoldenDB)
+       &amp;&amp; String.equals(<span class="str">"Y"</span>, orderRequest.OrderData.GoldenDB)) {
+        <span class="cm">// Path A — CES/GoldenDB</span>
+        <span class="ty">Events...CES_RESOLVE_SOC_CODE</span> reqEvent = Event.createEvent(<span class="str">"xslt://CES_RESOLVE_SOC_CODE"</span>...);
+        Event.Ext.sendEventImmediate(reqEvent);
+    } <span class="kw">else</span> {
+        <span class="cm">// Path B — standard CCBS</span>
+        <span class="ty">Events...CCBS_RESOLVE_SOC_CODE</span> reqEvent = Event.createEvent(<span class="str">"xslt://CCBS_RESOLVE_SOC_CODE"</span>...);
+        Event.Ext.sendEventImmediate(reqEvent);
+    }
+    isSkipped = <span class="kw">false</span>;
+}</div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction — Offer Name Collection Matrix</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Source</th><th>Filter (OfferName / SocCode)</th><th>PreExecCheck Helper</th><th>ResUB Guard?</th><th>NextPP check?</th></tr>
+      <tr><td>ParentOU Agreement Offers</td><td>Name ≠ blank, Code = blank</td><td><span class="inline-code">GetXMLForAgreementOffer</span></td><td><span class="badge badge-green">Yes (CompletionStatus=2)</span></td><td><span class="badge badge-blue">Yes</span></td></tr>
+      <tr><td>ParentOU Agree. RelatedOffers</td><td>Name ≠ blank, Code = blank</td><td><span class="inline-code">GetXMLForAgreementRelatedOffer</span></td><td><span class="badge badge-green">Yes</span></td><td>No</td></tr>
+      <tr><td>ParentOU SubscriberOffers</td><td>Name ≠ blank, Code = blank</td><td><span class="inline-code">GetXMLForSubscriberOffer</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-blue">Yes</span></td></tr>
+      <tr><td>ParentOU Sub. RelatedOffers</td><td>Name ≠ blank, Code = blank</td><td><span class="inline-code">GetXMLForSubscriberRelatedOffer</span></td><td><span class="badge badge-green">Yes</span></td><td>No</td></tr>
+      <tr><td>ChildOU Agreement Offers</td><td>Name ≠ blank, Code = blank</td><td><span class="inline-code">GetXMLForAgreementOfferInChildOU</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-blue">Yes</span></td></tr>
+      <tr><td>ChildOU Agree. RelatedOffers</td><td>Name ≠ blank, Code = blank</td><td><span class="inline-code">GetXMLForAgreementRelatedOfferInChildOU</span></td><td><span class="badge badge-green">Yes</span></td><td>No</td></tr>
+      <tr><td>ChildOU SubscriberOffers</td><td>Name ≠ blank, Code = blank</td><td><span class="inline-code">GetXMLForSubscriberOfferInChildOU</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-blue">Yes</span></td></tr>
+      <tr><td>ChildOU Sub. RelatedOffers</td><td>Name ≠ blank, Code = blank</td><td><span class="inline-code">GetXMLForSubscriberRelatedOfferInChildOU</span></td><td><span class="badge badge-green">Yes</span></td><td>No</td></tr>
+      <tr><td>NextPricePlan (any level)</td><td>SocProperties has next PP name + GOD has no code for it</td><td>None (direct from SocProperties via GetNextPricePlan)</td><td>No</td><td>N/A</td></tr>
+    </table>
+    <div class="info-block" style="margin-top:12px;"><strong>New PreExecCheck helpers (vs CCBS_GOD):</strong> <span class="inline-code">GetXMLForAgreementRelatedOffer</span>, <span class="inline-code">GetXMLForSubscriberRelatedOffer</span>, <span class="inline-code">GetXMLForAgreementRelatedOfferInChildOU</span>, <span class="inline-code">GetXMLForSubscriberRelatedOfferInChildOU</span> — each takes a 4th parameter: the parent offer's SocName as <span class="inline-code">relatedRefId</span>. CCBS_GOD added related offers unconditionally; CCBS_RESOLVE_SOC_CODE evaluates the PreExecCheck per related offer.</div>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.1 — Order Type / Scenario Dependencies</h3>
+    <table>
+      <tr><th>Scenario</th><th>Effect</th></tr>
+      <tr><td>GoldenDB='Y'</td><td>Routes to CES_RESOLVE_SOC_CODE event with event-level tracking extId</td></tr>
+      <tr><td>GoldenDB blank or ≠ 'Y'</td><td>Routes to standard CCBS_RESOLVE_SOC_CODE event</td></tr>
+      <tr><td>All offers already have SocCode</td><td>Nothing added to list → SKIPPED</td></tr>
+      <tr><td>isActResub=true (resubmit)</td><td>RequestCount not incremented; existing successful responses skip re-sending for those offers</td></tr>
+      <tr><td>Parameter SERVICE_TYPE set</td><td>Written to SubscriberOffers.ServiceType and RelatedOffersArray.ServiceType in response handler</td></tr>
+      <tr><td>NextPricePlan in SocProperties, no GOD code</td><td>Plan name added to batch; code resolved by CCBS</td></tr>
+    </table>
+
+    <h3>§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Path</th><th>Event Type</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td>Path A (GoldenDB=Y)</td><td><span class="inline-code">Events.OMConsumers.OMXFM.Request.CES_RESOLVE_SOC_CODE</span></td><td>CES_RESOLVE_SOC_CODE</td><td>SOC name resolution via CES/GoldenDB</td></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td>Path B (standard)</td><td><span class="inline-code">Events.OMConsumers.OMXFM.Request.CCBS_RESOLVE_SOC_CODE</span></td><td>CCBS_RESOLVE_SOC_CODE</td><td>SOC name resolution via CCBS</td></tr>
+      <tr><td><span class="badge badge-log">OUTBOUND</span></td><td>Both</td><td><span class="inline-code">Events.OMConsumers.OMXESB.Logger</span></td><td>AuditLog</td><td>Request audit</td></tr>
+    </table>
+
+    <h3>§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>Attribute</th><th>Path A (CES)</th><th>Path B (CCBS)</th></tr>
+      <tr><td>Request event type</td><td><span class="inline-code">CES_RESOLVE_SOC_CODE</span></td><td><span class="inline-code">CCBS_RESOLVE_SOC_CODE</span></td></tr>
+      <tr><td>Request schema ns</td><td colspan="2"><span class="inline-code">http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd</span></td></tr>
+      <tr><td>Request element</td><td colspan="2"><span class="inline-code">ns:ResolveSocCodeRequest</span> → N × <span class="inline-code">ns:SocName</span></td></tr>
+      <tr><td>Response event type</td><td colspan="2"><span class="inline-code">Events.OMConsumers.OMXFM.Response.CCBS_RESOLVE_SOC_CODE</span></td></tr>
+      <tr><td>Response schema ns</td><td colspan="2"><span class="inline-code">http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd2</span></td></tr>
+      <tr><td>Response element</td><td colspan="2"><span class="inline-code">ns:ResolveSocCodeResponse</span> → N × <span class="inline-code">ns:ResolveSocCode[ns:SocCode, ns:Socname]</span></td></tr>
+      <tr><td>Response concept</td><td colspan="2"><span class="inline-code">Concepts.FM.Response.CCBSResolveSocCodeRes</span> (has ResolveSocCode[] array)</td></tr>
+      <tr><td>Event-level extId</td><td>Yes — <span class="inline-code">OMXUtils:generateTrackingID()</span></td><td>No</td></tr>
+      <tr><td>Fan-out</td><td colspan="2">None — single batch request; RequestCount=1</td></tr>
+    </table>
+
+    <h3>§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Field / Path</th><th>Direction</th><th>Phase</th><th>Purpose</th></tr>
+      <tr><td><span class="inline-code">ParentOU[i].Agreement.Offers[l].OfferName / Soc</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>Name=source; Soc must be blank to qualify</td></tr>
+      <tr><td><span class="inline-code">SubscriberOffers[k].OfferName / Soc / SocProperties</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>Name=source; SocProperties feeds NextPricePlan</td></tr>
+      <tr><td><span class="inline-code">RelatedOffersArray[x].OfferName / Soc</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>Name=source; Soc must be blank to qualify</td></tr>
+      <tr><td><span class="inline-code">OrderData.GoldenDB</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>Path routing gate</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.Response[].ReferenceId / CompletionStatus</span></td><td><span class="badge badge-blue">READ</span></td><td>Request</td><td>Resubmission guard</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.Parameter["SERVICE_TYPE"]</span></td><td><span class="badge badge-blue">READ</span></td><td>Response</td><td>Optional service type to inject into matching offers</td></tr>
+      <tr><td><span class="inline-code">Agreement.Offers[l].Soc</span></td><td><span class="badge badge-red">WRITE</span></td><td>Response</td><td>Written with resolved SOC code</td></tr>
+      <tr><td><span class="inline-code">Agreement.Offers[l].RelatedOffersArray[p].Soc</span></td><td><span class="badge badge-red">WRITE</span></td><td>Response</td><td>Written with resolved SOC code</td></tr>
+      <tr><td><span class="inline-code">SubscriberOffers[k].Soc / ServiceType</span></td><td><span class="badge badge-red">WRITE</span></td><td>Response</td><td>Soc from resolution; ServiceType from parameter</td></tr>
+      <tr><td><span class="inline-code">SubscriberOffers[k].RelatedOffersArray[q].Soc / ServiceType</span></td><td><span class="badge badge-red">WRITE</span></td><td>Response</td><td>Soc from resolution; ServiceType from parameter</td></tr>
+      <tr><td><span class="inline-code">ChildOU equivalents of all above</span></td><td><span class="badge badge-red">WRITE</span></td><td>Response</td><td>Same write-back at ChildOU level</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.Status</span></td><td><span class="badge badge-red">WRITE</span></td><td>Request</td><td>IN_PROGRESS or SKIPPED</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.RequestCount</span></td><td><span class="badge badge-red">WRITE</span></td><td>Request</td><td>Incremented once (=1)</td></tr>
+    </table>
+
+    <h3>§8.5 — Helper Function Details</h3>
+    <table>
+      <tr><th>Function</th><th>New vs CCBS_GOD?</th><th>4th Parameter</th></tr>
+      <tr><td><span class="inline-code">GetXMLForAgreementOffer</span></td><td>Same</td><td>—</td></tr>
+      <tr><td><span class="inline-code">GetXMLForSubscriberOffer</span></td><td>Same</td><td>—</td></tr>
+      <tr><td><span class="inline-code">GetXMLForAgreementOfferInChildOU</span></td><td>Same</td><td>pouRefId</td></tr>
+      <tr><td><span class="inline-code">GetXMLForSubscriberOfferInChildOU</span></td><td>Same</td><td>pouRefId</td></tr>
+      <tr><td><span class="inline-code">GetXMLForAgreementRelatedOffer</span></td><td><span class="badge badge-red">NEW</span></td><td>relatedRefId (parent SocName)</td></tr>
+      <tr><td><span class="inline-code">GetXMLForSubscriberRelatedOffer</span></td><td><span class="badge badge-red">NEW</span></td><td>relatedRefId (parent SocName)</td></tr>
+      <tr><td><span class="inline-code">GetXMLForAgreementRelatedOfferInChildOU</span></td><td><span class="badge badge-red">NEW</span></td><td>relatedRefId + pouRefId</td></tr>
+      <tr><td><span class="inline-code">GetXMLForSubscriberRelatedOfferInChildOU</span></td><td><span class="badge badge-red">NEW</span></td><td>relatedRefId + pouRefId</td></tr>
+      <tr><td><span class="inline-code">GetNextPricePlan(socProps)</span></td><td><span class="badge badge-red">NEW</span></td><td>Parses next PP name from SocProperties string</td></tr>
+      <tr><td><span class="inline-code">GetSocCodeInGodBySocName(orderRequest, name)</span></td><td><span class="badge badge-red">NEW</span></td><td>Looks up GOD results by offer name to get code</td></tr>
+    </table>
+
+    <h3>§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><span class="inline-code">OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</span></td><td>Include User/Password in request</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/Component_Name/OMX_CEP</span></td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/Component_Name/OMX_FM</span></td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</span></td><td>LOG_LEVEL value</td></tr>
+      <tr><td><span class="inline-code">OMX_OM/WritePayload</span></td><td>Include payload in audit log</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+    <h3>§9.1 — XSLT Parameter Binding (Both Paths)</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th><th>Notes</th></tr>
+      <tr><td><span class="inline-code">$orderRequest</span></td><td>Working memory concept</td><td>Full order tree</td></tr>
+      <tr><td><span class="inline-code">$globalVariables</span></td><td>BE global variables</td><td>Credential gate, logging config</td></tr>
+      <tr><td><span class="inline-code">$SocNames</span></td><td><span class="inline-code">Collections.toArray(arrLstSOCs)</span></td><td>Array of offer names (NOT codes) — iterated as <span class="inline-code">$SocNames/elements</span></td></tr>
+    </table>
+
+    <h3>§9.2 — Key Difference: CES (Path A) vs CCBS (Path B) XSLT</h3>
+    <table>
+      <tr><th>Difference</th><th>Path A — CES_RESOLVE_SOC_CODE</th><th>Path B — CCBS_RESOLVE_SOC_CODE</th></tr>
+      <tr><td>Event type</td><td><span class="inline-code">CES_RESOLVE_SOC_CODE</span></td><td><span class="inline-code">CCBS_RESOLVE_SOC_CODE</span></td></tr>
+      <tr><td>extId on event element</td><td><span class="badge badge-green">Yes</span> — <span class="inline-code">OMXUtils:generateTrackingID()</span></td><td><span class="badge badge-orange">No</span></td></tr>
+      <tr><td>xmlns:OMXUtils</td><td><span class="badge badge-green">Declared</span></td><td><span class="badge badge-orange">Not declared</span></td></tr>
+      <tr><td>Payload structure</td><td colspan="2">Identical — <span class="inline-code">ns:ResolveSocCodeRequest</span> → N × <span class="inline-code">ns:SocName</span></td></tr>
+      <tr><td>JMS headers</td><td colspan="2">Identical — JMSPriority, JMSCorrelationID, OrderID, UserName, PassWord, OrderType</td></tr>
+    </table>
+
+    <h3>§9.3 — JMS / Event Header Fields (Both Paths)</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><span class="inline-code">extId</span> (attr on event)</td><td><span class="inline-code">OMXUtils:generateTrackingID()</span></td><td>Path A (CES) only</td></tr>
+      <tr><td><span class="inline-code">JMSPriority</span></td><td><span class="inline-code">$orderRequest/OrderPriority</span></td><td>If OrderPriority exists</td></tr>
+      <tr><td><span class="inline-code">JMSCorrelationID</span></td><td><span class="inline-code">$orderRequest/OrderData/OMXTrackingId</span></td><td>If OMXTrackingId exists</td></tr>
+      <tr><td><span class="inline-code">OrderID</span></td><td><span class="inline-code">$orderRequest/OrderData/OrderID</span></td><td>If OrderID exists</td></tr>
+      <tr><td><span class="inline-code">UserName</span></td><td><span class="inline-code">$orderRequest/OrderData/User</span></td><td>IsEnableUserPass='true' + User exists</td></tr>
+      <tr><td><span class="inline-code">PassWord</span></td><td><span class="inline-code">$orderRequest/OrderData/Password</span></td><td>IsEnableUserPass='true' + Password exists</td></tr>
+      <tr><td><span class="inline-code">OrderType</span></td><td><span class="inline-code">$orderRequest/OrderData/OrderType</span></td><td>If OrderType exists</td></tr>
+    </table>
+
+    <h3>§9.7 — Complete Generated XML Example</h3>
+    <div class="code-block"><span class="xt">&lt;createEvent&gt;</span>
+  <span class="xt">&lt;event</span> <span class="xa">extId=</span><span class="str">"TRK-XXXXXXXX"</span><span class="xt">&gt;</span>  <span class="cm">&lt;!-- extId only in CES path --&gt;</span>
+    <span class="xt">&lt;JMSPriority&gt;</span><span class="str">5</span><span class="xt">&lt;/JMSPriority&gt;</span>
+    <span class="xt">&lt;JMSCorrelationID&gt;</span><span class="str">OMX-TRK-20260727-001</span><span class="xt">&lt;/JMSCorrelationID&gt;</span>
+    <span class="xt">&lt;OrderID&gt;</span><span class="str">ORD-67890</span><span class="xt">&lt;/OrderID&gt;</span>
+    <span class="xt">&lt;OrderType&gt;</span><span class="str">1</span><span class="xt">&lt;/OrderType&gt;</span>
+    <span class="xt">&lt;payload&gt;</span>
+      <span class="xt">&lt;ns:ResolveSocCodeRequest</span>
+        <span class="xa">xmlns:ns=</span><span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ns:SocName&gt;</span><span class="str">TRUE_5G_UNLIMITED_OFFER</span><span class="xt">&lt;/ns:SocName&gt;</span>
+        <span class="xt">&lt;ns:SocName&gt;</span><span class="str">NEXT_PP_PLAN_OFFER</span><span class="xt">&lt;/ns:SocName&gt;</span>
+        <span class="cm">&lt;!-- … one per unique unresolved offer name --&gt;</span>
+      <span class="xt">&lt;/ns:ResolveSocCodeRequest&gt;</span>
+    <span class="xt">&lt;/payload&gt;</span>
+  <span class="xt">&lt;/event&gt;</span>
+<span class="xt">&lt;/createEvent&gt;</span></div>
+
+    <h3>§9.8 — XSLT Stylesheet Source</h3>
+    <h4>Path A — CES_RESOLVE_SOC_CODE (GoldenDB=Y)</h4>
+    <div class="code-block"><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:OMXUtils=</span><span class="str">"www.tibco.com/be/custom/OMXUtils"</span>
+  <span class="xa">xmlns:xsl=</span><span class="str">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:ns=</span><span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd"</span>
+  <span class="xa">version=</span><span class="str">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"SocNames"</span><span class="xt">/&gt;</span>  <span class="cm">&lt;!-- Note capital S — array of offer names --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match=</span><span class="str">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="xt">&lt;xsl:attribute</span> <span class="xa">name=</span><span class="str">"extId"</span><span class="xt">&gt;</span>  <span class="cm">&lt;!-- ONLY in CES variant --&gt;</span>
+        <span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"OMXUtils:generateTrackingID()"</span><span class="xt">/&gt;</span>
+      <span class="xt">&lt;/xsl:attribute&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderPriority"</span><span class="xt">&gt;&lt;JMSPriority&gt;</span>...<span class="xt">&lt;/JMSPriority&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">&gt;&lt;JMSCorrelationID&gt;</span>...<span class="xt">&lt;/JMSCorrelationID&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/OrderID"</span><span class="xt">&gt;&lt;OrderID&gt;</span>...<span class="xt">&lt;/OrderID&gt;&lt;/xsl:if&gt;</span>
+      <span class="cm">&lt;!-- Credential gate: UserName/PassWord --&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/OrderType"</span><span class="xt">&gt;&lt;OrderType&gt;</span>...<span class="xt">&lt;/OrderType&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns:ResolveSocCodeRequest&gt;</span>
+          <span class="xt">&lt;xsl:for-each</span> <span class="xa">select=</span><span class="str">"$SocNames/elements"</span><span class="xt">&gt;</span>
+            <span class="xt">&lt;ns:SocName&gt;&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"."</span><span class="xt">/&gt;&lt;/ns:SocName&gt;</span>
+          <span class="xt">&lt;/xsl:for-each&gt;</span>
+        <span class="xt">&lt;/ns:ResolveSocCodeRequest&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></div>
+    <h4>Path B — CCBS_RESOLVE_SOC_CODE (Standard)</h4>
+    <div class="info-block">Identical to Path A above <strong>except:</strong> No <span class="inline-code">xmlns:OMXUtils</span> declaration and no <span class="inline-code">&lt;xsl:attribute name="extId"&gt;</span> block on the event element. All other elements (JMS headers, payload) are the same.</div>
+  </div>
+</div>
+
+<!-- §10 Field Mapping Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-purple" style="font-size:.7rem">CES path only</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-purple" style="font-size:.7rem">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-purple" style="font-size:.7rem">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:ResolveSocCodeRequest</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:SocName</span><span class="tree-arrow">←</span><span class="tree-src">. (current element of $SocNames/elements)</span><span class="badge badge-orange" style="font-size:.7rem">Repeated</span><span class="tree-cond">xsl:for-each $SocNames/elements — one per unresolved offer name</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div class="tree-legend">
+      <span><span style="color:#a6e3a1">■</span> Green = XPath source</span>
+      <span><span class="badge badge-green" style="font-size:.7rem">Always</span> Unconditional</span>
+      <span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span> Inside xsl:if</span>
+      <span><span class="badge badge-orange" style="font-size:.7rem">Repeated</span> xsl:for-each</span>
+      <span><span class="badge badge-purple" style="font-size:.7rem">CES path only</span> GoldenDB=Y branch</span>
+      <span><span class="badge badge-purple" style="font-size:.7rem">Credential-gated</span> IsEnableUserPass</span>
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <p><strong>Request audit</strong> — <span class="inline-code">OPERATION_NAME = "CCBS_RESOLVE_SOC_CODE"</span> (static, same for both dispatch paths). <span class="inline-code">AUDIT_TRACE = "Request Sent for CCBS_RESOLVE_SOC_CODE"</span>. Payload: <span class="inline-code">copy-of($reqEvent)</span> when WritePayload=true.</p>
+    <p><strong>Response audit</strong> — <span class="inline-code">PROCESS_ID</span> with <span class="inline-code">_RES</span> suffix. <span class="inline-code">AUDIT_TRACE = "Response received for CCBS_RESOLVE_SOC_CODE, RefId: " + RefID</span>.</p>
+  </div>
+</div>
+
+<!-- §12 Status Management -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Trigger</th><th>Code</th><th>Status</th><th>Method</th></tr>
+      <tr><td>Rule fires</td><td>0</td><td><span class="badge badge-blue">WAITING</span></td><td>Pre-condition</td></tr>
+      <tr><td>Names list non-empty — request sent</td><td>1</td><td><span class="badge badge-orange">IN_PROGRESS</span></td><td><span class="inline-code">GetActivityStatusString("1", false)</span></td></tr>
+      <tr><td>No unresolved names (all have SocCode or filtered)</td><td>4</td><td><span class="badge badge-purple">SKIPPED</span></td><td><span class="inline-code">SkipActivity(…, "4")</span></td></tr>
+      <tr><td>Exception caught</td><td>3</td><td><span class="badge badge-red">ERROR</span></td><td><span class="inline-code">HandleActivityException</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_CCBS_RESOLVE_SOC_CODE (rule)
+├── Instance.getByExtIdByUri(NextActivityName, "/Concepts/OM/ProcessConfig/Activity")
+├── Collections.List.createArrayList()
+├── Offer collection loops (ParentOU → Agreement + Related + Subscriber + Related + ChildOU equivalents):
+│   ├── BRMS.IsBlankOrStringNull(SocName)
+│   ├── BRMS.IsBlankOrStringNull(SocCode)               [filter gate]
+│   ├── GetXMLForAgreementOffer / GetXMLForSubscriberOffer
+│   ├── GetXMLForAgreementRelatedOffer / GetXMLForSubscriberRelatedOffer  [NEW vs CCBS_GOD]
+│   ├── GetXMLForAgreementOfferInChildOU / GetXMLForSubscriberOfferInChildOU
+│   ├── GetXMLForAgreementRelatedOfferInChildOU / GetXMLForSubscriberRelatedOfferInChildOU [NEW]
+│   ├── XPath.execute("/(PreExecCheck)", sXML, ns)
+│   ├── Resubmission guard: Response[].ReferenceId == refId &amp;&amp; CompletionStatus==2
+│   ├── Collections.contains(arrLstSOCs, SocName)
+│   ├── Collections.add(arrLstSOCs, SocName)
+│   ├── GetNextPricePlan(socProps)                       [NextPP scan]
+│   └── GetSocCodeInGodBySocName(orderRequest, nxtPPName) [check if GOD already resolved it]
+├── Collections.toArray(arrLstSOCs)
+├── Collections.size(arrLstSOCs)
+├── GoldenDB branch:
+│   ├── BRMS.IsBlankOrStringNull(OrderData.GoldenDB)
+│   ├── String.equals("Y", GoldenDB)
+│   ├── [Path A] Event.createEvent(xslt://CES_RESOLVE_SOC_CODE)
+│   └── [Path B] Event.createEvent(xslt://CCBS_RESOLVE_SOC_CODE)
+├── Event.Ext.sendEventImmediate(reqEvent)
+├── AllowWriteLog(orderType)
+├── Event.createEvent(xslt://Logger)
+├── GetActivityStatusString("1", false)
+├── SendDataToDB(orderRequest)
+├── SkipActivity(...)
+└── HandleActivityException(...)
+
+Response_CCBS_RESOLVE_SOC_CODE (rulefunction)
+├── Instance.createInstance(xslt://CCBSResolveSocCodeRes)
+│   └── Maps: ResponseCode, ResponseMsg, CompletionStatus, RefID
+│       + ResolveSocCode[] array: SocCode ← ns:SocCode, SocName ← ns:Socname
+├── currActivity.Response[n] = activityRes
+├── Instance.getByExtIdByUri("C:"+OMXTrackingId, "/Concepts/OrderRequest/OrderElements/Customer")
+├── GetActivityParamValueFromKey(currActivity, "SERVICE_TYPE")
+├── Write-back loops (per ResolveSocCode[m], all hierarchy levels):
+│   ├── Match by OfferName == socName
+│   ├── IF SocCode non-blank: offer.Soc = socCode; continue
+│   └── IF SERVICE_TYPE non-blank: offer.ServiceType = serviceType
+├── AllowWriteLog(orderType)
+├── Event.createEvent(xslt://Logger)
+└── currActivity.RequestCount == currActivity.Response@length → "true" / "false"</div>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <ul class="plain">
+      <li><strong>R1</strong> — Collect all offer names where <span class="inline-code">OfferName ≠ blank AND SocCode = blank</span>, across Agreement, SubscriberOffers, RelatedOffers at all hierarchy levels.</li>
+      <li><strong>R2</strong> — Run per-offer PreExecCheck including for related offers (new helpers with 4th parameter).</li>
+      <li><strong>R3</strong> — Check resubmission guard: skip offers already in <span class="inline-code">Response[].ReferenceId</span> with <span class="inline-code">CompletionStatus=2</span>.</li>
+      <li><strong>R4</strong> — Also include offer names for "next price plan" entries from SocProperties where GOD hasn't returned a code.</li>
+      <li><strong>R5</strong> — Dispatch to CES (if GoldenDB=Y) or CCBS (standard). CES request includes event-level extId attribute.</li>
+      <li><strong>R6</strong> — Single batch dispatch; RequestCount always = 1.</li>
+      <li><strong>R7</strong> — Response: for each <span class="inline-code">ResolveSocCode[m]</span>, find matching offers by <span class="inline-code">OfferName == SocName</span> and write <span class="inline-code">Soc = SocCode</span>.</li>
+      <li><strong>R8</strong> — Response: also inject <span class="inline-code">ServiceType</span> from <span class="inline-code">Parameter["SERVICE_TYPE"]</span> to matching subscriber offers and related offers.</li>
+      <li><strong>R9</strong> — Fan-in: <span class="inline-code">RequestCount == Response@length</span> — always 1:1.</li>
+    </ul>
+
+    <h3>Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>NextPricePlan: depends on SocProperties already populated by CCBS_GOD — sequencing dependency not enforced in rule</td><td><span class="badge badge-red">HIGH</span></td><td>Ensure CCBS_GOD always runs before CCBS_RESOLVE_SOC_CODE in ProcessConfig ordering. Migration must enforce this dependency.</td></tr>
+      <tr><td>GoldenDB path produces a different response correlation ID (CES extId vs no extId in CCBS) — response handler must accommodate both</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Both paths use same Response concept <span class="inline-code">CCBSResolveSocCodeRes</span>. Verify correlation at response matching.</td></tr>
+      <tr><td>O(n²) write-back: for each of M resolved codes, scans all offers at all levels</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Build a name → positions map before write-back loop.</td></tr>
+      <tr><td>Related offer PreExecCheck requires 4th param (relatedRefId = parent SocName) — new helper signature</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Port all 4 new helper functions with their additional parent-context parameter.</td></tr>
+      <tr><td><span class="inline-code">CompletionStatus==2</span> as success code — magic number not defined in this file</td><td><span class="badge badge-blue">LOW</span></td><td>Document that CompletionStatus=2 means SUCCESS; verify against CCBS response schema.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h3>§19.1 — Overview</h3>
+    <p><span class="inline-code">RuleFunctions.OrderResponse.Response_CCBS_RESOLVE_SOC_CODE</span> receives the CCBS/CES response and:</p>
+    <ol style="padding-left:20px;margin-top:6px;">
+      <li>Creates <span class="inline-code">CCBSResolveSocCodeRes</span> concept with base response fields + a <span class="inline-code">ResolveSocCode[]</span> array</li>
+      <li>Looks up <span class="inline-code">SERVICE_TYPE</span> from currActivity.Parameter</li>
+      <li>For each resolved pair (SocName → SocCode), scans ALL offer positions and writes <span class="inline-code">Soc</span> and optionally <span class="inline-code">ServiceType</span></li>
+      <li>Sends response audit log</li>
+      <li>Returns <span class="inline-code">"true"</span> when <span class="inline-code">RequestCount == Response@length</span></li>
+    </ol>
+
+    <h3>§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><span class="inline-code">orderRequest</span></td><td><span class="inline-code">Concepts.OrderRequest.OrderRequest</span></td><td>Written back with resolved Soc codes and ServiceType</td></tr>
+      <tr><td><span class="inline-code">eventResponse</span></td><td><span class="inline-code">Events.OMConsumers.OMXFM.Response.CCBS_RESOLVE_SOC_CODE</span></td><td>Contains ResolveSocCodeResponse/ResolveSocCode[] array</td></tr>
+      <tr><td><span class="inline-code">currActivity</span></td><td><span class="inline-code">Concepts.OM.ProcessConfig.Activity</span></td><td>Response[] appended; Parameter["SERVICE_TYPE"] read</td></tr>
+    </table>
+
+    <h3>§19.3 — CCBSResolveSocCodeRes Concept Fields (from XSLT)</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResolveSocCode</span><span class="badge badge-orange" style="font-size:.7rem">Repeated</span><span class="tree-cond">xsl:for-each $eventResponse/payload/ns:ResolveSocCodeResponse/ns:ResolveSocCode</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">SocCode</span><span class="tree-arrow">←</span><span class="tree-src">ns:SocCode</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">SocName</span><span class="tree-arrow">←</span><span class="tree-src">ns:Socname</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span><span class="tree-cond">note: element is ns:Socname (lowercase n), maps to SocName concept field</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>§19.4 — Response Completion Logic</h3>
+    <div class="code-block"><span class="cm">// Fan-in completion: always 1 request sent, 1 response expected</span>
+<span class="kw">if</span>(currActivity.RequestCount == currActivity.Response@length)
+    <span class="kw">return</span> <span class="str">"true"</span>;
+<span class="kw">else</span>
+    <span class="kw">return</span> <span class="str">"false"</span>;</div>
+    <p>Since <span class="inline-code">RequestCount</span> is always 1 and a single response is received per invocation, this always evaluates to <span class="inline-code">"true"</span> on the first response.</p>
+
+    <h3>§19.5 — Write-back Scope (All Offer Levels)</h3>
+    <p>For each <span class="inline-code">ResolveSocCode[m]</span> in the response:</p>
+    <table>
+      <tr><th>Offer Position</th><th>Match By</th><th>Writes Soc</th><th>Writes ServiceType</th></tr>
+      <tr><td>ParentOU Agreement Offers</td><td><span class="inline-code">OfferName == socName</span></td><td><span class="badge badge-green">Yes</span></td><td>No</td></tr>
+      <tr><td>ParentOU Agreement RelatedOffers</td><td><span class="inline-code">OfferName == socName</span></td><td><span class="badge badge-green">Yes</span></td><td>No</td></tr>
+      <tr><td>ParentOU SubscriberOffers</td><td><span class="inline-code">OfferName == socName</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-blue">If SERVICE_TYPE ≠ blank</span></td></tr>
+      <tr><td>ParentOU Sub. RelatedOffers</td><td><span class="inline-code">OfferName == socName</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-blue">If SERVICE_TYPE ≠ blank</span></td></tr>
+      <tr><td>ChildOU Agreement Offers</td><td><span class="inline-code">OfferName == socName</span></td><td><span class="badge badge-green">Yes</span></td><td>No</td></tr>
+      <tr><td>ChildOU Agreement RelatedOffers</td><td><span class="inline-code">OfferName == socName</span></td><td><span class="badge badge-green">Yes</span></td><td>No</td></tr>
+      <tr><td>ChildOU SubscriberOffers</td><td><span class="inline-code">OfferName == socName</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-blue">If SERVICE_TYPE ≠ blank</span></td></tr>
+      <tr><td>ChildOU Sub. RelatedOffers</td><td><span class="inline-code">OfferName == socName</span></td><td><span class="badge badge-green">Yes</span></td><td><span class="badge badge-blue">If SERVICE_TYPE ≠ blank</span></td></tr>
+    </table>
+    <div class="warn-block">⚠ <span class="inline-code">continue</span> statement after Soc write skips the ServiceType write for that offer (they are mutually exclusive within the same if-block). ServiceType is only written if SocCode was NOT written (i.e., socCode was blank/empty in the response entry for that position).</div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#888;font-size:.82rem;border-top:1px solid var(--border);margin-top:8px;">
+  TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-07-27
+</div>
+</div>
+</body>
+</html>

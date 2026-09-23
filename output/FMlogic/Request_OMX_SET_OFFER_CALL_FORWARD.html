@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_SET_OFFER_CALL_FORWARD</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.7rem;font-weight:700;letter-spacing:.5px}
+header .sub{opacity:.85;font-size:.95rem;margin-top:6px}
+header .meta{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:.82rem;opacity:.8}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px}
+.section{background:var(--card);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;line-height:1.55;border-left:3px solid var(--true-red)}
+code{background:#f3e6e6;color:var(--true-dark);padding:1px 6px;border-radius:3px;font-size:.85em}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-grey{background:#ECEFF1;color:#455A64}
+.kw{color:#cba6f7}
+.ty{color:#89b4fa}
+.st{color:#a6e3a1}
+.cm{color:#6c7086;font-style:italic}
+.nm{color:#fab387}
+.fn{color:#f38ba8}
+.xt{color:#89dceb}
+.xa{color:#f9e2af}
+.info-box{background:#E3F0FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:4px;margin-bottom:12px;font-size:.88rem}
+.warn-box{background:#FFF3E0;border-left:4px solid #e65100;padding:12px 16px;border-radius:4px;margin-bottom:12px;font-size:.88rem}
+.success-box{background:#E8F5E9;border-left:4px solid #2e7d32;padding:12px 16px;border-radius:4px;margin-bottom:12px;font-size:.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-attr{color:#f9e2af}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#757575;font-size:.8rem;border-top:1px solid var(--border);margin-top:16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_OMX_SET_OFFER_CALL_FORWARD</h1>
+  <div class="sub">OMXOM Working-Memory Enrichment — Tag Call-Forward SubscriberOffers as DUMMY when OfferName is absent</div>
+  <div class="meta">
+    <span>Rule: OMXOM (internal)</span>
+    <span>Priority: 5</span>
+    <span>Backend: None — in-memory only</span>
+    <span>No backend call / No response rulefunction</span>
+    <span>Generated: 2026-08-20</span>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+<div class="section-header">§1 — Overview &amp; Purpose</div>
+<div class="section-body">
+<p>Scans every <code>SubscriberOffers</code> entry (across all ParentOU subscribers and ChildOU subscribers) and checks whether any of its <code>ParameterInfo[*].ParamName</code> values appears in the configured parameter list (<code>param</code>). For offers where a match is found <em>and</em> the offer has no <code>OfferName</code>, the rule stamps <code>Soc="0"</code> and <code>OfferName="DUMMY"</code>.</p>
+<br/>
+<div class="info-box"><strong>Business purpose:</strong> Some orders carry call-forward parameter changes (e.g., CFB, CFNRY, CFU) that are attached to a subscriber's offer slot but without a true SOC code — they are parameter-only entries. Tagging them with <code>Soc="0" / OfferName="DUMMY"</code> flags them as non-real offers so downstream FMs (CCBS_CHANGE_PACKAGE_SUBSCRIBER) know to skip them for SOC-level provisioning and only process the parameter update.</div>
+<br/>
+<div class="info-box"><strong>OMXOM internal rule:</strong> This is a pure working-memory transformation — no JMS events, no backend calls, no response rulefunction. The rule calls <code>NextActivity()</code> directly after completing its work.</div>
+<br/>
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXOM.OMX_SET_OFFER_CALL_FORWARD</code></td></tr>
+<tr><td>Rule class</td><td>OMXOM (in-memory enrichment)</td></tr>
+<tr><td>Backend call</td><td>None</td></tr>
+<tr><td>Response rulefunction</td><td>None</td></tr>
+<tr><td>ProcessConfig step</td><td>13 in POSTPAID_UPDATE_PARAMETER</td></tr>
+<tr><td>PreExecCheck</td><td>Commented-out in ProcessConfig XML (always executes)</td></tr>
+<tr><td>Writes to working memory</td><td><code>SubscriberOffers.Soc = "0"</code>; <code>SubscriberOffers.OfferName = "DUMMY"</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+<div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="section-body">
+<table>
+<tr><th>Property</th><th>Value</th></tr>
+<tr><td>Namespace</td><td><code>Rules.OMConsumers.OMXOM</code></td></tr>
+<tr><td>Rule file</td><td><code>OMX_SET_OFFER_CALL_FORWARD.rule</code></td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>forwardChain</td><td>true</td></tr>
+<tr><td>Author</td><td>DESKTOP-KB4BEG4</td></tr>
+<tr><td>RequestCount management</td><td>None (OMXOM — no backend requests)</td></tr>
+<tr><td>Activity completion</td><td><code>NextActivity(orderRequest, orderCurrentActivity)</code> called inline</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+<div class="section-header">§3 — Working Memory — Declared Objects</div>
+<div class="section-body">
+<table>
+<tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order request — modified in-place (SubscriberOffers.Soc / OfferName)</td></tr>
+<tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity — read for Parameter[1] and PreExecCheck</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+<div class="section-header">§4 — Rule Conditions (WHEN)</div>
+<div class="section-body">
+<table>
+<tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Binds activity to this order</td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_SET_OFFER_CALL_FORWARD"</code></td><td>Restricts to this OMXOM rule</td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_SET_OFFER_CALL_FORWARD"</code></td><td>Confirms process flow position</td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Prevents re-processing</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+<div class="section-header">§5 — Execution Flow Diagram</div>
+<div class="section-body">
+<ol style="padding-left:20px;line-height:2.1">
+<li>Read <code>param</code> from <code>orderCurrentActivity.Parameter[1]</code> via XPath</li>
+<li>Read <code>chkXPath</code> = <code>orderCurrentActivity.PreExecCheck</code></li>
+<li>Serialize <code>orderRequest</code> (not just OrderData) to XML string via <code>Instance.serializeUsingDefaults(orderRequest)</code></li>
+<li>Fire START audit logger (AUDIT_TRACE: "OMX-OM OMXSetOfferCallForward Started.")</li>
+<li>If <code>PreExecCheck.length &gt; 0</code>: evaluate XPath and store result in <code>chkRes</code>; else <code>chkRes = "true"</code></li>
+<li>If <code>chkRes == "true"</code>:
+  <ol type="a" style="margin-left:20px;line-height:1.9">
+    <li>Loop all ParentOU → Subscriber → SubscriberOffers → ParameterInfo
+      <ul style="margin-left:20px">
+        <li>If any <code>ParameterInfo.ParamName</code> appears in <code>param</code> (comma-contained) → <code>isThere = true</code></li>
+        <li>If <code>isThere</code> AND offer has no <code>OfferName</code>: set <code>Soc="0"</code>, <code>OfferName="DUMMY"</code></li>
+      </ul>
+    </li>
+    <li>Loop all ParentOU → ChildOU → Subscriber → SubscriberOffers → ParameterInfo
+      <ul style="margin-left:20px">
+        <li>Two match conditions: direct equality <em>or</em> comma-contained XPath check</li>
+        <li>If <code>isThere</code> AND offer has no <code>OfferName</code>: set <code>Soc="0"</code>, <code>OfferName="DUMMY"</code></li>
+      </ul>
+    </li>
+    <li>Call <code>NextActivity(orderRequest, orderCurrentActivity)</code></li>
+    <li>Fire COMPLETED audit logger</li>
+  </ol>
+</li>
+<li>Else: <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></li>
+<li>On exception: <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></li>
+</ol>
+</div>
+</div>
+
+<!-- §6 Action -->
+<div class="section">
+<div class="section-header">§6 — Rule Action (THEN) — Detailed Logic</div>
+<div class="section-body">
+
+<h3 style="margin-bottom:8px;color:var(--true-dark)">§6.1 — Parameter Reading</h3>
+<p><code>param</code> is read from the first Parameter element of the current activity:</p>
+<pre><span class="kw">String</span> param = <span class="fn">XPath.evalAsString</span>(<span class="st">"xpath://$orderCurrentActivity/Parameter[1]"</span>);</pre>
+<p>Example value: <code>"CFB,CFNRY,CFNRC,CFU"</code> — a comma-delimited list of call-forward parameter names.</p>
+<br/>
+
+<h3 style="margin-bottom:8px;color:var(--true-dark)">§6.2 — PreExecCheck Evaluation</h3>
+<p>PreExecCheck is evaluated against <code>Instance.serializeUsingDefaults(orderRequest)</code> (the full order request, not just OrderData — different from most other OMXOM rules). In POSTPAID_UPDATE_PARAMETER step 13, the PreExecCheck is commented out in the ProcessConfig XML, so <code>chkRes</code> always defaults to <code>"true"</code> and the main logic always runs.</p>
+<br/>
+
+<h3 style="margin-bottom:8px;color:var(--true-dark)">§6.3 — ParentOU Subscriber Loop (Match Logic)</h3>
+<p>For each <code>ParentOU[iPOU].Subscriber[iPOUSub].SubscriberOffers[iSubOffer]</code>:</p>
+<ul style="padding-left:20px;line-height:1.9">
+  <li>Scan <code>ParameterInfo[iParameter]</code> entries</li>
+  <li>Match condition (XPath): <code>contains($param, concat(',', paramName))</code> — the comma-prefix ensures exact name matching, preventing partial matches (e.g. "CF" must not match "CFB")</li>
+  <li>If match found: <code>isThere = true</code> → break</li>
+  <li>After inner loops: if <code>isThere == true</code>:
+    <ul style="margin-left:20px">
+      <li>Check <code>exists($subOffer/OfferName)</code></li>
+      <li>If no OfferName: <code>subOffer.Soc = "0"</code>; <code>subOffer.OfferName = "DUMMY"</code></li>
+    </ul>
+  </li>
+</ul>
+<br/>
+
+<h3 style="margin-bottom:8px;color:var(--true-dark)">§6.4 — ChildOU Subscriber Loop (Match Logic — Two Conditions)</h3>
+<p>The ChildOU loop adds a <strong>second, looser match condition</strong> before the comma-contained XPath check:</p>
+<pre><span class="kw">if</span>(orderRequest.OrderData.Customer.ParentOU[iPOU].ChildOU[iCOU].Subscriber[iCOUSub].SubscriberOffers[iSubOffer].ParameterInfo[iParameter].ParamName == param){
+    isThere = <span class="kw">true</span>; <span class="kw">break</span>;
+}
+<span class="cm">// Then falls through to the XPath contains() check if not matched above</span></pre>
+<div class="warn-box"><strong>[LOW] ChildOU has an extra direct-equality check:</strong> The ChildOU loop first checks if <code>ParamName == param</code> (exact match against the full param string, not a single entry). This would only trigger if <code>param</code> itself equals one of the <code>ParamName</code> values — which happens only when param is a single value with no commas. This appears to be an earlier version of the match logic that was not removed when the XPath <code>contains()</code> check was added. In practice, when param is multi-valued, only the XPath check fires for ChildOU.</div>
+<br/>
+
+<h3 style="margin-bottom:8px;color:var(--true-dark)">§6.5 — Mutation Applied</h3>
+<table>
+<tr><th>Field</th><th>Old value</th><th>New value</th><th>Condition</th></tr>
+<tr><td><code>SubscriberOffers.Soc</code></td><td>(empty / null)</td><td><code>"0"</code></td><td>isThere=true AND no OfferName</td></tr>
+<tr><td><code>SubscriberOffers.OfferName</code></td><td>(empty / null)</td><td><code>"DUMMY"</code></td><td>isThere=true AND no OfferName</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+<div class="section-header">§8 — System &amp; Integration Dependencies</div>
+<div class="section-body">
+
+<h3 style="margin-bottom:8px;color:var(--true-dark)">§8.4 — BE Working Memory — Read vs. Written</h3>
+<table>
+<tr><th>Path</th><th>Direction</th><th>Details</th></tr>
+<tr><td><code>orderCurrentActivity.Parameter[1]</code></td><td>READ</td><td>Comma-separated list of call-forward ParamName values</td></tr>
+<tr><td><code>orderCurrentActivity.PreExecCheck</code></td><td>READ</td><td>Optional gate XPath (commented-out in step 13)</td></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].Subscriber[*].SubscriberOffers[*].ParameterInfo[*].ParamName</code></td><td>READ</td><td>Match against param list</td></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].Subscriber[*].SubscriberOffers[*].OfferName</code></td><td>READ + WRITE</td><td>Check if absent → write "DUMMY"</td></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].Subscriber[*].SubscriberOffers[*].Soc</code></td><td>WRITE</td><td>Write "0" when offer is call-forward placeholder</td></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].ChildOU[*].Subscriber[*].SubscriberOffers[*].ParameterInfo[*].ParamName</code></td><td>READ</td><td>Match against param list</td></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].ChildOU[*].Subscriber[*].SubscriberOffers[*].OfferName</code></td><td>READ + WRITE</td><td>Check if absent → write "DUMMY"</td></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].ChildOU[*].Subscriber[*].SubscriberOffers[*].Soc</code></td><td>WRITE</td><td>Write "0" when offer is call-forward placeholder</td></tr>
+</table>
+<br/>
+
+<h3 style="margin-bottom:8px;color:var(--true-dark)">§8.6 — ProcessConfig Parameters Consumed</h3>
+<table>
+<tr><th>Parameter index</th><th>Variable</th><th>Expected format</th><th>Usage</th></tr>
+<tr><td><code>Parameter[1]</code> (first parameter)</td><td><code>param</code></td><td>Comma-separated ParamName values, e.g. <code>CFB,CFNRY,CFNRC,CFU</code></td><td>Filter: which ParamName values identify call-forward offers</td></tr>
+</table>
+<br/>
+<p><em>Note: The <code>contains($param, concat(',', ParamName))</code> XPath requires the param list to start with a comma or to have values preceded by commas — verify the actual parameter value to confirm the leading-comma convention is followed, or that all target param names are not the first entry in the list. If "CFB" is the first entry with no leading comma, <code>contains("CFB,CFNRY", ",CFB")</code> returns false. In practice, the <code>param</code> value should start with a comma (e.g. <code>",CFB,CFNRY"</code>) or the ProcessConfig value accounts for this.</em></p>
+</div>
+</div>
+
+<!-- §11 Audit -->
+<div class="section">
+<div class="section-header">§11 — Audit Logging</div>
+<div class="section-body">
+<p>Two audit logger events — START (before loops) and COMPLETED (after NextActivity):</p>
+<table>
+<tr><th>Field</th><th>START value</th><th>COMPLETED value</th></tr>
+<tr><td>ESBUUID</td><td colspan="2"><code>$orderRequest/OrderData/OMXTrackingId</code> (conditional)</td></tr>
+<tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td><td><code>concat($pid, "_RES")</code></td></tr>
+<tr><td>COMPONENT_NAME</td><td colspan="2"><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+<tr><td>OPERATION_NAME</td><td><code>"/Rules/OMConsumers/OMXOM/OMX_SET_OFFER_CALL_FORWARD"</code></td><td><code>"/Rules/OMConsumers/OMXOM/OMX_SetOfferCallForward"</code></td></tr>
+<tr><td>LOG_LEVEL</td><td colspan="2"><code>$globalVariables/OMX_COMMON/.../MSG_LOG_LEVEL/INFO</code></td></tr>
+<tr><td>AUDIT_TRACE</td><td><code>"OMX-OM OMXSetOfferCallForward Started."</code></td><td><code>"OMX-OM OMX_SetOfferCallForward Completed."</code></td></tr>
+<tr><td>AUDIT_TS</td><td colspan="2"><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+<tr><td>payload</td><td colspan="2">Empty <code>&lt;payload/&gt;</code></td></tr>
+</table>
+<div class="warn-box"><strong>[LOW] OPERATION_NAME inconsistency:</strong> The START logger uses <code>OMX_SET_OFFER_CALL_FORWARD</code> (underscore) while the COMPLETED logger uses <code>OMX_SetOfferCallForward</code> (mixed case). This may cause log query discrepancies if filtering by OPERATION_NAME.</div>
+</div>
+</div>
+
+<!-- §12 Status -->
+<div class="section">
+<div class="section-header">§12 — Activity Status Management</div>
+<div class="section-body">
+<table>
+<tr><th>Scenario</th><th>Action</th><th>Resulting Status</th></tr>
+<tr><td>PreExecCheck passes (or absent)</td><td><code>NextActivity(orderRequest, orderCurrentActivity)</code></td><td>COMPLETED (by NextActivity helper)</td></tr>
+<tr><td>PreExecCheck fails</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>SKIPPED</td></tr>
+<tr><td>Exception</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td><td>ERROR</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §13 Exception -->
+<div class="section">
+<div class="section-header">§13 — Exception / Error Handling</div>
+<div class="section-body">
+<p>Single <code>try/catch(Exception ae)</code> wraps the entire THEN block. On exception: <code>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code>.</p>
+</div>
+</div>
+
+<!-- §14 Helpers -->
+<div class="section">
+<div class="section-header">§14 — Helper Functions Reference</div>
+<div class="section-body">
+<table>
+<tr><th>Function</th><th>Purpose</th></tr>
+<tr><td><code>XPath.evalAsString("xpath://$orderCurrentActivity/Parameter[1]")</code></td><td>Reads first Parameter value (call-forward param list)</td></tr>
+<tr><td><code>Instance.serializeUsingDefaults(orderRequest)</code></td><td>Serializes full order request to XML for PreExecCheck evaluation</td></tr>
+<tr><td><code>XPath.execute("/("+chkXPath+")", sXML, "ns0=...")</code></td><td>Evaluates PreExecCheck gate expression</td></tr>
+<tr><td><code>XPath.evalAsBoolean("xpath://contains($param, concat(',', paramName))")</code></td><td>Tests if offer's ParamName is in the call-forward list</td></tr>
+<tr><td><code>XPath.evalAsBoolean("xpath://exists($subOffer/OfferName)")</code></td><td>Checks whether the offer has an OfferName</td></tr>
+<tr><td><code>RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)</code></td><td>Marks activity complete and advances process flow</td></tr>
+<tr><td><code>RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>Marks activity SKIPPED when PreExecCheck fails</td></tr>
+<tr><td><code>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td><td>Error handler</td></tr>
+<tr><td><code>Event.Ext.sendEventImmediate(Event.createEvent(Logger XSLT))</code></td><td>Fires START and COMPLETED audit log events</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="section">
+<div class="section-header">§15 — Function Dependency Tree</div>
+<div class="section-body">
+<pre>OMX_SET_OFFER_CALL_FORWARD (THEN block)
+├── XPath.evalAsString("xpath://$orderCurrentActivity/Parameter[1]")   [read param]
+├── Instance.serializeUsingDefaults(orderRequest)                       [serialize for PreExecCheck]
+├── XPath.execute("/("+chkXPath+")", sXML, ...)                        [PreExecCheck gate]
+├── Event.Ext.sendEventImmediate(Logger START)                          [audit start]
+├── [outer loop] ParentOU
+│   ├── [inner loop] Subscriber
+│   │   └── [inner loop] SubscriberOffers
+│   │       ├── [inner loop] ParameterInfo
+│   │       │   └── XPath.evalAsBoolean("contains($param, concat(',', paramName))")
+│   │       └── XPath.evalAsBoolean("exists($subOffer/OfferName)")
+│   │           └── [mutation] subOffer.Soc = "0"; subOffer.OfferName = "DUMMY"
+│   └── [inner loop] ChildOU
+│       └── [inner loop] Subscriber
+│           └── [inner loop] SubscriberOffers
+│               ├── [inner loop] ParameterInfo
+│               │   ├── direct: ParameterInfo.ParamName == param
+│               │   └── XPath.evalAsBoolean("contains($param, concat(',', paramName))")
+│               └── XPath.evalAsBoolean("exists($subOffer/OfferName)")
+│                   └── [mutation] subOffer.Soc = "0"; subOffer.OfferName = "DUMMY"
+├── RuleFunctions.Helpers.NextActivity()                                [advance process]
+├── Event.Ext.sendEventImmediate(Logger COMPLETED)                      [audit done]
+├── SkipActivity("4")                                                   [PreExecCheck failed]
+└── HandleActivityException()                                           [on error]</pre>
+</div>
+</div>
+
+<!-- §17 Migration -->
+<div class="section">
+<div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="section-body">
+<h3 style="margin-bottom:8px;color:var(--true-dark)">Functional Requirements</h3>
+<table>
+<tr><th>ID</th><th>Requirement</th></tr>
+<tr><td>R1</td><td>Scan all SubscriberOffers (ParentOU and ChildOU subscribers) for entries whose ParameterInfo includes a call-forward param name from the configured list</td></tr>
+<tr><td>R2</td><td>Mark matched offers that have no OfferName with Soc="0" and OfferName="DUMMY"</td></tr>
+<tr><td>R3</td><td>The call-forward param name list must be configurable via ProcessConfig Parameter[1]</td></tr>
+<tr><td>R4</td><td>Offers that already have an OfferName must NOT be modified</td></tr>
+<tr><td>R5</td><td>Gate via PreExecCheck when configured; always run in POSTPAID_UPDATE_PARAMETER step 13</td></tr>
+</table>
+<br/>
+<h3 style="margin-bottom:8px;color:var(--true-dark)">Design Risks</h3>
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td><code>contains($param, concat(',', ParamName))</code> fails when the target ParamName is the first item in the list (no leading comma) — e.g. <code>contains("CFB,CFNRY", ",CFB")</code> = false</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Verify the actual ProcessConfig param value always starts with a comma, or change the XPath to also check <code>starts-with($param, $ParamName)</code></td></tr>
+<tr><td>ChildOU loop has two match conditions (direct equality first, then XPath contains) — the first condition only fires if <code>ParamName == full param string</code>, which is almost never the case for multi-value params; this is dead code for typical usage</td><td><span class="badge badge-grey">[LOW]</span></td><td>Simplify to a single consistent match strategy in migration; remove the direct-equality check unless a single-value param is a valid configuration</td></tr>
+<tr><td>OPERATION_NAME mismatch between START logger (<code>OMX_SET_OFFER_CALL_FORWARD</code>) and COMPLETED logger (<code>OMX_SetOfferCallForward</code>) can cause log correlation failures</td><td><span class="badge badge-grey">[LOW]</span></td><td>Standardize OPERATION_NAME across both loggers in migration</td></tr>
+<tr><td>Mutation of <code>Soc</code> and <code>OfferName</code> is irreversible within the current process flow — if downstream FMs fail and retry, the "DUMMY" values are already set</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Consider preserving original values in ExtendedInfo before overwriting; restore on retry/resubmit path</td></tr>
+<tr><td>The rule serializes the <em>full</em> <code>orderRequest</code> (not just OrderData) for PreExecCheck evaluation — this is more expensive than the standard OrderData-only serialization pattern; XPath expressions must account for the full concept structure</td><td><span class="badge badge-grey">[LOW]</span></td><td>Document this difference; ensure PreExecCheck expressions reference the correct root path when step is reconfigured</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+<div class="section-header">§18 — Full Source Code</div>
+<div class="section-body">
+<pre><span class="cm">/**
+ * @description
+ * @author DESKTOP-KB4BEG4
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXOM.OMX_SET_OFFER_CALL_FORWARD</span> {
+    <span class="kw">attribute</span> { <span class="nm">priority</span> = <span class="nm">5</span>; <span class="nm">forwardChain</span> = <span class="kw">true</span>; }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"OMX_SET_OFFER_CALL_FORWARD"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"OMX_SET_OFFER_CALL_FORWARD"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="kw">try</span> {
+            <span class="ty">String</span> param = <span class="fn">XPath.evalAsString</span>(<span class="st">"xpath://$orderCurrentActivity/Parameter[1]"</span>);
+            <span class="kw">boolean</span> isThere = <span class="kw">false</span>;
+            <span class="ty">String</span> chkXPath = orderCurrentActivity.PreExecCheck;
+            <span class="ty">String</span> chkRes = <span class="st">"true"</span>;
+            <span class="ty">String</span> sXML = <span class="fn">Instance.serializeUsingDefaults</span>(orderRequest); <span class="cm">// note: full orderRequest, not OrderData</span>
+
+            <span class="kw">if</span>(<span class="fn">String.length</span>(orderCurrentActivity.PreExecCheck) > <span class="nm">0</span>) {
+                chkRes = <span class="fn">XPath.execute</span>(<span class="st">"/("+chkXPath+")"</span>, sXML, <span class="st">"ns0=www.tibco.com/be/ontology/..."</span>);
+            }
+
+            <span class="kw">if</span>(<span class="fn">String.equals</span>(chkRes, <span class="st">"true"</span>)) {
+                <span class="kw">long</span> pid = <span class="fn">System.nanoTime</span>();
+                <span class="fn">Event.Ext.sendEventImmediate</span>(<span class="fn">Event.createEvent</span>(<span class="st">"xslt://{{/Events/.../Logger}} /* see §11 START logger */"</span>));
+
+                <span class="cm">// Loop ParentOU → Subscriber → SubscriberOffers → ParameterInfo</span>
+                <span class="kw">int</span> iPOU = <span class="nm">0</span>;
+                <span class="kw">for</span>(iPOU = <span class="nm">0</span>; iPOU &lt; orderRequest.OrderData.Customer.ParentOU@length; iPOU++) {
+                    <span class="kw">for</span>(<span class="kw">int</span> iPOUSub = <span class="nm">0</span>; iPOUSub &lt; orderRequest.OrderData.Customer.ParentOU[iPOU].Subscriber@length; iPOUSub++) {
+                        <span class="ty">Concepts.OrderRequest.OrderElements.Subscriber</span> subscriber = orderRequest.OrderData.Customer.ParentOU[iPOU].Subscriber[iPOUSub];
+                        <span class="kw">int</span> psubsOffers = ...Subscriber[iPOUSub].SubscriberOffers@length;
+
+                        <span class="kw">for</span>(<span class="kw">int</span> iSubOffer = <span class="nm">0</span>; iSubOffer &lt; psubsOffers; iSubOffer++) {
+                            isThere = <span class="kw">false</span>;
+                            <span class="kw">int</span> pParameter = ...SubscriberOffers[iSubOffer].ParameterInfo@length;
+
+                            <span class="kw">for</span>(<span class="kw">int</span> iParameter = <span class="nm">0</span>; iParameter &lt; pParameter; iParameter++) {
+                                <span class="kw">if</span>(<span class="fn">XPath.evalAsBoolean</span>(<span class="st">"xpath://contains($param, concat(',', ParameterInfo[$iParameter+1]/ParamName))"</span>)) {
+                                    isThere = <span class="kw">true</span>; <span class="kw">break</span>;
+                                }
+                            }
+
+                            <span class="kw">if</span>(isThere == <span class="kw">true</span>) {
+                                <span class="ty">Concepts.OrderRequest.OrderElements.SubscriberOffers</span> subOffer = ...SubscriberOffers[iSubOffer];
+                                <span class="kw">boolean</span> chkOffer = <span class="fn">XPath.evalAsBoolean</span>(<span class="st">"xpath://exists($subOffer/OfferName)"</span>);
+                                <span class="kw">if</span>(!chkOffer) {
+                                    ...SubscriberOffers[iSubOffer].Soc = <span class="st">"0"</span>;
+                                    ...SubscriberOffers[iSubOffer].OfferName = <span class="st">"DUMMY"</span>;
+                                }
+                            }
+                        }
+                    }
+
+                    <span class="cm">// ChildOU loop — same pattern with extra direct-equality check first (see §6.4)</span>
+                    <span class="kw">for</span>(<span class="kw">int</span> iCOU = <span class="nm">0</span>; iCOU &lt; orderRequest.OrderData.Customer.ParentOU[iPOU].ChildOU@length; iCOU++) {
+                        <span class="cm">// ... (same structure; ChildOU.Subscriber.SubscriberOffers.ParameterInfo loop)</span>
+                        <span class="cm">// Extra check: if(paramName == param) { isThere=true; break; }  ← see §6.4 note</span>
+                        <span class="cm">// Then: contains() XPath same as ParentOU loop above</span>
+                        <span class="cm">// Mutation: Soc="0", OfferName="DUMMY" (same condition)</span>
+                    }
+                } <span class="cm">// end ParentOU loop</span>
+
+                <span class="fn">RuleFunctions.Helpers.NextActivity</span>(orderRequest, orderCurrentActivity);
+                <span class="fn">Event.Ext.sendEventImmediate</span>(<span class="fn">Event.createEvent</span>(<span class="st">"xslt://{{/Events/.../Logger}} /* see §11 COMPLETED logger */"</span>));
+            } <span class="kw">else</span> {
+                <span class="fn">RuleFunctions.Helpers.SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+            }
+        } <span class="kw">catch</span>(<span class="ty">Exception</span> ae) {
+            <span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</pre>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

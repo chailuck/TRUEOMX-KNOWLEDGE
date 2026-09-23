@@ -1,0 +1,763 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>UPDATE_CALL_VERIFICATION</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+<style>
+:root {
+  --true-red:  #CC0000;
+  --true-dark: #8B0000;
+  --true-deep: #5C0000;
+  --true-light:#FF5252;
+  --true-pale: #FFF5F5;
+  --success:   #2e7d32;
+  --warning:   #e65100;
+  --info:      #1565c0;
+  --skip:      #6a1b9a;
+  --bg:        #F9F9F9;
+  --card:      #FFFFFF;
+  --border:    #E0E0E0;
+  --code-bg:   #1e1e2e;
+  --code-fg:   #cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:36px 40px 28px;}
+.page-header h1{font-size:2rem;font-weight:700;letter-spacing:0.5px;margin-bottom:6px;}
+.page-header .subtitle{font-size:0.95rem;opacity:0.88;margin-bottom:16px;}
+.meta-row{display:flex;gap:24px;flex-wrap:wrap;}
+.meta-badge{background:rgba(255,255,255,0.15);border-radius:6px;padding:5px 14px;font-size:0.82rem;}
+main{max-width:1440px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:28px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.93rem;font-weight:600;letter-spacing:0.3px;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:0.84rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;white-space:nowrap;}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:hover td{background:#fafafa;}
+tr.conditional-row{border-left:3px solid #FBC02D;}
+tr.conditional-row td:first-child{border-left:3px solid #FBC02D;}
+code{background:#f0e6e6;color:var(--true-dark);border-radius:3px;padding:1px 5px;font-size:0.82rem;font-family:'Cascadia Code','Consolas',monospace;}
+.badge{display:inline-block;border-radius:4px;padding:2px 9px;font-size:0.76rem;font-weight:600;white-space:nowrap;}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-amber{background:#FFF8E1;color:#e65100;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:16px;padding:20px;}
+.fm-card{border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card);}
+.fm-card h4{font-size:0.88rem;color:var(--true-dark);margin-bottom:6px;}
+.fm-card .steps{font-size:0.78rem;color:#666;margin-bottom:8px;}
+.fm-card a{color:var(--true-red);font-size:0.82rem;text-decoration:none;}
+.fm-card a:hover{text-decoration:underline;}
+details{margin-bottom:10px;}
+details summary{cursor:pointer;font-size:0.87rem;font-weight:600;padding:8px 12px;background:var(--true-pale);border-radius:6px;color:var(--true-dark);}
+details[open] summary{border-radius:6px 6px 0 0;}
+.preexec-body{background:#FFFDE7;border:1px solid #FBC02D;border-top:none;border-radius:0 0 6px 6px;padding:12px 16px;}
+.mermaid-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card);}
+.mermaid-wrap .mermaid{min-width:600px;}
+footer{text-align:center;font-size:0.78rem;color:#9e9e9e;padding:24px;border-top:1px solid var(--border);margin-top:8px;}
+a.fm-link{color:var(--true-red);text-decoration:none;}
+a.fm-link:hover{text-decoration:underline;}
+.not-found{color:#9e9e9e;font-style:italic;}
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <h1>UPDATE_CALL_VERIFICATION</h1>
+  <p class="subtitle">Call Verification Status Update — CCBS, CJ, CRM, AA Orchestration</p>
+  <div class="meta-row">
+    <span class="meta-badge">Total steps: 25</span>
+    <span class="meta-badge">Unique FMs: 22</span>
+    <span class="meta-badge">Entry point: CCBS_GET_SUBSCRIBER_INFO</span>
+    <span class="meta-badge">Generated: 2026-09-18</span>
+  </div>
+</header>
+
+<main>
+
+<!-- §2 Order Flow Table -->
+<section class="section">
+  <div class="section-header">§2 — Order Flow</div>
+  <div style="overflow-x:auto;">
+  <table>
+    <thead>
+      <tr>
+        <th>Step</th>
+        <th>Step ID</th>
+        <th>FM (ActivityID)</th>
+        <th>Parameter(s)</th>
+        <th>PreExecCheck</th>
+        <th>Previous</th>
+        <th>Next</th>
+        <th>FM Doc</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>1</td><td>CCBS_GET_SUBSCRIBER_INFO</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_SUBSCRIBER_INFO.html">CCBS_GET_SUBSCRIBER_INFO</a></td>
+        <td>—</td><td>—</td><td>START</td><td>CCBS_GET_ACCOUNT</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td>2</td><td>CCBS_GET_ACCOUNT</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_ACCOUNT.html">CCBS_GET_ACCOUNT</a></td>
+        <td>—</td><td>—</td><td>CCBS_GET_SUBSCRIBER_INFO</td><td>CCBS_GET_SUBSCRIBER_RESOURCE</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td>3</td><td>CCBS_GET_SUBSCRIBER_RESOURCE</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_SUBSCRIBER_RESOURCE.html">CCBS_GET_SUBSCRIBER_RESOURCE</a></td>
+        <td>—</td><td>—</td><td>CCBS_GET_ACCOUNT</td><td>CCBS_GET_OFFER_DETAILS</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td>4</td><td>CCBS_GET_OFFER_DETAILS</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_OFFER_DETAILS.html">CCBS_GET_OFFER_DETAILS</a></td>
+        <td>—</td><td>—</td><td>CCBS_GET_SUBSCRIBER_RESOURCE</td><td>CCBS_GET_AGREEMENT</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td>5</td><td>CCBS_GET_AGREEMENT</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_AGREEMENT.html">CCBS_GET_AGREEMENT</a></td>
+        <td>—</td><td>—</td><td>CCBS_GET_OFFER_DETAILS</td><td>CJ_QUERY_STATE</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td>6</td><td>CJ_QUERY_STATE</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CJ_QUERY_STATE.html">CJ_QUERY_STATE</a></td>
+        <td>—</td><td>—</td><td>CCBS_GET_AGREEMENT</td><td>CCBS_RESOLVE_SOC_CODE</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td>7</td><td>CCBS_RESOLVE_SOC_CODE</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></td>
+        <td>—</td><td>—</td><td>CJ_QUERY_STATE</td><td>CCBS_GOD</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td>8</td><td>CCBS_GOD</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></td>
+        <td>—</td><td>—</td><td>CCBS_RESOLVE_SOC_CODE</td><td>OMX_OFFER_INCLUSION</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td>9</td><td>OMX_OFFER_INCLUSION</td>
+        <td><a class="fm-link" href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">OMX_OFFER_INCLUSION</a></td>
+        <td>—</td><td>—</td><td>CCBS_GOD</td><td>AA_GET_SWITCH_FEATURE_OFFER</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td>10</td><td>AA_GET_SWITCH_FEATURE_OFFER</td>
+        <td><a class="fm-link" href="../FMlogic/Request_AA_GET_SWITCH_FEATURE_OFFER.html">AA_GET_SWITCH_FEATURE_OFFER</a></td>
+        <td>—</td><td>—</td><td>OMX_OFFER_INCLUSION</td><td>OMX_GET_SRV_TRX_NO</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>11</td><td>OMX_GET_SRV_TRX_NO</td>
+        <td><a class="fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></td>
+        <td>—</td>
+        <td><code>PROVISIONING=Y and ActivityReason!=SUSWC and DeliveryType=CCD</code></td>
+        <td>AA_GET_SWITCH_FEATURE_OFFER</td><td>AA_ACTIVATE_SUBS</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>12</td><td>AA_ACTIVATE_SUBS</td>
+        <td><a class="fm-link" href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a></td>
+        <td>—</td>
+        <td><code>PROVISIONING=Y and ActivityReason!=SUSWC and DeliveryType=CCD</code></td>
+        <td>OMX_GET_SRV_TRX_NO</td><td>OMX_GET_SRV_TRX_NO_SOFT_SUSPEND</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>13</td><td>OMX_GET_SRV_TRX_NO_SOFT_SUSPEND</td>
+        <td><a class="fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></td>
+        <td>—</td>
+        <td><code>ActivityReason=SUSWC</code></td>
+        <td>AA_ACTIVATE_SUBS</td><td>AA_ACTIVATE_SUBS_SOFT_SUSPEND</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>14</td><td>AA_ACTIVATE_SUBS_SOFT_SUSPEND</td>
+        <td><a class="fm-link" href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a></td>
+        <td>—</td>
+        <td><code>ActivityReason=SUSWC</code></td>
+        <td>OMX_GET_SRV_TRX_NO_SOFT_SUSPEND</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>15</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td>
+        <td>ACTION=REMOVE</td>
+        <td><code>PROFCVBAR offer exists with Action=REMOVE</code></td>
+        <td>AA_ACTIVATE_SUBS_SOFT_SUSPEND</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_ADD</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>16</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_ADD</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td>
+        <td>ACTION=ADD</td>
+        <td><code>PROFCVBAR offer exists with Action=ADD</code></td>
+        <td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td><td>OMX_ADD_SUBSCRIBER_OFFER</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>17</td><td>OMX_ADD_SUBSCRIBER_OFFER</td>
+        <td><span class="not-found">OMX_ADD_SUBSCRIBER_OFFER</span></td>
+        <td>PARAM=50412</td>
+        <td><code>ActivityReason=SUSWC</code></td>
+        <td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_ADD</td><td>CCBS_UPDATE_SUBSCRIBER</td>
+        <td><span class="badge badge-amber">⚠ Not Found</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>18</td><td>CCBS_UPDATE_SUBSCRIBER</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCBS_UPDATE_SUBSCRIBER.html">CCBS_UPDATE_SUBSCRIBER</a></td>
+        <td>FE_OR_CCBS=OMX</td>
+        <td><code>ActivityReason=SUSWC and FE_OR_CCBS=OMX</code></td>
+        <td>OMX_ADD_SUBSCRIBER_OFFER</td><td>CJ_UPDATE_CALL_VERIFICATION</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>19</td><td>CJ_UPDATE_CALL_VERIFICATION</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CJ_UPDATE_CALL_VERIFICATION.html">CJ_UPDATE_CALL_VERIFICATION</a></td>
+        <td>—</td>
+        <td><code>IS_UPDATE_CALLVER=Y</code></td>
+        <td>CCBS_UPDATE_SUBSCRIBER</td><td>CRM_CREATE_UPDATE_SR</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>20</td><td>CRM_CREATE_UPDATE_SR</td>
+        <td><a class="fm-link" href="../FMlogic/Request_CRM_CREATE_UPDATE_SR.html">CRM_CREATE_UPDATE_SR</a></td>
+        <td>ACTIVITY_LIST*</td>
+        <td><code>starts-with(ACTIVITY_LIST*, currentActivity)</code></td>
+        <td>CJ_UPDATE_CALL_VERIFICATION</td><td>SMSGATEWAY_SEND_SMS</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>21</td><td>SMSGATEWAY_SEND_SMS</td>
+        <td><a class="fm-link" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></td>
+        <td>—</td>
+        <td><code>callVerStatus=PASS or (IVR_LANG=EN and callVerStatus=OVERFLOW)</code></td>
+        <td>CRM_CREATE_UPDATE_SR</td><td>PSA_GET_DEVICE_INFO</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>22</td><td>PSA_GET_DEVICE_INFO</td>
+        <td><a class="fm-link" href="../FMlogic/Request_PSA_GET_DEVICE_INFO.html">PSA_GET_DEVICE_INFO</a></td>
+        <td>—</td>
+        <td><code>ActivityReason=SUSWC and FE_OR_CCBS=CCBS and IMEI_KNOX!=''</code></td>
+        <td>SMSGATEWAY_SEND_SMS</td><td>KNOX_NOTIFICATION_DEVICE</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>23</td><td>KNOX_NOTIFICATION_DEVICE</td>
+        <td><a class="fm-link" href="../FMlogic/Request_KNOX_NOTIFICATION_DEVICE.html">KNOX_NOTIFICATION_DEVICE</a></td>
+        <td>TEL=1242</td>
+        <td><code>ActivityReason=SUSWC and FE_OR_CCBS=CCBS and IMEI_KNOX!=''</code></td>
+        <td>PSA_GET_DEVICE_INFO</td><td>OMX_NOTIFY_KNOX_EVENT_NOTIFY</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>24</td><td>OMX_NOTIFY_KNOX_EVENT_NOTIFY</td>
+        <td><a class="fm-link" href="../FMlogic/Request_OMX_NOTI_TO_KAFKA.html">OMX_NOTI_TO_KAFKA</a></td>
+        <td>knoxEvent=NOTIFY</td>
+        <td><code>ActivityReason=SUSWC and FE_OR_CCBS=CCBS and IMEI_KNOX!=''</code></td>
+        <td>KNOX_NOTIFICATION_DEVICE</td><td>AA_CHECK_CONFIRMATION</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+      <tr class="conditional-row">
+        <td>25</td><td>AA_CHECK_CONFIRMATION</td>
+        <td><a class="fm-link" href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a></td>
+        <td>UPDATE_NETWORK_STATUS</td>
+        <td><code>DeliveryType=CCD</code></td>
+        <td>OMX_NOTIFY_KNOX_EVENT_NOTIFY</td><td>END</td>
+        <td><span class="badge badge-green">✓ Generated</span></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+</section>
+
+<!-- §3 PreExecCheck Details -->
+<section class="section">
+  <div class="section-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="section-body">
+
+    <details>
+      <summary>Step 11 — OMX_GET_SRV_TRX_NO (extId: OMX_GET_SRV_TRX_NO) · FM: OMX_GET_SRV_TRX_NO</summary>
+      <div class="preexec-body">
+        <code>PROVISIONING=Y and ActivityReason!=SUSWC and DeliveryType=CCD</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#555;">Executes only on the provisioning path (PROVISIONING flag set by CJ_QUERY_STATE response), excluding SUSWC sub-flow, for CCD delivery type.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 12 — AA_ACTIVATE_SUBS · FM: AA_ACTIVATE_SUBS</summary>
+      <div class="preexec-body">
+        <code>PROVISIONING=Y and ActivityReason!=SUSWC and DeliveryType=CCD</code>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 13 — OMX_GET_SRV_TRX_NO_SOFT_SUSPEND · FM: OMX_GET_SRV_TRX_NO</summary>
+      <div class="preexec-body">
+        <code>ActivityReason=SUSWC</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#555;">SUSWC sub-path variant of the transaction number retrieval.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 14 — AA_ACTIVATE_SUBS_SOFT_SUSPEND · FM: AA_ACTIVATE_SUBS</summary>
+      <div class="preexec-body">
+        <code>ActivityReason=SUSWC</code>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 15 — CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE · FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER</summary>
+      <div class="preexec-body">
+        <code>PROFCVBAR offer with Action=REMOVE exists in subscriber offers</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#555;">Created by Response_CJ_QUERY_STATE when OVERFLOW→NOTPASS state transition detected.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 16 — CCBS_CHANGE_PACKAGE_SUBSCRIBER_ADD · FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER</summary>
+      <div class="preexec-body">
+        <code>PROFCVBAR offer with Action=ADD exists in subscriber offers</code>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 17 — OMX_ADD_SUBSCRIBER_OFFER · FM: OMX_ADD_SUBSCRIBER_OFFER ⚠ Not Found</summary>
+      <div class="preexec-body">
+        <code>ActivityReason=SUSWC</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#888;">Rule file not found. Internal OMX function or missing source.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 18 — CCBS_UPDATE_SUBSCRIBER · FM: CCBS_UPDATE_SUBSCRIBER</summary>
+      <div class="preexec-body">
+        <code>ActivityReason=SUSWC and FE_OR_CCBS=OMX</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#555;">Only in SUSWC path when orchestrated via OMX (not FE).</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 19 — CJ_UPDATE_CALL_VERIFICATION · FM: CJ_UPDATE_CALL_VERIFICATION</summary>
+      <div class="preexec-body">
+        <code>IS_UPDATE_CALLVER=Y</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#555;">Set by Response_CJ_QUERY_STATE. False when (PASS→NOTPASS) or (PASS→OVERFLOW) state transitions — no CJ update needed.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 20 — CRM_CREATE_UPDATE_SR · FM: CRM_CREATE_UPDATE_SR</summary>
+      <div class="preexec-body">
+        <code>starts-with(ACTIVITY_LIST*, currentActivityName)</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#555;">Gate on activity list parameter prefix. Only runs if current activity is in the allowed list.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 21 — SMSGATEWAY_SEND_SMS · FM: SMSGATEWAY_SEND_SMS</summary>
+      <div class="preexec-body">
+        <code>callVerStatus=PASS or (IVR_LANG=EN and callVerStatus=OVERFLOW)</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#555;">SMS only on PASS, or for EN-language IVR on OVERFLOW.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 22 — PSA_GET_DEVICE_INFO · FM: PSA_GET_DEVICE_INFO</summary>
+      <div class="preexec-body">
+        <code>ActivityReason=SUSWC and FE_OR_CCBS=CCBS and IMEI_KNOX!=''</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#555;">Knox NOTIFY block — requires SUSWC reason, CCBS routing, and a non-empty IMEI_KNOX.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 23 — KNOX_NOTIFICATION_DEVICE · FM: KNOX_NOTIFICATION_DEVICE</summary>
+      <div class="preexec-body">
+        <code>ActivityReason=SUSWC and FE_OR_CCBS=CCBS and IMEI_KNOX!=''</code>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 24 — OMX_NOTIFY_KNOX_EVENT_NOTIFY · FM: OMX_NOTI_TO_KAFKA</summary>
+      <div class="preexec-body">
+        <code>ActivityReason=SUSWC and FE_OR_CCBS=CCBS and IMEI_KNOX!=''</code>
+      </div>
+    </details>
+
+    <details>
+      <summary>Step 25 — AA_CHECK_CONFIRMATION · FM: AA_CHECK_CONFIRMATION</summary>
+      <div class="preexec-body">
+        <code>DeliveryType=CCD</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#555;">Final confirmation step — only for CCD delivery.</p>
+      </div>
+    </details>
+
+  </div>
+</section>
+
+<!-- §4 FM Documentation Index -->
+<section class="section">
+  <div class="section-header">§4 — FM Documentation Index</div>
+  <div class="fm-grid">
+    <div class="fm-card">
+      <h4>CCBS_GET_SUBSCRIBER_INFO</h4>
+      <div class="steps">Steps: 1</div>
+      <a href="../FMlogic/Request_CCBS_GET_SUBSCRIBER_INFO.html">Request_CCBS_GET_SUBSCRIBER_INFO.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>CCBS_GET_ACCOUNT</h4>
+      <div class="steps">Steps: 2</div>
+      <a href="../FMlogic/Request_CCBS_GET_ACCOUNT.html">Request_CCBS_GET_ACCOUNT.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>CCBS_GET_SUBSCRIBER_RESOURCE</h4>
+      <div class="steps">Steps: 3</div>
+      <a href="../FMlogic/Request_CCBS_GET_SUBSCRIBER_RESOURCE.html">Request_CCBS_GET_SUBSCRIBER_RESOURCE.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>CCBS_GET_OFFER_DETAILS</h4>
+      <div class="steps">Steps: 4</div>
+      <a href="../FMlogic/Request_CCBS_GET_OFFER_DETAILS.html">Request_CCBS_GET_OFFER_DETAILS.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>CCBS_GET_AGREEMENT</h4>
+      <div class="steps">Steps: 5</div>
+      <a href="../FMlogic/Request_CCBS_GET_AGREEMENT.html">Request_CCBS_GET_AGREEMENT.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>CJ_QUERY_STATE</h4>
+      <div class="steps">Steps: 6</div>
+      <a href="../FMlogic/Request_CJ_QUERY_STATE.html">Request_CJ_QUERY_STATE.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>CCBS_RESOLVE_SOC_CODE</h4>
+      <div class="steps">Steps: 7</div>
+      <a href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">Request_CCBS_RESOLVE_SOC_CODE.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>CCBS_GOD</h4>
+      <div class="steps">Steps: 8</div>
+      <a href="../FMlogic/Request_CCBS_GOD.html">Request_CCBS_GOD.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>OMX_OFFER_INCLUSION</h4>
+      <div class="steps">Steps: 9</div>
+      <a href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">Request_OMX_OFFER_INCLUSION.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>AA_GET_SWITCH_FEATURE_OFFER</h4>
+      <div class="steps">Steps: 10</div>
+      <a href="../FMlogic/Request_AA_GET_SWITCH_FEATURE_OFFER.html">Request_AA_GET_SWITCH_FEATURE_OFFER.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>OMX_GET_SRV_TRX_NO</h4>
+      <div class="steps">Steps: 11, 13</div>
+      <a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">Request_OMX_GET_SRV_TRX_NO.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>AA_ACTIVATE_SUBS</h4>
+      <div class="steps">Steps: 12, 14</div>
+      <a href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">Request_AA_ACTIVATE_SUBS.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>CCBS_CHANGE_PACKAGE_SUBSCRIBER</h4>
+      <div class="steps">Steps: 15, 16</div>
+      <a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>OMX_ADD_SUBSCRIBER_OFFER</h4>
+      <div class="steps">Steps: 17</div>
+      <span class="not-found">Rule file not found</span><br/>
+      <span class="badge badge-amber" style="margin-top:6px;">⚠ Not Found</span>
+    </div>
+    <div class="fm-card">
+      <h4>CCBS_UPDATE_SUBSCRIBER</h4>
+      <div class="steps">Steps: 18</div>
+      <a href="../FMlogic/Request_CCBS_UPDATE_SUBSCRIBER.html">Request_CCBS_UPDATE_SUBSCRIBER.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>CJ_UPDATE_CALL_VERIFICATION</h4>
+      <div class="steps">Steps: 19</div>
+      <a href="../FMlogic/Request_CJ_UPDATE_CALL_VERIFICATION.html">Request_CJ_UPDATE_CALL_VERIFICATION.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>CRM_CREATE_UPDATE_SR</h4>
+      <div class="steps">Steps: 20</div>
+      <a href="../FMlogic/Request_CRM_CREATE_UPDATE_SR.html">Request_CRM_CREATE_UPDATE_SR.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>SMSGATEWAY_SEND_SMS</h4>
+      <div class="steps">Steps: 21</div>
+      <a href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">Request_SMSGATEWAY_SEND_SMS.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>PSA_GET_DEVICE_INFO</h4>
+      <div class="steps">Steps: 22</div>
+      <a href="../FMlogic/Request_PSA_GET_DEVICE_INFO.html">Request_PSA_GET_DEVICE_INFO.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>KNOX_NOTIFICATION_DEVICE</h4>
+      <div class="steps">Steps: 23</div>
+      <a href="../FMlogic/Request_KNOX_NOTIFICATION_DEVICE.html">Request_KNOX_NOTIFICATION_DEVICE.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>OMX_NOTI_TO_KAFKA</h4>
+      <div class="steps">Steps: 24 (extId: OMX_NOTIFY_KNOX_EVENT_NOTIFY)</div>
+      <a href="../FMlogic/Request_OMX_NOTI_TO_KAFKA.html">Request_OMX_NOTI_TO_KAFKA.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+    <div class="fm-card">
+      <h4>AA_CHECK_CONFIRMATION</h4>
+      <div class="steps">Steps: 25</div>
+      <a href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">Request_AA_CHECK_CONFIRMATION.html</a><br/>
+      <span class="badge badge-green" style="margin-top:6px;">✓ Generated</span>
+    </div>
+  </div>
+</section>
+
+<!-- §5 Sequence Diagram -->
+<section class="section">
+  <div class="section-header">§5 — Sequence Diagram</div>
+  <div class="section-body">
+    <p style="margin-bottom:16px;font-size:0.85rem;color:#555;">25-step orchestration — conditional steps wrapped in <code>opt</code> blocks.</p>
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+    participant CJ as CJ
+    participant OMX as OMX
+    participant AA as AA
+    participant CRM as CRM
+    participant SMS as SMSGATEWAY
+    participant PSA as PSA
+    participant KNOX as KNOX
+
+    O->>CCBS: CCBS_GET_SUBSCRIBER_INFO
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_SUBSCRIBER_INFO
+
+    O->>CCBS: CCBS_GET_ACCOUNT
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_ACCOUNT
+
+    O->>CCBS: CCBS_GET_SUBSCRIBER_RESOURCE
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_SUBSCRIBER_RESOURCE
+
+    O->>CCBS: CCBS_GET_OFFER_DETAILS
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_OFFER_DETAILS
+
+    O->>CCBS: CCBS_GET_AGREEMENT
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_AGREEMENT
+
+    O->>CJ: CJ_QUERY_STATE
+    CJ-->>O: response [12-case state machine → PROVISIONING / PROFCVBAR]
+    Note over O,CJ: FM: CJ_QUERY_STATE
+
+    O->>CCBS: CCBS_RESOLVE_SOC_CODE
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_RESOLVE_SOC_CODE
+
+    O->>CCBS: CCBS_GOD
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GOD
+
+    O->>OMX: OMX_OFFER_INCLUSION
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_OFFER_INCLUSION
+
+    O->>AA: AA_GET_SWITCH_FEATURE_OFFER
+    AA-->>O: response
+    Note over O,AA: FM: AA_GET_SWITCH_FEATURE_OFFER
+
+    opt PROVISIONING=Y and ActivityReason!=SUSWC and DeliveryType=CCD
+        O->>OMX: OMX_GET_SRV_TRX_NO
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+        O->>AA: AA_ACTIVATE_SUBS
+        AA-->>O: response
+        Note over O,AA: FM: AA_ACTIVATE_SUBS
+    end
+
+    opt ActivityReason=SUSWC
+        O->>OMX: OMX_GET_SRV_TRX_NO_SOFT_SUSPEND
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+        O->>AA: AA_ACTIVATE_SUBS_SOFT_SUSPEND
+        AA-->>O: response
+        Note over O,AA: FM: AA_ACTIVATE_SUBS
+    end
+
+    opt PROFCVBAR offer with Action=REMOVE
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER
+    end
+
+    opt PROFCVBAR offer with Action=ADD
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER_ADD
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER
+    end
+
+    opt ActivityReason=SUSWC
+        O->>OMX: OMX_ADD_SUBSCRIBER_OFFER [param=50412]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_SUBSCRIBER_OFFER [NOT FOUND]
+    end
+
+    opt ActivityReason=SUSWC and FE_OR_CCBS=OMX
+        O->>CCBS: CCBS_UPDATE_SUBSCRIBER [FE_OR_CCBS=OMX]
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_UPDATE_SUBSCRIBER
+    end
+
+    opt IS_UPDATE_CALLVER=Y
+        O->>CJ: CJ_UPDATE_CALL_VERIFICATION
+        CJ-->>O: response
+        Note over O,CJ: FM: CJ_UPDATE_CALL_VERIFICATION
+    end
+
+    opt starts-with(ACTIVITY_LIST*, currentActivity)
+        O->>CRM: CRM_CREATE_UPDATE_SR [ACTIVITY_LIST*]
+        CRM-->>O: response
+        Note over O,CRM: FM: CRM_CREATE_UPDATE_SR [fire-and-forget]
+    end
+
+    opt callVerStatus=PASS or EN+OVERFLOW
+        O->>SMS: SMSGATEWAY_SEND_SMS
+        SMS-->>O: response
+        Note over O,SMS: FM: SMSGATEWAY_SEND_SMS
+    end
+
+    opt ActivityReason=SUSWC and FE_OR_CCBS=CCBS and IMEI_KNOX!=''
+        O->>PSA: PSA_GET_DEVICE_INFO
+        PSA-->>O: response
+        Note over O,PSA: FM: PSA_GET_DEVICE_INFO
+        O->>KNOX: KNOX_NOTIFICATION_DEVICE [TEL=1242]
+        KNOX-->>O: response
+        Note over O,KNOX: FM: KNOX_NOTIFICATION_DEVICE
+        O->>OMX: OMX_NOTIFY_KNOX_EVENT_NOTIFY [knoxEvent=NOTIFY]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_NOTI_TO_KAFKA
+    end
+
+    opt DeliveryType=CCD
+        O->>AA: AA_CHECK_CONFIRMATION [UPDATE_NETWORK_STATUS]
+        AA-->>O: response
+        Note over O,AA: FM: AA_CHECK_CONFIRMATION
+    end
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- §6 Flow Diagram -->
+<section class="section">
+  <div class="section-header">§6 — Flow Diagram</div>
+  <div class="section-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1[CCBS_GET_SUBSCRIBER_INFO\nFM: CCBS_GET_SUBSCRIBER_INFO]
+    S1 --> S2[CCBS_GET_ACCOUNT\nFM: CCBS_GET_ACCOUNT]
+    S2 --> S3[CCBS_GET_SUBSCRIBER_RESOURCE\nFM: CCBS_GET_SUBSCRIBER_RESOURCE]
+    S3 --> S4[CCBS_GET_OFFER_DETAILS\nFM: CCBS_GET_OFFER_DETAILS]
+    S4 --> S5[CCBS_GET_AGREEMENT\nFM: CCBS_GET_AGREEMENT]
+    S5 --> S6[CJ_QUERY_STATE\nFM: CJ_QUERY_STATE\n12-case state machine]
+    S6 --> S7[CCBS_RESOLVE_SOC_CODE]
+    S7 --> S8[CCBS_GOD]
+    S8 --> S9[OMX_OFFER_INCLUSION]
+    S9 --> S10[AA_GET_SWITCH_FEATURE_OFFER]
+    S10 --> D11{PROVISIONING=Y\nActivityReason!=SUSWC\nDeliveryType=CCD}
+    D11 -->|Yes| S11[OMX_GET_SRV_TRX_NO]
+    S11 --> S12[AA_ACTIVATE_SUBS]
+    D11 -->|No| D13
+    S12 --> D13
+    D13{ActivityReason\n=SUSWC}
+    D13 -->|Yes| S13[OMX_GET_SRV_TRX_NO\nSOFT_SUSPEND]
+    S13 --> S14[AA_ACTIVATE_SUBS\nSOFT_SUSPEND]
+    D13 -->|No| D15
+    S14 --> D15
+    D15{PROFCVBAR\nAction=REMOVE}
+    D15 -->|Yes| S15[CCBS_CHANGE_PACKAGE\nSUBSCRIBER REMOVE]
+    D15 -->|No| D16
+    S15 --> D16
+    D16{PROFCVBAR\nAction=ADD}
+    D16 -->|Yes| S16[CCBS_CHANGE_PACKAGE\nSUBSCRIBER ADD]
+    D16 -->|No| D17
+    S16 --> D17
+    D17{ActivityReason\n=SUSWC}
+    D17 -->|Yes| S17[OMX_ADD_SUBSCRIBER_OFFER\nparam=50412 ⚠NotFound]
+    D17 -->|No| D18
+    S17 --> D18
+    D18{SUSWC and\nFE_OR_CCBS=OMX}
+    D18 -->|Yes| S18[CCBS_UPDATE_SUBSCRIBER\nFM: CCBS_UPDATE_SUBSCRIBER]
+    D18 -->|No| D19
+    S18 --> D19
+    D19{IS_UPDATE_CALLVER\n=Y}
+    D19 -->|Yes| S19[CJ_UPDATE_CALL_VERIFICATION]
+    D19 -->|No| D20
+    S19 --> D20
+    D20{ACTIVITY_LIST*\nstarts-with gate}
+    D20 -->|Yes| S20[CRM_CREATE_UPDATE_SR\nfire-and-forget]
+    D20 -->|No| D21
+    S20 --> D21
+    D21{PASS or EN+OVERFLOW}
+    D21 -->|Yes| S21[SMSGATEWAY_SEND_SMS]
+    D21 -->|No| D22
+    S21 --> D22
+    D22{SUSWC and CCBS\nand IMEI_KNOX!=''}
+    D22 -->|Yes| S22[PSA_GET_DEVICE_INFO]
+    S22 --> S23[KNOX_NOTIFICATION_DEVICE\nTEL=1242]
+    S23 --> S24[OMX_NOTI_TO_KAFKA\nknoxEvent=NOTIFY]
+    D22 -->|No| D25
+    S24 --> D25
+    D25{DeliveryType\n=CCD}
+    D25 -->|Yes| S25[AA_CHECK_CONFIRMATION\nUPDATE_NETWORK_STATUS]
+    S25 --> END([END])
+    D25 -->|No| END
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents Order Journey Documentation · UPDATE_CALL_VERIFICATION · Generated 2026-09-18</footer>
+</body>
+</html>

@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_CCBS_CREATE_CHILD_OU</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700}
+.page-header .subtitle{opacity:0.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:0.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-always{background:#E8F5E9;color:#2e7d32}
+.badge-cond{background:#FFF3E0;color:#e65100}
+.info-box{background:#E3F2FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#999;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CCBS_CREATE_CHILD_OU</h1>
+  <div class="subtitle">CCBS — Create ChildOU Under ParentOU and Retrieve CCBS-assigned OUId</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: CCBS</span>
+    <span class="meta-badge">Pattern: assertEvent + IntraActivitySequencing (per ChildOU)</span>
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">Author: sakarin-pc</span>
+    <span class="meta-badge">Generated: 2026-09-21</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p><strong>CCBS_CREATE_CHILD_OU</strong> creates Child Organisational Units under existing ParentOUs in CCBS. The key difference from CCBS_CREATE_PARENT_OU is the addition of <code>ns:chArcInfo/ns:parentId</code> (POU.OUId) which establishes the parent-child relationship in the CCBS hierarchy.</p>
+    <div class="info-box">Loops ParentOU → ChildOU (two nested loops). Uses the same event type <code>CCBS_CREATE_OU</code> as CCBS_CREATE_PARENT_OU. The shared response handler matches by ChildOU.RefId and writes back <code>ChildOU.OUId</code>.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_CREATE_CHILD_OU</code></td></tr>
+      <tr><td>Author</td><td>sakarin-pc</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>Event type</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_CREATE_OU</code> (shared with PARENT_OU)</td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_CREATE_OU</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.assertEvent</code> + <code>IntraActivitySequencing</code> per ChildOU</td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Key difference vs PARENT_OU</td><td>Adds <code>ns:chArcInfo/ns:parentId = POU.OUId</code> (establishes parent-child hierarchy)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Mapping -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping (vs. CCBS_CREATE_PARENT_OU)</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent → event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">ParentOU[$var]/ChildOU[$iCOU]/RefId</span><span class="badge badge-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload → ns:CreateUnitAndGetIdsRequest</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:unitInfo → ns:name</span><span class="tree-arrow">←</span><span class="tree-src">ChildOU[$iCOU]/OUName</span><span class="badge badge-cond">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:unitInfo → ns:description</span><span class="tree-arrow">←</span><span class="tree-src">ChildOU[$iCOU]/OUDescription</span><span class="badge badge-cond">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:chArcInfo → ns:parentId</span><span class="tree-arrow">←</span><span class="tree-src-static">$OUId (ParentOU.OUId)</span><span class="badge badge-always">Always — CHILD_OU only, absent in PARENT_OU</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:customerIdInfo → ns:customerNo</span><span class="tree-arrow">←</span><span class="tree-src">Customer.CustomerId</span><span class="badge badge-always">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:activityInfo</span><span class="tree-arrow">←</span><span class="tree-src">ChildOU ActivityReason or "CREQ", userText, l3ActivityDate</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <div class="code-block">Request_CCBS_CREATE_CHILD_OU
+├── [if resubmit] IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── for each ParentOU[i]:
+│   ├── OUId = ParentOU[i].OUId (passed as $OUId to XSLT for chArcInfo)
+│   └── for each ChildOU[j]:
+│       ├── [skip if Response[ReferenceId==ChildOU.RefId AND CompletionStatus==2] exists]
+│       ├── GetXMLForChildOU(orderRequest, ChildOU.RefId, POU.RefId)
+│       ├── XPath.execute(PreExecCheck, sXML)
+│       ├── Event.createEvent(CCBS_CREATE_OU, XSLT: unitInfo + chArcInfo(parentId=OUId) + customerIdInfo + activityInfo)
+│       ├── Event.assertEvent(reqEvent)
+│       ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+│       └── sendEventImmediate(Logger REQ — OPERATION_NAME="CCBS_CREATE_CHILD_OU")
+├── IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── GetActivityStatusString("1", false)
+└── SendDataToDB(orderRequest)
+
+Response_CCBS_CREATE_CHILD_OU (identical logic to Response_CCBS_CREATE_PARENT_OU)
+├── for each POU[i]: if POU.RefId == eventResponse.RefID
+│   → POU.OUId ← payload/UnitIdsInfo/ChNodeId/ChNodeId
+│   for each ChildOU[j]: if ChildOU.RefId == eventResponse.RefID
+│   → ChildOU.OUId ← payload/UnitIdsInfo/ChNodeId/ChNodeId
+├── createInstance(CCBSCreateOURes)
+├── sendEventImmediate(Logger RES — OPERATION_NAME="CCBS_CREATE_CHILD_OU")
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → true/false</div>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>chArcInfo.parentId = POU.OUId — requires CCBS_CREATE_PARENT_OU to have completed first</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Enforce activity ordering in migration; POU.OUId must be populated</td></tr>
+      <tr><td>Shared event type CCBS_CREATE_OU — response handler serves both PARENT_OU and CHILD_OU</td><td><span class="badge badge-blue">[LOW]</span></td><td>Migration target must route CCBS_CREATE_OU responses to the correct rulefunction</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

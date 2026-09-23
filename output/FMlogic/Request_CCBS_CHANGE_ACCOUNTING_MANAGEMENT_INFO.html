@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}.badge-teal{background:#E0F2F1;color:#00695c}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.danger{border-color:#c62828;background:#FFEBEE}
+h3{color:var(--true-dark);margin:16px 0 10px;font-size:0.95rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</h1>
+    <div class="subtitle">Updates CCBS Account Accounting Management Info per-account sequentially via IntraActivitySequencing; optionally recalculates PersonalCreditLimit before sending (CAL_CREDITLIMIT parameter); activityReason selected by 4-tier priority; ClearField passthrough for CHARITY_CODE and CONVERGENCE_CODE.</div>
+    <div class="meta-row">
+      <span class="meta-badge">Backend: CCBS</span>
+      <span class="meta-badge">Pattern: IntraActivitySequencing (per-account sequential)</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Used in steps: 48, 49</span>
+      <span class="meta-badge">Generated: 2026-08-06</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>Updates the CCBS Accounting Management Info for each Account in the order. Uses <strong>IntraActivitySequencing</strong> to dispatch calls sequentially (not fan-out in parallel). Per-account loop: each account's event is queued via <code>ActionRequestEvent</code>, then the first is dispatched via <code>SendFirstRequestEvent</code>. Each response advances the queue via <code>ActionResponseEvent</code>.</p>
+    <ul style="margin-left:18px;font-size:0.88rem;line-height:2;margin-top:8px">
+      <li><strong>CAL_CREDITLIMIT parameter</strong>: if "Y", recalculates <code>PersonalCreditLimit = existing + sum(FE offers AMOUNT_IN_VAT)</code> before event construction</li>
+      <li><strong>calCRFlag</strong>: <code>CAL_CR_FLG=Y</code> in order ExtendedInfo → forces <code>activityReason="G158"</code></li>
+      <li><strong>activityReason 4-tier</strong>: calCRFlag→G158 / AccountActivityInfo.ActivityReason / tpc_reasonCode param / "CREQ"</li>
+      <li><strong>ClearField passthrough</strong>: CHARITY_CODE and CONVERGENCE_CODE pass sentinel value to CCBS to clear those fields</li>
+      <li><strong>LogicalDate read but unused</strong> — dead variable in current implementation</li>
+    </ul>
+    <div class="callout warning"><strong>Active vs old XSLT:</strong> A large commented-out old XSLT block exists in the source. The active version adds: (1) <code>CES</code> header field; (2) <code>tpc_reasonCode</code> branch in activityReason priority chain.</div>
+    <div class="callout danger"><strong>Response LOG_LEVEL = ERROR:</strong> The response audit logger hardcodes <code>MSG_LOG_LEVEL/ERROR</code> instead of INFO — all response logs are emitted at ERROR level regardless of outcome.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO.rule</code></td><td>99 lines (+ large commented-out old XSLT)</td></tr>
+      <tr><td>Rule namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td><td></td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO.rulefunction</code></td><td>24 lines</td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td></td></tr>
+      <tr><td>Backend</td><td>CCBS</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</code></td></tr>
+      <tr><td>Schema NS (payload)</td><td><code>http://www.tibco.com/schemas/tibco-ccbs-client/Schemas/Schema5.xsd</code></td><td>for <code>ns:</code> prefix</td></tr>
+      <tr><td>Schema NS (body)</td><td><code>www.tibco.com/plugin/java/xmlSchema/amdocs.csm3g.datatypes.AccountingManagementInfo</code></td><td>for <code>ns1:</code> prefix</td></tr>
+      <tr><td>Dispatch pattern</td><td>IntraActivitySequencing</td><td>assertEvent + ActionRequestEvent per account; SendFirstRequestEvent after loop</td></tr>
+      <tr><td>isActResub</td><td><code>RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted</code></td><td>→ PurgePendingRequestsBeforeResubmit</td></tr>
+      <tr><td>Per-account resub guard</td><td><code>CompletionStatus==2 &amp;&amp; ReferenceId==refId</code></td><td>Skips already-successful accounts</td></tr>
+      <tr><td>param tpc_reasonCode</td><td><code>GetActivityParamValueFromKey(…, "reasonCode")</code></td><td>Comment: True prompt care [Music add charge]</td></tr>
+      <tr><td>param cal_creditlimit</td><td><code>GetActivityParameterValueFromKey(…, "CAL_CREDITLIMIT")</code></td><td>Note: different helper function from tpc_reasonCode</td></tr>
+      <tr><td>LogicalDate</td><td>Read into <code>logicalDateVal</code></td><td><span class="badge badge-red">UNUSED</span> — never referenced in XSLT or logic</td></tr>
+      <tr><td>Request logger</td><td><code>Event.sendEvent</code></td><td>Different from <code>Event.Ext.sendEventImmediate</code> used elsewhere</td></tr>
+      <tr><td>Response logger</td><td><code>Event.Ext.sendEventImmediate</code></td><td>LOG_LEVEL = ERROR (hardcoded)</td></tr>
+      <tr><td>Skip condition</td><td><code>isSkipped == true</code> after loop</td><td>SkipActivity("4")</td></tr>
+      <tr><td>Post-loop</td><td>SendFirstRequestEvent + Status="1" + SendDataToDB</td><td></td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td><td>Returns "true"/"false"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 CAL_CREDITLIMIT pre-calculation -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> CAL_CREDITLIMIT Pre-Calculation (per Account)</div>
+  <div class="section-body">
+    <p style="font-size:0.88rem;margin-bottom:10px">When activity parameter <code>CAL_CREDITLIMIT="Y"</code>, the rule recalculates <code>account.AccountManagementInfo.PersonalCreditLimit</code> before constructing the JMS event:</p>
+    <div class="code-block"><span class="cm">// Step 1: existing credit limit</span>
+personalCreditLimit =
+    <span class="kw">if</span>(PersonalCreditLimit &gt; 0)
+        PersonalCreditLimit
+    <span class="kw">else if</span>(ExtendedInfo[<span class="str">"ODS_CREDIT_LIMIT"</span>]/Value &gt; 0)
+        ExtendedInfo[<span class="str">"ODS_CREDIT_LIMIT"</span>]/Value
+    <span class="kw">else</span>
+        0
+
+<span class="cm">// Step 2: sum of FE-origin offer charges on this account's subscribers</span>
+amountIntVat = sum(
+    ParentOU/Subscriber[AccountRefId == $refId]
+        /SubscriberOffers[ExtendedInfo[FE_OR_CCBS=<span class="str">"FE"</span>]]
+        /ExtendedInfo[Name=<span class="str">"AMOUNT_IN_VAT"</span>]/Value
+)
+
+<span class="cm">// Step 3: write back</span>
+account.AccountManagementInfo.PersonalCreditLimit = personalCreditLimit + amountIntVat</div>
+    <div class="callout info">The updated <code>PersonalCreditLimit</code> is then sent as <code>ns1:L9PrsnlCreditLimit</code> in the CCBS payload.</div>
+    <div class="callout warning"><strong>Note:</strong> The commented-out old condition was <code>OrderType == "22"</code>. The activity parameter <code>CAL_CREDITLIMIT</code> replaced the hard-coded order type check.</div>
+  </div>
+</div>
+
+<!-- §5 activityReason 4-tier -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> activityReason 4-Tier Priority</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Priority</th><th>Condition</th><th>Value</th></tr>
+      <tr><td>1</td><td><code>calCRFlag == "true"</code> (CAL_CR_FLG=Y in order ExtendedInfo)</td><td><code>"G158"</code></td></tr>
+      <tr><td>2</td><td><code>exists(AccountActivityInfo/ActivityReason) AND length &gt; 0</code></td><td><code>AccountActivityInfo/ActivityReason</code></td></tr>
+      <tr><td>3</td><td><code>length(tpc_reasonCode) &gt; 0</code></td><td><code>tpc_reasonCode</code> (activity parameter "reasonCode")</td></tr>
+      <tr><td>4 (default)</td><td>else</td><td><code>"CREQ"</code></td></tr>
+    </table>
+    <div class="callout info">The commented-out old XSLT had only 3 tiers (no tpc_reasonCode branch). The active version inserted it between AccountActivityInfo and "CREQ".</div>
+  </div>
+</div>
+
+<!-- §6 Payload -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> Request Payload — CCBS ChangeAccountingManagementInfo</div>
+  <div class="section-body">
+    <h3>Event Headers</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent / event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Always — no conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId</span><span class="tree-cond">[Always — Account.RefId]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="tree-cond">[Credential-gated: IsEnableUserPass="true"]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="tree-cond">[Conditional — NEW vs old XSLT]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>Payload — ns:ChangeAccountingManagementInfoRequest</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">ns:AccountIdInfo</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns:accountNo</span><span class="tree-arrow">←</span><span class="tree-src">number($account/AccountID)</span><span class="tree-cond">[Always — numeric conversion]</span></div></li>
+        </ul>
+      </li>
+      <li><div class="tree-row"><span class="tree-tag">ns1:AccountingManagementInfo</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9AccSubType</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/AccountSubType</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9AccountPriority</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[PRIORITY]/Value</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9AtbCharityCode</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[CHARITY_CODE]/Value or ClearField</span><span class="tree-cond">[exists-conditional; ClearField sentinel passthrough]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9CompanyCode</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/CompanyCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9ConvergenceCode</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[CONVERGENCE_CODE]/Value or ClearField</span><span class="tree-cond">[exists-conditional; ClearField sentinel passthrough]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9CreditClass</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/CreditClass</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9CreditLimitExpDate</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/tempCreditLimitExpDate</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9CreditLimitRsnCode</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/CreditLimitReasonCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9CreditLimitWaiverExpDate</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/CreditLimitWaiverExpDate</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9CreditLimitWaiverInd</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/CreditLimitWaiverInd</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9CustBranchNo</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/BranchNumber</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9CustTaxId</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/TaxId</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9InitiationReason</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[INIT_REASON]/Value</span><span class="tree-cond">[Double-exists-conditional: outer exists() + inner if value]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9LegacyBan</span><span class="tree-arrow">←</span><span class="tree-src">number(ExtendedInfo[LEGACY_BAN]/Value)</span><span class="tree-cond">[Conditional: tib:trim length &gt; 0; numeric conversion]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9ManualBlacklistInd</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/manualBlacklistInd</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9ManualBlacklistRsnCd</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/manualBlacklistRsnCd</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9ManualBlacklistUpDate</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/manualBlacklistUpDate</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9PrsnlCreditLimit</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/PersonalCreditLimit</span><span class="tree-cond">[Conditional — may include CAL_CREDITLIMIT adjustment from §4]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9SpecialInstructions</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[SPECIAL_INSTRUCTION]/Value</span><span class="tree-cond">[exists-conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9TempCreditLimit</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/tempCreditLimit</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9WHTCertiNo</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/WHTCertiNo</span><span class="tree-cond">[Double-exists-conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9WHTInd</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/whtInd</span><span class="tree-cond">[Double-gate: exists() AND whtInd != 0]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:L9WhtTaxUpDate</span><span class="tree-arrow">←</span><span class="tree-src">AccountManagementInfo/whtTaxUpDate</span><span class="tree-cond">[Double-exists-conditional]</span></div></li>
+        </ul>
+      </li>
+      <li><div class="tree-row"><span class="tree-tag">ns:ActivityInfo</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src-static">4-tier priority (§5)</span><span class="tree-cond">[Always — G158 / ActivityReason / tpc_reasonCode / "CREQ"]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:userText</span><span class="tree-arrow">←</span><span class="tree-src">AccountActivityInfo/UserText</span><span class="tree-cond">[Conditional]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §7 Response concept -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> Response Concept — CCBS_ChangeAccountingManagementInfoRes</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">[Conditional]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="callout danger" style="margin-top:12px"><strong>Response OPERATION_NAME is dynamic:</strong> <code>$currActivity/ActivityID</code> (not hardcoded). This allows the same response handler to serve both step 48 and step 49, since both share the same <code>activityId="CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO"</code>.</div>
+    <div class="callout danger"><strong>Response LOG_LEVEL = ERROR:</strong> Hardcoded <code>MSG_LOG_LEVEL/ERROR</code> in the response logger — all responses are logged at ERROR level regardless of success/failure. Should be INFO.</div>
+  </div>
+</div>
+
+<!-- §8 Function tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO (rule)
+├── isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)
+├── logicalDateRes = Instance.getByExtIdByUri("LogicalDate", ...)  [UNUSED — dead variable]
+├── [if isActResub]: PurgePendingRequestsBeforeResubmit(orderCurrentActivity)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── tpc_reasonCode = GetActivityParamValueFromKey(…, "reasonCode")
+├── calCRFlag = XPath.evalAsBoolean(exists(CAL_CR_FLG=Y))
+├── cal_creditlimit = GetActivityParameterValueFromKey(…, "CAL_CREDITLIMIT")
+├── [Account loop i]:
+│   ├── refId = Account[i].RefId
+│   ├── [Resub guard]: scan Response[] for CompletionStatus==2 &amp;&amp; ReferenceId==refId
+│   ├── [if !reqSuccess]:
+│   │   ├── GetXMLForAccount(orderRequest, refId)
+│   │   ├── XPath.execute(PreExecCheck)
+│   │   └── [if "true"]:
+│   │       ├── [if cal_creditlimit=="Y"]:
+│   │       │   ├── personalCreditLimit = XPath.evalAsDouble(PersonalCreditLimit or ODS_CREDIT_LIMIT or 0)
+│   │       │   ├── amountIntVat = XPath.evalAsDouble(sum FE AMOUNT_IN_VAT for this account)
+│   │       │   └── account.PersonalCreditLimit = personalCreditLimit + amountIntVat
+│   │       ├── Event.createEvent(CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO, XSLT: all AccountManagementInfo fields)
+│   │       ├── Event.assertEvent(reqEvent)
+│   │       ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+│   │       ├── Event.sendEvent(Logger: "Request Sent for CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO")
+│   │       └── isSkipped = false
+├── [if !isSkipped]:
+│   ├── IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)
+│   ├── Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch] HandleActivityException
+
+Response_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO (rulefunction)
+├── Instance.createInstance(CCBS_ChangeAccountingManagementInfoRes) { extId, ResponseCode, ReferenceId }
+├── currActivity.Response[] ← res
+├── Event.Ext.sendEventImmediate(Logger: OPERATION_NAME=$currActivity/ActivityID, LOG_LEVEL=ERROR)
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → "true"/"false"</div>
+  </div>
+</div>
+
+<!-- §9 Migration Notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Per-account sequential dispatch via IntraActivitySequencing (not parallel fan-out).</td></tr>
+      <tr><td>R2</td><td>CAL_CREDITLIMIT="Y" → recalculate PersonalCreditLimit before sending: max(PersonalCreditLimit, ODS_CREDIT_LIMIT) + sum(FE AMOUNT_IN_VAT).</td></tr>
+      <tr><td>R3</td><td>calCRFlag (CAL_CR_FLG=Y in order) → forces activityReason="G158" regardless of other parameters.</td></tr>
+      <tr><td>R4</td><td>activityReason 4-tier priority: G158 / AccountActivityInfo.ActivityReason / tpc_reasonCode / "CREQ".</td></tr>
+      <tr><td>R5</td><td>CHARITY_CODE and CONVERGENCE_CODE: pass ClearField sentinel as-is to CCBS when value equals global ClearField sentinel (field-clearing pattern).</td></tr>
+      <tr><td>R6</td><td>L9LegacyBan: <code>number()</code> conversion required; only sent when trimmed value has length &gt; 0.</td></tr>
+      <tr><td>R7</td><td>L9WHTInd: gated by <code>exists() AND whtInd != 0</code> — zero value suppressed.</td></tr>
+      <tr><td>R8</td><td>Response OPERATION_NAME is dynamic (<code>currActivity/ActivityID</code>), enabling reuse across steps 48 and 49.</td></tr>
+    </table>
+
+    <h3 style="margin-top:18px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Response LOG_LEVEL hardcoded to ERROR — all responses logged as errors regardless of outcome</td><td><span class="badge badge-red">HIGH</span></td><td>Change to <code>MSG_LOG_LEVEL/INFO</code> in response audit XSLT</td></tr>
+      <tr><td>logicalDateVal read from LogicalDate concept but never used — dead variable</td><td><span class="badge badge-teal">LOW</span></td><td>Remove the logicalDate read block or implement intended usage</td></tr>
+      <tr><td>Two different helper functions for activity parameters: <code>GetActivityParamValueFromKey</code> vs <code>GetActivityParameterValueFromKey</code> — subtle naming difference</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Verify both functions return the same data; consolidate to single helper in modernization</td></tr>
+      <tr><td>Commented-out old XSLT block left in source — maintenance confusion risk</td><td><span class="badge badge-teal">LOW</span></td><td>Remove dead code after confirming CES + tpc_reasonCode requirements are permanent</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

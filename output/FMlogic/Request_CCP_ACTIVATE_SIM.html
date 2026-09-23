@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_CCP_ACTIVATE_SIM</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.header h1{font-size:2rem;font-weight:700;letter-spacing:1px;}
+.header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.header .meta{margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;opacity:.9;}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:12px;}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600;}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-purple{background:#F3E5F5;color:var(--skip);}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.callout{padding:12px 16px;border-radius:6px;margin:12px 0;border-left:4px solid;}
+.callout-warning{background:#FFF8E1;border-color:var(--warning);color:#5D4037;}
+.callout-info{background:#E3F2FD;border-color:var(--info);color:#0D47A1;}
+.callout-error{background:#FFEBEE;border-color:var(--true-red);color:var(--true-dark);}
+.callout-success{background:#E8F5E9;border-color:var(--success);color:#1B5E20;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:8px 12px 8px 48px;position:relative;border-left:3px solid var(--border);margin-bottom:6px;}
+.step-list li::before{content:counter(step);position:absolute;left:-16px;top:6px;background:var(--true-red);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.kw{color:#cba6f7;}
+.ty{color:#89b4fa;}
+.st{color:#a6e3a1;}
+.cm{color:#6c7086;font-style:italic;}
+.nu{color:#fab387;}
+.fn{color:#f38ba8;}
+.xt{color:#89dceb;}
+.xa{color:#f9e2af;}
+footer{text-align:center;padding:24px;color:#888;font-size:.82rem;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Request_CCP_ACTIVATE_SIM</h1>
+  <div class="subtitle">FM Logic Documentation — CCP SIM Activation (IntraActivitySequencing)</div>
+  <div class="meta">
+    <span class="meta-item">Rule: Rules.OMConsumers.OMXFM.Request.Request_CCP_ACTIVATE_SIM</span>
+    <span class="meta-item">Priority: 5</span>
+    <span class="meta-item">Backend: CCP (Charging &amp; Control Platform)</span>
+    <span class="meta-item">Pattern: IntraActivitySequencing</span>
+    <span class="meta-item">Generated: 2026-09-09</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>CCP_ACTIVATE_SIM</strong> sends an <code>ActivateSimRequest</code> to the CCP (Charging &amp; Control Platform) for each subscriber in the order's ParentOU list. It uses the <strong>IntraActivitySequencing</strong> pattern — requests are queued and dispatched one at a time to avoid parallel flooding of the CCP system. CCP credentials (<code>CCP_USER</code> / <code>CCP_PASSWORD</code>) are sourced from order-level ExtendedInfo. A short <code>requestId</code> is generated from the order's Channel field.</p>
+    <div class="callout callout-error" style="margin-top:12px;">
+      <strong>Critical Bug — Missing ActionResponseEvent:</strong> The response rulefunction does NOT call <code>IntraActivitySequencing.ActionResponseEvent</code> after each response. For multi-subscriber orders, only the first subscriber's SIM activation request will ever be sent — subsequent queued requests are never dispatched. The response RF falls back to a plain count-based fan-in (<code>RequestCount == Response@length</code>) which will never reach equality when N&gt;1 unless all N responses are received (which they cannot be, since only 1 is ever sent).
+    </div>
+    <table style="margin-top:12px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule file</td><td>Request_CCP_ACTIVATE_SIM.rule</td></tr>
+      <tr><td>Response rulefunction</td><td>Response_CCP_ACTIVATE_SIM.rulefunction</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>Forward chain</td><td>true</td></tr>
+      <tr><td>Backend system</td><td>CCP via ESB (TIBCO FM schema)</td></tr>
+      <tr><td>Request event type</td><td><code>Events.OMConsumers.OMXFM.Request.CCP_ACTIVATE_SIM</code></td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.CCP_ACTIVATE_SIM</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td></tr>
+      <tr><td>Payload operation</td><td><code>ActivateSimRequest</code></td></tr>
+      <tr><td>Schema namespace</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd6</code></td></tr>
+      <tr><td>Dispatch scope</td><td>Per ParentOU Subscriber (no ChildOU support)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>priority</td><td>5</td><td>Standard FM priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Enables forward chaining after execution</td></tr>
+      <tr><td>Rule type</td><td>IntraActivitySequencing</td><td><code>assertEvent</code> + <code>ActionRequestEvent</code> + <code>SendFirstRequestEvent</code></td></tr>
+      <tr><td>RequestCount</td><td>Not incremented by this rule</td><td>IntraActivitySequencing manages count internally via the queue</td></tr>
+      <tr><td>Resubmit handling</td><td>Yes</td><td><code>PurgePendingRequestsBeforeResubmit</code> clears queue before re-queueing</td></tr>
+      <tr><td>Skip mechanism</td><td>Yes</td><td>Skips if PreExecCheck fails OR no subscribers found</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Main order state — supplies subscriber list, credentials, Channel</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity — holds the IntraActivitySequencing queue</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity extId matches process flow pointer</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCP_ACTIVATE_SIM"</code></td><td>Constrains rule to CCP_ACTIVATE_SIM activity only</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCP_ACTIVATE_SIM"</code></td><td>Double-check via process flow NextActivityID</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity is ready to be executed</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li><strong>Resubmit purge</strong> — if <code>isActResub</code>: call <code>PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code> to clear any previous queue state</li>
+      <li><strong>Load activity config</strong> — <code>Instance.getByExtIdByUri(NextActivityName)</code> → <code>nextAct</code></li>
+      <li><strong>PreExecCheck</strong> — if <code>nextAct.PreExecCheck</code> non-empty: serialize full <code>orderRequest</code> to XML → XPath evaluate → sets <code>chkRes</code></li>
+      <li><strong>Extract CCP credentials</strong> — iterate <code>orderRequest.OrderData.ExtendedInfo[]</code> looking for <code>CCP_USER</code> and <code>CCP_PASSWORD</code> keys</li>
+      <li><strong>Compute requestId</strong> — <code>"OMX" + Channel + "000000000"</code> → truncate to 12 chars</li>
+      <li><strong>Per-subscriber loop</strong> — iterate <code>ParentOU[i].Subscriber[j]</code>:
+        <ul style="margin-top:6px;margin-left:20px;">
+          <li>Build <code>CCP_ACTIVATE_SIM</code> event with <code>ActivateSimRequest</code> payload (user, password, msisdn, requestId)</li>
+          <li><code>Event.assertEvent(reqEvent)</code> — asserts event into working memory</li>
+          <li><code>IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)</code> — enqueues event for sequential dispatch</li>
+          <li>Send audit log (unconditionally per iteration)</li>
+          <li>Set <code>isSkipped = false</code></li>
+        </ul>
+      </li>
+      <li><strong>Dispatch first request</strong> — <code>IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)</code> — sends only the first queued request</li>
+      <li><strong>Status transition</strong> — <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></li>
+    </ol>
+    <div class="callout callout-warning" style="margin-top:12px;">
+      <strong>Audit log inside subscriber loop:</strong> The audit log send (<code>Event.Ext.sendEventImmediate(Logger...)</code>) occurs inside the per-subscriber loop on each iteration — so N audit events are sent for N subscribers even though only the first JMS request is dispatched. The audit payload copies the full <code>$reqEvent</code> structure (no payload filtering).
+    </div>
+    <div class="callout callout-info" style="margin-top:8px;">
+      <strong>PreExecCheck scope:</strong> The PreExecCheck is evaluated once at the activity level using the entire serialized <code>orderRequest</code>. This differs from per-offer PreExecCheck patterns used by CAT_GET_SWF. If PreExecCheck fails, ALL subscriber activations are skipped.
+    </div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Annotated Logic</div>
+  <div class="section-body">
+    <pre><code><span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+
+<span class="cm">// Purge stale queue on resubmit</span>
+<span class="kw">if</span>(isActResub) {
+    RuleFunctions.Helpers.IntraActivitySequencing.<span class="fn">PurgePendingRequestsBeforeResubmit</span>(orderCurrentActivity);
+}
+
+<span class="kw">try</span> {
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct = Instance.getByExtIdByUri(...);
+    <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+    <span class="kw">String</span> chkRes = <span class="st">"true"</span>;
+
+    <span class="cm">// Activity-level PreExecCheck using full orderRequest serialization</span>
+    <span class="kw">if</span>(String.length(nextAct.PreExecCheck) &gt; <span class="nu">0</span>) {
+        <span class="kw">String</span> sXML = Instance.serializeUsingDefaults(orderRequest);
+        <span class="kw">String</span> chkXPath = nextAct.PreExecCheck;
+        chkRes = XPath.execute(<span class="st">"/("+chkXPath+")"</span>, sXML, <span class="st">"ns0=..."</span>);
+    }
+
+    <span class="kw">if</span>(String.equals(chkRes, <span class="st">"true"</span>)) {
+        <span class="cm">// Extract CCP credentials from OrderData.ExtendedInfo</span>
+        <span class="kw">String</span> ccp_user = <span class="st">""</span>;
+        <span class="kw">String</span> ccp_password = <span class="st">""</span>;
+        <span class="kw">for</span>(<span class="kw">int</span> i = <span class="nu">0</span>; i &lt; orderRequest.OrderData.ExtendedInfo@length; i++) {
+            <span class="kw">if</span>(String.equals(exInfo.Name, <span class="st">"CCP_USER"</span>))     ccp_user = exInfo.Value;
+            <span class="kw">if</span>(String.equals(exInfo.Name, <span class="st">"CCP_PASSWORD"</span>)) ccp_password = exInfo.Value;
+        }
+
+        <span class="cm">// requestId = "OMX" + Channel + "000000000" truncated to 12 chars</span>
+        <span class="kw">String</span> requestId = <span class="st">"OMX"</span> + orderRequest.OrderData.Channel + <span class="st">"000000000"</span>;
+        requestId = String.substring(requestId, <span class="nu">0</span>, <span class="nu">12</span>);
+
+        <span class="cm">// Per-subscriber dispatch loop</span>
+        <span class="kw">int</span> pOuLen = orderRequest.OrderData.Customer.ParentOU@length;
+        <span class="kw">for</span>(<span class="kw">int</span> i = <span class="nu">0</span>; i &lt; pOuLen; i++) {
+            <span class="kw">String</span> pOuRefId = orderRequest.OrderData.Customer.ParentOU[i].RefId;
+            <span class="kw">for</span>(<span class="kw">int</span> j = <span class="nu">0</span>; j &lt; ou.Subscriber@length; j++) {
+                <span class="ty">Concepts.OrderRequest.OrderElements.Subscriber</span> sub = ou.Subscriber[j];
+                <span class="cm">// [XSLT builds ActivateSimRequest — see §9.7]</span>
+                Events.OMConsumers.OMXFM.Request.<span class="ty">CCP_ACTIVATE_SIM</span> reqEvent = Event.createEvent(<span class="st">"xslt://..."</span>);
+                Event.assertEvent(reqEvent);
+                RuleFunctions.Helpers.IntraActivitySequencing.<span class="fn">ActionRequestEvent</span>(reqEvent, orderCurrentActivity);
+                <span class="cm">// Audit log per-subscriber (unconditional — no AllowWriteLog check!)</span>
+                <span class="kw">long</span> pid = System.nanoTime();
+                Event.Ext.sendEventImmediate(Event.createEvent(<span class="st">"xslt://Logger..."</span>));
+                isSkipped = <span class="kw">false</span>;
+            }
+        }
+    }
+
+    <span class="kw">if</span>(!isSkipped) {
+        RuleFunctions.Helpers.IntraActivitySequencing.<span class="fn">SendFirstRequestEvent</span>(orderCurrentActivity);
+        orderCurrentActivity.Status = RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+        RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+    } <span class="kw">else</span> {
+        RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+    }
+} <span class="kw">catch</span>(<span class="ty">Exception</span> ae) {
+    RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</code></pre>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:8px;">CCP Credentials from ExtendedInfo</h3>
+    <table>
+      <tr><th>ExtendedInfo key</th><th>Target variable</th><th>Notes</th></tr>
+      <tr><td><code>CCP_USER</code></td><td><code>ccp_user</code></td><td>CCP system username; placed in <code>&lt;user&gt;</code> payload field</td></tr>
+      <tr><td><code>CCP_PASSWORD</code></td><td><code>ccp_password</code></td><td>CCP system password; placed in <code>&lt;password&gt;</code> payload field</td></tr>
+    </table>
+    <div class="callout callout-warning" style="margin-top:12px;">
+      <strong>Security concern:</strong> CCP credentials are stored in plaintext in <code>orderRequest.OrderData.ExtendedInfo</code>. These are included verbatim in the JMS payload. If <code>WritePayload="true"</code> in global variables, the password will appear in audit logs.
+    </div>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">requestId Generation</h3>
+    <pre><code><span class="kw">String</span> requestId = <span class="st">"OMX"</span> + orderRequest.OrderData.Channel + <span class="st">"000000000"</span>;
+requestId = String.substring(requestId, <span class="nu">0</span>, <span class="nu">12</span>);
+<span class="cm">// Example: Channel="RETAIL" → "OMXRETAIL000000000" → substring(0,12) = "OMXRETAIL000"</span>
+<span class="cm">// Example: Channel="DT"    → "OMXDT000000000"     → substring(0,12) = "OMXDT0000000"</span></code></pre>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      <strong>requestId collision risk:</strong> The requestId is derived only from the Channel field — all orders from the same channel get the same requestId. This is NOT unique per request or per subscriber. CCP may use requestId for deduplication; sending the same requestId for multiple activations could cause silent failures or idempotency conflicts.
+    </div>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="margin-bottom:8px;">§8.1 — Order Type Dependencies</h3>
+    <p>Fires for any order with PreExecCheck satisfied and at least one ParentOU subscriber. Typically used in PREPAID_REGISTRATION (step 17) to activate a new prepaid SIM.</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.CCP_ACTIVATE_SIM</code></td><td>ActivateSimRequest to CCP (first only per IntraActivitySequencing)</td></tr>
+      <tr><td><span class="badge badge-log">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Request audit (inside subscriber loop — unconditional, no AllowWriteLog gate)</td></tr>
+    </table>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      <strong>Audit log gate missing in request rule:</strong> Unlike most FMs, the request audit log is sent unconditionally (no <code>AllowWriteLog</code> check). The response RF does gate its audit log with <code>AllowWriteLog</code>.
+    </div>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Protocol</th><th>Schema</th></tr>
+      <tr><td>CCP</td><td>ActivateSim</td><td>JMS async (IntraActivitySequencing)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd6</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept path</th><th>Access</th><th>Purpose</th></tr>
+      <tr><td><code>orderRequest.OrderData.Channel</code></td><td>Read</td><td>requestId generation</td></tr>
+      <tr><td><code>orderRequest.OrderData.ExtendedInfo[Name="CCP_USER"].Value</code></td><td>Read</td><td>CCP username</td></tr>
+      <tr><td><code>orderRequest.OrderData.ExtendedInfo[Name="CCP_PASSWORD"].Value</code></td><td>Read</td><td>CCP password</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].RefId</code></td><td>Read</td><td>RefID header in JMS event</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].Subscriber[*].MSISDN</code></td><td>Read</td><td>MSISDN for SIM activation</td></tr>
+      <tr><td><code>orderRequest.OrderData.OMXTrackingId</code></td><td>Read</td><td>JMSCorrelationID</td></tr>
+      <tr><td><code>orderRequest.OrderData.OrderType</code></td><td>Read</td><td>Response audit gate (AllowWriteLog)</td></tr>
+      <tr><td><code>orderCurrentActivity.Status</code></td><td>Write</td><td>Status transition</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.5 — ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Key</th><th>Source</th><th>Required?</th><th>Purpose</th></tr>
+      <tr><td><code>CCP_USER</code></td><td><code>orderRequest.OrderData.ExtendedInfo</code></td><td>Required</td><td>CCP system authentication username</td></tr>
+      <tr><td><code>CCP_PASSWORD</code></td><td><code>orderRequest.OrderData.ExtendedInfo</code></td><td>Required</td><td>CCP system authentication password (plaintext)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Variable path</th><th>Used in</th></tr>
+      <tr><td><code>$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>Request XSLT — include UserName/PassWord if "true"</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit log COMPONENT_NAME</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit log TARGET_SYSTEM</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit log LOG_LEVEL</td></tr>
+      <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Response audit payload gating</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Detailed Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3 style="margin-bottom:8px;">§9.1 — XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>XSLT param</th><th>Bound from</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>Working memory <code>orderRequest</code> concept</td></tr>
+      <tr><td><code>$pOuRefId</code></td><td><code>orderRequest.OrderData.Customer.ParentOU[i].RefId</code></td></tr>
+      <tr><td><code>$globalVariables</code></td><td>Global variable store</td></tr>
+      <tr><td><code>$ccp_user</code></td><td>Extracted from <code>ExtendedInfo[Name="CCP_USER"].Value</code></td></tr>
+      <tr><td><code>$ccp_password</code></td><td>Extracted from <code>ExtendedInfo[Name="CCP_PASSWORD"].Value</code></td></tr>
+      <tr><td><code>$sub</code></td><td>Current subscriber: <code>ParentOU[i].Subscriber[j]</code></td></tr>
+      <tr><td><code>$requestId</code></td><td>Computed: <code>"OMX" + Channel</code> truncated to 12 chars</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.2 — Event Container Construction</h3>
+    <p>Event type: <code>Events.OMConsumers.OMXFM.Request.CCP_ACTIVATE_SIM</code> (dedicated event type, not shared)</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td>Always (no xsl:if guard)</td></tr>
+      <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>If OMXTrackingId present</td></tr>
+      <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td>If OrderID present</td></tr>
+      <tr><td><code>RefID</code></td><td><code>$pOuRefId</code> (ParentOU RefId)</td><td>Always</td></tr>
+      <tr><td><code>UserName</code></td><td><code>$orderRequest/OrderData/User</code></td><td>If IsEnableUserPass="true" and User present</td></tr>
+      <tr><td><code>PassWord</code></td><td><code>$orderRequest/OrderData/Password</code></td><td>If IsEnableUserPass="true" and Password present</td></tr>
+      <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>If OrderType present</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.4 — Payload Root Element</h3>
+    <p><code>&lt;ns:ActivateSimRequest&gt;</code> (namespace: <code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd6</code>)</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.5 — Core Payload Fields</h3>
+    <table>
+      <tr><th>XML element</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>user</code></td><td><code>$ccp_user</code></td><td>CCP username from ExtendedInfo</td></tr>
+      <tr><td><code>password</code></td><td><code>$ccp_password</code></td><td>CCP password from ExtendedInfo (plaintext)</td></tr>
+      <tr><td><code>msisdn</code></td><td><code>$sub/MSISDN</code></td><td>Subscriber MSISDN to activate</td></tr>
+      <tr><td><code>requestId</code></td><td><code>$requestId</code></td><td>Channel-based 12-char ID (non-unique per request)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.6 — Complete Generated XML Example</h3>
+    <pre><code><span class="xt">&lt;ns:ActivateSimRequest</span> <span class="xa">xmlns:ns</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd6"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;user&gt;</span>ccp_system_user<span class="xt">&lt;/user&gt;</span>
+  <span class="xt">&lt;password&gt;</span>ccp_system_pass<span class="xt">&lt;/password&gt;</span>
+  <span class="xt">&lt;msisdn&gt;</span>0812345678<span class="xt">&lt;/msisdn&gt;</span>
+  <span class="xt">&lt;requestId&gt;</span>OMXRETAIL000<span class="xt">&lt;/requestId&gt;</span>
+<span class="xt">&lt;/ns:ActivateSimRequest&gt;</span></code></pre>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.7 — XSLT Stylesheet Source (Request)</h3>
+    <pre><code><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:ns</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd6"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:xsd</span>=<span class="st">"http://www.w3.org/2001/XMLSchema"</span>
+  <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="cm">&lt;!-- params: $orderRequest, $pOuRefId, $globalVariables, $ccp_user, $ccp_password, $sub, $requestId --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="xt">&lt;JMSPriority&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;&lt;/JMSPriority&gt;</span>
+      <span class="cm">&lt;!-- JMSCorrelationID (if OMXTrackingId) --&gt;</span>
+      <span class="cm">&lt;!-- OrderID (if OrderID) --&gt;</span>
+      <span class="xt">&lt;RefID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$pOuRefId"</span><span class="xt">/&gt;&lt;/RefID&gt;</span>
+      <span class="cm">&lt;!-- UserName, PassWord (if IsEnableUserPass="true") --&gt;</span>
+      <span class="cm">&lt;!-- OrderType (if OrderType) --&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns:ActivateSimRequest&gt;</span>
+          <span class="xt">&lt;user&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$ccp_user"</span><span class="xt">/&gt;&lt;/user&gt;</span>
+          <span class="xt">&lt;password&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$ccp_password"</span><span class="xt">/&gt;&lt;/password&gt;</span>
+          <span class="xt">&lt;msisdn&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$sub/MSISDN"</span><span class="xt">/&gt;&lt;/msisdn&gt;</span>
+          <span class="xt">&lt;requestId&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$requestId"</span><span class="xt">/&gt;&lt;/requestId&gt;</span>
+        <span class="xt">&lt;/ns:ActivateSimRequest&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></code></pre>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$pOuRefId (ParentOU RefId)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge badge-green">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:ActivateSimRequest</span><span class="badge badge-green">Always</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">user</span><span class="tree-arrow">←</span><span class="tree-src">$ccp_user (from ExtendedInfo[CCP_USER])</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">password</span><span class="tree-arrow">←</span><span class="tree-src">$ccp_password (from ExtendedInfo[CCP_PASSWORD])</span><span class="badge badge-green">Always</span><span class="badge badge-red" style="margin-left:4px;">SENSITIVE</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">msisdn</span><span class="tree-arrow">←</span><span class="tree-src">$sub/MSISDN</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">requestId</span><span class="tree-arrow">←</span><span class="tree-src">$requestId ("OMX"+Channel truncated to 12)</span><span class="badge badge-green">Always</span><span class="badge badge-orange" style="margin-left:4px;">NON-UNIQUE</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:12px;font-size:.8rem;color:#666;"><strong>Legend:</strong> <span class="badge badge-green">Always</span> = unconditional &nbsp; <span class="badge badge-orange">Conditional</span> = inside xsl:if &nbsp; <span class="badge badge-purple">Credential-gated</span> = behind IsEnableUserPass &nbsp; <span class="badge badge-red">SENSITIVE</span> = plaintext credential</p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Event</th><th>Trigger</th><th>Key fields</th></tr>
+      <tr>
+        <td>Request audit (per subscriber)</td>
+        <td><strong>Unconditional</strong> (no AllowWriteLog check)</td>
+        <td><code>OPERATION_NAME="CCP_ACTIVATE_SIM"</code>, <code>AUDIT_TRACE="Request Sent for CCP_ACTIVATE_SIM"</code>, <code>PROCESS_ID=concat(pid,"_REQ")</code>; payload = full <code>$reqEvent</code> copy (includes password if WritePayload=true)</td>
+      </tr>
+      <tr>
+        <td>Response audit</td>
+        <td><code>AllowWriteLog(OrderType)</code> = true</td>
+        <td><code>OPERATION_NAME="CCP_ACTIVATE_SIM"</code>, <code>AUDIT_TRACE="Response received for CCP_ACTIVATE_SIM"</code>, <code>PROCESS_ID=concat(pid,"_RES")</code></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Activity Status Management -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Action</th><th>Status code</th></tr>
+      <tr><td>At least one subscriber found and PreExecCheck passes</td><td><code>SendFirstRequestEvent</code> + <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" = PROCESSING / SENT</td></tr>
+      <tr><td>PreExecCheck fails OR no subscribers found</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" = SKIPPED</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <pre><code><span class="kw">catch</span>(<span class="ty">Exception</span> ae) {
+    RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</code></pre>
+    <p>Standard catch-all; delegates to <code>HandleActivityException</code>.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)</code></td><td>Clears the sequential dispatch queue for clean resubmit</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionRequestEvent(event, activity)</code></td><td>Enqueues an event for sequential dispatch</td></tr>
+      <tr><td><code>IntraActivitySequencing.SendFirstRequestEvent(activity)</code></td><td>Dequeues and dispatches the first queued request</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetActivityStatusString(code, flag)</code></td><td>Translates numeric code to activity status string</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.SendDataToDB(orderRequest)</code></td><td>Persists current order state to database</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.SkipActivity(orderRequest, activity, code)</code></td><td>Marks activity as skipped and advances flow</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.HandleActivityException(orderRequest, activity, ex, msg)</code></td><td>Logs exception and transitions to error state</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.AllowWriteLog(orderType)</code></td><td>Response RF only — gates response audit log</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><code>Request_CCP_ACTIVATE_SIM (rule)
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit()  [on resubmit]
+├── Instance.getByExtIdByUri()
+├── Instance.serializeUsingDefaults()                             [PreExecCheck serialization]
+├── XPath.execute()                                               [PreExecCheck]
+├── String.equals(), String.length(), String.substring()
+├── Event.createEvent()                                           [ActivateSimRequest XSLT]
+├── Event.assertEvent()
+├── IntraActivitySequencing.ActionRequestEvent()
+├── System.nanoTime()
+├── Event.Ext.sendEventImmediate()                               [audit log — no AllowWriteLog gate]
+├── IntraActivitySequencing.SendFirstRequestEvent()
+├── Helpers.GetActivityStatusString()
+├── Helpers.SendDataToDB()
+├── Helpers.SkipActivity()
+└── Helpers.HandleActivityException()
+
+Response_CCP_ACTIVATE_SIM (rulefunction)
+├── Instance.createInstance()                                     [ResponseBase XSLT]
+├── Helpers.AllowWriteLog()
+├── System.nanoTime()
+├── Event.createEvent()                                          [Logger XSLT]
+├── Event.Ext.sendEventImmediate()
+└── [fan-in] currActivity.RequestCount == currActivity.Response@length → "true"/"false"</code></pre>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Used in</th><th>Key fields</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Request rule, Response RF</td><td>OrderData.Channel, OrderData.ExtendedInfo[], OrderData.Customer.ParentOU[].Subscriber[]</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Request rule, Response RF</td><td>ActivityID, Status, RequestCount, Response[], PreExecCheck (IntraActivitySequencing queue via internal helpers)</td></tr>
+      <tr><td><code>Concepts.FM.Base.ResponseBase</code></td><td>Response RF</td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.ParentOU</code></td><td>Request rule (read)</td><td>RefId, Subscriber[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>Request rule (read)</td><td>MSISDN</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:8px;">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Send ActivateSimRequest to CCP for each ParentOU subscriber</td></tr>
+      <tr><td>R2</td><td>Apply activity-level PreExecCheck before any dispatch (serializes full orderRequest)</td></tr>
+      <tr><td>R3</td><td>Retrieve CCP_USER and CCP_PASSWORD from order ExtendedInfo</td></tr>
+      <tr><td>R4</td><td>Generate requestId from Channel field (12-char "OMX" + Channel prefix)</td></tr>
+      <tr><td>R5</td><td>Use IntraActivitySequencing for sequential (non-parallel) dispatch</td></tr>
+      <tr><td>R6</td><td>Support resubmit by purging queue before re-queueing</td></tr>
+      <tr><td>R7</td><td>Fan-in: complete when all responses received (RequestCount == Response count)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td><strong>Critical Bug: Missing ActionResponseEvent</strong> — Response RF does NOT call <code>IntraActivitySequencing.ActionResponseEvent</code>. For orders with more than 1 subscriber, only the first SIM activation is sent; remaining queued requests are never dispatched. The fan-in check (<code>RequestCount == Response@length</code>) will also never complete because subsequent subscribers' responses will never arrive.</td>
+        <td><span class="badge badge-red">CRITICAL</span></td>
+        <td>Add <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> call in response RF before the fan-in return; change fan-in to use its return value</td>
+      </tr>
+      <tr>
+        <td><strong>requestId not unique per request:</strong> All orders from the same channel share the same requestId. CCP may use requestId for idempotency, causing silent deduplication failures.</td>
+        <td><span class="badge badge-red">HIGH</span></td>
+        <td>Include OMXTrackingId or subscriber MSISDN in requestId to make it unique</td>
+      </tr>
+      <tr>
+        <td><strong>No ChildOU subscriber support:</strong> Only <code>ParentOU[*].Subscriber[*]</code> is iterated. ChildOU subscribers are never activated.</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Add ChildOU subscriber loop (same pattern as CCP_ADD_HOME_ZONE and CAT_GET_SWF)</td>
+      </tr>
+      <tr>
+        <td><strong>Plaintext password in audit log:</strong> Request audit sends full <code>$reqEvent</code> payload (includes <code>&lt;password&gt;</code>) when <code>WritePayload="true"</code>. The password is not masked.</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Mask the password field in the audit XSLT or log only the msisdn/requestId fields</td>
+      </tr>
+      <tr>
+        <td><strong>Unconditional request audit:</strong> Request audit log fires for every subscriber regardless of <code>AllowWriteLog(OrderType)</code>. Inconsistent with other FMs and may cause excess audit volume for non-loggable order types.</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Wrap request audit in <code>if(AllowWriteLog(orderRequest.OrderData.OrderType))</code></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Request Rule)</div>
+  <div class="section-body">
+    <pre><code><span class="cm">/**
+ * @description
+ * @author DESKTOP-HINKNF3
+ */</span>
+<span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.<span class="ty">Request_CCP_ACTIVATE_SIM</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> {
+        Concepts.OrderRequest.<span class="ty">OrderRequest</span> orderRequest;
+        Concepts.OM.ProcessConfig.<span class="ty">Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"CCP_ACTIVATE_SIM"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"CCP_ACTIVATE_SIM"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">if</span>(isActResub)
+            RuleFunctions.Helpers.IntraActivitySequencing.<span class="fn">PurgePendingRequestsBeforeResubmit</span>(orderCurrentActivity);
+
+        <span class="kw">try</span> {
+            Concepts.OM.ProcessConfig.<span class="ty">Activity</span> nextAct = Instance.getByExtIdByUri(
+                orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+            <span class="kw">String</span> chkRes = <span class="st">"true"</span>;
+
+            <span class="cm">// Activity-level PreExecCheck (full orderRequest serialization)</span>
+            <span class="kw">if</span>(String.length(nextAct.PreExecCheck) &gt; <span class="nu">0</span>) {
+                <span class="kw">String</span> sXML = Instance.serializeUsingDefaults(orderRequest);
+                chkRes = XPath.execute(<span class="st">"/("+nextAct.PreExecCheck+")"</span>, sXML, <span class="st">"ns0=..."</span>);
+            }
+
+            <span class="kw">if</span>(String.equals(chkRes, <span class="st">"true"</span>)) {
+                <span class="cm">// Extract CCP credentials from ExtendedInfo</span>
+                <span class="kw">String</span> ccp_user = <span class="st">""</span>, ccp_password = <span class="st">""</span>;
+                <span class="kw">for</span>(<span class="kw">int</span> i = <span class="nu">0</span>; i &lt; orderRequest.OrderData.ExtendedInfo@length; i++) {
+                    Concepts.OrderRequest.OrderElements.ExtendedInfos.<span class="ty">OrderDataExtendedInfo</span> exInfo =
+                        orderRequest.OrderData.ExtendedInfo[i];
+                    <span class="kw">if</span>(String.equals(exInfo.Name, <span class="st">"CCP_USER"</span>))     ccp_user = exInfo.Value;
+                    <span class="kw">if</span>(String.equals(exInfo.Name, <span class="st">"CCP_PASSWORD"</span>)) ccp_password = exInfo.Value;
+                }
+
+                <span class="cm">// requestId = "OMX" + Channel (truncated to 12 chars)</span>
+                <span class="kw">String</span> requestId = String.substring(
+                    <span class="st">"OMX"</span> + orderRequest.OrderData.Channel + <span class="st">"000000000"</span>, <span class="nu">0</span>, <span class="nu">12</span>);
+
+                <span class="cm">// Per-subscriber dispatch</span>
+                <span class="kw">int</span> pOuLen = orderRequest.OrderData.Customer.ParentOU@length;
+                <span class="kw">for</span>(<span class="kw">int</span> i = <span class="nu">0</span>; i &lt; pOuLen; i++) {
+                    Concepts.OrderRequest.OrderElements.<span class="ty">ParentOU</span> ou = orderRequest.OrderData.Customer.ParentOU[i];
+                    <span class="kw">String</span> pOuRefId = orderRequest.OrderData.Customer.ParentOU[i].RefId;
+                    <span class="kw">for</span>(<span class="kw">int</span> j = <span class="nu">0</span>; j &lt; ou.Subscriber@length; j++) {
+                        Concepts.OrderRequest.OrderElements.<span class="ty">Subscriber</span> sub = ou.Subscriber[j];
+                        <span class="cm">// [XSLT builds ActivateSimRequest with user, password, msisdn, requestId — see §9.7]</span>
+                        Events.OMConsumers.OMXFM.Request.<span class="ty">CCP_ACTIVATE_SIM</span> reqEvent =
+                            Event.createEvent(<span class="st">"xslt://..."</span>);
+                        Event.assertEvent(reqEvent);
+                        RuleFunctions.Helpers.IntraActivitySequencing.<span class="fn">ActionRequestEvent</span>(reqEvent, orderCurrentActivity);
+                        <span class="cm">// Audit log — NOTE: no AllowWriteLog gate here (unlike most FMs)</span>
+                        <span class="kw">long</span> pid = System.nanoTime();
+                        Event.Ext.sendEventImmediate(Event.createEvent(<span class="st">"xslt://Logger..."</span>));
+                        isSkipped = <span class="kw">false</span>;
+                    }
+                }
+            }
+
+            <span class="kw">if</span>(!isSkipped) {
+                RuleFunctions.Helpers.IntraActivitySequencing.<span class="fn">SendFirstRequestEvent</span>(orderCurrentActivity);
+                orderCurrentActivity.Status = RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+                RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+            } <span class="kw">else</span> {
+                RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+            }
+        } <span class="kw">catch</span>(<span class="ty">Exception</span> ae) {
+            RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule (Response_CCP_ACTIVATE_SIM)</div>
+  <div class="section-body">
+
+    <h3 style="margin-bottom:8px;">§19.1 — Overview</h3>
+    <p>Creates a <code>ResponseBase</code> concept from the <code>CCP_ACTIVATE_SIM</code> response event, appends it to <code>currActivity.Response[]</code>, logs the response (if allowed), then checks fan-in completion via <code>RequestCount == Response@length</code>. Returns <code>"true"</code> when all responses received, <code>"false"</code> otherwise.</p>
+    <div class="callout callout-error">
+      <strong>Critical Bug:</strong> This response RF does NOT call <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> to dispatch the next queued request. With IntraActivitySequencing in the request rule, subsequent requests (for orders with N&gt;1 subscribers) will never be sent. This effectively makes CCP_ACTIVATE_SIM only work for single-subscriber orders.
+    </div>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order context for audit log gate</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCP_ACTIVATE_SIM</code></td><td>CCP response event</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity; Response[] array and RequestCount for fan-in</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.3 — ResponseBase Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">@extId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/@extId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.4 — Response Completion Logic</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == currActivity.Response@length</code></td></tr>
+      <tr><td>Return "true"</td><td>All responses received (equal count)</td></tr>
+      <tr><td>Return "false"</td><td>Waiting for more responses</td></tr>
+      <tr><td>Missing piece</td><td>No <code>IntraActivitySequencing.ActionResponseEvent</code> call — next queued request never dispatched</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.5 — Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td><code>OPERATION_NAME</code></td><td><code>"CCP_ACTIVATE_SIM"</code> (no trailing space)</td></tr>
+      <tr><td><code>AUDIT_TRACE</code></td><td><code>"Response received for CCP_ACTIVATE_SIM"</code> (no trailing space)</td></tr>
+      <tr><td><code>PROCESS_ID</code></td><td><code>concat(pid, "_RES")</code></td></tr>
+      <tr><td><code>payload</code></td><td>Full <code>$eventResponse</code> copy, gated on <code>WritePayload="true"</code></td></tr>
+      <tr><td>Gate</td><td><code>AllowWriteLog(orderRequest.OrderData.OrderType)</code></td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCP_ACTIVATE_SIM</footer>
+</body>
+</html>

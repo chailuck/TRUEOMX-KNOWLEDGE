@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>POSTPAID_UPDATE_PARAMETER — Order Journey</title>
+<style>
+:root {
+  --true-red:#CC0000; --true-dark:#8B0000; --true-deep:#5C0000;
+  --true-light:#FF5252; --true-pale:#FFF5F5;
+  --success:#2e7d32; --warning:#e65100; --info:#1565c0; --skip:#6a1b9a;
+  --bg:#F9F9F9; --card:#FFFFFF; --border:#E0E0E0;
+  --code-bg:#1e1e2e; --code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#222;font-size:14px;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px 24px;}
+.page-header h1{font-size:1.7rem;font-weight:700;}
+.page-header .subtitle{opacity:0.85;margin-top:6px;font-size:0.95rem;}
+.meta-row{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;}
+.meta-chip{background:rgba(255,255,255,0.18);border-radius:20px;padding:4px 14px;font-size:0.82rem;}
+.container{max-width:1400px;margin:0 auto;padding:24px 20px;}
+.card{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:22px;overflow:hidden;}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light);}
+.card-body{padding:18px 20px;}
+table{width:100%;border-collapse:collapse;font-size:0.855rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 10px;text-align:left;white-space:nowrap;}
+td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafafa;}
+code{font-family:'Cascadia Code','Consolas',monospace;background:#f0e8e8;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:0.82em;}
+pre{font-family:'Cascadia Code','Consolas',monospace;background:var(--code-bg);color:var(--code-fg);padding:14px;border-radius:8px;overflow-x:auto;font-size:0.8rem;border-left:3px solid var(--true-red);line-height:1.5;}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:0.75rem;font-weight:600;}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-amber{background:#FFF8E1;color:#F57F17;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-gray{background:#F5F5F5;color:#555;}
+.step-num{font-weight:700;color:var(--true-dark);}
+.has-check{border-left:3px solid #FFC107;}
+.fm-link{color:var(--true-dark);text-decoration:none;font-weight:600;}
+.fm-link:hover{color:var(--true-light);text-decoration:underline;}
+.precheck-code{font-size:0.78rem;color:#333;font-family:'Cascadia Code','Consolas',monospace;white-space:pre-wrap;word-break:break-word;background:#FFF9C4;border:1px solid #FFC107;border-radius:4px;padding:4px 8px;display:block;margin-top:4px;}
+details{margin:6px 0;}
+summary{cursor:pointer;color:var(--true-dark);font-weight:600;padding:3px 0;font-size:0.9rem;}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:14px;}
+.fm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;border-top:3px solid var(--true-red);}
+.fm-card h4{color:var(--true-dark);font-size:0.88rem;margin-bottom:6px;}
+.fm-card .fm-meta{font-size:0.8rem;color:#666;margin-bottom:8px;}
+.mermaid-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card);}
+footer{text-align:center;color:#888;font-size:0.82rem;padding:30px;border-top:1px solid var(--border);}
+h3{color:var(--true-dark);margin:14px 0 8px;font-size:0.95rem;}
+.sys-tag{display:inline-block;padding:1px 7px;border-radius:10px;font-size:0.75rem;font-weight:600;margin-right:4px;}
+.sys-ccbs{background:#E3F0FD;color:#1565c0;}
+.sys-omx{background:#F3E5F5;color:#6a1b9a;}
+.sys-aa{background:#E0F2F1;color:#00695c;}
+.sys-psa{background:#FFF3E0;color:#e65100;}
+.sys-mcs{background:#E8F5E9;color:#2e7d32;}
+.sys-sms{background:#FFE0E0;color:#C62828;}
+.sys-intx{background:#E8EAF6;color:#3949AB;}
+.sys-knox{background:#FBE9E7;color:#BF360C;}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:0.8rem;opacity:0.7;margin-bottom:6px;">TRUE Corporation OMX · Order Journey Documentation</div>
+  <h1>POSTPAID_UPDATE_PARAMETER</h1>
+  <div class="subtitle">Process Configuration for POSTPAID_UPDATE_PARAMETER.</div>
+  <div class="meta-row">
+    <span class="meta-chip">Total steps: 37</span>
+    <span class="meta-chip">Unique FMs: 34</span>
+    <span class="meta-chip">Entry point: CCBS_GET_CUST_ACC_SUB_ID</span>
+    <span class="meta-chip">Generated: 2026-08-20</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §2 Order Flow Table -->
+<div class="card">
+<div class="card-header">§2 — Order Flow Table</div>
+<div class="card-body" style="overflow-x:auto;">
+<table>
+<tr>
+  <th>#</th>
+  <th>Step ID</th>
+  <th>FM (ActivityID)</th>
+  <th>System</th>
+  <th>Parameter(s)</th>
+  <th>PreExecCheck</th>
+  <th>Previous</th>
+  <th>Next</th>
+  <th>FM Doc</th>
+</tr>
+<tr class="has-check">
+  <td class="step-num">1</td>
+  <td>CCBS_GET_CUST_ACC_SUB_ID</td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html">CCBS_GET_CUST_ACC_SUB_ID</a></td>
+  <td><span class="sys-tag sys-ccbs">CCBS</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//MSISDN/text())</code></td>
+  <td>START</td>
+  <td>CCBS_GET_CUSTOMER_HEADER</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">2</td>
+  <td>CCBS_GET_CUSTOMER_HEADER</td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_CUSTOMER_HEADER.html">CCBS_GET_CUSTOMER_HEADER</a></td>
+  <td><span class="sys-tag sys-ccbs">CCBS</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">exists(//Customer/CustomerId)</code></td>
+  <td>CCBS_GET_CUST_ACC_SUB_ID</td>
+  <td>CCBS_GET_SUBS_INFO</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">3</td>
+  <td>CCBS_GET_SUBS_INFO</td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">CCBS_GET_SUBS_INFO</a></td>
+  <td><span class="sys-tag sys-ccbs">CCBS</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//Subscriber/SubscriberId)</code></td>
+  <td>CCBS_GET_CUSTOMER_HEADER</td>
+  <td>CCBS_RESOLVE_SOC_CODE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">4</td>
+  <td>CCBS_RESOLVE_SOC_CODE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></td>
+  <td><span class="sys-tag sys-ccbs">CCBS</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[not(Soc/text())])</code></td>
+  <td>CCBS_GET_SUBS_INFO</td>
+  <td>OMX_BIZ_VAL</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr>
+  <td class="step-num">5</td>
+  <td>OMX_BIZ_VAL</td>
+  <td>OMX_BIZ_VAL</td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>—</td>
+  <td>—</td>
+  <td>CCBS_RESOLVE_SOC_CODE</td>
+  <td>OMX_CHECK_UPDATE_KNOX_IMEI</td>
+  <td><span class="badge badge-amber">⚠ Not Found</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">6</td>
+  <td>OMX_CHECK_UPDATE_KNOX_IMEI</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_CHECK_UPDATE_KNOX_IMEI.html">OMX_CHECK_UPDATE_KNOX_IMEI</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='IMEI_KNOX' and Value!='']])</code></td>
+  <td>OMX_BIZ_VAL</td>
+  <td>OMX_SEARCH_FUT_ALL</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">7</td>
+  <td>OMX_SEARCH_FUT_ALL</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_SEARCH_FUT_ALL.html">OMX_SEARCH_FUT_ALL</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>STATUS=1<br/>ORDER_TYPE=4<br/>GET_FUT_ORDER_ID=Y</td>
+  <td><code class="precheck-code">boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ParameterInfo[ParamName='TR_ORIG_CONTRACT_EXPIRE_DATE' and ValuesArray!='']])</code></td>
+  <td>OMX_CHECK_UPDATE_KNOX_IMEI</td>
+  <td>OMX_CAL_OFFER_FUT_DATE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">8</td>
+  <td>OMX_CAL_OFFER_FUT_DATE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">OMX_CAL_OFFER_FUT_DATE</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>CAL_PARAM_EXP=Y<br/>EXCLUDE_OFFER=RMVX00000000001</td>
+  <td><code class="precheck-code">boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]])</code></td>
+  <td>OMX_SEARCH_FUT_ALL</td>
+  <td>AA_GET_SWITCH_FEATURE_OFFER</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr>
+  <td class="step-num">9</td>
+  <td>AA_GET_SWITCH_FEATURE_OFFER</td>
+  <td><a class="fm-link" href="../FMlogic/Request_AA_GET_SWITCH_FEATURE_OFFER.html">AA_GET_SWITCH_FEATURE_OFFER</a></td>
+  <td><span class="sys-tag sys-aa">AA</span></td>
+  <td>—</td>
+  <td>—</td>
+  <td>OMX_CAL_OFFER_FUT_DATE</td>
+  <td>OMX_GET_SRV_TRX_NO</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">10</td>
+  <td>OMX_GET_SRV_TRX_NO</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>CCD</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']]/SwitchFeature[1]) or boolean(…RelatedOffersArray/SwitchFeature[1]) or (//SubscriberOffers/ParameterInfo[ParamName='CFW_NO_PARAM' or …])</code></td>
+  <td>AA_GET_SWITCH_FEATURE_OFFER</td>
+  <td>AA_ACTIVATE_SUBS</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">11</td>
+  <td>AA_ACTIVATE_SUBS</td>
+  <td><a class="fm-link" href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a></td>
+  <td><span class="sys-tag sys-aa">AA</span></td>
+  <td>CCD</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']]/SwitchFeature[1]) or boolean(…RelatedOffersArray/SwitchFeature[1]) or (//SubscriberOffers/ParameterInfo[ParamName='CFW_NO_PARAM' or …])</code></td>
+  <td>OMX_GET_SRV_TRX_NO</td>
+  <td>CCBS_GOD</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">12</td>
+  <td>CCBS_GOD</td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></td>
+  <td><span class="sys-tag sys-ccbs">CCBS</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">exists(//SubscriberOffers)</code></td>
+  <td>AA_ACTIVATE_SUBS</td>
+  <td>OMX_SET_OFFER_CALL_FORWARD</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr>
+  <td class="step-num">13</td>
+  <td>OMX_SET_OFFER_CALL_FORWARD</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_SET_OFFER_CALL_FORWARD.html">OMX_SET_OFFER_CALL_FORWARD</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>,CFW_NO_PARAM,CFNRC_NO_PARAM,<br/>CFNRY_NO_PARAM,CFU_NO_PARAM</td>
+  <td>— <em style="color:#888;font-size:0.8rem;">(commented out)</em></td>
+  <td>CCBS_GOD</td>
+  <td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">14</td>
+  <td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td>
+  <td><span class="sys-tag sys-ccbs">CCBS</span></td>
+  <td>REMOVE</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='IMEI_KNOX' and Value='NONE']])</code></td>
+  <td>OMX_SET_OFFER_CALL_FORWARD</td>
+  <td>OMX_REMOVE_FUT_OFFER_COP</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">15</td>
+  <td>OMX_REMOVE_FUT_OFFER_COP</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_REMOVE_FUT_OFFER_COP.html">OMX_REMOVE_FUT_OFFER_COP</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='FUT_ORDER_ID' and Value!=''] and ExtendedInfo[Name='IMEI_KNOX' and Value='NONE']])</code></td>
+  <td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td>
+  <td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_ADD</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">16</td>
+  <td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_ADD</td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td>
+  <td><span class="sys-tag sys-ccbs">CCBS</span></td>
+  <td>ADD<br/>REPLACE_NEW_INSTANCE_ID=Y</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='IMEI_KNOX' and Value='NONE']])</code></td>
+  <td>OMX_REMOVE_FUT_OFFER_COP</td>
+  <td>OMX_EXP_FUT_OFFER</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">17</td>
+  <td>OMX_EXP_FUT_OFFER</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_EXP_FUT_OFFER.html">OMX_EXP_FUT_OFFER</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='EXP_TYPE' and Value='FUT'] and (not(ExtendedInfo[Name='FUT_ORDER_ID'])or ExtendedInfo[Name='IMEI_KNOX' and Value='NONE'])])</code></td>
+  <td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_ADD</td>
+  <td>PSA_GET_DEVICE_INFO</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">18</td>
+  <td>PSA_GET_DEVICE_INFO</td>
+  <td><a class="fm-link" href="../FMlogic/Request_PSA_GET_DEVICE_INFO.html">PSA_GET_DEVICE_INFO</a></td>
+  <td><span class="sys-tag sys-psa">PSA</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='IMEI_KNOX' and Value!='NONE']])</code></td>
+  <td>OMX_EXP_FUT_OFFER</td>
+  <td>OMX_NOTIFY_KNOX_EVENT_COMPLETED_OLD_IMEI</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">19</td>
+  <td>OMX_NOTIFY_KNOX_EVENT_COMPLETED_OLD_IMEI</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_NOTI_TO_KAFKA.html">OMX_NOTI_TO_KAFKA</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>knoxEvent=COMPLETED_OLD_IMEI</td>
+  <td><code class="precheck-code">boolean(//Subscriber/ExtendedInfo[Name='UPDATE_KNOX_IMEI' and Value='Y'] and //Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS'] and ExtendedInfo[Name='IMEI_KNOX' and Value!='']])</code></td>
+  <td>PSA_GET_DEVICE_INFO</td>
+  <td>PSA_UPDATE_KNOX_STATUS_COMPLETE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">20</td>
+  <td>PSA_UPDATE_KNOX_STATUS_COMPLETE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_PSA_UPDATE_KNOX_STATUS.html">PSA_UPDATE_KNOX_STATUS</a></td>
+  <td><span class="sys-tag sys-psa">PSA</span></td>
+  <td>KNOX_STATUS=COMPLETE</td>
+  <td><code class="precheck-code">boolean(//Subscriber/ExtendedInfo[Name='UPDATE_KNOX_IMEI' and Value='Y'] and //Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS'] and ExtendedInfo[Name='IMEI_KNOX' and Value!='']])</code></td>
+  <td>OMX_NOTIFY_KNOX_EVENT_COMPLETED_OLD_IMEI</td>
+  <td>OMX_ADD_FUT_OFFERS_PARAM</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">21</td>
+  <td>OMX_ADD_FUT_OFFERS_PARAM</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_ADD_FUT_OFFERS_PARAM.html">OMX_ADD_FUT_OFFERS_PARAM</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>FINALLY=Y</td>
+  <td><code class="precheck-code">boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')] and ExtendedInfo[Name='EFF_TYPE' and Value='FUT'] and not(ExtendedInfo[Name='IMEI_KNOX'])])</code></td>
+  <td>PSA_UPDATE_KNOX_STATUS_COMPLETE</td>
+  <td>OMX_SEARCH_FUT_PP</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">22</td>
+  <td>OMX_SEARCH_FUT_PP</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_SEARCH_FUT_PP.html">OMX_SEARCH_FUT_PP</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and OfferName='RMVX00000000001' and ParameterInfo[ParamName='TR_ORIG_CONTRACT_EXPIRE_DATE' and ValuesArray!='']])</code></td>
+  <td>OMX_ADD_FUT_OFFERS_PARAM</td>
+  <td>OMX_EXP_FUT_PP</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">23</td>
+  <td>OMX_EXP_FUT_PP</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_EXP_FUT_PP.html">OMX_EXP_FUT_PP</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and OfferName='RMVX00000000001' and ParameterInfo[ParamName='TR_ORIG_CONTRACT_EXPIRE_DATE' and ValuesArray!='']])</code></td>
+  <td>OMX_SEARCH_FUT_PP</td>
+  <td>CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">24</td>
+  <td>CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST</td>
+  <td><a class="fm-link" href="../FMlogic/Request_CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST.html">CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST</a></td>
+  <td><span class="sys-tag sys-ccbs">CCBS</span></td>
+  <td>MAP_EFF_EXP=Y</td>
+  <td><code class="precheck-code">boolean(//Subscriber/SubscriberOffers[1])
+and boolean(//SubscriberOffers[(ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ServiceType!='86') or OfferName='DUMMY'])
+and boolean(not(boolean(//SubscriberOffers[ExtendedInfo[Name='IMEI_KNOX']])) or //SubscriberOffers[ExtendedInfo[Name='IMEI_KNOX' and Value!='NONE']])
+and boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']])</code></td>
+  <td>OMX_EXP_FUT_PP</td>
+  <td>OMX_UPDATE_FUT_OFFER_COP_DATE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">25</td>
+  <td>OMX_UPDATE_FUT_OFFER_COP_DATE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_UPDATE_FUT_OFFER_COP_DATE.html">OMX_UPDATE_FUT_OFFER_COP_DATE</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>UPDATE_EXP_DATE=Y</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='EXP_TYPE' and Value='FUT'] and ExtendedInfo[Name='FUT_ORDER_ID' and Value!=''] and (not(ExtendedInfo[Name='IMEI_KNOX']) or ExtendedInfo[Name='IMEI_KNOX' and Value!='NONE'])])</code></td>
+  <td>CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST</td>
+  <td>KNOX_SAVE_DEVICE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">26</td>
+  <td>KNOX_SAVE_DEVICE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_KNOX_SAVE_DEVICE.html">KNOX_SAVE_DEVICE</a></td>
+  <td><span class="sys-tag sys-knox">KNOX</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='IMEI_KNOX' and Value!='NONE']])</code></td>
+  <td>OMX_UPDATE_FUT_OFFER_COP_DATE</td>
+  <td>OMX_NOTIFY_KNOX_EVENT_ADD_NEW_IMEI</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">27</td>
+  <td>OMX_NOTIFY_KNOX_EVENT_ADD_NEW_IMEI</td>
+  <td><a class="fm-link" href="../FMlogic/Request_OMX_NOTI_TO_KAFKA.html">OMX_NOTI_TO_KAFKA</a></td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>knoxEvent=ADD_NEW_IMEI</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='IMEI_KNOX' and Value!='NONE']])</code></td>
+  <td>KNOX_SAVE_DEVICE</td>
+  <td>PSA_UPDATE_KNOX_STATUS_ACTIVE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">28</td>
+  <td>PSA_UPDATE_KNOX_STATUS_ACTIVE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_PSA_UPDATE_KNOX_STATUS.html">PSA_UPDATE_KNOX_STATUS</a></td>
+  <td><span class="sys-tag sys-psa">PSA</span></td>
+  <td>KNOX_STATUS=ACTIVE</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='IMEI_KNOX' and Value!='NONE']])</code></td>
+  <td>OMX_NOTIFY_KNOX_EVENT_ADD_NEW_IMEI</td>
+  <td>PSA_UPDATE_DEVICE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">29</td>
+  <td>PSA_UPDATE_DEVICE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_PSA_UPDATE_DEVICE.html">PSA_UPDATE_DEVICE</a></td>
+  <td><span class="sys-tag sys-psa">PSA</span></td>
+  <td>deviceStatus=COMPLETE</td>
+  <td><code class="precheck-code">/ns0:OrderRequest/OrderData/Channel/text()="MVP_SCB" and //SubscriberOffers[contains(SocProperties,'TR_SPECIAL_OFFER_IND=TPC')]</code></td>
+  <td>PSA_UPDATE_KNOX_STATUS_ACTIVE</td>
+  <td>MCS_UPDATE_SUBSCRIPTION</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">30</td>
+  <td>MCS_UPDATE_SUBSCRIPTION</td>
+  <td><a class="fm-link" href="../FMlogic/Request_MCS_UPDATE_SUBSCRIPTION.html">MCS_UPDATE_SUBSCRIPTION</a></td>
+  <td><span class="sys-tag sys-mcs">MCS</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">/ns0:OrderRequest/OrderData/Channel/text()="PSA" and count(//Subscriber/ExtendedInfo[Name='PARTNER' and Value='TPC-ASURION']) > 0</code></td>
+  <td>PSA_UPDATE_DEVICE</td>
+  <td>STATUS_UPDATE_CREATING_PROFILE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr>
+  <td class="step-num">31</td>
+  <td>STATUS_UPDATE_CREATING_PROFILE</td>
+  <td>STATUS_UPDATE_CREATING_PROFILE</td>
+  <td><span class="sys-tag sys-omx">OMX</span></td>
+  <td>—</td>
+  <td>—</td>
+  <td>MCS_UPDATE_SUBSCRIPTION</td>
+  <td>AA_CHECK_CONFIRMATION</td>
+  <td><span class="badge badge-amber">⚠ Not Found</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">32</td>
+  <td>AA_CHECK_CONFIRMATION</td>
+  <td><a class="fm-link" href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a></td>
+  <td><span class="sys-tag sys-aa">AA</span></td>
+  <td>CCD<br/>UPDATE_NETWORK_STATUS</td>
+  <td><code class="precheck-code">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']]/SwitchFeature[1]) or boolean(…RelatedOffersArray/SwitchFeature[1]) or (//SubscriberOffers/ParameterInfo[ParamName='CFW_NO_PARAM' or …])</code></td>
+  <td>STATUS_UPDATE_CREATING_PROFILE</td>
+  <td>MCS_GET_PACKCODE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">33</td>
+  <td>MCS_GET_PACKCODE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_MCS_GET_PACKCODE.html">MCS_GET_PACKCODE</a></td>
+  <td><span class="sys-tag sys-mcs">MCS</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and OfferName='RMVX00000000001' and ParameterInfo[ParamName='TR_ORIG_CONTRACT_EXPIRE_DATE' and ValuesArray!='']])</code></td>
+  <td>AA_CHECK_CONFIRMATION</td>
+  <td>MCS_CANCEL_AFTER_SALE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">34</td>
+  <td>MCS_CANCEL_AFTER_SALE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_MCS_CANCEL_AFTER_SALE.html">MCS_CANCEL_AFTER_SALE</a></td>
+  <td><span class="sys-tag sys-mcs">MCS</span></td>
+  <td>MAP_PP_EXPIRE=Y</td>
+  <td><code class="precheck-code">boolean(//Subscriber[ExtendedInfo[Name='MCS_CANCEL_AFS' and Value='Y']])</code></td>
+  <td>MCS_GET_PACKCODE</td>
+  <td>SMSGATEWAY_SEND_SMS</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">35</td>
+  <td>SMSGATEWAY_SEND_SMS</td>
+  <td><a class="fm-link" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></td>
+  <td><span class="sys-tag sys-sms">SMSGATEWAY</span></td>
+  <td>SMS_IND_UPDATE=CREDIT_LIMIT_UPDATE<br/>SMS_IND_UNBAR=CREDIT_LIMIT_UNBAR</td>
+  <td><code class="precheck-code">boolean(//Subscriber[MSISDN/text()][1] and /ns0:OrderRequest/OrderData/Channel/text()!="CCBS" and /ns0:OrderRequest/OrderData/Channel/text()!="OMX") and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name="SMS_IND" and Value!=""]])</code></td>
+  <td>MCS_CANCEL_AFTER_SALE</td>
+  <td>INTX_GET_OFFER_DETAIL</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">36</td>
+  <td>INTX_GET_OFFER_DETAIL</td>
+  <td><a class="fm-link" href="../FMlogic/Request_INTX_GET_OFFER_DETAIL.html">INTX_GET_OFFER_DETAIL</a></td>
+  <td><span class="sys-tag sys-intx">INTX</span></td>
+  <td>—</td>
+  <td><code class="precheck-code">boolean(/ns0:OrderRequest/OrderData/Channel/text()!="CCBS" and /ns0:OrderRequest/OrderData/Channel/text()!="OMX") and boolean(//Subscriber/SubscriberOffers[ServiceType='80' and ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS']])</code></td>
+  <td>SMSGATEWAY_SEND_SMS</td>
+  <td>SMSGATEWAY_SEND_SMS_UPDATE_EXPIRE</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+<tr class="has-check">
+  <td class="step-num">37</td>
+  <td>SMSGATEWAY_SEND_SMS_UPDATE_EXPIRE</td>
+  <td><a class="fm-link" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS_UPDATE_EXPIRE.html">SMSGATEWAY_SEND_SMS_UPDATE_EXPIRE</a></td>
+  <td><span class="sys-tag sys-sms">SMSGATEWAY</span></td>
+  <td>GET_EFF_EXP_FROM_RMVX=Y<br/>SMS_IND=UPDATE_EXPIRE_DATE</td>
+  <td><code class="precheck-code">boolean(//Subscriber[MSISDN/text()][1] and /ns0:OrderRequest/OrderData/Channel/text()!="CCBS" and /ns0:OrderRequest/OrderData/Channel/text()!="OMX") and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and OfferName='RMVX00000000001' and ParameterInfo[ParamName='TR_ORIG_CONTRACT_EXPIRE_DATE' and ValuesArray!='']])</code></td>
+  <td>INTX_GET_OFFER_DETAIL</td>
+  <td>END</td>
+  <td><span class="badge badge-green">✓ Generated</span></td>
+</tr>
+</table>
+<p style="margin-top:10px;font-size:0.82rem;color:#888;"><span style="border-left:3px solid #FFC107;padding-left:6px;">Yellow border</span> = has PreExecCheck (conditional execution)</p>
+</div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="card">
+<div class="card-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+<div class="card-body">
+<details><summary>Step 1 — CCBS_GET_CUST_ACC_SUB_ID &nbsp; <span class="badge badge-blue">CCBS_GET_CUST_ACC_SUB_ID</span></summary>
+<pre>boolean(//MSISDN/text())</pre>
+<p style="margin-top:6px;font-size:0.85rem;">Skip if no MSISDN present in order.</p>
+</details>
+<details><summary>Step 2 — CCBS_GET_CUSTOMER_HEADER &nbsp; <span class="badge badge-blue">CCBS_GET_CUSTOMER_HEADER</span></summary>
+<pre>exists(//Customer/CustomerId)</pre>
+</details>
+<details><summary>Step 3 — CCBS_GET_SUBS_INFO &nbsp; <span class="badge badge-blue">CCBS_GET_SUBS_INFO</span></summary>
+<pre>boolean(//Subscriber/SubscriberId)</pre>
+</details>
+<details><summary>Step 4 — CCBS_RESOLVE_SOC_CODE &nbsp; <span class="badge badge-blue">CCBS_RESOLVE_SOC_CODE</span></summary>
+<pre>boolean(//SubscriberOffers[not(Soc/text())])</pre>
+<p style="margin-top:6px;font-size:0.85rem;">Skip if all SubscriberOffers already have a Soc code.</p>
+</details>
+<details><summary>Step 6 — OMX_CHECK_UPDATE_KNOX_IMEI &nbsp; <span class="badge badge-purple">IMEI_KNOX check</span></summary>
+<pre>boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and ExtendedInfo[Name='IMEI_KNOX' and Value!='']])</pre>
+<p style="margin-top:6px;font-size:0.85rem;">Only run if FE offer has non-empty IMEI_KNOX.</p>
+</details>
+<details><summary>Step 7 — OMX_SEARCH_FUT_ALL &nbsp; <span class="badge badge-purple">Contract expire date check</span></summary>
+<pre>boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and ParameterInfo[ParamName='TR_ORIG_CONTRACT_EXPIRE_DATE' and ValuesArray!='']])</pre>
+</details>
+<details><summary>Step 8 — OMX_CAL_OFFER_FUT_DATE &nbsp; <span class="badge badge-purple">FE/BRMS offer check</span></summary>
+<pre>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS'
+  and (Value='FE' or Value='BRMS')]])</pre>
+</details>
+<details><summary>Step 10 — OMX_GET_SRV_TRX_NO &nbsp; <span class="badge badge-purple">SwitchFeature or CFW param</span></summary>
+<pre>boolean(//SubscriberOffers[ExtendedInfo[Name/text()='FE_OR_CCBS' and Value/text()='FE']]/SwitchFeature[1])
+or boolean(//SubscriberOffers[ExtendedInfo[Name/text()='FE_OR_CCBS' and Value/text()='FE']]/RelatedOffersArray/SwitchFeature[1])
+or (//SubscriberOffers/ParameterInfo[ParamName='CFW_NO_PARAM' or ParamName='CFNRC_NO_PARAM'
+  or ParamName='CFNRY_NO_PARAM' or ParamName='CFU_NO_PARAM'])</pre>
+</details>
+<details><summary>Step 11 — AA_ACTIVATE_SUBS &nbsp; <span class="badge badge-purple">Same as step 10</span></summary>
+<pre>boolean(//SubscriberOffers[ExtendedInfo[Name/text()='FE_OR_CCBS' and Value/text()='FE']]/SwitchFeature[1])
+or boolean(//SubscriberOffers[...]/RelatedOffersArray/SwitchFeature[1])
+or (//SubscriberOffers/ParameterInfo[ParamName='CFW_NO_PARAM' or …])</pre>
+</details>
+<details><summary>Step 12 — CCBS_GOD &nbsp; <span class="badge badge-blue">SubscriberOffers exists</span></summary>
+<pre>exists(//SubscriberOffers)</pre>
+</details>
+<details><summary>Step 14 — CCBS_CHANGE_PACKAGE_SUBSCRIBER (REMOVE) &nbsp; <span class="badge badge-purple">IMEI_KNOX=NONE</span></summary>
+<pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and ExtendedInfo[Name='IMEI_KNOX' and Value='NONE']])</pre>
+</details>
+<details><summary>Step 15 — OMX_REMOVE_FUT_OFFER_COP &nbsp; <span class="badge badge-purple">FUT_ORDER_ID present + IMEI_KNOX=NONE</span></summary>
+<pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and ExtendedInfo[Name='FUT_ORDER_ID' and Value!='']
+  and ExtendedInfo[Name='IMEI_KNOX' and Value='NONE']])</pre>
+</details>
+<details><summary>Step 16 — CCBS_CHANGE_PACKAGE_SUBSCRIBER (ADD) &nbsp; <span class="badge badge-purple">IMEI_KNOX=NONE</span></summary>
+<pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and ExtendedInfo[Name='IMEI_KNOX' and Value='NONE']])</pre>
+</details>
+<details><summary>Step 17 — OMX_EXP_FUT_OFFER &nbsp; <span class="badge badge-purple">EXP_TYPE=FUT without FUT_ORDER_ID or IMEI_KNOX=NONE</span></summary>
+<pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and ExtendedInfo[Name='EXP_TYPE' and Value='FUT']
+  and (not(ExtendedInfo[Name='FUT_ORDER_ID']) or ExtendedInfo[Name='IMEI_KNOX' and Value='NONE'])])</pre>
+</details>
+<details><summary>Step 18 — PSA_GET_DEVICE_INFO &nbsp; <span class="badge badge-purple">IMEI_KNOX not NONE</span></summary>
+<pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and ExtendedInfo[Name='IMEI_KNOX' and Value!='NONE']])</pre>
+</details>
+<details><summary>Step 19 — OMX_NOTI_TO_KAFKA (COMPLETED_OLD_IMEI) &nbsp; <span class="badge badge-purple">UPDATE_KNOX_IMEI=Y + CCBS IMEI_KNOX</span></summary>
+<pre>boolean(//Subscriber/ExtendedInfo[Name='UPDATE_KNOX_IMEI' and Value='Y']
+  and //Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS']
+  and ExtendedInfo[Name='IMEI_KNOX' and Value!='']])</pre>
+</details>
+<details><summary>Step 20 — PSA_UPDATE_KNOX_STATUS (COMPLETE) &nbsp; <span class="badge badge-purple">Same as step 19</span></summary>
+<pre>boolean(//Subscriber/ExtendedInfo[Name='UPDATE_KNOX_IMEI' and Value='Y']
+  and //Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS']
+  and ExtendedInfo[Name='IMEI_KNOX' and Value!='']])</pre>
+</details>
+<details><summary>Step 21 — OMX_ADD_FUT_OFFERS_PARAM &nbsp; <span class="badge badge-purple">EFF_TYPE=FUT without IMEI_KNOX</span></summary>
+<pre>boolean(//Subscriber/SubscriberOffers[1]
+  and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]
+  and ExtendedInfo[Name='EFF_TYPE' and Value='FUT']
+  and not(ExtendedInfo[Name='IMEI_KNOX'])])</pre>
+</details>
+<details><summary>Steps 22 &amp; 23 — OMX_SEARCH/EXP_FUT_PP &nbsp; <span class="badge badge-purple">RMVX + contract expire date</span></summary>
+<pre>boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and OfferName='RMVX00000000001'
+  and ParameterInfo[ParamName='TR_ORIG_CONTRACT_EXPIRE_DATE' and ValuesArray!='']])</pre>
+</details>
+<details><summary>Step 24 — CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST &nbsp; <span class="badge badge-purple">Complex multi-condition</span></summary>
+<pre>boolean(//Subscriber/SubscriberOffers[1])
+and boolean(//SubscriberOffers[(ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ServiceType!='86') or OfferName='DUMMY'])
+and boolean(not(boolean(//SubscriberOffers[ExtendedInfo[Name='IMEI_KNOX']]))
+  or //SubscriberOffers[ExtendedInfo[Name='IMEI_KNOX' and Value!='NONE']])
+and boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']])</pre>
+</details>
+<details><summary>Step 25 — OMX_UPDATE_FUT_OFFER_COP_DATE &nbsp; <span class="badge badge-purple">FUT offer with FUT_ORDER_ID</span></summary>
+<pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and ExtendedInfo[Name='EXP_TYPE' and Value='FUT']
+  and ExtendedInfo[Name='FUT_ORDER_ID' and Value!='']
+  and (not(ExtendedInfo[Name='IMEI_KNOX']) or ExtendedInfo[Name='IMEI_KNOX' and Value!='NONE'])])</pre>
+</details>
+<details><summary>Steps 26–28 — KNOX_SAVE_DEVICE / PSA KNOX steps &nbsp; <span class="badge badge-purple">IMEI_KNOX not NONE</span></summary>
+<pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and ExtendedInfo[Name='IMEI_KNOX' and Value!='NONE']])</pre>
+</details>
+<details><summary>Step 29 — PSA_UPDATE_DEVICE &nbsp; <span class="badge badge-purple">Channel=MVP_SCB + TPC offer</span></summary>
+<pre>/ns0:OrderRequest/OrderData/Channel/text()="MVP_SCB"
+  and //SubscriberOffers[contains(SocProperties,'TR_SPECIAL_OFFER_IND=TPC')]</pre>
+</details>
+<details><summary>Step 30 — MCS_UPDATE_SUBSCRIPTION &nbsp; <span class="badge badge-purple">Channel=PSA + PARTNER=TPC-ASURION</span></summary>
+<pre>/ns0:OrderRequest/OrderData/Channel/text()="PSA"
+  and count(//Subscriber/ExtendedInfo[Name='PARTNER' and Value='TPC-ASURION']) > 0</pre>
+</details>
+<details><summary>Step 32 — AA_CHECK_CONFIRMATION &nbsp; <span class="badge badge-purple">SwitchFeature or CFW params</span></summary>
+<pre>boolean(//SubscriberOffers[ExtendedInfo[Name/text()='FE_OR_CCBS' and Value/text()='FE']]/SwitchFeature[1])
+or boolean(//SubscriberOffers[...]/RelatedOffersArray/SwitchFeature[1])
+or (//SubscriberOffers/ParameterInfo[ParamName='CFW_NO_PARAM' or ParamName='CFNRC_NO_PARAM'
+  or ParamName='CFNRY_NO_PARAM' or ParamName='CFU_NO_PARAM'])</pre>
+</details>
+<details><summary>Step 33 — MCS_GET_PACKCODE &nbsp; <span class="badge badge-purple">RMVX + contract expire date</span></summary>
+<pre>boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and OfferName='RMVX00000000001'
+  and ParameterInfo[ParamName='TR_ORIG_CONTRACT_EXPIRE_DATE' and ValuesArray!='']])</pre>
+</details>
+<details><summary>Step 34 — MCS_CANCEL_AFTER_SALE &nbsp; <span class="badge badge-purple">MCS_CANCEL_AFS=Y</span></summary>
+<pre>boolean(//Subscriber[ExtendedInfo[Name='MCS_CANCEL_AFS' and Value='Y']])</pre>
+</details>
+<details><summary>Step 35 — SMSGATEWAY_SEND_SMS &nbsp; <span class="badge badge-purple">Channel not CCBS/OMX + SMS_IND not empty</span></summary>
+<pre>boolean(//Subscriber[MSISDN/text()][1]
+  and /ns0:OrderRequest/OrderData/Channel/text()!="CCBS"
+  and /ns0:OrderRequest/OrderData/Channel/text()!="OMX")
+  and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name="SMS_IND" and Value!=""]])</pre>
+</details>
+<details><summary>Step 36 — INTX_GET_OFFER_DETAIL &nbsp; <span class="badge badge-purple">Channel not CCBS/OMX + CCBS price plan</span></summary>
+<pre>boolean(/ns0:OrderRequest/OrderData/Channel/text()!="CCBS"
+  and /ns0:OrderRequest/OrderData/Channel/text()!="OMX")
+  and boolean(//Subscriber/SubscriberOffers[ServiceType='80'
+  and ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS']])</pre>
+</details>
+<details><summary>Step 37 — SMSGATEWAY_SEND_SMS_UPDATE_EXPIRE &nbsp; <span class="badge badge-purple">Channel not CCBS/OMX + RMVX expire date</span></summary>
+<pre>boolean(//Subscriber[MSISDN/text()][1]
+  and /ns0:OrderRequest/OrderData/Channel/text()!="CCBS"
+  and /ns0:OrderRequest/OrderData/Channel/text()!="OMX")
+  and boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']
+  and OfferName='RMVX00000000001'
+  and ParameterInfo[ParamName='TR_ORIG_CONTRACT_EXPIRE_DATE' and ValuesArray!='']])</pre>
+</details>
+</div>
+</div>
+
+<!-- §4 FM Documentation Index -->
+<div class="card">
+<div class="card-header">§4 — FM Documentation Index</div>
+<div class="card-body">
+<div class="fm-grid">
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html">CCBS_GET_CUST_ACC_SUB_ID</a></h4><div class="fm-meta">Steps: 1</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_CCBS_GET_CUSTOMER_HEADER.html">CCBS_GET_CUSTOMER_HEADER</a></h4><div class="fm-meta">Steps: 2</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">CCBS_GET_SUBS_INFO</a></h4><div class="fm-meta">Steps: 3</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></h4><div class="fm-meta">Steps: 4</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4>OMX_BIZ_VAL</h4><div class="fm-meta">Steps: 5</div><span class="badge badge-amber">⚠ Not Found</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_CHECK_UPDATE_KNOX_IMEI.html">OMX_CHECK_UPDATE_KNOX_IMEI</a></h4><div class="fm-meta">Steps: 6</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_SEARCH_FUT_ALL.html">OMX_SEARCH_FUT_ALL</a></h4><div class="fm-meta">Steps: 7</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">OMX_CAL_OFFER_FUT_DATE</a></h4><div class="fm-meta">Steps: 8</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_AA_GET_SWITCH_FEATURE_OFFER.html">AA_GET_SWITCH_FEATURE_OFFER</a></h4><div class="fm-meta">Steps: 9</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></h4><div class="fm-meta">Steps: 10</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a></h4><div class="fm-meta">Steps: 11</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></h4><div class="fm-meta">Steps: 12</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_SET_OFFER_CALL_FORWARD.html">OMX_SET_OFFER_CALL_FORWARD</a></h4><div class="fm-meta">Steps: 13</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></h4><div class="fm-meta">Steps: 14, 16</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_REMOVE_FUT_OFFER_COP.html">OMX_REMOVE_FUT_OFFER_COP</a></h4><div class="fm-meta">Steps: 15</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_EXP_FUT_OFFER.html">OMX_EXP_FUT_OFFER</a></h4><div class="fm-meta">Steps: 17</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_PSA_GET_DEVICE_INFO.html">PSA_GET_DEVICE_INFO</a></h4><div class="fm-meta">Steps: 18</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_NOTI_TO_KAFKA.html">OMX_NOTI_TO_KAFKA</a></h4><div class="fm-meta">Steps: 19, 27</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_PSA_UPDATE_KNOX_STATUS.html">PSA_UPDATE_KNOX_STATUS</a></h4><div class="fm-meta">Steps: 20, 28</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_ADD_FUT_OFFERS_PARAM.html">OMX_ADD_FUT_OFFERS_PARAM</a></h4><div class="fm-meta">Steps: 21</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_SEARCH_FUT_PP.html">OMX_SEARCH_FUT_PP</a></h4><div class="fm-meta">Steps: 22</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_EXP_FUT_PP.html">OMX_EXP_FUT_PP</a></h4><div class="fm-meta">Steps: 23</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST.html">CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST</a></h4><div class="fm-meta">Steps: 24</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_OMX_UPDATE_FUT_OFFER_COP_DATE.html">OMX_UPDATE_FUT_OFFER_COP_DATE</a></h4><div class="fm-meta">Steps: 25</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_KNOX_SAVE_DEVICE.html">KNOX_SAVE_DEVICE</a></h4><div class="fm-meta">Steps: 26</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_PSA_UPDATE_DEVICE.html">PSA_UPDATE_DEVICE</a></h4><div class="fm-meta">Steps: 29</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_MCS_UPDATE_SUBSCRIPTION.html">MCS_UPDATE_SUBSCRIPTION</a></h4><div class="fm-meta">Steps: 30</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4>STATUS_UPDATE_CREATING_PROFILE</h4><div class="fm-meta">Steps: 31</div><span class="badge badge-amber">⚠ Not Found</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a></h4><div class="fm-meta">Steps: 32</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_MCS_GET_PACKCODE.html">MCS_GET_PACKCODE</a></h4><div class="fm-meta">Steps: 33</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_MCS_CANCEL_AFTER_SALE.html">MCS_CANCEL_AFTER_SALE</a></h4><div class="fm-meta">Steps: 34</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></h4><div class="fm-meta">Steps: 35</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_INTX_GET_OFFER_DETAIL.html">INTX_GET_OFFER_DETAIL</a></h4><div class="fm-meta">Steps: 36</div><span class="badge badge-green">Generated</span></div>
+<div class="fm-card"><h4><a class="fm-link" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS_UPDATE_EXPIRE.html">SMSGATEWAY_SEND_SMS_UPDATE_EXPIRE</a></h4><div class="fm-meta">Steps: 37</div><span class="badge badge-green">Generated</span></div>
+</div>
+</div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="card">
+<div class="card-header">§5 — Sequence Diagram</div>
+<div class="card-body">
+<div class="mermaid-wrap">
+<div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+    participant OMX as OMX(Internal)
+    participant AA as AA
+    participant PSA as PSA
+    participant MCS as MCS
+    participant SMSGATEWAY as SMSGATEWAY
+    participant INTX as INTX
+    participant KNOX as KNOX
+
+    opt boolean(//MSISDN/text())
+        O->>CCBS: CCBS_GET_CUST_ACC_SUB_ID
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_CUST_ACC_SUB_ID
+    end
+    opt exists(//Customer/CustomerId)
+        O->>CCBS: CCBS_GET_CUSTOMER_HEADER
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_CUSTOMER_HEADER
+    end
+    opt boolean(//Subscriber/SubscriberId)
+        O->>CCBS: CCBS_GET_SUBS_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_SUBS_INFO
+    end
+    opt boolean(//SubscriberOffers[not(Soc/text())])
+        O->>CCBS: CCBS_RESOLVE_SOC_CODE
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_RESOLVE_SOC_CODE
+    end
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL [Not Found]
+    opt FE offer with non-empty IMEI_KNOX
+        O->>OMX: OMX_CHECK_UPDATE_KNOX_IMEI
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_CHECK_UPDATE_KNOX_IMEI
+    end
+    opt FE offer with TR_ORIG_CONTRACT_EXPIRE_DATE
+        O->>OMX: OMX_SEARCH_FUT_ALL [STATUS=1|ORDER_TYPE=4|GET_FUT_ORDER_ID=Y]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_SEARCH_FUT_ALL
+    end
+    opt SubscriberOffers FE/BRMS exist
+        O->>OMX: OMX_CAL_OFFER_FUT_DATE [CAL_PARAM_EXP=Y|EXCLUDE_OFFER=RMVX...]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_CAL_OFFER_FUT_DATE
+    end
+    O->>AA: AA_GET_SWITCH_FEATURE_OFFER
+    AA-->>O: response
+    Note over O,AA: FM: AA_GET_SWITCH_FEATURE_OFFER
+    opt SwitchFeature or CFW params present
+        O->>OMX: OMX_GET_SRV_TRX_NO [CCD]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+    end
+    opt SwitchFeature or CFW params present
+        O->>AA: AA_ACTIVATE_SUBS [CCD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_ACTIVATE_SUBS
+    end
+    opt SubscriberOffers exist
+        O->>CCBS: CCBS_GOD
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GOD
+    end
+    O->>OMX: OMX_SET_OFFER_CALL_FORWARD [CFW params]
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_SET_OFFER_CALL_FORWARD
+    opt FE offer IMEI_KNOX=NONE
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE [REMOVE]
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER
+    end
+    opt FE offer FUT_ORDER_ID present + IMEI_KNOX=NONE
+        O->>OMX: OMX_REMOVE_FUT_OFFER_COP
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_REMOVE_FUT_OFFER_COP
+    end
+    opt FE offer IMEI_KNOX=NONE
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER_ADD [ADD|REPLACE_NEW_INSTANCE_ID=Y]
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER
+    end
+    opt EXP_TYPE=FUT without FUT_ORDER_ID or IMEI_KNOX=NONE
+        O->>OMX: OMX_EXP_FUT_OFFER
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_EXP_FUT_OFFER
+    end
+    opt FE offer IMEI_KNOX!=NONE
+        O->>PSA: PSA_GET_DEVICE_INFO
+        PSA-->>O: response
+        Note over O,PSA: FM: PSA_GET_DEVICE_INFO
+    end
+    opt UPDATE_KNOX_IMEI=Y + CCBS IMEI_KNOX
+        O->>OMX: OMX_NOTI_TO_KAFKA [knoxEvent=COMPLETED_OLD_IMEI]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_NOTI_TO_KAFKA
+    end
+    opt UPDATE_KNOX_IMEI=Y + CCBS IMEI_KNOX
+        O->>PSA: PSA_UPDATE_KNOX_STATUS [KNOX_STATUS=COMPLETE]
+        PSA-->>O: response
+        Note over O,PSA: FM: PSA_UPDATE_KNOX_STATUS
+    end
+    opt EFF_TYPE=FUT offers without IMEI_KNOX
+        O->>OMX: OMX_ADD_FUT_OFFERS_PARAM [FINALLY=Y]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFERS_PARAM
+    end
+    opt RMVX offer with TR_ORIG_CONTRACT_EXPIRE_DATE
+        O->>OMX: OMX_SEARCH_FUT_PP
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_SEARCH_FUT_PP
+    end
+    opt RMVX offer with TR_ORIG_CONTRACT_EXPIRE_DATE
+        O->>OMX: OMX_EXP_FUT_PP
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_EXP_FUT_PP
+    end
+    opt Complex: FE offers not FUT + IMEI conditions
+        O->>CCBS: CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST [MAP_EFF_EXP=Y]
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST
+    end
+    opt EXP_TYPE=FUT with FUT_ORDER_ID
+        O->>OMX: OMX_UPDATE_FUT_OFFER_COP_DATE [UPDATE_EXP_DATE=Y]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_UPDATE_FUT_OFFER_COP_DATE
+    end
+    opt FE offer IMEI_KNOX!=NONE
+        O->>KNOX: KNOX_SAVE_DEVICE
+        KNOX-->>O: response
+        Note over O,KNOX: FM: KNOX_SAVE_DEVICE
+    end
+    opt FE offer IMEI_KNOX!=NONE
+        O->>OMX: OMX_NOTI_TO_KAFKA [knoxEvent=ADD_NEW_IMEI]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_NOTI_TO_KAFKA
+    end
+    opt FE offer IMEI_KNOX!=NONE
+        O->>PSA: PSA_UPDATE_KNOX_STATUS [KNOX_STATUS=ACTIVE]
+        PSA-->>O: response
+        Note over O,PSA: FM: PSA_UPDATE_KNOX_STATUS
+    end
+    opt Channel=MVP_SCB + TR_SPECIAL_OFFER_IND=TPC
+        O->>PSA: PSA_UPDATE_DEVICE [deviceStatus=COMPLETE]
+        PSA-->>O: response
+        Note over O,PSA: FM: PSA_UPDATE_DEVICE
+    end
+    opt Channel=PSA + PARTNER=TPC-ASURION
+        O->>MCS: MCS_UPDATE_SUBSCRIPTION
+        MCS-->>O: response
+        Note over O,MCS: FM: MCS_UPDATE_SUBSCRIPTION
+    end
+    O->>OMX: STATUS_UPDATE_CREATING_PROFILE
+    OMX-->>O: response
+    Note over O,OMX: FM: STATUS_UPDATE_CREATING_PROFILE [Not Found]
+    opt SwitchFeature or CFW params
+        O->>AA: AA_CHECK_CONFIRMATION [CCD|UPDATE_NETWORK_STATUS]
+        AA-->>O: response
+        Note over O,AA: FM: AA_CHECK_CONFIRMATION
+    end
+    opt RMVX + contract expire date
+        O->>MCS: MCS_GET_PACKCODE
+        MCS-->>O: response
+        Note over O,MCS: FM: MCS_GET_PACKCODE
+    end
+    opt MCS_CANCEL_AFS=Y
+        O->>MCS: MCS_CANCEL_AFTER_SALE [MAP_PP_EXPIRE=Y]
+        MCS-->>O: response
+        Note over O,MCS: FM: MCS_CANCEL_AFTER_SALE
+    end
+    opt Channel!=CCBS/OMX + SMS_IND not empty
+        O->>SMSGATEWAY: SMSGATEWAY_SEND_SMS [SMS_IND_UPDATE|SMS_IND_UNBAR]
+        SMSGATEWAY-->>O: response
+        Note over O,SMSGATEWAY: FM: SMSGATEWAY_SEND_SMS
+    end
+    opt Channel!=CCBS/OMX + CCBS price plan
+        O->>INTX: INTX_GET_OFFER_DETAIL
+        INTX-->>O: response
+        Note over O,INTX: FM: INTX_GET_OFFER_DETAIL
+    end
+    opt Channel!=CCBS/OMX + RMVX expire date
+        O->>SMSGATEWAY: SMSGATEWAY_SEND_SMS_UPDATE_EXPIRE [GET_EFF_EXP_FROM_RMVX=Y|SMS_IND=UPDATE_EXPIRE_DATE]
+        SMSGATEWAY-->>O: response
+        Note over O,SMSGATEWAY: FM: SMSGATEWAY_SEND_SMS_UPDATE_EXPIRE
+    end
+</div>
+</div>
+</div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="card">
+<div class="card-header">§6 — Flow Diagram</div>
+<div class="card-body">
+<div class="mermaid-wrap">
+<div class="mermaid">
+flowchart TD
+    START([START]) --> S1{CCBS_GET_CUST_ACC_SUB_ID\nFM: CCBS_GET_CUST_ACC_SUB_ID\nConditional}
+    S1 --> S2{CCBS_GET_CUSTOMER_HEADER\nFM: CCBS_GET_CUSTOMER_HEADER\nConditional}
+    S2 --> S3{CCBS_GET_SUBS_INFO\nFM: CCBS_GET_SUBS_INFO\nConditional}
+    S3 --> S4{CCBS_RESOLVE_SOC_CODE\nFM: CCBS_RESOLVE_SOC_CODE\nConditional}
+    S4 --> S5[OMX_BIZ_VAL\nFM: OMX_BIZ_VAL]
+    S5 --> S6{OMX_CHECK_UPDATE_KNOX_IMEI\nFM: OMX_CHECK_UPDATE_KNOX_IMEI\nConditional}
+    S6 --> S7{OMX_SEARCH_FUT_ALL\nFM: OMX_SEARCH_FUT_ALL\nConditional}
+    S7 --> S8{OMX_CAL_OFFER_FUT_DATE\nFM: OMX_CAL_OFFER_FUT_DATE\nConditional}
+    S8 --> S9[AA_GET_SWITCH_FEATURE_OFFER\nFM: AA_GET_SWITCH_FEATURE_OFFER]
+    S9 --> S10{OMX_GET_SRV_TRX_NO\nFM: OMX_GET_SRV_TRX_NO\nConditional}
+    S10 --> S11{AA_ACTIVATE_SUBS\nFM: AA_ACTIVATE_SUBS\nConditional}
+    S11 --> S12{CCBS_GOD\nFM: CCBS_GOD\nConditional}
+    S12 --> S13[OMX_SET_OFFER_CALL_FORWARD\nFM: OMX_SET_OFFER_CALL_FORWARD]
+    S13 --> S14{CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE\nFM: CCBS_CHANGE_PACKAGE_SUBSCRIBER\nConditional}
+    S14 --> S15{OMX_REMOVE_FUT_OFFER_COP\nConditional}
+    S15 --> S16{CCBS_CHANGE_PACKAGE_SUBSCRIBER_ADD\nFM: CCBS_CHANGE_PACKAGE_SUBSCRIBER\nConditional}
+    S16 --> S17{OMX_EXP_FUT_OFFER\nConditional}
+    S17 --> S18{PSA_GET_DEVICE_INFO\nConditional}
+    S18 --> S19{OMX_NOTI_TO_KAFKA\nknoxEvent=COMPLETED_OLD_IMEI\nConditional}
+    S19 --> S20{PSA_UPDATE_KNOX_STATUS\nKNOX_STATUS=COMPLETE\nConditional}
+    S20 --> S21{OMX_ADD_FUT_OFFERS_PARAM\nConditional}
+    S21 --> S22{OMX_SEARCH_FUT_PP\nConditional}
+    S22 --> S23{OMX_EXP_FUT_PP\nConditional}
+    S23 --> S24{CCBS_UPDATE_PARAMETER_SUBSCRIBER_POST\nConditional}
+    S24 --> S25{OMX_UPDATE_FUT_OFFER_COP_DATE\nConditional}
+    S25 --> S26{KNOX_SAVE_DEVICE\nConditional}
+    S26 --> S27{OMX_NOTI_TO_KAFKA\nknoxEvent=ADD_NEW_IMEI\nConditional}
+    S27 --> S28{PSA_UPDATE_KNOX_STATUS\nKNOX_STATUS=ACTIVE\nConditional}
+    S28 --> S29{PSA_UPDATE_DEVICE\nConditional}
+    S29 --> S30{MCS_UPDATE_SUBSCRIPTION\nConditional}
+    S30 --> S31[STATUS_UPDATE_CREATING_PROFILE]
+    S31 --> S32{AA_CHECK_CONFIRMATION\nConditional}
+    S32 --> S33{MCS_GET_PACKCODE\nConditional}
+    S33 --> S34{MCS_CANCEL_AFTER_SALE\nConditional}
+    S34 --> S35{SMSGATEWAY_SEND_SMS\nConditional}
+    S35 --> S36{INTX_GET_OFFER_DETAIL\nConditional}
+    S36 --> S37{SMSGATEWAY_SEND_SMS_UPDATE_EXPIRE\nConditional}
+    S37 --> END([END])
+</div>
+</div>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · Order Journey Documentation &nbsp;·&nbsp; POSTPAID_UPDATE_PARAMETER &nbsp;·&nbsp; Generated 2026-08-20</footer>
+</body>
+</html>

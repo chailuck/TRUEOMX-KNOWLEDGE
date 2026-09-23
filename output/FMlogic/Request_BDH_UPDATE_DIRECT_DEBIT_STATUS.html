@@ -1,0 +1,1208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request_BDH_UPDATE_DIRECT_DEBIT_STATUS — FM Logic Documentation</title>
+<style>
+:root {
+  --true-red:  #CC0000;
+  --true-dark: #8B0000;
+  --true-deep: #5C0000;
+  --true-light:#FF5252;
+  --true-pale: #FFF5F5;
+  --success:   #2e7d32;
+  --warning:   #e65100;
+  --info:      #1565c0;
+  --skip:      #6a1b9a;
+  --bg:        #F9F9F9;
+  --card:      #FFFFFF;
+  --border:    #E0E0E0;
+  --code-bg:   #1e1e2e;
+  --code-fg:   #cdd6f4;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', system-ui, -apple-system, sans-serif; background: var(--bg); color: #1a1a1a; font-size: 14px; line-height: 1.55; }
+
+/* Header */
+.page-header {
+  background: linear-gradient(135deg, var(--true-deep), var(--true-dark), var(--true-red));
+  color: white;
+  padding: 36px 40px 32px;
+}
+.page-header .rule-category { font-size: 12px; letter-spacing: 0.12em; text-transform: uppercase; opacity: 0.75; margin-bottom: 8px; }
+.page-header h1 { font-size: 26px; font-weight: 700; margin-bottom: 10px; letter-spacing: -0.01em; }
+.page-header .subtitle { font-size: 14px; opacity: 0.85; margin-bottom: 18px; }
+.meta-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.chip { display: inline-flex; align-items: center; gap: 5px; background: rgba(255,255,255,0.15); border: 1px solid rgba(255,255,255,0.25); border-radius: 20px; padding: 4px 12px; font-size: 12px; font-weight: 500; }
+
+/* Layout */
+.container { max-width: 1280px; margin: 0 auto; padding: 28px 28px 60px; }
+
+/* TOC */
+.toc { background: var(--card); border: 1px solid var(--border); border-left: 4px solid var(--true-red); border-radius: 8px; padding: 20px 24px; margin-bottom: 28px; }
+.toc h3 { font-size: 13px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--true-dark); margin-bottom: 12px; }
+.toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 4px 24px; }
+.toc a { color: var(--info); text-decoration: none; font-size: 13px; display: block; padding: 2px 0; }
+.toc a:hover { color: var(--true-red); text-decoration: underline; }
+
+/* Section card */
+.section { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 22px; overflow: hidden; }
+.section-header {
+  background: linear-gradient(90deg, var(--true-dark), var(--true-red));
+  border-left: 4px solid var(--true-light);
+  color: white;
+  padding: 12px 20px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.section-header h2 { font-size: 15px; font-weight: 600; }
+.section-header .sec-num { font-size: 12px; opacity: 0.7; background: rgba(255,255,255,0.15); padding: 2px 8px; border-radius: 10px; }
+.section-body { padding: 20px 22px; }
+
+/* Sub-section */
+.subsection { margin-top: 18px; }
+.subsection:first-child { margin-top: 0; }
+.subsec-title { font-size: 13.5px; font-weight: 600; color: var(--true-dark); border-bottom: 1px solid #f0dede; padding-bottom: 6px; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+.subsec-num { font-size: 11px; background: #F5E6E6; color: var(--true-dark); padding: 1px 7px; border-radius: 10px; }
+
+/* Tables */
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #F5E6E6; color: var(--true-dark); font-weight: 600; text-align: left; padding: 9px 12px; border-bottom: 2px solid var(--true-red); white-space: nowrap; }
+td { padding: 8px 12px; border-bottom: 1px solid #f0f0f0; vertical-align: top; }
+tr:hover td { background: #fafafa; }
+tr:last-child td { border-bottom: none; }
+
+/* Code blocks */
+pre {
+  background: var(--code-bg);
+  color: var(--code-fg);
+  border-radius: 6px;
+  padding: 16px 18px;
+  overflow-x: auto;
+  font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace;
+  font-size: 12.5px;
+  line-height: 1.6;
+  border-left: 3px solid var(--true-red);
+  margin: 0;
+}
+code { font-family: 'Cascadia Code', 'Fira Code', Consolas, monospace; font-size: 12.5px; background: #f5e6e6; color: var(--true-dark); padding: 1px 5px; border-radius: 3px; }
+pre code { background: none; color: inherit; padding: 0; }
+
+/* Syntax highlighting */
+.kw  { color: #cba6f7; font-weight: 600; }
+.ty  { color: #89b4fa; }
+.str { color: #a6e3a1; }
+.cmt { color: #6c7086; font-style: italic; }
+.num { color: #fab387; }
+.fn  { color: #f38ba8; }
+.xml-tag  { color: #89dceb; }
+.xml-attr { color: #f9e2af; }
+.xml-val  { color: #a6e3a1; }
+.xml-ns   { color: #74c7ec; }
+.xpath { color: #cba6f7; }
+
+/* Badges */
+.badge { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 11px; font-weight: 600; white-space: nowrap; }
+.b-red    { background: #FFE0E0; color: var(--true-dark); }
+.b-green  { background: #E8F5E9; color: var(--success); }
+.b-orange { background: #FFF3E0; color: var(--warning); }
+.b-blue   { background: #E3F0FD; color: var(--info); }
+.b-purple { background: #F3E5F5; color: var(--skip); }
+.b-teal   { background: #E0F2F1; color: #00695c; }
+.b-jms    { background: #FFE0B2; color: #E65100; }
+.b-db     { background: #E8EAF6; color: #3949AB; }
+.b-log    { background: #F1F8E9; color: #558B2F; }
+.b-gray   { background: #ECEFF1; color: #546E7A; }
+
+/* Severity */
+.sev-high   { background: #FFE0E0; color: var(--true-dark); }
+.sev-med    { background: #FFF3E0; color: var(--warning); }
+.sev-low    { background: #E8F5E9; color: var(--success); }
+
+/* Flow diagram */
+.flow { display: flex; flex-direction: column; gap: 0; }
+.flow-step { display: flex; gap: 14px; }
+.flow-step .step-line { display: flex; flex-direction: column; align-items: center; }
+.flow-step .step-num { width: 28px; height: 28px; border-radius: 50%; background: var(--true-red); color: white; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.flow-step .step-connector { width: 2px; background: #f0dede; flex: 1; min-height: 16px; }
+.flow-step:last-child .step-connector { display: none; }
+.flow-step .step-body { flex: 1; padding: 4px 0 16px; }
+.flow-step .step-title { font-weight: 600; font-size: 13.5px; color: var(--true-dark); margin-bottom: 4px; }
+.flow-step .step-desc { font-size: 12.5px; color: #555; line-height: 1.5; }
+.flow-step.branch .step-num { background: #e65100; }
+.flow-step.error .step-num  { background: #b71c1c; }
+.flow-step.skip .step-num   { background: var(--skip); }
+
+/* Condition block */
+.condition-block { background: var(--true-pale); border: 1px solid #f0c0c0; border-radius: 6px; padding: 12px 14px; margin-bottom: 10px; }
+.condition-block .cond-num { font-size: 10px; color: var(--true-dark); font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; }
+.condition-block .cond-expr { font-family: 'Cascadia Code', Consolas, monospace; font-size: 13px; color: #333; }
+.condition-block .cond-meaning { font-size: 12px; color: #666; margin-top: 5px; }
+
+/* Field mapping table type badges inline */
+.field-required { color: var(--true-red); font-weight: 700; font-size: 12px; }
+.field-optional { color: #888; font-size: 12px; }
+.field-static   { color: var(--info); font-size: 12px; }
+.field-computed { color: var(--skip); font-size: 12px; }
+
+/* Info grid */
+.info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+.info-cell { background: var(--true-pale); border: 1px solid #f0c0c0; border-radius: 6px; padding: 10px 14px; }
+.info-cell .ic-lbl { font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.07em; color: #888; margin-bottom: 3px; }
+.info-cell .ic-val { font-size: 13px; font-weight: 600; color: #1a1a1a; }
+
+/* Tree */
+.tree { font-family: 'Cascadia Code', Consolas, monospace; font-size: 12.5px; line-height: 1.7; background: var(--code-bg); color: var(--code-fg); padding: 16px 20px; border-radius: 6px; border-left: 3px solid var(--true-red); }
+.tree .t-rule { color: #f38ba8; font-weight: 700; }
+.tree .t-fn { color: #cba6f7; }
+.tree .t-helper { color: #89b4fa; }
+
+/* Alert box */
+.alert { border-radius: 6px; padding: 12px 16px; margin-bottom: 12px; font-size: 13px; }
+.alert-info { background: #E3F0FD; border-left: 4px solid var(--info); color: #0d47a1; }
+.alert-warn { background: #FFF3E0; border-left: 4px solid var(--warning); color: #bf360c; }
+.alert-note { background: var(--true-pale); border-left: 4px solid var(--true-red); color: var(--true-dark); }
+
+/* Payload example */
+.xml-example { background: #1a2233; border: 1px solid #2a3550; border-left: 3px solid var(--true-red); border-radius: 6px; padding: 16px 18px; overflow-x: auto; font-family: 'Cascadia Code', Consolas, monospace; font-size: 12.5px; line-height: 1.7; }
+
+/* Req list steps */
+.req-list { counter-reset: req; list-style: none; padding: 0; }
+.req-list li { counter-increment: req; display: flex; gap: 12px; align-items: flex-start; padding: 8px 0; border-bottom: 1px solid #f5f5f5; }
+.req-list li::before { content: 'R' counter(req); min-width: 30px; font-size: 11px; font-weight: 700; color: var(--true-dark); background: #F5E6E6; padding: 2px 6px; border-radius: 4px; margin-top: 1px; }
+.req-list li:last-child { border-bottom: none; }
+
+/* Footer */
+.page-footer { margin-top: 40px; text-align: center; font-size: 12px; color: #aaa; padding-bottom: 20px; }
+.page-footer strong { color: var(--true-dark); }
+
+p { margin: 6px 0; }
+ul, ol { padding-left: 20px; }
+li { margin: 4px 0; }
+</style>
+</head>
+<body>
+
+<!-- ══════════════════ PAGE HEADER ══════════════════ -->
+<div class="page-header">
+  <div class="rule-category">TIBCO BusinessEvents · FM Logic Documentation · OMXFM Request</div>
+  <h1>Request_BDH_UPDATE_DIRECT_DEBIT_STATUS</h1>
+  <div class="subtitle">Cancels Direct Debit mandates for all Customer accounts by sending an UpdateDirectDebitStatus request to the BDH (Bank Direct Handle) system via JMS.</div>
+  <div class="meta-chips">
+    <span class="chip">⚡ Priority: 5</span>
+    <span class="chip">🔁 ForwardChain: true</span>
+    <span class="chip">📡 Backend: BDH (Bank Direct Handle)</span>
+    <span class="chip">🚌 Transport: JMS Queue</span>
+    <span class="chip">📋 Activity: BDH_UPDATE_DIRECT_DEBIT_STATUS</span>
+    <span class="chip">📦 Namespace: Rules.OMConsumers.OMXFM.Request</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ══════════════════ TABLE OF CONTENTS ══════════════════ -->
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <div class="toc-grid">
+    <a href="#s1">1. Overview &amp; Purpose</a>
+    <a href="#s2">2. Rule Metadata &amp; Attributes</a>
+    <a href="#s3">3. Working Memory — Declared Objects</a>
+    <a href="#s4">4. Rule Conditions (WHEN)</a>
+    <a href="#s5">5. Execution Flow Diagram</a>
+    <a href="#s6">6. Rule Action (THEN) — Step-by-step</a>
+    <a href="#s8">8. System &amp; Integration Dependencies</a>
+    <a href="#s9">9. Detailed Payload Build</a>
+    <a href="#s10">10. XSLT Field Mapping Table</a>
+    <a href="#s11">11. Audit Logging</a>
+    <a href="#s12">12. Activity Status Management</a>
+    <a href="#s13">13. Exception / Error Handling</a>
+    <a href="#s14">14. Helper Functions Reference</a>
+    <a href="#s15">15. Function Dependency Tree</a>
+    <a href="#s16">16. Concept Definitions Referenced</a>
+    <a href="#s17">17. Migration Notes &amp; Recommendations</a>
+    <a href="#s18">18. Full Source Code</a>
+  </div>
+</div>
+
+<!-- ══════════════════ S1: OVERVIEW ══════════════════ -->
+<div class="section" id="s1">
+  <div class="section-header"><span class="sec-num">§ 1</span><h2>Overview &amp; Purpose</h2></div>
+  <div class="section-body">
+    <p>This rule is triggered when an order's process flow reaches the <code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code> activity in the <strong>WAITING</strong> state. It constructs a JMS request message and dispatches it to the <strong>BDH (Bank Direct Handle)</strong> system to cancel all Direct Debit mandates associated with the customer's accounts.</p>
+
+    <div class="alert alert-note" style="margin-top:14px;">
+      <strong>Business Intent:</strong> When a subscriber order is being processed (e.g., number porting, service cancellation, or SIM swap), any existing Direct Debit mandate must be cancelled with the bank before provisioning proceeds. This rule automates that cancellation by sending a bulk request — one <code>requestList</code> entry per account — with a hardcoded reason code of <code>DDMREQ</code> (Direct Debit Mandate Request) and status <code>C</code> (Cancel).
+    </div>
+
+    <div class="info-grid" style="margin-top:16px;">
+      <div class="info-cell"><div class="ic-lbl">Rule Namespace</div><div class="ic-val" style="font-size:12px;">Rules.OMConsumers.OMXFM.Request</div></div>
+      <div class="info-cell"><div class="ic-lbl">Target System</div><div class="ic-val">BDH (Bank Direct Handle)</div></div>
+      <div class="info-cell"><div class="ic-lbl">Operation</div><div class="ic-val">UpdateDirectDebitStatus</div></div>
+      <div class="info-cell"><div class="ic-lbl">Direction</div><div class="ic-val">Outbound (Request only)</div></div>
+      <div class="info-cell"><div class="ic-lbl">Transport</div><div class="ic-val">JMS Queue (Async)</div></div>
+      <div class="info-cell"><div class="ic-lbl">Result on Success</div><div class="ic-val">Activity → IN_PROGRESS</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ S2: METADATA ══════════════════ -->
+<div class="section" id="s2">
+  <div class="section-header"><span class="sec-num">§ 2</span><h2>Rule Metadata &amp; Attributes</h2></div>
+  <div class="section-body">
+    <table>
+      <thead><tr><th>Attribute</th><th>Value</th><th>Explanation</th></tr></thead>
+      <tbody>
+        <tr><td><strong>Full Rule Name</strong></td><td><code>Rules.OMConsumers.OMXFM.Request.Request_BDH_UPDATE_DIRECT_DEBIT_STATUS</code></td><td>Fully qualified TIBCO BE rule path</td></tr>
+        <tr><td><strong>Priority</strong></td><td><span class="badge b-blue">5</span></td><td>Standard FM request priority. Higher values run first when multiple rules are triggered simultaneously.</td></tr>
+        <tr><td><strong>ForwardChain</strong></td><td><span class="badge b-green">true</span></td><td>Rule will be re-evaluated after Working Memory modifications, enabling the response rule to fire automatically.</td></tr>
+        <tr><td><strong>Rule Type</strong></td><td><span class="badge b-jms">FM Request</span></td><td>Sends outbound request event to OMXFM channel; does not handle the response.</td></tr>
+        <tr><td><strong>File Path</strong></td><td><code>OMX-OM/Rules/OMConsumers/OMXFM/Request/Request_BDH_UPDATE_DIRECT_DEBIT_STATUS.rule</code></td><td></td></tr>
+        <tr><td><strong>Author</strong></td><td><code>DESKTOP-995HR2V</code></td><td>Build machine identifier (no human author specified)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════ S3: WORKING MEMORY ══════════════════ -->
+<div class="section" id="s3">
+  <div class="section-header"><span class="sec-num">§ 3</span><h2>Working Memory — Declared Objects</h2></div>
+  <div class="section-body">
+    <table>
+      <thead><tr><th>Variable</th><th>Type</th><th>Role</th><th>Key Fields Used</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>orderRequest</code></td>
+          <td><code>Concepts.OrderRequest.OrderRequest</code></td>
+          <td>The primary order container — holds all business data, customer info, accounts, process flow state, and flags.</td>
+          <td>
+            <code>ProcessFlow.NextActivityName</code>, <code>ProcessFlow.NextActivityID</code>,
+            <code>IsOrderResubmitted</code>, <code>OrderPriority</code>, <code>OrderData.OMXTrackingId</code>,
+            <code>OrderData.OrderID</code>, <code>OrderData.Customer.RefId</code>,
+            <code>OrderData.OrderType</code>, <code>OrderData.Customer.Account[*].AccountID</code>
+          </td>
+        </tr>
+        <tr>
+          <td><code>orderCurrentActivity</code></td>
+          <td><code>Concepts.OM.ProcessConfig.Activity</code></td>
+          <td>The current process step descriptor — controls eligibility checks, request counting, status, and routing.</td>
+          <td>
+            <code>@extId</code>, <code>ActivityID</code>, <code>Status</code>,
+            <code>PreExecCheck</code>, <code>RequestCount</code>,
+            <code>NextActivity</code>, <code>ExceptionActivity</code>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════ S4: CONDITIONS ══════════════════ -->
+<div class="section" id="s4">
+  <div class="section-header"><span class="sec-num">§ 4</span><h2>Rule Conditions (WHEN)</h2></div>
+  <div class="section-body">
+    <p>All four conditions must be <strong>simultaneously true</strong> for this rule to fire. They form a precise triple-lock: activity pointer, activity ID, and activity state.</p>
+    <br>
+    <div class="condition-block">
+      <div class="cond-num">Condition 1 — Activity Pointer Match</div>
+      <div class="cond-expr">orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</div>
+      <div class="cond-meaning">Ensures the candidate activity is exactly the one the order's process flow is currently pointing to. Prevents spurious rule firings from other WAITING activities in Working Memory.</div>
+    </div>
+    <div class="condition-block">
+      <div class="cond-num">Condition 2 — Activity Identity Check</div>
+      <div class="cond-expr">orderCurrentActivity.ActivityID == "BDH_UPDATE_DIRECT_DEBIT_STATUS"</div>
+      <div class="cond-meaning">Confirms the matched activity is specifically the BDH Update Direct Debit Status step. Prevents other activities with WAITING status from accidentally triggering this rule.</div>
+    </div>
+    <div class="condition-block">
+      <div class="cond-num">Condition 3 — Process Flow Consistency Guard</div>
+      <div class="cond-expr">orderRequest.ProcessFlow.NextActivityID == "BDH_UPDATE_DIRECT_DEBIT_STATUS"</div>
+      <div class="cond-meaning">Secondary cross-check on the ProcessFlow concept itself (not just the Activity concept). Guards against Working Memory inconsistency where the pointer was updated but the ID wasn't.</div>
+    </div>
+    <div class="condition-block">
+      <div class="cond-num">Condition 4 — Readiness Gate</div>
+      <div class="cond-expr">orderCurrentActivity.Status == "WAITING"</div>
+      <div class="cond-meaning">The activity must be in WAITING state. Activities in IN_PROGRESS, SUCCESS, ERROR, or SKIPPED states will not trigger this rule, preventing duplicate sends.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ S5: FLOW DIAGRAM ══════════════════ -->
+<div class="section" id="s5">
+  <div class="section-header"><span class="sec-num">§ 5</span><h2>Execution Flow Diagram</h2></div>
+  <div class="section-body">
+    <div class="flow">
+      <div class="flow-step">
+        <div class="step-line"><div class="step-num">1</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-title">Resubmit Flag Evaluation</div>
+          <div class="step-desc">Check if <code>orderCurrentActivity.RequestCount &gt; 0</code> AND <code>orderRequest.IsOrderResubmitted</code> is true → set <code>isActResub</code>. This flag prevents duplicate <code>RequestCount</code> increments during order resubmission.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-line"><div class="step-num">2</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-title">Load Activity Config &amp; PreExecCheck</div>
+          <div class="step-desc">Retrieve the Activity concept using <code>Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName)</code>. Read its <code>PreExecCheck</code> XPath expression string. Initialize <code>chkRes = "true"</code> and <code>isSkipped = true</code>.</div>
+        </div>
+      </div>
+      <div class="flow-step branch">
+        <div class="step-line"><div class="step-num">3</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-title">Conditional PreExecCheck Evaluation</div>
+          <div class="step-desc">If <code>String.length(nextAct.PreExecCheck) &gt; 0</code>: serialize <code>orderRequest</code> to XML string via <code>Instance.serializeUsingDefaults()</code>, then evaluate <code>chkXPath</code> via <code>XPath.execute()</code> against the serialized XML. The result overrides <code>chkRes</code>. If empty, <code>chkRes</code> remains <code>"true"</code> (execute always).</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-line"><div class="step-num">4</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-title">Build &amp; Send BDH Request Event</div>
+          <div class="step-desc"><em>(Only if <code>chkRes == "true"</code>)</em> — Execute XSLT to build <code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code> event. Iterate all <code>Customer/Account</code> entries with non-empty <code>AccountID</code>; emit one <code>requestList</code> element per account with static <code>reasonCode=DDMREQ</code> and <code>status=C</code>. Send via <code>Event.Ext.sendEventImmediate()</code>.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-line"><div class="step-num">5</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-title">Increment Request Counter (if new request)</div>
+          <div class="step-desc">If <code>!isActResub</code>, increment <code>orderCurrentActivity.RequestCount++</code>. Prevents double-counting during resubmissions.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-line"><div class="step-num">6</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-title">Emit Audit Log</div>
+          <div class="step-desc">Capture a nanosecond timestamp <code>pid = System.nanoTime()</code>. Build and send an OMXESB Logger event via <code>Event.Ext.sendEventImmediate()</code> with OPERATION_NAME=<code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code>, LOG_LEVEL=INFO, and AUDIT_TRACE=<em>"Request Sent for BDH_UPDATE_DIRECT_DEBIT_STATUS"</em>. Optionally copies the full request payload if <code>WritePayload=true</code>.</div>
+        </div>
+      </div>
+      <div class="flow-step">
+        <div class="step-line"><div class="step-num">7</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-title">Set <code>isSkipped = false</code></div>
+          <div class="step-desc">Marks that the request was sent (not skipped). Used by the downstream status-transition branch.</div>
+        </div>
+      </div>
+      <div class="flow-step branch">
+        <div class="step-line"><div class="step-num">8</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-title">Activity Status Transition (Branch)</div>
+          <div class="step-desc">
+            <strong>If NOT skipped:</strong> <code>orderCurrentActivity.Status = "IN_PROGRESS"</code> → call <code>SendDataToDB(orderRequest)</code>.<br>
+            <strong>If skipped (chkRes ≠ "true"):</strong> call <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code> → sets status to <code>SKIPPED</code> and advances the process flow to the next eligible activity.
+          </div>
+        </div>
+      </div>
+      <div class="flow-step error">
+        <div class="step-line"><div class="step-num">!</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <div class="step-title">Exception Path</div>
+          <div class="step-desc">Any exception in the <code>try</code> block is caught and routed to <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code> — sets activity status to <code>ERROR</code>, logs to ErrorLog channel, and activates the exception activity if configured.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ S6: THEN LOGIC ══════════════════ -->
+<div class="section" id="s6">
+  <div class="section-header"><span class="sec-num">§ 6</span><h2>Rule Action (THEN) — Step-by-Step Logic</h2></div>
+  <div class="section-body">
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">6.1</span> Local Variable Initialisation</div>
+      <table>
+        <thead><tr><th>Variable</th><th>Type</th><th>Expression</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>isActResub</code></td><td>boolean</td><td><code>orderCurrentActivity.RequestCount &gt; 0 &amp;&amp; orderRequest.IsOrderResubmitted</code></td><td>True if this activity has been previously sent AND the order is being resubmitted. Prevents RequestCount inflation.</td></tr>
+          <tr><td><code>nextAct</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td><code>Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, "/Concepts/OM/ProcessConfig/Activity")</code></td><td>Runtime lookup of the current activity concept for PreExecCheck.</td></tr>
+          <tr><td><code>chkXPath</code></td><td>String</td><td><code>nextAct.PreExecCheck</code></td><td>Configurable XPath skip condition expression from process config.</td></tr>
+          <tr><td><code>chkRes</code></td><td>String</td><td>Initially <code>"true"</code>; overridden by XPath evaluation if <code>chkXPath</code> is non-empty</td><td>Controls whether the request is sent or the activity is skipped.</td></tr>
+          <tr><td><code>isSkipped</code></td><td>boolean</td><td>Initially <code>true</code>; set to <code>false</code> after successful event send</td><td>Determines which status transition branch is taken.</td></tr>
+          <tr><td><code>pid</code></td><td>long</td><td><code>System.nanoTime()</code></td><td>Nanosecond process identifier used in audit log PROCESS_ID field.</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">6.2</span> PreExecCheck Logic</div>
+      <pre><span class="kw">if</span>(String.length(nextAct.PreExecCheck) &gt; <span class="num">0</span>) {
+    <span class="ty">String</span> sXML = Instance.serializeUsingDefaults(orderRequest);
+    chkRes = XPath.execute(<span class="str">"/(..."</span> + chkXPath + <span class="str">")"</span>, sXML,
+        <span class="str">"ns0=www.tibco.com/be/ontology/Concepts/OrderRequest/OrderRequest"</span>);
+}</pre>
+      <div class="alert alert-info" style="margin-top:10px;">
+        The PreExecCheck is a runtime-configurable XPath expression stored in the ProcessConfig data. If it evaluates to anything other than <code>"true"</code>, the activity is skipped. This allows ops teams to conditionally bypass BDH integration per order type without a code deploy.
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">6.3</span> Event Build &amp; Send</div>
+      <p>When <code>chkRes == "true"</code>:</p>
+      <ol style="margin-top:8px;">
+        <li>An <code>Events.OMConsumers.OMXFM.Request.BDH_UPDATE_DIRECT_DEBIT_STATUS</code> event is constructed using inline XSLT transformation against <code>$orderRequest</code>.</li>
+        <li>The event <code>extId</code> is assigned via <code>OMXUtils:generateTrackingID()</code> (custom TIBCO function).</li>
+        <li>JMS header fields (<code>JMSPriority</code>, <code>JMSCorrelationID</code>) and metadata fields (<code>OrderID</code>, <code>RefID</code>, <code>OrderType</code>) are conditionally mapped.</li>
+        <li>The payload iterates over all <code>Customer/Account</code> entries, emitting one <code>ns1:requestList</code> per account with non-empty <code>AccountID</code>.</li>
+        <li><code>Event.Ext.sendEventImmediate(reqEvent)</code> dispatches the message to the JMS queue synchronously in the current thread.</li>
+      </ol>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════ S8: DEPENDENCIES ══════════════════ -->
+<div class="section" id="s8">
+  <div class="section-header"><span class="sec-num">§ 8</span><h2>System &amp; Integration Dependencies</h2></div>
+  <div class="section-body">
+
+    <!-- 8.1 Order Type -->
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">8.1</span> Order Type Dependencies</div>
+      <p>This rule fires for any order type that includes <code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code> in its ProcessConfig activity chain. Typical order flows that include this step:</p>
+      <table>
+        <thead><tr><th>Order Type / Scenario</th><th>Rationale</th></tr></thead>
+        <tbody>
+          <tr><td>Number Porting (Port-Out)</td><td>Subscriber leaving; direct debit mandate must be cancelled before network release.</td></tr>
+          <tr><td>Service Cancellation / Terminate</td><td>Account closure requires clearing all bank mandate instructions.</td></tr>
+          <tr><td>SIM Swap / Account Migration</td><td>Old account's DD mandate cancelled; new account re-registers if needed.</td></tr>
+          <tr><td>Contract Renewal with New Account</td><td>Re-registration may cancel existing DD and set up a new one.</td></tr>
+        </tbody>
+      </table>
+      <div class="alert alert-info" style="margin-top:10px;">
+        The exact order types are determined by the ProcessConfig entries in the database, not by this rule. This rule is agnostic to order type — it fires on <em>any</em> order whose next activity is <code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code>.
+      </div>
+    </div>
+
+    <!-- 8.2 Channel -->
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">8.2</span> ESB / JMS Channel Dependencies</div>
+      <table>
+        <thead><tr><th>Direction</th><th>Channel</th><th>Destination Name</th><th>Queue Pattern</th><th>Serializer</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><span class="badge b-orange">OUTBOUND</span></td>
+            <td><code>/Channels/OMXFMConnectionRequest</code></td>
+            <td><code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code></td>
+            <td><code>{Env}.{Company}.{App}.{FM}.bdh_update_direct_debit_status.req</code></td>
+            <td>TextMessageSerializer (JMS)</td>
+            <td>Request to BDH system</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-blue">INBOUND</span></td>
+            <td><code>/Channels/OMXFMConnectionResponse</code></td>
+            <td><code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code></td>
+            <td><code>{Env}.{Company}.{App}.{OM}.bdh_update_direct_debit_status.res</code></td>
+            <td>TextMessageSerializer (JMS)</td>
+            <td>Response from BDH (handled by separate Response rule)</td>
+          </tr>
+          <tr>
+            <td><span class="badge b-log">LOG</span></td>
+            <td><code>/Channels/LogConnection</code></td>
+            <td><code>AuditLog</code></td>
+            <td><em>AuditLog queue</em></td>
+            <td>—</td>
+            <td>Audit trail for the outbound request</td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="alert alert-note" style="margin-top:10px;">
+        <strong>JMS Connection:</strong> The channel references <code>/_SharedResources/Connections/JMS/Connections/FM/OMX_FM_Connection.sharedjmscon</code> — the shared FM JMS connection pool. Queue names use parametric tokens (<code>%%OMX_COMMON/Env_Name%%</code>, etc.) resolved at deployment time.
+      </div>
+    </div>
+
+    <!-- 8.3 Backend API -->
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">8.3</span> Backend API Details</div>
+      <table>
+        <thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Target System</strong></td><td>BDH — Bank Direct Handle (banking integration layer)</td></tr>
+          <tr><td><strong>Operation</strong></td><td>UpdateDirectDebitStatus</td></tr>
+          <tr><td><strong>Schema (Request)</strong></td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/BDH/UpdateDirectDebitStatus.xsd</code></td></tr>
+          <tr><td><strong>Schema Namespace Prefix</strong></td><td><code>ns1</code> — <code>pfx2</code></td></tr>
+          <tr><td><strong>Root Element</strong></td><td><code>ns1:UpdateDirectDebitStatusReq</code></td></tr>
+          <tr><td><strong>Protocol</strong></td><td>JMS (Asynchronous — fire-and-forget from this rule)</td></tr>
+          <tr><td><strong>Correlation Pattern</strong></td><td><code>JMSCorrelationID</code> = <code>OMXTrackingId</code> — the response rule matches response back by this ID</td></tr>
+          <tr><td><strong>Hardcoded reasonCode</strong></td><td><code>DDMREQ</code> — Direct Debit Mandate Request (cancel)</td></tr>
+          <tr><td><strong>Hardcoded status</strong></td><td><code>C</code> — Cancel</td></tr>
+          <tr><td><strong>Account iteration</strong></td><td>One <code>requestList</code> per <code>Customer/Account</code> with non-empty <code>AccountID</code></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 8.4 BE Working Memory -->
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">8.4</span> BE Working Memory Dependencies</div>
+      <table>
+        <thead><tr><th>Concept</th><th>Field</th><th>Access</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>OrderRequest</code></td><td><code>ProcessFlow.NextActivityName</code></td><td>READ</td><td>Condition match &amp; Activity lookup</td></tr>
+          <tr><td><code>OrderRequest</code></td><td><code>ProcessFlow.NextActivityID</code></td><td>READ</td><td>Condition guard</td></tr>
+          <tr><td><code>OrderRequest</code></td><td><code>IsOrderResubmitted</code></td><td>READ</td><td>Resubmit detection</td></tr>
+          <tr><td><code>OrderRequest</code></td><td><code>OrderPriority</code></td><td>READ</td><td>JMS priority mapping</td></tr>
+          <tr><td><code>OrderRequest</code></td><td><code>OrderData.OMXTrackingId</code></td><td>READ</td><td>JMSCorrelationID + logger ESBUUID</td></tr>
+          <tr><td><code>OrderRequest</code></td><td><code>OrderData.OrderID</code></td><td>READ</td><td>Payload OrderID field</td></tr>
+          <tr><td><code>OrderRequest</code></td><td><code>OrderData.Customer.RefId</code></td><td>READ</td><td>Payload RefID field</td></tr>
+          <tr><td><code>OrderRequest</code></td><td><code>OrderData.OrderType</code></td><td>READ</td><td>Payload OrderType field</td></tr>
+          <tr><td><code>OrderRequest</code></td><td><code>OrderData.Customer.Account[*].AccountID</code></td><td>READ</td><td>Account iteration for requestList</td></tr>
+          <tr><td><code>Activity</code></td><td><code>@extId</code></td><td>READ</td><td>Condition match (pointer identity)</td></tr>
+          <tr><td><code>Activity</code></td><td><code>ActivityID</code></td><td>READ</td><td>Condition guard</td></tr>
+          <tr><td><code>Activity</code></td><td><code>Status</code></td><td>READ → WRITE</td><td>Trigger condition; updated to IN_PROGRESS after send</td></tr>
+          <tr><td><code>Activity</code></td><td><code>PreExecCheck</code></td><td>READ</td><td>Optional skip XPath</td></tr>
+          <tr><td><code>Activity</code></td><td><code>RequestCount</code></td><td>READ → WRITE</td><td>Incremented on first send</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- 8.5 ExtendedInfo -->
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">8.5</span> ExtendedInfo Fields Required</div>
+      <div class="alert alert-note">
+        <strong>None.</strong> This rule's XSLT does not reference any <code>ExtendedInfo[Name='...']/Value</code> patterns. The BDH UpdateDirectDebitStatus payload is entirely driven by structured <code>OrderData</code> fields and hardcoded static values. No ExtendedInfo dependency exists.
+      </div>
+    </div>
+
+    <!-- 8.6 Global Variables -->
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">8.6</span> Global Variable Dependencies</div>
+      <p>Referenced indirectly via Logger XSLT and helper functions:</p>
+      <table>
+        <thead><tr><th>Global Variable Path</th><th>Used By</th><th>Purpose</th></tr></thead>
+        <tbody>
+          <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Logger XSLT</td><td>COMPONENT_NAME in audit log</td></tr>
+          <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>Logger XSLT</td><td>TARGET_SYSTEM in audit log</td></tr>
+          <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Logger XSLT</td><td>LOG_LEVEL = INFO for this request log</td></tr>
+          <tr><td><code>OMX_OM/WritePayload</code></td><td>Logger XSLT</td><td>If <code>"true"</code>, the full request event XML is included in the audit log payload</td></tr>
+          <tr><td><code>OMX_OM/ComponentName</code> (<code>"OM"</code>)</td><td>HandleActivityException</td><td>Response code composition on error</td></tr>
+          <tr><td><code>OMX_OM/Services/OMServices</code> (<code>"01"</code>)</td><td>HandleActivityException</td><td>Service code in error response</td></tr>
+          <tr><td><code>OMX_OM/Services/SubmitOrder</code> (<code>"01"</code>)</td><td>HandleActivityException</td><td>Operation code in error response</td></tr>
+          <tr><td><code>OMX_COMMON/Severity/High</code> (<code>"03"</code>)</td><td>HandleActivityException</td><td>Severity code for errors</td></tr>
+          <tr><td><code>OMX_OM/ResponseCodes/GenericError</code> (<code>"999"</code>)</td><td>HandleActivityException</td><td>Error response code suffix</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════ S9: PAYLOAD BUILD ══════════════════ -->
+<div class="section" id="s9">
+  <div class="section-header"><span class="sec-num">§ 9</span><h2>Detailed Payload Build</h2></div>
+  <div class="section-body">
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">9.1</span> XSLT Parameter Binding</div>
+      <table>
+        <thead><tr><th>XSLT Parameter</th><th>Bound To</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td><code>$orderRequest</code></td><td><code>orderRequest</code> concept (serialized XML)</td><td>The full order request XML tree. All data fields are sourced from this parameter.</td></tr>
+        </tbody>
+      </table>
+      <p style="margin-top:8px;">The XSLT template matches <code>"/"</code> and uses <code>$orderRequest</code> as the sole data source (no other parameters). The namespace <code>OMXUtils</code> provides the <code>generateTrackingID()</code> custom extension function.</p>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">9.2</span> Event Container Construction</div>
+      <pre><span class="xml-tag">&lt;createEvent&gt;</span>
+  <span class="xml-tag">&lt;event&gt;</span>
+    <span class="xml-tag">&lt;xsl:attribute</span> <span class="xml-attr">name</span>=<span class="xml-val">"extId"</span><span class="xml-tag">&gt;</span>
+      <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select</span>=<span class="xml-val">"OMXUtils:generateTrackingID()"</span><span class="xml-tag">/&gt;</span>
+    <span class="xml-tag">&lt;/xsl:attribute&gt;</span>
+    <span class="cmt">&lt;!-- ... fields ... --&gt;</span>
+  <span class="xml-tag">&lt;/event&gt;</span>
+<span class="xml-tag">&lt;/createEvent&gt;</span></pre>
+      <p style="margin-top:8px;">The outer <code>&lt;createEvent&gt;&lt;event&gt;</code> structure is the TIBCO BE event creation wrapper. The <code>extId</code> attribute is always generated fresh via <code>OMXUtils:generateTrackingID()</code>, ensuring each dispatch gets a unique event identity.</p>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">9.3</span> JMS / Event Header Fields</div>
+      <table>
+        <thead><tr><th>Field</th><th>Source XPath</th><th>Condition</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>JMSPriority</code></td>
+            <td><code>$orderRequest/OrderPriority</code></td>
+            <td><span class="field-required">★ Required (always emitted)</span></td>
+            <td>Maps order priority to JMS message priority (0–9). Controls delivery precedence in the broker.</td>
+          </tr>
+          <tr>
+            <td><code>JMSCorrelationID</code></td>
+            <td><code>$orderRequest/OrderData/OMXTrackingId</code></td>
+            <td><span class="field-optional">○ Conditional: if OMXTrackingId exists</span></td>
+            <td>Critical for async response correlation. The Response rule matches this ID to link the BDH reply back to the order.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">9.4</span> Event Metadata Fields</div>
+      <table>
+        <thead><tr><th>Field</th><th>Source XPath</th><th>Condition</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr>
+            <td><code>OrderID</code></td>
+            <td><code>$orderRequest/OrderData/OrderID</code></td>
+            <td><span class="field-optional">○ Conditional: if OrderID exists</span></td>
+            <td>OMX Order identifier. Carried in the message for end-to-end traceability.</td>
+          </tr>
+          <tr>
+            <td><code>RefID</code></td>
+            <td><code>$orderRequest/OrderData/Customer/RefId</code></td>
+            <td><span class="field-required">★ Always emitted</span></td>
+            <td>Customer reference ID. Emitted unconditionally (no xsl:if guard).</td>
+          </tr>
+          <tr>
+            <td><code>OrderType</code></td>
+            <td><code>$orderRequest/OrderData/OrderType</code></td>
+            <td><span class="field-optional">○ Conditional: if OrderType exists</span></td>
+            <td>The order type string (e.g., PORT_IN, TERMINATE). Informs BDH of the context.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">9.5</span> Payload Root Element</div>
+      <p>The <code>&lt;payload&gt;</code> wrapper contains a single root element <code>&lt;ns1:UpdateDirectDebitStatusReq&gt;</code> from the <code>UpdateDirectDebitStatus.xsd</code> schema. Its content is entirely produced by the account for-each loop in section 9.6.</p>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">9.6</span> Account Loop — Core Payload Block</div>
+      <pre><span class="xml-tag">&lt;xsl:for-each</span> <span class="xml-attr">select</span>=<span class="xml-val">"$orderRequest/OrderData/Customer/Account"</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;xsl:if</span> <span class="xml-attr">test</span>=<span class="xml-val">"string-length(AccountID) &gt; 0"</span><span class="xml-tag">&gt;</span>
+        <span class="xml-tag">&lt;ns1:requestList&gt;</span>
+            <span class="xml-tag">&lt;ns1:accountNo&gt;</span>
+                <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select</span>=<span class="xml-val">"AccountID"</span><span class="xml-tag">/&gt;</span>
+            <span class="xml-tag">&lt;/ns1:accountNo&gt;</span>
+            <span class="xml-tag">&lt;ns1:reasonCode&gt;</span>
+                <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select</span>=<span class="xml-val">"&amp;quot;DDMREQ&amp;quot;"</span><span class="xml-tag">/&gt;</span>  <span class="cmt">&lt;!-- static --&gt;</span>
+            <span class="xml-tag">&lt;/ns1:reasonCode&gt;</span>
+            <span class="xml-tag">&lt;ns1:status&gt;</span>
+                <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select</span>=<span class="xml-val">"&amp;quot;C&amp;quot;"</span><span class="xml-tag">/&gt;</span>  <span class="cmt">&lt;!-- static: Cancel --&gt;</span>
+            <span class="xml-tag">&lt;/ns1:status&gt;</span>
+        <span class="xml-tag">&lt;/ns1:requestList&gt;</span>
+    <span class="xml-tag">&lt;/xsl:if&gt;</span>
+<span class="xml-tag">&lt;/xsl:for-each&gt;</span></pre>
+      <div class="alert alert-warn" style="margin-top:10px;">
+        <strong>Static Values Alert:</strong> Both <code>reasonCode</code> (<code>DDMREQ</code>) and <code>status</code> (<code>C</code>) are hardcoded literals. There is no dynamic lookup — every invocation of this rule will always send the same cancel instruction. Migration must preserve this semantics or provide a configuration mechanism.
+      </div>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">9.7</span> Complete Generated XML Example (Illustrative)</div>
+      <div class="xml-example">
+<span class="xml-tag">&lt;createEvent&gt;</span>
+  <span class="xml-tag">&lt;event</span> <span class="xml-attr">extId</span>=<span class="xml-val">"TRK20250617-112233-XA9B"</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;JMSPriority&gt;</span>5<span class="xml-tag">&lt;/JMSPriority&gt;</span>
+    <span class="xml-tag">&lt;JMSCorrelationID&gt;</span>OMX-2025-00145623<span class="xml-tag">&lt;/JMSCorrelationID&gt;</span>
+    <span class="xml-tag">&lt;OrderID&gt;</span>ORD-00145623<span class="xml-tag">&lt;/OrderID&gt;</span>
+    <span class="xml-tag">&lt;RefID&gt;</span>CUST-00987654<span class="xml-tag">&lt;/RefID&gt;</span>
+    <span class="xml-tag">&lt;OrderType&gt;</span>PORT_IN<span class="xml-tag">&lt;/OrderType&gt;</span>
+    <span class="xml-tag">&lt;payload&gt;</span>
+      <span class="xml-tag">&lt;ns1:UpdateDirectDebitStatusReq</span>
+        <span class="xml-attr">xmlns:ns1</span>=<span class="xml-val">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/BDH/UpdateDirectDebitStatus.xsd"</span><span class="xml-tag">&gt;</span>
+        <span class="xml-tag">&lt;ns1:requestList&gt;</span>
+          <span class="xml-tag">&lt;ns1:accountNo&gt;</span>ACC001234567<span class="xml-tag">&lt;/ns1:accountNo&gt;</span>
+          <span class="xml-tag">&lt;ns1:reasonCode&gt;</span>DDMREQ<span class="xml-tag">&lt;/ns1:reasonCode&gt;</span>
+          <span class="xml-tag">&lt;ns1:status&gt;</span>C<span class="xml-tag">&lt;/ns1:status&gt;</span>
+        <span class="xml-tag">&lt;/ns1:requestList&gt;</span>
+        <span class="xml-tag">&lt;ns1:requestList&gt;</span>
+          <span class="xml-tag">&lt;ns1:accountNo&gt;</span>ACC007654321<span class="xml-tag">&lt;/ns1:accountNo&gt;</span>
+          <span class="xml-tag">&lt;ns1:reasonCode&gt;</span>DDMREQ<span class="xml-tag">&lt;/ns1:reasonCode&gt;</span>
+          <span class="xml-tag">&lt;ns1:status&gt;</span>C<span class="xml-tag">&lt;/ns1:status&gt;</span>
+        <span class="xml-tag">&lt;/ns1:requestList&gt;</span>
+      <span class="xml-tag">&lt;/ns1:UpdateDirectDebitStatusReq&gt;</span>
+    <span class="xml-tag">&lt;/payload&gt;</span>
+  <span class="xml-tag">&lt;/event&gt;</span>
+<span class="xml-tag">&lt;/createEvent&gt;</span>
+      </div>
+      <p style="margin-top:8px;font-size:12px;color:#666;">* Example uses 2 accounts and simulated values. The actual number of <code>requestList</code> entries equals the number of non-empty <code>AccountID</code> entries in the order's Customer/Account array.</p>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════ S10: FIELD MAPPING TABLE ══════════════════ -->
+<div class="section" id="s10">
+  <div class="section-header"><span class="sec-num">§ 10</span><h2>XSLT Field Mapping Table</h2></div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr>
+          <th>Target Field</th>
+          <th>Type</th>
+          <th>Source XPath / Value</th>
+          <th>Condition</th>
+          <th>Notes</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><code>event/@extId</code></td>
+          <td><span class="badge b-purple">COMPUTED</span></td>
+          <td><code>OMXUtils:generateTrackingID()</code></td>
+          <td><span class="field-required">★ Always</span></td>
+          <td>Auto-generated unique tracking ID for this event instance</td>
+        </tr>
+        <tr>
+          <td><code>JMSPriority</code></td>
+          <td><span class="badge b-blue">DYNAMIC</span></td>
+          <td><code>$orderRequest/OrderPriority</code></td>
+          <td><span class="field-required">★ Always</span></td>
+          <td>Integer order priority (0–9)</td>
+        </tr>
+        <tr>
+          <td><code>JMSCorrelationID</code></td>
+          <td><span class="badge b-blue">DYNAMIC</span></td>
+          <td><code>$orderRequest/OrderData/OMXTrackingId</code></td>
+          <td><span class="field-optional">○ if OMXTrackingId exists</span></td>
+          <td>Required for async response matching</td>
+        </tr>
+        <tr>
+          <td><code>OrderID</code></td>
+          <td><span class="badge b-blue">DYNAMIC</span></td>
+          <td><code>$orderRequest/OrderData/OrderID</code></td>
+          <td><span class="field-optional">○ if OrderID exists</span></td>
+          <td>OMX order reference</td>
+        </tr>
+        <tr>
+          <td><code>RefID</code></td>
+          <td><span class="badge b-blue">DYNAMIC</span></td>
+          <td><code>$orderRequest/OrderData/Customer/RefId</code></td>
+          <td><span class="field-required">★ Always</span></td>
+          <td>Customer RefId — always emitted (no xsl:if)</td>
+        </tr>
+        <tr>
+          <td><code>OrderType</code></td>
+          <td><span class="badge b-blue">DYNAMIC</span></td>
+          <td><code>$orderRequest/OrderData/OrderType</code></td>
+          <td><span class="field-optional">○ if OrderType exists</span></td>
+          <td>Order type context for BDH</td>
+        </tr>
+        <tr style="background:#fafafa;">
+          <td colspan="5" style="font-size:12px;color:#666;font-style:italic;padding:6px 12px;">— For-each: $orderRequest/OrderData/Customer/Account [where string-length(AccountID) &gt; 0] —</td>
+        </tr>
+        <tr>
+          <td><code>ns1:requestList / ns1:accountNo</code></td>
+          <td><span class="badge b-blue">DYNAMIC</span></td>
+          <td><code>AccountID</code> (relative within for-each)</td>
+          <td><span class="field-optional">○ if AccountID non-empty</span></td>
+          <td>Bank account number for DD cancellation</td>
+        </tr>
+        <tr>
+          <td><code>ns1:requestList / ns1:reasonCode</code></td>
+          <td><span class="badge b-gray">STATIC</span></td>
+          <td><code>"DDMREQ"</code></td>
+          <td><span class="field-required">★ Always (per account)</span></td>
+          <td>Hardcoded. Reason: Direct Debit Mandate Request.</td>
+        </tr>
+        <tr>
+          <td><code>ns1:requestList / ns1:status</code></td>
+          <td><span class="badge b-gray">STATIC</span></td>
+          <td><code>"C"</code></td>
+          <td><span class="field-required">★ Always (per account)</span></td>
+          <td>Hardcoded. Status: Cancel.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════ S11: AUDIT LOGGING ══════════════════ -->
+<div class="section" id="s11">
+  <div class="section-header"><span class="sec-num">§ 11</span><h2>Audit Logging</h2></div>
+  <div class="section-body">
+    <p>After a successful request send, an audit log event is emitted via <code>Event.Ext.sendEventImmediate()</code> to the <code>LogConnection / AuditLog</code> channel.</p>
+    <table style="margin-top:12px;">
+      <thead><tr><th>Logger Field</th><th>Value</th><th>Source</th></tr></thead>
+      <tbody>
+        <tr><td><code>ESBUUID</code></td><td><em>OMXTrackingId value</em></td><td>Conditional: <code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+        <tr><td><code>PROCESS_ID</code></td><td><code>{nanoTime}_REQ</code></td><td><code>concat($pid, "_REQ")</code></td></tr>
+        <tr><td><code>COMPONENT_NAME</code></td><td><em>OMX_CEP component name</em></td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+        <tr><td><code>OPERATION_NAME</code></td><td><code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code></td><td>Static string</td></tr>
+        <tr><td><code>TARGET_SYSTEM</code></td><td><em>OMX_FM component name</em></td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+        <tr><td><code>LOG_LEVEL</code></td><td>INFO</td><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td></tr>
+        <tr><td><code>AUDIT_TRACE</code></td><td><code>Request Sent for BDH_UPDATE_DIRECT_DEBIT_STATUS</code></td><td>Static string</td></tr>
+        <tr><td><code>AUDIT_TS</code></td><td><em>Current timestamp</em></td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+        <tr><td><code>payload</code></td><td><em>Copy of reqEvent XML</em></td><td>Conditional: only if <code>$globalVariables/OMX_OM/WritePayload = "true"</code></td></tr>
+      </tbody>
+    </table>
+    <div class="alert alert-info" style="margin-top:12px;">
+      The payload is conditionally written to avoid audit log bloat in production. Set <code>OMX_OM/WritePayload = "true"</code> in global variables to enable full payload capture for debugging.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ S12: STATUS MANAGEMENT ══════════════════ -->
+<div class="section" id="s12">
+  <div class="section-header"><span class="sec-num">§ 12</span><h2>Activity Status Management</h2></div>
+  <div class="section-body">
+    <table>
+      <thead><tr><th>Scenario</th><th>Status Code</th><th>Status String</th><th>Who Sets It</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Rule trigger condition</td>
+          <td>—</td>
+          <td><span class="badge b-gray">WAITING</span></td>
+          <td>Upstream rule (process flow advance)</td>
+          <td>Enables this rule to fire</td>
+        </tr>
+        <tr>
+          <td>Request sent successfully</td>
+          <td><code>"1"</code></td>
+          <td><span class="badge b-orange">IN_PROGRESS</span></td>
+          <td><code>GetActivityStatusString("1", false)</code></td>
+          <td>Rule marks activity in-flight; waits for BDH response</td>
+        </tr>
+        <tr>
+          <td>PreExecCheck fails (chkRes ≠ "true")</td>
+          <td><code>"4"</code></td>
+          <td><span class="badge b-purple">SKIPPED</span></td>
+          <td><code>SkipActivity(..., "4")</code></td>
+          <td>Activity bypassed; process flow advances to next non-SUCCESS activity</td>
+        </tr>
+        <tr>
+          <td>Exception caught</td>
+          <td><code>"3"</code></td>
+          <td><span class="badge b-red">ERROR</span></td>
+          <td><code>HandleActivityException()</code></td>
+          <td>Activity and order marked failed; exception activity chain activated</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="alert alert-note" style="margin-top:12px;">
+      <strong>Note:</strong> There is no <code>SUCCESS</code> state set by <em>this</em> rule. Success (<code>"2"</code>) is set by the corresponding <code>Response_BDH_UPDATE_DIRECT_DEBIT_STATUS</code> rule when the BDH reply arrives on the response queue.
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ S13: EXCEPTION HANDLING ══════════════════ -->
+<div class="section" id="s13">
+  <div class="section-header"><span class="sec-num">§ 13</span><h2>Exception / Error Handling</h2></div>
+  <div class="section-body">
+    <p>The entire THEN body is wrapped in a single <code>try { ... } catch (Exception ae) { ... }</code> block. Any runtime exception (JMS send failure, XSLT error, null pointer, etc.) is routed to:</p>
+    <pre><span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);</pre>
+    <p style="margin-top:10px;"><strong><code>HandleActivityException</code> performs the following:</strong></p>
+    <ol style="margin-top:8px;">
+      <li>Reads global variables to compose a structured response code: <code>{ComponentName}{ServiceCode}{OperationCode}{Severity}{ErrorCode}</code> → e.g., <code>OM010103999</code></li>
+      <li>Sets <code>orderCurrentActivity.Status = "ERROR"</code></li>
+      <li>Writes <code>orderCurrentActivity.ResponseCode</code> and <code>ResponseMessage</code></li>
+      <li>Sets <code>orderRequest.OrderStatus</code> to FAILED (status 3)</li>
+      <li>Calls <code>RuleFunctions.Helpers.SetResponseCode()</code> to propagate the error</li>
+      <li>Emits an audit log to <code>/Channels/LogConnection/ErrorLog</code> at ERROR level, including exception type, message, and stack trace</li>
+      <li>If <code>orderCurrentActivity.ExceptionActivity</code> is non-blank: retrieves that activity, sets it to WAITING, and redirects the process flow — enabling a configurable exception-handling path</li>
+      <li>Calls <code>SendDataToDB(orderRequest)</code> to persist the error state</li>
+    </ol>
+  </div>
+</div>
+
+<!-- ══════════════════ S14: HELPER FUNCTIONS ══════════════════ -->
+<div class="section" id="s14">
+  <div class="section-header"><span class="sec-num">§ 14</span><h2>Helper Functions Reference</h2></div>
+  <div class="section-body">
+    <table>
+      <thead><tr><th>Function</th><th>Signature</th><th>Validity</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>GetActivityStatusString</code></td>
+          <td><code>String(String completionStatus, boolean isResponseCode)</code></td>
+          <td><span class="badge b-orange">ACTION</span></td>
+          <td>Maps a numeric status code (<code>"0"–"5"</code>) to a human-readable string (WAITING, IN_PROGRESS, SUCCESS, ERROR, SKIPPED, BLOCKING). When <code>isResponseCode=true</code>, extracts the last 3 chars and checks for <code>"000"</code> → SUCCESS vs ERROR.</td>
+        </tr>
+        <tr>
+          <td><code>SendDataToDB</code></td>
+          <td><code>void(OrderRequest orderRequest)</code></td>
+          <td><span class="badge b-orange">ACTION</span></td>
+          <td>Persists the current state of the OrderRequest concept to the database. Handles serialization, Redis queue management (if enabled), and synchronization. Large function with full activity/parameter mapping logic.</td>
+        </tr>
+        <tr>
+          <td><code>SkipActivity</code></td>
+          <td><code>void(OrderRequest orderRequest, Activity orderCurrentActivity, String currentActivityStatus)</code></td>
+          <td><span class="badge b-orange">ACTION</span></td>
+          <td>Marks the current activity as SKIPPED, then walks the NextActivity chain to find the next non-SUCCESS activity. Advances the process flow pointer (<code>NextActivityName</code>, <code>NextActivityID</code>) and sets the target to WAITING. Handles end-of-chain order completion logic.</td>
+        </tr>
+        <tr>
+          <td><code>HandleActivityException</code></td>
+          <td><code>void(OrderRequest orderRequest, Activity orderCurrentActivity, Exception ae, String inRefId)</code></td>
+          <td><span class="badge b-orange">ACTION</span></td>
+          <td>Centralised exception handler. Sets activity/order to ERROR state, composes structured response code, emits error audit log, optionally routes to a configured exception activity, and persists to DB.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ══════════════════ S15: DEPENDENCY TREE ══════════════════ -->
+<div class="section" id="s15">
+  <div class="section-header"><span class="sec-num">§ 15</span><h2>Function Dependency Tree</h2></div>
+  <div class="section-body">
+    <div class="tree">
+<span class="t-rule">Rules.OMConsumers.OMXFM.Request.Request_BDH_UPDATE_DIRECT_DEBIT_STATUS</span>
+│
+├── <span class="cmt">[built-in]</span> Instance.getByExtIdByUri()
+├── <span class="cmt">[built-in]</span> String.length() / String.equals()
+├── <span class="cmt">[built-in]</span> Instance.serializeUsingDefaults()
+├── <span class="cmt">[built-in]</span> XPath.execute()
+├── <span class="cmt">[built-in]</span> Event.createEvent() + XSLT
+│   └── <span class="cmt">[custom-fn]</span> OMXUtils:generateTrackingID()
+├── <span class="cmt">[built-in]</span> Event.Ext.sendEventImmediate()   [×2: request + logger]
+├── <span class="cmt">[built-in]</span> System.nanoTime()
+│
+├── <span class="t-fn">RuleFunctions.Helpers.GetActivityStatusString</span>   <span class="cmt">← sets IN_PROGRESS</span>
+│   └── <span class="cmt">[built-in]</span> XPath.evalAsString()            <span class="cmt">(isResponseCode path)</span>
+│
+├── <span class="t-fn">RuleFunctions.Helpers.SendDataToDB</span>
+│   ├── <span class="cmt">[built-in]</span> Log.getLogger() / Log.log()
+│   ├── <span class="cmt">[built-in]</span> Instance.getByExtIdByUri()       <span class="cmt">(DynamicVariable)</span>
+│   └── <span class="cmt">... (large internal logic: Redis, DB serialization)</span>
+│
+├── <span class="t-fn">RuleFunctions.Helpers.SkipActivity</span>              <span class="cmt">← skip path only</span>
+│   ├── <span class="t-helper">RuleFunctions.Helpers.GetActivityStatusString</span>
+│   ├── <span class="t-helper">RuleFunctions.Helpers.BRMS.IsBlank</span>
+│   ├── <span class="t-helper">RuleFunctions.Helpers.GetOrderStatusString</span>
+│   ├── <span class="t-helper">RuleFunctions.Helpers.SendDataToDB</span>
+│   └── <span class="cmt">[built-in]</span> System.getGlobalVariableAsString()
+│
+└── <span class="t-fn">RuleFunctions.Helpers.HandleActivityException</span>   <span class="cmt">← catch path only</span>
+    ├── <span class="cmt">[built-in]</span> System.getGlobalVariableAsString()
+    ├── <span class="t-helper">RuleFunctions.Helpers.GetActivityStatusString</span>
+    ├── <span class="t-helper">RuleFunctions.Helpers.GetOrderStatusString</span>
+    ├── <span class="t-helper">RuleFunctions.Helpers.SetResponseCode</span>
+    ├── <span class="cmt">[built-in]</span> Event.Ext.routeToImmediate()
+    └── <span class="t-helper">RuleFunctions.Helpers.SendDataToDB</span>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════ S16: CONCEPTS ══════════════════ -->
+<div class="section" id="s16">
+  <div class="section-header"><span class="sec-num">§ 16</span><h2>Concept Definitions Referenced</h2></div>
+  <div class="section-body">
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">16.1</span> Concepts.OrderRequest.OrderRequest</div>
+      <p>Primary order container. Key properties relevant to this rule:</p>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Used In Rule</th></tr></thead>
+        <tbody>
+          <tr><td>OrderPriority</td><td>int</td><td>JMSPriority in event</td></tr>
+          <tr><td>OrderStatus</td><td>String</td><td>Read by SkipActivity / HandleActivityException</td></tr>
+          <tr><td>ProcessFlow</td><td>ContainedConcept → ProcessConfig</td><td>NextActivityName, NextActivityID (conditions + lookup)</td></tr>
+          <tr><td>OrderData</td><td>ContainedConcept → OrderData</td><td>OMXTrackingId, OrderID, OrderType, Customer.RefId, Customer.Account[*]</td></tr>
+          <tr><td>IsOrderResubmitted</td><td>boolean</td><td>Resubmit detection flag</td></tr>
+          <tr><td>ResponseCode / ResponseMessage</td><td>String</td><td>Written on error path</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">16.2</span> Concepts.OM.ProcessConfig.Activity</div>
+      <p>Process step descriptor — one instance per activity in the order's configured flow:</p>
+      <table>
+        <thead><tr><th>Property</th><th>Type</th><th>Used In Rule</th></tr></thead>
+        <tbody>
+          <tr><td>Status</td><td>String</td><td>Condition guard (WAITING); updated to IN_PROGRESS / ERROR / SKIPPED</td></tr>
+          <tr><td>ActivityID</td><td>String</td><td>Condition identity check; passed to HandleActivityException</td></tr>
+          <tr><td>PreExecCheck</td><td>String</td><td>Optional XPath skip condition</td></tr>
+          <tr><td>RequestCount</td><td>int</td><td>Incremented on send (unless resubmit)</td></tr>
+          <tr><td>NextActivity</td><td>String</td><td>Read by SkipActivity to advance the chain</td></tr>
+          <tr><td>ExceptionActivity</td><td>String</td><td>Read by HandleActivityException for error routing</td></tr>
+          <tr><td>ResponseCode / ResponseMessage</td><td>String</td><td>Written on error</td></tr>
+          <tr><td>Response</td><td>ContainedConcept[] → ResponseBase</td><td>Array; used by Response rule (not this rule)</td></tr>
+          <tr><td>Parameter</td><td>String[]</td><td>Config parameter array; not used directly here</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">16.3</span> Base Event: OMXRequestBaseEvent</div>
+      <p>Supertype for <code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code> event. Contributes inherited fields:</p>
+      <table>
+        <thead><tr><th>Inherited Field</th><th>Type</th><th>Notes</th></tr></thead>
+        <tbody>
+          <tr><td>JMSPriority</td><td>int</td><td>Set by XSLT</td></tr>
+          <tr><td>JMSCorrelationID</td><td>String</td><td>Set conditionally</td></tr>
+          <tr><td>OrderID</td><td>String</td><td>Set conditionally</td></tr>
+          <tr><td>RefID</td><td>String</td><td>Set always</td></tr>
+          <tr><td>UserName / PassWord</td><td>String</td><td>Not used in this rule's XSLT</td></tr>
+          <tr><td>OrderType</td><td>String</td><td>Set conditionally</td></tr>
+          <tr><td>CES</td><td>String</td><td>Not used in this rule's XSLT</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════ S17: MIGRATION NOTES ══════════════════ -->
+<div class="section" id="s17">
+  <div class="section-header"><span class="sec-num">§ 17</span><h2>Migration Notes &amp; Recommendations</h2></div>
+  <div class="section-body">
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">17.1</span> Functional Requirements</div>
+      <ul class="req-list">
+        <li>The migrated system must send a <code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code> cancellation request to BDH for each active account in the order's Customer/Account array when this activity step is reached.</li>
+        <li>The request must carry the hardcoded cancellation instruction: <code>reasonCode = "DDMREQ"</code>, <code>status = "C"</code> per account. If BDH's schema evolves, these values may need to be externalised to configuration.</li>
+        <li>Request correlation must be maintained via <code>JMSCorrelationID = OMXTrackingId</code> so the async BDH response can be matched back to the correct order.</li>
+        <li>A configurable <code>PreExecCheck</code> skip mechanism must be preserved — it allows conditional bypass of BDH without code changes.</li>
+        <li>The <code>RequestCount</code> field must not be incremented during order resubmission (when <code>IsOrderResubmitted = true</code> and count already &gt; 0).</li>
+        <li>An INFO-level audit log entry must be emitted after every successful request dispatch, including the nanosecond process ID and optionally the full request payload (governed by <code>WritePayload</code> flag).</li>
+        <li>Activity status must transition: WAITING → IN_PROGRESS on send, SKIPPED if PreExecCheck fails, ERROR if an exception occurs. SUCCESS is set by the Response handler.</li>
+        <li>On exception, the activity and order must be marked ERROR, the error must be logged to the ErrorLog channel, and if an ExceptionActivity is configured, the flow must be rerouted to it.</li>
+      </ul>
+    </div>
+
+    <div class="subsection">
+      <div class="subsec-title"><span class="subsec-num">17.2</span> Design Risks</div>
+      <table>
+        <thead><tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr></thead>
+        <tbody>
+          <tr>
+            <td>Hardcoded <code>reasonCode="DDMREQ"</code> and <code>status="C"</code> — no dynamic control</td>
+            <td><span class="badge sev-med">MEDIUM</span></td>
+            <td>During migration, externalise these to a configuration table or ProcessConfig parameters to allow future flexibility without code redeployment.</td>
+          </tr>
+          <tr>
+            <td>Accounts with empty <code>AccountID</code> are silently skipped via <code>xsl:if</code> — no warning logged</td>
+            <td><span class="badge sev-low">LOW</span></td>
+            <td>Add observability: log a warning when accounts are skipped due to empty AccountID to aid debugging of incomplete orders.</td>
+          </tr>
+          <tr>
+            <td>An order with <em>zero</em> valid accounts produces an empty <code>UpdateDirectDebitStatusReq</code> payload</td>
+            <td><span class="badge sev-med">MEDIUM</span></td>
+            <td>Add a guard: if no accounts are present, either skip the activity entirely or fail with a meaningful error code. The current code sends an empty request to BDH, which may cause unexpected BDH-side behaviour.</td>
+          </tr>
+          <tr>
+            <td>Async JMS pattern — no timeout/retry logic in this rule</td>
+            <td><span class="badge sev-med">MEDIUM</span></td>
+            <td>Ensure the Response rule has a timeout mechanism (TTL on event, expiry action) and that TTL expiry triggers retry or exception flow. The <code>BDH_UPDATE_DIRECT_DEBIT_STATUS</code> event defines an <code>expiryAction</code> that should be verified.</td>
+          </tr>
+          <tr>
+            <td>XSLT inline in rule source — hard to unit-test or version independently</td>
+            <td><span class="badge sev-low">LOW</span></td>
+            <td>In the target architecture, externalise XSLT to a separate template file or use a mapping framework with independent test coverage.</td>
+          </tr>
+          <tr>
+            <td><code>SendDataToDB</code> is a very large function (~660KB) — coupling risk</td>
+            <td><span class="badge sev-med">MEDIUM</span></td>
+            <td>In microservices migration, replace with a dedicated persistence service or event sourcing pattern. Avoid carrying this monolithic DB function as-is.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </div>
+</div>
+
+<!-- ══════════════════ S18: SOURCE CODE ══════════════════ -->
+<div class="section" id="s18">
+  <div class="section-header"><span class="sec-num">§ 18</span><h2>Full Source Code</h2></div>
+  <div class="section-body">
+    <p style="margin-bottom:12px;font-size:12.5px;color:#666;">Source: <code>OMX-OM/Rules/OMConsumers/OMXFM/Request/Request_BDH_UPDATE_DIRECT_DEBIT_STATUS.rule</code></p>
+<pre><span class="cmt">/**
+ * @description
+ * @author DESKTOP-995HR2V
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request</span>.<span class="fn">Request_BDH_UPDATE_DIRECT_DEBIT_STATUS</span> {
+    <span class="kw">attribute</span> {
+        priority = <span class="num">5</span>;
+        forwardChain = <span class="kw">true</span>;
+    }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="str">"BDH_UPDATE_DIRECT_DEBIT_STATUS"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="str">"BDH_UPDATE_DIRECT_DEBIT_STATUS"</span>;
+        orderCurrentActivity.Status == <span class="str">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="ty">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="num">0</span>
+                             &amp;&amp; orderRequest.IsOrderResubmitted);
+
+        <span class="kw">try</span> {
+            <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct =
+                Instance.<span class="fn">getByExtIdByUri</span>(orderRequest.ProcessFlow.NextActivityName,
+                    <span class="str">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="ty">String</span> chkXPath = nextAct.PreExecCheck;
+            <span class="ty">String</span> chkRes = <span class="str">"true"</span>;
+            <span class="ty">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="kw">if</span>(String.<span class="fn">length</span>(nextAct.PreExecCheck) &gt; <span class="num">0</span>) {
+                <span class="ty">String</span> sXML = Instance.<span class="fn">serializeUsingDefaults</span>(orderRequest);
+                chkRes = XPath.<span class="fn">execute</span>(<span class="str">"/("</span> + chkXPath + <span class="str">")"</span>, sXML,
+                    <span class="str">"ns0=www.tibco.com/be/ontology/Concepts/OrderRequest/OrderRequest"</span>);
+            }
+
+            <span class="kw">if</span>(String.<span class="fn">equals</span>(chkRes, <span class="str">"true"</span>)) {
+
+                <span class="ty">Events.OMConsumers.OMXFM.Request.BDH_UPDATE_DIRECT_DEBIT_STATUS</span> reqEvent =
+                    Event.<span class="fn">createEvent</span>(<span class="str">"xslt://{{/Events/OMConsumers/OMXFM/Request/BDH_UPDATE_DIRECT_DEBIT_STATUS}}"</span>
+                    <span class="cmt">/* XSLT builds:
+                       - event/@extId = OMXUtils:generateTrackingID()
+                       - JMSPriority  = $orderRequest/OrderPriority
+                       - JMSCorrelationID = $orderRequest/OrderData/OMXTrackingId  [if exists]
+                       - OrderID      = $orderRequest/OrderData/OrderID             [if exists]
+                       - RefID        = $orderRequest/OrderData/Customer/RefId
+                       - OrderType    = $orderRequest/OrderData/OrderType           [if exists]
+                       - payload/ns1:UpdateDirectDebitStatusReq/ns1:requestList[*]
+                           ns1:accountNo  = AccountID
+                           ns1:reasonCode = "DDMREQ"  (static)
+                           ns1:status     = "C"        (static)
+                         For each Account where string-length(AccountID) > 0
+                    */</span>);
+
+                Event.Ext.<span class="fn">sendEventImmediate</span>(reqEvent);
+
+                <span class="kw">if</span>(!isActResub) {
+                    orderCurrentActivity.RequestCount++;
+                }
+
+                <span class="ty">long</span> pid = System.<span class="fn">nanoTime</span>();
+
+                Event.Ext.<span class="fn">sendEventImmediate</span>(Event.<span class="fn">createEvent</span>(
+                    <span class="str">"xslt://{{/Events/OMConsumers/OMXESB/Logger}}"</span>
+                    <span class="cmt">/* Logger XSLT:
+                       ESBUUID         = OMXTrackingId  [if exists]
+                       PROCESS_ID      = concat(pid, "_REQ")
+                       COMPONENT_NAME  = globalVariables/OMX_COMMON/Component_Name/OMX_CEP
+                       OPERATION_NAME  = "BDH_UPDATE_DIRECT_DEBIT_STATUS"
+                       TARGET_SYSTEM   = globalVariables/OMX_COMMON/Component_Name/OMX_FM
+                       LOG_LEVEL       = INFO
+                       AUDIT_TRACE     = "Request Sent for BDH_UPDATE_DIRECT_DEBIT_STATUS"
+                       AUDIT_TS        = current-dateTime()
+                       payload         = copy of reqEvent  [if WritePayload = "true"]
+                    */</span>));
+
+                isSkipped = <span class="kw">false</span>;
+            }
+
+            <span class="kw">if</span> (!isSkipped) {
+                orderCurrentActivity.Status =
+                    RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="str">"1"</span>, <span class="kw">false</span>);  <span class="cmt">// IN_PROGRESS</span>
+                RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+            } <span class="kw">else</span> {
+                RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="str">"4"</span>);
+            }
+
+        } <span class="kw">catch</span> (Exception ae) {
+            RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(
+                orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+        }
+    }
+}</pre>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<div class="page-footer">
+  <strong>TRUE Corporation OMX</strong> · TIBCO BusinessEvents FM Logic Documentation ·
+  Generated: 2026-06-17 · Rule: Request_BDH_UPDATE_DIRECT_DEBIT_STATUS
+</div>
+
+</body>
+</html>

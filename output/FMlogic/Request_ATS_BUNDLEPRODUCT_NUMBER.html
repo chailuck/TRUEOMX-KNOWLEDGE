@@ -1,0 +1,1298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FM Logic — Request_ATS_BUNDLEPRODUCT_NUMBER</title>
+<style>
+  :root {
+    --true-red:    #CC0000;
+    --true-dark:   #8B0000;
+    --true-deep:   #5C0000;
+    --true-light:  #FF5252;
+    --true-pale:   #FFF5F5;
+    --success:     #2e7d32;
+    --warning:     #e65100;
+    --info:        #1565c0;
+    --skip:        #6a1b9a;
+    --bg:          #F9F9F9;
+    --card:        #FFFFFF;
+    --border:      #E0E0E0;
+    --code-bg:     #1e1e2e;
+    --code-fg:     #cdd6f4;
+    --text:        #1A1A1A;
+    --text-muted:  #555555;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; }
+  a { color: var(--true-red); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  /* ── Header ── */
+  .page-header {
+    background: linear-gradient(135deg, var(--true-deep) 0%, var(--true-dark) 50%, var(--true-red) 100%);
+    color: #fff; padding: 28px 40px;
+    border-bottom: 4px solid var(--true-light);
+  }
+  .page-header .brand { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; margin-bottom: 6px; }
+  .page-header h1 { font-size: 1.6rem; font-weight: 700; }
+  .page-header .meta { font-size: 0.85rem; opacity: 0.8; margin-top: 8px; display: flex; flex-wrap: wrap; gap: 16px; }
+  .page-header .meta span { background: rgba(255,255,255,0.12); padding: 3px 10px; border-radius: 12px; }
+
+  /* ── Layout ── */
+  .container { max-width: 1280px; margin: 0 auto; padding: 32px 40px; }
+
+  /* ── Cards ── */
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 28px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .card-header {
+    background: linear-gradient(90deg, var(--true-dark), var(--true-red));
+    color: #fff; padding: 11px 20px; font-weight: 600; font-size: 0.95rem;
+    display: flex; align-items: center; gap: 8px;
+    border-left: 5px solid var(--true-light);
+  }
+  .card-header .icon { font-size: 1.05rem; }
+  .card-body { padding: 22px; }
+
+  /* ── Section anchor offset ── */
+  .section-anchor { display: block; height: 0; margin-top: -70px; padding-top: 70px; }
+
+  /* ── Tables ── */
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th { background: #F5E6E6; color: var(--true-dark); text-align: left; padding: 9px 12px; font-weight: 700; border-bottom: 2px solid var(--true-red); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--true-pale); }
+
+  /* ── Code ── */
+  pre { background: var(--code-bg); color: var(--code-fg); padding: 16px; border-radius: 6px; overflow-x: auto; font-size: 0.81rem; line-height: 1.6; border-left: 3px solid var(--true-red); }
+  code { font-family: 'Cascadia Code', 'Consolas', monospace; }
+  .kw  { color: #cba6f7; }
+  .ty  { color: #89b4fa; }
+  .str { color: #a6e3a1; }
+  .cmt { color: #6c7086; font-style: italic; }
+  .num { color: #fab387; }
+  .fn  { color: #f38ba8; }
+  .xml-tag  { color: #89dceb; }
+  .xml-attr { color: #f9e2af; }
+  .xml-val  { color: #a6e3a1; }
+
+  /* ── Flow diagram ── */
+  .flow { display: flex; flex-direction: column; gap: 0; padding: 8px 0; }
+  .flow-step { display: flex; align-items: flex-start; gap: 14px; }
+  .flow-step .connector { display: flex; flex-direction: column; align-items: center; min-width: 36px; }
+  .flow-step .connector .circle { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: #fff; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3); }
+  .flow-step .connector .line { width: 2px; flex: 1; background: #ddd; min-height: 22px; }
+  .flow-step .body { padding: 3px 0 14px; }
+  .flow-step .body .step-title { font-weight: 700; font-size: 0.92rem; color: var(--true-dark); }
+  .flow-step .body .step-desc { font-size: 0.86rem; color: #444; margin-top: 3px; }
+  .c-red    { background: var(--true-red); }
+  .c-dark   { background: var(--true-dark); }
+  .c-green  { background: #2e7d32; }
+  .c-orange { background: #e65100; }
+  .c-purple { background: #6a1b9a; }
+  .c-teal   { background: #00695c; }
+  .c-blue   { background: #1565c0; }
+
+  /* ── Badges ── */
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 0.76rem; font-weight: 700; }
+  .badge-red    { background: #FFE0E0; color: var(--true-dark); border: 1px solid #FFAAAA; }
+  .badge-green  { background: #E8F5E9; color: #2e7d32; }
+  .badge-orange { background: #FFF3E0; color: #e65100; }
+  .badge-blue   { background: #E3F0FD; color: #1565c0; }
+  .badge-purple { background: #F3E5F5; color: #6a1b9a; }
+  .badge-gray   { background: #F0F0F0; color: #555; }
+  .badge-dark   { background: var(--true-dark); color: #fff; }
+  .badge-teal   { background: #E0F2F1; color: #00695c; }
+
+  /* ── Rule blocks ── */
+  .rule-block { border-left: 4px solid var(--true-red); padding: 10px 16px; margin-bottom: 10px; background: var(--true-pale); border-radius: 0 6px 6px 0; }
+  .rule-block.action  { border-left-color: var(--success);  background: #F1FBF1; }
+  .rule-block.warning { border-left-color: var(--warning);  background: #FFF8F0; }
+  .rule-block.info    { border-left-color: var(--info);     background: #F0F6FF; }
+  .rule-block h4 { font-size: 0.88rem; font-weight: 700; margin-bottom: 5px; color: var(--true-dark); }
+  .rule-block p, .rule-block li { font-size: 0.87rem; color: #444; }
+  .rule-block ul { padding-left: 18px; margin-top: 4px; }
+
+  /* ── XSLT mapping ── */
+  .xslt-target { font-family: monospace; font-size: 0.81rem; color: #1a237e; font-weight: 600; }
+  .xslt-source { font-family: monospace; font-size: 0.81rem; color: #004d40; }
+  .xslt-static { font-family: monospace; font-size: 0.81rem; color: #6a1b9a; font-style: italic; }
+  .xslt-param  { font-family: monospace; font-size: 0.81rem; color: #c62828; }
+
+  /* ── Dependency tree ── */
+  .dep-tree { font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 0.85rem; background: #FAFAFA; border: 1px solid var(--border); border-left: 4px solid var(--true-red); border-radius: 6px; padding: 16px; line-height: 2; }
+  .dep-root   { color: var(--true-dark); font-weight: 700; font-size: 0.92rem; }
+  .dep-fn     { color: #1565c0; }
+  .dep-ext    { color: #2e7d32; }
+  .dep-note   { color: #888; font-style: italic; font-size: 0.78rem; }
+  .dep-branch { color: #999; }
+
+  /* ── Integration table ── */
+  .sys-type { font-size: 0.75rem; font-weight: 700; padding: 2px 7px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.5px; }
+  .sys-jms  { background: #FFE0B2; color: #E65100; }
+  .sys-db   { background: #E8EAF6; color: #3949AB; }
+  .sys-be   { background: #FCE4EC; color: #C62828; }
+  .sys-log  { background: #F1F8E9; color: #558B2F; }
+
+  /* ── TOC ── */
+  .toc-list { list-style: none; padding: 0; columns: 2; column-gap: 32px; }
+  .toc-list li { padding: 2px 0; break-inside: avoid; }
+  .toc-list a { color: var(--true-red); font-size: 0.88rem; display: block; padding: 3px 6px; border-radius: 4px; }
+  .toc-list a:hover { color: var(--true-dark); background: var(--true-pale); padding-left: 10px; transition: 0.15s; }
+  .toc-list .toc-group { font-size: 0.72rem; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; color: var(--true-dark); background: #F5E6E6; padding: 4px 6px; border-radius: 4px; margin-top: 10px; margin-bottom: 2px; break-after: avoid; }
+
+  /* ── Notes ── */
+  .note { background: #FFF8E1; border: 1px solid #FFE082; border-left: 4px solid #F9A825; border-radius: 6px; padding: 10px 14px; font-size: 0.87rem; color: #5F4200; margin-top: 10px; }
+  .note.danger { background: var(--true-pale); border-color: var(--true-red); border-left-color: var(--true-dark); color: var(--true-deep); }
+
+  /* ── Payload builder ── */
+  .xslt-step { background: #FAFAFA; border: 1px solid var(--border); border-radius: 6px; margin-bottom: 14px; overflow: hidden; }
+  .xslt-step-header { background: var(--true-pale); padding: 8px 14px; font-size: 0.84rem; font-weight: 700; color: var(--true-dark); border-bottom: 1px solid #FFCCCC; display: flex; align-items: center; gap: 8px; }
+  .xslt-step-body { padding: 12px 14px; font-size: 0.86rem; }
+  .xslt-step-body pre { margin-top: 8px; }
+
+  h2 { color: var(--true-dark); font-size: 1.1rem; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 2px solid var(--border); }
+  h3 { color: var(--true-dark); font-size: 0.95rem; margin: 16px 0 8px; font-weight: 700; }
+  p  { font-size: 0.89rem; color: #333; }
+
+  @media print { .page-header { background: var(--true-dark) !important; } }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="brand">TRUE Corporation OMX · TIBCO BusinessEvents · FM Logic Documentation</div>
+  <h1>Request_ATS_BUNDLEPRODUCT_NUMBER</h1>
+  <div class="meta">
+    <span>&#128193; Rules/OMConsumers/OMXFM/Request</span>
+    <span>&#127959; Project: OMX-OM</span>
+    <span>&#128197; 2026-06-17</span>
+    <span>&#128279; Target: ATS — submitCampaignReq</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- ═══ TOC ═══ -->
+  <div class="card">
+    <div class="card-header"><span class="icon">&#9776;</span> Table of Contents</div>
+    <div class="card-body">
+      <ul class="toc-list">
+        <li class="toc-group">Program &amp; Context</li>
+        <li><a href="#s0">0. Program Objective (ภาษาไทย / English)</a></li>
+        <li class="toc-group">Rule Structure</li>
+        <li><a href="#s1">1. Overview &amp; Purpose</a></li>
+        <li><a href="#s2">2. Rule Metadata &amp; Attributes</a></li>
+        <li><a href="#s3">3. Working Memory (Declared Objects)</a></li>
+        <li><a href="#s4">4. Rule Conditions (WHEN)</a></li>
+        <li><a href="#s5">5. Execution Flow Diagram</a></li>
+        <li><a href="#s6">6. Rule Action (THEN) — Step Logic</a></li>
+        <li><a href="#s7">7. Data Extraction — GROUP Parsing</a></li>
+        <li class="toc-group">★ Integration &amp; Payload (New)</li>
+        <li><a href="#s8">8. ★ Order Process Event Types</a></li>
+        <li><a href="#s9">9. ★ System &amp; Integration Dependencies</a></li>
+        <li><a href="#s10">10. ★ Detailed Payload Build (Step 6 Expanded)</a></li>
+        <li><a href="#s11">11. XSLT Field Mapping Table</a></li>
+        <li><a href="#s12">12. Audit Logging</a></li>
+        <li class="toc-group">Functions &amp; Concepts</li>
+        <li><a href="#s13">13. Activity Status Management</a></li>
+        <li><a href="#s14">14. Exception Handling</a></li>
+        <li><a href="#s15">15. Helper Functions Reference</a></li>
+        <li><a href="#s16">16. ★ Function Dependency Tree</a></li>
+        <li><a href="#s17">17. Concept Definitions</a></li>
+        <li class="toc-group">Delivery</li>
+        <li><a href="#s18">18. Migration Recommendations</a></li>
+        <li><a href="#s19">19. Full Source Code</a></li>
+      </ul>
+      <div class="note" style="margin-top:14px;">&#9733; = Sections added or expanded in this revision</div>
+    </div>
+  </div>
+
+  <!-- ═══ 0. BILINGUAL OBJECTIVE ═══ -->
+  <span class="section-anchor" id="s0"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#127463;&#127481;</span> 0. Program Objective — วัตถุประสงค์ของโปรแกรม</div>
+    <div class="card-body">
+
+      <!-- Thai -->
+      <h3 style="color:var(--true-dark);display:flex;align-items:center;gap:8px;">
+        <span style="background:var(--true-red);color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:10px;letter-spacing:1px;">ภาษาไทย</span>
+        วัตถุประสงค์
+      </h3>
+      <p style="font-size:0.93rem;line-height:1.9;color:#222;margin:10px 0 20px;padding:14px 18px;background:var(--true-pale);border-left:4px solid var(--true-red);border-radius:0 6px 6px 0;">
+        กฎ (Rule) นี้เป็นส่วนหนึ่งของระบบ <strong>TRUE OMX Order Management (OMX-OM)</strong> ซึ่งทำงานบนเครื่องมือ TIBCO BusinessEvents
+        มีหน้าที่ <strong>ส่งคำขอยืนยันหมายเลขสินค้าประเภท Bundle</strong> ไปยังระบบ ATS (Activation &amp; Transaction System)
+        เมื่อกระบวนการสั่งซื้อ (Order) ถึงขั้นตอน <code>ATS_BUNDLEPRODUCT_NUMBER</code>
+        กฎนี้จะดึงข้อมูลผลิตภัณฑ์จากฟิลด์ <code>GROUP</code> ของคำสั่งซื้อ ซึ่งบันทึกในรูปแบบ
+        <code>FAMILY_TYPE=…|PRODUCT_ID=…|COMPANY_CODE=…</code> จากนั้นสร้างและส่ง
+        Event ชนิด <code>ATS_SUBMIT_CAMPAIGN</code> ผ่านช่องทาง JMS ไปยัง ATS
+        เพื่อลงทะเบียนหมายเลขสินค้า Bundle สำหรับการเปิดใช้งานบริการ Prepaid ของ TRUE Move (TMV)
+        ในกรณีที่เงื่อนไขเบื้องต้น (PreExecCheck) ไม่ผ่าน กฎจะข้ามขั้นตอนนี้ไปโดยอัตโนมัติ
+        และในกรณีที่เกิดข้อผิดพลาด จะมีกระบวนการจัดการ Exception เพื่อบันทึกสถานะและแจ้งเตือนทีมงาน
+      </p>
+
+      <!-- English -->
+      <h3 style="color:var(--true-dark);display:flex;align-items:center;gap:8px;">
+        <span style="background:var(--true-dark);color:#fff;font-size:0.7rem;padding:2px 8px;border-radius:10px;letter-spacing:1px;">ENGLISH</span>
+        Objective
+      </h3>
+      <p style="font-size:0.93rem;line-height:1.9;color:#222;margin:10px 0 0;padding:14px 18px;background:#F0F6FF;border-left:4px solid #1565c0;border-radius:0 6px 6px 0;">
+        This rule is part of the <strong>TRUE OMX Order Management (OMX-OM)</strong> platform running on TIBCO BusinessEvents.
+        Its purpose is to <strong>submit a Bundle Product Number registration request</strong> to the ATS (Activation &amp; Transaction System)
+        when an order workflow reaches the <code>ATS_BUNDLEPRODUCT_NUMBER</code> process step.
+        The rule extracts the product identity — family type, product ID, and company code — from the
+        <code>GROUP</code> extended info field of the order (encoded as a pipe-delimited string),
+        then constructs and dispatches an <code>ATS_SUBMIT_CAMPAIGN</code> event via JMS to ATS
+        for bundle product number resolution and activation under the TRUE Move (TMV) Prepaid line.
+        If a configurable pre-execution condition is not satisfied, the activity is automatically skipped
+        and the order flow advances to the next step.
+        Any runtime exception triggers a structured error-handling flow that records the failure state,
+        emits an error audit log, and optionally routes to a compensation activity.
+      </p>
+
+    </div>
+  </div>
+
+  <!-- ═══ 1. OVERVIEW ═══ -->
+  <span class="section-anchor" id="s1"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128269;</span> 1. Overview &amp; Purpose</div>
+    <div class="card-body">
+      <p>This TIBCO BusinessEvents (BE) rule submits a <strong>Bundle Product Number campaign request</strong> to the ATS (Activation &amp; Transaction System) when an order reaches the <code>ATS_BUNDLEPRODUCT_NUMBER</code> step in the OMX Order Management process flow.</p>
+      <br/>
+      <table>
+        <tr><th style="width:230px">Attribute</th><th>Value</th></tr>
+        <tr><td>Rule Full Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_ATS_BUNDLEPRODUCT_NUMBER</code></td></tr>
+        <tr><td>File</td><td><code>Request_ATS_BUNDLEPRODUCT_NUMBER.rule</code></td></tr>
+        <tr><td>Project</td><td>OMX-OM</td></tr>
+        <tr><td>Rule Category</td><td>OMXFM Request Rules — Outbound FM requests</td></tr>
+        <tr><td>Target System</td><td><span class="badge badge-red">ATS</span> Activation &amp; Transaction System</td></tr>
+        <tr><td>ATS Operation</td><td><code>submitCampaignReq</code></td></tr>
+        <tr><td>JMS Channel</td><td><code>/Channels/OMXFMConnectionRequest</code> → <code>ATS_SUBMIT_CAMPAIGN</code></td></tr>
+        <tr><td>Business Domain</td><td>Prepaid Bundle Product / Campaign Activation (TMV, paymentType=Prepaid)</td></tr>
+      </table>
+      <div class="note">
+        <strong>Business context:</strong> When a Prepaid bundle product order is placed, this rule reads the
+        product identity from the order's <code>GROUP</code> extended info field
+        (<code>FAMILY_TYPE=…|PRODUCT_ID=…|COMPANY_CODE=…</code>) and fires a
+        <em>submitCampaignReq</em> to ATS to resolve and register the bundle product number.
+        The hardcoded values <code>productType="TMV"</code> and <code>paymentType="Prepaid"</code>
+        confirm this rule is exclusively for the TMV Prepaid product line.
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 2. METADATA ═══ -->
+  <span class="section-anchor" id="s2"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128196;</span> 2. Rule Metadata &amp; Attributes</div>
+    <div class="card-body">
+      <table>
+        <tr><th style="width:180px">Attribute</th><th>Value</th><th>Meaning</th></tr>
+        <tr><td><code>priority</code></td><td><span class="badge badge-red">5</span></td><td>Mid-range priority within the OMXFM request tier. Higher values execute first.</td></tr>
+        <tr><td><code>forwardChain</code></td><td><span class="badge badge-green">true</span></td><td>After the rule fires and modifies working memory (Status change), the engine immediately re-evaluates all rules — enabling the downstream response handler to auto-activate.</td></tr>
+        <tr><td>Rule Type</td><td><span class="badge badge-orange">Action Rule</span></td><td>Fires once per matching working-memory pair; dispatches an outbound JMS/ESB event.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 3. WORKING MEMORY ═══ -->
+  <span class="section-anchor" id="s3"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128190;</span> 3. Working Memory — Declared Objects</div>
+    <div class="card-body">
+      <table>
+        <tr><th style="width:220px">Variable</th><th>Type</th><th>Description</th></tr>
+        <tr>
+          <td><code>orderRequest</code></td>
+          <td><code>Concepts.OrderRequest.OrderRequest</code></td>
+          <td>Master order concept — all customer, product, extended info, flow pointer, and response fields.</td>
+        </tr>
+        <tr>
+          <td><code>orderCurrentActivity</code></td>
+          <td><code>Concepts.OM.ProcessConfig.Activity</code></td>
+          <td>Current process step — holds Status, RequestCount, PreExecCheck, and activity chain pointers.</td>
+        </tr>
+      </table>
+      <h3>Activity Concept — Key Fields</h3>
+      <table>
+        <tr><th>Field</th><th>Type</th><th>Purpose</th></tr>
+        <tr><td><code>ActivityID</code></td><td>String</td><td>Logical step name — <code>"ATS_BUNDLEPRODUCT_NUMBER"</code></td></tr>
+        <tr><td><code>Status</code></td><td>String</td><td>WAITING / IN_PROGRESS / SUCCESS / ERROR / SKIPPED / BLOCKING</td></tr>
+        <tr><td><code>PreExecCheck</code></td><td>String</td><td>XPath expression evaluated before executing. Must return <code>"true"</code> to proceed.</td></tr>
+        <tr><td><code>RequestCount</code></td><td>int</td><td>Outbound send counter. Incremented each dispatch unless resubmission.</td></tr>
+        <tr><td><code>NextActivity</code></td><td>String (extId)</td><td>Pointer to next activity concept in chain.</td></tr>
+        <tr><td><code>ExceptionActivity</code></td><td>String (extId)</td><td>Compensation activity activated on exception.</td></tr>
+        <tr><td><code>ResubmitActivity</code></td><td>String (extId)</td><td>Entry point for resubmit flow when order is FAILED.</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 4. CONDITIONS ═══ -->
+  <span class="section-anchor" id="s4"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#9989;</span> 4. Rule Conditions (WHEN) — All must be simultaneously true</div>
+    <div class="card-body">
+      <div class="rule-block">
+        <h4>C1 — Activity extId matches order's NextActivityName</h4>
+        <p><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></p>
+        <p>Binds this specific activity instance to this specific order. Prevents cross-order misfires in multi-order working memory.</p>
+      </div>
+      <div class="rule-block">
+        <h4>C2 — ActivityID == "ATS_BUNDLEPRODUCT_NUMBER"</h4>
+        <p><code>orderCurrentActivity.ActivityID == "ATS_BUNDLEPRODUCT_NUMBER"</code></p>
+        <p>Primary discriminator — selects this rule over hundreds of other OMXFM request rules.</p>
+      </div>
+      <div class="rule-block">
+        <h4>C3 — Order's NextActivityID matches</h4>
+        <p><code>orderRequest.ProcessFlow.NextActivityID == "ATS_BUNDLEPRODUCT_NUMBER"</code></p>
+        <p>Redundant safety — verifies by ActivityID string (not just extId) to prevent misfire during concurrent process config updates.</p>
+      </div>
+      <div class="rule-block">
+        <h4>C4 — Activity Status is WAITING</h4>
+        <p><code>orderCurrentActivity.Status == "WAITING"</code></p>
+        <p>Only fires when ready to process. Once this rule sets Status to IN_PROGRESS, forward chaining prevents re-firing.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 5. FLOW ═══ -->
+  <span class="section-anchor" id="s5"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128200;</span> 5. Execution Flow Diagram</div>
+    <div class="card-body">
+      <div class="flow">
+        <div class="flow-step"><div class="connector"><div class="circle c-dark">1</div><div class="line"></div></div><div class="body"><div class="step-title">Rule Fires</div><div class="step-desc">All 4 WHEN conditions true: Status=="WAITING" AND ActivityID=="ATS_BUNDLEPRODUCT_NUMBER"</div></div></div>
+        <div class="flow-step"><div class="connector"><div class="circle c-dark">2</div><div class="line"></div></div><div class="body"><div class="step-title">Resubmission Check</div><div class="step-desc">Compute <code>isActResub = (RequestCount &gt; 0 AND IsOrderResubmitted)</code></div></div></div>
+        <div class="flow-step"><div class="connector"><div class="circle c-dark">3</div><div class="line"></div></div><div class="body"><div class="step-title">Load Activity Config</div><div class="step-desc"><code>Instance.getByExtIdByUri(NextActivityName, "/Concepts/OM/ProcessConfig/Activity")</code> — loads full Activity with PreExecCheck</div></div></div>
+        <div class="flow-step"><div class="connector"><div class="circle c-teal">4</div><div class="line"></div></div><div class="body"><div class="step-title">Pre-Execution Check Gate</div><div class="step-desc">If PreExecCheck is non-empty: serialize orderRequest to XML → run XPath. Result must be <strong>"true"</strong> to proceed. Default = <strong>"true"</strong> when blank.</div></div></div>
+        <div class="flow-step"><div class="connector"><div class="circle c-green">5</div><div class="line"></div></div><div class="body"><div class="step-title">[chkRes=="true"] Extract GROUP Data</div><div class="step-desc">XPath on ExtendedInfo[Name='GROUP'] → split pipe-delimited → extract familyType, productId, companyCode</div></div></div>
+        <div class="flow-step"><div class="connector"><div class="circle c-red">6</div><div class="line"></div></div><div class="body"><div class="step-title">[chkRes=="true"] Create &amp; Send ATS_SUBMIT_CAMPAIGN Event</div><div class="step-desc">Inline XSLT builds submitCampaignReq payload → <code>Event.Ext.sendEventImmediate()</code> → JMS channel → ATS system</div></div></div>
+        <div class="flow-step"><div class="connector"><div class="circle c-green">7</div><div class="line"></div></div><div class="body"><div class="step-title">Increment RequestCount (if not resubmit)</div><div class="step-desc"><code>orderCurrentActivity.RequestCount++</code> — skipped when isActResub==true</div></div></div>
+        <div class="flow-step"><div class="connector"><div class="circle c-green">8</div><div class="line"></div></div><div class="body"><div class="step-title">Emit INFO Audit Log</div><div class="step-desc">Logger event → trace="Request Sent for ATS_BUNDLEPRODUCT_NUMBER", optional full payload</div></div></div>
+        <div class="flow-step"><div class="connector"><div class="circle c-dark">9</div><div class="line"></div></div><div class="body"><div class="step-title">Post-Execution Branch</div><div class="step-desc"><strong>Not skipped:</strong> Status="IN_PROGRESS", SendDataToDB() &nbsp;|&nbsp; <strong>Skipped:</strong> SkipActivity(...,"4")</div></div></div>
+        <div class="flow-step"><div class="connector"><div class="circle c-orange">E</div></div><div class="body"><div class="step-title">[CATCH] HandleActivityException()</div><div class="step-desc">Status="ERROR", compose response code, ERROR audit log, activate ExceptionActivity, persist to DB</div></div></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══ 6. ACTION ═══ -->
+  <span class="section-anchor" id="s6"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#9881;</span> 6. Rule Action (THEN) — Step-by-Step Logic</div>
+    <div class="card-body">
+      <h3>Step 1 — Resubmission Detection</h3>
+      <pre><code><span class="ty">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="num">0</span>
+                        &amp;&amp; orderRequest.IsOrderResubmitted);</code></pre>
+      <p>True only when BOTH: prior request was sent (RequestCount &gt; 0) AND order was explicitly resubmitted. Guards against double-counting retries.</p>
+      <br/>
+      <h3>Step 2 — Pre-Execution Check</h3>
+      <pre><code><span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct =
+    Instance.<span class="fn">getByExtIdByUri</span>(orderRequest.ProcessFlow.NextActivityName,
+                             <span class="str">"/Concepts/OM/ProcessConfig/Activity"</span>);
+<span class="ty">String</span>  chkXPath  = nextAct.PreExecCheck;
+<span class="ty">String</span>  chkRes    = <span class="str">"true"</span>;    <span class="cmt">// default: proceed when blank</span>
+<span class="ty">boolean</span> isSkipped = <span class="kw">true</span>;   <span class="cmt">// pessimistic default</span>
+
+<span class="kw">if</span> (String.<span class="fn">length</span>(nextAct.PreExecCheck) &gt; <span class="num">0</span>) {
+    <span class="ty">String</span> sXML = Instance.<span class="fn">serializeUsingDefaults</span>(orderRequest);
+    chkRes = XPath.<span class="fn">execute</span>(<span class="str">"/("</span> + chkXPath + <span class="str">")"</span>, sXML,
+                <span class="str">"ns0=www.tibco.com/be/ontology/Concepts/OrderRequest/OrderRequest"</span>);
+}</code></pre>
+      <h3>Step 3 — Post-Execution Branch</h3>
+      <pre><code><span class="kw">if</span> (!isSkipped) {
+    orderCurrentActivity.Status =
+        RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="str">"1"</span>, <span class="kw">false</span>); <span class="cmt">// → "IN_PROGRESS"</span>
+    RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+} <span class="kw">else</span> {
+    RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="str">"4"</span>);
+}</code></pre>
+    </div>
+  </div>
+
+  <!-- ═══ 7. GROUP PARSING ═══ -->
+  <span class="section-anchor" id="s7"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128203;</span> 7. Data Extraction — GROUP ExtendedInfo Parsing</div>
+    <div class="card-body">
+      <p>XPath: <code>$orderRequest/OrderData/ExtendedInfo[Name='GROUP']/Value</code></p>
+      <h3>Input Format</h3>
+      <pre><code>FAMILY_TYPE=&lt;value&gt;|PRODUCT_ID=&lt;value&gt;|COMPANY_CODE=&lt;value&gt;
+
+<span class="cmt">Example: FAMILY_TYPE=POSTPAID_BUNDLE|PRODUCT_ID=P00123456|COMPANY_CODE=TMV</span></code></pre>
+      <h3>Parsing Steps</h3>
+      <pre><code><span class="ty">String</span>[] parts = String.<span class="fn">split</span>(groupProductId, <span class="str">"\\|"</span>);
+
+familyType  = parts[<span class="num">0</span>]; <span class="kw">if</span> (String.<span class="fn">contains</span>(familyType,  <span class="str">"FAMILY_TYPE="</span>))  familyType  = String.<span class="fn">substringAfter</span>(familyType,  <span class="str">"="</span>);
+productId   = parts[<span class="num">1</span>]; <span class="kw">if</span> (String.<span class="fn">contains</span>(productId,   <span class="str">"PRODUCT_ID="</span>))   productId   = String.<span class="fn">substringAfter</span>(productId,   <span class="str">"="</span>);
+companyCode = parts[<span class="num">2</span>]; <span class="kw">if</span> (String.<span class="fn">contains</span>(companyCode, <span class="str">"COMPANY_CODE="</span>)) companyCode = String.<span class="fn">substringAfter</span>(companyCode, <span class="str">"="</span>);</code></pre>
+      <table>
+        <tr><th>Index</th><th>Variable</th><th>Key Prefix</th><th>Example Value</th></tr>
+        <tr><td>0</td><td><code>familyType</code></td><td><code>FAMILY_TYPE=</code></td><td>POSTPAID_BUNDLE</td></tr>
+        <tr><td>1</td><td><code>productId</code></td><td><code>PRODUCT_ID=</code></td><td>P00123456</td></tr>
+        <tr><td>2</td><td><code>companyCode</code></td><td><code>COMPANY_CODE=</code></td><td>TMV</td></tr>
+      </table>
+      <div class="note danger"><strong>Risk:</strong> No array length check. If GROUP has &lt;3 tokens, an index-out-of-bounds exception is thrown (caught by outer try/catch → order enters ERROR state).</div>
+    </div>
+  </div>
+
+  <!-- ═══ 8. ★ ORDER PROCESS EVENT TYPES ═══ -->
+  <span class="section-anchor" id="s8"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128200;</span> 8. ★ Order Process Event Types</div>
+    <div class="card-body">
+
+      <p>This section documents all event types involved in the complete lifecycle of the <code>ATS_BUNDLEPRODUCT_NUMBER</code> activity — from the order workflow trigger through to the ATS response and audit log events.</p>
+      <br/>
+
+      <h3>8.1 Event Flow Overview</h3>
+      <div class="dep-tree" style="font-size:0.83rem;">
+<span class="dep-root">Order Process reaches ATS_BUNDLEPRODUCT_NUMBER  (Activity.Status = WAITING)</span>
+│
+├── [THIS RULE fires]
+│   │
+│   ├── OUTBOUND REQUEST ────────────────────────────────────────────────────────
+│   │   <span class="dep-fn">Event: Events.OMConsumers.OMXFM.Request.ATS_SUBMIT_CAMPAIGN</span>
+│   │   Channel  : /Channels/OMXFMConnectionRequest → ATS_SUBMIT_CAMPAIGN (JMS)
+│   │   Schema   : submitCampaignReq  (SubmitCampaignRequest.xsd)
+│   │   Base     : OMXRequestBaseEvent
+│   │   SendMode : Event.Ext.sendEventImmediate()
+│   │
+│   ├── AUDIT LOG (INFO) ────────────────────────────────────────────────────────
+│   │   <span class="dep-ext">Event: Logger (INFO)</span>
+│   │   Channel  : /Channels/LogConnection → InfoLog
+│   │   Trace    : "Request Sent for ATS_BUNDLEPRODUCT_NUMBER"
+│   │
+│   └── [Activity.Status → IN_PROGRESS, DB checkpoint via SendDataToDB]
+│
+├── ATS processes request → replies with response (matched by JMSCorrelationID)
+│
+├── INBOUND RESPONSE ────────────────────────────────────────────────────────────
+│   <span class="dep-fn">Event: Events.OMConsumers.OMXFM.Response.ATS_SUBMIT_CAMPAIGN</span>
+│   Channel  : /Channels/OMXFMConnectionResponse → ATS_SUBMIT_CAMPAIGN (JMS)
+│   Schema   : submitCampaignRes  (SubmitCampaignResponse.xsd)
+│   Base     : OMXResponseBaseEvent
+│
+├── [Response handler: RuleFunctions.OrderResponse.Response_ATS_BUNDLEPRODUCT_NUMBER]
+│   ├── Maps eventResponse → Concepts.FM.Base.ResponseBase instance
+│   ├── Appends ResponseBase to currActivity.Response[]
+│   ├── Emits AUDIT LOG (INFO): "Response received for ATS_BUNDLEPRODUCT_NUMBER" (_RES)
+│   ├── Success test: currActivity.RequestCount == count(Response[code ends in "000"])
+│   └── Returns "true" (all confirmed successful) / "false" (waiting or error)
+│
+└── [Response rule advances Activity.Status → SUCCESS or ERROR]
+      </div>
+
+      <br/>
+      <h3>8.2 Request Event — ATS_SUBMIT_CAMPAIGN</h3>
+      <table>
+        <tr><th style="width:220px">Property</th><th>Value</th></tr>
+        <tr><td>Event Path</td><td><code>/Events/OMConsumers/OMXFM/Request/ATS_SUBMIT_CAMPAIGN</code></td></tr>
+        <tr><td>Parent Event</td><td><code>/Events/Base/OMXRequestBaseEvent</code></td></tr>
+        <tr><td>Channel URI</td><td><code>/Channels/OMXFMConnectionRequest</code></td></tr>
+        <tr><td>Destination Name</td><td><code>ATS_SUBMIT_CAMPAIGN</code></td></tr>
+        <tr><td>Payload Schema</td><td><code>SubmitCampaignRequest.xsd</code></td></tr>
+        <tr><td>Payload Root Element</td><td><code>ns:submitCampaignReq</code></td></tr>
+        <tr><td>Send Method</td><td><code>Event.Ext.sendEventImmediate()</code></td></tr>
+        <tr><td>Event extId</td><td>Generated by <code>OMXUtils:generateTrackingID()</code></td></tr>
+        <tr><td>Correlation Key</td><td><code>JMSCorrelationID = orderRequest.OrderData.OMXTrackingId</code></td></tr>
+      </table>
+      <h4 style="margin:12px 0 6px;font-size:0.88rem;color:var(--true-dark);">Inherited fields from OMXRequestBaseEvent</h4>
+      <table>
+        <tr><th>Field</th><th>Type</th><th>Description / Source</th></tr>
+        <tr><td><code>JMSPriority</code></td><td>int</td><td>JMS delivery priority — mapped from <code>orderRequest.OrderPriority</code></td></tr>
+        <tr><td><code>JMSCorrelationID</code></td><td>String</td><td>Correlation ID for response matching — mapped from <code>orderRequest.OrderData.OMXTrackingId</code></td></tr>
+        <tr><td><code>OrderID</code></td><td>String</td><td>Business order identifier from <code>orderRequest.OrderData.OrderId</code></td></tr>
+        <tr><td><code>RefID</code></td><td>String</td><td>Customer reference ID from <code>orderRequest.OrderData.RefId</code></td></tr>
+        <tr><td><code>OrderType</code></td><td>String</td><td>Order action type (NEW / CHANGE / CANCEL / etc.)</td></tr>
+        <tr><td><code>UserName</code></td><td>String</td><td>Authentication username (populated by base event initialisation)</td></tr>
+        <tr><td><code>PassWord</code></td><td>String</td><td>Authentication password (populated by base event initialisation)</td></tr>
+        <tr><td><code>CES</code></td><td>String</td><td>CES system indicator (populated by base event initialisation)</td></tr>
+      </table>
+
+      <br/>
+      <h3>8.3 Response Event — ATS_SUBMIT_CAMPAIGN</h3>
+      <table>
+        <tr><th style="width:220px">Property</th><th>Value</th></tr>
+        <tr><td>Event Path</td><td><code>/Events/OMConsumers/OMXFM/Response/ATS_SUBMIT_CAMPAIGN</code></td></tr>
+        <tr><td>Parent Event</td><td><code>/Events/Base/OMXResponseBaseEvent</code></td></tr>
+        <tr><td>Channel URI</td><td><code>/Channels/OMXFMConnectionResponse</code></td></tr>
+        <tr><td>Destination Name</td><td><code>ATS_SUBMIT_CAMPAIGN</code></td></tr>
+        <tr><td>Payload Schema</td><td><code>SubmitCampaignResponse.xsd</code></td></tr>
+        <tr><td>Payload Root Element</td><td><code>ns:submitCampaignRes</code></td></tr>
+        <tr><td>Response Handler</td><td><code>RuleFunctions.OrderResponse.Response_ATS_BUNDLEPRODUCT_NUMBER</code></td></tr>
+        <tr><td>Correlation Mechanism</td><td>BE Rete matches <code>eventResponse.JMSCorrelationID == orderRequest.OrderData.OMXTrackingId</code></td></tr>
+      </table>
+      <h4 style="margin:12px 0 6px;font-size:0.88rem;color:var(--true-dark);">Inherited fields from OMXResponseBaseEvent</h4>
+      <table>
+        <tr><th>Field</th><th>Type</th><th>Description</th></tr>
+        <tr><td><code>JMSCorrelationID</code></td><td>String</td><td>Echoed correlation ID — matched to identify the originating order</td></tr>
+        <tr><td><code>CompletionStatus</code></td><td>int</td><td>Numeric completion code from ATS backend</td></tr>
+        <tr><td><code>ResponseCode</code></td><td>String</td><td>Alphanumeric response code; success when <code>tib:right(tib:trim(code),3) = "000"</code></td></tr>
+        <tr><td><code>ResponseMsg</code></td><td>String</td><td>Human-readable result message returned by ATS</td></tr>
+        <tr><td><code>OrderID</code></td><td>String</td><td>Echoed business order identifier</td></tr>
+        <tr><td><code>RefID</code></td><td>String</td><td>Echoed customer reference ID</td></tr>
+      </table>
+
+      <br/>
+      <h3>8.4 Response Handler Logic</h3>
+      <p>The rulefunction <code>RuleFunctions.OrderResponse.Response_ATS_BUNDLEPRODUCT_NUMBER</code> is invoked by the response rule when an <code>ATS_SUBMIT_CAMPAIGN</code> response event arrives. It performs:</p>
+      <br/>
+      <table>
+        <tr><th>#</th><th>Step</th><th>Detail</th></tr>
+        <tr><td>1</td><td>Create ResponseBase concept</td><td>Instantiates <code>Concepts.FM.Base.ResponseBase</code>; sets <code>ResponseCode</code>, <code>ResponseMsg</code>, <code>CompletionStatus</code>, <code>RefID</code> from the incoming event</td></tr>
+        <tr><td>2</td><td>Append to activity Response array</td><td><code>currActivity.Response[length] = activityRes</code> — appends each reply round so multi-request batches are tracked</td></tr>
+        <tr><td>3</td><td>Emit INFO audit log</td><td>Trace: <code>"Response received for ATS_BUNDLEPRODUCT_NUMBER"</code>; PROCESS_ID suffix = <code>"_RES"</code></td></tr>
+        <tr><td>4</td><td>Evaluate success</td><td>Counts responses where <code>tib:right(tib:trim(ResponseCode),3) = "000"</code>. Returns <code>"true"</code> when <code>currActivity.RequestCount == successResponseCount</code> (all sent requests acknowledged successfully), <code>"false"</code> otherwise.</td></tr>
+      </table>
+
+      <br/>
+      <h3>8.5 Audit / Logger Events Summary</h3>
+      <table>
+        <tr><th>Trigger</th><th>Channel → Destination</th><th>Direction</th><th>AUDIT_TRACE</th><th>PROCESS_ID Suffix</th></tr>
+        <tr>
+          <td>Request dispatched (request rule)</td>
+          <td><code>/Channels/LogConnection → InfoLog</code></td>
+          <td><span class="badge badge-green">Outbound</span></td>
+          <td>"Request Sent for ATS_BUNDLEPRODUCT_NUMBER"</td>
+          <td><code>_REQ</code></td>
+        </tr>
+        <tr>
+          <td>Response received (response handler)</td>
+          <td><code>/Channels/LogConnection → InfoLog</code></td>
+          <td><span class="badge badge-blue">Outbound</span></td>
+          <td>"Response received for ATS_BUNDLEPRODUCT_NUMBER"</td>
+          <td><code>_RES</code></td>
+        </tr>
+        <tr>
+          <td>Exception caught (request rule catch)</td>
+          <td><code>/Channels/LogConnection → ErrorLog</code></td>
+          <td><span class="badge badge-red">Outbound</span></td>
+          <td>"Runtime exception in ATS_BUNDLEPRODUCT_NUMBER"</td>
+          <td><code>_REQ</code></td>
+        </tr>
+      </table>
+
+      <br/>
+      <h3>8.6 Order Type Compatibility</h3>
+      <p>This rule contains <strong>no OrderType filter</strong> in its WHEN conditions. Which order types flow through this activity depends entirely on the ProcessConfig. The hardcoded static values indicate intended scenarios:</p>
+      <br/>
+      <table>
+        <tr><th>Order Scenario / OrderType</th><th>Likelihood</th><th>Notes</th></tr>
+        <tr><td>Prepaid New Activation (TMV)</td><td><span class="badge badge-green">Primary</span></td><td>Core design target — new Prepaid subscriber with bundle product assignment</td></tr>
+        <tr><td>Prepaid Bundle Change / Upgrade</td><td><span class="badge badge-green">Primary</span></td><td>Modifying bundle product; GROUP field carries updated product info</td></tr>
+        <tr><td>Port-In with Bundle Product</td><td><span class="badge badge-orange">Secondary</span></td><td>MNP port-in orders that include a Prepaid bundle may route through this activity</td></tr>
+        <tr><td>Postpaid / other payment types</td><td><span class="badge badge-red">Not Intended</span></td><td>If routed here by config, payload will still carry <code>paymentType="Prepaid"</code> — ATS may reject</td></tr>
+        <tr><td>Orders without GROUP ExtendedInfo</td><td><span class="badge badge-red">Risk</span></td><td>Empty productId / familyType / companyCode are sent to ATS — no guard prevents dispatch</td></tr>
+      </table>
+
+    </div>
+  </div>
+
+  <!-- ═══ 9. ★ DEPENDENCIES ═══ -->
+  <span class="section-anchor" id="s9"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128279;</span> 9. ★ System &amp; Integration Dependencies</div>
+    <div class="card-body">
+
+      <h3>9.1 Order Type Dependencies</h3>
+      <p>This rule has <strong>no OrderType filter</strong> in its WHEN conditions. It fires for any order where the process configuration includes <code>ATS_BUNDLEPRODUCT_NUMBER</code> as an activity. In practice, this is limited by the ProcessConfig to specific order scenarios:</p>
+      <br/>
+      <table>
+        <tr><th>Order Scenario</th><th>Expected</th><th>Evidence in Rule</th></tr>
+        <tr>
+          <td>Prepaid Bundle Activation</td>
+          <td><span class="badge badge-green">Primary Use Case</span></td>
+          <td>Hardcoded <code>paymentType="Prepaid"</code> and <code>productType="TMV"</code> in XSLT</td>
+        </tr>
+        <tr>
+          <td>Postpaid orders</td>
+          <td><span class="badge badge-gray">Possible via config</span></td>
+          <td>Rule has no guard — process config controls inclusion; payload would still send Prepaid/TMV</td>
+        </tr>
+        <tr>
+          <td>Change Plan / Modify orders</td>
+          <td><span class="badge badge-gray">Possible via config</span></td>
+          <td>No order-action filter; activity inclusion is driven by ProcessConfig only</td>
+        </tr>
+        <tr>
+          <td>Campaign Code presence</td>
+          <td><span class="badge badge-orange">Optional enrichment</span></td>
+          <td>CAMPAIGN_CODE, REQUEST_NAME, CONVERGENCE_TYPE, TRUELIFE_ID are all optional in XSLT</td>
+        </tr>
+      </table>
+      <div class="note"><strong>Note:</strong> The hardcoded <code>productType="TMV"</code> and <code>paymentType="Prepaid"</code> indicate this rule was designed exclusively for the TRUE Move (TMV) Prepaid line. Any order from a different company/payment-type that routes here will send incorrect metadata to ATS.</div>
+
+      <br/><h3>9.2 ESB / JMS Channel Dependencies</h3>
+      <table>
+        <tr><th>Direction</th><th>Channel / Destination</th><th>System Type</th><th>Event / Message</th><th>Purpose</th></tr>
+        <tr>
+          <td><span class="badge badge-red">OUTBOUND</span></td>
+          <td><code>/Channels/OMXFMConnectionRequest</code><br/><code>→ ATS_SUBMIT_CAMPAIGN</code></td>
+          <td><span class="sys-type sys-jms">JMS</span></td>
+          <td><code>ATS_SUBMIT_CAMPAIGN</code></td>
+          <td>Send submitCampaignReq to ATS system for bundle product number resolution</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-red">OUTBOUND</span></td>
+          <td><code>/Channels/LogConnection</code><br/><code>→ InfoLog</code></td>
+          <td><span class="sys-type sys-log">LOGGING</span></td>
+          <td><code>Logger event (INFO)</code></td>
+          <td>Structured audit log — "Request Sent for ATS_BUNDLEPRODUCT_NUMBER"</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-red">OUTBOUND</span></td>
+          <td><code>/Channels/LogConnection</code><br/><code>→ ErrorLog</code></td>
+          <td><span class="sys-type sys-log">LOGGING</span></td>
+          <td><code>Logger event (ERROR)</code></td>
+          <td>Exception audit log — written only on catch block via HandleActivityException</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-blue">DB WRITE</span></td>
+          <td><code>SendDataToDB(orderRequest)</code></td>
+          <td><span class="sys-type sys-db">DATABASE</span></td>
+          <td>OrderRequest serialization</td>
+          <td>Persist activity state checkpoint after dispatch (or on skip/error)</td>
+        </tr>
+      </table>
+
+      <br/><h3>9.3 Backend API — ATS System</h3>
+      <table>
+        <tr><th style="width:200px">Property</th><th>Value</th></tr>
+        <tr><td>System Name</td><td>ATS — Activation &amp; Transaction System</td></tr>
+        <tr><td>Operation</td><td><code>submitCampaignReq</code></td></tr>
+        <tr><td>Protocol</td><td>JMS (via TIBCO FM OMXFMConnectionRequest channel)</td></tr>
+        <tr><td>Request Schema</td><td><code>SubmitCampaignRequest.xsd</code></td></tr>
+        <tr><td>Schema Namespace</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/ATS/SubmitCampaignRequest.xsd</code></td></tr>
+        <tr><td>Root Element</td><td><code>ns:submitCampaignReq</code></td></tr>
+        <tr><td>Send Pattern</td><td>Fire-and-forget request; response handled by separate <code>Response_ATS_BUNDLEPRODUCT_NUMBER</code> rule</td></tr>
+        <tr><td>JMS Correlation</td><td><code>JMSCorrelationID = OMXTrackingId</code> — used by response rule to match reply</td></tr>
+      </table>
+
+      <br/><h3>9.4 BE Working Memory (Object Cache) Dependencies</h3>
+      <table>
+        <tr><th>Concept</th><th>Access Pattern</th><th>Field(s) Read</th><th>Field(s) Written</th></tr>
+        <tr>
+          <td><code>Concepts.OrderRequest.OrderRequest</code></td>
+          <td>Matched in WHEN; read/written in THEN</td>
+          <td>ProcessFlow.NextActivityName, OrderData.*, OrderPriority, IsOrderResubmitted</td>
+          <td>ResponseCode, ResponseMessage, OrderStatus (on exception only)</td>
+        </tr>
+        <tr>
+          <td><code>Concepts.OM.ProcessConfig.Activity</code></td>
+          <td>Matched in WHEN; read/written in THEN</td>
+          <td>ActivityID, Status, PreExecCheck, RequestCount, ExceptionActivity</td>
+          <td>Status → "IN_PROGRESS", RequestCount++</td>
+        </tr>
+      </table>
+
+      <br/><h3>9.5 Extended Info Fields Required from Upstream</h3>
+      <p>These name/value pairs must be present in <code>OrderData.ExtendedInfo[]</code> for full operation:</p>
+      <br/>
+      <table>
+        <tr><th>ExtendedInfo Name</th><th>Required?</th><th>Used For</th><th>Where Consumed</th></tr>
+        <tr><td><code>GROUP</code></td><td><span class="badge badge-red">Required*</span></td><td>Source of familyType, productId, companyCode</td><td>GROUP parsing block (Step 5 → XSLT params)</td></tr>
+        <tr><td><code>REQUEST_NAME</code></td><td><span class="badge badge-gray">Optional</span></td><td>ATS request name label</td><td>XSLT: <code>ns:requestName</code> (emitted only if present)</td></tr>
+        <tr><td><code>CAMPAIGN_CODE</code></td><td><span class="badge badge-gray">Optional</span></td><td>Campaign identifier</td><td>XSLT: <code>ns:campaignCode</code> (emitted only if present)</td></tr>
+        <tr><td><code>CONVERGENCE_TYPE</code></td><td><span class="badge badge-gray">Optional</span></td><td>Fixed/Mobile/Both convergence flag</td><td>XSLT: <code>ns:convergenceType</code> (emitted only if present)</td></tr>
+        <tr><td><code>TRUELIFE_ID</code></td><td><span class="badge badge-gray">Optional</span></td><td>TrueLife unified identity account</td><td>XSLT: <code>ns:truelifeId</code> (emitted only if present)</td></tr>
+      </table>
+      <div class="note"><strong>*</strong> GROUP is logically required but only wrapped in <code>IsBlankOrStringNull</code> — if absent, all product fields are sent as empty strings to ATS.</div>
+
+      <br/><h3>9.6 Global Variable Dependencies</h3>
+      <table>
+        <tr><th>Global Variable Path</th><th>Used In</th><th>Purpose</th></tr>
+        <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit log COMPONENT_NAME</td><td>This engine's component name for logging</td></tr>
+        <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit log TARGET_SYSTEM</td><td>FM component name for logging target</td></tr>
+        <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit log LOG_LEVEL</td><td>INFO level constant</td></tr>
+        <tr><td><code>OMX_OM/WritePayload</code></td><td>Audit log conditional</td><td>Toggle for writing full payload to audit log</td></tr>
+        <tr><td><code>OMX_OM/ComponentName</code></td><td>HandleActivityException</td><td>Component code for error response composition</td></tr>
+        <tr><td><code>OMX_OM/Services/OMServices</code></td><td>HandleActivityException</td><td>Service code for error response</td></tr>
+        <tr><td><code>OMX_OM/Services/SubmitOrder</code></td><td>HandleActivityException</td><td>Operation code for error response</td></tr>
+        <tr><td><code>OMX_COMMON/Severity/High</code></td><td>HandleActivityException</td><td>Error severity code</td></tr>
+        <tr><td><code>OMX_OM/ResponseCodes/GenericError</code></td><td>HandleActivityException</td><td>Error code constant (999)</td></tr>
+      </table>
+
+    </div>
+  </div>
+
+  <!-- ═══ 10. ★ DETAILED PAYLOAD BUILD ═══ -->
+  <span class="section-anchor" id="s10"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128736;</span> 10. ★ Detailed Payload Build — Step 6: Create &amp; Send ATS_SUBMIT_CAMPAIGN Event</div>
+    <div class="card-body">
+
+      <p>Step 6 uses <code>Event.createEvent("xslt://{{...}}&lt;xsl:stylesheet&gt;...&lt;/xsl:stylesheet&gt;")</code> with a complete inline XSLT stylesheet. Below is the full decomposition of each stage.</p>
+      <br/>
+
+      <!-- 9.1 PARAMETER BINDING -->
+      <div class="xslt-step">
+        <div class="xslt-step-header">&#128280; 9.1 — XSLT Parameter Binding (inputs to the XSLT)</div>
+        <div class="xslt-step-body">
+          <p>The XSLT declares four parameters that receive values from the BE working memory at execution time:</p>
+          <pre><code><span class="xml-tag">&lt;xsl:param</span> <span class="xml-attr">name=</span><span class="xml-val">"orderRequest"</span><span class="xml-tag">/&gt;</span>   <span class="cmt">← injected from BE working memory (the full orderRequest concept)</span>
+<span class="xml-tag">&lt;xsl:param</span> <span class="xml-attr">name=</span><span class="xml-val">"productId"</span><span class="xml-tag">/&gt;</span>      <span class="cmt">← result of GROUP parsing (array index 1), e.g. "P00123456"</span>
+<span class="xml-tag">&lt;xsl:param</span> <span class="xml-attr">name=</span><span class="xml-val">"companyCode"</span><span class="xml-tag">/&gt;</span>    <span class="cmt">← result of GROUP parsing (array index 2), e.g. "TMV"</span>
+<span class="xml-tag">&lt;xsl:param</span> <span class="xml-attr">name=</span><span class="xml-val">"familyType"</span><span class="xml-tag">/&gt;</span>     <span class="cmt">← result of GROUP parsing (array index 0), e.g. "POSTPAID_BUNDLE"</span></code></pre>
+          <table>
+            <tr><th>XSLT Param</th><th>Source in Rule</th><th>Type</th></tr>
+            <tr><td><code class="xslt-param">$orderRequest</code></td><td>Working memory concept <code>orderRequest</code></td><td>BE Concept serialized as XML</td></tr>
+            <tr><td><code class="xslt-param">$productId</code></td><td>Local variable from GROUP split[1], stripped of "PRODUCT_ID=" prefix</td><td>String</td></tr>
+            <tr><td><code class="xslt-param">$companyCode</code></td><td>Local variable from GROUP split[2], stripped of "COMPANY_CODE=" prefix</td><td>String</td></tr>
+            <tr><td><code class="xslt-param">$familyType</code></td><td>Local variable from GROUP split[0], stripped of "FAMILY_TYPE=" prefix</td><td>String</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- 9.2 EVENT CONTAINER -->
+      <div class="xslt-step">
+        <div class="xslt-step-header">&#128200; 9.2 — Event Container Construction</div>
+        <div class="xslt-step-body">
+          <p>The XSLT template match="/" produces a <code>&lt;createEvent&gt;</code> wrapper that BE uses to instantiate the event object:</p>
+          <pre><code><span class="xml-tag">&lt;createEvent&gt;</span>
+    <span class="xml-tag">&lt;event&gt;</span>
+        <span class="cmt">&lt;!-- extId: unique event identity --&gt;</span>
+        <span class="xml-tag">&lt;xsl:attribute</span> <span class="xml-attr">name=</span><span class="xml-val">"extId"</span><span class="xml-tag">&gt;</span>
+            <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"OMXUtils:generateTrackingID()"</span><span class="xml-tag">/&gt;</span>  <span class="cmt">← custom BE function, generates UUID/sequence</span>
+        <span class="xml-tag">&lt;/xsl:attribute&gt;</span>
+        ... <span class="cmt">(headers + payload follow)</span>
+    <span class="xml-tag">&lt;/event&gt;</span>
+<span class="xml-tag">&lt;/createEvent&gt;</span></code></pre>
+          <p>The <code>extId</code> becomes the JMS MessageID for this request. The corresponding response rule uses this to look up the event in working memory.</p>
+        </div>
+      </div>
+
+      <!-- 9.3 JMS HEADERS -->
+      <div class="xslt-step">
+        <div class="xslt-step-header">&#128236; 9.3 — JMS / Event Header Fields</div>
+        <div class="xslt-step-body">
+          <pre><code><span class="xml-tag">&lt;JMSPriority&gt;</span>
+    <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$orderRequest/OrderPriority"</span><span class="xml-tag">/&gt;</span>
+<span class="xml-tag">&lt;/JMSPriority&gt;</span>
+<span class="cmt">&lt;!-- Controls JMS queue priority for this message --&gt;</span>
+
+<span class="xml-tag">&lt;JMSCorrelationID&gt;</span>
+    <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xml-tag">/&gt;</span>
+<span class="xml-tag">&lt;/JMSCorrelationID&gt;</span>
+<span class="cmt">&lt;!-- KEY: used by Response_ATS_BUNDLEPRODUCT_NUMBER rule to correlate ATS reply --&gt;</span>
+
+<span class="xml-tag">&lt;OrderID&gt;</span>
+    <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$orderRequest/OrderData/OrderID"</span><span class="xml-tag">/&gt;</span>
+<span class="xml-tag">&lt;/OrderID&gt;</span>
+
+<span class="xml-tag">&lt;RefID&gt;</span>
+    <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$orderRequest/OrderData/Customer/RefId"</span><span class="xml-tag">/&gt;</span>
+<span class="xml-tag">&lt;/RefID&gt;</span>
+
+<span class="xml-tag">&lt;OrderType&gt;</span>
+    <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$orderRequest/OrderData/OrderType"</span><span class="xml-tag">/&gt;</span>
+<span class="xml-tag">&lt;/OrderType&gt;</span></code></pre>
+          <table>
+            <tr><th>Field</th><th>XPath Source</th><th>Role</th></tr>
+            <tr><td><code>extId</code></td><td><code>OMXUtils:generateTrackingID()</code></td><td>Unique event ID — used as JMS MessageID</td></tr>
+            <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td>JMS delivery priority</td></tr>
+            <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Correlation key for response matching</td></tr>
+            <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Business order reference</td></tr>
+            <tr><td><code>RefID</code></td><td><code>$orderRequest/OrderData/Customer/RefId</code></td><td>Customer reference</td></tr>
+            <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Order action type</td></tr>
+          </table>
+        </div>
+      </div>
+
+      <!-- 9.4 PAYLOAD ROOT -->
+      <div class="xslt-step">
+        <div class="xslt-step-header">&#128230; 9.4 — Payload Root: &lt;ns:submitCampaignReq&gt;</div>
+        <div class="xslt-step-body">
+          <p>The payload element is namespace-qualified under the ATS schema. Channel is always hardcoded:</p>
+          <pre><code><span class="xml-tag">&lt;payload&gt;</span>
+    <span class="xml-tag">&lt;ns:submitCampaignReq&gt;</span>
+
+        <span class="xml-tag">&lt;ns:channel&gt;</span>OMX<span class="xml-tag">&lt;/ns:channel&gt;</span>  <span class="cmt">&lt;!-- STATIC — always "OMX", identifies this system to ATS --&gt;</span>
+
+        ... <span class="cmt">(conditional + campaignInfo follow)</span>
+
+    <span class="xml-tag">&lt;/ns:submitCampaignReq&gt;</span>
+<span class="xml-tag">&lt;/payload&gt;</span></code></pre>
+        </div>
+      </div>
+
+      <!-- 9.5 OPTIONAL FIELDS -->
+      <div class="xslt-step">
+        <div class="xslt-step-header">&#10067; 9.5 — Conditional Fields (xsl:if — emitted only when ExtendedInfo exists)</div>
+        <div class="xslt-step-body">
+          <p>Four fields are conditionally emitted using <code>xsl:if test="..."</code>. When the corresponding ExtendedInfo entry is absent, the XML element is completely omitted (not sent as empty):</p>
+          <pre><code><span class="cmt">&lt;!-- REQUEST_NAME: emitted only when ExtendedInfo[Name='REQUEST_NAME']/Value is non-empty --&gt;</span>
+<span class="xml-tag">&lt;xsl:if</span> <span class="xml-attr">test=</span><span class="xml-val">"$orderRequest/OrderData/ExtendedInfo[Name='REQUEST_NAME']/Value"</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;ns:requestName&gt;</span>
+        <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$orderRequest/OrderData/ExtendedInfo[Name='REQUEST_NAME']/Value"</span><span class="xml-tag">/&gt;</span>
+    <span class="xml-tag">&lt;/ns:requestName&gt;</span>
+<span class="xml-tag">&lt;/xsl:if&gt;</span>
+
+<span class="cmt">&lt;!-- campaignCode --&gt;</span>
+<span class="xml-tag">&lt;xsl:if</span> <span class="xml-attr">test=</span><span class="xml-val">"$orderRequest/OrderData/ExtendedInfo[Name='CAMPAIGN_CODE']/Value"</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;ns:campaignCode&gt;</span>
+        <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$orderRequest/OrderData/ExtendedInfo[Name='CAMPAIGN_CODE']/Value"</span><span class="xml-tag">/&gt;</span>
+    <span class="xml-tag">&lt;/ns:campaignCode&gt;</span>
+<span class="xml-tag">&lt;/xsl:if&gt;</span>
+
+<span class="cmt">&lt;!-- convergenceType --&gt;</span>
+<span class="xml-tag">&lt;xsl:if</span> <span class="xml-attr">test=</span><span class="xml-val">"$orderRequest/OrderData/ExtendedInfo[Name='CONVERGENCE_TYPE']/Value"</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;ns:convergenceType&gt;</span>
+        <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$orderRequest/OrderData/ExtendedInfo[Name='CONVERGENCE_TYPE']/Value"</span><span class="xml-tag">/&gt;</span>
+    <span class="xml-tag">&lt;/ns:convergenceType&gt;</span>
+<span class="xml-tag">&lt;/xsl:if&gt;</span>
+
+<span class="cmt">&lt;!-- truelifeId --&gt;</span>
+<span class="xml-tag">&lt;xsl:if</span> <span class="xml-attr">test=</span><span class="xml-val">"$orderRequest/OrderData/ExtendedInfo[Name='TRUELIFE_ID']/Value"</span><span class="xml-tag">&gt;</span>
+    <span class="xml-tag">&lt;ns:truelifeId&gt;</span>
+        <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$orderRequest/OrderData/ExtendedInfo[Name='TRUELIFE_ID']/Value"</span><span class="xml-tag">/&gt;</span>
+    <span class="xml-tag">&lt;/ns:truelifeId&gt;</span>
+<span class="xml-tag">&lt;/xsl:if&gt;</span></code></pre>
+        </div>
+      </div>
+
+      <!-- 9.6 PRODUCT LIST -->
+      <div class="xslt-step">
+        <div class="xslt-step-header">&#128230; 9.6 — productList Block (core ATS product identity)</div>
+        <div class="xslt-step-body">
+          <p>The <code>productList</code> element carries the product identity resolved from the GROUP field, plus two hardcoded static values:</p>
+          <pre><code><span class="xml-tag">&lt;ns:productList&gt;</span>
+
+    <span class="xml-tag">&lt;ns:productId&gt;</span>
+        <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$productId"</span><span class="xml-tag">/&gt;</span>      <span class="cmt">&lt;!-- from GROUP[1]: e.g. "P00123456" --&gt;</span>
+    <span class="xml-tag">&lt;/ns:productId&gt;</span>
+
+    <span class="xml-tag">&lt;ns:productType&gt;</span>
+        <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"'TMV'"</span><span class="xml-tag">/&gt;</span>          <span class="cmt">&lt;!-- STATIC — TRUE Move, hardcoded --&gt;</span>
+    <span class="xml-tag">&lt;/ns:productType&gt;</span>
+
+    <span class="xml-tag">&lt;ns:paymentType&gt;</span>
+        <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"'Prepaid'"</span><span class="xml-tag">/&gt;</span>       <span class="cmt">&lt;!-- STATIC — always Prepaid, hardcoded --&gt;</span>
+    <span class="xml-tag">&lt;/ns:paymentType&gt;</span>
+
+    <span class="xml-tag">&lt;ns:companyCode&gt;</span>
+        <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$companyCode"</span><span class="xml-tag">/&gt;</span>    <span class="cmt">&lt;!-- from GROUP[2]: e.g. "TMV" --&gt;</span>
+    <span class="xml-tag">&lt;/ns:companyCode&gt;</span>
+
+    <span class="xml-tag">&lt;ns:familyType&gt;</span>
+        <span class="xml-tag">&lt;xsl:value-of</span> <span class="xml-attr">select=</span><span class="xml-val">"$familyType"</span><span class="xml-tag">/&gt;</span>     <span class="cmt">&lt;!-- from GROUP[0]: e.g. "POSTPAID_BUNDLE" --&gt;</span>
+    <span class="xml-tag">&lt;/ns:familyType&gt;</span>
+
+<span class="xml-tag">&lt;/ns:productList&gt;</span></code></pre>
+        </div>
+      </div>
+
+      <!-- 9.7 FULL EXAMPLE -->
+      <div class="xslt-step">
+        <div class="xslt-step-header">&#128196; 9.7 — Complete Generated XML (full example)</div>
+        <div class="xslt-step-body">
+          <p>Given: <code>GROUP = "FAMILY_TYPE=POSTPAID_BUNDLE|PRODUCT_ID=P00123456|COMPANY_CODE=TMV"</code>, with CAMPAIGN_CODE and TRUELIFE_ID present:</p>
+          <pre><code><span class="xml-tag">&lt;createEvent&gt;</span>
+  <span class="xml-tag">&lt;event</span> <span class="xml-attr">extId=</span><span class="xml-val">"TRK-20240617-00001"</span><span class="xml-tag">&gt;</span>                 <span class="cmt">&lt;!-- OMXUtils:generateTrackingID() --&gt;</span>
+    <span class="xml-tag">&lt;JMSPriority&gt;</span>5<span class="xml-tag">&lt;/JMSPriority&gt;</span>                       <span class="cmt">&lt;!-- orderRequest.OrderPriority --&gt;</span>
+    <span class="xml-tag">&lt;JMSCorrelationID&gt;</span>OMX-TRK-20240617-ABC<span class="xml-tag">&lt;/JMSCorrelationID&gt;</span>  <span class="cmt">&lt;!-- OMXTrackingId --&gt;</span>
+    <span class="xml-tag">&lt;OrderID&gt;</span>ORD-9988776655<span class="xml-tag">&lt;/OrderID&gt;</span>
+    <span class="xml-tag">&lt;RefID&gt;</span>CUST-12345<span class="xml-tag">&lt;/RefID&gt;</span>
+    <span class="xml-tag">&lt;OrderType&gt;</span>NEW_ACTIVATION<span class="xml-tag">&lt;/OrderType&gt;</span>
+    <span class="xml-tag">&lt;payload&gt;</span>
+      <span class="xml-tag">&lt;ns:submitCampaignReq&gt;</span>
+        <span class="xml-tag">&lt;ns:channel&gt;</span>OMX<span class="xml-tag">&lt;/ns:channel&gt;</span>                    <span class="cmt">&lt;!-- STATIC --&gt;</span>
+        <span class="xml-tag">&lt;ns:requestName&gt;</span>BUNDLE_ACTIVATION<span class="xml-tag">&lt;/ns:requestName&gt;</span> <span class="cmt">&lt;!-- REQUEST_NAME ExtInfo --&gt;</span>
+        <span class="xml-tag">&lt;ns:campaignInfo&gt;</span>
+          <span class="xml-tag">&lt;ns:campaignCode&gt;</span>CAMP_2024_Q2<span class="xml-tag">&lt;/ns:campaignCode&gt;</span>    <span class="cmt">&lt;!-- CAMPAIGN_CODE ExtInfo --&gt;</span>
+          <span class="cmt">&lt;!-- convergenceType omitted: CONVERGENCE_TYPE absent in this order --&gt;</span>
+          <span class="xml-tag">&lt;ns:truelifeId&gt;</span>TL_9876543210<span class="xml-tag">&lt;/ns:truelifeId&gt;</span>     <span class="cmt">&lt;!-- TRUELIFE_ID ExtInfo --&gt;</span>
+          <span class="xml-tag">&lt;ns:productList&gt;</span>
+            <span class="xml-tag">&lt;ns:productId&gt;</span>P00123456<span class="xml-tag">&lt;/ns:productId&gt;</span>           <span class="cmt">&lt;!-- GROUP[1] --&gt;</span>
+            <span class="xml-tag">&lt;ns:productType&gt;</span>TMV<span class="xml-tag">&lt;/ns:productType&gt;</span>               <span class="cmt">&lt;!-- STATIC --&gt;</span>
+            <span class="xml-tag">&lt;ns:paymentType&gt;</span>Prepaid<span class="xml-tag">&lt;/ns:paymentType&gt;</span>           <span class="cmt">&lt;!-- STATIC --&gt;</span>
+            <span class="xml-tag">&lt;ns:companyCode&gt;</span>TMV<span class="xml-tag">&lt;/ns:companyCode&gt;</span>               <span class="cmt">&lt;!-- GROUP[2] --&gt;</span>
+            <span class="xml-tag">&lt;ns:familyType&gt;</span>POSTPAID_BUNDLE<span class="xml-tag">&lt;/ns:familyType&gt;</span>   <span class="cmt">&lt;!-- GROUP[0] --&gt;</span>
+          <span class="xml-tag">&lt;/ns:productList&gt;</span>
+        <span class="xml-tag">&lt;/ns:campaignInfo&gt;</span>
+      <span class="xml-tag">&lt;/ns:submitCampaignReq&gt;</span>
+    <span class="xml-tag">&lt;/payload&gt;</span>
+  <span class="xml-tag">&lt;/event&gt;</span>
+<span class="xml-tag">&lt;/createEvent&gt;</span></code></pre>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ═══ 11. XSLT FIELD MAPPING ═══ -->
+  <span class="section-anchor" id="s11"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128257;</span> 11. XSLT Field Mapping Table — submitCampaignReq</div>
+    <div class="card-body">
+      <table>
+        <tr><th>Target XML Field</th><th>Type</th><th>Source</th><th>Condition</th></tr>
+        <tr><td class="xslt-target">ns:channel</td><td><span class="badge badge-purple">Static</span></td><td class="xslt-static">"OMX"</td><td>Always</td></tr>
+        <tr><td class="xslt-target">ns:requestName</td><td><span class="badge badge-blue">Dynamic</span></td><td class="xslt-source">ExtendedInfo[Name='REQUEST_NAME']/Value</td><td>xsl:if — omitted when absent</td></tr>
+        <tr><td class="xslt-target">ns:campaignCode</td><td><span class="badge badge-blue">Dynamic</span></td><td class="xslt-source">ExtendedInfo[Name='CAMPAIGN_CODE']/Value</td><td>xsl:if — omitted when absent</td></tr>
+        <tr><td class="xslt-target">ns:convergenceType</td><td><span class="badge badge-blue">Dynamic</span></td><td class="xslt-source">ExtendedInfo[Name='CONVERGENCE_TYPE']/Value</td><td>xsl:if — omitted when absent</td></tr>
+        <tr><td class="xslt-target">ns:truelifeId</td><td><span class="badge badge-blue">Dynamic</span></td><td class="xslt-source">ExtendedInfo[Name='TRUELIFE_ID']/Value</td><td>xsl:if — omitted when absent</td></tr>
+        <tr><td class="xslt-target">ns:productId</td><td><span class="badge badge-teal">XSLT Param</span></td><td class="xslt-param">$productId (from GROUP split[1])</td><td>Always (may be "")</td></tr>
+        <tr><td class="xslt-target">ns:productType</td><td><span class="badge badge-purple">Static</span></td><td class="xslt-static">"TMV"</td><td>Always</td></tr>
+        <tr><td class="xslt-target">ns:paymentType</td><td><span class="badge badge-purple">Static</span></td><td class="xslt-static">"Prepaid"</td><td>Always</td></tr>
+        <tr><td class="xslt-target">ns:companyCode</td><td><span class="badge badge-teal">XSLT Param</span></td><td class="xslt-param">$companyCode (from GROUP split[2])</td><td>Always (may be "")</td></tr>
+        <tr><td class="xslt-target">ns:familyType</td><td><span class="badge badge-teal">XSLT Param</span></td><td class="xslt-param">$familyType (from GROUP split[0])</td><td>Always (may be "")</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 12. AUDIT ═══ -->
+  <span class="section-anchor" id="s12"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128221;</span> 12. Audit Logging</div>
+    <div class="card-body">
+      <table>
+        <tr><th>Field</th><th>Value / Source</th></tr>
+        <tr><td><code>ESBUUID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+        <tr><td><code>PROCESS_ID</code></td><td><code>concat(System.nanoTime(), "_REQ")</code></td></tr>
+        <tr><td><code>COMPONENT_NAME</code></td><td>Global var: <code>OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+        <tr><td><code>OPERATION_NAME</code></td><td>Hardcoded: <code>"ATS_BUNDLEPRODUCT_NUMBER"</code></td></tr>
+        <tr><td><code>TARGET_SYSTEM</code></td><td>Global var: <code>OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+        <tr><td><code>LOG_LEVEL</code></td><td>Global var: <code>OMX_COMMON/.../MSG_LOG_LEVEL/INFO</code></td></tr>
+        <tr><td><code>AUDIT_TRACE</code></td><td>Hardcoded: <code>"Request Sent for ATS_BUNDLEPRODUCT_NUMBER"</code></td></tr>
+        <tr><td><code>AUDIT_TS</code></td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+        <tr><td><code>payload</code></td><td>Full <code>reqEvent</code> XML — only when <code>OMX_OM/WritePayload == "true"</code></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 13. STATUS ═══ -->
+  <span class="section-anchor" id="s13"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128260;</span> 13. Activity Status Management</div>
+    <div class="card-body">
+      <table>
+        <tr><th>Code</th><th>Status</th><th>Set By / When</th></tr>
+        <tr><td><code>"0"</code></td><td><span class="badge badge-gray">WAITING</span></td><td>Initial state; set by SkipActivity on next activity</td></tr>
+        <tr><td><code>"1"</code></td><td><span class="badge badge-blue">IN_PROGRESS</span></td><td><strong>This rule</strong> — after successful ATS dispatch</td></tr>
+        <tr><td><code>"2"</code></td><td><span class="badge badge-green">SUCCESS</span></td><td>Response rule — after ATS reply received</td></tr>
+        <tr><td><code>"3"</code></td><td><span class="badge badge-red">ERROR</span></td><td>HandleActivityException — on any caught exception</td></tr>
+        <tr><td><code>"4"</code></td><td><span class="badge badge-purple">SKIPPED</span></td><td>SkipActivity — when PreExecCheck returns false</td></tr>
+        <tr><td><code>"5"</code></td><td><span class="badge badge-orange">BLOCKING</span></td><td>External gate — not set by this rule</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 14. EXCEPTION ═══ -->
+  <span class="section-anchor" id="s14"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128680;</span> 14. Exception / Error Handling</div>
+    <div class="card-body">
+      <p>The entire THEN body is wrapped in <code>try { } catch (Exception ae) { }</code>. On exception: <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code>.</p>
+      <br/>
+      <table>
+        <tr><th>#</th><th>Action</th><th>Detail</th></tr>
+        <tr><td>1</td><td>Set activity STATUS</td><td><code>Status = "ERROR"</code></td></tr>
+        <tr><td>2</td><td>Compose ResponseCode</td><td><code>ComponentName + ServiceCode + OpCode + Severity + ErrorCode</code> → e.g. <code>OM010103999</code></td></tr>
+        <tr><td>3</td><td>Set activity response fields</td><td><code>ResponseCode</code> = composite; <code>ResponseMessage</code> = <code>ae@message</code></td></tr>
+        <tr><td>4</td><td>Set order STATUS</td><td><code>OrderStatus = GetOrderStatusString(3)</code> → FAILED</td></tr>
+        <tr><td>5</td><td>Propagate to order</td><td>Same composite code and message set on <code>orderRequest.ResponseCode/Message</code></td></tr>
+        <tr><td>6</td><td>ERROR audit log</td><td>Routes to <code>/Channels/LogConnection/ErrorLog</code> with <code>ae@message</code>, <code>ae@stackTrace</code></td></tr>
+        <tr><td>7</td><td>Exception activity flow</td><td>If <code>ExceptionActivity</code> configured → sets next activity to it, Status = WAITING</td></tr>
+        <tr><td>8</td><td>Persist to DB</td><td><code>SendDataToDB(orderRequest)</code></td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 15. HELPERS ═══ -->
+  <span class="section-anchor" id="s15"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128296;</span> 15. Helper Functions Reference</div>
+    <div class="card-body">
+      <table>
+        <tr><th style="width:280px">Function</th><th>Signature</th><th>Validity</th><th>Purpose</th></tr>
+        <tr>
+          <td><code>BRMS.IsBlankOrStringNull</code></td>
+          <td><code>boolean(String)</code></td>
+          <td><span class="badge badge-teal">CONDITION</span></td>
+          <td>Returns true if null, "", or literal "null" (case-insensitive)</td>
+        </tr>
+        <tr>
+          <td><code>GetActivityStatusString</code></td>
+          <td><code>String(String code, boolean isResponseCode)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Maps "0"–"5" → WAITING/IN_PROGRESS/SUCCESS/ERROR/SKIPPED/BLOCKING. When isResponseCode=true: extracts last 3 chars, "000"→SUCCESS else ERROR.</td>
+        </tr>
+        <tr>
+          <td><code>SendDataToDB</code></td>
+          <td><code>void(OrderRequest)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Serialises and persists orderRequest to OMX backing store. Called after every state transition.</td>
+        </tr>
+        <tr>
+          <td><code>SkipActivity</code></td>
+          <td><code>void(OrderRequest, Activity, String statusCode)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Marks current activity with given status, walks chain to first non-SUCCESS activity, advances process flow. If all SUCCESS → closes order. If FAILED → routes to ResubmitActivity.</td>
+        </tr>
+        <tr>
+          <td><code>HandleActivityException</code></td>
+          <td><code>void(OrderRequest, Activity, Exception, String refId)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Centralised exception handler: ERROR status, response code, error audit log, ExceptionActivity routing, DB persist.</td>
+        </tr>
+        <tr>
+          <td><code>Instance.getByExtIdByUri</code></td>
+          <td><code>Concept(String extId, String uri)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Retrieves concept from BE object cache by extId + type URI.</td>
+        </tr>
+        <tr>
+          <td><code>Instance.serializeUsingDefaults</code></td>
+          <td><code>String(Concept)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Serializes BE concept to default XML. Used for XPath over orderRequest in PreExecCheck.</td>
+        </tr>
+        <tr>
+          <td><code>Event.Ext.sendEventImmediate</code></td>
+          <td><code>void(Event)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Synchronously dispatches event to its configured JMS channel destination.</td>
+        </tr>
+        <tr>
+          <td><code>Event.createEvent</code></td>
+          <td><code>Event(String xsltUri)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Creates event via inline XSLT. URI format: <code>xslt://{{/path/event}}&lt;xsl:stylesheet&gt;...&lt;/xsl:stylesheet&gt;</code></td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 16. ★ FUNCTION DEPENDENCY TREE ═══ -->
+  <span class="section-anchor" id="s16"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128336;</span> 16. ★ Function Dependency Tree</div>
+    <div class="card-body">
+
+      <h3>Call Tree — this rule → all transitively called functions</h3>
+      <div class="dep-tree">
+<span class="dep-root">Rules.OMConsumers.OMXFM.Request.Request_ATS_BUNDLEPRODUCT_NUMBER  [this rule]</span>
+│
+├── <span class="dep-fn">Instance.getByExtIdByUri()</span>                           <span class="dep-note">BE built-in — loads Activity from object cache</span>
+│
+├── <span class="dep-fn">Instance.serializeUsingDefaults()</span>                    <span class="dep-note">BE built-in — serializes orderRequest to XML</span>
+│
+├── <span class="dep-fn">XPath.execute()</span>                                      <span class="dep-note">BE built-in — evaluates PreExecCheck XPath</span>
+│
+├── <span class="dep-fn">XPath.evalAsString()</span>                                 <span class="dep-note">BE built-in — extracts GROUP field value</span>
+│
+├── <span class="dep-fn">RuleFunctions.Helpers.BRMS.IsBlankOrStringNull()</span>    <span class="dep-note">validity=CONDITION — null/blank guard</span>
+│   └── <span class="dep-ext">[no further calls — single predicate expression]</span>
+│
+├── <span class="dep-fn">Event.createEvent("xslt://ATS_SUBMIT_CAMPAIGN")</span>     <span class="dep-note">BE built-in — builds event via inline XSLT</span>
+│   └── <span class="dep-fn">OMXUtils:generateTrackingID()</span>                    <span class="dep-note">custom TIBCO custom function (Java)</span>
+│
+├── <span class="dep-fn">Event.Ext.sendEventImmediate(reqEvent)</span>              <span class="dep-note">BE built-in — JMS dispatch to ATS channel</span>
+│
+├── <span class="dep-fn">Event.createEvent("xslt://Logger")</span>                  <span class="dep-note">BE built-in — builds INFO audit log event</span>
+│
+├── <span class="dep-fn">Event.Ext.sendEventImmediate(logEvent)</span>              <span class="dep-note">BE built-in — dispatch to LogConnection</span>
+│
+├── <span class="dep-fn">RuleFunctions.Helpers.GetActivityStatusString()</span>     <span class="dep-note">validity=ACTION — "1" → "IN_PROGRESS"</span>
+│   └── <span class="dep-fn">XPath.evalAsString()</span>                             <span class="dep-note">only when isResponseCode=true (not this call)</span>
+│
+├── <span class="dep-fn">RuleFunctions.Helpers.SendDataToDB()</span>                <span class="dep-note">[called when NOT skipped]</span>
+│   └── <span class="dep-ext">[backing store serialization — internal BE channel]</span>
+│
+├── <span class="dep-fn">RuleFunctions.Helpers.SkipActivity()</span>               <span class="dep-note">[called when isSkipped==true]</span>
+│   ├── <span class="dep-fn">RuleFunctions.Helpers.BRMS.IsBlank()</span>            <span class="dep-note">null/empty guard</span>
+│   ├── <span class="dep-fn">RuleFunctions.Helpers.GetActivityStatusString()</span> <span class="dep-note">maps status code to string</span>
+│   ├── <span class="dep-fn">RuleFunctions.Helpers.GetOrderStatusString()</span>    <span class="dep-note">maps order status code to string</span>
+│   └── <span class="dep-fn">RuleFunctions.Helpers.SendDataToDB()</span>            <span class="dep-note">persists after skip</span>
+│
+└── <span class="dep-fn">RuleFunctions.Helpers.HandleActivityException()</span>    <span class="dep-note">[called in catch block]</span>
+    ├── <span class="dep-fn">RuleFunctions.Helpers.GetActivityStatusString()</span> <span class="dep-note">"3" → "ERROR"</span>
+    ├── <span class="dep-fn">RuleFunctions.Helpers.GetOrderStatusString()</span>    <span class="dep-note">maps order FAILED status</span>
+    ├── <span class="dep-fn">RuleFunctions.Helpers.SetResponseCode()</span>         <span class="dep-note">writes ResponseCode onto orderRequest</span>
+    ├── <span class="dep-fn">RuleFunctions.Helpers.BRMS.IsBlank()</span>            <span class="dep-note">checks ExceptionActivity is configured</span>
+    ├── <span class="dep-fn">Event.Ext.routeToImmediate()</span>                     <span class="dep-note">error audit log → /Channels/LogConnection/ErrorLog</span>
+    └── <span class="dep-fn">RuleFunctions.Helpers.SendDataToDB()</span>            <span class="dep-note">persists failed state</span>
+      </div>
+
+      <h3>Function Summary by Origin</h3>
+      <table>
+        <tr><th>Function</th><th>Origin</th><th>Called From</th></tr>
+        <tr><td><code>IsBlankOrStringNull</code></td><td><span class="badge badge-blue">RuleFunctions.Helpers.BRMS</span></td><td>This rule (GROUP guard)</td></tr>
+        <tr><td><code>IsBlank</code></td><td><span class="badge badge-blue">RuleFunctions.Helpers.BRMS</span></td><td>SkipActivity, HandleActivityException</td></tr>
+        <tr><td><code>GetActivityStatusString</code></td><td><span class="badge badge-red">RuleFunctions.Helpers</span></td><td>This rule, SkipActivity, HandleActivityException</td></tr>
+        <tr><td><code>GetOrderStatusString</code></td><td><span class="badge badge-red">RuleFunctions.Helpers</span></td><td>SkipActivity, HandleActivityException</td></tr>
+        <tr><td><code>SendDataToDB</code></td><td><span class="badge badge-red">RuleFunctions.Helpers</span></td><td>This rule, SkipActivity, HandleActivityException</td></tr>
+        <tr><td><code>SkipActivity</code></td><td><span class="badge badge-red">RuleFunctions.Helpers</span></td><td>This rule (on isSkipped==true)</td></tr>
+        <tr><td><code>HandleActivityException</code></td><td><span class="badge badge-red">RuleFunctions.Helpers</span></td><td>This rule (catch block)</td></tr>
+        <tr><td><code>SetResponseCode</code></td><td><span class="badge badge-red">RuleFunctions.Helpers</span></td><td>HandleActivityException</td></tr>
+        <tr><td><code>generateTrackingID</code></td><td><span class="badge badge-gray">OMXUtils (Java custom fn)</span></td><td>XSLT (ATS_SUBMIT_CAMPAIGN event)</td></tr>
+        <tr><td><code>getByExtIdByUri / serializeUsingDefaults</code></td><td><span class="badge badge-teal">BE Built-in (Instance.*)</span></td><td>This rule</td></tr>
+        <tr><td><code>execute / evalAsString</code></td><td><span class="badge badge-teal">BE Built-in (XPath.*)</span></td><td>This rule</td></tr>
+        <tr><td><code>createEvent / sendEventImmediate</code></td><td><span class="badge badge-teal">BE Built-in (Event.*)</span></td><td>This rule</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 17. CONCEPTS ═══ -->
+  <span class="section-anchor" id="s17"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128462;</span> 17. Concept Definitions Referenced</div>
+    <div class="card-body">
+      <h3>OrderRequest — Fields Used in This Rule</h3>
+      <table>
+        <tr><th style="width:340px">Field Path</th><th>Type</th><th>Purpose</th></tr>
+        <tr><td><code>OrderData.OMXTrackingId</code></td><td>String</td><td>Global tracking ID — JMS correlation, audit key</td></tr>
+        <tr><td><code>OrderData.OrderID</code></td><td>String</td><td>Business order identifier</td></tr>
+        <tr><td><code>OrderData.OrderType</code></td><td>String</td><td>NEW / MODIFY / CANCEL</td></tr>
+        <tr><td><code>OrderData.Customer.RefId</code></td><td>String</td><td>Customer reference for JMS routing</td></tr>
+        <tr><td><code>OrderData.ExtendedInfo[Name='GROUP']/Value</code></td><td>String</td><td>Pipe-delimited product info: FAMILY_TYPE, PRODUCT_ID, COMPANY_CODE</td></tr>
+        <tr><td><code>OrderData.ExtendedInfo[Name='REQUEST_NAME']/Value</code></td><td>String</td><td>Optional ATS request name</td></tr>
+        <tr><td><code>OrderData.ExtendedInfo[Name='CAMPAIGN_CODE']/Value</code></td><td>String</td><td>Optional campaign code</td></tr>
+        <tr><td><code>OrderData.ExtendedInfo[Name='CONVERGENCE_TYPE']/Value</code></td><td>String</td><td>Optional Fixed/Mobile convergence flag</td></tr>
+        <tr><td><code>OrderData.ExtendedInfo[Name='TRUELIFE_ID']/Value</code></td><td>String</td><td>Optional TrueLife unified identity</td></tr>
+        <tr><td><code>OrderPriority</code></td><td>int</td><td>JMS message priority</td></tr>
+        <tr><td><code>ProcessFlow.NextActivityName</code></td><td>String</td><td>ExtId of next activity to execute</td></tr>
+        <tr><td><code>ProcessFlow.NextActivityID</code></td><td>String</td><td>ActivityID string of next step</td></tr>
+        <tr><td><code>IsOrderResubmitted</code></td><td>boolean</td><td>Resubmission flag</td></tr>
+        <tr><td><code>OrderStatus</code></td><td>String</td><td>Overall order lifecycle status</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 18. MIGRATION ═══ -->
+  <span class="section-anchor" id="s18"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128640;</span> 18. Migration Notes &amp; Recommendations</div>
+    <div class="card-body">
+      <h3>Functional Requirements</h3>
+      <div class="rule-block action"><h4>R1 — Pre-Execution Gate</h4><p>Implement configurable condition check (SpEL/JSONPath/rule predicate). Default when absent: proceed.</p></div>
+      <div class="rule-block action"><h4>R2 — GROUP Parser Utility</h4><p>Reusable parser for pipe-delimited <code>KEY=value|KEY=value|KEY=value</code> format. Must include length guard (≥3 tokens) and return a structured object.</p></div>
+      <div class="rule-block action"><h4>R3 — ATS Adapter (submitCampaignReq)</h4><p>Externalise the XSLT mapping as a dedicated DTO/mapper class. Static values (<code>channel="OMX"</code>, <code>productType="TMV"</code>, <code>paymentType="Prepaid"</code>) should be configurable. Optional fields use null-safe conditional mapping.</p></div>
+      <div class="rule-block action"><h4>R4 — Resubmission Counter Guard</h4><p>Do NOT increment counter when <code>isResubmitted==true AND requestCount &gt; 0</code>.</p></div>
+      <div class="rule-block action"><h4>R5 — Activity State Machine</h4><p>After dispatch: Status → IN_PROGRESS, persist. Response handler sets SUCCESS/ERROR.</p></div>
+      <div class="rule-block action"><h4>R6 — Structured Audit Logging</h4><p>INFO log on dispatch, ERROR log on exception. Full payload toggle via config flag.</p></div>
+      <div class="rule-block warning"><h4>R7 — Exception Handling</h4><p>try/catch all activity logic. On exception: ERROR status, standard response code, ExceptionActivity routing, persist.</p></div>
+
+      <h3>Design Risks</h3>
+      <table>
+        <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+        <tr><td>Inline XSLT embedded in rule source</td><td><span class="badge badge-red">High</span></td><td>Externalise as mapper class/template file for independent testability</td></tr>
+        <tr><td>GROUP array index without length check</td><td><span class="badge badge-orange">Medium</span></td><td>Add <code>if (parts.length &lt; 3) throw ...</code> or return validation error</td></tr>
+        <tr><td>Empty product fields sent to ATS when GROUP absent</td><td><span class="badge badge-orange">Medium</span></td><td>Validate GROUP completeness; skip activity if absent rather than sending invalid payload</td></tr>
+        <tr><td>Hardcoded productType/paymentType</td><td><span class="badge badge-blue">Low</span></td><td>Make configurable per activity or product line for multi-brand support</td></tr>
+        <tr><td>Synchronous sendEventImmediate</td><td><span class="badge badge-blue">Low</span></td><td>Replace with async messaging + timeout/retry policy in microservices target</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <!-- ═══ 19. SOURCE ═══ -->
+  <span class="section-anchor" id="s19"></span>
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128196;</span> 19. Full Source Code</div>
+    <div class="card-body">
+      <pre><code><span class="cmt">/**
+ * @description
+ * @author DESKTOP-995HR2V
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_ATS_BUNDLEPRODUCT_NUMBER</span> {
+
+    <span class="kw">attribute</span> {
+        priority = <span class="num">5</span>;
+        forwardChain = <span class="kw">true</span>;
+    }
+
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span>  orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span>  orderCurrentActivity;
+    }
+
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="str">"ATS_BUNDLEPRODUCT_NUMBER"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="str">"ATS_BUNDLEPRODUCT_NUMBER"</span>;
+        orderCurrentActivity.Status == <span class="str">"WAITING"</span>;
+    }
+
+    <span class="kw">then</span> {
+        <span class="ty">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="num">0</span>
+                             &amp;&amp; orderRequest.IsOrderResubmitted);
+
+        <span class="kw">try</span> {
+            <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct =
+                Instance.<span class="fn">getByExtIdByUri</span>(orderRequest.ProcessFlow.NextActivityName,
+                                         <span class="str">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="ty">String</span>  chkXPath  = nextAct.PreExecCheck;
+            <span class="ty">String</span>  chkRes    = <span class="str">"true"</span>;
+            <span class="ty">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="kw">if</span> (String.<span class="fn">length</span>(nextAct.PreExecCheck) &gt; <span class="num">0</span>) {
+                <span class="ty">String</span> sXML = Instance.<span class="fn">serializeUsingDefaults</span>(orderRequest);
+                chkRes = XPath.<span class="fn">execute</span>(<span class="str">"/("</span> + chkXPath + <span class="str">")"</span>, sXML,
+                    <span class="str">"ns0=www.tibco.com/be/ontology/Concepts/OrderRequest/OrderRequest"</span>);
+            }
+
+            <span class="kw">if</span> (String.<span class="fn">equals</span>(chkRes, <span class="str">"true"</span>)) {
+
+                <span class="ty">String</span> familyType    = <span class="str">""</span>;
+                <span class="ty">String</span> productId     = <span class="str">""</span>;
+                <span class="ty">String</span> companyCode   = <span class="str">""</span>;
+                <span class="ty">String</span> groupProductId = XPath.<span class="fn">evalAsString</span>(
+                    <span class="str">"xpath://... $orderRequest/OrderData/ExtendedInfo[Name='GROUP']/Value ..."</span>);
+
+                <span class="kw">if</span> (!RuleFunctions.Helpers.BRMS.<span class="fn">IsBlankOrStringNull</span>(groupProductId)) {
+                    <span class="ty">String</span>[] parts = String.<span class="fn">split</span>(groupProductId, <span class="str">"\\|"</span>);
+
+                    familyType  = parts[<span class="num">0</span>]; <span class="kw">if</span>(String.<span class="fn">contains</span>(familyType, <span class="str">"FAMILY_TYPE="</span>))
+                                               familyType  = String.<span class="fn">substringAfter</span>(familyType, <span class="str">"="</span>);
+                    productId   = parts[<span class="num">1</span>]; <span class="kw">if</span>(String.<span class="fn">contains</span>(productId, <span class="str">"PRODUCT_ID="</span>))
+                                               productId   = String.<span class="fn">substringAfter</span>(productId, <span class="str">"="</span>);
+                    companyCode = parts[<span class="num">2</span>]; <span class="kw">if</span>(String.<span class="fn">contains</span>(companyCode, <span class="str">"COMPANY_CODE="</span>))
+                                               companyCode = String.<span class="fn">substringAfter</span>(companyCode, <span class="str">"="</span>);
+                }
+
+                <span class="ty">Events.OMConsumers.OMXFM.Request.ATS_SUBMIT_CAMPAIGN</span> reqEvent =
+                    Event.<span class="fn">createEvent</span>(<span class="str">"xslt://{{/Events/OMConsumers/OMXFM/Request/ATS_SUBMIT_CAMPAIGN}}"</span>
+                        <span class="cmt">/* inline XSLT: maps orderRequest fields + productId/companyCode/familyType
+                           → submitCampaignReq payload — see Sections 9 and 10 */</span>);
+
+                Event.Ext.<span class="fn">sendEventImmediate</span>(reqEvent);
+
+                <span class="kw">if</span> (!isActResub) {
+                    orderCurrentActivity.RequestCount++;
+                }
+
+                <span class="ty">long</span> pid = System.<span class="fn">nanoTime</span>();
+                Event.Ext.<span class="fn">sendEventImmediate</span>(Event.<span class="fn">createEvent</span>(
+                    <span class="str">"xslt://{{/Events/OMConsumers/OMXESB/Logger}}"</span>
+                    <span class="cmt">/* INFO: "Request Sent for ATS_BUNDLEPRODUCT_NUMBER" */</span>));
+
+                isSkipped = <span class="kw">false</span>;
+            }
+
+            <span class="kw">if</span> (!isSkipped) {
+                orderCurrentActivity.Status =
+                    RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="str">"1"</span>, <span class="kw">false</span>);
+                RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+            } <span class="kw">else</span> {
+                RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="str">"4"</span>);
+            }
+
+        } <span class="kw">catch</span> (<span class="ty">Exception</span> ae) {
+            RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(
+                orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+        }
+    }
+}</code></pre>
+    </div>
+  </div>
+
+  <p style="text-align:center;font-size:0.78rem;color:#999;padding:16px 0 24px;">
+    TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation &nbsp;|&nbsp;
+    Generated 2026-06-17 &nbsp;|&nbsp;
+    <code>Rules/OMConsumers/OMXFM/Request/Request_ATS_BUNDLEPRODUCT_NUMBER.rule</code>
+  </p>
+
+</div>
+</body>
+</html>

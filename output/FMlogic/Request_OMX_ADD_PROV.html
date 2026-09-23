@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_ADD_PROV</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;
+  --true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a2e;font-size:14px;line-height:1.6;}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:28px 32px;}
+header h1{font-size:1.7rem;font-weight:700;letter-spacing:.5px;}
+header p{opacity:.85;margin-top:6px;font-size:.93rem;}
+.meta-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:12px;}
+.meta-badge{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem;}
+main{max-width:1200px;margin:0 auto;padding:24px 20px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:22px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:11px 18px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light);}
+.card-body{padding:18px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600;}
+td{padding:7px 10px;border-bottom:1px solid #f0e0e0;vertical-align:top;}
+tr:hover td{background:#fdf5f5;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:7px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.55;}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;}
+.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.76rem;font-weight:600;}
+.b-red{background:#FFE0E0;color:var(--true-dark);}
+.b-green{background:#E8F5E9;color:#2e7d32;}
+.b-orange{background:#FFF3E0;color:#e65100;}
+.b-blue{background:#E3F0FD;color:#1565c0;}
+.b-purple{background:#F3E5F5;color:#6a1b9a;}
+.b-teal{background:#E0F2F1;color:#00695c;}
+.b-jms{background:#FFE0B2;color:#E65100;}
+.b-log{background:#F1F8E9;color:#558B2F;}
+.warn-box{background:#FFF8E1;border-left:4px solid #FF8F00;padding:10px 14px;border-radius:6px;margin-bottom:12px;font-size:.87rem;}
+.info-box{background:#E3F2FD;border-left:4px solid #1565c0;padding:10px 14px;border-radius:6px;margin-bottom:12px;font-size:.87rem;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}
+.nm{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;}
+.tree-ns{color:#6c7086;font-size:.78rem;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+details summary{cursor:pointer;font-weight:600;color:var(--true-dark);padding:6px 0;}
+footer{text-align:center;padding:18px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:12px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_OMX_ADD_PROV</h1>
+  <p>Submits a future SOC provisioning order (PROV) to OMX internal future-order system per OU per Agreement, scheduling new priceplan activation and current priceplan expiry for tomorrow (Bangkok TZ).</p>
+  <div class="meta-row">
+    <span class="meta-badge">System: OMX Internal</span>
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">Author: warawich-nb</span>
+    <span class="meta-badge">orderType: 203</span>
+    <span class="meta-badge">futureType: PROV</span>
+    <span class="meta-badge">Loop: OU × Agreement</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header">§1 — Overview &amp; Purpose</div>
+<div class="card-body">
+<p>Submits a <strong>future SOC provisioning order</strong> (futureType=PROV, orderType=203) to OMX's internal future-order system via the <code>OMX_ADD_FUTURE</code> event. Iterates over POU and COU-level Agreements and schedules:</p>
+<ul style="margin:10px 0 10px 20px;">
+  <li>A <strong>new priceplan futureSoc</strong> (effectiveDate = tomorrow) — always sent</li>
+  <li>A <strong>current priceplan futureSoc</strong> (expireDate = tomorrow) — sent only if <code>currentPricePlanSoc</code> is non-empty</li>
+</ul>
+<p>"Tomorrow" is calculated in Bangkok timezone (UTC+7) by adding 1 day to the current date at midnight. This is important for midnight cutoffs.</p>
+<table style="margin-top:14px;">
+  <tr><th>Attribute</th><th>Value</th></tr>
+  <tr><td>Rule File</td><td><code>Request_OMX_ADD_PROV.rule</code></td></tr>
+  <tr><td>Response File</td><td><code>Response_OMX_ADD_PROV.rulefunction</code></td></tr>
+  <tr><td>Author</td><td>warawich-nb</td></tr>
+  <tr><td>Priority</td><td>5</td></tr>
+  <tr><td>Target System</td><td>OMX Internal (future-order subsystem)</td></tr>
+  <tr><td>Event</td><td>OMX_ADD_FUTURE</td></tr>
+  <tr><td>orderType</td><td>203 (hardcoded)</td></tr>
+  <tr><td>futureType</td><td>PROV (hardcoded)</td></tr>
+  <tr><td>Loop level</td><td>OU (POU then COU), per Agreement</td></tr>
+  <tr><td>Timezone</td><td>Bangkok (+7) for "tomorrow" calculation</td></tr>
+  <tr><td>Send pattern</td><td>Event.Ext.sendEventImmediate + manual RequestCount++</td></tr>
+  <tr><td>Audit pattern</td><td>Event.Ext.sendEventImmediate (sync)</td></tr>
+  <tr><td>JMSCorrelationID</td><td>OMXTrackingId (standard)</td></tr>
+  <tr><td>Fan-in</td><td>IsAllResponseSuccess(currActivity)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+<div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="card-body">
+<table>
+  <tr><th>Attribute</th><th>Value</th></tr>
+  <tr><td>Rule type</td><td>rule (forward-chaining)</td></tr>
+  <tr><td>forwardChain</td><td>true</td></tr>
+  <tr><td>Priority</td><td>5</td></tr>
+  <tr><td>Validity</td><td>ACTION (response rulefunction)</td></tr>
+  <tr><td>Namespace path</td><td>Rules.OMConsumers.OMXFM.Request.Request_OMX_ADD_PROV</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+<div class="card-header">§3 — Working Memory — Declared Objects</div>
+<div class="card-body">
+<table>
+  <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+  <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Root order data</td></tr>
+  <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity pointer + RequestCount</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="card">
+<div class="card-header">§4 — Rule Conditions (WHEN)</div>
+<div class="card-body">
+<table>
+  <tr><th>Condition</th><th>Purpose</th></tr>
+  <tr><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity pointer alignment</td></tr>
+  <tr><td><code>ActivityID == "OMX_ADD_PROV"</code></td><td>FM match</td></tr>
+  <tr><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_ADD_PROV"</code></td><td>Flow alignment</td></tr>
+  <tr><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Prevents re-firing</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+<div class="card-header">§5 — Execution Flow</div>
+<div class="card-body">
+<ol style="line-height:2.1;padding-left:20px;">
+  <li><strong>Init</strong> — If resubmit (<code>RequestCount&gt;0 &amp;&amp; IsOrderResubmitted</code>) → <code>PurgePendingRequestsBeforeResubmit</code>. Compute <code>tomorrow</code> in Bangkok TZ. Extract <code>customerType</code>, <code>accountSubType</code>, <code>requestBy</code>, <code>inputUserText</code>. Build <code>userText = inputUserText;request by requestBy on dateTimeNow;</code>. Set <code>isSkipped=true</code>.</li>
+  <li><strong>POU loop</strong> — For each <code>ParentOU</code>: <code>GetXMLForAgreement(orderRequest, pOu.Agreement.RefId)</code>. If CompletionStatus==2 → skip. Extract current (CCBS) and new (FE) priceplan by <code>ServiceType='80' and FE_OR_CCBS='CCBS'/'FE'</code>.</li>
+  <li><strong>POU Send</strong> — Create <code>OMX_ADD_FUTURE</code> event (POU XSLT). <code>Event.Ext.sendEventImmediate</code>. If !resubmit → <code>RequestCount++</code>. Set <code>isSkipped=false</code>, <code>Status="1"</code> (inside send block).</li>
+  <li><strong>COU loop</strong> — For each <code>ChildOU</code>: <code>GetXMLForAgreementInChildOU(orderRequest, cAgreeRefId, pOuRef)</code>. Same CompletionStatus==2 guard using <code>cAgreeRefId</code>. Same priceplan extraction + send (COU variant XSLT). <code>isSkipped=false</code>, <code>Status="1"</code> (inside send block).</li>
+  <li><strong>Post-loop</strong> — If <code>!isSkipped</code> → <code>Status="1"</code> again (redundant) + <code>SendDataToDB</code>. Else → <code>SkipActivity("4")</code>.</li>
+  <li><strong>Exception</strong> → <code>HandleActivityException</code></li>
+</ol>
+<div class="warn-box" style="margin-top:12px;">⚠ <strong>Redundant Status="1":</strong> Status is set to "1" both <em>inside</em> the per-OU send block and again <em>after</em> the outer loop. The inner set is the operative one for mid-loop status; the outer is redundant.</div>
+</div>
+</div>
+
+<!-- §6 Action -->
+<div class="card">
+<div class="card-header">§6 — Rule Action (THEN) — Step-by-Step Logic</div>
+<div class="card-body">
+<pre><span class="cm">// 1. Resubmit guard</span>
+<span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nm">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+<span class="kw">if</span>(isActResub) PurgePendingRequestsBeforeResubmit(...);
+
+<span class="cm">// 2. "Tomorrow" in Bangkok TZ (UTC+7)</span>
+<span class="ty">String</span> tomorrow = tib:add-to-dateTime(tib:current-date() + offset(+7,0), duration(P1D));
+
+<span class="cm">// 3. Customer info</span>
+<span class="ty">String</span> customerType = OMXUtils.asciiCodeToText(Customer.CustomerTypeInfo.Type);
+<span class="ty">String</span> accountSubType = Customer.Account[<span class="nm">1</span>].AccountManagementInfo.AccountSubType;
+<span class="ty">String</span> userText = String.format(<span class="st">"%s;request by %s on %s;"</span>, inputUserText, requestBy, dateTimeNow);
+<span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+<span class="cm">// 4. POU loop</span>
+<span class="kw">for</span>(<span class="kw">int</span> iPOU=<span class="nm">0</span>; iPOU&lt;pOULen; iPOU++) {
+    agreeRefId = pOu.Agreement.RefId;
+    chkRes = GetXMLForAgreement(orderRequest, agreeRefId);
+    <span class="kw">if</span>(CompletionStatus==<span class="nm">2</span>) <span class="kw">continue</span>;  <span class="cm">// uses agreeRefId — CORRECT</span>
+    <span class="cm">// Extract currentPricePlanSoc (CCBS), newPricePlanSoc (FE) from Offers</span>
+    Event.Ext.sendEventImmediate(reqEvent_POU);  <span class="cm">// OMX_ADD_FUTURE POU variant</span>
+    <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+    isSkipped = <span class="kw">false</span>;
+    Status = <span class="st">"1"</span>;  <span class="cm">// set inside per-OU send block</span>
+}
+
+<span class="cm">// 5. COU loop</span>
+<span class="kw">for</span>(<span class="kw">int</span> iCOU=<span class="nm">0</span>; iCOU&lt;cOULen; iCOU++) {
+    cAgreeRefId = cOu.Agreement.RefId;
+    chkRes = GetXMLForAgreementInChildOU(orderRequest, cAgreeRefId, pOuRef);
+    <span class="kw">if</span>(CompletionStatus==<span class="nm">2</span>) <span class="kw">continue</span>;  <span class="cm">// uses cAgreeRefId — CORRECT</span>
+    Event.Ext.sendEventImmediate(reqEvent_COU);  <span class="cm">// OMX_ADD_FUTURE COU variant</span>
+    <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+    isSkipped = <span class="kw">false</span>;
+    Status = <span class="st">"1"</span>;  <span class="cm">// inside per-OU send block (redundant with post-loop)</span>
+}
+
+<span class="cm">// 6. Post-loop</span>
+<span class="kw">if</span>(!isSkipped) { Status=<span class="st">"1"</span>; SendDataToDB(); }  <span class="cm">// Status="1" here is redundant</span>
+<span class="kw">else</span> SkipActivity(<span class="st">"4"</span>);</pre>
+</div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="card">
+<div class="card-header">§7 — Data Extraction</div>
+<div class="card-body">
+<h3 style="margin-bottom:10px;color:var(--true-dark);">§7.1 Priceplan Extraction (per Agreement)</h3>
+<table>
+  <tr><th>Variable</th><th>XPath filter</th><th>Extracted field</th><th>Default if not found</th></tr>
+  <tr><td><code>currentPricePlanSoc</code></td><td><code>ServiceType='80' and FE_OR_CCBS='CCBS'</code></td><td>Offer.Soc</td><td><code>""</code></td></tr>
+  <tr><td><code>currentPricePlanName</code></td><td>Same</td><td>Offer.Name</td><td><code>""</code></td></tr>
+  <tr><td><code>currentPricePlanInstanceId</code></td><td>Same</td><td>Offer.InstanceId</td><td><code>""</code></td></tr>
+  <tr><td><code>newPricePlanSoc</code></td><td><code>ServiceType='80' and FE_OR_CCBS='FE'</code></td><td>Offer.Soc</td><td><code>""</code></td></tr>
+  <tr><td><code>newPricePlanName</code></td><td>Same</td><td>Offer.Name</td><td><code>""</code></td></tr>
+</table>
+<h3 style="margin:12px 0 8px;color:var(--true-dark);">§7.2 userText Construction</h3>
+<pre><span class="ty">String</span> userText = String.format(<span class="st">"%s;request by %s on %s;"</span>, inputUserText, requestBy, tib:format-dateTime(...))</pre>
+<h3 style="margin:12px 0 8px;color:var(--true-dark);">§7.3 Tomorrow Calculation</h3>
+<pre><span class="cm">// tib:add-to-dateTime adds P1D (1 day) to today's date at Bangkok midnight (UTC+7:00)</span>
+<span class="ty">String</span> tomorrow = tib:format-dateTime(tib:add-to-dateTime(tib:current-date(), <span class="st">"PT7H"</span>), <span class="st">"P1D"</span>);</pre>
+<div class="warn-box">⚠ Bangkok TZ offset +7 is hardcoded. If executed at runtime near midnight UTC, "tomorrow" may shift by one day unexpectedly vs. local business day.</div>
+</div>
+</div>
+
+<!-- §8 System & Integration -->
+<div class="card">
+<div class="card-header">§8 — System &amp; Integration Dependencies</div>
+<div class="card-body">
+<h3 style="color:var(--true-dark);margin-bottom:8px;">§8.1 Order Type Dependencies</h3>
+<table>
+  <tr><th>Trigger</th><th>ProcessConfig</th><th>Purpose</th></tr>
+  <tr><td>CHANGE_PP flow, step 79</td><td>CHANGE_PP.xml</td><td>Schedule PROV future SOC for priceplan change</td></tr>
+</table>
+<h3 style="color:var(--true-dark);margin:12px 0 8px;">§8.2 ESB / JMS Channel Dependencies</h3>
+<table>
+  <tr><th>Direction</th><th>Event</th><th>Channel / Destination</th><th>Protocol</th><th>Purpose</th></tr>
+  <tr><td><span class="badge b-jms">OUTBOUND</span></td><td>OMX_ADD_FUTURE</td><td>OMX internal queue</td><td>JMS/BE internal</td><td>Future SOC provisioning order</td></tr>
+  <tr><td><span class="badge b-log">OUTBOUND</span></td><td>Logger (OMXESB)</td><td>Audit log queue</td><td>JMS</td><td>Request/Response audit trail</td></tr>
+</table>
+<h3 style="color:var(--true-dark);margin:12px 0 8px;">§8.3 Backend API Details</h3>
+<table>
+  <tr><th>System</th><th>Operation</th><th>orderType</th><th>futureType</th><th>Pattern</th></tr>
+  <tr><td>OMX Future Order</td><td>ADD_FUTURE</td><td>203</td><td>PROV</td><td>Event.Ext.sendEventImmediate (sync)</td></tr>
+</table>
+<h3 style="color:var(--true-dark);margin:12px 0 8px;">§8.5 ExtendedInfo Fields Required</h3>
+<table>
+  <tr><th>Name</th><th>Required?</th><th>Scope</th><th>Where used</th></tr>
+  <tr><td>FE_OR_CCBS</td><td>Required</td><td>Offer.ExtendedInfo</td><td>Priceplan CCBS/FE extraction</td></tr>
+  <tr><td>POU_ID</td><td>Always emitted</td><td>futureOrder.extendedInfo</td><td>POU and COU sends</td></tr>
+  <tr><td>CUS_ID</td><td>Always emitted</td><td>futureOrder.extendedInfo</td><td>POU and COU sends</td></tr>
+  <tr><td>PAGR_ID</td><td>Always emitted</td><td>futureOrder.extendedInfo</td><td>POU and COU sends</td></tr>
+  <tr><td>OU_ID</td><td>COU only</td><td>futureOrder.extendedInfo</td><td>COU sends only</td></tr>
+</table>
+<h3 style="color:var(--true-dark);margin:12px 0 8px;">§8.6 Global Variable Dependencies</h3>
+<table>
+  <tr><th>Path</th><th>Used for</th></tr>
+  <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+  <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+  <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+  <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Conditional payload in audit</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §9 Detailed Payload Build -->
+<div class="card">
+<div class="card-header">§9 — Detailed Payload Build</div>
+<div class="card-body">
+<h3 style="color:var(--true-dark);margin-bottom:8px;">§9.1 XSLT Parameter Binding</h3>
+<table>
+  <tr><th>Param</th><th>POU Binding</th><th>COU Binding</th></tr>
+  <tr><td><code>orderRequest</code></td><td>OrderRequest concept</td><td>same</td></tr>
+  <tr><td><code>agreeRefId</code> / <code>cAgreeRefId</code></td><td>pOu.Agreement.RefId</td><td>cOu.Agreement.RefId</td></tr>
+  <tr><td><code>tomorrow</code></td><td>Bangkok TZ date+1</td><td>same</td></tr>
+  <tr><td><code>orderType</code></td><td>"203" (hardcoded)</td><td>same</td></tr>
+  <tr><td><code>nodeLeve</code></td><td>"3" (hardcoded, note typo: missing 'l')</td><td>same</td></tr>
+  <tr><td><code>nodeId</code></td><td>pOuId</td><td>cOuId</td></tr>
+  <tr><td><code>requestBy</code></td><td>OrderRequest field</td><td>same</td></tr>
+  <tr><td><code>pOu</code> / <code>cOu</code></td><td>ParentOU[iPOU] concept</td><td>ChildOU[iCOU] concept</td></tr>
+  <tr><td><code>pOuId</code></td><td>ParentOU.OUId</td><td>ParentOU.OUId (still POU)</td></tr>
+  <tr><td><code>custId</code></td><td>Customer.CustomerId</td><td>same</td></tr>
+  <tr><td><code>pAgreeId</code></td><td>ParentOU Agreement ID</td><td>ParentOU Agreement ID (still POU)</td></tr>
+  <tr><td><code>userText</code></td><td>Constructed string</td><td>same</td></tr>
+  <tr><td><code>customerType</code></td><td>OMXUtils.asciiCodeToText(...)</td><td>same</td></tr>
+  <tr><td><code>accountSubType</code></td><td>Account[1].AccountSubType</td><td>same</td></tr>
+  <tr><td><code>futureType</code></td><td>"PROV" (hardcoded)</td><td>same</td></tr>
+  <tr><td><code>newPricePlanSoc</code></td><td>FE_OR_CCBS='FE' Offer.Soc</td><td>same</td></tr>
+  <tr><td><code>currentPricePlanSoc</code></td><td>FE_OR_CCBS='CCBS' Offer.Soc</td><td>same</td></tr>
+  <tr><td><code>currentPricePlanInstanceId</code></td><td>FE_OR_CCBS='CCBS' Offer.InstanceId</td><td>same</td></tr>
+</table>
+<div class="info-box">Note: <code>nodeLeve</code> is a typo in the source code (should be <code>nodeLevel</code>). The XSLT param name must match exactly — do not rename without updating both BE rule and XSLT.</div>
+
+<h3 style="color:var(--true-dark);margin:14px 0 8px;">§9.3 JMS / Event Header Fields</h3>
+<table>
+  <tr><th>Header</th><th>Source</th><th>Conditional?</th></tr>
+  <tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional: if OMXTrackingId exists</td></tr>
+  <tr><td>RefID</td><td><code>$agreeRefId</code> / <code>$cAgreeRefId</code></td><td>Conditional: if agreeRefId exists</td></tr>
+  <tr><td>UserName</td><td><code>$orderRequest/OrderData/UserName</code></td><td>Conditional</td></tr>
+  <tr><td>PassWord</td><td><code>$orderRequest/OrderData/PassWord</code></td><td>Conditional</td></tr>
+</table>
+
+<h3 style="color:var(--true-dark);margin:14px 0 8px;">§9.5 Payload Root Element</h3>
+<p>Namespace-qualified: <code>ns3:futureOrderWithSoc</code> (xmlns:ns3 = OMX future SOC namespace)</p>
+
+<h3 style="color:var(--true-dark);margin:14px 0 8px;">§9.5 Conditional Fields in futureOrder</h3>
+<table>
+  <tr><th>Element</th><th>Condition</th><th>Source</th></tr>
+  <tr><td>activityReason</td><td>if activityReason present</td><td><code>$orderRequest/OrderData/activityReason</code></td></tr>
+  <tr><td>extendedInfo[OU_ID]</td><td>COU loop only</td><td><code>$cOuId</code></td></tr>
+  <tr><td>futureSoc (currentPricePlan)</td><td>if currentPricePlanSoc non-empty</td><td>Soc=currentPricePlanSoc, expireDate=tomorrow</td></tr>
+  <tr><td>ns2:instanceId</td><td>POU only (for current priceplan futureSoc)</td><td><code>$currentPricePlanInstanceId</code></td></tr>
+  <tr><td>ns2:parentInstanceId</td><td>COU only (for current priceplan futureSoc)</td><td><code>$currentPricePlanInstanceId</code></td></tr>
+  <tr><td>UserName / PassWord</td><td>if present in orderRequest</td><td><code>$orderRequest/OrderData/UserName</code></td></tr>
+</table>
+
+<h3 style="color:var(--true-dark);margin:14px 0 8px;">§9.7 Complete Generated XML Example</h3>
+<pre><span class="cm">&lt;!-- POU variant --&gt;</span>
+<span class="xt">&lt;ns3:futureOrderWithSoc&gt;</span>
+  <span class="xt">&lt;UserName&gt;</span>user<span class="xt">&lt;/UserName&gt;</span>
+  <span class="xt">&lt;PassWord&gt;</span>pass<span class="xt">&lt;/PassWord&gt;</span>
+  <span class="xt">&lt;ns:futureOrder&gt;</span>
+    <span class="xt">&lt;ns:effectiveDate&gt;</span>2026-09-16<span class="xt">&lt;/ns:effectiveDate&gt;</span>   <span class="cm">&lt;!-- tomorrow Bangkok --&gt;</span>
+    <span class="xt">&lt;ns:orderType&gt;</span>203<span class="xt">&lt;/ns:orderType&gt;</span>
+    <span class="xt">&lt;ns:nodeLevel&gt;</span>3<span class="xt">&lt;/ns:nodeLevel&gt;</span>             <span class="cm">&lt;!-- from param nodeLeve (typo) --&gt;</span>
+    <span class="xt">&lt;ns:nodeId&gt;</span>POU_OUId<span class="xt">&lt;/ns:nodeId&gt;</span>
+    <span class="xt">&lt;ns:requestedDate&gt;</span>2026-09-15T10:30:00<span class="xt">&lt;/ns:requestedDate&gt;</span>
+    <span class="xt">&lt;ns:requestedBy&gt;</span>agent001<span class="xt">&lt;/ns:requestedBy&gt;</span>
+    <span class="xt">&lt;ns:activityReason&gt;</span>CHANGE_PP<span class="xt">&lt;/ns:activityReason&gt;</span>
+    <span class="xt">&lt;ns:extendedInfo&gt;</span>
+      <span class="xt">&lt;ns:info&gt;&lt;ns:name&gt;</span>POU_ID<span class="xt">&lt;/ns:name&gt;&lt;ns:value&gt;</span>pOuId<span class="xt">&lt;/ns:value&gt;&lt;/ns:info&gt;</span>
+      <span class="xt">&lt;ns:info&gt;&lt;ns:name&gt;</span>CUS_ID<span class="xt">&lt;/ns:name&gt;&lt;ns:value&gt;</span>custId<span class="xt">&lt;/ns:value&gt;&lt;/ns:info&gt;</span>
+      <span class="xt">&lt;ns:info&gt;&lt;ns:name&gt;</span>PAGR_ID<span class="xt">&lt;/ns:name&gt;&lt;ns:value&gt;</span>pAgreeId<span class="xt">&lt;/ns:value&gt;&lt;/ns:info&gt;</span>
+      <span class="cm">&lt;!-- OU_ID omitted for POU --&gt;</span>
+    <span class="xt">&lt;/ns:extendedInfo&gt;</span>
+    <span class="xt">&lt;ns:fromOrderId&gt;</span>ORD-00001<span class="xt">&lt;/ns:fromOrderId&gt;</span>
+    <span class="xt">&lt;ns:userText&gt;</span>Change PP;request by agent001 on 2026-09-15;<span class="xt">&lt;/ns:userText&gt;</span>
+    <span class="xt">&lt;ns:customerType&gt;</span>Individual<span class="xt">&lt;/ns:customerType&gt;</span>
+    <span class="xt">&lt;ns:accountSubtype&gt;</span>POSTPAID<span class="xt">&lt;/ns:accountSubtype&gt;</span>
+    <span class="xt">&lt;ns:futureType&gt;</span>PROV<span class="xt">&lt;/ns:futureType&gt;</span>
+  <span class="xt">&lt;/ns:futureOrder&gt;</span>
+  <span class="xt">&lt;ns2:futureSocs&gt;</span>
+    <span class="cm">&lt;!-- New priceplan (always) --&gt;</span>
+    <span class="xt">&lt;ns2:futureSoc&gt;</span>
+      <span class="xt">&lt;ns2:code&gt;</span>NEW_PP_SOC<span class="xt">&lt;/ns2:code&gt;</span>
+      <span class="xt">&lt;ns2:effectiveDate&gt;</span>2026-09-16<span class="xt">&lt;/ns2:effectiveDate&gt;</span>
+      <span class="xt">&lt;ns2:ParameterInfo&gt;</span>...<span class="xt">&lt;/ns2:ParameterInfo&gt;</span>
+      <span class="xt">&lt;ns2:RelatedOffersArray&gt;</span>
+        <span class="xt">&lt;ns2:childSoc&gt;&lt;ns2:code&gt;</span>ADDON_SOC<span class="xt">&lt;/ns2:code&gt;</span>...<span class="xt">&lt;/ns2:childSoc&gt;</span>
+      <span class="xt">&lt;/ns2:RelatedOffersArray&gt;</span>
+      <span class="xt">&lt;ns2:type&gt;</span>80<span class="xt">&lt;/ns2:type&gt;</span>
+      <span class="xt">&lt;ns2:subType&gt;</span>PROV<span class="xt">&lt;/ns2:subType&gt;</span>
+      <span class="xt">&lt;ns2:socName&gt;</span>New Priceplan Name<span class="xt">&lt;/ns2:socName&gt;</span>
+    <span class="xt">&lt;/ns2:futureSoc&gt;</span>
+    <span class="cm">&lt;!-- Current priceplan (conditional if currentPricePlanSoc non-empty) --&gt;</span>
+    <span class="xt">&lt;ns2:futureSoc&gt;</span>
+      <span class="xt">&lt;ns2:code&gt;</span>CUR_PP_SOC<span class="xt">&lt;/ns2:code&gt;</span>
+      <span class="xt">&lt;ns2:expireDate&gt;</span>2026-09-16<span class="xt">&lt;/ns2:expireDate&gt;</span>
+      <span class="xt">&lt;ns2:instanceId&gt;</span>inst-001<span class="xt">&lt;/ns2:instanceId&gt;</span>   <span class="cm">&lt;!-- POU: instanceId; COU: parentInstanceId --&gt;</span>
+      <span class="xt">&lt;ns2:type&gt;</span>80<span class="xt">&lt;/ns2:type&gt;</span>
+      <span class="xt">&lt;ns2:subType&gt;</span>PROV<span class="xt">&lt;/ns2:subType&gt;</span>
+      <span class="xt">&lt;ns2:socName&gt;</span>Current Priceplan Name<span class="xt">&lt;/ns2:socName&gt;</span>
+    <span class="xt">&lt;/ns2:futureSoc&gt;</span>
+  <span class="xt">&lt;/ns2:futureSocs&gt;</span>
+<span class="xt">&lt;/ns3:futureOrderWithSoc&gt;</span></pre>
+
+<h3 style="color:var(--true-dark);margin:14px 0 8px;">§9.8 XSLT Stylesheet Source</h3>
+<p><strong>POU Variant ①</strong> — parameters: orderRequest, agreeRefId, tomorrow, orderType, nodeLeve, nodeId=pOuId, requestBy, pOu, pOuId, custId, pAgreeId, userText, customerType, accountSubType, futureType, newPricePlanSoc, currentPricePlanSoc, currentPricePlanInstanceId</p>
+<pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:ns3</span>=<span class="st">"..."</span> <span class="xa">xmlns:ns</span>=<span class="st">"..."</span> <span class="xa">xmlns:ns2</span>=<span class="st">"..."</span> <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"agreeRefId"</span><span class="xt">/&gt;</span>          <span class="cm">&lt;!-- POU: pOu.Agreement.RefId --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"tomorrow"</span><span class="xt">/&gt;</span>           <span class="cm">&lt;!-- Bangkok TZ date+1 --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderType"</span><span class="xt">/&gt;</span>          <span class="cm">&lt;!-- "203" --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"nodeLeve"</span><span class="xt">/&gt;</span>           <span class="cm">&lt;!-- "3" — typo: missing 'l' --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"nodeId"</span><span class="xt">/&gt;</span>             <span class="cm">&lt;!-- pOuId --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"requestBy"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"pOu"</span><span class="xt">/&gt;</span>               <span class="cm">&lt;!-- ParentOU concept --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"pOuId"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"custId"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"pAgreeId"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"userText"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"customerType"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"accountSubType"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"futureType"</span><span class="xt">/&gt;</span>         <span class="cm">&lt;!-- "PROV" --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"newPricePlanSoc"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"currentPricePlanSoc"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"currentPricePlanInstanceId"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;JMSCorrelationID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/JMSCorrelationID&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$agreeRefId"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;RefID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$agreeRefId"</span><span class="xt">/&gt;&lt;/RefID&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/UserName"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;UserName&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/UserName"</span><span class="xt">/&gt;&lt;/UserName&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/PassWord"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;PassWord&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/PassWord"</span><span class="xt">/&gt;&lt;/PassWord&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns3:futureOrderWithSoc&gt;</span>
+          <span class="xt">&lt;ns:futureOrder&gt;</span>
+            <span class="xt">&lt;ns:effectiveDate&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$tomorrow"</span><span class="xt">/&gt;&lt;/ns:effectiveDate&gt;</span>
+            <span class="xt">&lt;ns:orderType&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderType"</span><span class="xt">/&gt;&lt;/ns:orderType&gt;</span>   <span class="cm">&lt;!-- 203 --&gt;</span>
+            <span class="xt">&lt;ns:nodeLevel&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$nodeLeve"</span><span class="xt">/&gt;&lt;/ns:nodeLevel&gt;</span>  <span class="cm">&lt;!-- param typo --&gt;</span>
+            <span class="xt">&lt;ns:nodeId&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$nodeId"</span><span class="xt">/&gt;&lt;/ns:nodeId&gt;</span>
+            <span class="xt">&lt;ns:requestedDate&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"current-dateTime()"</span><span class="xt">/&gt;&lt;/ns:requestedDate&gt;</span>
+            <span class="xt">&lt;ns:requestedBy&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$requestBy"</span><span class="xt">/&gt;&lt;/ns:requestedBy&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/activityReason"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns:activityReason&gt;</span>...<span class="xt">&lt;/ns:activityReason&gt;</span>
+            <span class="xt">&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;ns:extendedInfo&gt;</span>
+              <span class="xt">&lt;ns:info&gt;&lt;ns:name&gt;</span>POU_ID<span class="xt">&lt;/ns:name&gt;&lt;ns:value&gt;</span>$pOuId<span class="xt">&lt;/ns:value&gt;&lt;/ns:info&gt;</span>
+              <span class="xt">&lt;ns:info&gt;&lt;ns:name&gt;</span>CUS_ID<span class="xt">&lt;/ns:name&gt;&lt;ns:value&gt;</span>$custId<span class="xt">&lt;/ns:value&gt;&lt;/ns:info&gt;</span>
+              <span class="xt">&lt;ns:info&gt;&lt;ns:name&gt;</span>PAGR_ID<span class="xt">&lt;/ns:name&gt;&lt;ns:value&gt;</span>$pAgreeId<span class="xt">&lt;/ns:value&gt;&lt;/ns:info&gt;</span>
+              <span class="cm">&lt;!-- OU_ID: COU variant only --&gt;</span>
+            <span class="xt">&lt;/ns:extendedInfo&gt;</span>
+            <span class="xt">&lt;ns:fromOrderId&gt;</span>...<span class="xt">&lt;/ns:fromOrderId&gt;</span>
+            <span class="xt">&lt;ns:userText&gt;</span>$userText<span class="xt">&lt;/ns:userText&gt;</span>
+            <span class="xt">&lt;ns:customerType&gt;</span>$customerType<span class="xt">&lt;/ns:customerType&gt;</span>
+            <span class="xt">&lt;ns:accountSubtype&gt;</span>$accountSubType<span class="xt">&lt;/ns:accountSubtype&gt;</span>
+            <span class="xt">&lt;ns:futureType&gt;</span>$futureType<span class="xt">&lt;/ns:futureType&gt;</span>         <span class="cm">&lt;!-- PROV --&gt;</span>
+          <span class="xt">&lt;/ns:futureOrder&gt;</span>
+          <span class="xt">&lt;ns2:futureSocs&gt;</span>
+            <span class="cm">&lt;!-- futureSoc: newPricePlan (always) --&gt;</span>
+            <span class="xt">&lt;ns2:futureSoc&gt;</span>
+              <span class="xt">&lt;ns2:code&gt;</span>$newPricePlanSoc<span class="xt">&lt;/ns2:code&gt;</span>
+              <span class="xt">&lt;ns2:effectiveDate&gt;</span>$tomorrow<span class="xt">&lt;/ns2:effectiveDate&gt;</span>
+              <span class="xt">&lt;ns2:ParameterInfo&gt;</span>... from pOu.Agreement.Offers<span class="xt">&lt;/ns2:ParameterInfo&gt;</span>
+              <span class="xt">&lt;ns2:RelatedOffersArray&gt;</span>
+                <span class="xt">&lt;ns2:childSoc&gt;</span>... RelatedOffers loop<span class="xt">&lt;/ns2:childSoc&gt;</span>
+              <span class="xt">&lt;/ns2:RelatedOffersArray&gt;</span>
+              <span class="xt">&lt;ns2:type&gt;</span>80<span class="xt">&lt;/ns2:type&gt;</span>
+              <span class="xt">&lt;ns2:subType&gt;</span>$futureType<span class="xt">&lt;/ns2:subType&gt;</span>  <span class="cm">&lt;!-- PROV --&gt;</span>
+              <span class="xt">&lt;ns2:socName&gt;</span>...<span class="xt">&lt;/ns2:socName&gt;</span>
+            <span class="xt">&lt;/ns2:futureSoc&gt;</span>
+            <span class="cm">&lt;!-- futureSoc: currentPricePlan (conditional) --&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$currentPricePlanSoc != ''"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns2:futureSoc&gt;</span>
+                <span class="xt">&lt;ns2:code&gt;</span>$currentPricePlanSoc<span class="xt">&lt;/ns2:code&gt;</span>
+                <span class="xt">&lt;ns2:expireDate&gt;</span>$tomorrow<span class="xt">&lt;/ns2:expireDate&gt;</span>
+                <span class="xt">&lt;ns2:instanceId&gt;</span>$currentPricePlanInstanceId<span class="xt">&lt;/ns2:instanceId&gt;</span>  <span class="cm">&lt;!-- POU only --&gt;</span>
+                <span class="xt">&lt;ns2:type&gt;</span>80<span class="xt">&lt;/ns2:type&gt;</span>
+                <span class="xt">&lt;ns2:subType&gt;</span>$futureType<span class="xt">&lt;/ns2:subType&gt;</span>
+                <span class="xt">&lt;ns2:socName&gt;</span>...<span class="xt">&lt;/ns2:socName&gt;</span>
+              <span class="xt">&lt;/ns2:futureSoc&gt;</span>
+            <span class="xt">&lt;/xsl:if&gt;</span>
+          <span class="xt">&lt;/ns2:futureSocs&gt;</span>
+        <span class="xt">&lt;/ns3:futureOrderWithSoc&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+<p style="margin-top:10px;"><strong>COU Variant ②</strong> — Differs from POU variant in:</p>
+<table style="margin-top:8px;">
+  <tr><th>Difference</th><th>POU ①</th><th>COU ②</th></tr>
+  <tr><td>Agreement RefId param</td><td><code>agreeRefId</code></td><td><code>cAgreeRefId</code></td></tr>
+  <tr><td>OU concept param</td><td><code>pOu</code></td><td><code>cOu</code></td></tr>
+  <tr><td>nodeId</td><td>pOuId</td><td>cOuId</td></tr>
+  <tr><td>extendedInfo[OU_ID]</td><td>omitted</td><td>emitted with cOuId</td></tr>
+  <tr><td>currentPricePlan futureSoc instance element</td><td><code>ns2:instanceId</code></td><td><code>ns2:parentInstanceId</code></td></tr>
+  <tr><td>pOuId, pAgreeId params</td><td>pOuId=pOuId</td><td>pOuId=still POU's OUId (shared)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="card">
+<div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+<div class="card-body">
+<p style="font-size:.82rem;margin-bottom:12px;">POU variant shown; COU differences noted inline.</p>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">if OMXTrackingId</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$agreeRefId / $cAgreeRefId</span><span class="tree-cond">if agreeRefId</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/UserName</span><span class="tree-cond">if present</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/PassWord</span><span class="tree-cond">if present</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge b-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns3:futureOrderWithSoc</span><span class="badge b-green">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:futureOrder</span><span class="badge b-green">Always</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:effectiveDate</span><span class="tree-arrow">←</span><span class="tree-src">$tomorrow</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:orderType</span><span class="tree-arrow">←</span><span class="tree-src-static">"203" (hardcoded)</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:nodeLevel</span><span class="tree-arrow">←</span><span class="tree-src">$nodeLeve</span><span class="tree-cond">⚠ typo param name</span><span class="tree-src-static">= "3"</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:nodeId</span><span class="tree-arrow">←</span><span class="tree-src">$nodeId (pOuId/cOuId)</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:requestedDate</span><span class="tree-arrow">←</span><span class="tree-src">current-dateTime()</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:requestedBy</span><span class="tree-arrow">←</span><span class="tree-src">$requestBy</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/activityReason</span><span class="tree-cond">if activityReason</span><span class="badge b-orange">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:extendedInfo</span><span class="badge b-green">Always</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:info[POU_ID]</span><span class="tree-arrow">←</span><span class="tree-src">$pOuId</span><span class="badge b-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:info[CUS_ID]</span><span class="tree-arrow">←</span><span class="tree-src">$custId</span><span class="badge b-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:info[PAGR_ID]</span><span class="tree-arrow">←</span><span class="tree-src">$pAgreeId</span><span class="badge b-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:info[OU_ID]</span><span class="tree-arrow">←</span><span class="tree-src">$cOuId</span><span class="tree-cond">COU variant only</span><span class="badge b-purple">COU only</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:fromOrderId</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID (or similar)</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:userText</span><span class="tree-arrow">←</span><span class="tree-src">$userText</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:customerType</span><span class="tree-arrow">←</span><span class="tree-src">$customerType</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:accountSubtype</span><span class="tree-arrow">←</span><span class="tree-src">$accountSubType</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:futureType</span><span class="tree-arrow">←</span><span class="tree-src-static">"PROV" (hardcoded)</span><span class="badge b-green">Always</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">ns2:futureSocs</span><span class="badge b-green">Always</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:futureSoc</span><span class="tree-cond">[new priceplan]</span><span class="badge b-green">Always</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:code</span><span class="tree-arrow">←</span><span class="tree-src">$newPricePlanSoc</span><span class="badge b-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:effectiveDate</span><span class="tree-arrow">←</span><span class="tree-src">$tomorrow</span><span class="badge b-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:ParameterInfo</span><span class="tree-arrow">←</span><span class="tree-src">Agreement.Offers parameters</span><span class="badge b-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:RelatedOffersArray/ns2:childSoc</span><span class="tree-arrow">←</span><span class="tree-src">Agreement.RelatedOffers loop</span><span class="badge b-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:type</span><span class="tree-arrow">←</span><span class="tree-src-static">"80" (hardcoded)</span><span class="badge b-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:subType</span><span class="tree-arrow">←</span><span class="tree-src-static">"PROV" (via $futureType)</span><span class="badge b-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:socName</span><span class="tree-arrow">←</span><span class="tree-src">newPricePlanName</span><span class="badge b-green">Always</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:futureSoc</span><span class="tree-cond">[current priceplan — if currentPricePlanSoc != '']</span><span class="badge b-orange">Conditional</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:code</span><span class="tree-arrow">←</span><span class="tree-src">$currentPricePlanSoc</span><span class="badge b-green">Always (within block)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:expireDate</span><span class="tree-arrow">←</span><span class="tree-src">$tomorrow</span><span class="badge b-green">Always (within block)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:instanceId</span><span class="tree-arrow">←</span><span class="tree-src">$currentPricePlanInstanceId</span><span class="tree-cond">POU variant only</span><span class="badge b-purple">POU only</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:parentInstanceId</span><span class="tree-arrow">←</span><span class="tree-src">$currentPricePlanInstanceId</span><span class="tree-cond">COU variant only</span><span class="badge b-purple">COU only</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:type</span><span class="tree-arrow">←</span><span class="tree-src-static">"80" (hardcoded)</span><span class="badge b-green">Always (within block)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:subType</span><span class="tree-arrow">←</span><span class="tree-src-static">"PROV"</span><span class="badge b-green">Always (within block)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:socName</span><span class="tree-arrow">←</span><span class="tree-src">currentPricePlanName</span><span class="badge b-green">Always (within block)</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<p style="margin-top:12px;font-size:.8rem;"><strong>Legend:</strong> <span class="tree-tag">■</span> XML tag · <span class="tree-src">green</span> = XPath source · <span class="tree-src-static">orange</span> = static/literal · <span class="tree-cond">purple italic</span> = condition · <span class="badge b-green">Always</span> <span class="badge b-orange">Conditional</span> <span class="badge b-purple">Loop/Variant-scoped</span></p>
+</div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+<div class="card-header">§11 — Audit Logging</div>
+<div class="card-body">
+<table>
+  <tr><th>Direction</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th><th>Send Method</th></tr>
+  <tr><td><span class="badge b-blue">REQUEST</span></td><td><code>"OMX_ADD_PROV"</code></td><td><code>"Request Sent for OMX_ADD_PROV"</code></td><td>Event.Ext.sendEventImmediate (sync)</td></tr>
+  <tr><td><span class="badge b-green">RESPONSE</span></td><td><code>"OMX_ADD_PROV"</code></td><td><code>"Response received for OMX_ADD_PROV"</code></td><td>Event.Ext.sendEventImmediate (sync)</td></tr>
+</table>
+<p style="margin-top:8px;font-size:.87rem;">Both request and response audit use sync <code>Event.Ext.sendEventImmediate</code>. Payload conditionally included when <code>WritePayload="true"</code>.</p>
+</div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="card">
+<div class="card-header">§12 — Activity Status Management</div>
+<div class="card-body">
+<table>
+  <tr><th>Condition</th><th>Status</th><th>Action</th></tr>
+  <tr><td>At least one OU send</td><td><code>"1"</code> IN_PROGRESS</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td></tr>
+  <tr><td>All OUs skipped</td><td>SKIPPED</td><td><code>SkipActivity("4")</code></td></tr>
+</table>
+<div class="warn-box" style="margin-top:10px;">Status="1" is set <em>twice</em>: once inside the per-OU send block and once in the post-loop <code>if(!isSkipped)</code> block. The post-loop set is redundant. No functional issue unless the post-loop condition is later changed independently.</div>
+</div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="card">
+<div class="card-header">§13 — Exception / Error Handling</div>
+<div class="card-body">
+<table>
+  <tr><th>Catch type</th><th>Handler</th><th>Fallthrough</th></tr>
+  <tr><td>Exception (general)</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae)</code></td><td>No — catch terminates the flow</td></tr>
+</table>
+<p style="margin-top:8px;font-size:.87rem;">No OMX_DATA_ERROR thrown if priceplan SOCs are empty — empty strings are passed to XSLT (same as SBM_FUP_CHANGE_PP behavior).</p>
+</div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card">
+<div class="card-header">§14 — Helper Functions Reference</div>
+<div class="card-body">
+<table>
+  <tr><th>Function</th><th>Signature</th><th>Purpose</th></tr>
+  <tr><td><code>PurgePendingRequestsBeforeResubmit</code></td><td>IntraActivitySequencing</td><td>Clear pending requests on resubmit</td></tr>
+  <tr><td><code>GetXMLForAgreement</code></td><td>(orderRequest, agreeRefId) → String</td><td>POU-level PreExecCheck via agreement RefId</td></tr>
+  <tr><td><code>GetXMLForAgreementInChildOU</code></td><td>(orderRequest, cAgreeRefId, pOuRef) → String</td><td>COU-level PreExecCheck via child agreement</td></tr>
+  <tr><td><code>OMXUtils.asciiCodeToText</code></td><td>(asciiCode) → String</td><td>Convert ASCII-encoded customer type to text</td></tr>
+  <tr><td><code>String.format</code></td><td>("%s;...", args...) → String</td><td>Build userText string</td></tr>
+  <tr><td><code>SendDataToDB</code></td><td>() → void</td><td>Persist activity status to DB</td></tr>
+  <tr><td><code>SkipActivity</code></td><td>("4") → void</td><td>Mark activity skipped</td></tr>
+  <tr><td><code>HandleActivityException</code></td><td>(orderRequest, activity, ex) → void</td><td>Exception handler</td></tr>
+  <tr><td><code>IsAllResponseSuccess</code></td><td>(currActivity) → boolean</td><td>Fan-in: check all responses successful</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+<div class="card-header">§15 — Function Dependency Tree</div>
+<div class="card-body">
+<pre>Request_OMX_ADD_PROV
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit  [if resubmit]
+├── tib:add-to-dateTime (Bangkok TZ +7, P1D)                    [tomorrow calculation]
+├── OMXUtils.asciiCodeToText(CustomerTypeInfo.Type)             [customerType]
+├── String.format(userText pattern)                             [userText]
+├── GetXMLForAgreement(orderRequest, agreeRefId)                [POU PreExecCheck]
+├── GetXMLForAgreementInChildOU(orderRequest, cAgreeRefId, pOuRef) [COU PreExecCheck]
+├── XPath.evalAsBoolean(ServiceType=80 + FE_OR_CCBS)            [priceplan extraction x2 per OU]
+├── Event.createEvent("xslt://OMX_ADD_FUTURE POU variant")      [build request event]
+├── Event.createEvent("xslt://OMX_ADD_FUTURE COU variant")      [build request event]
+├── Event.Ext.sendEventImmediate(reqEvent)                      [send x per OU]
+├── RequestCount++ (if !resubmit)
+├── Event.createEvent("xslt://Logger") + sendEventImmediate     [audit, per send]
+├── GetActivityStatusString("1", false)
+├── SkipActivity("4") | SendDataToDB
+└── HandleActivityException(...)
+
+Response_OMX_ADD_PROV
+├── Instance.createInstance(OMX_AddFutureRes XSLT)             [map response fields]
+├── currActivity.Response[length] = resEvent                   [append to response array]
+├── Event.createEvent(Logger) + Event.Ext.sendEventImmediate   [response audit, sync]
+└── RuleFunctions.Helpers.IsAllResponseSuccess(currActivity)   [fan-in check]</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+<div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="card-body">
+<h3 style="color:var(--true-dark);margin-bottom:8px;">§17.1 Functional Requirements</h3>
+<table>
+  <tr><th>ID</th><th>Requirement</th></tr>
+  <tr><td>R1</td><td>Submit future provisioning SOC orders to OMX with orderType=203 and futureType=PROV</td></tr>
+  <tr><td>R2</td><td>Schedule new priceplan SOC effective tomorrow (Bangkok TZ midnight)</td></tr>
+  <tr><td>R3</td><td>Schedule current priceplan SOC expiry for tomorrow if currentPricePlanSoc is present</td></tr>
+  <tr><td>R4</td><td>Per-Agreement granularity: one send per OU per Agreement</td></tr>
+  <tr><td>R5</td><td>POU uses ns2:instanceId; COU uses ns2:parentInstanceId for current priceplan</td></tr>
+  <tr><td>R6</td><td>COU adds OU_ID to extendedInfo; POU does not</td></tr>
+</table>
+<h3 style="color:var(--true-dark);margin:12px 0 8px;">§17.2 Design Risks</h3>
+<table>
+  <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+  <tr><td>Bangkok TZ offset (+7) is hardcoded — DST or TZ config changes break "tomorrow"</td><td><span class="badge b-orange">[MEDIUM]</span></td><td>Parameterize TZ offset from global variable</td></tr>
+  <tr><td><code>nodeLeve</code> typo in param name — rename breaks XSLT</td><td><span class="badge b-orange">[MEDIUM]</span></td><td>Fix in both BE rule and XSLT in same change; add test assertion on nodeLevel output</td></tr>
+  <tr><td>Redundant Status="1" set both inside and after loop — maintenance confusion</td><td><span class="badge b-blue">[LOW]</span></td><td>Remove the inner Status="1"; only set after outer loop in post-process block</td></tr>
+  <tr><td>No validation error if newPricePlanSoc is empty — empty SOC sent to OMX</td><td><span class="badge b-red">[HIGH]</span></td><td>Add OMX_DATA_ERROR if newPricePlanSoc="" before send</td></tr>
+  <tr><td>customerType uses ASCII→text conversion — depends on OMXUtils custom function</td><td><span class="badge b-blue">[LOW]</span></td><td>Document valid ASCII→text mapping table; port OMXUtils to microservice</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="card">
+<div class="card-header">§18 — Full Source Code</div>
+<div class="card-body">
+<pre><span class="cm">/**
+ * @author warawich-nb
+ */</span>
+<span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.Request_OMX_ADD_PROV {
+    attribute { priority = <span class="nm">5</span>; forwardChain = <span class="kw">true</span>; }
+    when {
+        <span class="cm">// ActivityID == "OMX_ADD_PROV" + WAITING status + flow alignment</span>
+    }
+    then {
+        <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nm">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">try</span> {
+            <span class="kw">if</span>(isActResub) PurgePendingRequestsBeforeResubmit(...);
+
+            <span class="cm">// tomorrow = Bangkok TZ (UTC+7) + 1 day</span>
+            <span class="ty">String</span> tomorrow = <span class="fn">tib:add-to-dateTime</span>(tib:current-date()+offset(<span class="nm">7,0</span>), <span class="st">"P1D"</span>);
+            <span class="ty">String</span> customerType = <span class="fn">OMXUtils.asciiCodeToText</span>(Customer.CustomerTypeInfo.Type);
+            <span class="ty">String</span> accountSubType = Customer.Account[<span class="nm">1</span>].AccountManagementInfo.AccountSubType;
+            <span class="ty">String</span> userText = String.format(<span class="st">"%s;request by %s on %s;"</span>, inputUserText, requestBy, dateTimeNow);
+            <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="cm">// POU loop</span>
+            <span class="kw">for</span>(<span class="kw">int</span> iPOU=<span class="nm">0</span>; iPOU&lt;pOULen; iPOU++) {
+                agreeRefId = pOu.Agreement.RefId;
+                chkRes = <span class="fn">GetXMLForAgreement</span>(orderRequest, agreeRefId);
+                <span class="kw">if</span>(CompletionStatus==<span class="nm">2</span>) <span class="kw">continue</span>;
+                <span class="cm">// Extract currentPricePlanSoc (CCBS) + newPricePlanSoc (FE) from Offers</span>
+                <span class="cm">/* §9.8 POU Variant ①: XSLT builds ns3:futureOrderWithSoc with
+                   ns:futureOrder (effectiveDate=tomorrow, orderType=203, nodeLeve=3, ...)
+                   + ns2:futureSocs (newPP always, currentPP conditional) */</span>
+                Event.Ext.sendEventImmediate(reqEvent_POU);
+                <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                isSkipped = <span class="kw">false</span>;
+                Status = <span class="st">"1"</span>;  <span class="cm">// inside per-OU block</span>
+            }
+
+            <span class="cm">// COU loop</span>
+            <span class="kw">for</span>(<span class="kw">int</span> iCOU=<span class="nm">0</span>; iCOU&lt;cOULen; iCOU++) {
+                cAgreeRefId = cOu.Agreement.RefId;
+                chkRes = <span class="fn">GetXMLForAgreementInChildOU</span>(orderRequest, cAgreeRefId, pOuRef);
+                <span class="kw">if</span>(CompletionStatus==<span class="nm">2</span>) <span class="kw">continue</span>;
+                <span class="cm">/* §9.8 COU Variant ②: agreeRefId→cAgreeRefId, pOu→cOu, adds OU_ID,
+                   uses ns2:parentInstanceId (not ns2:instanceId) for currentPricePlan */</span>
+                Event.Ext.sendEventImmediate(reqEvent_COU);
+                <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                isSkipped = <span class="kw">false</span>;
+                Status = <span class="st">"1"</span>;  <span class="cm">// inside per-OU block (redundant)</span>
+            }
+
+            <span class="kw">if</span>(!isSkipped) { Status=<span class="st">"1"</span>; SendDataToDB(); }  <span class="cm">// Status="1" redundant here</span>
+            <span class="kw">else</span> SkipActivity(<span class="st">"4"</span>);
+        } <span class="kw">catch</span>(Exception ae) { HandleActivityException(...); }
+    }
+}</pre>
+</div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="card">
+<div class="card-header">§19 — Response Message Rule</div>
+<div class="card-body">
+<h3 style="color:var(--true-dark);margin-bottom:8px;">§19.1 Overview</h3>
+<p>Parses the OMX_ADD_FUTURE response, maps standard fields into an <code>OMX_AddFutureRes</code> concept, appends to <code>currActivity.Response</code>, logs audit, and returns the IsAllResponseSuccess fan-in result.</p>
+
+<h3 style="color:var(--true-dark);margin:12px 0 8px;">§19.2 Scope Variables</h3>
+<table>
+  <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+  <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Root order data for audit + logging</td></tr>
+  <tr><td><code>eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.OMX_ADD_FUTURE</td><td>Inbound response event from OMX</td></tr>
+  <tr><td><code>currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity state — Response[] array + RequestCount</td></tr>
+</table>
+
+<h3 style="color:var(--true-dark);margin:12px 0 8px;">§19.3 OMX_AddFutureRes Concept Construction</h3>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">object</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">if ResponseCode present</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">if ResponseMsg present</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">if CompletionStatus present</span><span class="badge b-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<p style="margin-top:8px;font-size:.87rem;color:#555;">Note: OMX_AddFutureRes has 3 response fields (no ReferenceId, unlike CCBS responses).</p>
+
+<h3 style="color:var(--true-dark);margin:12px 0 8px;">§19.4 Response Completion Logic</h3>
+<table>
+  <tr><th>Function</th><th>Return</th><th>Meaning</th></tr>
+  <tr><td><code>IsAllResponseSuccess(currActivity)</code></td><td>"true"</td><td>All parallel OMX_ADD_FUTURE calls succeeded; activity can advance</td></tr>
+  <tr><td><code>IsAllResponseSuccess(currActivity)</code></td><td>"false"</td><td>Still waiting for more responses or failure detected</td></tr>
+</table>
+<p style="margin-top:8px;font-size:.87rem;">Unlike SBM FUP FMs which use explicit <code>count(ResponseCode suffix "000") == RequestCount</code>, this uses the shared helper <code>IsAllResponseSuccess</code>. The underlying logic checks ResponseCode suffix "000" count against RequestCount.</p>
+
+<h3 style="color:var(--true-dark);margin:12px 0 8px;">§19.5 Response Audit Logging</h3>
+<table>
+  <tr><th>Field</th><th>Value</th></tr>
+  <tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+  <tr><td>PROCESS_ID</td><td><code>concat($pid, "_RES")</code></td></tr>
+  <tr><td>COMPONENT_NAME</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+  <tr><td>OPERATION_NAME</td><td><code>"OMX_ADD_PROV"</code></td></tr>
+  <tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+  <tr><td>LOG_LEVEL</td><td>INFO (from globalVariables)</td></tr>
+  <tr><td>AUDIT_TRACE</td><td><code>"Response received for OMX_ADD_PROV"</code></td></tr>
+  <tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+  <tr><td>payload/ns:ServicePayload</td><td>Conditional: if WritePayload="true" — copy of $eventResponse</td></tr>
+</table>
+</div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

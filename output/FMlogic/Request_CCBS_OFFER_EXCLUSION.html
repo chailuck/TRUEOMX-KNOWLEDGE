@@ -1,0 +1,712 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_CCBS_OFFER_EXCLUSION — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}.code-block .xa{color:#f9e2af}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-jms{background:#FFE0B2;color:#E65100}.badge-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.flow-text{flex:1}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.bug{border-color:#e53935;background:#FFEBEE}
+.callout.purple{border-color:var(--skip);background:#F3E5F5}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+details>summary{cursor:pointer;padding:8px 4px;font-weight:600;color:var(--true-dark)}
+details[open]>summary{color:var(--true-red)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+.variant-header{background:#2a2a3e;color:#89dceb;padding:8px 14px;font-weight:700;font-size:0.85rem;border-radius:4px 4px 0 0;margin-top:12px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_CCBS_OFFER_EXCLUSION</h1>
+    <div class="subtitle">Batch SOC exclusion group lookup with dual backend routing (CCBS vs CES/GoldenDB) — collects all unique SOCs across all offer types, fires one aggregated request</div>
+    <div class="meta-row">
+      <span class="meta-badge">Target: CCBS / CES (GoldenDB)</span>
+      <span class="meta-badge">Pattern: Batch/aggregate SOC collection</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Author: awalia-t420</span>
+      <span class="meta-badge">Generated: 2026-08-04</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This FM retrieves offer exclusion group data for all SOC codes involved in the order. It aggregates all unique SOC codes from every offer source (Agreement Offers, Agreement RelatedOffersArray, Subscriber SubscriberOffers, Subscriber SubscriberOffers RelatedOffersArray — across both POU and COU) into a deduplicated list, then fires <strong>a single batch request</strong> to CCBS (or CES for GoldenDB orders). The response writes the exclusion group name (<code>TR_OFFER_EXCL_GROUP_NAME</code>) to each matching offer's <code>SocProperties</code> field, but only if <code>SocProperties</code> is currently blank (idempotent write-back).</p>
+    <div class="callout purple">
+      <strong>Dual backend routing:</strong> When <code>orderRequest.OrderData.GoldenDB == "Y"</code>, the request is routed to <code>CES_OFFER_EXCLUSION</code> (CES backend). Otherwise it goes to <code>CCBS_OFFER_EXCLUSION</code>. Both share the same payload schema but differ in event type and the CES variant adds an <code>extId</code> attribute using <code>OMXUtils:generateTrackingID()</code>.
+    </div>
+    <div class="callout warning">
+      <strong>Double SendDataToDB:</strong> <code>SendDataToDB</code> is called both inside the success branch (line 136) and unconditionally after the if/else block (line 141). The second call is redundant.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_CCBS_OFFER_EXCLUSION.rule</code></td><td>148 lines</td></tr>
+      <tr><td>Response file</td><td><code>Response_CCBS_OFFER_EXCLUSION.rulefunction</code></td><td>157 lines</td></tr>
+      <tr><td>Author</td><td>awalia-t420</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td></td></tr>
+      <tr><td>Request event (CCBS path)</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_OFFER_EXCLUSION</code></td><td>Default backend</td></tr>
+      <tr><td>Request event (CES path)</td><td><code>Events.OMConsumers.OMXFM.Request.CES_OFFER_EXCLUSION</code></td><td>GoldenDB==Y only</td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_OFFER_EXCLUSION</code></td><td>Single response regardless of routing</td></tr>
+      <tr><td>Request schema NS</td><td><code>http://www.tibco.com/schemas/OMX_FM/SharedResources/Schema Definitions/OfferExclusionRequest.xsd</code> (ns)</td><td></td></tr>
+      <tr><td>Response schema NS</td><td><code>http://www.tibco.com/schemas/OMX_FM/SharedResources/Schema Definitions/OfferExclusionResponse.xsd</code> (xsd2)</td><td>Note: xsd2 prefix in response</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBS_OfferExclusionRes</code></td><td>Custom — has OfferExclusionResponse[] array</td></tr>
+      <tr><td>Correlation key</td><td>None (RefID not set in CCBS variant; CES variant no RefID either)</td><td>Batch — one event per activity</td></tr>
+      <tr><td>Fan-out level</td><td>Batch — single event regardless of SOC count</td><td></td></tr>
+      <tr><td>Credential gate</td><td>IsEnableUserPass (global var)</td><td>Credentials from OrderData.User/Password — same as MCS pattern</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Source of all SOC codes; GoldenDB routing flag; offer SocProperties written by response</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity state; RequestCount++ once; Response[] appended by response handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN Conditions -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_OFFER_EXCLUSION"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_OFFER_EXCLUSION"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>Resubmit flag</strong> — <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-text"><strong>PreExecCheck</strong> — if <code>nextAct.PreExecCheck</code> length &gt; 0: evaluate XPath; if result != "true" → <code>SkipActivity("4")</code> and exit</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-text"><strong>Collect SOC codes</strong> — build deduplicated <code>arrLstSOCs</code> ArrayList by iterating:
+      <ul style="margin:8px 0 0 16px;line-height:2">
+        <li>POU Agreement Offers + RelatedOffersArray[].Soc</li>
+        <li>POU Subscriber[].SubscriberOffers[].Soc + RelatedOffersArray[].Soc</li>
+        <li>COU Agreement Offers + RelatedOffersArray[].Soc</li>
+        <li>COU Subscriber[].SubscriberOffers[].Soc + RelatedOffersArray[].Soc</li>
+      </ul>
+      Skip blank Soc values; use <code>Collections.contains()</code> to deduplicate.
+    </div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>Route by GoldenDB flag:</strong>
+      <ul style="margin:8px 0 0 16px;line-height:2">
+        <li>If <code>GoldenDB == "Y"</code> → fire <code>CES_OFFER_EXCLUSION</code> event (CES backend, adds extId)</li>
+        <li>Else → fire <code>CCBS_OFFER_EXCLUSION</code> event (CCBS backend, no extId)</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>Send event + audit</strong> — <code>Event.Ext.sendEventImmediate(reqEvent)</code>; if !isActResub → <code>RequestCount++</code>; send audit log</div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-text"><strong>Status update</strong> — <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></div></div>
+    <div class="flow-step"><div class="flow-num">7</div><div class="flow-text"><strong>Redundant SendDataToDB</strong> (line 141) — called again unconditionally outside if/else block <span class="badge badge-orange">Bug: redundant</span></div></div>
+    <div class="flow-step"><div class="flow-num">8</div><div class="flow-text"><strong>Exception</strong> — try/catch → <code>HandleActivityException</code></div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> Rule Action (THEN) — Key Details</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§6.1 — SOC Collection Logic</h3>
+    <div class="code-block"><span class="kw">Object</span> arrLstSOCs = <span class="fn">Collections.List.createArrayList</span>();
+<span class="cm">// For each POU + COU, Agreement + Subscriber, Offer + RelatedOffersArray:</span>
+<span class="kw">if</span> (currSoc != <span class="str">""</span> &amp;&amp; !<span class="fn">Collections.contains</span>(arrLstSOCs, currSoc))
+    <span class="fn">Collections.add</span>(arrLstSOCs, currSoc);
+<span class="cm">// Repeat for RelatedOffersArray[k].Soc</span>
+
+<span class="ty">Object</span>[] socIDs = <span class="fn">Collections.toArray</span>(arrLstSOCs);</div>
+    <p style="margin-top:8px;font-size:0.88rem">All 8 offer sources (4 types × POU+COU) are traversed. The final <code>socIDs</code> array is passed as XSLT parameter to build the payload.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§6.2 — GoldenDB Routing Branch</h3>
+    <div class="code-block"><span class="kw">if</span>(!<span class="fn">IsBlankOrStringNull</span>(orderRequest.OrderData.GoldenDB) &amp;&amp; <span class="fn">String.equals</span>(<span class="str">"Y"</span>, orderRequest.OrderData.GoldenDB)) {
+    <span class="cm">// CES path — adds extId attribute via OMXUtils:generateTrackingID()</span>
+    <span class="ty">Events..CES_OFFER_EXCLUSION</span> reqEvent = Event.createEvent(<span class="str">"xslt://{{CES_OFFER_EXCLUSION}}..."</span>);
+} <span class="kw">else</span> {
+    <span class="cm">// CCBS path — standard CCBS backend, no extId</span>
+    <span class="ty">Events..CCBS_OFFER_EXCLUSION</span> reqEvent = Event.createEvent(<span class="str">"xslt://{{CCBS_OFFER_EXCLUSION}}..."</span>);
+}</div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§6.3 — Double SendDataToDB (Bug)</h3>
+    <div class="callout bug">
+      <strong>Line 136 (inside success branch):</strong> <code>RuleFunctions.Helpers.SendDataToDB(orderRequest);</code><br/>
+      <strong>Line 141 (after if/else, unconditional):</strong> <code>RuleFunctions.Helpers.SendDataToDB(orderRequest);</code><br/>
+      <span style="margin-top:6px;display:block">The second call is always executed even if the first already ran. This is redundant and may cause unnecessary DB writes. The skip path only hits line 141 (no send, no status change), so in that case it is still harmless but wasteful.</span>
+    </div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> Data Extraction</div>
+  <div class="section-body">
+    <p>No pipe/delimiter parsing in the request. The SOC dedup collection is the primary data aggregation step. The response uses <code>XPath.evalAsString</code> to extract individual fields from each <code>OfferExclusionReturn</code> element by index.</p>
+  </div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§8.1 — Order Type Dependencies</h3>
+    <p>Routed by <code>orderRequest.OrderData.GoldenDB</code>:</p>
+    <table>
+      <tr><th>GoldenDB</th><th>Backend</th><th>Event Type</th></tr>
+      <tr><td><code>"Y"</code></td><td>CES (GoldenDB)</td><td><code>CES_OFFER_EXCLUSION</code></td></tr>
+      <tr><td>blank / other</td><td>CCBS</td><td><code>CCBS_OFFER_EXCLUSION</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>FM JMS</td><td>CCBS_OFFER_EXCLUSION queue</td><td>Batch SOC exclusion group lookup (CCBS path)</td></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>FM JMS</td><td>CES_OFFER_EXCLUSION queue</td><td>Batch SOC exclusion group lookup (GoldenDB path)</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td>FM JMS</td><td>CCBS_OFFER_EXCLUSION response queue</td><td>OfferExclusionReturn[] per SOC</td></tr>
+      <tr><td><span class="badge badge-log">LOG</span></td><td>OMXESB Logger</td><td>Audit event (immediate)</td><td>Request and response audit trail</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>CCBS Path</th><th>CES Path</th></tr>
+      <tr><td>System</td><td>CCBS</td><td>CES (GoldenDB)</td></tr>
+      <tr><td>Request root</td><td><code>ns:OfferExclusionRequest</code></td><td><code>ns:OfferExclusionRequest</code></td></tr>
+      <tr><td>Response root</td><td><code>xsd2:OfferExclusionResponse</code></td><td><code>xsd2:OfferExclusionResponse</code></td></tr>
+      <tr><td>Key request field</td><td><code>SOCCode</code> (repeated)</td><td><code>SOCCode</code> (repeated)</td></tr>
+      <tr><td>Key response field</td><td><code>OfferExclusionReturn[].Soc_Code + Exc_Group</code></td><td>same</td></tr>
+      <tr><td>Correlation pattern</td><td>Batch — one response for all SOCs</td><td>same</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept</th><th>Field</th><th>Access</th><th>Notes</th></tr>
+      <tr><td>OrderRequest</td><td>OrderData.GoldenDB</td><td>READ</td><td>Backend routing decision</td></tr>
+      <tr><td>OrderRequest</td><td>Customer.ParentOU[].Agreement.Offers[].Soc</td><td>READ</td><td>SOC collection source</td></tr>
+      <tr><td>OrderRequest</td><td>Customer.ParentOU[].Agreement.Offers[].RelatedOffersArray[].Soc</td><td>READ</td><td>SOC collection source</td></tr>
+      <tr><td>OrderRequest</td><td>Customer.ParentOU[].Subscriber[].SubscriberOffers[].Soc</td><td>READ</td><td>SOC collection source</td></tr>
+      <tr><td>OrderRequest</td><td>Customer.ParentOU[].Subscriber[].SubscriberOffers[].RelatedOffersArray[].Soc</td><td>READ</td><td>SOC collection source</td></tr>
+      <tr><td>OrderRequest</td><td>(all above repeated for ChildOU)</td><td>READ</td><td>COU equivalents</td></tr>
+      <tr><td>AgreementOffers / SubscriberOffers / RelatedOffersArray</td><td>SocProperties</td><td>WRITTEN</td><td>Set to <code>"TR_OFFER_EXCL_GROUP_NAME=&lt;group&gt;;"</code> if currently blank</td></tr>
+      <tr><td>Activity</td><td>RequestCount / Response[]</td><td>READ+WRITTEN</td><td>RequestCount++ once; Response[] appended by response handler</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.5 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><code>OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>Credential gate flag</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>Payload inclusion in audit</td></tr>
+    </table>
+    <div class="callout warning" style="margin-top:8px">
+      <strong>Credential inconsistency:</strong> When <code>IsEnableUserPass == "true"</code>, credentials are read from <code>$orderRequest/OrderData/User</code> and <code>$orderRequest/OrderData/Password</code> — NOT from global variables. Same pattern as MCS_GET_CHARGE_INFO. Migration must replicate this per-order credential pattern.
+    </div>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§9.1 — XSLT Parameters</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th><th>Both Variants</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest concept serialized</td><td>Yes</td></tr>
+      <tr><td><code>$globalVariables</code></td><td>System global variables</td><td>Yes</td></tr>
+      <tr><td><code>$socIDs</code></td><td><code>Collections.toArray(arrLstSOCs)</code> — deduped SOC array</td><td>Yes</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.2 — Variant Differences</h3>
+    <table>
+      <tr><th>Feature</th><th>CCBS variant</th><th>CES variant (GoldenDB)</th></tr>
+      <tr><td>Event type</td><td><code>CCBS_OFFER_EXCLUSION</code></td><td><code>CES_OFFER_EXCLUSION</code></td></tr>
+      <tr><td>extId on event</td><td>Not set</td><td><code>OMXUtils:generateTrackingID()</code></td></tr>
+      <tr><td>OMXUtils import</td><td>Not imported</td><td><code>xmlns:OMXUtils="www.tibco.com/be/custom/OMXUtils"</code></td></tr>
+      <tr><td>Payload structure</td><td>Identical</td><td>Identical</td></tr>
+      <tr><td>Headers</td><td>Identical</td><td>Identical</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Header</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>extId (event attr)</td><td><code>OMXUtils:generateTrackingID()</code></td><td>CES variant only — Always</td></tr>
+      <tr><td>JMSPriority</td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional</td></tr>
+      <tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional</td></tr>
+      <tr><td>OrderID</td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional</td></tr>
+      <tr><td>UserName</td><td><code>$orderRequest/OrderData/User</code></td><td>Credential-gated (IsEnableUserPass)</td></tr>
+      <tr><td>PassWord</td><td><code>$orderRequest/OrderData/Password</code></td><td>Credential-gated (IsEnableUserPass)</td></tr>
+      <tr><td>OrderType</td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:8px">Note: No <code>RefID</code> header is set. The response correlation is implicit via the single JMSCorrelationID. The response concept extId is <code>concat("OFEXROOT:", JMSCorrelationID)</code>.</div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.4 — Payload Fields</h3>
+    <table>
+      <tr><th>XML Element</th><th>Source</th><th>Iteration</th></tr>
+      <tr><td><code>ns:OfferExclusionRequest</code></td><td>— root container</td><td></td></tr>
+      <tr><td><code>SOCCode</code></td><td><code>xsl:for-each select="$socIDs/elements"</code> → <code>.</code></td><td>One element per unique SOC in the deduplicated list</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.5 — Generated XML Example</h3>
+    <div class="code-block"><span class="xt">&lt;event</span> <span class="xa">extId</span>=<span class="str">"TRK-20250804-001"</span><span class="xt">&gt;</span>  <span class="cm">&lt;!-- extId only in CES variant --&gt;</span>
+  <span class="xt">&lt;JMSPriority&gt;</span>5<span class="xt">&lt;/JMSPriority&gt;</span>
+  <span class="xt">&lt;JMSCorrelationID&gt;</span>OMX-TRK-20250804-001<span class="xt">&lt;/JMSCorrelationID&gt;</span>
+  <span class="xt">&lt;OrderID&gt;</span>ORD-001<span class="xt">&lt;/OrderID&gt;</span>
+  <span class="xt">&lt;OrderType&gt;</span>3<span class="xt">&lt;/OrderType&gt;</span>
+  <span class="xt">&lt;payload&gt;</span>
+    <span class="xt">&lt;ns:OfferExclusionRequest</span>
+      <span class="xa">xmlns:ns</span>=<span class="str">"http://www.tibco.com/schemas/OMX_FM/SharedResources/Schema Definitions/OfferExclusionRequest.xsd"</span><span class="xt">&gt;</span>
+      <span class="xt">&lt;SOCCode&gt;</span>VOICE_PLAN_A<span class="xt">&lt;/SOCCode&gt;</span>
+      <span class="xt">&lt;SOCCode&gt;</span>DATA_PACK_B<span class="xt">&lt;/SOCCode&gt;</span>
+      <span class="xt">&lt;SOCCode&gt;</span>SMS_BUNDLE_C<span class="xt">&lt;/SOCCode&gt;</span>
+    <span class="xt">&lt;/ns:OfferExclusionRequest&gt;</span>
+  <span class="xt">&lt;/payload&gt;</span>
+<span class="xt">&lt;/event&gt;</span></div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.6 — XSLT Stylesheet Source</h3>
+    <details>
+      <summary>CES variant (GoldenDB=="Y") — adds extId attribute</summary>
+      <div class="variant-header">CES_OFFER_EXCLUSION Variant (GoldenDB path)</div>
+      <div class="code-block"><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:OMXUtils</span>=<span class="str">"www.tibco.com/be/custom/OMXUtils"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="str">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:ns</span>=<span class="str">"http://www.tibco.com/schemas/OMX_FM/SharedResources/Schema Definitions/OfferExclusionRequest.xsd"</span>
+  <span class="xa">version</span>=<span class="str">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"socIDs"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="str">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="str">"extId"</span><span class="xt">&gt;</span>  <span class="cm">&lt;!-- CES only: generates unique event extId --&gt;</span>
+        <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"OMXUtils:generateTrackingID()"</span><span class="xt">/&gt;</span>
+      <span class="xt">&lt;/xsl:attribute&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderPriority"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;JMSPriority&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;&lt;/JMSPriority&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;JMSCorrelationID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/JMSCorrelationID&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/OrderID"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;OrderID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;&lt;/OrderID&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$globalVariables/OMX_OM/Rules/.../IsEnableUserPass='true'"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/User"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;UserName&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/User"</span><span class="xt">/&gt;&lt;/UserName&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/Password"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;PassWord&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/Password"</span><span class="xt">/&gt;&lt;/PassWord&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/OrderType"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;OrderType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;&lt;/OrderType&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns:OfferExclusionRequest&gt;</span>
+          <span class="xt">&lt;xsl:for-each</span> <span class="xa">select</span>=<span class="str">"$socIDs/elements"</span><span class="xt">&gt;</span>
+            <span class="xt">&lt;SOCCode&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"."</span><span class="xt">/&gt;&lt;/SOCCode&gt;</span>
+          <span class="xt">&lt;/xsl:for-each&gt;</span>
+        <span class="xt">&lt;/ns:OfferExclusionRequest&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></div>
+    </details>
+    <details style="margin-top:8px">
+      <summary>CCBS variant (default) — identical except no extId attribute and no OMXUtils import</summary>
+      <div class="callout info" style="margin-top:8px">Structurally identical to CES variant except: (1) no <code>xmlns:OMXUtils</code> import, (2) no <code>&lt;xsl:attribute name="extId"&gt;</code> block. Payload and headers are identical.</div>
+    </details>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header"><span class="num">§10</span> XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge badge-purple" style="font-size:0.7rem">CES variant only</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">JMSPriority</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">UserName</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/User</span> <span class="badge badge-purple" style="font-size:0.7rem">Credential-gated (IsEnableUserPass + User present)</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">PassWord</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/Password</span> <span class="badge badge-purple" style="font-size:0.7rem">Credential-gated</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">OfferExclusionRequest</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-tag">SOCCode</span> <span class="tree-arrow">←</span> <span class="tree-src">xsl:for-each $socIDs/elements → .</span> <span class="badge badge-green" style="font-size:0.7rem">Repeated per unique SOC</span></div></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header"><span class="num">§11</span> Audit Logging</div>
+  <div class="section-body">
+    <div class="grid2">
+      <div>
+        <h3 style="color:var(--true-dark);margin-bottom:10px">Request Audit</h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for CCBS_OFFER_EXCLUSION"</code></td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"CCBS_OFFER_EXCLUSION"</code></td></tr>
+          <tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td></tr>
+          <tr><td>Payload</td><td>copy of <code>$reqEvent</code> (WritePayload gated)</td></tr>
+        </table>
+        <div class="callout info" style="margin-top:8px;font-size:0.83rem">Same request audit logged for both CCBS and CES paths.</div>
+      </div>
+      <div>
+        <h3 style="color:var(--true-dark);margin-bottom:10px">Response Audit</h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>"Response received for CCBS_OFFER_EXCLUSION"</code></td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"CCBS_OFFER_EXCLUSION"</code></td></tr>
+          <tr><td>PROCESS_ID</td><td><code>concat($pid, "_RES")</code></td></tr>
+          <tr><td>Payload</td><td>copy of <code>$eventResponse</code> (WritePayload gated)</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header"><span class="num">§12</span> Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Call</th><th>Code</th></tr>
+      <tr><td>PreExecCheck passes, event sent</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" (RUNNING)</td></tr>
+      <tr><td>PreExecCheck fails</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" (SKIPPED)</td></tr>
+    </table>
+    <div class="callout bug" style="margin-top:8px"><strong>Redundant:</strong> <code>SendDataToDB</code> also called at line 141 (outside if/else) — fires unconditionally, even after skip or success.</div>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header"><span class="num">§13</span> Exception / Error Handling</div>
+  <div class="section-body">
+    <div class="code-block"><span class="kw">catch</span> (Exception ae) {
+    <span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+}</div>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header"><span class="num">§14</span> Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Collections.List.createArrayList()</code></td><td>Create deduplicated SOC list</td></tr>
+      <tr><td><code>Collections.contains(list, item)</code></td><td>Dedup check before adding SOC</td></tr>
+      <tr><td><code>Collections.add(list, item)</code></td><td>Add SOC to list</td></tr>
+      <tr><td><code>Collections.toArray(list)</code></td><td>Convert list to Object[] for XSLT param</td></tr>
+      <tr><td><code>IsBlankOrStringNull(value)</code></td><td>Null/blank check on GoldenDB flag</td></tr>
+      <tr><td><code>String.equals("Y", GoldenDB)</code></td><td>GoldenDB routing check</td></tr>
+      <tr><td><code>GetActivityStatusString(code, flag)</code></td><td>Activity status string builder</td></tr>
+      <tr><td><code>SendDataToDB(orderRequest)</code></td><td>Persist to DB (called twice — bug)</td></tr>
+      <tr><td><code>SkipActivity(orderRequest, activity, code)</code></td><td>Mark activity skipped</td></tr>
+      <tr><td><code>HandleActivityException(orderRequest, activity, ae, msg)</code></td><td>Exception handler</td></tr>
+      <tr><td><code>XPath.evalAsInt(xpath...)</code></td><td><strong>Response:</strong> count OfferExclusionReturn elements</td></tr>
+      <tr><td><code>XPath.evalAsString(xpath...)</code></td><td><strong>Response:</strong> extract Soc_Code and Exc_Group per element</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§15</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_CCBS_OFFER_EXCLUSION (rule)
+├── Instance.serializeUsingDefaults(orderRequest)  [if PreExecCheck present]
+├── XPath.execute(chkXPath, sXML, ns)  [PreExecCheck evaluation]
+├── Collections.List.createArrayList()
+├── Collections.contains(arrLstSOCs, currSoc)  [dedup check ×8 offer sources]
+├── Collections.add(arrLstSOCs, currSoc)
+├── Collections.toArray(arrLstSOCs)  → socIDs
+├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(GoldenDB)  [routing check]
+├── String.equals("Y", GoldenDB)
+├── Event.createEvent("xslt://CES_OFFER_EXCLUSION...")  [GoldenDB path]
+│   └── OMXUtils:generateTrackingID()  [event extId — CES only]
+├── Event.createEvent("xslt://CCBS_OFFER_EXCLUSION...")  [default path]
+├── Event.Ext.sendEventImmediate(reqEvent)
+├── Event.Ext.sendEventImmediate(auditEvent)
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)  [×2 — redundant]
+├── RuleFunctions.Helpers.SkipActivity(orderRequest, activity, "4")  [if skip]
+└── RuleFunctions.Helpers.HandleActivityException(...)  [catch]
+
+Response_CCBS_OFFER_EXCLUSION (rulefunction)
+├── Instance.createInstance("xslt://CCBS_OfferExclusionRes...")
+│   └── concat("OFEXROOT:", JMSCorrelationID)  [custom extId — NOT generateTrackingID]
+├── currActivity.Response[length] = resEvent
+├── XPath.evalAsInt("count(.../OfferExclusionReturn)")  [response item count]
+├── XPath.evalAsString("...OfferExclusionReturn[$i]/Soc_Code")  [per item]
+├── XPath.evalAsString("...OfferExclusionReturn[$i]/Exc_Group")  [per item]
+├── String.equals(offer.Soc, soc_cd)  [match ×8 offer sources]
+├── String.length(offer.SocProperties)==0  [idempotent write guard]
+│   └── offer.SocProperties = "TR_OFFER_EXCL_GROUP_NAME=" + group_name + ";"
+├── Event.Ext.sendEventImmediate(auditLogEvent)
+└── return "true"  [always — unconditional fan-in]</div>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header"><span class="num">§16</span> Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Key Fields</th><th>Role</th></tr>
+      <tr><td><code>Concepts.FM.Response.CCBS_OfferExclusionRes</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId, OfferExclusionResponse[] (SOC_CD, GROUP_NAME)</td><td>Custom response — array of per-SOC exclusion group results</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.AgreementOffers</code></td><td>Soc, SocProperties</td><td>READ (Soc collection) + WRITTEN (SocProperties)</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>Soc, SocProperties</td><td>READ + WRITTEN</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.RelatedOffersArray</code></td><td>Soc, SocProperties</td><td>READ + WRITTEN</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§17</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Collect all unique SOC codes across all 8 offer sources (4 types × POU+COU) before sending request.</td></tr>
+      <tr><td>R2</td><td>Dedup SOC codes using contains-check before adding to list.</td></tr>
+      <tr><td>R3</td><td>Route to CES_OFFER_EXCLUSION when <code>GoldenDB == "Y"</code>; CCBS_OFFER_EXCLUSION otherwise.</td></tr>
+      <tr><td>R4</td><td>CES variant must generate and set an <code>extId</code> on the event using <code>OMXUtils:generateTrackingID()</code>.</td></tr>
+      <tr><td>R5</td><td>Credential gate: if IsEnableUserPass, include UserName/PassWord from OrderData (not global variables).</td></tr>
+      <tr><td>R6</td><td>Response: for each OfferExclusionReturn, write <code>SocProperties = "TR_OFFER_EXCL_GROUP_NAME=&lt;Exc_Group&gt;;"</code> to matching offers — only if SocProperties is currently blank.</td></tr>
+      <tr><td>R7</td><td>Fan-in always returns "true" — single batch event, no RequestCount comparison needed.</td></tr>
+      <tr><td>R8</td><td>Response extId uses <code>concat("OFEXROOT:", JMSCorrelationID)</code> — NOT generateTrackingID.</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:18px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td><strong>Double SendDataToDB (lines 136 + 141)</strong> — redundant DB write on success path</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Remove the unconditional line 141 call; only the in-branch call is needed</td>
+      </tr>
+      <tr>
+        <td>Credential source inconsistency (OrderData.User/Password vs global variables)</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Document as per-order credential pattern; migration must replicate from OrderData</td>
+      </tr>
+      <tr>
+        <td>Dual backend (CCBS/CES) — test coverage must cover both GoldenDB paths</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Add test cases for GoldenDB=="Y" and GoldenDB blank/other</td>
+      </tr>
+      <tr>
+        <td>SocProperties idempotency — only writes if blank; won't update on resubmit if already set</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Verify this is intentional for resubmit scenarios; may need to clear SocProperties on resubmit</td>
+      </tr>
+      <tr>
+        <td>Null Agreement guard (line 42–44): <code>if (Agreement != null)</code> then immediately <code>if (Agreement == null) continue;</code> — dead code</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>The inner null check is unreachable; clean up for clarity in migration</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+  <div class="section-header"><span class="num">§18</span> Full Source Code</div>
+  <div class="section-body">
+    <details>
+      <summary>Request_CCBS_OFFER_EXCLUSION.rule (148 lines)</summary>
+      <div class="code-block" style="margin-top:8px"><span class="kw">rule</span> <span class="fn">Rules.OMConsumers.OMXFM.Request.Request_CCBS_OFFER_EXCLUSION</span> {
+  <span class="kw">attribute</span> { priority=<span class="nu">5</span>; forwardChain=<span class="kw">true</span>; }
+  <span class="kw">declare</span> {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="str">"CCBS_OFFER_EXCLUSION"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="str">"CCBS_OFFER_EXCLUSION"</span>;
+    orderCurrentActivity.Status == <span class="str">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">try</span> {
+      <span class="cm">// PreExecCheck evaluation</span>
+      <span class="kw">String</span> chkRes = <span class="str">"true"</span>;
+      <span class="kw">if</span>(<span class="fn">String.length</span>(nextAct.PreExecCheck) &gt; <span class="nu">0</span>) { ... }
+
+      <span class="kw">if</span>(<span class="fn">String.equals</span>(chkRes, <span class="str">"true"</span>)) {
+        <span class="cm">// Collect unique SOCs from 8 offer sources</span>
+        <span class="ty">Object</span> arrLstSOCs = <span class="fn">Collections.List.createArrayList</span>();
+        <span class="cm">// ... POU + COU loops (4 types × 2 = 8 sources)</span>
+        <span class="ty">Object</span>[] socIDs = <span class="fn">Collections.toArray</span>(arrLstSOCs);
+
+        <span class="kw">if</span>(!<span class="fn">IsBlankOrStringNull</span>(GoldenDB) &amp;&amp; <span class="fn">String.equals</span>(<span class="str">"Y"</span>, GoldenDB)) {
+          <span class="cm">// [CES XSLT — adds extId via OMXUtils:generateTrackingID() — see §9.6]</span>
+          <span class="ty">Events..CES_OFFER_EXCLUSION</span> reqEvent = <span class="fn">Event.createEvent</span>(<span class="str">"xslt://{{CES_OFFER_EXCLUSION}}..."</span>);
+          <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+          <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+          <span class="fn">Event.Ext.sendEventImmediate</span>(auditEvent);
+        } <span class="kw">else</span> {
+          <span class="cm">// [CCBS XSLT — no extId — see §9.6]</span>
+          <span class="ty">Events..CCBS_OFFER_EXCLUSION</span> reqEvent = <span class="fn">Event.createEvent</span>(<span class="str">"xslt://{{CCBS_OFFER_EXCLUSION}}..."</span>);
+          <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+          <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+          <span class="fn">Event.Ext.sendEventImmediate</span>(auditEvent);
+        }
+        orderCurrentActivity.Status = <span class="fn">GetActivityStatusString</span>(<span class="str">"1"</span>, <span class="kw">false</span>);
+        <span class="fn">SendDataToDB</span>(orderRequest);  <span class="cm">// line 136</span>
+      } <span class="kw">else</span> {
+        <span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="str">"4"</span>);
+      }
+      <span class="fn">SendDataToDB</span>(orderRequest);  <span class="cm">// line 141 — BUG: redundant</span>
+    } <span class="kw">catch</span> (Exception ae) { <span class="fn">HandleActivityException</span>(...); }
+  }
+}</div>
+    </details>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="section">
+  <div class="section-header"><span class="num">§19</span> Response Message Rule</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§19.1 — Overview</h3>
+    <p>Parses the batch OfferExclusionResponse, populates a <code>CCBS_OfferExclusionRes</code> concept with per-SOC exclusion group data, then iterates each <code>OfferExclusionReturn</code> item and writes <code>TR_OFFER_EXCL_GROUP_NAME</code> to the <code>SocProperties</code> of every matching offer across all 8 offer sources. Returns "true" unconditionally (batch = single event = always complete).</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>READ/WRITTEN — offer SocProperties written per SOC result</td></tr>
+      <tr><td><code>eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.CCBS_OFFER_EXCLUSION</td><td>Backend response</td></tr>
+      <tr><td><code>currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Response[] appended</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.3 — Response Concept Construction (CCBS_OfferExclusionRes)</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">concat("OFEXROOT:", $eventResponse/JMSCorrelationID)</span> <span class="badge badge-green" style="font-size:0.7rem">Always — NOT generateTrackingID</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/RefID</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OfferExclusionResponse[]</span> <span class="tree-arrow">←</span> <span class="tree-src">xsl:for-each $eventResponse/payload/ns:OfferExclusionResponse/OfferExclusionReturn</span> <span class="badge badge-green" style="font-size:0.7rem">Repeated per return item</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">concat("OFFEXCL:", ../../../JMSCorrelationID, ":", Soc_Code)</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">SOC_CD</span> <span class="tree-arrow">←</span> <span class="tree-src">Soc_Code</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">GROUP_NAME</span> <span class="tree-arrow">←</span> <span class="tree-src">Exc_Group</span></div></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.4 — Write-back to Offers</h3>
+    <div class="code-block"><span class="kw">int</span> respLen = <span class="fn">XPath.evalAsInt</span>(<span class="str">"count($eventResponse/payload/xsd2:OfferExclusionResponse/OfferExclusionReturn)"</span>);
+<span class="kw">for</span>(<span class="kw">int</span> iResp=<span class="nu">0</span>; iResp &lt; respLen; iResp++) {
+    <span class="kw">String</span> soc_cd = <span class="fn">XPath.evalAsString</span>(<span class="str">"...OfferExclusionReturn[$iResp + 1]/Soc_Code"</span>);
+    <span class="kw">String</span> group_name = <span class="fn">XPath.evalAsString</span>(<span class="str">"...OfferExclusionReturn[$iResp+1]/Exc_Group"</span>);
+
+    <span class="kw">if</span>(<span class="fn">String.length</span>(group_name) &gt; <span class="nu">0</span>) {
+        <span class="cm">// Iterate ALL 8 offer sources: POU+COU × Agreement+Subscriber × Offer+RelatedOffer</span>
+        <span class="kw">if</span>(<span class="fn">String.equals</span>(offer.Soc, soc_cd)) {
+            <span class="kw">if</span>(<span class="fn">String.length</span>(offer.SocProperties) == <span class="nu">0</span>) {  <span class="cm">// idempotent: only if blank</span>
+                offer.SocProperties = <span class="str">"TR_OFFER_EXCL_GROUP_NAME="</span> + group_name + <span class="str">";"</span>;
+            }
+        }
+    }
+}</div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.5 — Fan-in Completion Logic</h3>
+    <div class="code-block"><span class="kw">return</span> <span class="str">"true"</span>;  <span class="cm">// Always — unconditional fan-in (batch = single event)</span></div>
+    <div class="callout success" style="margin-top:8px">Unlike most FMs, there is no RequestCount comparison. Since only one event is ever fired per activity execution, the response handler simply returns "true" unconditionally.</div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

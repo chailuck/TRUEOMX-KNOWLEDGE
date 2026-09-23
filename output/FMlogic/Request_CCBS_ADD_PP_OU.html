@@ -1,0 +1,1044 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>FM Logic — Request_CCBS_ADD_PP_OU</title>
+<style>
+  :root {
+    --true-red:    #CC0000;
+    --true-dark:   #8B0000;
+    --true-deep:   #5C0000;
+    --true-light:  #FF5252;
+    --true-pale:   #FFF5F5;
+    --success:     #2e7d32;
+    --warning:     #e65100;
+    --info:        #1565c0;
+    --skip:        #6a1b9a;
+    --bg:          #F9F9F9;
+    --card:        #FFFFFF;
+    --border:      #E0E0E0;
+    --code-bg:     #1e1e2e;
+    --code-fg:     #cdd6f4;
+    --text:        #1A1A1A;
+    --text-muted:  #555555;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: var(--text); line-height: 1.65; }
+  a { color: var(--true-red); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+
+  .page-header {
+    background: linear-gradient(135deg, var(--true-deep) 0%, var(--true-dark) 50%, var(--true-red) 100%);
+    color: #fff; padding: 28px 40px;
+    border-bottom: 4px solid var(--true-light);
+  }
+  .page-header .brand { font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; opacity: 0.7; margin-bottom: 6px; }
+  .page-header h1 { font-size: 1.6rem; font-weight: 700; }
+  .page-header .meta { font-size: 0.85rem; opacity: 0.8; margin-top: 8px; display: flex; flex-wrap: wrap; gap: 16px; }
+  .page-header .meta span { background: rgba(255,255,255,0.12); padding: 3px 10px; border-radius: 12px; }
+
+  .container { max-width: 1280px; margin: 0 auto; padding: 32px 40px; }
+
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 8px; margin-bottom: 28px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+  .card-header {
+    background: linear-gradient(90deg, var(--true-dark), var(--true-red));
+    color: #fff; padding: 11px 20px; font-weight: 600; font-size: 0.95rem;
+    display: flex; align-items: center; gap: 8px;
+    border-left: 5px solid var(--true-light);
+  }
+  .card-header .icon { font-size: 1.05rem; }
+  .card-body { padding: 22px; }
+
+  .section-anchor { display: block; height: 0; margin-top: -70px; padding-top: 70px; }
+
+  table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+  th { background: #F5E6E6; color: var(--true-dark); text-align: left; padding: 9px 12px; font-weight: 700; border-bottom: 2px solid var(--true-red); }
+  td { padding: 8px 12px; border-bottom: 1px solid var(--border); vertical-align: top; }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: var(--true-pale); }
+
+  pre { background: var(--code-bg); color: var(--code-fg); padding: 16px; border-radius: 6px; overflow-x: auto; font-size: 0.81rem; line-height: 1.6; border-left: 3px solid var(--true-red); }
+  code { font-family: 'Cascadia Code', 'Consolas', monospace; }
+  .kw  { color: #cba6f7; }
+  .ty  { color: #89b4fa; }
+  .str { color: #a6e3a1; }
+  .cmt { color: #6c7086; font-style: italic; }
+  .num { color: #fab387; }
+  .fn  { color: #f38ba8; }
+  .xml-tag  { color: #89dceb; }
+  .xml-attr { color: #f9e2af; }
+  .xml-val  { color: #a6e3a1; }
+
+  .flow { display: flex; flex-direction: column; gap: 0; padding: 8px 0; }
+  .flow-step { display: flex; align-items: flex-start; gap: 14px; }
+  .flow-step .connector { display: flex; flex-direction: column; align-items: center; min-width: 36px; }
+  .flow-step .connector .circle { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; color: #fff; flex-shrink: 0; border: 2px solid rgba(255,255,255,0.3); }
+  .flow-step .connector .line { width: 2px; flex: 1; background: #ddd; min-height: 22px; }
+  .flow-step .body { padding: 3px 0 14px; }
+  .flow-step .body .step-title { font-weight: 700; font-size: 0.92rem; color: var(--true-dark); }
+  .flow-step .body .step-desc { font-size: 0.86rem; color: #444; margin-top: 3px; }
+  .c-red    { background: var(--true-red); }
+  .c-dark   { background: var(--true-dark); }
+  .c-green  { background: #2e7d32; }
+  .c-orange { background: #e65100; }
+  .c-purple { background: #6a1b9a; }
+  .c-teal   { background: #00695c; }
+  .c-blue   { background: #1565c0; }
+
+  .badge { display: inline-block; padding: 2px 9px; border-radius: 12px; font-size: 0.76rem; font-weight: 700; }
+  .badge-red    { background: #FFE0E0; color: var(--true-dark); border: 1px solid #FFAAAA; }
+  .badge-green  { background: #E8F5E9; color: #2e7d32; }
+  .badge-orange { background: #FFF3E0; color: #e65100; }
+  .badge-blue   { background: #E3F0FD; color: #1565c0; }
+  .badge-purple { background: #F3E5F5; color: #6a1b9a; }
+  .badge-teal   { background: #E0F2F1; color: #00695c; }
+  .badge-jms    { background: #FFE0B2; color: #E65100; }
+  .badge-db     { background: #E8EAF6; color: #3949AB; }
+  .badge-log    { background: #F1F8E9; color: #558B2F; }
+
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; }
+  .info-item { background: var(--true-pale); border-radius: 6px; padding: 12px 16px; border-left: 3px solid var(--true-red); }
+  .info-item .label { font-size: 0.74rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 4px; }
+  .info-item .value { font-size: 0.92rem; font-weight: 700; color: var(--true-dark); }
+
+  .purpose-box { background: var(--true-pale); border-left: 4px solid var(--true-red); border-radius: 0 6px 6px 0; padding: 14px 18px; margin-bottom: 12px; }
+  .sub-header { font-size: 0.88rem; font-weight: 700; color: var(--true-dark); background: #faeaea; padding: 7px 12px; border-radius: 4px; margin: 16px 0 8px; border-left: 3px solid var(--true-light); }
+  .fn-tree { font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 0.83rem; background: var(--code-bg); color: var(--code-fg); padding: 16px; border-radius: 6px; border-left: 3px solid var(--true-red); white-space: pre; overflow-x: auto; }
+  .condition-block { background: #f8f4fe; border: 1px solid #d0b8f0; border-radius: 6px; padding: 10px 14px; margin-bottom: 8px; font-family: 'Cascadia Code', 'Consolas', monospace; font-size: 0.84rem; color: #3a0070; }
+  .then-step { display: flex; gap: 12px; margin-bottom: 12px; align-items: flex-start; }
+  .then-step .num-badge { min-width: 26px; height: 26px; border-radius: 50%; background: var(--true-red); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 700; flex-shrink: 0; margin-top: 2px; }
+  .then-step .content { flex: 1; font-size: 0.88rem; }
+  .then-step .content strong { color: var(--true-dark); }
+  .warn-box { background: #FFF8E1; border-left: 4px solid #F9A825; border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 0.86rem; margin-top: 8px; }
+  .note-box { background: #E3F2FD; border-left: 4px solid #1565c0; border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 0.86rem; margin-top: 8px; }
+
+  footer { text-align: center; padding: 24px; font-size: 0.78rem; color: #999; background: var(--true-deep); color: rgba(255,255,255,0.5); margin-top: 40px; }
+  .toc { display: flex; flex-wrap: wrap; gap: 8px; padding: 16px; }
+  .toc a { background: var(--true-pale); color: var(--true-dark); padding: 5px 12px; border-radius: 20px; font-size: 0.8rem; border: 1px solid #f0c0c0; }
+  .toc a:hover { background: var(--true-red); color: #fff; text-decoration: none; }
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════ PAGE HEADER ═══ -->
+<header class="page-header">
+  <div class="brand">TRUE Corporation OMX &middot; TIBCO BusinessEvents &middot; FM Logic Documentation</div>
+  <h1>Request_CCBS_ADD_PP_OU</h1>
+  <div class="meta">
+    <span>Rule: Rules.OMConsumers.OMXFM.Request.Request_CCBS_ADD_PP_OU</span>
+    <span>Backend: CCBS</span>
+    <span>Operation: ADD_AGREEOFFER (PP / ServiceType 80)</span>
+    <span>Author: warawich-nb</span>
+    <span>Generated: 2026-06-17</span>
+  </div>
+</header>
+
+<!-- TOC -->
+<div class="container" style="padding-bottom:0;">
+  <div class="card">
+    <div class="card-header"><span class="icon">&#128197;</span> Table of Contents</div>
+    <div class="toc">
+      <a href="#s1">1. Overview</a>
+      <a href="#s2">2. Rule Metadata</a>
+      <a href="#s3">3. Working Memory</a>
+      <a href="#s4">4. WHEN Conditions</a>
+      <a href="#s5">5. Flow Diagram</a>
+      <a href="#s6">6. THEN Actions</a>
+      <a href="#s8">8. Integration Dependencies</a>
+      <a href="#s9">9. Payload Build</a>
+      <a href="#s10">10. Field Mapping Table</a>
+      <a href="#s11">11. Audit Logging</a>
+      <a href="#s12">12. Status Management</a>
+      <a href="#s13">13. Exception Handling</a>
+      <a href="#s14">14. Helper Functions</a>
+      <a href="#s15">15. Function Dependency Tree</a>
+      <a href="#s16">16. Concept Definitions</a>
+      <a href="#s17">17. Migration Notes</a>
+      <a href="#s18">18. Source Code</a>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- ═══════════════════════════════════════════════ SECTION 1 ═══ -->
+<span class="section-anchor" id="s1"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128269;</span> 1. Overview &amp; Purpose</div>
+  <div class="card-body">
+    <div class="purpose-box">
+      This rule sends <strong>Add Offer (PP — Postpaid Package, ServiceType 80)</strong> requests to the <strong>CCBS</strong> backend
+      for all Organisational Units (OU) in the customer's hierarchy. It iterates over every
+      <code>ParentOU → ChildOU</code> pair and, for each OU that holds an Agreement containing at least one
+      Offer with <code>ServiceType = '80'</code>, constructs and dispatches a
+      <code>CCBS_ADD_AGREEOFFER</code> JMS event via the FM channel. An audit log entry is emitted
+      after each successful dispatch.
+    </div>
+    <p style="font-size:0.88rem;color:#444;">
+      This rule fires when the process flow pointer reaches activity <code>CCBS_ADD_PP_OU</code> and that
+      activity's status is <code>WAITING</code>. It supports <strong>resubmission</strong> (purges stale
+      pending requests before re-sending) and <strong>LargeCustomer</strong> date-override logic
+      (computes tomorrow's logical date when <code>LargeCustomerIndicator = 89</code>).
+      A configurable <strong>PreExecCheck</strong> XPath filter can exclude specific OU / Agreement
+      combinations from dispatch. If no events are dispatched the activity is automatically
+      <strong>SKIPPED</strong> and the flow advances.
+    </p>
+    <div class="note-box">
+      <strong>Scope:</strong> Two independent loop paths are handled in this single rule —
+      one for ChildOU agreements and one for ParentOU agreements. Both paths produce identical
+      event schemas; only the source OU concept reference differs.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 2 ═══ -->
+<span class="section-anchor" id="s2"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#9881;</span> 2. Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <div class="info-grid">
+      <div class="info-item"><div class="label">Rule Full Name</div><div class="value" style="font-size:0.78rem;">Rules.OMConsumers.OMXFM.Request.Request_CCBS_ADD_PP_OU</div></div>
+      <div class="info-item"><div class="label">Short Name</div><div class="value">Request_CCBS_ADD_PP_OU</div></div>
+      <div class="info-item"><div class="label">Priority</div><div class="value">5</div></div>
+      <div class="info-item"><div class="label">forwardChain</div><div class="value">true</div></div>
+      <div class="info-item"><div class="label">Rule Type</div><div class="value">Outbound Request</div></div>
+      <div class="info-item"><div class="label">Target Backend</div><div class="value">CCBS</div></div>
+      <div class="info-item"><div class="label">Operation</div><div class="value">ADD_AGREEOFFER</div></div>
+      <div class="info-item"><div class="label">Author</div><div class="value">warawich-nb</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 3 ═══ -->
+<span class="section-anchor" id="s3"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128736;</span> 3. Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <thead><tr>
+        <th>Variable</th><th>Type</th><th>Concept Path</th><th>Role in Rule</th>
+      </tr></thead>
+      <tbody>
+        <tr>
+          <td><code>orderRequest</code></td>
+          <td><span class="badge badge-blue">ContainedConcept</span></td>
+          <td><code>/Concepts/OrderRequest/OrderRequest</code></td>
+          <td>Source of all order data: OU hierarchy, agreements, offers, customer info, and flow control state</td>
+        </tr>
+        <tr>
+          <td><code>orderCurrentActivity</code></td>
+          <td><span class="badge badge-blue">ContainedConcept</span></td>
+          <td><code>/Concepts/OM/ProcessConfig/Activity</code></td>
+          <td>Represents the current CCBS_ADD_PP_OU step; matched by extId and ActivityID; status updated on completion</td>
+        </tr>
+      </tbody>
+    </table>
+    <div class="sub-header">Runtime Local Variables (THEN block)</div>
+    <table>
+      <thead><tr><th>Variable</th><th>Type</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>isActResub</code></td><td>boolean</td><td>True when RequestCount &gt; 0 AND order is flagged for resubmission</td></tr>
+        <tr><td><code>nextAct</code></td><td>Activity concept</td><td>Current activity instance fetched by extId for PreExecCheck access</td></tr>
+        <tr><td><code>isSkipped</code></td><td>boolean</td><td>Tracks whether at least one event was sent; drives SKIP vs IN_PROGRESS transition</td></tr>
+        <tr><td><code>tomorrowLogicalDate</code></td><td>String</td><td>Next-day date (yyyy-MM-dd'T'00:00:00XXX) set when LargeCustomerIndicator=89</td></tr>
+        <tr><td><code>parentOu</code></td><td>ParentOU concept</td><td>Loop variable over <code>orderRequest.OrderData.Customer.ParentOU</code></td></tr>
+        <tr><td><code>childOu</code></td><td>ChildOU concept</td><td>Inner loop variable over <code>parentOu.ChildOU</code></td></tr>
+        <tr><td><code>countOfers</code></td><td>int</td><td>XPath count of Offers on the current OU Agreement (for SOC_SEQ_NO increment)</td></tr>
+        <tr><td><code>countRelatedOffersArray</code></td><td>int</td><td>XPath count of all RelatedOffersArray under Agreement (for SOC_SEQ_NO increment)</td></tr>
+        <tr><td><code>reqEvent</code></td><td>CCBS_ADD_AGREEOFFER event</td><td>Outbound event instance created by XSLT and sent immediately</td></tr>
+        <tr><td><code>chkRes</code></td><td>String</td><td>Result of PreExecCheck XPath; must equal "true" for event to be sent</td></tr>
+        <tr><td><code>pid</code></td><td>long</td><td>Nano-time used as process ID suffix (_REQ) in audit log</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 4 ═══ -->
+<span class="section-anchor" id="s4"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#10067;</span> 4. Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <p style="font-size:0.86rem;color:#444;margin-bottom:12px;">
+      All four conditions must be satisfied simultaneously for the rule to fire. The engine matches
+      <code>orderCurrentActivity</code> and <code>orderRequest</code> via the extId join.
+    </p>
+    <div class="condition-block">orderCurrentActivity<span style="color:#f9e2af;">@extId</span> == orderRequest.ProcessFlow.<span style="color:#89b4fa;">NextActivityName</span></div>
+    <div class="condition-block">orderCurrentActivity.<span style="color:#89b4fa;">ActivityID</span> == <span style="color:#a6e3a1;">"CCBS_ADD_PP_OU"</span></div>
+    <div class="condition-block">orderRequest.ProcessFlow.<span style="color:#89b4fa;">NextActivityID</span> == <span style="color:#a6e3a1;">"CCBS_ADD_PP_OU"</span></div>
+    <div class="condition-block">orderCurrentActivity.<span style="color:#89b4fa;">Status</span> == <span style="color:#a6e3a1;">"WAITING"</span></div>
+    <table style="margin-top:16px;">
+      <thead><tr><th>Condition</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><code>extId == NextActivityName</code></td><td>JOIN — binds the correct Activity instance to this order's process flow pointer</td></tr>
+        <tr><td><code>ActivityID == "CCBS_ADD_PP_OU"</code></td><td>TYPE guard — ensures only the CCBS PP-OU activity triggers this rule</td></tr>
+        <tr><td><code>NextActivityID == "CCBS_ADD_PP_OU"</code></td><td>FLOW guard — verifies the flow pointer is actively directing to this activity</td></tr>
+        <tr><td><code>Status == "WAITING"</code></td><td>STATE guard — prevents duplicate firing; activity must be in ready state</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 5 ═══ -->
+<span class="section-anchor" id="s5"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128260;</span> 5. Execution Flow Diagram</div>
+  <div class="card-body">
+    <div class="flow">
+      <div class="flow-step">
+        <div class="connector"><div class="circle c-dark">1</div><div class="line"></div></div>
+        <div class="body"><div class="step-title">Guard &amp; Resubmit Check</div><div class="step-desc">Determine <code>isActResub</code> (RequestCount &gt; 0 AND IsOrderResubmitted). If true, call <code>PurgePendingRequestsBeforeResubmit</code> to clear stale events.</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="connector"><div class="circle c-dark">2</div><div class="line"></div></div>
+        <div class="body"><div class="step-title">Large Customer Date Override</div><div class="step-desc">If <code>LargeCustomerIndicator = 89</code>, compute <code>tomorrowLogicalDate = DateTime.now() + 1 day</code> formatted as ISO-8601.</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="connector"><div class="circle c-red">3</div><div class="line"></div></div>
+        <div class="body"><div class="step-title">Iterate ChildOU Agreements</div><div class="step-desc">For each <code>ParentOU[i] → ChildOU[j]</code>: if Agreement exists with Offers, run PreExecCheck. If passes, count offers/relatedOffers, build <code>CCBS_ADD_AGREEOFFER</code> XSLT event, send immediately, increment <code>RequestCount</code>, emit audit log.</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="connector"><div class="circle c-red">4</div><div class="line"></div></div>
+        <div class="body"><div class="step-title">Iterate ParentOU Agreements</div><div class="step-desc">For each <code>ParentOU[i]</code>: if Agreement exists with Offers, run PreExecCheck. If passes, same build-and-send pattern as ChildOU, then emit audit log.</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="connector"><div class="circle c-orange">5a</div><div class="line"></div></div>
+        <div class="body"><div class="step-title">isSkipped = true path &rarr; SKIPPED</div><div class="step-desc">No events were dispatched (no qualifying agreements). Call <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code> → status becomes <strong>SKIPPED</strong> and flow advances to next activity.</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="connector"><div class="circle c-green">5b</div><div class="line"></div></div>
+        <div class="body"><div class="step-title">isSkipped = false path &rarr; IN_PROGRESS</div><div class="step-desc">At least one event was dispatched. Set <code>orderCurrentActivity.Status = "IN_PROGRESS"</code> via <code>GetActivityStatusString("1", false)</code>. Call <code>SendDataToDB</code> to persist state.</div></div>
+      </div>
+      <div class="flow-step">
+        <div class="connector"><div class="circle c-purple">6</div></div>
+        <div class="body"><div class="step-title">Exception Handler</div><div class="step-desc">Any exception caught → <code>HandleActivityException</code>: sets activity status ERROR, order status FAILED, fires error Logger event, persists to DB.</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 6 ═══ -->
+<span class="section-anchor" id="s6"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#9654;</span> 6. Rule Action (THEN) — Step-by-Step Logic</div>
+  <div class="card-body">
+    <div class="then-step"><div class="num-badge">1</div><div class="content"><strong>Resubmit flag:</strong> <code>isActResub = (orderCurrentActivity.RequestCount &gt; 0 &amp;&amp; orderRequest.IsOrderResubmitted)</code></div></div>
+    <div class="then-step"><div class="num-badge">2</div><div class="content"><strong>Fetch nextAct:</strong> <code>Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, "/Concepts/OM/ProcessConfig/Activity")</code> — used to read <code>PreExecCheck</code> expression.</div></div>
+    <div class="then-step"><div class="num-badge">3</div><div class="content"><strong>Purge on resubmit:</strong> If <code>isActResub</code>, call <code>PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code>.</div></div>
+    <div class="then-step"><div class="num-badge">4</div><div class="content"><strong>Large Customer date:</strong> Evaluate XPath <code>$orderRequest/OrderData/Customer/CustomerGeneralInfo/LargeCustomerIndicator=89</code>. If true, <code>tomorrowLogicalDate = format(addDay(now(),1), "yyyy-MM-dd'T'00:00:00XXX")</code>.</div></div>
+    <div class="then-step"><div class="num-badge">5</div><div class="content"><strong>ChildOU loop</strong> — <code>for iPou in ParentOU.length</code> → <code>for iCou in ChildOU.length</code>:
+      <br/>&nbsp;&nbsp;a) Skip ChildOU if <code>childOu.Agreement == null</code> or <code>Offers.length == 0</code>
+      <br/>&nbsp;&nbsp;b) Run PreExecCheck: call <code>GetXMLForAgreementInChildOU(orderRequest, agreement.RefId, parentOu.RefId)</code> then XPath evaluate; skip if result != "true"
+      <br/>&nbsp;&nbsp;c) Count: <code>countOfers = count($childOu/Agreement/Offers)</code>, <code>countRelatedOffersArray = count($childOu/Agreement/*/RelatedOffersArray)</code>
+      <br/>&nbsp;&nbsp;d) Build and send <code>CCBS_ADD_AGREEOFFER</code> event via XSLT (see §9)
+      <br/>&nbsp;&nbsp;e) If not resubmit: <code>orderCurrentActivity.RequestCount++</code>; set <code>isSkipped = false</code>
+      <br/>&nbsp;&nbsp;f) Emit audit Logger event
+    </div></div>
+    <div class="then-step"><div class="num-badge">6</div><div class="content"><strong>ParentOU loop</strong> — after ChildOU inner loop, checks <code>parentOu.Agreement</code> directly:
+      <br/>&nbsp;&nbsp;Same structure as ChildOU but uses <code>GetXMLForAgreement(orderRequest, agreement.RefId)</code> for PreExecCheck, and references <code>$parentOu</code> in XSLT.
+    </div></div>
+    <div class="then-step"><div class="num-badge">7</div><div class="content"><strong>Post-loop decision:</strong>
+      <br/>&nbsp;&nbsp;• <code>isSkipped == true</code> → <code>RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</code>
+      <br/>&nbsp;&nbsp;• <code>isSkipped == false</code> → <code>orderCurrentActivity.Status = GetActivityStatusString("1", false)</code>; <code>SendDataToDB(orderRequest)</code>
+    </div></div>
+    <div class="then-step"><div class="num-badge">!</div><div class="content"><strong>catch(Exception ae):</strong> <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></div></div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 8 ═══ -->
+<span class="section-anchor" id="s8"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128268;</span> 8. System &amp; Integration Dependencies</div>
+  <div class="card-body">
+
+    <div class="sub-header">8.1 Order Type / Scenario Dependencies</div>
+    <table>
+      <thead><tr><th>Condition</th><th>Value / Criteria</th><th>Effect</th></tr></thead>
+      <tbody>
+        <tr><td>ActivityID match</td><td><code>CCBS_ADD_PP_OU</code></td><td>Only orders whose process flow references this activity ID are eligible</td></tr>
+        <tr><td>ServiceType filter</td><td><code>ServiceType = '80'</code> (Postpaid Package)</td><td>Only Offers with ServiceType 80 are selected as <code>varPP</code>; other offer types ignored</td></tr>
+        <tr><td>LargeCustomer override</td><td><code>LargeCustomerIndicator = 89</code></td><td>Triggers tomorrowLogicalDate calculation (currently computed but not injected into XSLT payload in this rule version)</td></tr>
+        <tr><td>OU hierarchy scope</td><td>Both ParentOU and ChildOU agreements</td><td>Events sent for both levels; ChildOU processed first per inner loop</td></tr>
+        <tr><td>PreExecCheck gate</td><td>Configured in Activity.PreExecCheck field</td><td>If non-empty, filters individual OUs; all pass when blank</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header">8.2 ESB / JMS Channel Dependencies</div>
+    <table>
+      <thead><tr><th>Direction</th><th>Channel URI</th><th>Destination</th><th>Protocol</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><span class="badge badge-orange">OUTBOUND</span></td>
+          <td><code>/Channels/OMXFMConnectionRequest</code></td>
+          <td><code>CCBS_ADD_AGREEOFFER</code></td>
+          <td><span class="badge badge-jms">JMS</span></td>
+          <td>Delivers addOfferRequest payload to CCBS FM backend</td>
+        </tr>
+        <tr>
+          <td><span class="badge badge-orange">OUTBOUND</span></td>
+          <td><code>/Channels/LogConnection</code></td>
+          <td><code>AuditLog</code></td>
+          <td><span class="badge badge-log">LOG</span></td>
+          <td>Writes audit trail for each dispatched request</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header">8.3 Backend API Details</div>
+    <table>
+      <thead><tr><th>System</th><th>Operation</th><th>Schema / Namespace</th><th>Protocol</th><th>Correlation Pattern</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><strong>CCBS</strong></td>
+          <td><code>addOfferRequest / AddOfferRequest</code></td>
+          <td><code>http://services.omx.truecorp.co.th/FMServices/addOfferRequest</code><br/><small>Schema file: <code>_SharedResources\Schemas\FM\FM_AddOfferRequest.xsd</code></small></td>
+          <td>JMS (async)</td>
+          <td><code>JMSCorrelationID = orderRequest.@extId</code>; response matched via <code>CCBS_ADD_AGREEOFFER</code> response event</td>
+        </tr>
+        <tr>
+          <td><strong>CCBS</strong></td>
+          <td>GetSequenceValue (SOC_SEQ_NO)</td>
+          <td><code>http://www.tibco.com/schemas/tibco-ccbs-client/Schemas/SubscriberServices/SequenceValue/Schema.xsd</code></td>
+          <td>Embedded in same request payload</td>
+          <td>Increment by <code>countOfers + countRelatedOffersArray</code></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header">8.4 BE Working Memory Dependencies</div>
+    <table>
+      <thead><tr><th>Concept Field</th><th>Access</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>orderRequest.ProcessFlow.NextActivityName</code></td><td>READ</td><td>JOIN key and extId for nextAct lookup</td></tr>
+        <tr><td><code>orderRequest.ProcessFlow.NextActivityID</code></td><td>READ</td><td>WHEN condition guard</td></tr>
+        <tr><td><code>orderRequest.IsOrderResubmitted</code></td><td>READ</td><td>Drives resubmit path</td></tr>
+        <tr><td><code>orderRequest.OrderData.Customer.ParentOU[]</code></td><td>READ</td><td>Outer loop source</td></tr>
+        <tr><td><code>parentOu.ChildOU[]</code></td><td>READ</td><td>Inner loop source</td></tr>
+        <tr><td><code>childOu / parentOu .Agreement.Offers[]</code></td><td>READ</td><td>Offer data including ServiceType, Soc, EffectiveDate, RCIndicator, RelatedOffersArray, ParameterInfo</td></tr>
+        <tr><td><code>orderRequest.OrderData.Customer.CustomerGeneralInfo.LargeCustomerIndicator</code></td><td>READ</td><td>Controls tomorrowLogicalDate computation</td></tr>
+        <tr><td><code>orderRequest.OrderData.Customer.Account[].AccountID</code></td><td>READ</td><td>Used as <code>targetPayChannelId</code> when RCIndicator=65</td></tr>
+        <tr><td><code>orderCurrentActivity.RequestCount</code></td><td>READ / WRITE</td><td>Read for resubmit check; incremented on each event dispatch (non-resubmit path)</td></tr>
+        <tr><td><code>orderCurrentActivity.Status</code></td><td>WRITE</td><td>Set to IN_PROGRESS on success, SKIPPED on skip, ERROR on exception</td></tr>
+        <tr><td><code>orderCurrentActivity.PreExecCheck</code></td><td>READ</td><td>XPath expression used as filter gate per OU agreement</td></tr>
+        <tr><td><code>orderCurrentActivity@parent.NextActivityName / NextActivityID</code></td><td>WRITE (via SkipActivity)</td><td>Updated when activity is skipped to advance flow</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header">8.5 ExtendedInfo Fields Required</div>
+    <p style="font-size:0.86rem;color:#555;margin:8px 0;">No <code>ExtendedInfo[Name=...]/Value</code> patterns are used in this rule's XSLT. The payload is constructed directly from Agreement / Offer concept fields.</p>
+
+    <div class="sub-header">8.6 Global Variable Dependencies</div>
+    <table>
+      <thead><tr><th>Global Variable Path</th><th>Usage</th><th>Default / Notes</th></tr></thead>
+      <tbody>
+        <tr><td><code>OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>Controls inclusion of UserName / PassWord fields in XSLT event (ChildOU path only)</td><td>Must equal <code>'true'</code> to emit credentials</td></tr>
+        <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit log <code>COMPONENT_NAME</code></td><td>e.g. <code>OMX_CEP</code></td></tr>
+        <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit log <code>TARGET_SYSTEM</code></td><td>e.g. <code>OMX_FM</code></td></tr>
+        <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit log <code>LOG_LEVEL</code></td><td><code>INFO</code></td></tr>
+        <tr><td><code>OMX_OM/WritePayload</code></td><td>Controls whether <code>reqEvent</code> payload body is copied into audit log</td><td>Only when value equals <code>"true"</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 9 ═══ -->
+<span class="section-anchor" id="s9"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128196;</span> 9. Detailed Payload Build — XSLT Decomposition</div>
+  <div class="card-body">
+
+    <div class="note-box" style="margin-bottom:16px;">
+      Two nearly-identical XSLT templates exist in this rule — one scoped to <strong>ChildOU</strong> (lines 53, 60) and one to <strong>ParentOU</strong> (lines 77, 84).
+      The description below covers both; differences are noted inline.
+    </div>
+
+    <div class="sub-header">9.1 XSLT Parameter Binding</div>
+    <table>
+      <thead><tr><th>XSLT Parameter</th><th>ChildOU Source</th><th>ParentOU Source</th></tr></thead>
+      <tbody>
+        <tr><td><code>$orderRequest</code></td><td colspan="2">Bound from BE working memory — full OrderRequest concept</td></tr>
+        <tr><td><code>$childOu</code> / <code>$parentOu</code></td><td>Current <code>childOu</code> loop variable</td><td>Current <code>parentOu</code> loop variable</td></tr>
+        <tr><td><code>$globalVariables</code></td><td colspan="2">Engine global variable tree</td></tr>
+        <tr><td><code>$countOfers</code></td><td colspan="2">XPath count of <code>Agreement/Offers</code> on current OU</td></tr>
+        <tr><td><code>$countRelatedOffersArray</code></td><td colspan="2">XPath count of <code>Agreement/*/RelatedOffersArray</code> on current OU</td></tr>
+        <tr><td><code>$varPP</code></td><td><code>$childOu/Agreement/Offers[ServiceType='80']</code></td><td><code>$parentOu/Agreement/Offers[ServiceType='80']</code></td></tr>
+        <tr><td><code>$varTargetPcn</code> / <code>$varTargerPcn</code></td><td><code>$orderRequest/OrderData/Customer/Account[AgreementRefId=$childOu/Agreement/RefId][1]/AccountID</code></td><td><code>$orderRequest/OrderData/Customer/Account[AgreementRefId=$parentOu/Agreement/RefId][1]/AccountID</code> <span class="badge badge-orange">Note: typo "Targertarger" in parentOu variant</span></td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header">9.2 Event Container Construction</div>
+    <p style="font-size:0.86rem;margin:8px 0;">Event type: <code>Events.OMConsumers.OMXFM.Request.CCBS_ADD_AGREEOFFER</code> — created via <code>Event.createEvent("xslt://{{/Events/OMConsumers/OMXFM/Request/CCBS_ADD_AGREEOFFER}}...")</code>. No static <code>extId</code> is set on the event; correlation is via <code>JMSCorrelationID</code>.</p>
+
+    <div class="sub-header">9.3 JMS / Event Header Fields</div>
+    <table>
+      <thead><tr><th>Field</th><th>Source XPath</th><th>Condition</th></tr></thead>
+      <tbody>
+        <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td>Always emitted</td></tr>
+        <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/@extId</code></td><td><code>xsl:if test="$orderRequest/@extId"</code></td></tr>
+        <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td><code>xsl:if test="$orderRequest/OrderData/OrderID"</code></td></tr>
+        <tr><td><code>RefID</code></td><td><code>$childOu/RefId</code> or <code>$parentOu/RefId</code></td><td><code>xsl:if test="[ou]/RefId"</code></td></tr>
+        <tr><td><code>UserName</code></td><td><code>$orderRequest/OrderData/User</code></td><td>Only if <code>IsEnableUserPass='true'</code> AND User element exists (ChildOU only — ParentOU path also wraps PassWord inside same IsEnableUserPass block)</td></tr>
+        <tr><td><code>PassWord</code></td><td><code>$orderRequest/OrderData/Password</code></td><td>ChildOU: outside IsEnableUserPass block (always if Password exists); ParentOU: inside IsEnableUserPass block</td></tr>
+        <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td><code>xsl:if</code></td></tr>
+        <tr><td><code>CES</code></td><td><code>$orderRequest/OrderData/CES</code></td><td><code>xsl:if</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header">9.4 Payload Root Element</div>
+    <p style="font-size:0.86rem;margin:8px 0;">Namespace: <code>ns = http://services.omx.truecorp.co.th/FMServices/addOfferRequest</code><br/>
+    Namespace: <code>ns1 = http://www.tibco.com/schemas/tibco-ccbs-client/Schemas/SubscriberServices/SequenceValue/Schema.xsd</code></p>
+    <pre><code><span class="xml-tag">&lt;ns:addOfferRequest&gt;</span>
+  <span class="xml-tag">&lt;ns1:GetSequenceValueRequest&gt;</span>
+    <span class="xml-tag">&lt;ns1:sequenceName&gt;</span><span class="str">SOC_SEQ_NO</span><span class="xml-tag">&lt;/ns1:sequenceName&gt;</span>
+    <span class="xml-tag">&lt;ns1:incrementByCount&gt;</span><span class="num">$countOfers + $countRelatedOffersArray</span><span class="xml-tag">&lt;/ns1:incrementByCount&gt;</span>
+  <span class="xml-tag">&lt;/ns1:GetSequenceValueRequest&gt;</span>
+  <span class="xml-tag">&lt;ns:AddOfferRequest&gt;</span>
+    <span class="xml-tag">&lt;ns:AgreementIdInfo&gt;</span>
+      <span class="xml-tag">&lt;ns:agreementNo&gt;</span><span class="fn">number($[ou]/Agreement/AgreementId)</span><span class="xml-tag">&lt;/ns:agreementNo&gt;</span>
+    <span class="xml-tag">&lt;/ns:AgreementIdInfo&gt;</span>
+    ...
+  <span class="xml-tag">&lt;/ns:AddOfferRequest&gt;</span>
+<span class="xml-tag">&lt;/ns:addOfferRequest&gt;</span></code></pre>
+
+    <div class="sub-header">9.5 Conditional Fields (xsl:if)</div>
+    <table>
+      <thead><tr><th>Field</th><th>Parent Element</th><th>Condition Expression</th></tr></thead>
+      <tbody>
+        <tr><td><code>ns:effectiveDate</code></td><td>srvAgrInfo</td><td><code>$varPP/EffectiveDate</code></td></tr>
+        <tr><td><code>ns:name</code> (service)</td><td>srvAgrInfo</td><td><code>$varPP/OfferName</code></td></tr>
+        <tr><td><code>ns:name</code> (relatedOffer)</td><td>relatedOffers (for-each)</td><td><code>OfferName</code> (local node)</td></tr>
+        <tr><td><code>ns:chargeDistributionDetailsInfo</code> (PP level)</td><td>AddOfferRequest</td><td><code>$varPP/RCIndicator = 65</code></td></tr>
+        <tr><td><code>ns:chargeDistributionDetailsInfo</code> (related level)</td><td>AddOfferRequest (for-each)</td><td><code>RcIndicator = 65</code> (local, note lowercase 'c')</td></tr>
+        <tr><td><code>ns:targetPayChannelId</code></td><td>chargeDistributionDetailsInfo</td><td><code>$varTargetPcn</code> (or <code>$varTargerPcn</code>) is non-empty</td></tr>
+        <tr><td><code>ns:activityReason</code></td><td>activityInfo</td><td><code>xsl:choose</code>: from <code>AgreementActivityInfo/ActivityReason</code> if non-blank (after tib:trim), else static "CREQ"</td></tr>
+        <tr><td><code>ns:userText</code></td><td>activityInfo</td><td><code>$[ou]/Agreement/AgreementActivityInfo/UserText</code></td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header">9.6 Core Payload — services &amp; parameterInfo Block</div>
+    <table>
+      <thead><tr><th>Element</th><th>Source</th><th>Loop / Condition</th></tr></thead>
+      <tbody>
+        <tr><td><code>ns:srvAgrInfo / ns:soc</code></td><td><code>$varPP/Soc</code></td><td>Always (varPP is ServiceType=80 offer)</td></tr>
+        <tr><td><code>ns:relatedOffers</code> block</td><td><code>$varPP/RelatedOffersArray</code></td><td><code>xsl:for-each</code></td></tr>
+        <tr><td><code>ns:parameterInfo</code> (primary)</td><td><code>$varPP/ParameterInfo</code></td><td><code>xsl:for-each</code>; values = <code>ValuesArray[1]</code></td></tr>
+        <tr><td><code>ns:parameterInfo</code> (related)</td><td><code>$varPP/RelatedOffersArray/ParameterInfo</code></td><td><code>xsl:for-each</code>; soc = <code>../Soc</code></td></tr>
+        <tr><td><code>ns:chargeDistributionDetailsInfo / ns:soc</code></td><td><code>$varPP/Soc</code> or local <code>Soc</code></td><td>Only when RCIndicator/RcIndicator = 65</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header">9.7 Complete Generated XML Example (illustrative)</div>
+    <pre><code><span class="xml-tag">&lt;createEvent&gt;</span>
+  <span class="xml-tag">&lt;event&gt;</span>
+    <span class="xml-tag">&lt;JMSPriority&gt;</span><span class="num">5</span><span class="xml-tag">&lt;/JMSPriority&gt;</span>
+    <span class="xml-tag">&lt;JMSCorrelationID&gt;</span><span class="str">ORD-20240601-001234</span><span class="xml-tag">&lt;/JMSCorrelationID&gt;</span>
+    <span class="xml-tag">&lt;OrderID&gt;</span><span class="str">20240601001234</span><span class="xml-tag">&lt;/OrderID&gt;</span>
+    <span class="xml-tag">&lt;RefID&gt;</span><span class="str">COU-001</span><span class="xml-tag">&lt;/RefID&gt;</span>
+    <span class="xml-tag">&lt;UserName&gt;</span><span class="str">dealer01</span><span class="xml-tag">&lt;/UserName&gt;</span>
+    <span class="xml-tag">&lt;PassWord&gt;</span><span class="str">***</span><span class="xml-tag">&lt;/PassWord&gt;</span>
+    <span class="xml-tag">&lt;OrderType&gt;</span><span class="str">NEW_INSTALL</span><span class="xml-tag">&lt;/OrderType&gt;</span>
+    <span class="xml-tag">&lt;CES&gt;</span><span class="str">CES001</span><span class="xml-tag">&lt;/CES&gt;</span>
+    <span class="xml-tag">&lt;payload&gt;</span>
+      <span class="xml-tag">&lt;ns:addOfferRequest&gt;</span>
+        <span class="xml-tag">&lt;ns1:GetSequenceValueRequest&gt;</span>
+          <span class="xml-tag">&lt;ns1:sequenceName&gt;</span><span class="str">SOC_SEQ_NO</span><span class="xml-tag">&lt;/ns1:sequenceName&gt;</span>
+          <span class="xml-tag">&lt;ns1:incrementByCount&gt;</span><span class="num">3</span><span class="xml-tag">&lt;/ns1:incrementByCount&gt;</span>
+        <span class="xml-tag">&lt;/ns1:GetSequenceValueRequest&gt;</span>
+        <span class="xml-tag">&lt;ns:AddOfferRequest&gt;</span>
+          <span class="xml-tag">&lt;ns:AgreementIdInfo&gt;</span>
+            <span class="xml-tag">&lt;ns:agreementNo&gt;</span><span class="num">987654321</span><span class="xml-tag">&lt;/ns:agreementNo&gt;</span>
+          <span class="xml-tag">&lt;/ns:AgreementIdInfo&gt;</span>
+          <span class="xml-tag">&lt;ns:services&gt;</span>
+            <span class="xml-tag">&lt;ns:srvAgrInfo&gt;</span>
+              <span class="xml-tag">&lt;ns:effectiveDate&gt;</span><span class="str">2024-06-01T00:00:00+07:00</span><span class="xml-tag">&lt;/ns:effectiveDate&gt;</span>
+              <span class="xml-tag">&lt;ns:name&gt;</span><span class="str">PP_UNLIMITED_PLUS</span><span class="xml-tag">&lt;/ns:name&gt;</span>
+              <span class="xml-tag">&lt;ns:relatedOffers&gt;</span>
+                <span class="xml-tag">&lt;ns:name&gt;</span><span class="str">VAS_DATA_ADD</span><span class="xml-tag">&lt;/ns:name&gt;</span>
+                <span class="xml-tag">&lt;ns:soc&gt;</span><span class="str">VAS_D001</span><span class="xml-tag">&lt;/ns:soc&gt;</span>
+              <span class="xml-tag">&lt;/ns:relatedOffers&gt;</span>
+              <span class="xml-tag">&lt;ns:soc&gt;</span><span class="str">PP_UNL_001</span><span class="xml-tag">&lt;/ns:soc&gt;</span>
+            <span class="xml-tag">&lt;/ns:srvAgrInfo&gt;</span>
+          <span class="xml-tag">&lt;/ns:services&gt;</span>
+          <span class="xml-tag">&lt;ns:parameterInfo&gt;</span>
+            <span class="xml-tag">&lt;ns:name&gt;</span><span class="str">SPEED</span><span class="xml-tag">&lt;/ns:name&gt;</span>
+            <span class="xml-tag">&lt;ns:values&gt;</span><span class="str">100M</span><span class="xml-tag">&lt;/ns:values&gt;</span>
+            <span class="xml-tag">&lt;ns:soc&gt;</span><span class="str">PP_UNL_001</span><span class="xml-tag">&lt;/ns:soc&gt;</span>
+          <span class="xml-tag">&lt;/ns:parameterInfo&gt;</span>
+          <span class="xml-tag">&lt;ns:chargeDistributionDetailsInfo&gt;</span>
+            <span class="xml-tag">&lt;ns:soc&gt;</span><span class="str">PP_UNL_001</span><span class="xml-tag">&lt;/ns:soc&gt;</span>
+            <span class="xml-tag">&lt;ns:targetPayChannelId&gt;</span><span class="num">ACC-112233</span><span class="xml-tag">&lt;/ns:targetPayChannelId&gt;</span>
+          <span class="xml-tag">&lt;/ns:chargeDistributionDetailsInfo&gt;</span>
+          <span class="xml-tag">&lt;ns:activityInfo&gt;</span>
+            <span class="xml-tag">&lt;ns:activityReason&gt;</span><span class="str">CREQ</span><span class="xml-tag">&lt;/ns:activityReason&gt;</span>
+            <span class="xml-tag">&lt;ns:userText&gt;</span><span class="str">Customer requested PP upgrade</span><span class="xml-tag">&lt;/ns:userText&gt;</span>
+          <span class="xml-tag">&lt;/ns:activityInfo&gt;</span>
+        <span class="xml-tag">&lt;/ns:AddOfferRequest&gt;</span>
+      <span class="xml-tag">&lt;/ns:addOfferRequest&gt;</span>
+    <span class="xml-tag">&lt;/payload&gt;</span>
+  <span class="xml-tag">&lt;/event&gt;</span>
+<span class="xml-tag">&lt;/createEvent&gt;</span></code></pre>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 10 ═══ -->
+<span class="section-anchor" id="s10"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128203;</span> 10. XSLT Field Mapping Table</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Target XML Element</th><th>Type</th><th>Source XPath</th><th>Condition</th><th>OU Scope</th></tr></thead>
+      <tbody>
+        <tr><td><code>JMSPriority</code></td><td><span class="badge badge-blue">int</span></td><td><code>$orderRequest/OrderPriority</code></td><td>Always</td><td>Both</td></tr>
+        <tr><td><code>JMSCorrelationID</code></td><td><span class="badge badge-blue">String</span></td><td><code>$orderRequest/@extId</code></td><td>If extId present</td><td>Both</td></tr>
+        <tr><td><code>OrderID</code></td><td><span class="badge badge-blue">String</span></td><td><code>$orderRequest/OrderData/OrderID</code></td><td>If present</td><td>Both</td></tr>
+        <tr><td><code>RefID</code></td><td><span class="badge badge-blue">String</span></td><td><code>$[ou]/RefId</code></td><td>If present</td><td>Both (different OU ref)</td></tr>
+        <tr><td><code>UserName</code></td><td><span class="badge badge-blue">String</span></td><td><code>$orderRequest/OrderData/User</code></td><td>IsEnableUserPass='true' AND User present</td><td>Both</td></tr>
+        <tr><td><code>PassWord</code></td><td><span class="badge badge-blue">String</span></td><td><code>$orderRequest/OrderData/Password</code></td><td>ChildOU: if Password present; ParentOU: inside IsEnableUserPass block</td><td>Both</td></tr>
+        <tr><td><code>OrderType</code></td><td><span class="badge badge-blue">String</span></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>If present</td><td>Both</td></tr>
+        <tr><td><code>CES</code></td><td><span class="badge badge-blue">String</span></td><td><code>$orderRequest/OrderData/CES</code></td><td>If present</td><td>Both</td></tr>
+        <tr><td><code>ns1:sequenceName</code></td><td><span class="badge badge-green">Literal</span></td><td><code>"SOC_SEQ_NO"</code></td><td>Always</td><td>Both</td></tr>
+        <tr><td><code>ns1:incrementByCount</code></td><td><span class="badge badge-blue">int</span></td><td><code>$countOfers + $countRelatedOffersArray</code></td><td>Always</td><td>Both (counts from respective OU)</td></tr>
+        <tr><td><code>ns:agreementNo</code></td><td><span class="badge badge-blue">number</span></td><td><code>number($[ou]/Agreement/AgreementId)</code></td><td>Always</td><td>Both</td></tr>
+        <tr><td><code>ns:effectiveDate</code></td><td><span class="badge badge-orange">Conditional</span></td><td><code>$varPP/EffectiveDate</code></td><td>If EffectiveDate present</td><td>Both</td></tr>
+        <tr><td><code>ns:name</code> (service)</td><td><span class="badge badge-orange">Conditional</span></td><td><code>$varPP/OfferName</code></td><td>If OfferName present</td><td>Both</td></tr>
+        <tr><td><code>ns:name</code> (relatedOffer)</td><td><span class="badge badge-orange">Conditional</span></td><td><code>OfferName</code> (local)</td><td>If OfferName present in RelatedOffers</td><td>Both</td></tr>
+        <tr><td><code>ns:soc</code> (relatedOffer)</td><td><span class="badge badge-blue">String</span></td><td><code>Soc</code> (local)</td><td>Always in for-each</td><td>Both</td></tr>
+        <tr><td><code>ns:soc</code> (srvAgrInfo)</td><td><span class="badge badge-blue">String</span></td><td><code>$varPP/Soc</code></td><td>Always</td><td>Both</td></tr>
+        <tr><td><code>ns:parameterInfo / ns:name</code></td><td><span class="badge badge-blue">String</span></td><td><code>ParamName</code></td><td>for-each ParameterInfo</td><td>Both</td></tr>
+        <tr><td><code>ns:parameterInfo / ns:values</code></td><td><span class="badge badge-blue">String</span></td><td><code>ValuesArray[1]</code></td><td>for-each ParameterInfo</td><td>Both</td></tr>
+        <tr><td><code>ns:parameterInfo / ns:soc</code></td><td><span class="badge badge-blue">String</span></td><td><code>../Soc</code></td><td>for-each ParameterInfo</td><td>Both</td></tr>
+        <tr><td><code>ns:chargeDistributionDetailsInfo / ns:soc</code></td><td><span class="badge badge-orange">Conditional</span></td><td><code>$varPP/Soc</code></td><td>RCIndicator = 65</td><td>Both</td></tr>
+        <tr><td><code>ns:chargeDistributionDetailsInfo / ns:targetPayChannelId</code></td><td><span class="badge badge-orange">Conditional</span></td><td><code>$varTargetPcn</code> / <code>$varTargerPcn</code></td><td>RCIndicator=65 AND pcn non-empty</td><td>Both</td></tr>
+        <tr><td><code>ns:activityReason</code></td><td><span class="badge badge-orange">Conditional</span></td><td><code>AgreementActivityInfo/ActivityReason</code> or static <code>"CREQ"</code></td><td>xsl:choose: ActivityReason non-blank → from data; else literal CREQ</td><td>Both</td></tr>
+        <tr><td><code>ns:userText</code></td><td><span class="badge badge-orange">Conditional</span></td><td><code>$[ou]/Agreement/AgreementActivityInfo/UserText</code></td><td>If UserText present</td><td>Both</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 11 ═══ -->
+<span class="section-anchor" id="s11"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128221;</span> 11. Audit Logging</div>
+  <div class="card-body">
+    <p style="font-size:0.86rem;margin-bottom:12px;">An audit log event is emitted after each successful <code>CCBS_ADD_AGREEOFFER</code> dispatch (once per qualifying OU). The Logger event is sent to channel <code>/Channels/LogConnection</code>, destination <code>AuditLog</code>.</p>
+    <table>
+      <thead><tr><th>Logger Field</th><th>Value / Source</th></tr></thead>
+      <tbody>
+        <tr><td><code>ESBUUID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code> (if present)</td></tr>
+        <tr><td><code>PROCESS_ID</code></td><td><code>concat($pid, "_REQ")</code> — nano-time based unique ID</td></tr>
+        <tr><td><code>COMPONENT_NAME</code></td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+        <tr><td><code>OPERATION_NAME</code></td><td>Static: <code>"CCBS_ADD_PP_OU"</code></td></tr>
+        <tr><td><code>TARGET_SYSTEM</code></td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+        <tr><td><code>LOG_LEVEL</code></td><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td></tr>
+        <tr><td><code>AUDIT_TRACE</code></td><td>Static: <code>"Request Sent for CCBS_ADD_PP_OU"</code></td></tr>
+        <tr><td><code>AUDIT_TS</code></td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+        <tr><td><code>payload / ns:ServicePayload</code></td><td><code>xsl:copy-of select="$reqEvent"</code> — only when <code>OMX_OM/WritePayload = "true"</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 12 ═══ -->
+<span class="section-anchor" id="s12"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128257;</span> 12. Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Trigger</th><th>Status Code</th><th>Status String</th><th>Mechanism</th></tr></thead>
+      <tbody>
+        <tr><td>Rule fires (pre-condition)</td><td>—</td><td><code>WAITING</code></td><td>WHEN condition guard on <code>orderCurrentActivity.Status</code></td></tr>
+        <tr><td>At least one event dispatched</td><td>1</td><td><code>IN_PROGRESS</code></td><td><code>orderCurrentActivity.Status = GetActivityStatusString("1", false)</code></td></tr>
+        <tr><td>No qualifying OU found (all skipped by PreExecCheck or no offers)</td><td>4</td><td><code>SKIPPED</code></td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code> internally calls <code>GetActivityStatusString("4", false)</code></td></tr>
+        <tr><td>Next activity after skip</td><td>0</td><td><code>WAITING</code></td><td>Set by <code>SkipActivity</code> on next activity in chain</td></tr>
+        <tr><td>Exception caught</td><td>3</td><td><code>ERROR</code></td><td><code>HandleActivityException</code> calls <code>GetActivityStatusString("3", false)</code></td></tr>
+      </tbody>
+    </table>
+    <div class="note-box" style="margin-top:12px;">
+      The transition to <code>SUCCESS</code> is driven by the corresponding <strong>Response rule</strong>
+      (<code>Response_CCBS_ADD_PP_OU</code>) when the CCBS reply event arrives. This rule only
+      advances the activity to <code>IN_PROGRESS</code>.
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 13 ═══ -->
+<span class="section-anchor" id="s13"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#9888;</span> 13. Exception / Error Handling</div>
+  <div class="card-body">
+    <p style="font-size:0.86rem;margin-bottom:12px;">A single top-level <code>try/catch</code> wraps all logic in the THEN block. Any exception routes to:</p>
+    <pre><code><span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);</code></pre>
+    <div class="sub-header">HandleActivityException behaviour</div>
+    <table>
+      <thead><tr><th>Action</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Build response code</td><td><code>compNm + svcCode + opCode + sev(03) + errCode(999)</code> — High-severity generic error</td></tr>
+        <tr><td>Set activity status</td><td><code>orderCurrentActivity.Status = "ERROR"</code></td></tr>
+        <tr><td>Set activity response</td><td><code>orderCurrentActivity.ResponseCode = respCode</code>; <code>ResponseMessage = ae@message</code></td></tr>
+        <tr><td>Set order status</td><td><code>orderRequest.OrderStatus = GetOrderStatusString(3)</code> → FAILED</td></tr>
+        <tr><td>Set order response</td><td><code>orderRequest.ResponseCode = respCode</code>; <code>ResponseMessage = ae@message</code></td></tr>
+        <tr><td>Call SetResponseCode</td><td><code>SetResponseCode(orderRequest, activityID, "", respCode, ae@message)</code></td></tr>
+        <tr><td>Fire error Logger event</td><td>Sends to <code>/Channels/LogConnection/ErrorLog</code>; includes ERROR_CODE, ERROR_MSG, ERROR_STACKTRACE</td></tr>
+        <tr><td>Trigger exception flow</td><td>If <code>ExceptionActivity</code> is set on the current activity, re-routes flow to that activity and sets its status to WAITING</td></tr>
+        <tr><td>Persist to DB</td><td><code>SendDataToDB(orderRequest)</code></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 14 ═══ -->
+<span class="section-anchor" id="s14"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128295;</span> 14. Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Function</th><th>Signature</th><th>Validity</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr>
+          <td><code>PurgePendingRequestsBeforeResubmit</code></td>
+          <td><code>void (Activity orderCurrentActivity)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>On resubmit path: iterates <code>orderCurrentActivity.Request.RequestEventExtID[]</code>, consumes pending events from the rete network, decrements <code>RequestCount</code>. Logs with DEBUG level.</td>
+        </tr>
+        <tr>
+          <td><code>GetXMLForAgreementInChildOU</code></td>
+          <td><code>String (OrderRequest orderRequest, String agreeRefId, String parentOURefId)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Serialises a subset of orderRequest scoped to a specific ChildOU agreement (by RefId within a ParentOU). Returns XML string used to evaluate <code>nextAct.PreExecCheck</code> XPath.</td>
+        </tr>
+        <tr>
+          <td><code>GetXMLForAgreement</code></td>
+          <td><code>String (OrderRequest orderRequest, String agreeRefId)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Serialises a subset of orderRequest scoped to a specific ParentOU agreement. Returns XML string for PreExecCheck evaluation.</td>
+        </tr>
+        <tr>
+          <td><code>SkipActivity</code></td>
+          <td><code>void (OrderRequest orderRequest, Activity orderCurrentActivity, String currentActivityStatus)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Marks activity as SKIPPED (status "4"), walks the next-activity chain to find the next non-SUCCESS activity, updates flow pointer, and either completes the order (if all done) or advances to next WAITING step.</td>
+        </tr>
+        <tr>
+          <td><code>GetActivityStatusString</code></td>
+          <td><code>String (String completionStatus, boolean isResponseCode)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Maps numeric codes to status strings: 0→WAITING, 1→IN_PROGRESS, 2→SUCCESS, 3→ERROR, 4→SKIPPED, 5→BLOCKING. When isResponseCode=true, inspects last 3 chars of a response code to determine SUCCESS vs ERROR.</td>
+        </tr>
+        <tr>
+          <td><code>SendDataToDB</code></td>
+          <td><code>void (OrderRequest orderRequest)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Persists the full OrderRequest concept state to the backing data store. Called after every state-changing operation (skip, in_progress, exception).</td>
+        </tr>
+        <tr>
+          <td><code>HandleActivityException</code></td>
+          <td><code>void (OrderRequest orderRequest, Activity orderCurrentActivity, Exception ae, String inRefId)</code></td>
+          <td><span class="badge badge-orange">ACTION</span></td>
+          <td>Centralised error handler — see §13 for full behaviour.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 15 ═══ -->
+<span class="section-anchor" id="s15"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#127795;</span> 15. Function Dependency Tree</div>
+  <div class="card-body">
+    <div class="fn-tree">Request_CCBS_ADD_PP_OU  (rule)
+├── RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit
+│   └── [reads/writes orderCurrentActivity.Request.RequestEventExtID[]]
+│
+├── RuleFunctions.Helpers.GetXMLForAgreementInChildOU
+│   └── [serialises childOU-scoped agreement XML via Instance operations]
+│
+├── RuleFunctions.Helpers.GetXMLForAgreement
+│   └── [serialises parentOU-scoped agreement XML via Instance operations]
+│
+├── Event.createEvent  (CCBS_ADD_AGREEOFFER — XSLT inline, ×N per OU)
+│   └── Event.Ext.sendEventImmediate  →  /Channels/OMXFMConnectionRequest → CCBS
+│
+├── Event.createEvent  (Logger — XSLT inline, ×N per OU)
+│   └── Event.Ext.sendEventImmediate  →  /Channels/LogConnection → AuditLog
+│
+├── [skip path]
+│   └── RuleFunctions.Helpers.SkipActivity
+│       ├── RuleFunctions.Helpers.GetActivityStatusString  ("4" → SKIPPED)
+│       ├── RuleFunctions.Helpers.GetActivityStatusString  ("0" → WAITING, next act)
+│       ├── RuleFunctions.Helpers.GetOrderStatusString     (2 → SUCCESS, if chain done)
+│       ├── RuleFunctions.Helpers.BRMS.IsBlank             (utility)
+│       └── RuleFunctions.Helpers.SendDataToDB
+│
+├── [success path]
+│   ├── RuleFunctions.Helpers.GetActivityStatusString  ("1" → IN_PROGRESS)
+│   └── RuleFunctions.Helpers.SendDataToDB
+│
+└── [exception path]
+    └── RuleFunctions.Helpers.HandleActivityException
+        ├── RuleFunctions.Helpers.GetActivityStatusString  ("3" → ERROR)
+        ├── RuleFunctions.Helpers.GetOrderStatusString     (3 → FAILED)
+        ├── RuleFunctions.Helpers.SetResponseCode
+        ├── Event.Ext.routeToImmediate  (Logger error event)
+        │   └── /Channels/LogConnection/ErrorLog
+        └── RuleFunctions.Helpers.SendDataToDB</div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 16 ═══ -->
+<span class="section-anchor" id="s16"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128218;</span> 16. Concept Definitions Referenced</div>
+  <div class="card-body">
+
+    <div class="sub-header">Concepts.OrderRequest.OrderRequest</div>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>OrderPriority</td><td>int</td><td>JMS message priority</td></tr>
+        <tr><td>OrderStatus</td><td>String</td><td>Overall order lifecycle state</td></tr>
+        <tr><td>ProcessFlow</td><td>ContainedConcept → ProcessConfig</td><td>Holds NextActivityName, NextActivityID</td></tr>
+        <tr><td>OrderData</td><td>ContainedConcept → OrderData</td><td>Contains Customer (with ParentOU/ChildOU hierarchy), OrderID, OMXTrackingId, User, Password, OrderType, CES</td></tr>
+        <tr><td>IsOrderResubmitted</td><td>boolean</td><td>Resubmit flag</td></tr>
+        <tr><td>ResponseCode</td><td>String</td><td>Written on success or error</td></tr>
+        <tr><td>ResponseMessage</td><td>String</td><td>Written on success or error</td></tr>
+        <tr><td>IsExceptionFlowTriggered</td><td>boolean</td><td>Tracks exception flow state</td></tr>
+        <tr><td>ProfileStatus / NetworkStatus</td><td>String</td><td>Sub-status fields updated by SkipActivity on order completion</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header">Concepts.OM.ProcessConfig.Activity</div>
+    <table>
+      <thead><tr><th>Property</th><th>Type</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>Status</td><td>String</td><td>WAITING / IN_PROGRESS / SUCCESS / ERROR / SKIPPED</td></tr>
+        <tr><td>ActivityID</td><td>String</td><td>Unique activity identifier; matched in WHEN as "CCBS_ADD_PP_OU"</td></tr>
+        <tr><td>PreExecCheck</td><td>String</td><td>Optional XPath expression to filter OU processing</td></tr>
+        <tr><td>RequestCount</td><td>int</td><td>Counts dispatched requests; guards against duplicate sends on resubmit</td></tr>
+        <tr><td>NextActivity</td><td>String</td><td>extId of next activity in chain (used by SkipActivity)</td></tr>
+        <tr><td>ExceptionActivity</td><td>String</td><td>extId of exception-handler activity</td></tr>
+        <tr><td>ResubmitActivity</td><td>String</td><td>extId of activity to resume after FAILED state</td></tr>
+        <tr><td>ResponseCode / ResponseMessage</td><td>String</td><td>Populated on error by HandleActivityException</td></tr>
+        <tr><td>Response[]</td><td>ContainedConcept[] → ResponseBase</td><td>Array holding per-OU backend responses (written by Response rule)</td></tr>
+        <tr><td>Request</td><td>ContainedConcept → RequestBase</td><td>Holds <code>RequestEventExtID[]</code> used by PurgePendingRequests</td></tr>
+        <tr><td>Parameter[]</td><td>String[]</td><td>Configurable parameters for activity behaviour</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header">Key OrderData Sub-Concepts Used</div>
+    <table>
+      <thead><tr><th>Path</th><th>Fields Used</th></tr></thead>
+      <tbody>
+        <tr><td><code>OrderData.Customer.ParentOU[]</code></td><td>RefId, Agreement, ChildOU[]</td></tr>
+        <tr><td><code>ParentOU.ChildOU[]</code></td><td>RefId, Agreement</td></tr>
+        <tr><td><code>Agreement</code></td><td>RefId, AgreementId, Offers[], AgreementActivityInfo</td></tr>
+        <tr><td><code>Offers[]</code></td><td>ServiceType, Soc, OfferName, EffectiveDate, RCIndicator, RelatedOffersArray[], ParameterInfo[]</td></tr>
+        <tr><td><code>RelatedOffersArray[]</code></td><td>Soc, OfferName, RcIndicator (note lowercase 'c'), ParameterInfo[]</td></tr>
+        <tr><td><code>ParameterInfo[]</code></td><td>ParamName, ValuesArray[], Soc</td></tr>
+        <tr><td><code>AgreementActivityInfo</code></td><td>ActivityReason, UserText</td></tr>
+        <tr><td><code>OrderData.Customer.Account[]</code></td><td>AgreementRefId, AccountID (for targetPayChannelId)</td></tr>
+        <tr><td><code>OrderData.Customer.CustomerGeneralInfo</code></td><td>LargeCustomerIndicator</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 17 ═══ -->
+<span class="section-anchor" id="s17"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128736;</span> 17. Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+
+    <div class="sub-header">Functional Requirements</div>
+    <table>
+      <thead><tr><th>ID</th><th>Requirement</th></tr></thead>
+      <tbody>
+        <tr><td>R1</td><td>The replacement service MUST iterate the full ParentOU → ChildOU hierarchy for each order and send one AddOfferRequest per qualifying OU agreement.</td></tr>
+        <tr><td>R2</td><td>Only Offers with <code>ServiceType = '80'</code> (Postpaid Package) MUST be selected; other ServiceType values MUST be ignored.</td></tr>
+        <tr><td>R3</td><td>The SOC sequence number request MUST include <code>incrementByCount = count(Offers) + count(all RelatedOffersArray)</code> across the agreement.</td></tr>
+        <tr><td>R4</td><td>When <code>RCIndicator = 65</code> on a PP offer or its related offers, a <code>chargeDistributionDetailsInfo</code> block MUST be included with the matching Account's <code>AccountID</code> as <code>targetPayChannelId</code>.</td></tr>
+        <tr><td>R5</td><td>The <code>activityReason</code> field MUST default to <code>"CREQ"</code> when <code>AgreementActivityInfo.ActivityReason</code> is blank or absent.</td></tr>
+        <tr><td>R6</td><td>A configurable <code>PreExecCheck</code> XPath gate MUST be evaluated per OU before dispatch; OUs failing the check MUST be silently skipped.</td></tr>
+        <tr><td>R7</td><td>Resubmission MUST cancel any in-flight request events before re-sending (idempotency guard).</td></tr>
+        <tr><td>R8</td><td>When no qualifying OU is found the activity MUST be marked <strong>SKIPPED</strong> and the order flow MUST advance automatically.</td></tr>
+        <tr><td>R9</td><td>Credential fields (UserName / PassWord) MUST be configurable via a global flag; they MUST NOT be hardcoded in the transport layer.</td></tr>
+        <tr><td>R10</td><td>An audit log record MUST be emitted after each successful event dispatch, capturing ESBUUID, PROCESS_ID, OPERATION_NAME, AUDIT_TRACE, and optionally the full payload.</td></tr>
+      </tbody>
+    </table>
+
+    <div class="sub-header" style="margin-top:18px;">Design Risks</div>
+    <table>
+      <thead><tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr></thead>
+      <tbody>
+        <tr>
+          <td>Typo in variable name: <code>varTargerPcn</code> (ParentOU path) vs <code>varTargetPcn</code> (ChildOU path)</td>
+          <td><span class="badge badge-orange">MEDIUM</span></td>
+          <td>Standardise variable name to <code>varTargetPcn</code> across both templates in migration; add unit test for RCIndicator=65 scenarios on ParentOU agreements.</td>
+        </tr>
+        <tr>
+          <td>PassWord exposure inconsistency: ChildOU emits PassWord <em>outside</em> the <code>IsEnableUserPass</code> guard; ParentOU emits it <em>inside</em>.</td>
+          <td><span class="badge badge-red">HIGH</span></td>
+          <td>Decide on a single policy and apply uniformly. Recommend placing PassWord inside the same guard as UserName on all paths.</td>
+        </tr>
+        <tr>
+          <td><code>tomorrowLogicalDate</code> is computed but never injected into the XSLT payload</td>
+          <td><span class="badge badge-orange">MEDIUM</span></td>
+          <td>Investigate whether this is intentional (dead code) or an omitted feature. If intentional, remove to reduce confusion. If needed, wire it to <code>effectiveDate</code> for LargeCustomer orders.</td>
+        </tr>
+        <tr>
+          <td>Single global <code>try/catch</code> covers both ChildOU and ParentOU loops; a failure in ChildOU loop will abort ParentOU processing</td>
+          <td><span class="badge badge-orange">MEDIUM</span></td>
+          <td>In modern architecture consider per-OU error isolation, allowing partial success and per-agreement retry.</td>
+        </tr>
+        <tr>
+          <td><code>RCIndicator</code> uses uppercase 'C' on the primary offer but lowercase 'c' (<code>RcIndicator</code>) on RelatedOffersArray items</td>
+          <td><span class="badge badge-orange">MEDIUM</span></td>
+          <td>Verify CCBS schema whether this is intentional; normalise field names in the target data model.</td>
+        </tr>
+        <tr>
+          <td>Inline XSLT embedded in rule strings is not independently versionable or testable</td>
+          <td><span class="badge badge-orange">MEDIUM</span></td>
+          <td>Extract XSLT to named transform files or implement as a mapping function in the target platform for independent unit testing.</td>
+        </tr>
+        <tr>
+          <td>SOC sequence number is requested within the same JMS payload as the offer add — introduces coupling to CCBS sequence service</td>
+          <td><span class="badge badge-blue">LOW</span></td>
+          <td>In microservices target, consider a dedicated sequence-reserve step before offer dispatch, or an idempotency key approach.</td>
+        </tr>
+        <tr>
+          <td>No explicit null-check for <code>varPP</code> — if no Offer with ServiceType=80 exists but the Agreement has other offers, XSLT will produce an empty <code>srvAgrInfo</code></td>
+          <td><span class="badge badge-blue">LOW</span></td>
+          <td>Add guard: only proceed when <code>$varPP</code> node-set is non-empty; the outer <code>if(Offers@length &gt; 0)</code> does not guarantee a ServiceType=80 offer exists.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ SECTION 18 ═══ -->
+<span class="section-anchor" id="s18"></span>
+<div class="card">
+  <div class="card-header"><span class="icon">&#128196;</span> 18. Full Source Code</div>
+  <div class="card-body">
+<pre><code><span class="cmt">/**
+ * @description
+ * @author warawich-nb
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request</span>.<span class="fn">Request_CCBS_ADD_PP_OU</span> {
+    <span class="kw">attribute</span> {
+        priority = <span class="num">5</span>;
+        forwardChain = <span class="kw">true</span>;
+    }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity<span class="xml-attr">@extId</span> == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="str">"CCBS_ADD_PP_OU"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="str">"CCBS_ADD_PP_OU"</span>;
+        orderCurrentActivity.Status == <span class="str">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="ty">boolean</span> isActResub = (orderCurrentActivity.RequestCount&gt;<span class="num">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+
+        <span class="kw">try</span> {
+            <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct = <span class="fn">Instance.getByExtIdByUri</span>(
+                orderRequest.ProcessFlow.NextActivityName,
+                <span class="str">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="ty">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="kw">if</span>(isActResub) {
+                <span class="fn">RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit</span>(orderCurrentActivity);
+            }
+
+            <span class="ty">String</span> tomorrowLogicalDate = <span class="str">""</span>;
+            <span class="kw">if</span>(<span class="fn">XPath.evalAsBoolean</span>(<span class="str">"xpath://...LargeCustomerIndicator=89..."</span>)){
+                tomorrowLogicalDate = <span class="fn">DateTime.format</span>(<span class="fn">DateTime.addDay</span>(<span class="fn">DateTime.now</span>(),<span class="num">1</span>),<span class="str">"yyyy-MM-dd'T'00:00:00XXX"</span>);
+            }
+
+            <span class="cmt">// ─── ChildOU Loop ─────────────────────────────────────────</span>
+            <span class="kw">for</span>(<span class="ty">int</span> iPou = <span class="num">0</span>; iPou &lt; orderRequest.OrderData.Customer.ParentOU<span class="xml-attr">@length</span>; iPou++){
+                <span class="ty">Concepts.OrderRequest.OrderElements.ParentOU</span> parentOu =
+                    orderRequest.OrderData.Customer.ParentOU[iPou];
+
+                <span class="kw">for</span>(<span class="ty">int</span> iCou = <span class="num">0</span>; iCou &lt; parentOu.ChildOU<span class="xml-attr">@length</span>; iCou++){
+                    <span class="ty">Concepts.OrderRequest.OrderElements.ChildOU</span> childOu = parentOu.ChildOU[iCou];
+
+                    <span class="kw">if</span>(childOu.Agreement != <span class="kw">null</span> &amp;&amp; childOu.Agreement.Offers<span class="xml-attr">@length</span> &gt; <span class="num">0</span>){
+                        <span class="ty">String</span> chkRes = <span class="str">"true"</span>;
+                        <span class="kw">if</span>(<span class="fn">String.length</span>(nextAct.PreExecCheck) &gt; <span class="num">0</span>) {
+                            <span class="ty">String</span> sXML = <span class="fn">RuleFunctions.Helpers.GetXMLForAgreementInChildOU</span>(
+                                orderRequest, childOu.Agreement.RefId, parentOu.RefId);
+                            chkRes = <span class="fn">XPath.execute</span>(<span class="str">"/("+nextAct.PreExecCheck+")"</span>, sXML,
+                                <span class="str">"ns0=www.tibco.com/be/ontology/Concepts/OrderRequest/OrderRequest"</span>);
+                        }
+
+                        <span class="kw">if</span>(<span class="fn">String.equals</span>(chkRes,<span class="str">"true"</span>)) {
+                            <span class="ty">int</span> countOfers = <span class="fn">XPath.evalAsInt</span>(<span class="str">"xpath://...count($childOu/Agreement/Offers)..."</span>);
+                            <span class="ty">int</span> countRelatedOffersArray = <span class="fn">XPath.evalAsInt</span>(<span class="str">"xpath://...count($childOu/Agreement/*/RelatedOffersArray)..."</span>);
+
+                            <span class="ty">Events.OMConsumers.OMXFM.Request.CCBS_ADD_AGREEOFFER</span> reqEvent =
+                                <span class="fn">Event.createEvent</span>(<span class="str">"xslt://{{/Events/OMConsumers/OMXFM/Request/CCBS_ADD_AGREEOFFER}}..."</span>);
+                            <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+
+                            <span class="kw">if</span>(!isActResub){ orderCurrentActivity.RequestCount++; }
+                            isSkipped = <span class="kw">false</span>;
+
+                            <span class="ty">long</span> pid = <span class="fn">System.nanoTime</span>();
+                            <span class="fn">Event.Ext.sendEventImmediate</span>(<span class="fn">Event.createEvent</span>(<span class="str">"xslt://{{/Events/OMConsumers/OMXESB/Logger}}..."</span>));
+                        }
+                    }
+                } <span class="cmt">// iCou</span>
+
+                <span class="cmt">// ─── ParentOU Agreement ────────────────────────────────────</span>
+                <span class="kw">if</span>(parentOu.Agreement != <span class="kw">null</span> &amp;&amp; parentOu.Agreement.Offers<span class="xml-attr">@length</span> &gt; <span class="num">0</span>){
+                    <span class="ty">String</span> chkRes = <span class="str">"true"</span>;
+                    <span class="kw">if</span>(<span class="fn">String.length</span>(nextAct.PreExecCheck) &gt; <span class="num">0</span>) {
+                        <span class="ty">String</span> sXML = <span class="fn">RuleFunctions.Helpers.GetXMLForAgreement</span>(
+                            orderRequest, parentOu.Agreement.RefId);
+                        chkRes = <span class="fn">XPath.execute</span>(<span class="str">"/("+nextAct.PreExecCheck+")"</span>, sXML,
+                            <span class="str">"ns0=www.tibco.com/be/ontology/Concepts/OrderRequest/OrderRequest"</span>);
+                    }
+
+                    <span class="kw">if</span>(<span class="fn">String.equals</span>(chkRes,<span class="str">"true"</span>)) {
+                        <span class="ty">int</span> countOfers = <span class="fn">XPath.evalAsInt</span>(<span class="str">"xpath://...count($parentOu/Agreement/Offers)..."</span>);
+                        <span class="ty">int</span> countRelatedOffersArray = <span class="fn">XPath.evalAsInt</span>(<span class="str">"xpath://...count($parentOu/Agreement/*/RelatedOffersArray)..."</span>);
+
+                        <span class="ty">Events.OMConsumers.OMXFM.Request.CCBS_ADD_AGREEOFFER</span> reqEvent =
+                            <span class="fn">Event.createEvent</span>(<span class="str">"xslt://{{/Events/OMConsumers/OMXFM/Request/CCBS_ADD_AGREEOFFER}}..."</span>);
+                        <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+
+                        <span class="kw">if</span>(!isActResub){ orderCurrentActivity.RequestCount++; }
+                        isSkipped = <span class="kw">false</span>;
+
+                        <span class="ty">long</span> pid = <span class="fn">System.nanoTime</span>();
+                        <span class="fn">Event.Ext.sendEventImmediate</span>(<span class="fn">Event.createEvent</span>(<span class="str">"xslt://{{/Events/OMConsumers/OMXESB/Logger}}..."</span>));
+                    }
+                }
+            } <span class="cmt">// iPou</span>
+
+            <span class="kw">if</span> (isSkipped){
+                <span class="fn">RuleFunctions.Helpers.SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="str">"4"</span>);
+            } <span class="kw">else</span> {
+                orderCurrentActivity.Status = <span class="fn">RuleFunctions.Helpers.GetActivityStatusString</span>(<span class="str">"1"</span>, <span class="kw">false</span>);
+                <span class="fn">RuleFunctions.Helpers.SendDataToDB</span>(orderRequest);
+            }
+
+        } <span class="kw">catch</span> ( <span class="ty">Exception</span> ae){
+            <span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+</div><!-- /container -->
+
+<footer>
+  TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &mdash; Generated 2026-06-17
+</footer>
+
+</body>
+</html>

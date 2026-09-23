@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request_CCBS_OFFER_POOLING_POOLED</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#212121}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;letter-spacing:.5px}
+.page-header .subtitle{opacity:.85;margin-top:6px;font-size:.95rem}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 20px}
+.card{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid var(--border)}tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+code,pre{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);font-size:.83rem;line-height:1.5}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}.badge-teal{background:#E0F2F1;color:#00695c}
+.warn-box{background:#FFF3E0;border-left:4px solid var(--warning);padding:12px 16px;border-radius:4px;margin-bottom:12px;font-size:.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+details summary{cursor:pointer;font-weight:600;color:var(--true-dark);padding:8px 0}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="subtitle">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_CCBS_OFFER_POOLING_POOLED</h1>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: CCBS / CES (GoldenDB routing)</span>
+    <span class="meta-chip">Pattern: Fire-and-Forget</span>
+    <span class="meta-chip">Author: SathidP-PC</span>
+    <span class="meta-chip">Generated: 2026-09-23</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header">§1 — Overview &amp; Purpose</div>
+<div class="card-body">
+<p>Collects poolable SOC codes from the order's Agreement Offers (filtered by <strong>SPECIAL_OFFER_INDICATOR = "RPD" or "CPD"</strong>) and RelatedOffers, then submits a single pooling request to CCBS (standard) or CES (when <code>OrderData.GoldenDB = "Y"</code>). The activity enables the bundled billing plan to be correctly pooled across parent and child OUs. If no eligible SOCs are found, no request is sent and the activity is skipped.</p>
+</div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+<div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="card-body">
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_OFFER_POOLING_POOLED</code></td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>ForwardChain</td><td>true</td></tr>
+<tr><td>Activity ID</td><td>CCBS_OFFER_POOLING_POOLED</td></tr>
+<tr><td>Author</td><td>SathidP-PC</td></tr>
+<tr><td>Backend (default)</td><td>CCBS — OfferPoolingPooled endpoint</td></tr>
+<tr><td>Backend (GoldenDB)</td><td>CES — OfferPoolingPooled endpoint</td></tr>
+<tr><td>Pattern</td><td><span class="badge badge-orange">Fire-and-Forget</span> (sendEventImmediate + RequestCount++)</td></tr>
+<tr><td>Response Concept</td><td>Concepts.FM.Response.CCBS_OfferPoolingpooledRes</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="card">
+<div class="card-header">§4 — Rule Conditions (WHEN)</div>
+<div class="card-body">
+<ol style="line-height:2;padding-left:20px">
+<li><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></li>
+<li><code>orderCurrentActivity.ActivityID == "CCBS_OFFER_POOLING_POOLED"</code></li>
+<li><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_OFFER_POOLING_POOLED"</code></li>
+<li><code>orderCurrentActivity.Status == "WAITING"</code></li>
+</ol>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+<div class="card-header">§5 — Execution Flow</div>
+<div class="card-body">
+<ol style="line-height:2;padding-left:20px">
+<li>Read <code>GoldenDB</code> flag from <code>OrderData.GoldenDB</code></li>
+<li>Collect SOC IDs from POU/ChildOU Agreement Offers where <code>SPECIAL_OFFER_INDICATOR == "RPD"</code> or <code>"CPD"</code></li>
+<li>Append SOC IDs from RelatedOffers (unconditionally)</li>
+<li>Guard: if <code>socIDs@length == 0</code> → SkipActivity; else proceed</li>
+<li>Determine event type: GoldenDB == "Y" → <code>CES_OFFER_POOLING_POOLED</code> (with CES extId); else → <code>CCBS_OFFER_POOLING_POOLED</code></li>
+<li>Build <code>ns:OfferPoolingPooledRequest</code> with one <code>&lt;SOCCode&gt;</code> per item in socIDs</li>
+<li><code>Event.Ext.sendEventImmediate(reqEvent)</code>; <code>RequestCount++</code></li>
+<li>Set activity to IN_PROGRESS; send audit log event</li>
+</ol>
+</div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+<div class="card-header">§8 — System &amp; Integration Dependencies</div>
+<div class="card-body">
+<h3 style="margin-bottom:10px;color:var(--true-dark)">§8.2 ESB / JMS Channel Dependencies</h3>
+<table>
+<tr><th>Direction</th><th>Event Type</th><th>Destination</th><th>Condition</th></tr>
+<tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>CCBS_OFFER_POOLING_POOLED</td><td>CCBS OfferPoolingPooled queue</td><td>GoldenDB ≠ "Y"</td></tr>
+<tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>CES_OFFER_POOLING_POOLED</td><td>CES OfferPoolingPooled queue</td><td>GoldenDB == "Y"</td></tr>
+<tr><td><span class="badge badge-blue">AUDIT LOG</span></td><td>OMXESB Logger</td><td>ESB audit channel</td><td>Always</td></tr>
+</table>
+
+<h3 style="margin-top:16px;margin-bottom:10px;color:var(--true-dark)">§8.5 ExtendedInfo Fields Required</h3>
+<table>
+<tr><th>Field</th><th>Source</th><th>Required</th></tr>
+<tr><td>GoldenDB (OrderData)</td><td>orderRequest.OrderData.GoldenDB</td><td>Optional — controls event routing</td></tr>
+<tr><td>SPECIAL_OFFER_INDICATOR</td><td>Agreement Offer ExtendedInfo</td><td>Required for SOC filtering</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §9 Payload -->
+<div class="card">
+<div class="card-header">§9 — Detailed Payload Build</div>
+<div class="card-body">
+<h3 style="margin-bottom:8px;color:var(--true-dark)">§9.3 Event Header Fields</h3>
+<table>
+<tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+<tr><td>JMSPriority</td><td>orderRequest/OrderPriority</td><td>Conditional</td></tr>
+<tr><td>JMSCorrelationID</td><td>orderRequest/OrderData/OMXTrackingId</td><td>Conditional</td></tr>
+<tr><td>OrderID</td><td>orderRequest/OrderData/OrderID</td><td>Conditional</td></tr>
+<tr><td>CES (extId)</td><td>OMXUtils:generateTrackingID()</td><td><strong>CES variant only</strong></td></tr>
+<tr><td>RefID</td><td>OMXTrackingId</td><td>Conditional</td></tr>
+<tr><td>OrderType</td><td>orderRequest/OrderData/OrderType</td><td>Conditional</td></tr>
+</table>
+
+<h3 style="margin-top:16px;margin-bottom:8px;color:var(--true-dark)">§9.4 Payload Root</h3>
+<pre>&lt;ns:OfferPoolingPooledRequest&gt;
+  &lt;SOCCode&gt;{socIDs[0]}&lt;/SOCCode&gt;
+  &lt;SOCCode&gt;{socIDs[1]}&lt;/SOCCode&gt;
+  ...  (one per item in socIDs array)
+&lt;/ns:OfferPoolingPooledRequest&gt;</pre>
+
+<h3 style="margin-top:16px;margin-bottom:8px;color:var(--true-dark)">§9.7 Complete Generated XML Example</h3>
+<pre>&lt;event&gt;
+  &lt;JMSPriority&gt;5&lt;/JMSPriority&gt;
+  &lt;JMSCorrelationID&gt;OMX-TRK-001&lt;/JMSCorrelationID&gt;
+  &lt;OrderID&gt;ORD-123456&lt;/OrderID&gt;
+  &lt;RefID&gt;OMX-TRK-001&lt;/RefID&gt;
+  &lt;OrderType&gt;11002&lt;/OrderType&gt;
+  &lt;payload&gt;
+    &lt;ns:OfferPoolingPooledRequest&gt;
+      &lt;SOCCode&gt;10001234&lt;/SOCCode&gt;
+      &lt;SOCCode&gt;10005678&lt;/SOCCode&gt;
+    &lt;/ns:OfferPoolingPooledRequest&gt;
+  &lt;/payload&gt;
+&lt;/event&gt;</pre>
+</div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="card">
+<div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+<div class="card-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="tree-cond">CES variant only</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:OfferPoolingPooledRequest</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">SOCCode</span><span class="tree-arrow">←</span><span class="tree-src">socIDs[i]</span><span class="tree-cond">for-each socIDs array</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<p style="margin-top:12px;font-size:.82rem;color:#666"><strong>Legend:</strong> <span class="tree-src">green</span> = XPath source &nbsp;|&nbsp; <span class="tree-src-static">orange</span> = static literal &nbsp;|&nbsp; <span class="tree-cond">purple italic</span> = xsl:if / condition &nbsp;|&nbsp; <span class="badge badge-orange">Conditional</span> = inside xsl:if &nbsp;|&nbsp; <span class="badge badge-green">Always</span> = unconditional</p>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+<div class="card-header">§15 — Function Dependency Tree</div>
+<div class="card-body">
+<pre>Request_CCBS_OFFER_POOLING_POOLED
+├── GetXMLForAgreementOffer(req, offerRefId)     ← filter by SPECIAL_OFFER_INDICATOR
+├── GetXMLForRelatedOffer(req, offerRefId)        ← unconditional
+├── OMXUtils.generateTrackingID()                 ← CES extId only
+├── Event.Ext.sendEventImmediate(reqEvent)        ← Fire-and-Forget
+├── AllowWriteLog(orderType)
+├── GetActivityStatusString("1", false)           ← IN_PROGRESS
+├── SendDataToDB(orderRequest)
+├── SkipActivity(req, activity, "4")              ← if socIDs empty
+└── HandleActivityException(req, activity, ae, "")</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+<div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="card-body">
+<table>
+<tr><th>#</th><th>Requirement / Risk</th><th>Severity</th></tr>
+<tr><td>R1</td><td>Implement GoldenDB routing: check <code>OrderData.GoldenDB == "Y"</code> → route to CES; else → CCBS</td><td><span class="badge badge-red">HIGH</span></td></tr>
+<tr><td>R2</td><td>Filter SOCs: include only Agreement Offers with SPECIAL_OFFER_INDICATOR = "RPD" or "CPD"; always include RelatedOffers</td><td><span class="badge badge-red">HIGH</span></td></tr>
+<tr><td>R3</td><td>Skip (do not send) if collected socIDs array is empty</td><td><span class="badge badge-orange">MEDIUM</span></td></tr>
+<tr><td>R4</td><td>CES event requires additional <code>CES</code> extId field via <code>generateTrackingID()</code>; CCBS variant does not</td><td><span class="badge badge-orange">MEDIUM</span></td></tr>
+<tr><td>R5</td><td>Response always returns "true" — no fan-in count check; activity advances after single response</td><td><span class="badge badge-blue">LOW</span></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+<div class="card-header">§19 — Response Message Rule</div>
+<div class="card-body">
+<h3 style="color:var(--true-dark);margin-bottom:10px">§19.1 Overview</h3>
+<p>Parses <code>CCBS_OFFER_POOLING_POOLED</code> response into a <code>CCBS_OfferPoolingpooledRes</code> concept. Extracts pooled SOC mappings from the response payload. Returns <code>"true"</code> unconditionally (no RequestCount fan-in check).</p>
+
+<h3 style="color:var(--true-dark);margin-top:14px;margin-bottom:10px">§19.2 Scope Variables</h3>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td>orderRequest</td><td>Concepts.OrderRequest.OrderRequest</td><td>Order context</td></tr>
+<tr><td>eventResponse</td><td>Events.OMConsumers.OMXFM.Response.CCBS_OFFER_POOLING_POOLED</td><td>Backend response</td></tr>
+<tr><td>currActivity</td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity state</td></tr>
+</table>
+
+<h3 style="color:var(--true-dark);margin-top:14px;margin-bottom:10px">§19.3 ResponseBase Concept Construction</h3>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject/object (CCBS_OfferPoolingpooledRes)</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">OfferPoolingpooledRes</span><span class="tree-cond">for-each PoolingPooledSocsReturn</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">PooledSOCCode</span><span class="tree-arrow">←</span><span class="tree-src">PooledSoc</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">PoolingSocCode</span><span class="tree-arrow">←</span><span class="tree-src">PoolingSocs/PoolingSoc</span><span class="tree-cond">for-each</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3 style="color:var(--true-dark);margin-top:14px;margin-bottom:10px">§19.4 Fan-in Completion</h3>
+<div class="warn-box">Response handler returns <strong><code>"true"</code> unconditionally</strong> — there is no <code>RequestCount == successResponseCount</code> check. The single pooling request is sent once; the activity advances on the first (and only) response.</div>
+
+<h3 style="color:var(--true-dark);margin-top:14px;margin-bottom:10px">§19.5 Response Audit Logging</h3>
+<p>OPERATION_NAME: <code>"CCBS_OFFER_POOLING_POOLED"</code> | AUDIT_TRACE: <code>"Response received for CCBS_OFFER_POOLING_POOLED"</code> | Payload gated on <code>WritePayload=true</code></p>
+</div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#666;font-size:.82rem">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</div>
+</div>
+</body>
+</html>

@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_ESIM_SWAP_SIM</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:13px;line-height:1.5}
+.hdr{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:28px 40px}
+.hdr h1{font-size:1.6rem;font-weight:700;margin-bottom:4px;word-break:break-all}
+.hdr .sub{opacity:.85;font-size:.9rem;margin-bottom:10px}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.15);border-radius:20px;padding:3px 12px;font-size:.78rem}
+.cont{max-width:1300px;margin:0 auto;padding:20px 32px}
+.sec{background:var(--card);border-radius:10px;margin-bottom:18px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.sec-hdr{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:9px 16px;font-size:.88rem;font-weight:600;border-left:4px solid var(--true-light)}
+.sec-body{padding:14px 16px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:7px 10px;text-align:left;font-weight:600}
+td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre.blk{background:var(--code-bg);color:var(--code-fg);padding:10px 14px;border-radius:6px;font-size:.75rem;overflow-x:auto;white-space:pre-wrap;border-left:3px solid var(--true-red)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600}
+.b-grn{background:#E8F5E9;color:var(--success)}.b-org{background:#FFF3E0;color:var(--warning)}
+.b-pur{background:#F3E5F5;color:var(--skip)}.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-blu{background:#E3F0FD;color:var(--info)}.b-tl{background:#E0F2F1;color:#00695c}
+.step{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.step-n{background:var(--true-red);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.8rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:2px 0 2px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:11px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 5px;border-radius:3px}
+.tree-src-s{color:#fab387;background:rgba(250,179,135,.1);padding:1px 5px;border-radius:3px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.tree-arrow{color:#6c7086;margin:0 4px}
+.warn-box{background:#FFE0E0;border-left:4px solid var(--true-red);padding:10px 14px;border-radius:4px;margin-bottom:10px;font-size:.83rem}
+.info-box{background:#FFF3E0;border-left:4px solid #e65100;padding:10px 14px;border-radius:4px;margin-bottom:10px;font-size:.83rem}
+footer{text-align:center;padding:16px;color:#888;font-size:.75rem;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>Request_CCBS_ESIM_SWAP_SIM</h1>
+  <div class="sub">Execute eSIM swap in CCBS via mSimData API; pre-populates PEID/PMATCHID ResourceInfo with Source=FE; sets IS_CALLED_MSIM_SWAP_SIM=Y — CRITICAL: response always returns "true" without checking fan-in count</div>
+  <div class="chips">
+    <span class="chip">Rule Priority: 5</span>
+    <span class="chip">ForwardChain: true</span>
+    <span class="chip">Backend: CCBS (eSIM)</span>
+    <span class="chip">Pattern: Fire-and-Forget</span>
+    <span class="chip">Author: sakarin-radchapunya</span>
+  </div>
+</div>
+<div class="cont">
+
+<div class="warn-box">⛔ <strong>Critical Migration Risk:</strong> The response rulefunction for CCBS_ESIM_SWAP_SIM always returns <code>"true"</code> unconditionally. There is NO fan-in count check — <code>successResponseCount</code> is never calculated. The engine declares completion after the first response regardless of how many requests were sent. This may cause partially-processed bulk eSIM swaps to appear complete. Target architecture must implement proper fan-in.</div>
+
+<div class="sec"><div class="sec-hdr">§1 — Overview &amp; Purpose</div><div class="sec-body">
+<p>This rule fires when the process reaches <code>CCBS_ESIM_SWAP_SIM</code> (steps 27 and 28 in SWAPSIM). It performs the eSIM swap call to CCBS via the same <code>mSimData/OUList</code> schema as CCBS_MSIM_SWAP_SIM but uses the eSIM endpoint and handles eSIM-specific resource types (PEID, PMATCHID). Before building the request, it pre-populates missing PEID ResourceInfo (from NEW_PEID, Source='FE') and PMATCHID ResourceInfo (from NEW_PMATCHID, Source='FE') on the subscriber. In the XSLT payload, <code>NEW_PEID</code> and <code>OLD_PEID</code> values are packed with subscriberId: <code>concat(ValuesArray, '_', $subscriber/SubscriberId)</code>. The pattern is <strong>fire-and-forget</strong> (<code>sendEventImmediate</code> + <code>RequestCount++</code>). As a side effect, <code>IS_CALLED_MSIM_SWAP_SIM=Y</code> is set on subscriber.ExtendedInfo to gate downstream steps 34 (CCBS_SWAP_SIM_POSTPAID_SUB).</p>
+<p style="margin-top:8px">Steps 27 and 28 both use ActivityID <code>CCBS_ESIM_SWAP_SIM</code> with different PreExecCheck conditions: step 27 handles non-bulk (no FILE_ID), step 28 handles bulk (FILE_ID exists).</p>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§2 — Rule Metadata</div><div class="sec-body">
+<table><tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_ESIM_SWAP_SIM</code></td></tr>
+<tr><td>Priority</td><td>5</td></tr><tr><td>ForwardChain</td><td>true</td></tr>
+<tr><td>Activity ID</td><td>CCBS_ESIM_SWAP_SIM</td></tr>
+<tr><td>Author</td><td>sakarin-radchapunya</td></tr>
+<tr><td>Backend System</td><td>CCBS (eSIM endpoint)</td></tr>
+<tr><td>Dispatch Pattern</td><td>Fire-and-Forget (sendEventImmediate + RequestCount++)</td></tr>
+<tr><td>Schema</td><td>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/MSim.xsd</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§4 — Rule Conditions (WHEN)</div><div class="sec-body">
+<table><tr><th>#</th><th>Condition</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_ESIM_SWAP_SIM"</code></td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_ESIM_SWAP_SIM"</code></td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§5 — Execution Flow</div><div class="sec-body">
+<div class="step"><div class="step-n">1</div><div>Loop POU[i] → Subscriber[j]; evaluate PreExecCheck; check reqSuccess guard</div></div>
+<div class="step"><div class="step-n">2</div><div><strong>Pre-populate PEID:</strong> if subscriber has no PEID ResourceInfo AND NEW_PEID has value → create PEID ResourceInfo with Source='FE', Values=NEW_PEID</div></div>
+<div class="step"><div class="step-n">3</div><div><strong>Pre-populate PMATCHID:</strong> if subscriber has no PMATCHID ResourceInfo AND NEW_PMATCHID has value → create PMATCHID ResourceInfo with Source='FE', Values=NEW_PMATCHID</div></div>
+<div class="step"><div class="step-n">4</div><div>Build mSimData payload (same schema as CCBS_MSIM_SWAP_SIM); for PEID/OLD_PEID values: <code>concat(ValuesArray, '_', subscriberId)</code></div></div>
+<div class="step"><div class="step-n">5</div><div>Send via <code>sendEventImmediate</code></div></div>
+<div class="step"><div class="step-n">6</div><div>If not resubmit: <code>RequestCount++</code>; set <code>IS_CALLED_MSIM_SWAP_SIM=Y</code></div></div>
+<div class="step"><div class="step-n">7</div><div>Repeat for ChildOU[k] → Subscriber[j]</div></div>
+<div class="step"><div class="step-n">8</div><div>If requests sent: set IN_PROGRESS, SendDataToDB; else SkipActivity</div></div>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§6 — eSIM ResourceInfo Pre-population</div><div class="sec-body">
+<table><tr><th>Source ResourceName</th><th>Target ResourceName</th><th>Target Source Attr</th><th>Condition</th></tr>
+<tr><td>NEW_PEID</td><td>PEID</td><td>FE</td><td>not(exists(subscriber/ResourceInfo[PEID])) AND NEW_PEID not blank</td></tr>
+<tr><td>NEW_PMATCHID</td><td>PMATCHID</td><td>FE</td><td>not(exists(subscriber/ResourceInfo[PMATCHID])) AND NEW_PMATCHID not blank</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§8 — System &amp; Integration Dependencies</div><div class="sec-body">
+<table><tr><th>Direction</th><th>Event</th><th>Backend</th></tr>
+<tr><td><span class="badge b-org">OUTBOUND</span></td><td>Events.OMConsumers.OMXFM.Request.CCBS_ESIM_SWAP_SIM</td><td>CCBS (eSIM)</td></tr>
+<tr><td><span class="badge b-tl">INBOUND</span></td><td>Events.OMConsumers.OMXFM.Response.CCBS_ESIM_SWAP_SIM</td><td>CCBS</td></tr>
+</table>
+<h4 style="margin:10px 0 6px;color:var(--true-dark)">ExtendedInfo Written</h4>
+<table><tr><th>Name</th><th>Value</th><th>When</th></tr>
+<tr><td>IS_CALLED_MSIM_SWAP_SIM</td><td>Y</td><td>After each sendEventImmediate (not resubmit)</td></tr>
+</table>
+<h4 style="margin:10px 0 6px;color:var(--true-dark)">Used in Steps (SWAPSIM)</h4>
+<table><tr><th>Step #</th><th>Step ExtId</th><th>PreExecCheck Summary</th></tr>
+<tr><td>27</td><td>CCBS_ESIM_SWAP_SIM</td><td>no FILE_ID + TARGET + NEW/OLD_PMATCHID&gt;0 + no NEW/OLD_EID + not IS_CALLED_MSIM_SWAP_SIM</td></tr>
+<tr><td>28</td><td>CCBS_ESIM_SWAP_SIM_BULK</td><td>FILE_ID exists + TARGET + NEW/OLD_PMATCHID&gt;0</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§9 — Payload Build (mSimData — eSIM variant)</div><div class="sec-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent / event</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">JMSPriority / JMSCorrelationID / OrderID / CES / OrderType</span><span class="badge b-org">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="badge b-pur">Credential-gated</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns:mSimData/ns:OUList</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:Subscriber/ns:subscriberId</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberId</span><span class="badge b-grn">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:MultiSIMInfo/ns:Master</span><span class="tree-arrow">←</span><span class="tree-src-s">(empty element)</span><span class="badge b-grn">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns1:ResourceInfo</span><span class="badge b-org">Conditional — for-each subscriber/ResourceInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:Values</span><span class="tree-arrow">←</span><span class="tree-src-s">if ResourceName = NEW_PEID or OLD_PEID: concat(ValuesArray, '_', subscriberId)</span><span class="badge b-red">eSIM-specific packing</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:Values</span><span class="tree-arrow">←</span><span class="tree-src">$ri/ValuesArray</span><span class="badge b-grn">all other ResourceNames</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:Name</span><span class="tree-arrow">←</span><span class="tree-src">$ri/ResourceName</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:Category</span><span class="tree-arrow">←</span><span class="tree-src">$ri/ResourceCategory</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ns:activityInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:ActivityReason</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberActivityInfo/ActivityReason</span><span class="badge b-org">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:UserText</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberActivityInfo/UserText</span><span class="badge b-org">Conditional</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§11 — Audit Logging</div><div class="sec-body">
+<table><tr><th>Field</th><th>Value</th></tr>
+<tr><td>OPERATION_NAME</td><td>"CCBS_ESIM_SWAP_SIM" (static)</td></tr>
+<tr><td>AUDIT_TRACE</td><td>concat("Request Sent for RefId: ", $refId)</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§15 — Function Dependency Tree</div><div class="sec-body">
+<pre class="blk">Request_CCBS_ESIM_SWAP_SIM
+├── RuleFunctions.Helpers.GetXMLForSubscriber(req, refId)
+├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(req, refId, pouRefId)
+├── XPath.evalAsBoolean() × 2    ← PEID/PMATCHID absence checks
+├── Instance.createInstance() × 2 ← Create PEID/PMATCHID ResourceInfo concepts
+├── Event.Ext.sendEventImmediate(reqEvent)
+├── Instance.createInstance(SubscriberExtendedInfo)  ← IS_CALLED_MSIM_SWAP_SIM=Y
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(req, activity, "4")
+└── RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")</pre>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§17 — Migration Notes</div><div class="sec-body">
+<table><tr><th>#</th><th>Requirement</th></tr>
+<tr><td>R1</td><td>Before calling CCBS eSIM endpoint, add PEID/PMATCHID ResourceInfo (Source='FE') from NEW_PEID/NEW_PMATCHID if not present</td></tr>
+<tr><td>R2</td><td>Build mSimData payload same as CCBS_MSIM_SWAP_SIM but pack PEID/OLD_PEID as concat(value, '_', subscriberId)</td></tr>
+<tr><td>R3</td><td>Set IS_CALLED_MSIM_SWAP_SIM=Y on subscriber after dispatch</td></tr>
+<tr><td><span class="badge b-red">R4-CRITICAL</span></td><td>Response rulefunction returns "true" unconditionally with NO fan-in check. Target architecture must implement proper fan-in: count("000" suffixed ResponseCodes) == RequestCount</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§19 — Response Message Rule</div><div class="sec-body">
+<div class="warn-box">⛔ <strong>Critical Defect:</strong> The response rulefunction returns <code>"true"</code> unconditionally without any fan-in logic. The <code>successResponseCount</code> XPath is completely absent — not even commented out. This means after ANY single CCBS eSIM response arrives, the activity is considered complete regardless of RequestCount. For bulk eSIM operations (step 28) this is a correctness bug.</div>
+<h4 style="color:var(--true-dark);margin:10px 0 6px">§19.1 Overview</h4>
+<p>Creates <code>CCBS_MsimSwapSimRes</code> concept (same type as CCBS_MSIM_SWAP_SIM response). OPERATION_NAME: "CCBS_ESIM_SWAP_SIM".</p>
+<h4 style="color:var(--true-dark);margin:10px 0 6px">§19.4 Fan-in Completion Logic</h4>
+<table><tr><th>Item</th><th>Value</th></tr>
+<tr><td>Fan-in expression</td><td><span class="badge b-red">NONE</span> — function body is: <code>return "true";</code></td></tr>
+<tr><td>Expected behavior</td><td>Should count "000" ResponseCodes == RequestCount (same as CCBS_MSIM_SWAP_SIM)</td></tr>
+<tr><td>Actual behavior</td><td>Returns "true" after the first response arrives, regardless of RequestCount</td></tr>
+</table>
+</div></div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCBS_ESIM_SWAP_SIM</footer>
+</body></html>

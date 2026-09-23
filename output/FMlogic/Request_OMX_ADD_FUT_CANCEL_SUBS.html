@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Request_OMX_ADD_FUT_CANCEL_SUBS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#333;font-size:14px;line-height:1.6}
+.hero{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.hero h1{font-size:1.8rem;font-weight:700;letter-spacing:-0.5px}
+.hero .sub{opacity:.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px}
+.meta-chip{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#FFF9F9}
+code{font-family:'Cascadia Code','Consolas',monospace;background:rgba(139,0,0,0.07);color:var(--true-dark);padding:2px 6px;border-radius:4px;font-size:0.85em}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.83rem;border-left:3px solid var(--true-red);line-height:1.5}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:0.75rem;font-weight:600}
+.b-green{background:#E8F5E9;color:var(--success)}
+.b-orange{background:#FFF3E0;color:var(--warning)}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-blue{background:#E3F0FD;color:var(--info)}
+.b-purple{background:#F3E5F5;color:var(--skip)}
+.section-title{font-size:1.1rem;font-weight:700;color:var(--true-dark);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--true-pale)}
+ul.info-list{padding-left:20px}
+ul.info-list li{margin-bottom:6px}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>Request_OMX_ADD_FUT_CANCEL_SUBS</h1>
+  <div class="sub">TIBCO BusinessEvents FM — OMX Add Future Cancel Subscriber (full-to-cancel scheduled cancellation)</div>
+  <div class="meta-row">
+    <span class="meta-chip">Rule: Rules.OMConsumers.OMXFM.Request.Request_OMX_ADD_FUT_CANCEL_SUBS</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Author: DESKTOP-HINKNF3</span>
+    <span class="meta-chip">Backend: OMX (FutureOrder)</span>
+    <span class="meta-chip">Generated: 2026-09-16</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header">§1 — Overview &amp; Purpose</div>
+<div class="card-body">
+<p>Fires when <code>ActivityID == "OMX_ADD_FUT_CANCEL_SUBS"</code> and status is WAITING. This FM is the "Full Suspend → Future Cancel" bridge: when the activity reason is <code>FCVG</code>, it schedules a future order in OMX to automatically cancel the subscriber <code>FullToCancelDay</code> days after today. It resolves the primary subscriber from <code>ParentOU[0]/Subscriber[0]</code> (or ChildOU fallback), then fires a single <code>OMX_ADD_FUTURE</code> event with a <code>futureOrderWithSoc</code> payload (type <code>CANSUB</code>, level 5 = Subscriber). The response rulefunction always returns <code>"true"</code> unconditionally (no fan-in count).</p>
+<p style="margin-top:10px"><strong>Trigger condition (FCVG):</strong> This activity is gated by <code>ActivityReason="FCVG"</code> in the ProcessConfig PreExecCheck. Only full-suspension orders with convergence-driven cancellation scheduling reach this step.</p>
+</div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+<div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="card-body">
+<table>
+<thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_ADD_FUT_CANCEL_SUBS</code></td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>forwardChain</td><td>true</td></tr>
+<tr><td>Author</td><td>DESKTOP-HINKNF3</td></tr>
+<tr><td>Resubmit support</td><td>Yes — <code>PurgePendingRequestsBeforeResubmit</code></td></tr>
+<tr><td>Loop strategy</td><td>Single subscriber (POU[0]/Sub[0] with COU fallback via <code>tib:if-absent</code>)</td></tr>
+<tr><td>futureType</td><td><code>CANSUB</code></td></tr>
+<tr><td>nodeLevel</td><td>5 (Subscriber)</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+<div class="card-header">§3 — Working Memory — Declared Objects</div>
+<div class="card-body">
+<table>
+<thead><tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Order context — Channel, OrderID, subscriber tree</td></tr>
+<tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="card">
+<div class="card-header">§4 — Rule Conditions (WHEN)</div>
+<div class="card-body">
+<table>
+<thead><tr><th>#</th><th>Condition</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_ADD_FUT_CANCEL_SUBS"</code></td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_ADD_FUT_CANCEL_SUBS"</code></td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §5 Flow -->
+<div class="card">
+<div class="card-header">§5 — Execution Flow</div>
+<div class="card-body">
+<ol style="padding-left:20px;line-height:2">
+<li>Load LogicalDate; set <code>requestedDate = DateTime.now()</code>; <code>requestBy = Channel</code></li>
+<li>Apply PreExecCheck on full OrderData XML (activity-level gate, e.g., <code>ActivityReason="FCVG"</code>)</li>
+<li>If check fails → SkipActivity("4")</li>
+<li>Resolve <code>subExtId</code> via XPath tib:if-absent (POU[1]/Sub[1] or COU[1]/Sub[1])</li>
+<li>If subExtId null → throw DATA_ISSUE exception</li>
+<li>Read GVs: <code>FullToCancelDay</code> → plusDay; <code>FullToCancelOrderType</code> → orderType; <code>FullToCancelReason</code> → reasonCode</li>
+<li>Compute <code>effectiveDate = DateTime.addDay(now(), plusDay)</code></li>
+<li>Fire <code>OMX_ADD_FUTURE</code> event with <code>futureOrderWithSoc</code> payload</li>
+<li>Increment <code>RequestCount</code> (if not resubmit); set status "1"; persist DB</li>
+<li>Catch block → HandleActivityException</li>
+</ol>
+</div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+<div class="card-header">§8 — System &amp; Integration Dependencies</div>
+<div class="card-body">
+<div class="section-title">§8.2 ESB / JMS Channels</div>
+<table>
+<thead><tr><th>Direction</th><th>Event</th><th>Schema</th></tr></thead>
+<tbody>
+<tr><td><span class="badge b-orange">OUTBOUND</span></td><td>OMX_ADD_FUTURE</td><td>futureOrderWithSoc (FutureOrderWithSoc.xsd)</td></tr>
+<tr><td><span class="badge b-blue">LOG</span></td><td>OMXESB/Logger</td><td>AuditLogging/V1_0</td></tr>
+</tbody>
+</table>
+<br/>
+<div class="section-title">§8.4 BE Working Memory Dependencies</div>
+<table>
+<thead><tr><th>Field</th><th>Access</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><code>subscriber.SubscriberId</code></td><td>READ</td><td>nodeId in futureOrder</td></tr>
+<tr><td><code>subscriber.MSISDN</code></td><td>READ</td><td>MOBILE_NO extendedInfo</td></tr>
+<tr><td><code>customer.CustomerId</code></td><td>READ</td><td>CUS_ID extendedInfo</td></tr>
+<tr><td><code>subscriber.RefId</code></td><td>READ</td><td>RefID in event header</td></tr>
+<tr><td><code>SubscriberActivityInfo.ActivityReason</code></td><td>READ</td><td>Future order reason cross-ref</td></tr>
+<tr><td><code>OrderData.Channel</code></td><td>READ</td><td>requestedBy</td></tr>
+<tr><td><code>orderCurrentActivity.RequestCount</code></td><td>WRITE</td><td>Incremented on dispatch</td></tr>
+</tbody>
+</table>
+<br/>
+<div class="section-title">§8.6 Global Variables</div>
+<table>
+<thead><tr><th>Path</th><th>Usage</th></tr></thead>
+<tbody>
+<tr><td><code>$globalVariables/OMX_OM/Services/SUSPEND/FullToCancelDay</code></td><td>Days to add to today for effectiveDate</td></tr>
+<tr><td><code>$globalVariables/OMX_OM/Services/SUSPEND/FullToCancelOrderType</code></td><td>orderType for the future order</td></tr>
+<tr><td><code>$globalVariables/OMX_OM/Services/SUSPEND/FullToCancelReason</code></td><td>reasonCode for the future order</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §9 Payload -->
+<div class="card">
+<div class="card-header">§9 — Detailed Payload Build</div>
+<div class="card-body">
+<div class="section-title">§9.1 XSLT Parameters</div>
+<table>
+<thead><tr><th>Parameter</th><th>Source</th></tr></thead>
+<tbody>
+<tr><td>orderRequest</td><td>Full order context</td></tr>
+<tr><td>subscriber</td><td>Resolved Subscriber concept</td></tr>
+<tr><td>effectiveDate</td><td>DateTime.addDay(now, plusDay)</td></tr>
+<tr><td>orderType</td><td>GV FullToCancelOrderType</td></tr>
+<tr><td>nodeLeve</td><td>5 (hardcoded)</td></tr>
+<tr><td>nodeId</td><td>subscriber.SubscriberId</td></tr>
+<tr><td>requestedDate</td><td>DateTime.now()</td></tr>
+<tr><td>requestBy</td><td>OrderData.Channel</td></tr>
+<tr><td>reasonCode</td><td>GV FullToCancelReason</td></tr>
+<tr><td>custId</td><td>customer.CustomerId</td></tr>
+<tr><td>msisdn</td><td>subscriber.MSISDN</td></tr>
+<tr><td>futureType</td><td>"CANSUB" (hardcoded)</td></tr>
+</tbody>
+</table>
+<br/>
+<div class="section-title">§9.7 Generated XML Example</div>
+<pre>&lt;createEvent&gt;
+  &lt;event&gt;
+    &lt;JMSPriority&gt;5&lt;/JMSPriority&gt;
+    &lt;JMSCorrelationID&gt;TRK-20250101-001&lt;/JMSCorrelationID&gt;
+    &lt;OrderID&gt;ORD-12345&lt;/OrderID&gt;
+    &lt;RefID&gt;REF-SUB-001&lt;/RefID&gt;
+    &lt;UserName&gt;admin&lt;/UserName&gt;
+    &lt;OrderType&gt;18&lt;/OrderType&gt;
+    &lt;payload&gt;
+      &lt;ns3:futureOrderWithSoc&gt;
+        &lt;ns:futureOrder&gt;
+          &lt;ns:effectiveDate&gt;2026-01-15T00:00:00&lt;/ns:effectiveDate&gt;  &lt;!-- today + FullToCancelDay --&gt;
+          &lt;ns:orderType&gt;13&lt;/ns:orderType&gt;                           &lt;!-- GV FullToCancelOrderType --&gt;
+          &lt;ns:nodeLevel&gt;5&lt;/ns:nodeLevel&gt;
+          &lt;ns:nodeId&gt;SUB-ID-001&lt;/ns:nodeId&gt;
+          &lt;ns:requestedDate&gt;2026-01-01T10:00:00&lt;/ns:requestedDate&gt;
+          &lt;ns:requestedBy&gt;CARE&lt;/ns:requestedBy&gt;
+          &lt;ns:activityReason&gt;FCVG&lt;/ns:activityReason&gt;              &lt;!-- GV FullToCancelReason --&gt;
+          &lt;ns:extendedInfo&gt;
+            &lt;ns:name&gt;CUS_ID&lt;/ns:name&gt;
+            &lt;ns:value&gt;CUST-001&lt;/ns:value&gt;
+          &lt;/ns:extendedInfo&gt;
+          &lt;ns:extendedInfo&gt;
+            &lt;ns:name&gt;MOBILE_NO&lt;/ns:name&gt;
+            &lt;ns:value&gt;0812345678&lt;/ns:value&gt;
+          &lt;/ns:extendedInfo&gt;
+          &lt;ns:fromOrderId&gt;ORD-12345&lt;/ns:fromOrderId&gt;
+          &lt;ns:futureType&gt;CANSUB&lt;/ns:futureType&gt;
+        &lt;/ns:futureOrder&gt;
+        &lt;ns2:futureSocs/&gt;                                            &lt;!-- empty SOC list --&gt;
+      &lt;/ns3:futureOrderWithSoc&gt;
+    &lt;/payload&gt;
+  &lt;/event&gt;
+&lt;/createEvent&gt;</pre>
+</div>
+</div>
+
+<!-- §10 Tree -->
+<div class="card">
+<div class="card-header">§10 — XSLT Field Mapping Tree</div>
+<div class="card-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent → event</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/RefId</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">payload → ns3:futureOrderWithSoc → ns:futureOrder</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns:effectiveDate</span><span class="tree-arrow">←</span><span class="tree-src">$effectiveDate</span><span class="badge b-green">Always</span><span class="tree-cond">= today + GV/FullToCancelDay</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:orderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderType</span><span class="tree-src-static">GV/FullToCancelOrderType</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:nodeLevel</span><span class="tree-arrow">←</span><span class="tree-src-static">5 (Subscriber)</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:nodeId</span><span class="tree-arrow">←</span><span class="tree-src">$nodeId (SubscriberId)</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:requestedDate</span><span class="tree-arrow">←</span><span class="tree-src">$requestedDate (now)</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:requestedBy</span><span class="tree-arrow">←</span><span class="tree-src">$requestBy (Channel)</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src">$reasonCode</span><span class="tree-src-static">GV/FullToCancelReason</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:extendedInfo[CUS_ID]</span><span class="tree-arrow">←</span><span class="tree-src">$custId</span><span class="tree-cond">if string-length(custId) &gt; 0</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:extendedInfo[MOBILE_NO]</span><span class="tree-arrow">←</span><span class="tree-src">$msisdn</span><span class="tree-cond">if string-length(msisdn) &gt; 0</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:fromOrderId</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:futureType</span><span class="tree-arrow">←</span><span class="tree-src-static">"CANSUB"</span><span class="badge b-green">Always</span></div></li>
+        </ul>
+      </li>
+      <li><div class="tree-row"><span class="tree-tag">ns2:futureSocs</span><span class="tree-arrow">←</span><span class="tree-src-static">empty</span><span class="badge b-green">Always</span></div></li>
+    </ul>
+  </li>
+</ul>
+</div>
+</div>
+
+<!-- §12 Status -->
+<div class="card">
+<div class="card-header">§12 — Activity Status Management</div>
+<div class="card-body">
+<table>
+<thead><tr><th>Condition</th><th>Status</th></tr></thead>
+<tbody>
+<tr><td>Request sent</td><td><code>GetActivityStatusString("1", false)</code></td></tr>
+<tr><td>PreExecCheck fails</td><td><code>SkipActivity("4")</code></td></tr>
+<tr><td>subExtId null</td><td>Exception thrown → HandleActivityException</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §15 Function Tree -->
+<div class="card">
+<div class="card-header">§15 — Function Dependency Tree</div>
+<div class="card-body">
+<pre>Request_OMX_ADD_FUT_CANCEL_SUBS
+├── RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit  (resubmit)
+├── Instance.serializeUsingDefaults(orderRequest.OrderData)     (PreExecCheck XML)
+├── XPath.execute (PreExecCheck)
+├── XPath.evalAsString (subExtId, cusExtId, activityReason)
+├── XPath.evalAsInt (plusDay, orderType)
+├── DateTime.now / DateTime.addDay
+├── Event.createEvent (OMX_ADD_FUTURE XSLT)
+├── Event.Ext.sendEventImmediate
+├── Event.Ext.sendEventImmediate (audit logger)
+├── RuleFunctions.Helpers.GetActivityStatusString
+├── RuleFunctions.Helpers.SendDataToDB
+├── RuleFunctions.Helpers.SkipActivity
+└── RuleFunctions.Helpers.HandleActivityException</pre>
+</div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+<div class="card-header">§19 — Response Message Rule</div>
+<div class="card-body">
+<div class="section-title">§19.1 Overview</div>
+<p><code>Response_OMX_ADD_FUT_CANCEL_SUBS</code>: Receives <code>OMX_ADD_FUTURE</code> response. Maps into <code>OMX_AddFutureRes</code> concept. Always returns <code>"true"</code> unconditionally — no fan-in count needed since this FM fires a single request.</p>
+<br/>
+<div class="section-title">§19.2 Scope Variables</div>
+<table>
+<thead><tr><th>Variable</th><th>Type</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Order context</td></tr>
+<tr><td><code>eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.OMX_ADD_FUTURE</td><td>Response event</td></tr>
+<tr><td><code>currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity</td></tr>
+</tbody>
+</table>
+<br/>
+<div class="section-title">§19.3 ResponseBase Construction (OMX_AddFutureRes)</div>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">OMX_AddFutureRes</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">extId</span><span class="tree-arrow">←</span><span class="tree-src-static">OMXUtils.generateTrackingID()</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge b-orange">Conditional</span></div></li>
+    </ul>
+  </li>
+</ul>
+<p style="margin-top:12px"><strong>Note:</strong> No <code>ReferenceId</code> field — this response concept does not include RefID. Fan-in: always <code>return "true"</code>.</p>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

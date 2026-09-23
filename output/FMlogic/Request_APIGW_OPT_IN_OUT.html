@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_APIGW_OPT_IN_OUT</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;line-height:1.6;font-size:14px;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.page-header h1{font-size:1.8rem;font-weight:700;}
+.page-header .sub{opacity:.85;font-size:.95rem;margin-top:4px;}
+.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 12px;font-size:.78rem;}
+.container{max-width:1300px;margin:0 auto;padding:24px 32px;}
+.section{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:20px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 18px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light);}
+.section-body{padding:18px;}
+table{width:100%;border-collapse:collapse;font-size:.84rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600;}
+td{padding:7px 10px;border-bottom:1px solid #eee;vertical-align:top;}
+tr:hover{background:#FFF8F8;}
+code,pre{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.8rem;white-space:pre-wrap;word-break:break-word;}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.75rem;font-weight:600;}
+.badge-low{background:#E3F0FD;color:#1565c0;}
+.badge-ok{background:#E8F5E9;color:#2e7d32;}
+.risk-box{border-left:4px solid var(--true-red);background:var(--true-pale);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;font-size:.85rem;}
+.risk-box.info{border-color:#1565c0;background:#E3F0FD;}
+.flow-step{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid #eee;}
+.flow-num{min-width:28px;height:28px;background:var(--true-red);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;}
+.flow-text{flex:1;font-size:.86rem;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.74rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+h3{color:var(--true-dark);margin:16px 0 8px;font-size:.95rem;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_APIGW_OPT_IN_OUT</h1>
+  <div class="sub">Sends Opt-In/Opt-Out request to API Gateway per subscriber (POU + COU). ACTION and PHONE_NO selection driven by activity parameters.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: APIGW (OptInOut)</span>
+    <span class="meta-badge">Fan-out: POU + COU subscribers</span>
+    <span class="meta-badge">Dispatch: sendEventImmediate</span>
+    <span class="meta-badge">Author: 41HW170580</span>
+    <span class="meta-badge">Lines: 133</span>
+    <span class="meta-badge">Used in step: 82</span>
+    <span class="meta-badge">forwardChain: true</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+<div class="section-header">§1 — Overview &amp; Purpose</div>
+<div class="section-body">
+<p>Sends an Opt-In/Opt-Out request to the API Gateway for each subscriber (both POU direct subscribers and COU subscribers). The operation type (<code>ACTION</code>) and whether to use the original or old MSISDN (<code>USE_OLD_SUBR</code>) are driven by activity parameters configured in the ProcessConfig, making this FM reusable for different Opt-In/Out scenarios.</p>
+<br>
+<table>
+<tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+<tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.APIGW_OPT_IN_OUT</code></td><td></td></tr>
+<tr><td>Schema NS (ns)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/APIGW/OptInOut.xsd</code></td><td>OptInOutReq payload</td></tr>
+<tr><td>Fan-out</td><td>POU direct subscribers first, then COU subscribers</td><td>POU→Sub, then POU→COU→Sub</td></tr>
+<tr><td>RefID</td><td>Subscriber RefId (bare)</td><td>Always emitted</td></tr>
+<tr><td>extId</td><td>Pre-generated via <code>OMXUtils:generateTrackingID()</code> in XSLT attribute</td><td>Unique per event</td></tr>
+<tr><td>ACTION</td><td>From activity parameter <code>ACTION</code></td><td>e.g., OPT_IN or OPT_OUT</td></tr>
+<tr><td>USE_OLD_SUBR</td><td>From activity parameter <code>USE_OLD_SUBR</code></td><td>If 'Y' → use OLD_MSISDN ResourceInfo</td></tr>
+<tr><td>operator</td><td>"1" (hardcoded)</td><td>TRUE operator code</td></tr>
+<tr><td>submissionId</td><td><code>concat('OPINOUT_TSUBS_', yyyyMMddHHmmss, '_', substr(MSISDN,1,8))</code></td><td>Unique per subscriber per second</td></tr>
+<tr><td>PurgePendingRequestsBeforeResubmit</td><td>YES</td><td>Called when isActResub is true</td></tr>
+<tr><td>Dispatch</td><td><code>Event.Ext.sendEventImmediate</code></td><td>One event per subscriber</td></tr>
+<tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td><td>Standard (not dedicated)</td></tr>
+<tr><td>Fan-in</td><td>RequestCount == successResponseCount (suffix "000")</td><td>Standard count-match</td></tr>
+</table>
+
+<div class="risk-box info">
+<strong>[INFO]</strong> <code>USE_OLD_SUBR='Y'</code> switches <code>ns:PHONE_NO</code> to read from <code>ResourceInfo[ResourceName='OLD_MSISDN']/ValuesArray</code> instead of subscriber MSISDN. This supports MSISDN change/number portability scenarios where Opt-In/Out must be applied to the old number.
+</div>
+<div class="risk-box" style="border-color:#e65100;background:#FFF3E0;">
+<strong>[LOW]</strong> Audit logger is always sent unconditionally — the <code>AllowWriteLog(OrderType)</code> guard seen in other FMs is absent here. Logger fires for every subscriber regardless of order type.
+</div>
+</div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+<div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="section-body">
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule file</td><td><code>Request_APIGW_OPT_IN_OUT.rule</code> (133 lines)</td></tr>
+<tr><td>Author</td><td>41HW170580</td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>forwardChain</td><td>true</td></tr>
+<tr><td>ActivityID guard</td><td><code>APIGW_OPT_IN_OUT</code></td></tr>
+<tr><td>Payload root</td><td><code>ns:OptInOutReq</code></td></tr>
+<tr><td>Activity params read</td><td><code>ACTION</code>, <code>USE_OLD_SUBR</code></td></tr>
+<tr><td>extId</td><td>Pre-generated: <code>OMXUtils:generateTrackingID()</code> as XSLT attribute on event element</td></tr>
+<tr><td>Resub handling</td><td>PurgePendingRequestsBeforeResubmit when isActResub=true</td></tr>
+<tr><td>POU PreExecCheck</td><td><code>GetXMLForSubscriber(orderRequest, refId)</code></td></tr>
+<tr><td>COU PreExecCheck</td><td><code>GetXMLForSubscriberInChildOU(orderRequest, refId, ParentOU.RefId)</code></td></tr>
+<tr><td>UserName/PassWord gate</td><td>ABSENT — no credential fields in payload</td></tr>
+<tr><td>OPERATION_NAME (request)</td><td>"APIGW_OPT_IN_OUT"</td></tr>
+<tr><td>OPERATION_NAME (response)</td><td>"APIGW_OPT_IN_OUT"</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="section">
+<div class="section-header">§3 — Rule Conditions (WHEN)</div>
+<div class="section-body">
+<table>
+<tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "APIGW_OPT_IN_OUT"</code></td><td>FM type guard</td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "APIGW_OPT_IN_OUT"</code></td><td>Process flow alignment</td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+<div class="section-header">§5 — Execution Flow</div>
+<div class="section-body">
+<div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>Init:</strong> <code>isActResub</code> = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted). If true → <code>PurgePendingRequestsBeforeResubmit</code>. Read <code>action</code> (ACTION param) and <code>user_old_sub</code> (USE_OLD_SUBR param). <code>isSkipped = true</code>.</div></div>
+<div class="flow-step"><div class="flow-num">2</div><div class="flow-text"><strong>POU subscriber loop</strong> (POU p → Sub s): For each POU direct subscriber — resub guard, PreExecCheck, send one APIGW_OPT_IN_OUT event + Logger. RequestCount++ if !isActResub. isSkipped = false.</div></div>
+<div class="flow-step"><div class="flow-num">3</div><div class="flow-text"><strong>COU subscriber loop</strong> (POU p → COU c → Sub s): For each COU subscriber — same resub guard + PreExecCheck + send event + Logger.</div></div>
+<div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>Completion:</strong> if (!isSkipped) → Status = GetActivityStatusString("1", false); SendDataToDB. Else → SkipActivity("4").</div></div>
+<div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>Exception:</strong> catch(Exception ae) → HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</div></div>
+</div>
+</div>
+
+<!-- §9 Payload -->
+<div class="section">
+<div class="section-header">§9 — Detailed Payload Build</div>
+<div class="section-body">
+
+<h3>9.1 Activity Parameters</h3>
+<table>
+<tr><th>Parameter Key</th><th>Variable</th><th>Effect</th></tr>
+<tr><td>ACTION</td><td><code>action</code></td><td>Emitted as <code>ns:ACTION</code> in payload — e.g., "OPT_IN" or "OPT_OUT"</td></tr>
+<tr><td>USE_OLD_SUBR</td><td><code>user_old_sub</code></td><td>If "Y" → PHONE_NO = <code>ResourceInfo[ResourceName='OLD_MSISDN']/ValuesArray</code>; else → PHONE_NO = MSISDN</td></tr>
+</table>
+
+<h3>9.2 submissionId Pattern</h3>
+<pre>concat('OPINOUT_TSUBS_', tib:format-dateTime('yyyyMMddHHmmss', current-dateTime()), '_', substring(MSISDN, 1, 8))</pre>
+<p>Example: <code>OPINOUT_TSUBS_20240115143022_0812345</code>. Uses first 8 characters of MSISDN — not a globally unique ID if two subscribers share a MSISDN prefix within the same second.</p>
+
+<h3>9.3 PHONE_NO Selection</h3>
+<table>
+<tr><th>Condition</th><th>PHONE_NO Source</th></tr>
+<tr><td><code>user_old_sub == 'Y'</code></td><td><code>Subscriber/ResourceInfo[ResourceName='OLD_MSISDN']/ValuesArray</code></td></tr>
+<tr><td>otherwise (and MSISDN exists)</td><td><code>Subscriber/MSISDN</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="section">
+<div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+<div class="section-body">
+<p>Two XSLT variants: POU (param: <code>psub</code>) and COU (param: <code>csub</code>). Structure is identical; only the subscriber reference differs.</p>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span><span class="tree-cond">[@extId = OMXUtils:generateTrackingID()]</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Always — unconditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId (subscriber RefId)</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:OptInOutReq</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:submissionId</span><span class="tree-arrow">←</span><span class="tree-src">concat('OPINOUT_TSUBS_', yyyyMMddHHmmss, '_', substr(MSISDN,1,8))</span><span class="tree-cond">[Always]</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:operator</span><span class="tree-arrow">←</span><span class="tree-src-static">"1"</span><span class="tree-cond">[Always — hardcoded]</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:submissionDatas</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:PHONE_NO</span><span class="tree-arrow">←</span><span class="tree-src">if USE_OLD_SUBR='Y': ResourceInfo[OLD_MSISDN]/ValuesArray; else MSISDN</span><span class="tree-cond">[Conditional — MSISDN presence check in else branch]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ACTION</span><span class="tree-arrow">←</span><span class="tree-src">$action (activity parameter ACTION)</span><span class="tree-cond">[Always]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:DATE_TIME</span><span class="tree-arrow">←</span><span class="tree-src">tib:format-dateTime('yyyyMMddHHmmss', current-dateTime())</span><span class="tree-cond">[Always]</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<br>
+<p><strong>Legend:</strong> <span style="color:#a6e3a1">Green</span> = XPath from order data | <span style="color:#fab387">Orange</span> = Static literal | <span style="color:#cba6f7;font-style:italic">Purple italic</span> = Condition</p>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+<div class="section-header">§15 — Function Dependency Tree</div>
+<div class="section-body">
+<pre>Request_APIGW_OPT_IN_OUT (rule)
+├── isActResub = (RequestCount > 0 &amp;&amp; IsOrderResubmitted)
+├── [if isActResub]: PurgePendingRequestsBeforeResubmit(orderCurrentActivity)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── action = GetActivityParamValueFromKey(orderCurrentActivity, "ACTION")
+├── user_old_sub = GetActivityParamValueFromKey(orderCurrentActivity, "USE_OLD_SUBR")
+├── isSkipped = true
+│
+├── [POU loop: POU p → Sub s]
+│   ├── refId = ParentOU[p].Subscriber[s].RefId
+│   ├── resub guard: Response[ReferenceId==refId &amp;&amp; CompletionStatus==2] → skip
+│   ├── [PreExecCheck if set]: GetXMLForSubscriber(orderRequest, refId) → XPath.execute
+│   └── [if chkRes == "true"]:
+│       ├── reqEvent = Event.createEvent(APIGW_OPT_IN_OUT, XSLT):
+│       │   ├── @extId = OMXUtils:generateTrackingID()
+│       │   ├── submissionId = concat('OPINOUT_TSUBS_', yyyyMMddHHmmss, '_', substr(MSISDN,1,8))
+│       │   ├── operator = "1"
+│       │   ├── PHONE_NO = OLD_MSISDN (USE_OLD_SUBR='Y') or MSISDN
+│       │   ├── ACTION = $action
+│       │   └── DATE_TIME = yyyyMMddHHmmss
+│       ├── Event.Ext.sendEventImmediate(reqEvent)
+│       ├── isSkipped = false
+│       ├── [if !isActResub]: RequestCount++
+│       └── Logger (OPERATION_NAME="APIGW_OPT_IN_OUT") — always, no AllowWriteLog guard
+│
+├── [COU loop: POU p → COU c → Sub s]
+│   ├── refId = ChildOU[c].Subscriber[s].RefId
+│   ├── resub guard (same)
+│   ├── [PreExecCheck]: GetXMLForSubscriberInChildOU(orderRequest, refId, ParentOU.RefId)
+│   └── [same sendEventImmediate + Logger — COU variant uses $csub param]
+│
+├── [if !isSkipped]:
+│   ├── orderCurrentActivity.Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException(orderRequest, orderCurrentActivity, ae, "")
+
+Response_APIGW_OPT_IN_OUT (rulefunction)
+├── activityRes = Instance.createInstance(ResponseBase){extId=generateTrackingID(), ResponseCode, ResponseMessage, CompletionStatus, ReferenceId}
+├── currActivity.Response[] ← activityRes
+├── Logger (PROCESS_ID _RES suffix, OPERATION_NAME="APIGW_OPT_IN_OUT")
+├── successResponseCount = count(Response[tib:right(tib:trim(ResponseCode), 3) = "000"])
+└── return (RequestCount == successResponseCount) ? "true" : "false"</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+<div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="section-body">
+
+<h3>Functional Requirements</h3>
+<table>
+<tr><th>Ref</th><th>Requirement</th></tr>
+<tr><td>R1</td><td>Fan-out: POU direct subscribers first, then COU subscribers. One request per subscriber.</td></tr>
+<tr><td>R2</td><td>RefID = subscriber RefId. Always emitted.</td></tr>
+<tr><td>R3</td><td>extId = OMXUtils:generateTrackingID() — pre-generated in XSLT attribute on the event element.</td></tr>
+<tr><td>R4</td><td>ACTION = activity parameter "ACTION" (e.g., OPT_IN, OPT_OUT). Must be configured per ProcessConfig step.</td></tr>
+<tr><td>R5</td><td>USE_OLD_SUBR='Y' → PHONE_NO from ResourceInfo[OLD_MSISDN]; else PHONE_NO from Subscriber.MSISDN.</td></tr>
+<tr><td>R6</td><td>submissionId = 'OPINOUT_TSUBS_' + yyyyMMddHHmmss + '_' + first-8-chars-of-MSISDN.</td></tr>
+<tr><td>R7</td><td>operator = "1" (hardcoded).</td></tr>
+<tr><td>R8</td><td>DATE_TIME = current timestamp in yyyyMMddHHmmss format.</td></tr>
+<tr><td>R9</td><td>PurgePendingRequestsBeforeResubmit when resubmitting.</td></tr>
+<tr><td>R10</td><td>Fan-in: RequestCount == successResponseCount (suffix "000").</td></tr>
+</table>
+
+<h3>Design Risks</h3>
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td>Audit logger always fires — no AllowWriteLog(OrderType) guard</td><td><span class="badge badge-low">[LOW]</span></td><td>Add AllowWriteLog guard if log volume is a concern for high-frequency orders</td></tr>
+<tr><td>submissionId uses substr(MSISDN,1,8) — not globally unique if same MSISDN prefix and sub-second timing</td><td><span class="badge badge-low">[LOW]</span></td><td>Consider using OMXUtils:generateTrackingID() as submissionId or add a counter suffix</td></tr>
+<tr><td>USE_OLD_SUBR='Y' absent from ResourceInfo → PHONE_NO will be empty; APIGW may reject</td><td><span class="badge badge-low">[LOW]</span></td><td>Validate ResourceInfo[OLD_MSISDN] presence before sending when USE_OLD_SUBR='Y'</td></tr>
+<tr><td>operator hardcoded to "1" — may break if deployed for a non-TRUE operator</td><td><span class="badge badge-low">[LOW]</span></td><td>Move to activity parameter or global variable if multi-operator deployment is needed</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+<div class="section-header">§19 — Response Message Rule (Response_APIGW_OPT_IN_OUT)</div>
+<div class="section-body">
+
+<h3>§19.2 Scope Variables</h3>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td>orderRequest</td><td>Concepts.OrderRequest.OrderRequest</td><td>Order context</td></tr>
+<tr><td>eventResponse</td><td>Events.OMConsumers.OMXFM.Response.APIGW_OPT_IN_OUT</td><td>APIGW response event</td></tr>
+<tr><td>currActivity</td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity state &amp; response list</td></tr>
+</table>
+
+<h3>§19.3 ResponseBase Construction</h3>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">object (ResponseBase)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">[Conditional]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3>§19.4 Fan-in Completion Logic</h3>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+<tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+<tr><td>Return "true"</td><td>All parallel APIGW calls completed with ResponseCode suffix "000"</td></tr>
+</table>
+</div>
+</div>
+
+<div style="text-align:center;color:#999;font-size:.8rem;padding:20px 0;">
+TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &middot; Request_APIGW_OPT_IN_OUT
+</div>
+</div>
+</body>
+</html>

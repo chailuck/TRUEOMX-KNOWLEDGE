@@ -1,0 +1,679 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_IOM_CHECK_SEQUENCING</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#222;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:36px 40px}
+.page-header h1{font-size:2rem;font-weight:700;letter-spacing:.5px}
+.page-header .subtitle{font-size:1rem;opacity:.85;margin-top:6px}
+.meta-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px}
+.meta-chip{background:rgba(255,255,255,.18);padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:600}
+.container{max-width:1200px;margin:0 auto;padding:28px 24px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:700;display:flex;align-items:center;gap:10px;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FFF8F8}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:.8rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.74rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.badge-high{background:#FFE0E0;color:#B71C1C;border:1px solid #FFCDD2}
+.badge-medium{background:#FFF9C4;color:#F57F17;border:1px solid #FFF176}
+.badge-low{background:#E8F5E9;color:#1B5E20;border:1px solid #C8E6C9}
+.alert{border-left:4px solid var(--warning);background:#FFF8F0;padding:12px 16px;border-radius:0 6px 6px 0;margin:10px 0}
+.alert-info{border-left-color:var(--info);background:#EBF4FE}
+.alert-warning{border-left-color:var(--warning);background:#FFF8F0}
+.alert-success{border-left-color:var(--success);background:#F0FFF2}
+.callout{background:var(--true-pale);border:1px solid #FFCCCC;border-radius:8px;padding:14px 18px;margin:10px 0}
+.flow-step{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow-body{flex:1}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086;font-style:italic}.nu{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-ns{color:#6c7086;font-size:.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+details summary{cursor:pointer;font-weight:600;color:var(--true-dark)}
+details summary:hover{color:var(--true-red)}
+.unique-box{background:#FFF0E0;border-left:4px solid var(--warning);border-radius:0 8px 8px 0;padding:14px 18px;margin:12px 0}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:4px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_IOM_CHECK_SEQUENCING</h1>
+  <div class="subtitle">External OMXFM — IOM Sequencing Gate · Sequencing.xsd</div>
+  <div class="meta-row">
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Backend: IOM (Integration Order Manager)</span>
+    <span class="meta-chip">Channel: OMXFMConnectionRequest</span>
+    <span class="meta-chip">Author: CHAYATORN-PC</span>
+    <span class="meta-chip">Generated: 2026-09-07</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>IOM_CHECK_SEQUENCING</strong> is an External OMXFM rule that acts as an <em>order sequencing gate</em>.
+      Before executing downstream activities, it asks IOM (Integration Order Manager) whether this order is cleared to proceed in sequence
+      with other in-flight orders affecting the same MSISDN. If IOM returns <code>accept</code>, the order continues.
+      If IOM returns a non-accept status, the activity remains <code>IN_PROGRESS</code> and the order waits.
+    </div>
+    <div class="unique-box">
+      <strong>⚡ Unique Architectural Pattern</strong><br/>
+      Unlike all other OMXFM rules that evaluate their <em>own</em> PreExecCheck, IOM_CHECK_SEQUENCING reads the
+      <strong>next activity's</strong> PreExecCheck (<code>orderRequest.ProcessFlow.NextActivityName</code>) to determine
+      whether each subscriber actually needs to be sequenced. If the next activity would be skipped for a subscriber,
+      no sequencing request is sent for that subscriber.
+    </div>
+    <table>
+      <tr><th style="width:220px">Property</th><th>Value</th></tr>
+      <tr><td>Rule class</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_IOM_CHECK_SEQUENCING</code></td></tr>
+      <tr><td>Backend System</td><td>IOM — Integration Order Manager (sequencing service)</td></tr>
+      <tr><td>Integration type</td><td><span class="badge badge-jms">JMS / Async</span> via <code>/Channels/OMXFMConnectionRequest</code></td></tr>
+      <tr><td>JMS Destination</td><td><code>IOM_CHECK_SEQUENCING</code></td></tr>
+      <tr><td>Request schema</td><td><code>SequencingRequest</code> — <code>Sequencing.xsd</code> (ns1 / xsd2)</td></tr>
+      <tr><td>Response schema</td><td><code>SequencingResponse</code> — <code>Sequencing.xsd</code></td></tr>
+      <tr><td>Completion trigger</td><td><code>SequencingResponse/status = "accept"</code></td></tr>
+      <tr><td>IntraActivitySequencing</td><td>None</td></tr>
+      <tr><td>Send method</td><td><code>sendEventImmediate</code> (no <code>routeToImmediate</code>)</td></tr>
+      <tr><td>Skip code</td><td><code>SkipActivity("4")</code> when no subscribers require sequencing</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule Name</td><td><code>Request_IOM_CHECK_SEQUENCING</code></td><td>External OMXFM request rule</td></tr>
+      <tr><td>Namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td><td></td></tr>
+      <tr><td>Priority</td><td>5</td><td>Standard OMXFM priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Triggers further rule evaluation on WM changes</td></tr>
+      <tr><td>Author</td><td>CHAYATORN-PC</td><td></td></tr>
+      <tr><td>Rule type</td><td>OMXFM External</td><td>Async JMS; awaits IOM response before completing</td></tr>
+      <tr><td>Dead code</td><td>Large commented-out CRM_CREATE_UPDATE_SR XSLT block (~line 109)</td><td>Legacy artefact — safe to remove</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Main order payload — ProcessFlow, OrderData, subscriber lists</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity state — ActivityID = IOM_CHECK_SEQUENCING</td></tr>
+      <tr><td><code>nextAct</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Next activity in the flow; read to get its PreExecCheck</td></tr>
+      <tr><td><code>globalVariables</code></td><td><code>Concepts.GlobalVariables</code></td><td>System_Name, WritePayload flag, component names</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <p style="margin-bottom:10px">Standard OMXFM conditions gate execution:</p>
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderRequest.ProcessFlow.CurrentActivityID == "IOM_CHECK_SEQUENCING"</code></td><td>Route to this rule only</td></tr>
+      <tr><td>2</td><td><code>currActivity.ActivityID == "IOM_CHECK_SEQUENCING"</code></td><td>Confirm matching activity object</td></tr>
+      <tr><td>3</td><td><code>currActivity.Status != "IN_PROGRESS"</code></td><td>Prevent duplicate request sends</td></tr>
+      <tr><td>4</td><td><code>orderRequest exists in WM</code></td><td>Standard existence guard</td></tr>
+    </table>
+    <div class="alert alert-info" style="margin-top:12px">
+      <strong>Note:</strong> The reqSuccess guard (<code>Response[].ReferenceId == subRefId &amp;&amp; CompletionStatus == 2</code>)
+      prevents sending duplicate requests per subscriber when the response rulefunction fires in fanout.
+    </div>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><strong>Resolve next activity PreExecCheck</strong><br/>Call <code>Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, "/Concepts/OM/ProcessConfig/Activity")</code> to retrieve the Activity concept for the <em>next</em> step. Extract its <code>PreExecCheck</code> XPath string.</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><strong>ParentOU subscriber loop</strong><br/>For each subscriber in the ParentOU loop: evaluate the next activity's PreExecCheck using <code>XPath.execute("/(" + chkXPath + ")", sXML, "ns0=...")</code>. If result == "true" and no prior successful response, build the <code>ns1:SequencingRequest</code> XSLT payload and send via <code>sendEventImmediate</code>. Increment request counter.</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><strong>ChildOU subscriber loop</strong><br/>Repeat step 2 for ChildOU subscribers using <code>$cSubRefId</code> and <code>$csub/MSISDN</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><strong>Set activity status</strong><br/>If at least one request was sent: set <code>currActivity.Status = "IN_PROGRESS"</code> and emit audit log ("Request Sent for IOM_CHECK_SEQUENCING").<br/>If no requests were sent: call <code>SkipActivity("4")</code> — sequencing not required for any subscriber.</div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-body"><strong>Await response</strong><br/>IOM responds asynchronously. <code>Response_IOM_CHECK_SEQUENCING.rulefunction</code> receives the JMS reply, checks <code>SequencingResponse/status = "accept"</code>, and drives fan-in completion.</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Step-by-Step Logic</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Step</th><th>Action</th><th>Detail</th></tr>
+      <tr><td>1</td><td>Fetch next activity</td><td><code>Instance.getByExtIdByUri(NextActivityName, "/Concepts/OM/ProcessConfig/Activity")</code></td></tr>
+      <tr><td>2</td><td>Extract PreExecCheck XPath</td><td><code>String chkXPath = nextAct.PreExecCheck</code></td></tr>
+      <tr><td>3</td><td>ParentOU subscriber loop</td><td>Iterate orderRequest.ParentOU.Subscriber[]</td></tr>
+      <tr><td>3a</td><td>Get subscriber XML</td><td><code>RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, pSubRefId)</code></td></tr>
+      <tr><td>3b</td><td>Evaluate next activity PreExecCheck</td><td><code>XPath.execute("/(" + chkXPath + ")", sXML, ns0=...)</code></td></tr>
+      <tr><td>3c</td><td>Guard: reqSuccess check</td><td>Skip if subscriber already has a successful response</td></tr>
+      <tr><td>3d</td><td>Build &amp; send SequencingRequest</td><td>XSLT with ns1 prefix; sequenceId=concat("MOBILE-",MSISDN)</td></tr>
+      <tr><td>3e</td><td>Increment request count</td><td><code>currActivity.RequestCount++</code></td></tr>
+      <tr><td>4</td><td>ChildOU subscriber loop</td><td>Same as steps 3a–3e using $cSubRefId / $csub/MSISDN</td></tr>
+      <tr><td>5</td><td>Status branch</td><td>If requestCount &gt; 0: set IN_PROGRESS + audit log. Else: SkipActivity("4").</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§8.1 Order Type Dependencies</h3>
+    <p style="margin-bottom:12px">IOM_CHECK_SEQUENCING is the <em>entry point</em> of the PREPAID_ADD_OFFER process (step 1). It applies to all PREPAID_ADD_OFFER order types — the actual gating depends dynamically on the next activity's PreExecCheck XPath evaluated per subscriber.</p>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§8.2 ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Protocol</th><th>Purpose</th></tr>
+      <tr>
+        <td><span class="badge badge-orange">OUTBOUND</span></td>
+        <td><code>/Channels/OMXFMConnectionRequest</code></td>
+        <td><code>IOM_CHECK_SEQUENCING</code></td>
+        <td><span class="badge badge-jms">JMS</span></td>
+        <td>Send SequencingRequest to IOM</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-blue">INBOUND</span></td>
+        <td>OMXFMConnectionResponse (implied)</td>
+        <td>IOM_CHECK_SEQUENCING response</td>
+        <td><span class="badge badge-jms">JMS</span></td>
+        <td>Receive SequencingResponse from IOM</td>
+      </tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Schema</th><th>Correlation</th></tr>
+      <tr>
+        <td>IOM (Integration Order Manager)</td>
+        <td>Sequence check (action="sequence")</td>
+        <td><code>SequencingRequest / SequencingResponse</code> — Sequencing.xsd</td>
+        <td>RefID (pSubRefId / cSubRefId) matched in response; fan-in on RequestCount == successResponseCount</td>
+      </tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§8.4 BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Field</th><th>Access</th><th>Notes</th></tr>
+      <tr><td><code>orderRequest.ProcessFlow.NextActivityName</code></td><td>READ</td><td>Used to look up the next activity's concept</td></tr>
+      <tr><td><code>nextAct.PreExecCheck</code></td><td>READ</td><td>XPath string from next activity; evaluated per subscriber</td></tr>
+      <tr><td><code>orderRequest.OrderData.OMXTrackingId</code></td><td>READ</td><td>trackingId = substring-after(OMXTrackingId, '-')</td></tr>
+      <tr><td><code>orderRequest.OrderData.OrderID</code></td><td>READ</td><td>ns1:info[orderId]</td></tr>
+      <tr><td><code>orderRequest.OrderData.OrderType</code></td><td>READ</td><td>ns1:info[orderType]</td></tr>
+      <tr><td><code>orderRequest.OrderData.CreateDate</code></td><td>READ</td><td>ns1:info[created] — conditional (if exists)</td></tr>
+      <tr><td><code>subscriber.MSISDN</code></td><td>READ</td><td>sequenceId = concat("MOBILE-", MSISDN)</td></tr>
+      <tr><td><code>currActivity.RequestCount</code></td><td>WRITE</td><td>Incremented per sequencing request sent</td></tr>
+      <tr><td><code>currActivity.Status</code></td><td>WRITE</td><td>Set to IN_PROGRESS</td></tr>
+      <tr><td><code>globalVariables/OMX_COMMON/System_Name</code></td><td>READ</td><td>ns1:info[envName]</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§8.6 Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Global Variable</th><th>Used For</th></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/System_Name</code></td><td>envName info element</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit log COMPONENT_NAME</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit log TARGET_SYSTEM</td></tr>
+      <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Gate for payload logging</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Detailed Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build (XSLT Decomposition)</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§9.1 XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound from</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>OrderRequest WM concept</td></tr>
+      <tr><td><code>$psub</code></td><td>ParentOU subscriber (current loop element)</td></tr>
+      <tr><td><code>$csub</code></td><td>ChildOU subscriber (ChildOU variant)</td></tr>
+      <tr><td><code>$pSubRefId</code></td><td>ParentOU subscriber reference ID</td></tr>
+      <tr><td><code>$cSubRefId</code></td><td>ChildOU subscriber reference ID</td></tr>
+      <tr><td><code>$globalVariables</code></td><td>Global BE variables concept</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§9.4 Payload Root Element</h3>
+    <pre><span class="xt">&lt;ns1:SequencingRequest</span> <span class="xa">xmlns:ns1</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/IOM/Sequencing.xsd"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;ns1:action&gt;</span>sequence<span class="xt">&lt;/ns1:action&gt;</span>                                   <span class="cm">// Static: always "sequence"</span>
+  <span class="xt">&lt;ns1:sequenceId&gt;</span>MOBILE-{MSISDN}<span class="xt">&lt;/ns1:sequenceId&gt;</span>                 <span class="cm">// concat("MOBILE-", subscriber/MSISDN)</span>
+  <span class="xt">&lt;ns1:trackingId&gt;</span>{partial OMXTrackingId}<span class="xt">&lt;/ns1:trackingId&gt;</span>         <span class="cm">// substring-after(OMXTrackingId, '-')</span>
+  <span class="xt">&lt;ns1:system&gt;</span>OMX<span class="xt">&lt;/ns1:system&gt;</span>                                       <span class="cm">// Static: always "OMX"</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"orderId"</span><span class="xt">&gt;</span>{OrderID}<span class="xt">&lt;/ns1:info&gt;</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"orderType"</span><span class="xt">&gt;</span>{OrderType}<span class="xt">&lt;/ns1:info&gt;</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"created"</span><span class="xt">&gt;</span>{CreateDate}<span class="xt">&lt;/ns1:info&gt;</span>                 <span class="cm">// xsl:if: only if CreateDate exists</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"currentTrackingId"</span><span class="xt">&gt;</span>{OMXTrackingId}<span class="xt">&lt;/ns1:info&gt;</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"refId"</span><span class="xt">&gt;</span>{pSubRefId or cSubRefId}<span class="xt">&lt;/ns1:info&gt;</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"envName"</span><span class="xt">&gt;</span>{System_Name}<span class="xt">&lt;/ns1:info&gt;</span>
+<span class="xt">&lt;/ns1:SequencingRequest&gt;</span></pre>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§9.7 Complete Generated XML Example</h3>
+    <pre><span class="xt">&lt;ns1:SequencingRequest</span> <span class="xa">xmlns:ns1</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/IOM/Sequencing.xsd"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;ns1:action&gt;</span>sequence<span class="xt">&lt;/ns1:action&gt;</span>
+  <span class="xt">&lt;ns1:sequenceId&gt;</span>MOBILE-0812345678<span class="xt">&lt;/ns1:sequenceId&gt;</span>
+  <span class="xt">&lt;ns1:trackingId&gt;</span>20250719100000000<span class="xt">&lt;/ns1:trackingId&gt;</span>
+  <span class="xt">&lt;ns1:system&gt;</span>OMX<span class="xt">&lt;/ns1:system&gt;</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"orderId"</span><span class="xt">&gt;</span>ORD-20250719-001<span class="xt">&lt;/ns1:info&gt;</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"orderType"</span><span class="xt">&gt;</span>51<span class="xt">&lt;/ns1:info&gt;</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"created"</span><span class="xt">&gt;</span>2025-07-19T10:00:00<span class="xt">&lt;/ns1:info&gt;</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"currentTrackingId"</span><span class="xt">&gt;</span>OMX-20250719100000000<span class="xt">&lt;/ns1:info&gt;</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"refId"</span><span class="xt">&gt;</span>SUB-001-PARENT<span class="xt">&lt;/ns1:info&gt;</span>
+  <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"envName"</span><span class="xt">&gt;</span>OMX-PROD<span class="xt">&lt;/ns1:info&gt;</span>
+<span class="xt">&lt;/ns1:SequencingRequest&gt;</span></pre>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§9.8 XSLT Stylesheet Source</h3>
+    <div class="alert alert-info">Two variants exist: <strong>ParentOU Variant ①</strong> (uses <code>$pSubRefId</code> / <code>$psub/MSISDN</code>) and <strong>ChildOU Variant ②</strong> (uses <code>$cSubRefId</code> / <code>$csub/MSISDN</code>). Both produce identical XML structure; only the RefID and MSISDN source differ.</div>
+    <pre><span class="cm">// ParentOU Variant ①</span>
+<span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+    <span class="xa">xmlns:ns1</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/IOM/Sequencing.xsd"</span>
+    <span class="xa">version</span>=<span class="st">"1.0"</span> <span class="xa">exclude-result-prefixes</span>=<span class="st">"xsl"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:output</span> <span class="xa">method</span>=<span class="st">"xml"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderRequest"</span><span class="xt">/&gt;</span>   <span class="cm">&lt;!-- OrderRequest WM concept --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"psub"</span><span class="xt">/&gt;</span>           <span class="cm">&lt;!-- ParentOU subscriber element --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"pSubRefId"</span><span class="xt">/&gt;</span>      <span class="cm">&lt;!-- ParentOU subscriber RefID --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"globalVariables"</span><span class="xt">/&gt;</span>
+
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;</span>
+      <span class="xt">&lt;event&gt;</span>
+        <span class="xt">&lt;payload&gt;</span>
+          <span class="xt">&lt;ns1:SequencingRequest&gt;</span>
+            <span class="xt">&lt;ns1:action&gt;</span>sequence<span class="xt">&lt;/ns1:action&gt;</span>
+            <span class="xt">&lt;ns1:sequenceId&gt;</span>
+              <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"concat('MOBILE-', $psub/MSISDN)"</span><span class="xt">/&gt;</span>
+            <span class="xt">&lt;/ns1:sequenceId&gt;</span>
+            <span class="xt">&lt;ns1:trackingId&gt;</span>
+              <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"substring-after($orderRequest/OrderData/OMXTrackingId, '-')"</span><span class="xt">/&gt;</span>
+            <span class="xt">&lt;/ns1:trackingId&gt;</span>
+            <span class="xt">&lt;ns1:system&gt;</span>OMX<span class="xt">&lt;/ns1:system&gt;</span>
+            <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"orderId"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;</span>
+            <span class="xt">&lt;/ns1:info&gt;</span>
+            <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"orderType"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;</span>
+            <span class="xt">&lt;/ns1:info&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/CreateDate"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"created"</span><span class="xt">&gt;</span>
+                <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/CreateDate"</span><span class="xt">/&gt;</span>
+              <span class="xt">&lt;/ns1:info&gt;</span>
+            <span class="xt">&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"currentTrackingId"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;</span>
+            <span class="xt">&lt;/ns1:info&gt;</span>
+            <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"refId"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$pSubRefId"</span><span class="xt">/&gt;</span>
+            <span class="xt">&lt;/ns1:info&gt;</span>
+            <span class="xt">&lt;ns1:info</span> <span class="xa">name</span>=<span class="st">"envName"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$globalVariables/OMX_COMMON/System_Name"</span><span class="xt">/&gt;</span>
+            <span class="xt">&lt;/ns1:info&gt;</span>
+          <span class="xt">&lt;/ns1:SequencingRequest&gt;</span>
+        <span class="xt">&lt;/payload&gt;</span>
+      <span class="xt">&lt;/event&gt;</span>
+    <span class="xt">&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span>
+
+<span class="cm">// ChildOU Variant ② — identical; change only:</span>
+<span class="cm">//   $psub  → $csub</span>
+<span class="cm">//   $pSubRefId → $cSubRefId</span></pre>
+  </div>
+</div>
+
+<!-- §10 Field Mapping Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:SequencingRequest</span> <span class="tree-ns">xmlns:ns1="…/IOM/Sequencing.xsd"</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:action</span><span class="tree-arrow">←</span><span class="tree-src-static">"sequence" (static)</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:sequenceId</span><span class="tree-arrow">←</span><span class="tree-src">concat("MOBILE-", $psub/MSISDN)</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:trackingId</span><span class="tree-arrow">←</span><span class="tree-src">substring-after($orderRequest/OrderData/OMXTrackingId, '-')</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:system</span><span class="tree-arrow">←</span><span class="tree-src-static">"OMX" (static)</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:info[orderId]</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:info[orderType]</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:info[created]</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CreateDate</span><span class="tree-cond">if: $orderRequest/OrderData/CreateDate exists</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:info[currentTrackingId]</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:info[refId]</span><span class="tree-arrow">←</span><span class="tree-src">$pSubRefId (ParentOU) / $cSubRefId (ChildOU)</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:info[envName]</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/OMX_COMMON/System_Name</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div style="margin-top:10px;font-size:.78rem;color:#555">
+      <strong>Legend:</strong>
+      <span class="badge badge-green">Always</span> — unconditionally emitted &nbsp;
+      <span class="badge badge-orange">Conditional</span> — inside xsl:if &nbsp;
+      <span class="tree-src" style="color:#a6e3a1">green</span> = XPath source &nbsp;
+      <span class="tree-src-static" style="color:#fab387">orange</span> = static literal
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Phase</th><th>AUDIT_TRACE</th><th>Condition</th></tr>
+      <tr><td>Request sent</td><td><code>Request Sent for IOM_CHECK_SEQUENCING</code></td><td>When at least one request is emitted (fixed string, not per-subscriber)</td></tr>
+      <tr><td>Response received</td><td><code>Response received for IOM_CHECK_SEQUENCING</code></td><td>When RequestCount == successResponseCount (fan-in complete)</td></tr>
+      <tr><td>Waiting (dead code)</td><td><code>Response received for IOM_CHECK_SEQUENCING</code></td><td>Commented-out "waiting_sequencing" logger — never emitted</td></tr>
+    </table>
+    <div class="alert alert-warning" style="margin-top:10px">
+      <strong>Note:</strong> The request audit log emits once for the entire activity, not once per subscriber.
+      Individual subscriber tracking can only be inferred from JMS correlation via RefID.
+    </div>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Status</th><th>Next Step</th></tr>
+      <tr><td>One or more sequencing requests sent</td><td><span class="badge badge-blue">IN_PROGRESS</span></td><td>Wait for IOM response; fan-in completion drives forward</td></tr>
+      <tr><td>No requests sent (all subscribers skipped)</td><td><span class="badge badge-purple">SKIPPED</span></td><td><code>SkipActivity("4")</code> — move to next activity</td></tr>
+      <tr><td>All responses received, status = accept</td><td><span class="badge badge-green">COMPLETED</span></td><td>Return "true" — order proceeds</td></tr>
+      <tr><td>All responses received, status ≠ accept</td><td><span class="badge badge-orange">WAITING</span></td><td>Return "false" — IOM sequencing still pending</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Return Type</th><th>Purpose</th></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, subRefId)</code></td><td>String (XML)</td><td>Returns XML snapshot for a single subscriber given its RefID — used to evaluate XPath expressions against subscriber-scope data</td></tr>
+      <tr><td><code>Instance.getByExtIdByUri(extId, conceptURI)</code></td><td>Concept</td><td>Retrieves an Activity concept from WM by its extId — used to look up the next activity</td></tr>
+      <tr><td><code>XPath.execute(expr, xml, nsContext)</code></td><td>String</td><td>Evaluates an XPath expression against a raw XML string — returns "true"/"false" for boolean expressions</td></tr>
+      <tr><td><code>OMXUtils.generateTrackingID()</code></td><td>String</td><td>Generates a unique extId for ResponseBase instances</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre>Request_IOM_CHECK_SEQUENCING (rule)
+├── Instance.getByExtIdByUri()            [resolve next activity concept]
+├── RuleFunctions.Helpers.GetXMLForSubscriber()  [subscriber XML snapshot]
+├── XPath.execute()                       [evaluate next activity PreExecCheck]
+├── Event.createEvent(xslt://...)         [build SequencingRequest event]
+│   └── XSLT: ns1:SequencingRequest
+│       ├── concat()                      [MOBILE- + MSISDN]
+│       └── substring-after()            [strip OMX- prefix from trackingId]
+└── Event.Ext.sendEventImmediate()        [dispatch JMS to IOM]
+
+Response_IOM_CHECK_SEQUENCING (rulefunction)
+├── Instance.createInstance(xslt://...)   [create ResponseBase concept]
+├── XPath.evalAsInt()                     [count successful responses]
+│   └── count($currActivity/Response[tib:right(tib:trim(ResponseCode),3)="000"])
+├── XPath.evalAsBoolean()                 [check SequencingResponse/status = "accept"]
+└── Event.Ext.sendEventImmediate()        [emit response audit log]</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th><th>Priority</th></tr>
+      <tr><td>R1</td><td>The modernised component MUST evaluate the <em>next activity's</em> PreExecCheck per subscriber before sending a sequencing call to IOM</td><td><span class="badge badge-high">HIGH</span></td></tr>
+      <tr><td>R2</td><td>sequenceId MUST be formatted as <code>MOBILE-{MSISDN}</code> — IOM uses this as the sequence key</td><td><span class="badge badge-high">HIGH</span></td></tr>
+      <tr><td>R3</td><td>trackingId MUST strip the "OMX-" prefix from OMXTrackingId (<code>substring-after(..., '-')</code>)</td><td><span class="badge badge-high">HIGH</span></td></tr>
+      <tr><td>R4</td><td>Completion MUST check <code>SequencingResponse/status = "accept"</code> — not just a 000 response code</td><td><span class="badge badge-high">HIGH</span></td></tr>
+      <tr><td>R5</td><td>If no subscribers require sequencing (all skip), the activity MUST be skipped with code "4"</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+      <tr><td>R6</td><td>Dead commented-out CRM_CREATE_UPDATE_SR XSLT block should be removed during migration</td><td><span class="badge badge-low">LOW</span></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Dynamic PreExecCheck evaluation — runtime XPath injection risk if next activity PreExecCheck is not sanitised</td><td><span class="badge badge-high">HIGH</span></td><td>Modern implementation should use a static mapping or compile XPath expressions at load time; validate XPath strings from DB/config</td></tr>
+      <tr><td>IOM sequencing timeout — if IOM never returns "accept", the order is stuck IN_PROGRESS</td><td><span class="badge badge-high">HIGH</span></td><td>Implement timeout/retry in the new platform; consider IOM circuit-breaker pattern</td></tr>
+      <tr><td>Single audit log for entire activity — insufficient per-subscriber observability</td><td><span class="badge badge-medium">MEDIUM</span></td><td>Emit per-subscriber structured logs in the modern service</td></tr>
+      <tr><td>Commented-out "waiting_sequencing" log suggests the non-accept path has no visibility</td><td><span class="badge badge-medium">MEDIUM</span></td><td>Implement explicit waiting-state monitoring in the replacement</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Request Rule)</div>
+  <div class="section-body">
+    <pre><span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_IOM_CHECK_SEQUENCING</span> {
+  <span class="kw">attribute</span> {
+    priority = <span class="nu">5</span>;
+    forwardChain = <span class="kw">true</span>;
+  }
+  <span class="kw">declare</span> {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> currActivity;
+  }
+  <span class="kw">when</span> {
+    <span class="cm">// Standard OMXFM conditions:</span>
+    <span class="cm">// orderRequest.ProcessFlow.CurrentActivityID == "IOM_CHECK_SEQUENCING"</span>
+    <span class="cm">// currActivity.ActivityID == "IOM_CHECK_SEQUENCING"</span>
+    <span class="cm">// currActivity.Status != "IN_PROGRESS"</span>
+  }
+  <span class="kw">then</span> {
+    <span class="cm">// 1. Resolve NEXT activity and its PreExecCheck</span>
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct =
+        <span class="fn">Instance.getByExtIdByUri</span>(orderRequest.ProcessFlow.NextActivityName,
+            <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+    <span class="ty">String</span> chkXPath = nextAct.PreExecCheck;
+
+    <span class="cm">// 2. ParentOU subscriber loop</span>
+    <span class="kw">int</span> pLen = orderRequest.ParentOU.Subscriber@length;
+    <span class="kw">for</span>(<span class="kw">int</span> i = <span class="nu">0</span>; i &lt; pLen; i++) {
+        <span class="ty">String</span> pSubRefId = orderRequest.ParentOU.Subscriber[i].RefId;
+        <span class="cm">// reqSuccess guard: skip if response already received</span>
+        <span class="ty">String</span> sXML = <span class="fn">RuleFunctions.Helpers.GetXMLForSubscriber</span>(orderRequest, pSubRefId);
+        <span class="ty">String</span> chkRes = <span class="fn">XPath.execute</span>(<span class="st">"/("</span> + chkXPath + <span class="st">")"</span>, sXML, <span class="st">"ns0=..."</span>);
+        <span class="kw">if</span>(chkRes.equals(<span class="st">"true"</span>)) {
+            <span class="fn">Event.Ext.sendEventImmediate</span>(<span class="fn">Event.createEvent</span>(
+                <span class="st">"xslt://{{/Events/OMConsumers/OMXFM/Request/IOM_CHECK_SEQUENCING}}"</span>
+                <span class="cm">/* XSLT: ns1:SequencingRequest — see §9.8 ParentOU Variant ①
+                   Outputs: action="sequence", sequenceId=concat("MOBILE-",MSISDN),
+                   trackingId=substring-after(OMXTrackingId,'-'), system="OMX",
+                   info[orderId,orderType,created?,currentTrackingId,refId,envName] */</span>
+            ));
+            currActivity.RequestCount++;
+        }
+    }
+
+    <span class="cm">// 3. ChildOU subscriber loop (identical; $cSubRefId / $csub — see §9.8 Variant ②)</span>
+
+    <span class="cm">// 4. Set activity status</span>
+    <span class="kw">if</span>(currActivity.RequestCount > <span class="nu">0</span>) {
+        currActivity.Status = <span class="fn">GetActivityStatusString</span>(<span class="st">"IN_PROGRESS"</span>);
+        <span class="cm">// AUDIT_TRACE: "Request Sent for IOM_CHECK_SEQUENCING"</span>
+    } <span class="kw">else</span> {
+        <span class="fn">SkipActivity</span>(<span class="st">"4"</span>);
+    }
+
+    <span class="cm">/* DEAD CODE (~line 109): Large commented-out CRM_CREATE_UPDATE_SR XSLT block
+       — legacy artefact, safe to remove */</span>
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§19.1 Overview</h3>
+    <p>
+      <code>Response_IOM_CHECK_SEQUENCING.rulefunction</code> handles the asynchronous JMS reply from IOM.
+      It parses the <code>SequencingResponse</code> payload, updates the activity's response array, and determines
+      whether the sequencing gate has been cleared. It returns <code>"true"</code> only when <em>all</em> subscribers have
+      received successful responses AND IOM's status is <code>"accept"</code>. Non-accept responses cause the activity to
+      remain IN_PROGRESS — the order waits.
+    </p>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Main order object — activities array updated</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.IOM_CHECK_SEQUENCING</code></td><td>JMS response event from IOM</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity state — Response[] array, RequestCount, ResponseCode/Message</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§19.3 ResponseBase Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">if: $eventResponse/ResponseCode</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">if: $eventResponse/ResponseMsg</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">if: $eventResponse/CompletionStatus</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">if: $eventResponse/RefID</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:8px">After creation: <code>currActivity.Response[n] = activityRes</code>, <code>currActivity.ResponseCode = eventResponse.ResponseCode</code>, <code>currActivity.ResponseMessage = eventResponse.ResponseMsg</code>.</p>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§19.4 Response Completion Logic</h3>
+    <div class="callout">
+      <strong>Step 1 — Update RequestCount sync</strong><br/>
+      Loop over <code>orderRequest.ProcessFlow.Activities[]</code> where <code>ActivityID == "IOM_CHECK_SEQUENCING"</code> and sync <code>RequestCount = currActivity.Response@length</code>.
+    </div>
+    <div class="callout" style="margin-top:8px">
+      <strong>Step 2 — Count successes</strong><br/>
+      <code>successResponseCount = count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code><br/>
+      A response is "successful" when the last 3 chars of its ResponseCode are "000".
+    </div>
+    <div class="callout" style="margin-top:8px">
+      <strong>Step 3 — Fan-in check</strong><br/>
+      <code>if (currActivity.RequestCount == successResponseCount)</code> → all subscribers responded successfully.<br/>
+      Then check: <code>$eventResponse/payload/xsd2:SequencingResponse/xsd2:status = "accept"</code><br/>
+      <span class="badge badge-green">accept</span> → return <code>"true"</code> (order cleared to proceed)<br/>
+      <span class="badge badge-orange">other</span> → return <code>"false"</code> (IOM sequencing still pending)
+    </div>
+    <div class="alert alert-info" style="margin-top:10px">
+      <strong>Key difference from other OMXFM rules:</strong> IOM_CHECK_SEQUENCING has a <em>two-tier</em> completion check:
+      first the normal fan-in (<code>RequestCount == successResponseCount</code>), then the IOM-specific semantic check
+      (<code>status = "accept"</code>). Even with all 000 response codes, a non-accept status keeps the order waiting.
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§19.5 Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code> (conditional)</td></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat($pid, "_RES")</code></td></tr>
+      <tr><td>COMPONENT_NAME</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"IOM_CHECK_SEQUENCING"</code> (static)</td></tr>
+      <tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+      <tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Response received for IOM_CHECK_SEQUENCING"</code> (static)</td></tr>
+      <tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+      <tr><td>payload</td><td>Copy of $eventResponse — gated on <code>WritePayload = "true"</code></td></tr>
+    </table>
+    <div class="alert alert-warning" style="margin-top:8px">
+      The "waiting_sequencing" audit log (OPERATION_NAME="waiting_sequencing") is fully commented out.
+      There is no visibility into orders waiting for IOM to return "accept". The non-accept path silently returns "false".
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:14px 0 10px">§19.6 Response XSLT Source (ResponseBase)</h3>
+    <pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+    <span class="xa">xmlns:ns</span>=<span class="st">"www.tibco.com/be/custom/OMXUtils"</span>
+    <span class="xa">xmlns:xsd</span>=<span class="st">"http://www.w3.org/2001/XMLSchema"</span>
+    <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:output</span> <span class="xa">method</span>=<span class="st">"xml"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"eventResponse"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createObject&gt;</span>
+      <span class="xt">&lt;object&gt;</span>
+        <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="st">"extId"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"ns:generateTrackingID()"</span><span class="xt">/&gt;</span>
+        <span class="xt">&lt;/xsl:attribute&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/ResponseCode"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ResponseCode&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/ResponseCode"</span><span class="xt">/&gt;&lt;/ResponseCode&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/ResponseMsg"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ResponseMessage&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/ResponseMsg"</span><span class="xt">/&gt;&lt;/ResponseMessage&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/CompletionStatus"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;CompletionStatus&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/CompletionStatus"</span><span class="xt">/&gt;&lt;/CompletionStatus&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/RefID"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ReferenceId&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/RefID"</span><span class="xt">/&gt;&lt;/ReferenceId&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;/object&gt;</span>
+    <span class="xt">&lt;/createObject&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:8px">
+  TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-07
+</div>
+</div>
+</body>
+</html>

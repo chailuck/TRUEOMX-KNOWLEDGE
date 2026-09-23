@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_MCS_REGISTER_SUBSCRIPTION</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#222;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:36px 40px}
+.page-header h1{font-size:2rem;font-weight:700;letter-spacing:.5px}
+.page-header .subtitle{font-size:1rem;opacity:.85;margin-top:6px}
+.meta-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px}
+.meta-chip{background:rgba(255,255,255,.18);padding:4px 12px;border-radius:20px;font-size:.78rem;font-weight:600}
+.container{max-width:1200px;margin:0 auto;padding:28px 24px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:700;display:flex;align-items:center;gap:10px;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.86rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FFF8F8}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:.8rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.74rem;font-weight:700}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.badge-high{background:#FFE0E0;color:#B71C1C;border:1px solid #FFCDD2}
+.badge-medium{background:#FFF9C4;color:#F57F17;border:1px solid #FFF176}
+.badge-low{background:#E8F5E9;color:#1B5E20;border:1px solid #C8E6C9}
+.alert-info{border-left:4px solid var(--info);background:#EBF4FE;padding:12px 16px;border-radius:0 6px 6px 0;margin:10px 0}
+.alert-warning{border-left:4px solid var(--warning);background:#FFF8F0;padding:12px 16px;border-radius:0 6px 6px 0;margin:10px 0}
+.callout{background:var(--true-pale);border:1px solid #FFCCCC;border-radius:8px;padding:14px 18px;margin:10px 0}
+.flow-step{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:1px}
+.flow-body{flex:1}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086;font-style:italic}.nu{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+h3{color:var(--true-dark);margin:14px 0 10px;font-size:.95rem}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:4px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_MCS_REGISTER_SUBSCRIPTION</h1>
+  <div class="subtitle">External OMXFM — MCS Media Content Subscription Registration · RegisterSubscriptionRequest schema</div>
+  <div class="meta-row">
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Backend: MCS (Media Content Service)</span>
+    <span class="meta-chip">Event: MCS_REGISTER_SUBSCRIPTION</span>
+    <span class="meta-chip">Author: Chayatorn Pan.</span>
+    <span class="meta-chip">Generated: 2026-09-09</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>MCS_REGISTER_SUBSCRIPTION</strong> registers prepaid subscribers into the MCS (Media Content Service /
+      MarketPlace) system. For each SubscriberOffer across ParentOU and ChildOU subscribers, it sends a
+      <code>RegisterSubscriptionRequest</code> to MCS, carrying the pack code, subscriber identity
+      (msisdn, subscriber_id, certificate_number), channel, language, and up to 8 optional
+      <code>ns:extra</code> key-value pairs (tokens, promotion IDs, recurring SOC, MCS pack code, OTT discount).
+    </div>
+    <table>
+      <tr><th style="width:240px">Property</th><th>Value</th></tr>
+      <tr><td>Rule class</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_MCS_REGISTER_SUBSCRIPTION</code></td></tr>
+      <tr><td>Backend System</td><td>MCS (Media Content Service)</td></tr>
+      <tr><td>Integration type</td><td><span class="badge badge-jms">JMS / Async</span></td></tr>
+      <tr><td>Request event</td><td><code>Events.OMConsumers.OMXFM.Request.MCS_REGISTER_SUBSCRIPTION</code></td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.MCS_REGISTER_SUBSCRIPTION</code></td></tr>
+      <tr><td>Schema</td><td><code>ns:RegisterSubscriptionRequest</code> (RegisterSubscription.xsd)</td></tr>
+      <tr><td>Destination</td><td><code>MCS_REGISTER_SUBSCRIPTION</code> on channel <code>/Channels/OMXFMConnectionRequest</code></td></tr>
+      <tr><td>RefID</td><td><code>subOff.OfferName</code> (offer name only — not a composite key)</td></tr>
+      <tr><td>Dispatch pattern</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> direct; RequestCount manually incremented</td></tr>
+      <tr><td>Audit log gate</td><td><code>AllowWriteLog(orderRequest.OrderData.OrderType)</code> — order-type-dependent</td></tr>
+      <tr><td>Fan-in completion</td><td><code>count(Response[last3ofResponseCode="000"]) == RequestCount</code></td></tr>
+      <tr><td>Resubmit support</td><td>Yes — RequestCount not incremented when <code>isActResub=true</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule Name</td><td><code>Request_MCS_REGISTER_SUBSCRIPTION</code></td><td>External OMXFM request rule</td></tr>
+      <tr><td>Namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td><td></td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td>true</td><td></td></tr>
+      <tr><td>Author</td><td>Chayatorn Pan.</td><td></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order — Customer hierarchy, order-level ExtendedInfo (tokens, MCS correlation)</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity — Response[], RequestCount, Status, Parameters</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:.85rem;color:#555"><code>nextAct</code> is fetched dynamically via <code>Instance.getByExtIdByUri</code> for PreExecCheck evaluation.</p>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Bind to current step</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "MCS_REGISTER_SUBSCRIPTION"</code></td><td>Route to this rule</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "MCS_REGISTER_SUBSCRIPTION"</code></td><td>Cross-check ProcessFlow state</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Ready to execute</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><strong>Setup</strong><br/><code>isActResub = (RequestCount > 0 && IsOrderResubmitted)</code>.<br/>Fetch <code>nextAct</code> (for PreExecCheck).<br/>Read <code>USE_FE_RECURRING</code> parameter from current activity.</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><strong>ParentOU Subscriber Offers loop</strong><br/>RefID = <code>subOff.OfferName</code>. Check reqSuccess guard (<code>ReferenceId == refId && CompletionStatus == 2</code>).<br/>Evaluate PreExecCheck via <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code>.<br/>If passed: collect all variables (transaction_id, msisdn, subIdCrm, recurringSoc, tokens, etc.),<br/>build and <code>sendEventImmediate</code>; if <code>AllowWriteLog(OrderType)</code>: emit audit event.<br/>If <code>!isActResub</code>: <code>orderCurrentActivity.RequestCount++</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><strong>ChildOU Subscriber Offers loop</strong><br/>Same logic for ChildOU subscribers (uses <code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code>).<br/>Same RequestCount increment logic.</div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><strong>Status branch</strong><br/>If any sent: <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB(orderRequest)</code>.<br/>All skipped: <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-body"><strong>Exception</strong> — <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></div></div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction &amp; Key Variables</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>refId</code></td><td><code>subOff.OfferName</code></td><td>Used as RefID for correlation — offer name only (not a composite key)</td></tr>
+      <tr><td><code>transaction_id</code></td><td><code>orderRequest.OrderData.OMXTrackingId</code></td><td>Sent as <code>ns:transaction_id</code> in payload</td></tr>
+      <tr><td><code>method</code></td><td><code>orderRequest.OrderData.OMXTrackingId</code></td><td><span style="color:#B71C1C">⚠ Dead variable — assigned but never passed to XSLT; ns:method is hardcoded "register"</span></td></tr>
+      <tr><td><code>msisdn</code></td><td><code>subscriber.MSISDN</code></td><td>Sent as <code>ns:msisdn</code></td></tr>
+      <tr><td><code>channel</code></td><td><code>orderRequest.OrderData.Channel</code></td><td>Sent as <code>ns:channel</code></td></tr>
+      <tr><td><code>pack_code</code></td><td><code>subOff.OfferName</code></td><td>Sent as <code>ns:pack_code</code>; earlier code (now commented out) was filtering by ServiceType='69' and FE_OR_CCBS</td></tr>
+      <tr><td><code>lang</code></td><td><code>subscriber.SubscriberGeneralInfo.Language</code></td><td>Sent as <code>ns:lang</code></td></tr>
+      <tr><td><code>recurringSoc</code></td><td>Conditional: if USE_FE_RECURRING="Y" → any FE offer's RECURRING_SOC; else → current offer's RECURRING_SOC</td><td>Sent as extra[RECURRING_SOC] if non-empty</td></tr>
+      <tr><td><code>mcsCorrelationId</code></td><td><code>orderRequest.OrderData.ExtendedInfo[MCS_CORRELATION_ID]/Value</code></td><td>Sent as extra[MCS_CORRELATION_ID] if non-empty</td></tr>
+      <tr><td><code>flowId</code></td><td><code>subOff.ExtendedInfo[FLOW_ID]/Value</code></td><td>Sent as extra[FLOW_ID] if non-empty</td></tr>
+      <tr><td><code>accessToken</code></td><td><code>orderRequest.OrderData.ExtendedInfo[AccessToken]/Value</code></td><td>Sent as extra[ACCESS_TOKEN] if non-empty</td></tr>
+      <tr><td><code>refreshToken</code></td><td><code>orderRequest.OrderData.ExtendedInfo[RefreshToken]/Value</code></td><td>Sent as extra[REFRESH_TOKEN] if non-empty</td></tr>
+      <tr><td><code>promotionId</code></td><td><code>orderRequest.OrderData.ExtendedInfo[PromotionID]/Value</code></td><td>Sent as extra[PROMOTION_ID] if non-empty</td></tr>
+      <tr><td><code>mcs_packcode</code></td><td><code>subOff.ExtendedInfo[MCS_PACKCODE]/Value</code></td><td>Sent as extra[MCS_PACKCODE] if non-empty AND serviceType='69'</td></tr>
+      <tr><td><code>ott_discount_amount</code></td><td><code>subOff.ExtendedInfo[OTT_DISCOUNT_AMOUNT]/Value</code></td><td>Sent as extra[OTT_DISCOUNT_AMOUNT] if non-empty AND serviceType='80'</td></tr>
+      <tr><td><code>subIdCrm</code></td><td><code>MapSubscriberIdFromCRM(subscriber, USE_ROWID_CRM)</code></td><td>Sent as <code>ns:subscriber_id</code> if non-empty</td></tr>
+    </table>
+
+    <h3>USE_FE_RECURRING — recurringSoc resolution logic</h3>
+    <pre><span class="cm">// XPath in-rule (pseudo):</span>
+<span class="kw">if</span> ($feRecurringSoc = <span class="st">"Y"</span>)
+    <span class="cm">// Read RECURRING_SOC from any FE offer on this subscriber (FE_OR_CCBS="FE")</span>
+    $subscriber/SubscriberOffers[ExtendedInfo[Name=<span class="st">"FE_OR_CCBS"</span> <span class="kw">and</span> Value=<span class="st">"FE"</span>]]/ExtendedInfo[Name=<span class="st">"RECURRING_SOC"</span>]/Value
+<span class="kw">else</span>
+    <span class="cm">// Read RECURRING_SOC from the current offer being processed</span>
+    $subOff/ExtendedInfo[Name=<span class="st">"RECURRING_SOC"</span>]/Value</pre>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.2 ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event</th><th>Protocol</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.MCS_REGISTER_SUBSCRIPTION</code></td><td><span class="badge badge-jms">JMS</span></td><td>Send RegisterSubscriptionRequest to MCS</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Response.MCS_REGISTER_SUBSCRIPTION</code></td><td><span class="badge badge-jms">JMS</span></td><td>Receive subscription registration result from MCS</td></tr>
+    </table>
+
+    <h3>§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Schema</th><th>Correlation</th></tr>
+      <tr><td>MCS</td><td>RegisterSubscription</td><td><code>ns:RegisterSubscriptionRequest</code> (RegisterSubscription.xsd)</td><td>RefID = <code>subOff.OfferName</code>; fan-in: RequestCount == count(000 responses)</td></tr>
+    </table>
+
+    <h3>§8.4 BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Field</th><th>Access</th><th>Notes</th></tr>
+      <tr><td><code>orderRequest.OrderData.Channel</code></td><td>READ</td><td>ns:channel</td></tr>
+      <tr><td><code>orderRequest.OrderData.OMXTrackingId</code></td><td>READ</td><td>ns:transaction_id</td></tr>
+      <tr><td><code>orderRequest.OrderData.ExtendedInfo[MCS_CORRELATION_ID, AccessToken, RefreshToken, PromotionID]</code></td><td>READ</td><td>extra[] elements</td></tr>
+      <tr><td><code>subscriber.MSISDN</code></td><td>READ</td><td>ns:msisdn</td></tr>
+      <tr><td><code>subscriber.SubscriberGeneralInfo.Language</code></td><td>READ</td><td>ns:lang</td></tr>
+      <tr><td><code>subscriber.SubscriberName.NameType / Identification</code></td><td>READ</td><td>ns:certificate_number (INDY subscribers)</td></tr>
+      <tr><td><code>subscriber.AccountRefId</code></td><td>READ</td><td>Joined to Customer.Account[] for ns:account_id</td></tr>
+      <tr><td><code>subscriber.SubscriberOffers[ServiceType='80']</code></td><td>READ</td><td>ns:pp_code (existing prepaid plan)</td></tr>
+      <tr><td><code>subscriber.SubscriberOffers[OfferName='RMVX00000000001']</code></td><td>READ</td><td>ns:pp_expire_date from TR_ORIG_CONTRACT_EXPIRE_DATE parameter</td></tr>
+      <tr><td><code>subOff.ExtendedInfo[FE_OR_CCBS, FLOW_ID, RECURRING_SOC, MCS_PACKCODE, OTT_DISCOUNT_AMOUNT]</code></td><td>READ</td><td>Payload construction</td></tr>
+      <tr><td><code>orderCurrentActivity.Response[]</code></td><td>READ/WRITE</td><td>reqSuccess guard + appended by response RF</td></tr>
+      <tr><td><code>orderCurrentActivity.RequestCount</code></td><td>WRITE</td><td>Manually incremented (if !isActResub)</td></tr>
+    </table>
+
+    <h3>§8.5 Activity Parameters</h3>
+    <table>
+      <tr><th>Parameter</th><th>Effect</th></tr>
+      <tr><td><code>USE_FE_RECURRING</code></td><td>If "Y": read RECURRING_SOC from FE offer; else read from current offer</td></tr>
+      <tr><td><code>USE_ROWID_CRM</code></td><td>Controls <code>MapSubscriberIdFromCRM</code> — CRM row ID vs subscriber ID</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build (XSLT Decomposition)</div>
+  <div class="section-body">
+    <h3>§9.4 Payload Structure — RegisterSubscriptionRequest</h3>
+    <pre><span class="xt">&lt;ns:RegisterSubscriptionRequest</span>
+  <span class="xa">xmlns:ns</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/.../MCS/RegisterSubscription.xsd"</span><span class="xt">&gt;</span>
+
+  <span class="xt">&lt;ns:transaction_id&gt;</span>OMXTrackingId<span class="xt">&lt;/ns:transaction_id&gt;</span>
+  <span class="xt">&lt;ns:method&gt;</span>register<span class="xt">&lt;/ns:method&gt;</span>               <span class="cm">// Static — "register"</span>
+  <span class="xt">&lt;ns:msisdn&gt;</span>subscriber.MSISDN<span class="xt">&lt;/ns:msisdn&gt;</span>
+  <span class="xt">&lt;ns:subscriber_id&gt;</span>subIdCrm<span class="xt">&lt;/ns:subscriber_id&gt;</span>   <span class="cm">// if subIdCrm != ""</span>
+  <span class="xt">&lt;ns:channel&gt;</span>orderData.Channel<span class="xt">&lt;/ns:channel&gt;</span>
+  <span class="xt">&lt;ns:pack_code&gt;</span>subOff.OfferName<span class="xt">&lt;/ns:pack_code&gt;</span>
+  <span class="xt">&lt;ns:lang&gt;</span>subscriber.Language<span class="xt">&lt;/ns:lang&gt;</span>
+
+  <span class="cm">// if NameType='INDY' AND Identification present</span>
+  <span class="xt">&lt;ns:certificate_number&gt;</span>SubscriberName.Identification<span class="xt">&lt;/ns:certificate_number&gt;</span>
+
+  <span class="cm">// if Account[AccountRefId]/AccountID present</span>
+  <span class="xt">&lt;ns:account_id&gt;</span>Customer.Account[AccountRefId].AccountID<span class="xt">&lt;/ns:account_id&gt;</span>
+
+  <span class="cm">// if subscriber has an offer with ServiceType='80'</span>
+  <span class="xt">&lt;ns:pp_code&gt;</span>SubscriberOffers[ServiceType='80'].OfferName<span class="xt">&lt;/ns:pp_code&gt;</span>
+
+  <span class="cm">// if subscriber has offer OfferName="RMVX00000000001" with TR_ORIG_CONTRACT_EXPIRE_DATE param</span>
+  <span class="xt">&lt;ns:pp_expire_date&gt;</span>SubscriberOffers["RMVX00000000001"].ParameterInfo[TR_ORIG_CONTRACT_EXPIRE_DATE].ValuesArray<span class="xt">&lt;/ns:pp_expire_date&gt;</span>
+
+  <span class="cm">// Extra key-value pairs (each conditional on non-empty value, some also on serviceType)</span>
+  <span class="xt">&lt;ns:extra&gt;&lt;ns:key&gt;</span>RECURRING_SOC<span class="xt">&lt;/ns:key&gt;&lt;ns:value&gt;</span>recurringSoc<span class="xt">&lt;/ns:value&gt;&lt;/ns:extra&gt;</span>
+  <span class="xt">&lt;ns:extra&gt;&lt;ns:key&gt;</span>MCS_CORRELATION_ID<span class="xt">&lt;/ns:key&gt;&lt;ns:value&gt;</span>mcsCorrelationId<span class="xt">&lt;/ns:value&gt;&lt;/ns:extra&gt;</span>
+  <span class="xt">&lt;ns:extra&gt;&lt;ns:key&gt;</span>FLOW_ID<span class="xt">&lt;/ns:key&gt;&lt;ns:value&gt;</span>flowId<span class="xt">&lt;/ns:value&gt;&lt;/ns:extra&gt;</span>
+  <span class="xt">&lt;ns:extra&gt;&lt;ns:key&gt;</span>ACCESS_TOKEN<span class="xt">&lt;/ns:key&gt;&lt;ns:value&gt;</span>accessToken<span class="xt">&lt;/ns:value&gt;&lt;/ns:extra&gt;</span>
+  <span class="xt">&lt;ns:extra&gt;&lt;ns:key&gt;</span>REFRESH_TOKEN<span class="xt">&lt;/ns:key&gt;&lt;ns:value&gt;</span>refreshToken<span class="xt">&lt;/ns:value&gt;&lt;/ns:extra&gt;</span>
+  <span class="xt">&lt;ns:extra&gt;&lt;ns:key&gt;</span>PROMOTION_ID<span class="xt">&lt;/ns:key&gt;&lt;ns:value&gt;</span>promotionId<span class="xt">&lt;/ns:value&gt;&lt;/ns:extra&gt;</span>
+  <span class="xt">&lt;ns:extra&gt;&lt;ns:key&gt;</span>MCS_PACKCODE<span class="xt">&lt;/ns:key&gt;&lt;ns:value&gt;</span>mcs_packcode<span class="xt">&lt;/ns:value&gt;&lt;/ns:extra&gt;</span>   <span class="cm">// AND serviceType='69'</span>
+  <span class="xt">&lt;ns:extra&gt;&lt;ns:key&gt;</span>OTT_DISCOUNT_AMOUNT<span class="xt">&lt;/ns:key&gt;&lt;ns:value&gt;</span>ott_discount_amount<span class="xt">&lt;/ns:value&gt;&lt;/ns:extra&gt;</span>   <span class="cm">// AND serviceType='80'</span>
+<span class="xt">&lt;/ns:RegisterSubscriptionRequest&gt;</span></pre>
+  </div>
+</div>
+
+<!-- §10 Field Mapping Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID() [inside XSLT]</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId (= subOff.OfferName)</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:RegisterSubscriptionRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:transaction_id</span><span class="tree-arrow">←</span><span class="tree-src">$transaction_id (= OMXTrackingId)</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:method</span><span class="tree-arrow">←</span><span class="tree-src-static">"register"</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:msisdn</span><span class="tree-arrow">←</span><span class="tree-src">$msisdn</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:subscriber_id</span><span class="tree-arrow">←</span><span class="tree-src">$subIdCrm</span><span class="tree-cond">if subIdCrm != ""</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:channel</span><span class="tree-arrow">←</span><span class="tree-src">$channel (= orderData.Channel)</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:pack_code</span><span class="tree-arrow">←</span><span class="tree-src">$pack_code (= subOff.OfferName)</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:lang</span><span class="tree-arrow">←</span><span class="tree-src">$lang (subscriber.Language)</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:certificate_number</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberName/Identification</span><span class="tree-cond">if NameType='INDY' AND Identification present</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:account_id</span><span class="tree-arrow">←</span><span class="tree-src">Customer/Account[AccountRefId]/AccountID</span><span class="tree-cond">if AccountID present</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:pp_code</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers[ServiceType='80']/OfferName</span><span class="tree-cond">if present</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:pp_expire_date</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers["RMVX00000000001"]/ParameterInfo[TR_ORIG_CONTRACT_EXPIRE_DATE]/ValuesArray</span><span class="tree-cond">if present</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:extra[RECURRING_SOC]</span><span class="tree-arrow">←</span><span class="tree-src">recurringSoc</span><span class="tree-cond">if string-length > 0</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:extra[MCS_CORRELATION_ID]</span><span class="tree-arrow">←</span><span class="tree-src">mcsCorrelationId</span><span class="tree-cond">if string-length > 0</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:extra[FLOW_ID]</span><span class="tree-arrow">←</span><span class="tree-src">flowId</span><span class="tree-cond">if string-length > 0</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:extra[ACCESS_TOKEN]</span><span class="tree-arrow">←</span><span class="tree-src">accessToken</span><span class="tree-cond">if string-length > 0</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:extra[REFRESH_TOKEN]</span><span class="tree-arrow">←</span><span class="tree-src">refreshToken</span><span class="tree-cond">if string-length > 0</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:extra[PROMOTION_ID]</span><span class="tree-arrow">←</span><span class="tree-src">promotionId</span><span class="tree-cond">if string-length > 0</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:extra[MCS_PACKCODE]</span><span class="tree-arrow">←</span><span class="tree-src">mcs_packcode</span><span class="tree-cond">if string-length > 0 AND serviceType='69'</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:extra[OTT_DISCOUNT_AMOUNT]</span><span class="tree-arrow">←</span><span class="tree-src">ott_discount_amount</span><span class="tree-cond">if string-length > 0 AND serviceType='80'</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div style="margin-top:10px;font-size:.78rem;color:#555">
+      <strong>Note:</strong> Unlike most OMXFM rules, the event <code>@extId</code> is set inside the XSLT via <code>OMXUtils:generateTrackingID()</code>, not assigned by the outer BE rule scope.
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Phase</th><th>AUDIT_TRACE</th><th>Gate</th></tr>
+      <tr><td>Request sent (per offer)</td><td><code>Request Sent for MCS_REGISTER_SUBSCRIPTION</code></td><td><code>AllowWriteLog(orderRequest.OrderData.OrderType)</code> — conditional by order type</td></tr>
+      <tr><td>Response received</td><td><code>Response received for RefId &lt;RefID&gt;</code> (includes actual RefID)</td><td>Unconditional</td></tr>
+    </table>
+    <div class="alert-info" style="margin-top:8px">Request audit logging is gated by <code>AllowWriteLog(OrderType)</code> — certain order types suppress request-side audit trails. This is distinct from other OMXFM rules which log unconditionally. The response audit trace uniquely includes the actual RefID value in the message text.</div>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Status</th><th>Additional action</th></tr>
+      <tr><td>At least one request sent</td><td><code>GetActivityStatusString("1", false)</code></td><td><code>SendDataToDB(orderRequest)</code></td></tr>
+      <tr><td>No offers sent</td><td><span class="badge badge-purple">SKIPPED</span></td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+      <tr><td>Exception</td><td>Error state</td><td><code>HandleActivityException</code></td></tr>
+    </table>
+    <div class="alert-warning" style="margin-top:8px"><strong>RequestCount increment:</strong> This rule manually increments <code>orderCurrentActivity.RequestCount++</code> per offer, but only when <code>!isActResub</code>. Unlike rules using IntraActivitySequencing (SBM_ADD_3GPREPAID), there is no <code>SendFirstRequestEvent</code> call — each event is dispatched immediately via <code>sendEventImmediate</code>.</div>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre>Request_MCS_REGISTER_SUBSCRIPTION (rule)
+├── Instance.getByExtIdByUri(NextActivityName)                      [next activity PreExecCheck]
+├── GetActivityParameterValueFromKey(..., "USE_FE_RECURRING")       [parameter read]
+├── GetActivityParameterValueFromKey(..., "USE_ROWID_CRM")          [per offer]
+├── (per offer loop — ParentOU)
+│   ├── XPath.evalAsString()                                        [FE_OR_CCBS filter]
+│   ├── GetXMLForSubscriberOfferFilterWithExtendedInfo()            [PreExecCheck XML]
+│   ├── XPath.execute()                                             [evaluate PreExecCheck]
+│   ├── XPath.evalAsString() × 8                                   [recurringSoc, mcsCorrelationId, flowId, accessToken, refreshToken, promotionId, mcs_packcode, ott_discount_amount]
+│   ├── MapSubscriberIdFromCRM(subscriber, USE_ROWID_CRM)           [subIdCrm]
+│   ├── Event.createEvent(xslt://MCS_REGISTER_SUBSCRIPTION)         [build RegisterSubscriptionRequest]
+│   ├── Event.Ext.sendEventImmediate(reqEvent)                      [dispatch JMS directly]
+│   ├── AllowWriteLog(orderRequest.OrderData.OrderType)             [gate for audit log]
+│   └── [if AllowWriteLog] Event.Ext.sendEventImmediate(Logger)    [audit event]
+├── (per offer loop — ChildOU)  [same as ParentOU]
+├── GetActivityStatusString("1", false)                             [IN_PROGRESS]
+├── SendDataToDB(orderRequest)                                      [persist]
+├── SkipActivity(orderRequest, orderCurrentActivity, "4")           [skip path]
+└── HandleActivityException()                                       [error path]
+
+Response_MCS_REGISTER_SUBSCRIPTION (rulefunction)
+├── OMXUtils.generateTrackingID()                                   [extId]
+├── Instance.createInstance(xslt://ResponseBase)                    [standard ResponseBase]
+│   → ResponseCode, ResponseMessage, CompletionStatus, ReferenceId
+├── currActivity.Response[length] = activityRes                     [append response]
+├── Event.Ext.sendEventImmediate(Logger)                            [response audit (unconditional)]
+└── XPath.evalAsInt("count(Response[last3='000'])")                 [fan-in count]
+    → if RequestCount == successResponseCount → "true" else "false"</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <div class="alert-warning">
+      <strong>Dead variable — method (lines 65, 135):</strong><br/>
+      <code>String method = orderRequest.OrderData.OMXTrackingId</code> — assigned but never passed to XSLT;
+      <code>ns:method</code> is hardcoded as the static literal <code>'register'</code> in the XSLT.
+    </div>
+    <div class="alert-warning" style="margin-top:8px">
+      <strong>Hardcoded offer name for pp_expire_date — "RMVX00000000001":</strong><br/>
+      The offer name is a magic string inside the XSLT template. If this contract SOC changes, the code must be updated.
+    </div>
+    <table style="margin-top:12px">
+      <tr><th>ID</th><th>Requirement</th><th>Priority</th></tr>
+      <tr><td>R1</td><td>One RegisterSubscriptionRequest per SubscriberOffer (ParentOU + ChildOU)</td><td><span class="badge badge-high">HIGH</span></td></tr>
+      <tr><td>R2</td><td>RefID = subOff.OfferName (not composite) — preserve for response correlation</td><td><span class="badge badge-high">HIGH</span></td></tr>
+      <tr><td>R3</td><td>8 conditional ns:extra fields — all conditions must be evaluated per offer</td><td><span class="badge badge-high">HIGH</span></td></tr>
+      <tr><td>R4</td><td>ns:certificate_number only for INDY NameType subscribers</td><td><span class="badge badge-high">HIGH</span></td></tr>
+      <tr><td>R5</td><td>USE_FE_RECURRING="Y" → read RECURRING_SOC from FE offer, not current offer</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+      <tr><td>R6</td><td>MCS_PACKCODE extra only when serviceType='69'; OTT_DISCOUNT_AMOUNT only when serviceType='80'</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+      <tr><td>R7</td><td>Request audit log gated by AllowWriteLog(OrderType) — preserve this filter</td><td><span class="badge badge-medium">MEDIUM</span></td></tr>
+      <tr><td>R8</td><td>pp_expire_date from SubscriberOffers["RMVX00000000001"]/TR_ORIG_CONTRACT_EXPIRE_DATE — externalise magic SOC name</td><td><span class="badge badge-low">LOW</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h3>§19.1 Overview</h3>
+    <p>Standard <code>ResponseBase</code> concept mapped from the MCS response. Fan-in via
+    <code>count(Response[last3 of ResponseCode == "000"]) == currActivity.RequestCount</code>.
+    Response AUDIT_TRACE uniquely includes the actual RefID: <code>"Response received for RefId &lt;RefID&gt;"</code>.</p>
+
+    <h3>§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order data (audit log context)</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.MCS_REGISTER_SUBSCRIPTION</code></td><td>JMS response from MCS</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Response[] array, RequestCount</td></tr>
+    </table>
+
+    <h3>§19.3 ResponseBase Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span><span class="badge badge-green" style="font-size:.72rem">Always</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange" style="font-size:.72rem">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3>§19.4 Response Completion Logic</h3>
+    <pre><span class="kw">int</span> successResponseCount = <span class="fn">XPath.evalAsInt</span>(
+  <span class="st">"count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = '000'])"</span>
+);
+<span class="kw">if</span>(currActivity.RequestCount == successResponseCount) {
+    <span class="kw">return</span> <span class="st">"true"</span>;   <span class="cm">// All parallel MCS subscriptions registered → advance</span>
+} <span class="kw">else</span> {
+    <span class="kw">return</span> <span class="st">"false"</span>;  <span class="cm">// Still waiting</span>
+}</pre>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:8px">
+  TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-09
+</div>
+</div>
+</body>
+</html>

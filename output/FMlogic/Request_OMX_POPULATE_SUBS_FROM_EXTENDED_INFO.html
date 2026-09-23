@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_POPULATE_SUBS_FROM_EXTENDED_INFO</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-low{background:#F1F8E9;color:#558B2F}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_OMX_POPULATE_SUBS_FROM_EXTENDED_INFO</h1>
+  <div class="subtitle">Internal OMX rule — reconstructs ParentOU + Subscriber concepts from EXISTING_SUB ExtInfo</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: None (internal)</span>
+    <span class="meta-chip">Namespace: OMXOM</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: Inline — NextActivity direct</span>
+    <span class="meta-chip">No response handler</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>OMX_POPULATE_SUBS_FROM_EXTENDED_INFO</strong> reconstructs working memory objects — a <code>ParentOU</code> concept with <code>Subscriber</code> children — from the pipe-delimited <code>EXISTING_SUB</code> ExtInfo stored in <code>OrderData.ExtendedInfo</code>. It is a data-hydration step: it restores subscriber structure that was serialized earlier in the order flow.
+    </div>
+    <div class="callout info">
+      <strong>No backend call:</strong> Purely in-memory. Reads ExtInfo, creates concepts, appends to order, then calls <code>NextActivity</code> directly. There is no outbound event and no response rulefunction.
+    </div>
+    <div class="callout success">
+      <strong>EXISTING_SUB format:</strong> Pipe-delimited string where each token is <code>MSISDN=RefId</code> (e.g., <code>0810001111=REF001|0820002222=REF002</code>). MSISDN = <code>substring-before(., "=")</code>; RefId/SubscriberId = <code>substring-after(., "=")</code>.
+    </div>
+    <div class="callout warn">
+      <strong>Write-back (2 markers):</strong> New ParentOU gets <code>ExtendedInfo Name="EXISTING_OU" Value="Y"</code>. Each new Subscriber gets <code>ExtendedInfo Name="EXISTING_SUB" Value="Y"</code>. These markers signal to downstream rules that this OU/subscriber is an existing (not new) subscription.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXOM.OMX_POPULATE_SUBS_FROM_EXTENDED_INFO</code></td></tr>
+      <tr><td>Author</td><td>DESKTOP-995HR2V</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>None — in-memory concept creation only</td></tr>
+      <tr><td>Send pattern</td><td>None — <code>Instance.createInstance(XSLT)</code> only, no <code>Event.createEvent</code> to a backend</td></tr>
+      <tr><td>Fan-in</td><td>No response handler — calls <code>NextActivity</code> directly</td></tr>
+      <tr><td>Iteration target</td><td>None — single-pass: reads ExtInfo once, creates one ParentOU with N Subscribers</td></tr>
+      <tr><td>Input key</td><td><code>OrderData.ExtendedInfo[Name="EXISTING_SUB"].Value</code> — pipe-delimited MSISDN=RefId list</td></tr>
+      <tr><td>Output</td><td>New <code>ParentOU</code> with <code>Subscriber[]</code> appended to <code>orderRequest.OrderData.Customer.ParentOU[]</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Key Logic -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>EXISTING_SUB parsing</td><td><code>XPath.evalAsString(OrderData/ExtendedInfo[Name="EXISTING_SUB"]/Value)</code> → <code>String.tokenize(existingSub, "|")</code> → <code>String[]</code> of MSISDN=RefId tokens</td></tr>
+      <tr><td>ParentOU creation</td><td><code>Instance.createInstance("xslt://{{/Concepts/OrderRequest/OrderElements/ParentOU}}"...)</code> — creates one ParentOU with extId <code>"OU:"+generateTrackingID()</code></td></tr>
+      <tr><td>Subscriber per token</td><td>XSLT <code>xsl:for-each select="$subList/elements"</code> — one Subscriber per pipe token; extId = <code>"SUB:"+generateTrackingID()</code></td></tr>
+      <tr><td>MSISDN / RefId split</td><td><code>MSISDN = substring-before(., "=")</code>; <code>RefId = SubscriberId = substring-after(., "=")</code></td></tr>
+      <tr><td>Marker flags</td><td>Each Subscriber: <code>ExtendedInfo Name="EXISTING_SUB" Value="Y"</code>; ParentOU: <code>ExtendedInfo Name="EXISTING_OU" Value="Y"</code></td></tr>
+      <tr><td>Array append</td><td><code>orderRequest.OrderData.Customer.ParentOU[length] = newOU</code> — appends to existing ParentOU array</td></tr>
+      <tr><td>Skip condition</td><td>Standard PreExecCheck; if <code>chkRes != "true"</code> → <code>SkipActivity("4")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — ParentOU Creation Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src-static">concat("OU:", OMXUtils:generateTrackingID())</span><span class="badge" style="background:#E8F5E9;color:#2e7d32;font-size:.72rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Subscriber</span><span class="tree-cond">[for-each $subList/elements] — one per MSISDN=RefId token</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src-static">concat("SUB:", OMXUtils:generateTrackingID())</span><span class="badge" style="background:#E8F5E9;color:#2e7d32;font-size:.72rem">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">MSISDN</span><span class="tree-arrow">←</span><span class="tree-src">substring-before(., "=")</span><span class="badge" style="background:#E8F5E9;color:#2e7d32;font-size:.72rem">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">RefId</span><span class="tree-arrow">←</span><span class="tree-src">substring-after(., "=")</span><span class="badge" style="background:#E8F5E9;color:#2e7d32;font-size:.72rem">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">SubscriberId</span><span class="tree-arrow">←</span><span class="tree-src">substring-after(., "=")</span><span class="badge" style="background:#E8F5E9;color:#2e7d32;font-size:.72rem">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ExtendedInfo</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src-static">generateTrackingID()</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">Name</span><span class="tree-arrow">←</span><span class="tree-src-static">"EXISTING_SUB"</span><span class="badge" style="background:#E8F5E9;color:#2e7d32;font-size:.72rem">Hardcoded</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">Value</span><span class="tree-arrow">←</span><span class="tree-src-static">"Y"</span><span class="badge" style="background:#E8F5E9;color:#2e7d32;font-size:.72rem">Hardcoded</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ExtendedInfo</span><span class="tree-cond">[ParentOU level marker]</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src-static">generateTrackingID()</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">Name</span><span class="tree-arrow">←</span><span class="tree-src-static">"EXISTING_OU"</span><span class="badge" style="background:#E8F5E9;color:#2e7d32;font-size:.72rem">Hardcoded</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">Value</span><span class="tree-arrow">←</span><span class="tree-src-static">"Y"</span><span class="badge" style="background:#E8F5E9;color:#2e7d32;font-size:.72rem">Hardcoded</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>OMX_POPULATE_SUBS_FROM_EXTENDED_INFO (internal, no FM pattern)
+├── Instance.getByExtIdByUri(NextActivityName, Activity) → nextAct
+├── [PreExecCheck if length > 0]
+│   └── Instance.serializeUsingDefaults(orderRequest) → sXML
+│       → XPath.execute("/("+chkXPath+")", sXML, ns) → chkRes
+├── if chkRes == "true":
+│   ├── XPath.evalAsString(OrderData/ExtendedInfo[Name="EXISTING_SUB"]/Value) → existingSub
+│   ├── String.tokenize(existingSub, "|") → String[] subList
+│   ├── Instance.createInstance("xslt://ParentOU", subList)
+│   │   └── XSLT: for-each $subList/elements:
+│   │       ├── Subscriber[@extId="SUB:"+generateTrackingID()]
+│   │       │   ├── MSISDN = substring-before(., "=")
+│   │       │   ├── RefId = substring-after(., "=")
+│   │       │   ├── SubscriberId = substring-after(., "=")
+│   │       │   └── ExtendedInfo[EXISTING_SUB=Y]
+│   │       └── ParentOU ExtendedInfo[EXISTING_OU=Y]
+│   ├── orderRequest.OrderData.Customer.ParentOU[length] = newOU   ← array append
+│   ├── Event.Ext.sendEventImmediate(Logger REQ)
+│   └── isSkipped = false
+├── if !isSkipped:
+│   └── RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)
+└── else:
+    └── RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")
+    [catch] → HandleActivityException</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>EXISTING_SUB format is implicit — depends on pipe + "=" convention being written correctly earlier in the flow; no schema validation</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document and validate EXISTING_SUB write format in upstream steps; consider JSON or structured XML instead of pipe-delimited string</td>
+      </tr>
+      <tr>
+        <td>EXISTING_OU / EXISTING_SUB marker flags are set by this rule — downstream rules depend on these being present to identify pre-existing subscribers</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document all downstream consumers of EXISTING_OU and EXISTING_SUB flags</td>
+      </tr>
+      <tr>
+        <td>RefId == SubscriberId — both set from substring-after(., "="); if the format changes the downstream lookup may break silently</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Add unit tests for tokenization edge cases (empty string, no "=" separator)</td>
+      </tr>
+      <tr>
+        <td>New ParentOU appended to array — does NOT create Account, Agreement, or other sub-objects; downstream rules must handle the partial OU structure</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document the minimal OU model produced by this rule</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

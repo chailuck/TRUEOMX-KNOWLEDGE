@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request_NAS_CHECK_COLLECTION_BLACKLIST</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem}
+.meta-row{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.meta-pill{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem}
+.content{max-width:1200px;margin:0 auto;padding:24px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left}
+td{padding:9px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre-wrap}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;font-size:0.8rem;color:#888;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_NAS_CHECK_COLLECTION_BLACKLIST</h1>
+  <div class="subtitle">Checks the NAS collection blacklist for a subscriber's ID number. Writes RELAX_STATUS back to subscriber ExtendedInfo from the response.</div>
+  <div class="meta-row">
+    <span class="meta-pill">Activity: NAS_CHECK_COLLECTION_BLACKLIST</span>
+    <span class="meta-pill">Backend: NAS</span>
+    <span class="meta-pill">Pattern: IntraActivitySequencing</span>
+    <span class="meta-pill">Scope: Subscriber (ChildOU primary, then ParentOU)</span>
+    <span class="meta-pill">Generated: 2026-09-23</span>
+  </div>
+</div>
+<div class="content">
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Invokes the NAS <code>CheckCollectionBlacklist</code> API using the customer's identification number (<code>CustomerGeneralInfo/Identification</code>) and a hardcoded company code <code>"AL"</code>. The response's <code>relaxStatus</code> is written back to each matched subscriber's <code>ExtendedInfo</code> as the key <code>RELAX_STATUS</code>.</p>
+    <p style="margin-top:10px">Iteration order: ChildOU subscribers first, then ParentOU subscribers. Uses IntraActivitySequencing pattern. Old RequestCount fan-in code is commented out.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_NAS_CHECK_COLLECTION_BLACKLIST</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Activity ID</td><td>NAS_CHECK_COLLECTION_BLACKLIST</td></tr>
+      <tr><td>Backend</td><td>NAS — CheckCollectionBlacklist</td></tr>
+      <tr><td>Pattern</td><td>IntraActivitySequencing</td></tr>
+      <tr><td>Iteration Order</td><td>ChildOU subscribers → ParentOU subscribers</td></tr>
+      <tr><td>Response Concept</td><td>Concepts.FM.Response.NAS_ActivateSubscriberRes (reused)</td></tr>
+      <tr><td>Response Event</td><td>Events.OMConsumers.OMXFM.Response.NAS_CHECK_COLLECTION_BLACKLIST</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <pre>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName
+orderCurrentActivity.ActivityID == "NAS_CHECK_COLLECTION_BLACKLIST"
+orderRequest.ProcessFlow.NextActivityID == "NAS_CHECK_COLLECTION_BLACKLIST"
+orderCurrentActivity.Status == "WAITING"</pre>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol style="padding-left:20px;line-height:2">
+      <li>If resubmit: call <code>PurgePendingRequestsBeforeResubmit</code></li>
+      <li><strong>ChildOU first</strong>: Iterate <code>ParentOU[i].ChildOU[k].Subscriber[j]</code></li>
+      <li>Evaluate PreExecCheck via <code>GetXMLForSubscriberInChildOU</code></li>
+      <li>For passing: fire <code>NAS_CHECK_COLLECTION_BLACKLIST</code> via IntraActivitySequencing</li>
+      <li>Fire audit logger</li>
+      <li><strong>Then ParentOU</strong>: Iterate <code>ParentOU[i].Subscriber[j]</code></li>
+      <li>Evaluate PreExecCheck via <code>GetXMLForSubscriber</code></li>
+      <li>For passing: fire request via IntraActivitySequencing</li>
+      <li>Fire audit logger</li>
+      <li>If not skipped: <code>SendFirstRequestEvent</code> + set IN_PROGRESS; else: <code>SkipActivity("4")</code></li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§9 — Payload Build (NAS_CHECK_COLLECTION_BLACKLIST)</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">Subscriber[index]/RefId</span><span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:NasCheckCollectionBlacklistRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:correlatedId</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:idNumber</span><span class="tree-arrow">←</span><span class="tree-src">CustomerGeneralInfo/Identification</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:companyCode</span><span class="tree-arrow">←</span><span class="tree-src-static">"AL"</span><span class="badge badge-green" style="font-size:0.7rem">Hardcoded</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_NAS_CHECK_COLLECTION_BLACKLIST
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)
+├── GetXMLForSubscriber(orderRequest, refId)
+├── XPath.execute("/(preExecCheck)", sXML, ...)
+├── Event.assertEvent(reqEvent)
+├── IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+├── Event.Ext.sendEventImmediate(Logger)
+├── IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── GetActivityStatusString("1", false)
+├── SendDataToDB(orderRequest)
+├── SkipActivity(req, activity, "4")
+└── HandleActivityException(req, activity, ae, "")</pre>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Requirement / Risk</th><th>Severity</th></tr>
+      <tr><td>R1</td><td>idNumber sourced from <code>CustomerGeneralInfo/Identification</code> (account level, not subscriber)</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+      <tr><td>R2</td><td>companyCode is hardcoded <code>"AL"</code> — not configurable</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R3</td><td>Response writes <code>RELAX_STATUS</code> ExtendedInfo to each subscriber matched by RefId</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R4</td><td>Iteration order: ChildOU before ParentOU (unusual — document and preserve)</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R5</td><td>Old RequestCount fan-in code commented out; uses IntraActivitySequencing.ActionResponseEvent only</td><td><span class="badge badge-blue">[LOW]</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule</div>
+  <div class="card-body">
+    <h4>§19.1 Overview</h4>
+    <p>Creates <code>NAS_ActivateSubscriberRes</code> (concept reused for this rule). Reads <code>relaxStatus</code> from <code>NasCheckCollectionBlacklistResponse/data/relaxStatus</code>. Writes <code>RELAX_STATUS</code> ExtendedInfo to matching subscriber. Fan-in via <code>IntraActivitySequencing.ActionResponseEvent</code>.</p>
+    <h4 style="margin-top:14px">§19.2 Response Write-back</h4>
+    <pre>eventResponse/payload/xsd3:NasCheckCollectionBlacklistResponse/xsd3:data/xsd3:relaxStatus
+→ subscriber.ExtendedInfo[Name='RELAX_STATUS']/Value</pre>
+    <h4 style="margin-top:14px">§19.4 Completion</h4>
+    <pre>IntraActivitySequencing.ActionResponseEvent(currActivity)
+→ "true" when all pending requests responded
+(Old RequestCount code COMMENTED OUT)</pre>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

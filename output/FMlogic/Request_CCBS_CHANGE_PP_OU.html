@@ -1,0 +1,568 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>CCBS_CHANGE_PP_OU</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.header h1{font-size:2rem;font-weight:700;letter-spacing:1px;}
+.header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.header .meta{margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;opacity:.9;}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:12px;}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600;}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-purple{background:#F3E5F5;color:var(--skip);}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.callout{padding:12px 16px;border-radius:6px;margin:12px 0;border-left:4px solid;}
+.callout-warning{background:#FFF8E1;border-color:var(--warning);color:#5D4037;}
+.callout-info{background:#E3F2FD;border-color:var(--info);color:#0D47A1;}
+.callout-error{background:#FFEBEE;border-color:var(--true-red);color:var(--true-dark);}
+.callout-success{background:#E8F5E9;border-color:var(--success);color:#1B5E20;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:8px 12px 8px 48px;position:relative;border-left:3px solid var(--border);margin-bottom:6px;}
+.step-list li::before{content:counter(step);position:absolute;left:-16px;top:6px;background:var(--true-red);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}.tree-attr{color:#f9e2af;}.tree-arrow{color:#6c7086;margin:0 6px;}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+footer{text-align:center;padding:24px;color:#888;font-size:.82rem;}
+h3{font-size:.95rem;font-weight:600;color:var(--true-dark);margin-bottom:8px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>CCBS_CHANGE_PP_OU</h1>
+  <div class="subtitle">FM Logic Documentation — Change Price Plan at OU Level (COU + POU Scopes; Shared Allowance; LargeCustomer LogicalDate; SOC Sequence Pre-allocation; OMXFM external dispatch)</div>
+  <div class="meta">
+    <span class="meta-item">Rule: Rules.OMConsumers.OMXFM.Request.Request_CCBS_CHANGE_PP_OU</span>
+    <span class="meta-item">ActivityID: CCBS_CHANGE_PP_OU</span>
+    <span class="meta-item">Priority: 5</span>
+    <span class="meta-item">Pattern: Per-OU dispatch (COU first, then POU)</span>
+    <span class="meta-item">Used in step: 17</span>
+    <span class="meta-item">Generated: 2026-09-11</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>CCBS_CHANGE_PP_OU</strong> registers a price plan change at the OU (Organizational Unit) level in the OMX FM system. It iterates all ParentOUs; for each POU it first checks ChildOUs (COU scope), then the ParentOU itself (POU scope). If the OU's Agreement has Offers and passes PreExecCheck, it dispatches one <code>CCBS_CHANGE_PP_OU</code> event per qualifying OU. The payload contains the FE price plan offer (ServiceType=80, FE_OR_CCBS=FE), its parameters, related offers, and optionally a shared-allowance CAP SOC entry.</p>
+    <div class="callout callout-info" style="margin-top:10px;">
+      <strong>Key design notes:</strong>
+      <ul style="margin-left:20px;margin-top:4px;">
+        <li><strong>COU before POU:</strong> For each ParentOU, ChildOUs are processed first (inner loop), then the ParentOU Agreement is processed (outer). Each qualifying scope gets one dispatch.</li>
+        <li><strong>PurgePendingRequestsBeforeResubmit:</strong> Called at start when isActResub is true (unlike some other FMs). Clears any pending/incomplete requests before resubmitting.</li>
+        <li><strong>varPP selection:</strong> XSLT selects the FE price plan offer via <code>Offers[ServiceType='80' and ExtendedInfo/Name='FE_OR_CCBS' and ExtendedInfo/Value='FE'][1]</code>. Only this offer's data drives the payload.</li>
+        <li><strong>isSharedAllowance + capSoc:</strong> If the FE PP offer has SPECIAL_OFFER_INDICATOR=CSH, iterates RelatedOffersArray to find the one whose <code>GetSplOffIndForSoc == "CAP"</code>. If found → adds a special <code>ns9:parameterInfoWithSoc</code> with static name="Agreement level offer instance ID".</li>
+        <li><strong>LargeCustomerIndicator=89:</strong> Computes tomorrowLogicalDate (+1 day midnight) at the top. Inside XSLT → adds <code>ns6:EnclosedClientInfo/ns6:LogicalDate</code>: uses varPP.EffectiveDate if exists, else tomorrowDate.</li>
+        <li><strong>FUT_TYPE UserText append:</strong> If orderRequest.ExtendedInfo[FUT_TYPE] is 'NXTPP' or 'FUTPP' → appends Thai text ';เปลี่ยน PP โดย omx future order;' to UserText.</li>
+        <li><strong>SOC sequence pre-allocation:</strong> countOfers + countRelatedOffersArray is sent in <code>ns3:GetSequenceValueRequest.ns3:incrementByCount</code> to pre-allocate SOC sequence numbers (SOC_SEQ_NO).</li>
+        <li><strong>ChargeDistributionDetailsInfo:</strong> If varPP.RCIndicator=65 → adds <code>ns8:ChargeDistributionDetailsInfo</code> for the main PP offer and any RelatedOffersArray[RcIndicator=65], pointing to accountId as TargetPayChannelId.</li>
+        <li><strong>Fan-in CRITICAL NOTE:</strong> Response RF uses <code>boolean(Response["000"])</code> — returns "true" if ANY response is "000". This is NOT compared to RequestCount. If COU and POU both dispatch, the activity completes as soon as the FIRST "000" response arrives — the second response may be ignored or processed after completion. See §19.4 for analysis.</li>
+        <li><strong>ReferenceId IS populated</strong> in the response concept (from eventResponse.RefID) — unlike OMX_ADD_FUT_OFFERS.</li>
+      </ul>
+    </div>
+    <table style="margin-top:12px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Backend system</td><td>OMX FM via <code>Events.OMConsumers.OMXFM.Request.CCBS_CHANGE_PP_OU</code></td></tr>
+      <tr><td>Dispatch pattern</td><td>Per-OU (COU first, then POU); max 2 events per POU iteration</td></tr>
+      <tr><td>Scope gate</td><td>Agreement != null AND Agreement.Offers@length > 0 AND PreExecCheck passes</td></tr>
+      <tr><td>Fan-in</td><td><code>boolean($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code> — ANY "000" response (not compared to RequestCount)</td></tr>
+      <tr><td>Completion</td><td>Status="1" + SendDataToDB (if sent) or SkipActivity("4")</td></tr>
+      <tr><td>Steps in BN_CHANGE_PACKAGE</td><td>17 (CCBS_CHANGE_PP_OU)</td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_CCBS_CHANGE_PP_OU.rulefunction</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>priority</td><td>5</td><td>Standard</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Standard</td></tr>
+      <tr><td>Rule type</td><td>OMXFM Request Rule</td><td>External dispatch to OMX FM</td></tr>
+      <tr><td>PurgePendingRequestsBeforeResubmit</td><td>Yes</td><td>Called when isActResub==true (line 29)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>All OU, Agreement, Offer data; ExtendedInfo (FUT_TYPE, LargeCustomerIndicator)</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>PreExecCheck; RequestCount; Response array</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_CHANGE_PP_OU"</code></td><td>Rule constraint</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_CHANGE_PP_OU"</code></td><td>ProcessFlow check</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Ready to process</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li><strong>isActResub:</strong> <code>RequestCount&gt;0 &amp;&amp; IsOrderResubmitted</code>.</li>
+      <li><strong>PurgePendingRequestsBeforeResubmit:</strong> If isActResub → call <code>PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code>.</li>
+      <li><strong>tomorrowLogicalDate:</strong> If <code>CustomerGeneralInfo.LargeCustomerIndicator=89</code> → compute tomorrow midnight date string using <code>DateTime.addDay(DateTime.now(),1)</code>.</li>
+      <li><strong>COU loop (for each ChildOU):</strong> If ChildOU has Agreement with Offers → PreExecCheck via <code>GetXMLForAgreementInChildOU</code> → if "true": compute counts, agreementNo, activityReason, userText, accountId, isSharedAllowance/capSoc → dispatch <code>CCBS_CHANGE_PP_OU</code> event (COU variant) → RequestCount++ → Logger.</li>
+      <li><strong>POU loop (for each ParentOU):</strong> After COU iteration — if ParentOU has Agreement with Offers → PreExecCheck via <code>GetXMLForAgreement</code> → if "true": same compute steps → dispatch <code>CCBS_CHANGE_PP_OU</code> event (POU variant) → RequestCount++ → Logger.</li>
+      <li><strong>isSkipped resolution:</strong> If any event sent → Status="1" + <code>SendDataToDB</code>. Else → <code>SkipActivity("4")</code>.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 -->
+<div class="section">
+  <div class="section-header">§6 — isSharedAllowance / capSoc Detection</div>
+  <div class="section-body">
+    <p>For each qualifying OU (COU and POU), before dispatching the event, the rule scans Agreement.Offers for shared allowance:</p>
+    <ol class="step-list">
+      <li>For each <code>AgreementOffer</code> where <code>ServiceType=="80"</code> AND <code>exists(ExtendedInfo[FE_OR_CCBS=FE])</code>: this is the FE price plan offer.</li>
+      <li>If <code>exists(ExtendedInfo[SPECIAL_OFFER_INDICATOR=CSH])</code>: iterate its RelatedOffersArray.</li>
+      <li>For each RelatedOffers entry: call <code>GetSplOffIndForSoc(orderRequest, currRelSoc.Soc)</code>.</li>
+      <li>If result == "CAP" → set <code>capSoc = currRelSoc.Soc</code> and <code>isSharedAllowance = true</code>.</li>
+    </ol>
+    <p style="margin-top:8px;">When <code>isSharedAllowance==true</code>, the XSLT adds an extra <code>ns9:parameterInfoWithSoc</code> with static values:</p>
+    <pre><code>&lt;ns9:parameterInfoWithSoc&gt;
+    &lt;ns9:name&gt;Agreement level offer instance ID&lt;/ns9:name&gt;
+    &lt;ns9:values&gt;Agreement level offer instance ID&lt;/ns9:values&gt;
+    &lt;ns9:soc&gt;{$capSoc}&lt;/ns9:soc&gt;
+&lt;/ns9:parameterInfoWithSoc&gt;</code></pre>
+  </div>
+</div>
+
+<!-- §7 -->
+<div class="section">
+  <div class="section-header">§7 — LargeCustomerIndicator=89 &amp; EnclosedClientInfo</div>
+  <div class="section-body">
+    <p>At the start of the rule (before any OU loop), if <code>CustomerGeneralInfo.LargeCustomerIndicator=89</code>:</p>
+    <pre><code>tomorrowLogicalDate = DateTime.format(DateTime.addDay(DateTime.now(),1),"yyyy-MM-dd'T'00:00:00XXX")</code></pre>
+    <p>This computed string is passed to the XSLT. Inside the payload, when <code>LargeCustomerIndicator=89</code>:</p>
+    <ul style="margin-left:20px;margin-top:8px;">
+      <li>Adds <code>ns6:EnclosedClientInfo</code> block with <code>ns6:LogicalDate</code>.</li>
+      <li><code>xsl:choose</code>: if <code>varPP/EffectiveDate</code> exists → use <code>varPP.EffectiveDate</code>; else → use <code>tib:add-to-dateTime(...</code> (compute tomorrow midnight inline inside the XSLT as well).</li>
+    </ul>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      The rule computes <code>tomorrowLogicalDate</code> in BE but the XSLT also computes tomorrow inline (using <code>tib:add-to-dateTime</code>). The BE-computed variable is passed to the XSLT as a param but the XSLT uses its own <code>tib:add-to-dateTime</code> in the else branch — so the param <code>tomorrowLogicalDate</code> is declared but only the XSLT-internal computation is actually used for the else branch. This is a minor redundancy.
+    </div>
+  </div>
+</div>
+
+<!-- §8 -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.1 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Gate</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUT</span></td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_CHANGE_PP_OU</code></td><td>Agreement has Offers AND PreExecCheck passes</td><td>Register PP change at OU level in CCBS/OMX FM</td></tr>
+      <tr><td><span class="badge badge-teal">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Always after each outbound event</td><td>Request audit trail</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.2 — Backend API Details</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>System</td><td>OMX FM / CCBS</td></tr>
+      <tr><td>Operation</td><td>changePricePlanOu</td></tr>
+      <tr><td>Schema</td><td><code>ns2:changePricePlanOuRequest</code> (ChangePricePlanOu.xsd)</td></tr>
+      <tr><td>Key sub-elements</td><td>GetSequenceValueRequest (SOC_SEQ_NO), changePricePlanOu (AgreementIdInfo + parameterInfoWithSoc + SrvAgrInfo + ChargeDistributionDetailsInfo + ActivityInfo)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.3 — BE Working Memory Dependencies (Read)</h3>
+    <table>
+      <tr><th>Concept path</th><th>Purpose</th></tr>
+      <tr><td><code>CustomerGeneralInfo.LargeCustomerIndicator</code></td><td>Gate for tomorrowLogicalDate and EnclosedClientInfo</td></tr>
+      <tr><td><code>ParentOU[*].Agreement.RefId / AgreementId / Offers</code></td><td>POU scope: PreExecCheck + payload source</td></tr>
+      <tr><td><code>ParentOU[*].ChildOU[*].Agreement.RefId / AgreementId / Offers</code></td><td>COU scope: PreExecCheck + payload source</td></tr>
+      <tr><td><code>Agreement.Offers[ServiceType=80 and FE_OR_CCBS=FE]</code></td><td>varPP: price plan FE offer (XSLT parameter)</td></tr>
+      <tr><td><code>Agreement.Offers[*].ExtendedInfo[SPECIAL_OFFER_INDICATOR=CSH]</code></td><td>isSharedAllowance detection</td></tr>
+      <tr><td><code>Agreement.Offers[*].RelatedOffersArray[*].Soc</code></td><td>capSoc lookup (GetSplOffIndForSoc)</td></tr>
+      <tr><td><code>Account[AgreementId=$agreeId].AccountID</code></td><td>accountId for ChargeDistributionDetailsInfo</td></tr>
+      <tr><td><code>Agreement.AgreementActivityInfo.ActivityReason / UserText</code></td><td>ns6:ActivityInfo payload</td></tr>
+      <tr><td><code>OrderData.ExtendedInfo[FUT_TYPE].Value</code></td><td>Gate for Thai UserText append</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.4 — PreExecCheck Helpers per Scope</h3>
+    <table>
+      <tr><th>Scope</th><th>Helper</th><th>Arguments</th></tr>
+      <tr><td>COU</td><td><code>GetXMLForAgreementInChildOU(orderRequest, childOu.Agreement.RefId, parentOu.RefId)</code></td><td>childOu.Agreement.RefId, parentOu.RefId</td></tr>
+      <tr><td>POU</td><td><code>GetXMLForAgreement(orderRequest, parentOu.Agreement.RefId)</code></td><td>parentOu.Agreement.RefId</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 -->
+<div class="section">
+  <div class="section-header">§9 — Payload Build — CCBS_CHANGE_PP_OU Event (COU &amp; POU Variants)</div>
+  <div class="section-body">
+    <h3>§9.1 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Header</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>JMSPriority</td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional: if exists</td></tr>
+      <tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional: if exists</td></tr>
+      <tr><td>OrderID</td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional: if exists</td></tr>
+      <tr><td>RefID</td><td><code>$childOu/RefId</code> or <code>$parentOu/RefId</code></td><td>Conditional: if exists</td></tr>
+      <tr><td>UserName</td><td><code>$orderRequest/OrderData/User</code></td><td>Conditional: IsEnableUserPass='true'</td></tr>
+      <tr><td>PassWord</td><td><code>$orderRequest/OrderData/Password</code></td><td>Conditional: IsEnableUserPass='true'</td></tr>
+      <tr><td>OrderType</td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional: if exists</td></tr>
+      <tr><td>CES</td><td><code>$orderRequest/OrderData/CES</code></td><td>Conditional: if exists</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§9.2 — Payload Root: ns2:changePricePlanOuRequest</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">ns2:changePricePlanOuRequest</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns3:GetSequenceValueRequest</span> <span class="badge badge-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns3:sequenceName</span><span class="tree-arrow">←</span><span class="tree-src-static">"SOC_SEQ_NO"</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns3:incrementByCount</span><span class="tree-arrow">←</span><span class="tree-src">$countOfers + $countRelatedOffersArray</span> <span class="badge badge-green">Always</span></div></li>
+            </ul>
+          </li>
+          <li><div class="tree-row"><span class="tree-tag">ns2:changePricePlanOu</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns4:AgreementIdInfo/ns4:AgreementNo</span><span class="tree-arrow">←</span><span class="tree-src">$agreementNo</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns9:parameterInfoWithSoc[*]</span><span class="tree-arrow">←</span><span class="tree-src">for-each $varPP/ParameterInfo</span> <span class="badge badge-orange">Conditional: varPP has ParameterInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns9:name</span><span class="tree-arrow">←</span><span class="tree-src">./ParamName</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns9:values</span><span class="tree-arrow">←</span><span class="tree-src">./ValuesArray[1]</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns9:soc</span><span class="tree-arrow">←</span><span class="tree-src">$varPP/Soc</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ns9:parameterInfoWithSoc[*]</span><span class="tree-arrow">←</span><span class="tree-src">for-each $varPP/RelatedOffersArray/ParameterInfo</span> <span class="badge badge-orange">Conditional: RelatedOffers have ParameterInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns9:soc</span><span class="tree-arrow">←</span><span class="tree-src">../Soc</span> <span class="tree-cond">(parent RelatedOffers.Soc)</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ns9:parameterInfoWithSoc</span> <span class="badge badge-purple">Conditional: isSharedAllowance='true'</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns9:name</span><span class="tree-arrow">←</span><span class="tree-src-static">"Agreement level offer instance ID"</span> <span class="badge badge-green">Static</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns9:values</span><span class="tree-arrow">←</span><span class="tree-src-static">"Agreement level offer instance ID"</span> <span class="badge badge-green">Static</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns9:soc</span><span class="tree-arrow">←</span><span class="tree-src">$capSoc</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ns5:SrvAgrInfo</span><span class="tree-arrow">←</span><span class="tree-src">for-each $varPP</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns5:Name</span><span class="tree-arrow">←</span><span class="tree-src">OfferName</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns5:RelatedOffers[*]</span><span class="tree-arrow">←</span><span class="tree-src">for-each $varPP/RelatedOffersArray</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:Name</span><span class="tree-arrow">←</span><span class="tree-src">OfferName</span> <span class="badge badge-orange">Conditional: if OfferName</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:Soc</span><span class="tree-arrow">←</span><span class="tree-src">Soc</span> <span class="badge badge-orange">Conditional: if Soc</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">ns5:Soc</span><span class="tree-arrow">←</span><span class="tree-src">Soc</span> <span class="badge badge-orange">Conditional: if Soc</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ns8:ChargeDistributionDetailsInfo</span> <span class="badge badge-orange">Conditional: $varPP/RCIndicator=65</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns8:Soc</span><span class="tree-arrow">←</span><span class="tree-src">$varPP/Soc</span> <span class="badge badge-orange">Conditional: if Soc</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns8:TargetPayChannelId</span><span class="tree-arrow">←</span><span class="tree-src">$accountId</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ns8:ChargeDistributionDetailsInfo[*]</span><span class="tree-arrow">←</span><span class="tree-src">for-each $varPP/RelatedOffersArray[RcIndicator=65]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns6:ActivityInfo</span> <span class="badge badge-green">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns6:ActivityReason</span><span class="tree-arrow">←</span><span class="tree-src">$activityReason</span> <span class="tree-cond">(from AgreementActivityInfo or default "CREQ")</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns6:EnclosedClientInfo</span> <span class="badge badge-purple">Conditional: LargeCustomerIndicator=89</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns6:LogicalDate</span><span class="tree-arrow">←</span><span class="tree-src">xsl:choose: varPP.EffectiveDate if exists, else tomorrowDate</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">ns6:UserText</span><span class="tree-arrow">←</span><span class="tree-src">xsl:if FUT_TYPE=NXTPP/FUTPP: concat(userText, ';เปลี่ยน PP โดย omx future order;'); else: userText</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px;">§9.3 — COU vs POU Variant Differences</h3>
+    <table>
+      <tr><th>Attribute</th><th>COU variant</th><th>POU variant</th></tr>
+      <tr><td>XSLT parameter for scope</td><td><code>$childOu</code></td><td><code>$parentOu</code></td></tr>
+      <tr><td>RefID in event header</td><td><code>$childOu/RefId</code></td><td><code>$parentOu/RefId</code></td></tr>
+      <tr><td>varPP source</td><td><code>$childOu/Agreement/Offers[ServiceType='80' and FE_OR_CCBS=FE][1]</code></td><td><code>$parentOu/Agreement/Offers[ServiceType='80' and FE_OR_CCBS=FE][1]</code></td></tr>
+      <tr><td>PreExecCheck helper</td><td><code>GetXMLForAgreementInChildOU(..., childOu.Agreement.RefId, parentOu.RefId)</code></td><td><code>GetXMLForAgreement(..., parentOu.Agreement.RefId)</code></td></tr>
+      <tr><td>agreementNo source</td><td><code>$childOu/Agreement/AgreementId</code></td><td><code>$parentOu/Agreement/AgreementId</code></td></tr>
+      <tr><td>activityReason fallback</td><td><code>$childOu/Agreement/AgreementActivityInfo/ActivityReason</code> → "CREQ"</td><td><code>$parentOu/Agreement/AgreementActivityInfo/ActivityReason</code> → "CREQ"</td></tr>
+      <tr><td>Payload structure</td><td colspan="2">Identical — only the XSLT param name differs</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §11 -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>PROCESS_ID suffix</td><td>_REQ</td></tr>
+      <tr><td>OPERATION_NAME</td><td>"CCBS_CHANGE_PP_OU"</td></tr>
+      <tr><td>TARGET_SYSTEM</td><td>OMX_FM</td></tr>
+      <tr><td>AUDIT_TRACE</td><td>"Request Sent for CCBS_CHANGE_PP_OU"</td></tr>
+      <tr><td>WritePayload gate</td><td>Yes — <code>$globalVariables/OMX_OM/WritePayload=="true"</code></td></tr>
+    </table>
+    <p style="margin-top:8px;color:#555;">Both COU and POU scopes send the Logger event (same Logger XSLT with same OPERATION_NAME/AUDIT_TRACE).</p>
+  </div>
+</div>
+
+<!-- §12 -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Action</th></tr>
+      <tr><td>Any event dispatched (isSkipped==false)</td><td>Status = GetActivityStatusString("1", false); <code>SendDataToDB(orderRequest)</code></td></tr>
+      <tr><td>No events dispatched (isSkipped==true)</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+      <tr><td>Exception</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §14 -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code></td><td>Clear pending/incomplete requests on resubmit</td></tr>
+      <tr><td><code>Helpers.GetXMLForAgreementInChildOU(orderRequest, childOu.Agreement.RefId, parentOu.RefId)</code></td><td>Build PreExecCheck XML for COU scope</td></tr>
+      <tr><td><code>Helpers.GetXMLForAgreement(orderRequest, parentOu.Agreement.RefId)</code></td><td>Build PreExecCheck XML for POU scope</td></tr>
+      <tr><td><code>Helpers.GetSplOffIndForSoc(orderRequest, soc)</code></td><td>Lookup SPECIAL_OFFER_INDICATOR value for a given SOC code</td></tr>
+      <tr><td><code>Helpers.GetActivityStatusString("1", false)</code></td><td>Return "IN PROGRESS" status string</td></tr>
+      <tr><td><code>Helpers.SendDataToDB(orderRequest)</code></td><td>Persist order state</td></tr>
+      <tr><td><code>Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>Skip this activity</td></tr>
+      <tr><td><code>Helpers.HandleActivityException(orderRequest, activity, ex, msg)</code></td><td>Error state transition</td></tr>
+      <tr><td><code>XPath.evalAsInt(count($scope/Agreement/Offers))</code></td><td>countOfers for sequence increment</td></tr>
+      <tr><td><code>XPath.evalAsInt(count($scope/Agreement/*/RelatedOffersArray))</code></td><td>countRelatedOffersArray for sequence increment</td></tr>
+      <tr><td><code>XPath.evalAsInt($scope/Agreement/AgreementId)</code></td><td>agreementNo for AgreementIdInfo</td></tr>
+      <tr><td><code>XPath.evalAsString(AgreementActivityInfo.ActivityReason or "CREQ")</code></td><td>activityReason</td></tr>
+      <tr><td><code>XPath.evalAsString(tib:if-absent(Account[AgreementId=...][1]/AccountID, Account[AgreementRefId=...][1]/AccountID))</code></td><td>accountId for ChargeDistributionDetailsInfo</td></tr>
+      <tr><td><code>DateTime.addDay(DateTime.now(),1)</code></td><td>Compute tomorrow for LargeCustomer LogicalDate</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><code>Request_CCBS_CHANGE_PP_OU (rule)
+├── isActResub = (RequestCount>0 && IsOrderResubmitted)
+├── [if isActResub] PurgePendingRequestsBeforeResubmit(orderCurrentActivity)
+├── [if LargeCustomerIndicator=89] DateTime.addDay(now,1) → tomorrowLogicalDate
+└── try {
+    ├── [COU loop: for each ChildOU]
+    │   ├── [if ChildOU.Agreement.Offers@length > 0]
+    │   │   ├── GetXMLForAgreementInChildOU(orderRequest, childOu.Agreement.RefId, parentOu.RefId) → sXML
+    │   │   ├── XPath.execute(PreExecCheck) → chkRes
+    │   │   ├── [if chkRes=="true"]
+    │   │   │   ├── XPath.evalAsInt(count(Offers))            → countOfers
+    │   │   │   ├── XPath.evalAsInt(count(*/RelatedOffersArray)) → countRelatedOffersArray
+    │   │   │   ├── XPath.evalAsInt(AgreementId)              → agreementNo
+    │   │   │   ├── XPath.evalAsString(ActivityReason or "CREQ") → activityReason
+    │   │   │   ├── XPath.evalAsString(UserText)              → userText
+    │   │   │   ├── XPath.evalAsString(tib:if-absent(Account[...]/AccountID,...)) → accountId
+    │   │   │   ├── [for each Offer: ServiceType=80 && FE_OR_CCBS=FE]
+    │   │   │   │   ├── [if SPECIAL_OFFER_INDICATOR=CSH]
+    │   │   │   │   │   └── GetSplOffIndForSoc(orderRequest, relSoc.Soc) → "CAP"? → capSoc, isSharedAllowance=true
+    │   │   │   ├── Event.createEvent(xslt://CCBS_CHANGE_PP_OU [COU variant])
+    │   │   │   ├── Event.Ext.sendEventImmediate(reqEvent)
+    │   │   │   ├── RequestCount++ (if !isActResub)
+    │   │   │   ├── isSkipped = false
+    │   │   │   └── Event.Ext.sendEventImmediate(Logger audit)
+    ├── [POU loop: same as COU but parentOu.Agreement and GetXMLForAgreement]
+    ├── [if !isSkipped] Status="1"; SendDataToDB(orderRequest)
+    └── [else] SkipActivity("4")
+} catch → HandleActivityException()</code></pre>
+  </div>
+</div>
+
+<!-- §17 -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Process COU scope before POU scope within the same ParentOU iteration.</td></tr>
+      <tr><td>R2</td><td>PurgePendingRequestsBeforeResubmit on isActResub — critical for idempotency.</td></tr>
+      <tr><td>R3</td><td>varPP = Offers[ServiceType=80 and FE_OR_CCBS=FE][1] — always from the FE price plan offer only.</td></tr>
+      <tr><td>R4</td><td>Shared allowance detection: ServiceType=80 FE offer with SPECIAL_OFFER_INDICATOR=CSH → find RelatedOffers with GetSplOffIndForSoc=="CAP" → add parameterInfoWithSoc with static "Agreement level offer instance ID" and capSoc.</td></tr>
+      <tr><td>R5</td><td>LargeCustomerIndicator=89 → EnclosedClientInfo in ActivityInfo. LogicalDate = varPP.EffectiveDate if exists, else tomorrow midnight.</td></tr>
+      <tr><td>R6</td><td>FUT_TYPE NXTPP/FUTPP → UserText gets Thai future order string appended.</td></tr>
+      <tr><td>R7</td><td>SOC_SEQ_NO sequence pre-allocation via GetSequenceValueRequest.incrementByCount = countOfers + countRelatedOffersArray.</td></tr>
+      <tr><td>R8</td><td>ChargeDistributionDetailsInfo for RCIndicator=65 PP offer and its RelatedOffersArray — use accountId from Account lookup by AgreementId OR AgreementRefId.</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">Design Notes</h3>
+    <table>
+      <tr><th>Note</th><th>Severity</th><th>Detail</th></tr>
+      <tr><td>Fan-in: boolean vs RequestCount comparison</td><td><span class="badge badge-red">HIGH</span></td><td>Response RF uses <code>boolean(Response["000"])</code> not <code>count(...)==RequestCount</code>. If both COU and POU are dispatched, activity completes after the FIRST "000" response. The second may arrive after state has already advanced. This is a race condition / premature completion defect when multiple OUs are dispatched.</td></tr>
+      <tr><td>tomorrowLogicalDate param computed but XSLT uses its own calculation</td><td><span class="badge badge-blue">LOW</span></td><td>The BE-computed tomorrowLogicalDate is passed as XSLT param but the XSLT's else branch recalculates using tib:add-to-dateTime. The param is effectively unused in the XSLT's EnclosedClientInfo else branch.</td></tr>
+      <tr><td>varPP uses [1] index</td><td><span class="badge badge-blue">INFO</span></td><td>If multiple ServiceType=80 FE offers exist, only the first one drives the payload. Multiple PP offers per Agreement is not expected but should be validated during migration.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Condensed)</div>
+  <div class="section-body">
+    <pre><code><span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.<span class="ty">Request_CCBS_CHANGE_PP_OU</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> { <span class="ty">OrderRequest</span> orderRequest; <span class="ty">Activity</span> orderCurrentActivity; }
+    <span class="kw">when</span> { <span class="cm">/* extId / ActivityID=="CCBS_CHANGE_PP_OU" / NextActivityID / Status=="WAITING" */</span> }
+    <span class="kw">then</span> {
+        isActResub = (RequestCount&gt;<span class="nu">0</span> &amp;&amp; IsOrderResubmitted);
+        <span class="kw">try</span> {
+            <span class="kw">if</span>(isActResub) PurgePendingRequestsBeforeResubmit(orderCurrentActivity);
+            <span class="kw">if</span>(LargeCustomerIndicator==<span class="nu">89</span>)
+                tomorrowLogicalDate = DateTime.format(DateTime.addDay(now,<span class="nu">1</span>),<span class="st">"yyyy-MM-dd'T'00:00:00XXX"</span>);
+
+            <span class="kw">for</span>(iPou...) {
+                <span class="cm">// COU loop: ChildOU.Agreement.Offers</span>
+                <span class="kw">for</span>(iCou...) {
+                    <span class="kw">if</span>(childOu.Agreement.Offers@length &gt; <span class="nu">0</span>) {
+                        chkRes = GetXMLForAgreementInChildOU + XPath.execute(PreExecCheck);
+                        <span class="kw">if</span>(chkRes==<span class="st">"true"</span>) {
+                            countOfers = XPath.evalAsInt(count(Agreement.Offers));
+                            countRelatedOffersArray = XPath.evalAsInt(count(Agreement/*/RelatedOffersArray));
+                            agreementNo = childOu.Agreement.AgreementId;
+                            activityReason = XPath ... <span class="st">"CREQ"</span>;
+                            userText = childOu.Agreement.AgreementActivityInfo.UserText;
+                            accountId = tib:if-absent(Account[AgreementId=agreeId]/AccountID, Account[AgreementRefId=refId]/AccountID);
+                            <span class="cm">// isSharedAllowance detection</span>
+                            <span class="kw">for</span>(iOUSoc: ServiceType=80 &amp;&amp; FE_OR_CCBS=FE) {
+                                <span class="kw">if</span>(SPECIAL_OFFER_INDICATOR=CSH) {
+                                    <span class="kw">for</span>(iRelSoc: GetSplOffIndForSoc==<span class="st">"CAP"</span>) capSoc=soc; isSharedAllowance=<span class="kw">true</span>;
+                                }
+                            }
+                            reqEvent = Event.createEvent(<span class="st">"xslt://CCBS_CHANGE_PP_OU [COU variant]"</span>); <span class="cm">/* see §9 */</span>
+                            Event.Ext.sendEventImmediate(reqEvent); RequestCount++; isSkipped=<span class="kw">false</span>;
+                            Logger(<span class="st">"Request Sent for CCBS_CHANGE_PP_OU"</span>);
+                        }
+                    }
+                }
+                <span class="cm">// POU loop: ParentOU.Agreement.Offers</span>
+                <span class="kw">if</span>(parentOu.Agreement.Offers@length &gt; <span class="nu">0</span>) {
+                    chkRes = GetXMLForAgreement + XPath.execute(PreExecCheck);
+                    <span class="kw">if</span>(chkRes==<span class="st">"true"</span>) {
+                        <span class="cm">// same compute + isSharedAllowance detection for parentOu</span>
+                        reqEvent = Event.createEvent(<span class="st">"xslt://CCBS_CHANGE_PP_OU [POU variant]"</span>); <span class="cm">/* see §9 */</span>
+                        Event.Ext.sendEventImmediate(reqEvent); RequestCount++; isSkipped=<span class="kw">false</span>;
+                        Logger(<span class="st">"Request Sent for CCBS_CHANGE_PP_OU"</span>);
+                    }
+                }
+            }
+            <span class="kw">if</span>(!isSkipped) { Status=<span class="st">"1"</span>; SendDataToDB(orderRequest); }
+            <span class="kw">else</span> { SkipActivity(<span class="st">"4"</span>); }
+        } <span class="kw">catch</span>(ae) { HandleActivityException; }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<!-- §19 -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule (Response_CCBS_CHANGE_PP_OU)</div>
+  <div class="section-body">
+    <h3>§19.1 — Overview</h3>
+    <p>Handles incoming responses from the CCBS FM Price Plan change. Creates a <code>ResponseBase</code> concept (with ReferenceId mapped from RefID), appends to <code>currActivity.Response</code>, sends Logger audit, and checks if ANY "000" response exists — not compared to RequestCount. Returns "true" as soon as any success response arrives.</p>
+
+    <h3 style="margin-top:16px;">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Audit correlation (OMXTrackingId)</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_CHANGE_PP_OU</code></td><td>Incoming CCBS FM response event</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Response array target</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§19.3 — ResponseBase Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span> <span class="tree-cond">(Concepts.FM.Base.ResponseBase)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span> <span class="badge badge-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange">Conditional: if exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge badge-orange">Conditional: if exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange">Conditional: if exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span> <span class="badge badge-orange">Conditional: if exists</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div class="callout callout-success" style="margin-top:8px;">
+      <strong>ReferenceId is populated</strong> from <code>$eventResponse/RefID</code> — unlike OMX_ADD_FUT_OFFERS which omitted it. This allows the reqSuccess check in future resubmit scenarios to match response by RefID.
+    </div>
+
+    <h3 style="margin-top:16px;">§19.4 — Response Completion Logic</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>boolean($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><strong>ANY</strong> response with "000" suffix → return "true"</td></tr>
+      <tr><td>RequestCount comparison</td><td><strong>None</strong> — does NOT check RequestCount</td></tr>
+    </table>
+    <div class="callout callout-error" style="margin-top:8px;">
+      <strong>[HIGH] Fan-in design defect:</strong> The response function returns "true" as soon as ANY response has a "000" code, regardless of how many events were dispatched (RequestCount). If both COU and POU OUs were each dispatched (RequestCount=2), the activity is marked complete as soon as the first "000" response arrives — the second response may arrive after the ProcessFlow has already advanced, causing it to be lost or handled incorrectly. This contrasts with the standard fan-in pattern used in most other FMs (count("000") == RequestCount). Mitigation: if in production only one scope ever qualifies per activity run, this may never cause issues — but this is architecturally fragile. Should be investigated during migration.
+    </div>
+
+    <h3 style="margin-top:16px;">§19.5 — Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>PROCESS_ID suffix</td><td>_RES</td></tr>
+      <tr><td>OPERATION_NAME</td><td>"CCBS_CHANGE_PP_OU"</td></tr>
+      <tr><td>TARGET_SYSTEM</td><td>OMX_FM</td></tr>
+      <tr><td>AUDIT_TRACE</td><td>"Response received for CCBS_CHANGE_PP_OU"</td></tr>
+      <tr><td>payload</td><td>$eventResponse (conditional: WritePayload=="true")</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · CCBS_CHANGE_PP_OU</footer>
+</body>
+</html>

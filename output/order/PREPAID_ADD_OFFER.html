@@ -1,0 +1,701 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PREPAID_ADD_OFFER — Order Journey</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#222;font-size:14px;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.page-header h1{font-size:2rem;font-weight:700;letter-spacing:.5px;}
+.page-header .subtitle{opacity:.85;margin-top:6px;font-size:.95rem;}
+.meta-row{display:flex;gap:16px;margin-top:14px;flex-wrap:wrap;}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.8rem;}
+.section{margin:0 32px 32px;}
+.card{background:var(--card);border-radius:8px;border:1px solid var(--border);overflow:hidden;margin-bottom:20px;}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 18px;font-weight:600;font-size:.9rem;border-left:4px solid var(--true-light);}
+.card-body{padding:18px;}
+h2.st{color:var(--true-dark);font-size:1.05rem;font-weight:700;margin-bottom:14px;padding-bottom:6px;border-bottom:2px solid var(--true-pale);}
+h2.st span{color:var(--true-red);margin-right:8px;}
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 10px;text-align:left;font-weight:600;white-space:nowrap;}
+td{padding:7px 10px;border-bottom:1px solid #F0E0E0;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FFF8F8;}
+tr.cond-row{border-left:4px solid #FFC107;}
+tr.cond-row td:first-child{background:#FFFDE7;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px;border-radius:6px;overflow-x:auto;font-size:.78rem;line-height:1.5;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:2px 5px;border-radius:4px;font-size:.8rem;}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.73rem;font-weight:600;}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-grey{background:#EEEEEE;color:#555;}
+a{color:var(--true-dark);text-decoration:none;}
+a:hover{text-decoration:underline;color:var(--true-light);}
+details summary{cursor:pointer;font-weight:600;padding:8px 0;color:var(--true-dark);}
+details[open] summary{margin-bottom:10px;}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px;}
+.fm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;border-top:3px solid var(--true-red);}
+.fm-card h4{color:var(--true-dark);font-size:.9rem;margin-bottom:6px;}
+.fm-card .steps{font-size:.78rem;color:#666;margin-bottom:8px;}
+.fm-card .status{font-size:.78rem;}
+.diagram-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card);}
+footer{text-align:center;padding:24px;color:#999;font-size:.8rem;border-top:1px solid var(--border);margin-top:40px;}
+.xpath-label{font-size:.75rem;color:#888;font-style:italic;margin-bottom:4px;}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <div class="subtitle">TRUE Corporation OMX · Order Journey Documentation</div>
+  <h1>PREPAID_ADD_OFFER</h1>
+  <div class="subtitle">Process Configuration for PREPAID_ADD_OFFER</div>
+  <div class="meta-row">
+    <span class="meta-chip">Total steps: 21</span>
+    <span class="meta-chip">Unique FMs: 20</span>
+    <span class="meta-chip">FM docs generated: 6</span>
+    <span class="meta-chip">Entry point: IOM_CHECK_SEQUENCING</span>
+    <span class="meta-chip">Generated: 2026-09-09</span>
+  </div>
+</div>
+
+<!-- §2 Order Flow Table -->
+<div class="section" style="margin-top:28px;" id="s2">
+  <h2 class="st"><span>§2</span>Order Flow</h2>
+  <div class="card">
+    <div class="card-body" style="padding:0;overflow-x:auto;">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Step ID (short)</th>
+            <th>FM (ActivityID)</th>
+            <th>Parameter(s)</th>
+            <th>PreExecCheck</th>
+            <th>Previous</th>
+            <th>Next</th>
+            <th>FM Doc</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr class="cond-row">
+            <td><strong>1</strong></td>
+            <td><code>IOM_CHECK_SEQUENCING</code></td>
+            <td>IOM_CHECK_SEQUENCING</td>
+            <td>—</td>
+            <td><code>Channel="POMX_ETG" or Channel="APPLE"</code></td>
+            <td>START</td>
+            <td>CAT_GOD_A</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>2</strong></td>
+            <td><code>CAT_GOD_A</code></td>
+            <td>CAT_GOD</td>
+            <td>—</td>
+            <td><code>count(//Offers)&gt;0 or count(//SubscriberOffers)&gt;0</code></td>
+            <td>IOM_CHECK_SEQUENCING</td>
+            <td>CRM_GET_LAST_ASSET_ROOT</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr>
+            <td><strong>3</strong></td>
+            <td><code>CRM_GET_LAST_ASSET_ROOT</code></td>
+            <td>CRM_GET_LAST_ASSET_ROOT</td>
+            <td><code>customerAddressFlag=Y</code></td>
+            <td>—</td>
+            <td>CAT_GOD_A</td>
+            <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr>
+            <td><strong>4</strong></td>
+            <td><code>CRM_GET_ASSET_COMPONENT_LIST</code></td>
+            <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+            <td><code>STATUS=Active</code></td>
+            <td>—</td>
+            <td>CRM_GET_LAST_ASSET_ROOT</td>
+            <td>CDB_GET_PROFILE</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>5</strong></td>
+            <td><code>CDB_GET_PROFILE</code></td>
+            <td>CDB_GET_PROFILE</td>
+            <td>—</td>
+            <td><code>boolean(//SubscriberOffers[EI[FE_OR_CCBS=FE] and OfferName='PROAUTOACT'])</code></td>
+            <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+            <td>OMX_BRMS_DB</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>6</strong></td>
+            <td><code>OMX_BRMS_DB</code></td>
+            <td>OMX_BRMS_DB</td>
+            <td>—</td>
+            <td><code>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[EI[FE_OR_CCBS=FE]])</code></td>
+            <td>CDB_GET_PROFILE</td>
+            <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr>
+            <td><strong>7</strong></td>
+            <td><code>CCP_GET_PREPAID_CREDIT_INFO</code></td>
+            <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+            <td>—</td>
+            <td>—</td>
+            <td>OMX_BRMS_DB</td>
+            <td>CAT_GOD_B</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>8</strong></td>
+            <td><code>CAT_GOD_B</code></td>
+            <td>CAT_GOD</td>
+            <td>—</td>
+            <td><code>not(exists(//Soc)) or string-length(//Soc/text())=0</code></td>
+            <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+            <td>OMX_CAL_OFFER_FUT_DATE</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>9</strong></td>
+            <td><code>OMX_CAL_OFFER_FUT_DATE</code></td>
+            <td>OMX_CAL_OFFER_FUT_DATE</td>
+            <td>—</td>
+            <td><code>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[EI[FE_OR_CCBS=FE or BRMS]])</code></td>
+            <td>CAT_GOD_B</td>
+            <td>OMX_ADD_FUT_OFFER</td>
+            <td><a href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html"><span class="badge badge-green">✓ Generated</span></a></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>10</strong></td>
+            <td><code>OMX_ADD_FUT_OFFER</code></td>
+            <td>OMX_ADD_FUT_OFFER</td>
+            <td><code>ORDERTYPE=69 | USE_ROWID_CRM=Y</code></td>
+            <td><code>boolean(//SubscriberOffers[EI[FE_OR_CCBS=FE or BRMS] and EI[EFF_TYPE=FUT]])</code></td>
+            <td>OMX_CAL_OFFER_FUT_DATE</td>
+            <td>OMX_BIZ_VAL</td>
+            <td><a href="../FMlogic/Request_OMX_ADD_FUT_OFFER.html"><span class="badge badge-green">✓ Generated</span></a></td>
+          </tr>
+          <tr>
+            <td><strong>11</strong></td>
+            <td><code>OMX_BIZ_VAL</code></td>
+            <td>OMX_BIZ_VAL</td>
+            <td>—</td>
+            <td>—</td>
+            <td>OMX_ADD_FUT_OFFER</td>
+            <td>OMX_GET_SRV_TRX_NO</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>12</strong></td>
+            <td><code>OMX_GET_SRV_TRX_NO</code></td>
+            <td>OMX_GET_SRV_TRX_NO</td>
+            <td><code>CCD</code></td>
+            <td><code>(PROVISIONING absent or ≠N) and (EFF_TYPE absent or ≠FUT)</code></td>
+            <td>OMX_BIZ_VAL</td>
+            <td>AA_PREPAID_PROVISIONING</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>13</strong></td>
+            <td><code>AA_PREPAID_PROVISIONING</code></td>
+            <td>AA_PREPAID_PROVISIONING</td>
+            <td><code>CCD</code></td>
+            <td><code>(PROVISIONING absent or ≠N) and (EFF_TYPE absent or ≠FUT)</code></td>
+            <td>OMX_GET_SRV_TRX_NO</td>
+            <td>CRM_CREATE_ORDER_PREPAID</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>14</strong></td>
+            <td><code>CRM_CREATE_ORDER_PREPAID</code></td>
+            <td>CRM_CREATE_ORDER_PREPAID</td>
+            <td><code>command=AddRemoveOffer | orderType=A | listOfRootLineItemAction=Update | listOfLineItemAction=Add | listOfLineItemStatus=Active | USE_ROWID_CRM=N</code></td>
+            <td><code>(EI[FE_OR_CCBS=FE or BRMS]) and (EFF_TYPE absent or ≠FUT)</code></td>
+            <td>AA_PREPAID_PROVISIONING</td>
+            <td>SBM_ADD_3GPREPAID</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>15</strong></td>
+            <td><code>SBM_ADD_3GPREPAID</code></td>
+            <td>SBM_ADD_3GPREPAID</td>
+            <td>—</td>
+            <td><code>boolean(//SubscriberOffers[EI[FE_OR_CCBS=BRMS] and ServiceType='88'])</code></td>
+            <td>CRM_CREATE_ORDER_PREPAID</td>
+            <td>MCS_REGISTER_SUBSCRIPTION</td>
+            <td><a href="../FMlogic/Request_SBM_ADD_3GPREPAID.html"><span class="badge badge-green">✓ Generated</span></a></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>16</strong></td>
+            <td><code>MCS_REGISTER_SUBSCRIPTION</code></td>
+            <td>MCS_REGISTER_SUBSCRIPTION</td>
+            <td><code>USE_ROWID_CRM=Y</code></td>
+            <td><code>boolean(//Subscriber/SubscriberOffers[EI[FE_OR_CCBS=BRMS] and ServiceType='69'])</code></td>
+            <td>SBM_ADD_3GPREPAID</td>
+            <td>STATUS_UPDATE_CREATING_PROFILE</td>
+            <td><a href="../FMlogic/Request_MCS_REGISTER_SUBSCRIPTION.html"><span class="badge badge-green">✓ Generated</span></a></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>17</strong></td>
+            <td><code>STATUS_UPDATE_CREATING_PROFILE</code></td>
+            <td>STATUS_UPDATE_CREATING_PROFILE</td>
+            <td>—</td>
+            <td><code>(EFF_TYPE absent or ≠FUT)</code></td>
+            <td>MCS_REGISTER_SUBSCRIPTION</td>
+            <td>OMX_EXP_FUT_OFFER</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>18</strong></td>
+            <td><code>OMX_EXP_FUT_OFFER</code></td>
+            <td>OMX_EXP_FUT_OFFER</td>
+            <td><code>ORDERTYPE=70 | USE_ROWID_CRM=Y</code></td>
+            <td><code>boolean(//SubscriberOffers[EI[FE_OR_CCBS=FE or BRMS] and EI[EFF_TYPE≠FUT] and EI[EXP_TYPE=FUT]]) and (EFF_TYPE≠FUT or LOGICALDATE_PROV present)</code></td>
+            <td>STATUS_UPDATE_CREATING_PROFILE</td>
+            <td>AA_CHECK_CONFIRMATION</td>
+            <td><a href="../FMlogic/Request_OMX_EXP_FUT_OFFER.html"><span class="badge badge-green">✓ Generated</span></a></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>19</strong></td>
+            <td><code>AA_CHECK_CONFIRMATION</code></td>
+            <td>AA_CHECK_CONFIRMATION</td>
+            <td><code>CCD</code></td>
+            <td><code>(PROVISIONING absent or ≠N) and (EFF_TYPE absent or ≠FUT)</code></td>
+            <td>OMX_EXP_FUT_OFFER</td>
+            <td>SMSGATEWAY_SEND_SMS</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>20</strong></td>
+            <td><code>SMSGATEWAY_SEND_SMS</code></td>
+            <td>SMSGATEWAY_SEND_SMS</td>
+            <td>—</td>
+            <td><code>boolean(//Subscriber[MSISDN][1]) and Channel≠"CCBS" and Channel≠"OMX" and (EFF_TYPE absent or ≠FUT)</code></td>
+            <td>AA_CHECK_CONFIRMATION</td>
+            <td>APIGW_OPT_IN_OUT</td>
+            <td><a href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html"><span class="badge badge-green">✓ Generated</span></a></td>
+          </tr>
+          <tr class="cond-row">
+            <td><strong>21</strong></td>
+            <td><code>APIGW_OPT_IN_OUT</code></td>
+            <td>APIGW_OPT_IN_OUT</td>
+            <td><code>ACTION=1</code></td>
+            <td><code>boolean(//SubscriberOffers[EI[FE_OR_CCBS=FE] and contains(SocProperties,'TR_OFFER_GROUP=CBSC')])</code></td>
+            <td>SMSGATEWAY_SEND_SMS</td>
+            <td>END</td>
+            <td><span class="badge badge-grey">⚠ Not Found</span></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <p style="font-size:.78rem;color:#888;margin-top:6px;">Rows with yellow left border have a PreExecCheck (conditional execution). <strong>EI</strong> = ExtendedInfo shorthand.</p>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="section" id="s3">
+  <h2 class="st"><span>§3</span>Conditional Execution Rules (PreExecCheck)</h2>
+
+  <details open>
+    <summary>Step 1 — IOM_CHECK_SEQUENCING</summary>
+    <div class="xpath-label">FM: IOM_CHECK_SEQUENCING · Gate: Channel must be POMX_ETG or APPLE</div>
+    <pre>/ns0:OrderRequest/OrderData/Channel/text()="POMX_ETG" or
+/ns0:OrderRequest/OrderData/Channel/text()="APPLE"</pre>
+  </details>
+
+  <details>
+    <summary>Step 2 — CAT_GOD_A</summary>
+    <div class="xpath-label">FM: CAT_GOD · Gate: Order must contain offers</div>
+    <pre>count(//Offers) > 0 or count(//SubscriberOffers) > 0</pre>
+  </details>
+
+  <details>
+    <summary>Step 5 — CDB_GET_PROFILE</summary>
+    <div class="xpath-label">FM: CDB_GET_PROFILE · Gate: Has PROAUTOACT offer with FE_OR_CCBS=FE</div>
+    <pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and OfferName='PROAUTOACT'])</pre>
+  </details>
+
+  <details>
+    <summary>Step 6 — OMX_BRMS_DB</summary>
+    <div class="xpath-label">FM: OMX_BRMS_DB · Gate: Has subscriber offers AND FE_OR_CCBS=FE</div>
+    <pre>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']])</pre>
+  </details>
+
+  <details>
+    <summary>Step 8 — CAT_GOD_B</summary>
+    <div class="xpath-label">FM: CAT_GOD · Gate: No Soc element or Soc is empty</div>
+    <pre>not(exists(//Soc)) or string-length(//Soc/text())=0</pre>
+  </details>
+
+  <details>
+    <summary>Step 9 — OMX_CAL_OFFER_FUT_DATE</summary>
+    <div class="xpath-label">FM: OMX_CAL_OFFER_FUT_DATE · Gate: Has offers with FE or BRMS</div>
+    <pre>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]])</pre>
+  </details>
+
+  <details>
+    <summary>Step 10 — OMX_ADD_FUT_OFFER</summary>
+    <div class="xpath-label">FM: OMX_ADD_FUT_OFFER · Gate: Has FE/BRMS offers with EFF_TYPE=FUT</div>
+    <pre>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')] and ExtendedInfo[Name='EFF_TYPE' and Value='FUT']])</pre>
+  </details>
+
+  <details>
+    <summary>Step 12 — OMX_GET_SRV_TRX_NO</summary>
+    <div class="xpath-label">FM: OMX_GET_SRV_TRX_NO · Gate: Provisioning enabled AND no future-only offers</div>
+    <pre>(not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']]))
+and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))</pre>
+  </details>
+
+  <details>
+    <summary>Step 13 — AA_PREPAID_PROVISIONING</summary>
+    <div class="xpath-label">FM: AA_PREPAID_PROVISIONING · Gate: Same provisioning + EFF_TYPE guard as step 12</div>
+    <pre>(not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']]))
+and (not(boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))</pre>
+  </details>
+
+  <details>
+    <summary>Step 14 — CRM_CREATE_ORDER_PREPAID</summary>
+    <div class="xpath-label">FM: CRM_CREATE_ORDER_PREPAID · Gate: Has FE/BRMS offers AND not future-only</div>
+    <pre>(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]])
+and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))</pre>
+  </details>
+
+  <details>
+    <summary>Step 15 — SBM_ADD_3GPREPAID</summary>
+    <div class="xpath-label">FM: SBM_ADD_3GPREPAID · Gate: Has BRMS offer with ServiceType=88 (3G prepaid)</div>
+    <pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS'] and (ServiceType='88')])</pre>
+  </details>
+
+  <details>
+    <summary>Step 16 — MCS_REGISTER_SUBSCRIPTION</summary>
+    <div class="xpath-label">FM: MCS_REGISTER_SUBSCRIPTION · Gate: Has BRMS offer with ServiceType=69</div>
+    <pre>boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS'] and ServiceType='69'])</pre>
+  </details>
+
+  <details>
+    <summary>Step 17 — STATUS_UPDATE_CREATING_PROFILE</summary>
+    <div class="xpath-label">FM: STATUS_UPDATE_CREATING_PROFILE · Gate: No future-only offers</div>
+    <pre>(not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))</pre>
+  </details>
+
+  <details>
+    <summary>Step 18 — OMX_EXP_FUT_OFFER</summary>
+    <div class="xpath-label">FM: OMX_EXP_FUT_OFFER · Gate: Has FE/BRMS offers with immediate EFF + future EXP; plus immediate/LOGICALDATE_PROV guard</div>
+    <pre>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')] and ExtendedInfo[Name='EFF_TYPE' and Value!='FUT'] and ExtendedInfo[Name='EXP_TYPE' and Value='FUT']])
+and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']]))</pre>
+  </details>
+
+  <details>
+    <summary>Step 19 — AA_CHECK_CONFIRMATION</summary>
+    <div class="xpath-label">FM: AA_CHECK_CONFIRMATION · Gate: Same provisioning + EFF_TYPE guard as steps 12/13</div>
+    <pre>(not(boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING']])) or boolean(/ns0:OrderRequest/OrderData[ExtendedInfo[Name='PROVISIONING' and Value!='N']]))
+and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))</pre>
+  </details>
+
+  <details>
+    <summary>Step 20 — SMSGATEWAY_SEND_SMS</summary>
+    <div class="xpath-label">FM: SMSGATEWAY_SEND_SMS · Gate: Has subscriber with MSISDN, channel not CCBS/OMX, not future-only</div>
+    <pre>boolean(//Subscriber[MSISDN/text()][1] and /ns0:OrderRequest/OrderData/Channel/text()!="CCBS" and /ns0:OrderRequest/OrderData/Channel/text()!="OMX")
+and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))</pre>
+  </details>
+
+  <details>
+    <summary>Step 21 — APIGW_OPT_IN_OUT</summary>
+    <div class="xpath-label">FM: APIGW_OPT_IN_OUT · Gate: Has FE offer with TR_OFFER_GROUP=CBSC</div>
+    <pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and contains(SocProperties,'TR_OFFER_GROUP=CBSC')])</pre>
+  </details>
+</div>
+
+<!-- §4 FM Documentation Index -->
+<div class="section" id="s4">
+  <h2 class="st"><span>§4</span>FM Documentation Index</h2>
+  <div class="fm-grid">
+    <div class="fm-card">
+      <h4>IOM_CHECK_SEQUENCING</h4>
+      <div class="steps">Used in: Step 1</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>CAT_GOD</h4>
+      <div class="steps">Used in: Steps 2, 8</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>CRM_GET_LAST_ASSET_ROOT</h4>
+      <div class="steps">Used in: Step 3</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>CRM_GET_ASSET_COMPONENT_LIST</h4>
+      <div class="steps">Used in: Step 4</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>CDB_GET_PROFILE</h4>
+      <div class="steps">Used in: Step 5</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>OMX_BRMS_DB</h4>
+      <div class="steps">Used in: Step 6</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>CCP_GET_PREPAID_CREDIT_INFO</h4>
+      <div class="steps">Used in: Step 7</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card" style="border-top-color:var(--success);">
+      <h4><a href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">OMX_CAL_OFFER_FUT_DATE</a></h4>
+      <div class="steps">Used in: Step 9</div>
+      <div class="status"><span class="badge badge-green">✓ Generated</span></div>
+    </div>
+    <div class="fm-card" style="border-top-color:var(--success);">
+      <h4><a href="../FMlogic/Request_OMX_ADD_FUT_OFFER.html">OMX_ADD_FUT_OFFER</a></h4>
+      <div class="steps">Used in: Step 10</div>
+      <div class="status"><span class="badge badge-green">✓ Generated</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>OMX_BIZ_VAL</h4>
+      <div class="steps">Used in: Step 11</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>OMX_GET_SRV_TRX_NO</h4>
+      <div class="steps">Used in: Step 12</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>AA_PREPAID_PROVISIONING</h4>
+      <div class="steps">Used in: Step 13</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>CRM_CREATE_ORDER_PREPAID</h4>
+      <div class="steps">Used in: Step 14</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card" style="border-top-color:var(--success);">
+      <h4><a href="../FMlogic/Request_SBM_ADD_3GPREPAID.html">SBM_ADD_3GPREPAID</a></h4>
+      <div class="steps">Used in: Step 15</div>
+      <div class="status"><span class="badge badge-green">✓ Generated</span></div>
+    </div>
+    <div class="fm-card" style="border-top-color:var(--success);">
+      <h4><a href="../FMlogic/Request_MCS_REGISTER_SUBSCRIPTION.html">MCS_REGISTER_SUBSCRIPTION</a></h4>
+      <div class="steps">Used in: Step 16</div>
+      <div class="status"><span class="badge badge-green">✓ Generated</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>STATUS_UPDATE_CREATING_PROFILE</h4>
+      <div class="steps">Used in: Step 17</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card" style="border-top-color:var(--success);">
+      <h4><a href="../FMlogic/Request_OMX_EXP_FUT_OFFER.html">OMX_EXP_FUT_OFFER</a></h4>
+      <div class="steps">Used in: Step 18</div>
+      <div class="status"><span class="badge badge-green">✓ Generated</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>AA_CHECK_CONFIRMATION</h4>
+      <div class="steps">Used in: Step 19</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+    <div class="fm-card" style="border-top-color:var(--success);">
+      <h4><a href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></h4>
+      <div class="steps">Used in: Step 20</div>
+      <div class="status"><span class="badge badge-green">✓ Generated</span></div>
+    </div>
+    <div class="fm-card">
+      <h4>APIGW_OPT_IN_OUT</h4>
+      <div class="steps">Used in: Step 21</div>
+      <div class="status"><span class="badge badge-grey">⚠ Not Found</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="section" id="s5">
+  <h2 class="st"><span>§5</span>Sequence Diagram</h2>
+  <div class="diagram-wrap">
+    <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant IOM as IOM
+    participant CAT as CAT
+    participant CRM as CRM
+    participant CDB as CDB
+    participant OMX as OMX
+    participant CCP as CCP
+    participant SBM as SBM
+    participant MCS as MCS
+    participant STATUS as STATUS
+    participant AA as AA
+    participant SMS as SMSGATEWAY
+    participant APIGW as APIGW
+
+    opt Channel=POMX_ETG or APPLE
+        O->>IOM: IOM_CHECK_SEQUENCING
+        IOM-->>O: response
+        Note over O,IOM: FM: IOM_CHECK_SEQUENCING
+    end
+    opt count(Offers)>0 or count(SubscriberOffers)>0
+        O->>CAT: CAT_GOD_A
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+    O->>CRM: CRM_GET_LAST_ASSET_ROOT [customerAddressFlag=Y]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_GET_LAST_ASSET_ROOT
+    O->>CRM: CRM_GET_ASSET_COMPONENT_LIST [STATUS=Active]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_GET_ASSET_COMPONENT_LIST
+    opt EI[FE_OR_CCBS=FE] and OfferName=PROAUTOACT
+        O->>CDB: CDB_GET_PROFILE
+        CDB-->>O: response
+        Note over O,CDB: FM: CDB_GET_PROFILE
+    end
+    opt SubscriberOffers present and EI[FE_OR_CCBS=FE]
+        O->>OMX: OMX_BRMS_DB
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_BRMS_DB
+    end
+    O->>CCP: CCP_GET_PREPAID_CREDIT_INFO
+    CCP-->>O: response
+    Note over O,CCP: FM: CCP_GET_PREPAID_CREDIT_INFO
+    opt not(exists(Soc)) or Soc empty
+        O->>CAT: CAT_GOD_B
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+    opt SubscriberOffers with FE or BRMS
+        O->>OMX: OMX_CAL_OFFER_FUT_DATE
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_CAL_OFFER_FUT_DATE
+    end
+    opt FE/BRMS offers with EFF_TYPE=FUT
+        O->>OMX: OMX_ADD_FUT_OFFER [ORDERTYPE=69|USE_ROWID_CRM=Y]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFER
+    end
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL
+    opt Provisioning enabled and EFF_TYPE not FUT
+        O->>OMX: OMX_GET_SRV_TRX_NO [CCD]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+    end
+    opt Provisioning enabled and EFF_TYPE not FUT
+        O->>AA: AA_PREPAID_PROVISIONING [CCD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_PREPAID_PROVISIONING
+    end
+    opt FE/BRMS offers and EFF_TYPE not FUT
+        O->>CRM: CRM_CREATE_ORDER_PREPAID [command=AddRemoveOffer|...]
+        CRM-->>O: response
+        Note over O,CRM: FM: CRM_CREATE_ORDER_PREPAID
+    end
+    opt BRMS offers with ServiceType=88
+        O->>SBM: SBM_ADD_3GPREPAID
+        SBM-->>O: response
+        Note over O,SBM: FM: SBM_ADD_3GPREPAID
+    end
+    opt BRMS offers with ServiceType=69
+        O->>MCS: MCS_REGISTER_SUBSCRIPTION [USE_ROWID_CRM=Y]
+        MCS-->>O: response
+        Note over O,MCS: FM: MCS_REGISTER_SUBSCRIPTION
+    end
+    opt EFF_TYPE not FUT
+        O->>STATUS: STATUS_UPDATE_CREATING_PROFILE
+        STATUS-->>O: response
+        Note over O,STATUS: FM: STATUS_UPDATE_CREATING_PROFILE
+    end
+    opt FE/BRMS with EFF_TYPE=IM and EXP_TYPE=FUT
+        O->>OMX: OMX_EXP_FUT_OFFER [ORDERTYPE=70|USE_ROWID_CRM=Y]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_EXP_FUT_OFFER
+    end
+    opt Provisioning enabled and EFF_TYPE not FUT
+        O->>AA: AA_CHECK_CONFIRMATION [CCD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_CHECK_CONFIRMATION
+    end
+    opt Subscriber has MSISDN and Channel not CCBS/OMX
+        O->>SMS: SMSGATEWAY_SEND_SMS
+        SMS-->>O: response
+        Note over O,SMS: FM: SMSGATEWAY_SEND_SMS
+    end
+    opt FE offers with TR_OFFER_GROUP=CBSC
+        O->>APIGW: APIGW_OPT_IN_OUT [ACTION=1]
+        APIGW-->>O: response
+        Note over O,APIGW: FM: APIGW_OPT_IN_OUT
+    end
+    </div>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="section" id="s6">
+  <h2 class="st"><span>§6</span>Flow Diagram</h2>
+  <div class="diagram-wrap">
+    <div class="mermaid">
+flowchart TD
+    START([START]) --> S1
+    S1{IOM_CHECK_SEQUENCING\nFM: IOM_CHECK_SEQUENCING\nConditional} --> S2
+    S2{CAT_GOD_A\nFM: CAT_GOD\nConditional} --> S3
+    S3[CRM_GET_LAST_ASSET_ROOT\ncustomerAddressFlag=Y] --> S4
+    S4[CRM_GET_ASSET_COMPONENT_LIST\nSTATUS=Active] --> S5
+    S5{CDB_GET_PROFILE\nFM: CDB_GET_PROFILE\nConditional} --> S6
+    S6{OMX_BRMS_DB\nFM: OMX_BRMS_DB\nConditional} --> S7
+    S7[CCP_GET_PREPAID_CREDIT_INFO] --> S8
+    S8{CAT_GOD_B\nFM: CAT_GOD\nConditional} --> S9
+    S9{OMX_CAL_OFFER_FUT_DATE\nConditional} --> S10
+    S10{OMX_ADD_FUT_OFFER\nORDERTYPE=69\nConditional} --> S11
+    S11[OMX_BIZ_VAL] --> S12
+    S12{OMX_GET_SRV_TRX_NO\nCCD\nConditional} --> S13
+    S13{AA_PREPAID_PROVISIONING\nCCD\nConditional} --> S14
+    S14{CRM_CREATE_ORDER_PREPAID\nConditional} --> S15
+    S15{SBM_ADD_3GPREPAID\nServiceType=88\nConditional} --> S16
+    S16{MCS_REGISTER_SUBSCRIPTION\nServiceType=69\nConditional} --> S17
+    S17{STATUS_UPDATE_CREATING_PROFILE\nConditional} --> S18
+    S18{OMX_EXP_FUT_OFFER\nORDERTYPE=70\nConditional} --> S19
+    S19{AA_CHECK_CONFIRMATION\nCCD\nConditional} --> S20
+    S20{SMSGATEWAY_SEND_SMS\nConditional} --> S21
+    S21{APIGW_OPT_IN_OUT\nACTION=1\nConditional} --> END([END])
+
+    style S9 fill:#E8F5E9,stroke:#2e7d32
+    style S10 fill:#E8F5E9,stroke:#2e7d32
+    style S15 fill:#E8F5E9,stroke:#2e7d32
+    style S16 fill:#E8F5E9,stroke:#2e7d32
+    style S18 fill:#E8F5E9,stroke:#2e7d32
+    style S20 fill:#E8F5E9,stroke:#2e7d32
+    </div>
+  </div>
+  <p style="font-size:.78rem;color:#888;margin-top:8px;">Green nodes: FM documentation generated. Diamond shapes: conditional steps (have PreExecCheck).</p>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({ startOnLoad: true, theme: 'default' });</script>
+
+<footer>
+  <strong>TRUE Corporation OMX</strong> · Order Journey Documentation<br/>
+  PREPAID_ADD_OFFER · 21 steps · 20 unique FMs · 6 FM docs generated · 2026-09-09
+</footer>
+
+</body>
+</html>

@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CREATE_MEMO — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#333;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+.page-header .sub{opacity:.85;margin-top:6px;font-size:.95rem}
+.breadcrumb{font-size:.78rem;opacity:.7;margin-bottom:8px}
+.meta-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:14px}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.82rem}
+.content{max-width:1400px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+.has-check td:first-child{border-left:3px solid #f59e0b}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);line-height:1.5}
+code{background:#f0e8e8;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85em}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-amber{background:#FFF8E1;color:#e65100}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+a{color:var(--true-dark);text-decoration:none}
+a:hover{text-decoration:underline;color:var(--true-light)}
+details{margin-bottom:10px}
+details summary{cursor:pointer;padding:9px 14px;background:#fdf0f0;border-radius:6px;font-weight:600;color:var(--true-dark);list-style:none}
+details[open] summary{background:#f5e0e0;border-radius:6px 6px 0 0}
+.details-body{padding:12px 14px;background:#fff8f8;border:1px solid #f0d0d0;border-top:none;border-radius:0 0 6px 6px}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:14px}
+.fm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;transition:box-shadow .2s}
+.fm-card:hover{box-shadow:0 3px 12px rgba(139,0,0,.12)}
+.fm-card-title{font-weight:700;color:var(--true-dark);font-size:.92rem;margin-bottom:6px}
+.fm-card-steps{font-size:.8rem;color:#666;margin-bottom:8px}
+.section-num{color:var(--true-red);font-weight:700;margin-right:6px}
+.step-num{display:inline-block;width:26px;height:26px;background:var(--true-red);color:#fff;border-radius:50%;text-align:center;line-height:26px;font-size:.78rem;font-weight:700;flex-shrink:0}
+.skipped-note{background:#f3e5f5;border:1px solid #ce93d8;border-radius:8px;padding:14px 18px;color:#6a1b9a;font-size:.9rem;margin:8px 0}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb">TRUE Corporation OMX &rsaquo; Order Journey Documentation</div>
+  <h1>CREATE_MEMO</h1>
+  <div class="sub">Process Configuration for CREATE_MEMO.</div>
+  <div class="meta-row">
+    <span class="meta-chip">2 steps</span>
+    <span class="meta-chip">2 unique FMs</span>
+    <span class="meta-chip">2 generated</span>
+    <span class="meta-chip">0 not found</span>
+    <span class="meta-chip">Entry: CCBS_GET_CUST_ACC_SUB_ID</span>
+    <span class="meta-chip">Generated: 2026-09-15</span>
+  </div>
+</div>
+<div class="content">
+
+<!-- §2 Order Flow Table -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§2</span> Order Flow</div>
+  <div class="card-body" style="overflow-x:auto">
+    <table id="flow-table">
+      <thead>
+        <tr>
+          <th>Step #</th>
+          <th>Step ID</th>
+          <th>FM (ActivityID)</th>
+          <th>Parameter(s)</th>
+          <th>PreExecCheck</th>
+          <th>Previous</th>
+          <th>Next</th>
+          <th>FM Doc</th>
+        </tr>
+      </thead>
+      <tbody id="flow-body"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§3</span> Conditional Execution Rules (PreExecCheck)</div>
+  <div class="card-body" id="preexec-body"></div>
+</div>
+
+<!-- §4 FM Documentation Index -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§4</span> FM Documentation Index</div>
+  <div class="card-body">
+    <div class="fm-grid" id="fm-grid"></div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§5</span> Sequence Diagram</div>
+  <div class="card-body">
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+
+    opt exists(Subscriber/MSISDN[./text()])
+        O->>CCBS: CCBS_GET_CUST_ACC_SUB_ID
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_CUST_ACC_SUB_ID
+    end
+    O->>CCBS: CCBS_CREATE_MEMO
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_CREATE_MEMO
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§6</span> Flow Diagram</div>
+  <div class="card-body">
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1
+    S1{"CCBS_GET_CUST_ACC_SUB_ID\nFM: CCBS_GET_CUST_ACC_SUB_ID\n[Conditional]"}
+    S1 --> S2["CCBS_CREATE_MEMO\nFM: CCBS_CREATE_MEMO"]
+    S2 --> END([END])
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /content -->
+<footer>TRUE Corporation OMX &middot; Order Journey Documentation &middot; CREATE_MEMO &middot; Generated 2026-09-15</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+<script>
+function esc(s){return s?s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'):''}
+// [step, shortId, activityId, params, preExecCheck, prevShortId, nextShortId, notFound]
+const A=[
+  [1,"CCBS_GET_CUST_ACC_SUB_ID","CCBS_GET_CUST_ACC_SUB_ID","","exists(//Subscriber/MSISDN[./text()])","START","CCBS_CREATE_MEMO",false],
+  [2,"CCBS_CREATE_MEMO","CCBS_CREATE_MEMO","","","CCBS_GET_CUST_ACC_SUB_ID","END",false]
+];
+
+// §2 table
+const tbody=document.getElementById('flow-body');
+A.forEach(r=>{
+  const [step,sid,aid,params,pec,prev,next,nf]=r;
+  const hasCheck=pec&&pec.length>0;
+  const tr=document.createElement('tr');
+  if(hasCheck)tr.className='has-check';
+  const docLink=nf
+    ?`<span class="badge badge-amber">⚠ Not Found</span>`
+    :`<a class="badge badge-green" href="../FMlogic/Request_${esc(aid)}.html" target="_blank">✓ Generated</a>`;
+  const fmCell=nf
+    ?`<s>${esc(aid)}</s> <span class="badge badge-amber">Not Found</span>`
+    :`<a href="../FMlogic/Request_${esc(aid)}.html" target="_blank">${esc(aid)}</a>`;
+  tr.innerHTML=`
+    <td><span class="step-num">${step}</span></td>
+    <td><code>${esc(sid)}</code></td>
+    <td>${fmCell}</td>
+    <td>${params?`<code>${esc(params)}</code>`:'—'}</td>
+    <td style="${hasCheck?'background:#fffbeb':''}"">${hasCheck?`<code style="font-size:.78rem">${esc(pec)}</code>`:'—'}</td>
+    <td><code>${esc(prev)}</code></td>
+    <td><code>${esc(next)}</code></td>
+    <td>${docLink}</td>`;
+  tbody.appendChild(tr);
+});
+
+// §3 PreExecCheck
+const peDiv=document.getElementById('preexec-body');
+const pecSteps=A.filter(r=>r[4]&&r[4].length>0);
+if(pecSteps.length===0){
+  peDiv.innerHTML='<p style="color:#888">No conditional steps in this process.</p>';
+}else{
+  pecSteps.forEach(r=>{
+    const [step,sid,aid,,pec]=r;
+    const det=document.createElement('details');
+    det.innerHTML=`<summary>Step ${step} — ${esc(sid)}</summary>
+      <div class="details-body">
+        <p style="margin-bottom:8px"><strong>FM:</strong> <a href="../FMlogic/Request_${esc(aid)}.html" target="_blank">${esc(aid)}</a></p>
+        <pre>${esc(pec)}</pre>
+      </div>`;
+    peDiv.appendChild(det);
+  });
+}
+
+// §4 FM Index
+const grid=document.getElementById('fm-grid');
+const fmMap={};
+A.forEach(r=>{const aid=r[2];if(!fmMap[aid]){fmMap[aid]={steps:[],nf:r[7]}}fmMap[aid].steps.push(r[0]);});
+Object.entries(fmMap).forEach(([aid,{steps,nf}])=>{
+  const div=document.createElement('div');
+  div.className='fm-card';
+  div.innerHTML=`<div class="fm-card-title">${esc(aid)}</div>
+    <div class="fm-card-steps">Used in steps: ${steps.join(', ')}</div>
+    ${nf
+      ?`<span class="badge badge-amber">⚠ Not Found</span>`
+      :`<a href="../FMlogic/Request_${esc(aid)}.html" target="_blank" class="badge badge-green">✓ View FM Doc</a>`
+    }`;
+  grid.appendChild(div);
+});
+</script>
+</body>
+</html>

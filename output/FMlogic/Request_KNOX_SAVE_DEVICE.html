@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_KNOX_SAVE_DEVICE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem;margin-bottom:14px}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:18px;border-radius:8px;overflow-x:auto;font-size:.8rem;border-left:3px solid var(--true-red)}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:.78rem}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.88rem}
+.callout-warn{border-color:#e65100;background:#FFF3E0}
+.callout-info{border-color:#1565c0;background:#E3F0FD}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_KNOX_SAVE_DEVICE</h1>
+  <div class="subtitle">Registers a device with Knox via the shared KNOX_PROXY_SERVICE event (method="saveDevice") per qualifying subscriber offer; sends IMEI and brand-name sourced from offer ExtendedInfo (populated by upstream PSA_GET_DEVICE_INFO).</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: Knox (saveDevice)</span>
+    <span class="meta-badge">Event: KNOX_PROXY_SERVICE</span>
+    <span class="meta-badge">Pattern: Per-offer fan-out</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Author: DESKTOP-995HR2V</span>
+    <span class="meta-badge">Used in step: 65</span>
+    <span class="meta-badge">Generated: 2026-08-07</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Sends one <strong>Knox knoxProxyReq</strong> (method=saveDevice) per qualifying subscriber offer. Uses the shared <code>KNOX_PROXY_SERVICE</code> event type — the operation is distinguished by the hardcoded <code>ns2:method = "saveDevice"</code> field in the payload, not by the event type name. Device data (IMEI, brand) is sourced from the offer's ExtendedInfo fields written by the upstream <strong>PSA_GET_DEVICE_INFO</strong> response handler.</p>
+    <ul style="margin:12px 0 0 20px;line-height:2">
+      <li><strong>Event type (shared):</strong> <code>Events.OMConsumers.OMXFM.Request.KNOX_PROXY_SERVICE</code> — not a dedicated KNOX_SAVE_DEVICE event</li>
+      <li><strong>Method discriminator:</strong> <code>ns2:method = "saveDevice"</code> (hardcoded in payload)</li>
+      <li><strong>transactionId:</strong> <code>concat(IMEI_KNOX, tib:timestamp())</code> — always sent; timestamp-only if IMEI_KNOX absent</li>
+      <li><strong>IMEI (ns2:deviceUid):</strong> <code>ExtendedInfo[IMEI_KNOX]/Value</code> — conditional on presence</li>
+      <li><strong>Brand (ns2:brand):</strong> <code>ExtendedInfo[BRAND_NAME]/Value</code> — conditional; set by PSA_GET_DEVICE_INFO</li>
+      <li><strong>COU PreExecCheck:</strong> <code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code> — correct offer-level context (fixed vs. PSA_GET_DEVICE_INFO)</li>
+      <li><strong>Response:</strong> standard ResponseBase only — no write-back</li>
+    </ul>
+    <div class="callout callout-info" style="margin-top:14px">
+      <strong>Upstream dependency on PSA_GET_DEVICE_INFO:</strong> <code>ns2:brand</code> is sourced from <code>ExtendedInfo[BRAND_NAME]</code>, which is written by the PSA_GET_DEVICE_INFO response handler. If PSA_GET_DEVICE_INFO was skipped or failed, BRAND_NAME will be absent and <code>ns2:brand</code> will not be sent to Knox.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] transactionId always sent even when IMEI_KNOX absent:</strong> <code>concat(IMEI_KNOX_value, tib:timestamp())</code> always emits — produces just a timestamp string if IMEI_KNOX has no value. Knox transactionId uniqueness is preserved (timestamp), but the IMEI prefix is lost.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] No PurgePendingRequestsBeforeResubmit:</strong> Same pattern as PSA_GET_DEVICE_INFO — pending KNOX_PROXY_SERVICE events from a failed run remain in queue on resubmit.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_KNOX_SAVE_DEVICE.rule</code></td><td>151 lines</td></tr>
+      <tr><td>Rule namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td><td></td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_KNOX_SAVE_DEVICE.rulefunction</code></td><td>27 lines — standard, no write-back</td></tr>
+      <tr><td>Author</td><td>DESKTOP-995HR2V</td><td>Same as PSA_GET_DEVICE_INFO</td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td>true</td><td></td></tr>
+      <tr><td>Backend event type</td><td><code>Events.OMConsumers.OMXFM.Request.KNOX_PROXY_SERVICE</code></td><td>Shared event — not KNOX_SAVE_DEVICE</td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.KNOX_PROXY_SERVICE</code></td><td>Shared response event</td></tr>
+      <tr><td>Payload root</td><td><code>ns2:knoxProxyReq</code></td><td>Knox proxy request</td></tr>
+      <tr><td>Schema NS (ns2)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/Knox/KnoxProxyRequest.xsd</code></td><td>Knox payload</td></tr>
+      <tr><td>Operation discriminator</td><td><code>ns2:method = "saveDevice"</code></td><td>Hardcoded in payload — distinguishes from other Knox ops</td></tr>
+      <tr><td>offerRefId format</td><td><code>subRefId + ":" + offer.Soc + ":" + filter</code></td><td>Same 3-part as PSA_GET_DEVICE_INFO</td></tr>
+      <tr><td>IMEI source</td><td><code>ExtendedInfo[IMEI_KNOX]/Value</code></td><td>Same as PSA_GET_DEVICE_INFO</td></tr>
+      <tr><td>Brand source</td><td><code>ExtendedInfo[BRAND_NAME]/Value</code></td><td>Written by PSA_GET_DEVICE_INFO upstream</td></tr>
+      <tr><td>Dispatch</td><td><code>Event.Ext.sendEventImmediate</code></td><td>Per-offer fan-out</td></tr>
+      <tr><td>isActResub</td><td><code>RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted</code></td><td>Suppresses RequestCount++ only</td></tr>
+      <tr><td>Resub purge</td><td><strong>ABSENT</strong></td><td>No PurgePendingRequestsBeforeResubmit</td></tr>
+      <tr><td>POU PreExecCheck builder</td><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, pSubRefId, offer.Soc, filter)</code></td><td>Correct</td></tr>
+      <tr><td>COU PreExecCheck builder</td><td><code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, cSubRefId, offer.Soc, pOuRefId, filter)</code></td><td><span class="badge badge-green">Correct</span> — unlike PSA_GET_DEVICE_INFO</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td><td>Standard 4 fields — no Knox-specific fields</td></tr>
+      <tr><td>Response write-back</td><td>None</td><td>Simple response handler</td></tr>
+      <tr><td>Fan-in</td><td><code>RequestCount == successResponseCount</code></td><td>success = ResponseCode suffix "000"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="card">
+  <div class="card-header">§3 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "KNOX_SAVE_DEVICE"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "KNOX_SAVE_DEVICE"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Mapping -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p style="margin-bottom:12px">POU and COU XSLTs are identical — only <code>$offer</code> is bound to POU or COU SubscriberOffers respectively.</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$offerRefId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-purple">Credential-gated</span><span class="tree-cond">IsEnableUserPass='true'</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns2:knoxProxyReq</span><span class="tree-ns">ns2=http://…/Knox/KnoxProxyRequest.xsd</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:transactionId</span><span class="tree-arrow">←</span><span class="tree-src">concat(ExtendedInfo[IMEI_KNOX]/Value, tib:timestamp())</span><span class="badge badge-green">Always</span><span class="tree-cond">timestamp-only if IMEI_KNOX absent</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:deviceUid</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[IMEI_KNOX]/Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">xsl:if on IMEI_KNOX</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:brand</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[BRAND_NAME]/Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">xsl:if on BRAND_NAME; set by PSA_GET_DEVICE_INFO</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:method</span><span class="tree-arrow">←</span><span class="tree-src-static">"saveDevice"</span><span class="badge badge-green">Always</span><span class="tree-cond">hardcoded operation discriminator</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>Knox (Samsung Knox device management)</td></tr>
+      <tr><td>Operation</td><td>knoxProxyReq / method = "saveDevice" — device registration</td></tr>
+      <tr><td>Schema NS (ns2)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/Knox/KnoxProxyRequest.xsd</code></td></tr>
+      <tr><td>Event type (shared)</td><td><code>KNOX_PROXY_SERVICE</code> — used by multiple Knox operations; method field distinguishes them</td></tr>
+      <tr><td>transactionId</td><td><code>concat(IMEI_KNOX, tib:timestamp())</code> — ensures uniqueness per request</td></tr>
+      <tr><td>Correlation</td><td>RefID = subRefId:Soc:filter</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§8.5 ExtendedInfo Fields</h3>
+    <table>
+      <tr><th>Name</th><th>Direction</th><th>Source</th><th>Maps to</th></tr>
+      <tr><td>FE_OR_CCBS</td><td>INPUT</td><td>Offer</td><td>filter segment in offerRefId</td></tr>
+      <tr><td>IMEI_KNOX</td><td>INPUT</td><td>Offer (original order data)</td><td>ns2:transactionId prefix + ns2:deviceUid</td></tr>
+      <tr><td>BRAND_NAME</td><td>INPUT</td><td>Written by PSA_GET_DEVICE_INFO upstream</td><td>ns2:brand (conditional)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_KNOX_SAVE_DEVICE (rule)
+├── isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── [NOTE: NO PurgePendingRequestsBeforeResubmit]
+├── [POU loop p → ps → psof]:
+│   ├── filter = XPath.evalAsString(offer/ExtendedInfo[FE_OR_CCBS]/Value)
+│   ├── offerRefId = pSubRefId + ":" + offer.Soc + ":" + filter
+│   ├── [Resub guard]: scan Response[] for CompletionStatus==2 &amp;&amp; ReferenceId==offerRefId
+│   ├── [if !reqSuccess]:
+│   │   ├── [if PreExecCheck]: GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, pSubRefId, offer.Soc, filter)
+│   │   ├── XPath.execute(PreExecCheck)
+│   │   └── [if "true"]:
+│   │       ├── Event.createEvent(KNOX_PROXY_SERVICE, XSLT: ns2:knoxProxyReq, method="saveDevice")
+│   │       ├── Event.Ext.sendEventImmediate(reqEvent)
+│   │       ├── isSkipped = false
+│   │       ├── [if !isActResub]: RequestCount++
+│   │       └── Event.Ext.sendEventImmediate(Logger: "Request Sent for KNOX_SAVE_DEVICE")
+├── [COU loop p → c → cs → csof]:
+│   ├── filter = XPath.evalAsString(offer/ExtendedInfo[FE_OR_CCBS]/Value)
+│   ├── offerRefId = cSubRefId + ":" + offer.Soc + ":" + filter
+│   ├── [if PreExecCheck]: GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, cSubRefId, offer.Soc, pOuRefId, filter)
+│   └── Event.createEvent(KNOX_PROXY_SERVICE, XSLT: ns2:knoxProxyReq, method="saveDevice")
+├── [if !isSkipped]:
+│   ├── Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException(orderRequest, orderCurrentActivity, ae, "")
+
+Response_KNOX_SAVE_DEVICE (rulefunction)
+├── activityRes = Instance.createInstance(ResponseBase) {extId, ResponseCode, ResponseMessage, CompletionStatus, ReferenceId}
+├── currActivity.Response[] ← activityRes
+├── Event.Ext.sendEventImmediate(Logger: "Response received for KNOX_SAVE_DEVICE", LOG_LEVEL=INFO)
+├── successResponseCount = count(Response[tib:right(tib:trim(ResponseCode),3)="000"])
+└── return (RequestCount == successResponseCount) ? "true" : "false"</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Per-offer fan-out across POU and COU. One KNOX_PROXY_SERVICE(saveDevice) per qualifying offer.</td></tr>
+      <tr><td>R2</td><td>Operation is identified by <code>ns2:method = "saveDevice"</code> in payload (not event type). Uses shared KNOX_PROXY_SERVICE event.</td></tr>
+      <tr><td>R3</td><td>transactionId = concat(IMEI_KNOX, tib:timestamp()) — always sent; unique per invocation.</td></tr>
+      <tr><td>R4</td><td>deviceUid = IMEI_KNOX value — conditional on IMEI_KNOX being present in offer ExtendedInfo.</td></tr>
+      <tr><td>R5</td><td>brand = BRAND_NAME value — conditional; BRAND_NAME is populated by PSA_GET_DEVICE_INFO upstream response handler.</td></tr>
+      <tr><td>R6</td><td>offerRefId: <code>subRefId:offer.Soc:filter</code> — same format as PSA_GET_DEVICE_INFO.</td></tr>
+      <tr><td>R7</td><td>COU PreExecCheck uses correct offer+filter context (GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo).</td></tr>
+      <tr><td>R8</td><td>Response is standard ResponseBase — no write-back to working memory.</td></tr>
+      <tr><td>R9</td><td>Fan-in: RequestCount == count(Response[ResponseCode suffix "000"]).</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Upstream dependency on BRAND_NAME from PSA_GET_DEVICE_INFO — if PSA step skipped/failed, brand not sent to Knox</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Verify Knox can accept absent brand; document that PSA_GET_DEVICE_INFO must succeed for full Knox registration</td></tr>
+      <tr><td>No PurgePendingRequestsBeforeResubmit — duplicate saveDevice calls possible on resubmit</td><td><span class="badge badge-blue">[LOW]</span></td><td>Verify Knox idempotency for duplicate saveDevice with same deviceUid + different transactionId</td></tr>
+      <tr><td>transactionId always sent even when IMEI_KNOX absent — produces timestamp-only string</td><td><span class="badge badge-blue">[LOW]</span></td><td>Confirm Knox transactionId format expectation; add guard if IMEI prefix required</td></tr>
+      <tr><td>Shared KNOX_PROXY_SERVICE event type — response routing relies on RefID not event type; multiple Knox FMs in parallel could collide</td><td><span class="badge badge-blue">[LOW]</span></td><td>Confirm only one Knox FM is active per order at any time; check response routing logic</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule (Response_KNOX_SAVE_DEVICE)</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§19.3 ResponseBase Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span><span class="tree-cond">Concepts.FM.Base.ResponseBase</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">Msg→Message rename</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.4 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code> → "true"/"false"</td></tr>
+      <tr><td>LOG_LEVEL</td><td>MSG_LOG_LEVEL/INFO</td></tr>
+      <tr><td>No write-back</td><td>Response handler only creates ResponseBase — no offer.ExtendedInfo modifications</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

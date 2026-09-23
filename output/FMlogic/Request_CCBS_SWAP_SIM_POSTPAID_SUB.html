@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_SWAP_SIM_POSTPAID_SUB</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:13px;line-height:1.5}
+.hdr{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:28px 40px}
+.hdr h1{font-size:1.6rem;font-weight:700;margin-bottom:4px;word-break:break-all}
+.hdr .sub{opacity:.85;font-size:.9rem;margin-bottom:10px}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.15);border-radius:20px;padding:3px 12px;font-size:.78rem}
+.cont{max-width:1300px;margin:0 auto;padding:20px 32px}
+.sec{background:var(--card);border-radius:10px;margin-bottom:18px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.sec-hdr{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:9px 16px;font-size:.88rem;font-weight:600;border-left:4px solid var(--true-light)}
+.sec-body{padding:14px 16px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:7px 10px;text-align:left;font-weight:600}
+td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre.blk{background:var(--code-bg);color:var(--code-fg);padding:10px 14px;border-radius:6px;font-size:.75rem;overflow-x:auto;white-space:pre-wrap;border-left:3px solid var(--true-red)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600}
+.b-grn{background:#E8F5E9;color:var(--success)}.b-org{background:#FFF3E0;color:var(--warning)}
+.b-pur{background:#F3E5F5;color:var(--skip)}.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-blu{background:#E3F0FD;color:var(--info)}.b-tl{background:#E0F2F1;color:#00695c}
+.step{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.step-n{background:var(--true-red);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.8rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:2px 0 2px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:11px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 5px;border-radius:3px}
+.tree-src-s{color:#fab387;background:rgba(250,179,135,.1);padding:1px 5px;border-radius:3px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.tree-arrow{color:#6c7086;margin:0 4px}
+.warn-box{background:#FFF3E0;border-left:4px solid #e65100;padding:10px 14px;border-radius:4px;margin-bottom:10px;font-size:.83rem}
+footer{text-align:center;padding:16px;color:#888;font-size:.75rem;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>Request_CCBS_SWAP_SIM_POSTPAID_SUB</h1>
+  <div class="sub">Update postpaid subscriber SIM + IMSI on CCBS via UpdateSubscriberRequest; includes GetSequenceValue for SOC_SEQ_NO; uses pooling indicator logic; two XSLT variants (POU / ChildOU)</div>
+  <div class="chips">
+    <span class="chip">Rule Priority: 5</span>
+    <span class="chip">ForwardChain: true</span>
+    <span class="chip">Backend: CCBS (UpdateSubscriber)</span>
+    <span class="chip">Pattern: IntraActivitySequencing</span>
+    <span class="chip">Author: TrueOM</span>
+  </div>
+</div>
+<div class="cont">
+
+<div class="warn-box">⚠ <strong>Known Bug:</strong> Audit logger OPERATION_NAME in both POU and ChildOU request paths reads <code>"CCBS_SPWAP_SIM_POSTPAID_SUB"</code> (typo: "SPWAP" instead of "SWAP"). The response logger correctly uses <code>"CCBS_SWAP_SIM_POSTPAID_SUB"</code>. Correct in migration target.</div>
+<div class="warn-box">⚠ <strong>Dead Code:</strong> <code>logicalDateRes</code> and <code>logicalDateVal</code> are loaded from working memory but never passed to the XSLT or used anywhere. Same pattern as CCBS_RESTORE_SUBSCRIBERS.</div>
+
+<div class="sec"><div class="sec-hdr">§1 — Overview &amp; Purpose</div><div class="sec-body">
+<p>This rule updates a postpaid subscriber's SIM (physical) and IMSI (logical) in CCBS during a SIM swap operation. It fires for TARGET subscribers that have NOT already called CCBS_MSIM_SWAP_SIM (i.e., <code>IS_CALLED_MSIM_SWAP_SIM</code> count == 0 on the subscriber). Pre-processing builds three arrays: <code>alSOCs</code> (distinct SOC codes from POU+ChildOU subscribers excluding ServiceType=80), <code>alPropVal</code> (pooling indicator values), and <code>alInstVal</code> (pooling indicator instance values). The XSLT payload contains two nested requests: a <code>GetSequenceValueRequest</code> (for SOC_SEQ_NO, incrementBy = SubscriberOffers count + RelatedOffers count) and the <code>UpdateSubscriberRequest</code> with subscriber ID, IMSI change, SIM replacement, and ActivityInfo. The pattern is <strong>IntraActivitySequencing</strong>. Two XSLT variants exist for POU (includes RefID) and ChildOU (no RefID).</p>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§2 — Rule Metadata</div><div class="sec-body">
+<table><tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_SWAP_SIM_POSTPAID_SUB</code></td></tr>
+<tr><td>Priority</td><td>5</td></tr><tr><td>ForwardChain</td><td>true</td></tr>
+<tr><td>Activity ID</td><td>CCBS_SWAP_SIM_POSTPAID_SUB</td></tr>
+<tr><td>Author</td><td>TrueOM</td></tr>
+<tr><td>Backend System</td><td>CCBS (UpdateSubscriber endpoint)</td></tr>
+<tr><td>Dispatch Pattern</td><td>IntraActivitySequencing</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§4 — Rule Conditions (WHEN)</div><div class="sec-body">
+<table><tr><th>#</th><th>Condition</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_SWAP_SIM_POSTPAID_SUB"</code></td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_SWAP_SIM_POSTPAID_SUB"</code></td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§5 — Execution Flow</div><div class="sec-body">
+<div class="step"><div class="step-n">1</div><div>If resubmit: PurgePendingRequestsBeforeResubmit</div></div>
+<div class="step"><div class="step-n">2</div><div>Load global vars: <code>sPooling</code> (OMX-OM/PoolingPooled/PoolingIndicator), <code>sPrefix</code> (OMX-OM/PoolingPooled/PooledPrefix)</div></div>
+<div class="step"><div class="step-n">3</div><div>Load <code>logicalDateRes</code> from working memory (DEAD CODE — never used downstream)</div></div>
+<div class="step"><div class="step-n">4</div><div>Collect distinct SOCs from POU subscribers (excl. ServiceType=80) → build alSOCs, alPropVal, alInstVal arrays via GetSplOffIndForSoc</div></div>
+<div class="step"><div class="step-n">5</div><div>Collect same arrays from ChildOU subscribers</div></div>
+<div class="step"><div class="step-n">6</div><div>Loop POU[i] → Subscriber[j]; evaluate PreExecCheck; check reqSuccess guard</div></div>
+<div class="step"><div class="step-n">7</div><div>Build <code>subOffersArray</code>: filter subscriber offers by PreExecCheck (per-offer) and FE_OR_CCBS; only send event if <code>subOffersArray.length &gt; 0</code></div></div>
+<div class="step"><div class="step-n">8</div><div>Build and assert UpdateSubscriberRequest event; ActionRequestEvent</div></div>
+<div class="step"><div class="step-n">9</div><div>Repeat for ChildOU[k] → Subscriber[j]</div></div>
+<div class="step"><div class="step-n">10</div><div>SendFirstRequestEvent → IN_PROGRESS; or SkipActivity</div></div>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§7 — Pre-processing: SOC Arrays</div><div class="sec-body">
+<table><tr><th>Array</th><th>Type</th><th>Source</th><th>Purpose</th></tr>
+<tr><td>alSOCs</td><td>String[]</td><td>Distinct SOC codes from all subscribers</td><td>Look up pooling indicator per SOC</td></tr>
+<tr><td>alPropVal</td><td>String[]</td><td>GetSplOffIndForSoc.poolingIndicator</td><td>Pooling indicator per SOC (used in XSLT)</td></tr>
+<tr><td>alInstVal</td><td>String[]</td><td>GetSplOffIndForSoc.poolingInstIndicator</td><td>Instance-level pooling indicator per SOC</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§8 — System &amp; Integration Dependencies</div><div class="sec-body">
+<table><tr><th>Direction</th><th>Event</th><th>Backend</th></tr>
+<tr><td><span class="badge b-org">OUTBOUND</span></td><td>Events.OMConsumers.OMXFM.Request.CCBS_SWAP_SIM_POSTPAID_SUB</td><td>CCBS</td></tr>
+<tr><td><span class="badge b-tl">INBOUND</span></td><td>Events.OMConsumers.OMXFM.Response.CCBS_SWAP_SIM_POSTPAID_SUB</td><td>CCBS</td></tr>
+</table>
+<h4 style="margin:10px 0 6px;color:var(--true-dark)">Global Variables</h4>
+<table><tr><th>Path</th><th>Purpose</th></tr>
+<tr><td>OMX-OM/PoolingPooled/PoolingIndicator</td><td>Default pooling indicator flag</td></tr>
+<tr><td>OMX-OM/PoolingPooled/PooledPrefix</td><td>Prefix for pooled resources</td></tr>
+<tr><td>OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</td><td>Credential gate</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§9 — Payload Build (UpdateSubscriberRequest)</div><div class="sec-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent / event</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">JMSPriority / JMSCorrelationID / OrderID / CES / OrderType / RefID</span><span class="badge b-org">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="badge b-pur">Credential-gated</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns1:GetSequenceValueRequest</span><span class="badge b-grn">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns1:sequenceName</span><span class="tree-arrow">←</span><span class="tree-src-s">"SOC_SEQ_NO"</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns1:incrementByCount</span><span class="tree-arrow">←</span><span class="tree-src">count($subOffersArray/elements) + count($relatedOffersArray/elements)</span></div></li>
+            </ul>
+          </li>
+          <li><div class="tree-row"><span class="tree-tag">ns:UpdateSubscriberRequest</span><span class="badge b-grn">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:SubscriberIdInfo/ns:subscrNumber</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberId</span><span class="badge b-grn">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:ChangeLogicalResourceInputInfo</span><span class="badge b-org">Conditional — IMSI change</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:ResourceName</span><span class="tree-arrow">←</span><span class="tree-src-s">"IMSI"</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:NewResourceValue</span><span class="tree-arrow">←</span><span class="tree-src">subscriber/ResourceInfo[IMSI]/ValuesArray</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:ActivityReason</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/ActivityReason, default 'CREQ'</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:UserText</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/UserText</span><span class="badge b-org">Conditional</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ns:ReplacePhysicalResourceInputInfo</span><span class="badge b-org">Conditional — SIM change</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:ResourceName</span><span class="tree-arrow">←</span><span class="tree-src-s">"SIM"</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:NewResourceValue</span><span class="tree-arrow">←</span><span class="tree-src">subscriber/ResourceInfo[SIM]/ValuesArray</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:ActivityReason</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/ActivityReason, default 'CREQ'</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ns:ActivityInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/ActivityReason → else 'CREQ'</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:userText</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/UserText</span><span class="badge b-org">Conditional</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§11 — Audit Logging</div><div class="sec-body">
+<table><tr><th>Field</th><th>Value (POU / ChildOU)</th></tr>
+<tr><td>OPERATION_NAME</td><td><span class="badge b-red">"CCBS_SPWAP_SIM_POSTPAID_SUB"</span> (typo in both POU + ChildOU loggers)</td></tr>
+<tr><td>OPERATION_NAME (response)</td><td>"CCBS_SWAP_SIM_POSTPAID_SUB" (correct in response logger)</td></tr>
+<tr><td>AUDIT_TRACE</td><td>concat("Request Sent for RefId: ", $refId)</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§15 — Function Dependency Tree</div><div class="sec-body">
+<pre class="blk">Request_CCBS_SWAP_SIM_POSTPAID_SUB
+├── RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── System.getGlobalVariableAsString("PoolingPooled/PoolingIndicator")
+├── System.getGlobalVariableAsString("PoolingPooled/PooledPrefix")
+├── Instance.getByExtIdByUri("LogicalDate", ...)              ← DEAD CODE: result never used
+├── RuleFunctions.Helpers.GetSplOffIndForSoc(soc, sPooling, sPrefix) × N ← builds alPropVal/alInstVal
+├── RuleFunctions.Helpers.GetXMLForSubscriberOffer(req, subRefId, offerRefId, filter)
+├── XPath.evalAsBoolean() × multiple                          ← PreExecCheck + offer filters
+├── Event.assertEvent(reqEvent)
+├── RuleFunctions.Helpers.IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+├── RuleFunctions.Helpers.IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(req, activity, "4")
+└── RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")</pre>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§17 — Migration Notes</div><div class="sec-body">
+<table><tr><th>#</th><th>Requirement / Risk</th></tr>
+<tr><td>R1</td><td>Build GetSequenceValueRequest (SOC_SEQ_NO) bundled with UpdateSubscriberRequest in a single call</td></tr>
+<tr><td>R2</td><td>Support both ChangeLogicalResourceInputInfo (IMSI) and ReplacePhysicalResourceInputInfo (SIM) in the same request</td></tr>
+<tr><td>R3</td><td>ActivityReason defaults to 'CREQ' if not provided</td></tr>
+<tr><td>R4</td><td>Offer filter: FE_OR_CCBS flag + per-offer PreExecCheck; skip subscriber entirely if filtered subOffersArray is empty</td></tr>
+<tr><td><span class="badge b-red">BUG</span></td><td>Audit OPERATION_NAME "CCBS_SPWAP_SIM_POSTPAID_SUB" (typo) — fix to "CCBS_SWAP_SIM_POSTPAID_SUB" in target</td></tr>
+<tr><td><span class="badge b-org">DEAD</span></td><td>Remove logicalDateRes/logicalDateVal loading — instance is fetched but never used downstream</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§19 — Response Message Rule</div><div class="sec-body">
+<p><strong>§19.1</strong> Creates <code>CCBS_SwapSIMPostpaidSubRes</code> concept (ResponseCode/ResponseMsg/CompletionStatus/ReferenceId). Fan-in via <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code>.</p>
+<p style="margin-top:8px"><strong>OPERATION_NAME in response logger:</strong> "CCBS_SWAP_SIM_POSTPAID_SUB" (correct).</p>
+</div></div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCBS_SWAP_SIM_POSTPAID_SUB</footer>
+</body></html>

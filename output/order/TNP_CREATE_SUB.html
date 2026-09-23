@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TNP_CREATE_SUB</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:2rem;font-weight:700;margin-bottom:6px}
+.subtitle{opacity:.85;font-size:0.93rem;max-width:820px}
+.meta-row{display:flex;gap:14px;margin-top:14px;flex-wrap:wrap}
+.meta-pill{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 14px;font-size:0.8rem}
+.content{max-width:1400px;margin:0 auto;padding:24px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 20px;font-weight:600;border-left:4px solid var(--true-light);font-size:0.97rem}
+.card-body{padding:18px 20px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+tr.has-precheck td{border-left:3px solid #FFA000}
+.step-num{font-weight:700;color:var(--true-dark)}
+.step-id{font-family:'Cascadia Code',monospace;font-size:0.78rem;color:#333}
+.fm-link a{color:var(--true-dark);text-decoration:none;font-weight:500}
+.fm-link a:hover{text-decoration:underline}
+.param-cell{font-family:'Cascadia Code',monospace;font-size:0.75rem;color:#555}
+.precheck-cell{font-family:'Cascadia Code',monospace;font-size:0.72rem;color:#333;max-width:280px;word-break:break-word}
+.badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-new{background:#EDE7F6;color:#5e35b1}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre-wrap;margin-top:8px}
+details{margin:6px 0}
+summary{cursor:pointer;font-weight:600;color:var(--true-dark);padding:5px 0}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.fm-card{background:#fff;border:1px solid var(--border);border-radius:6px;padding:12px;transition:box-shadow .2s}
+.fm-card:hover{box-shadow:0 2px 8px rgba(0,0,0,0.1)}
+.fm-card h4{color:var(--true-dark);font-size:0.86rem;margin-bottom:4px}
+.fm-card .steps{font-size:0.77rem;color:#666;margin-bottom:6px}
+footer{text-align:center;padding:16px;font-size:0.78rem;color:#888;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>TNP_CREATE_SUB</h1>
+  <div class="subtitle">Process Configuration for TNP_CREATE_SUB. Creates a new postpaid subscriber for TNP (True Move H) order types — resolving SOC codes, retrieving CCBS headers, provisioning the subscriber via L9 API, scheduling future offers, applying package changes, updating subscriber general info, and creating BL charges.</div>
+  <div class="meta-row">
+    <span class="meta-pill">Total Steps: 14</span>
+    <span class="meta-pill">Unique FMs: 12</span>
+    <span class="meta-pill">Entry Point: CCBS_RESOLVE_SOC_CODE</span>
+    <span class="meta-pill">New FM Docs: 1</span>
+    <span class="meta-pill">Not Found: 0</span>
+    <span class="meta-pill">Generated: 2026-09-23</span>
+  </div>
+</div>
+<div class="content">
+
+<div class="card">
+  <div class="card-header">§2 — Order Flow (14 Steps)</div>
+  <div class="card-body">
+    <p style="margin-bottom:10px;font-size:0.84rem;color:#555"><span style="border-left:3px solid #FFA000;padding-left:6px">Amber border</span> = has PreExecCheck &nbsp;|&nbsp; <span class="badge badge-new">★ NEW</span> = FM doc generated this run</p>
+    <div class="table-wrap">
+    <table>
+      <thead><tr><th>Step</th><th>Step ID</th><th>FM (ActivityID)</th><th>Parameter(s)</th><th>PreExecCheck (summary)</th><th>Previous</th><th>Next</th><th>Doc</th></tr></thead>
+      <tbody>
+<tr class="has-precheck"><td class="step-num">1</td><td class="step-id">CCBS_RESOLVE_SOC_CODE</td><td class="fm-link"><a href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></td><td class="param-cell">—</td><td class="precheck-cell">count(//Offers)&gt;0 or count(//SubscriberOffers)&gt;0</td><td>START</td><td>CCBS_GOD</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">2</td><td class="step-id">CCBS_GOD</td><td class="fm-link"><a href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></td><td class="param-cell">—</td><td class="precheck-cell">count(//Offers)&gt;0 or count(//SubscriberOffers)&gt;0</td><td>CCBS_RESOLVE_SOC_CODE</td><td>OMX_OFFER_INCLUSION</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr><td class="step-num">3</td><td class="step-id">OMX_OFFER_INCLUSION</td><td class="fm-link"><a href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">OMX_OFFER_INCLUSION</a></td><td class="param-cell">—</td><td class="precheck-cell">—</td><td>CCBS_GOD</td><td>CCBS_GET_ACCOUNT_HEADER</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">4</td><td class="step-id">CCBS_GET_ACCOUNT_HEADER</td><td class="fm-link"><a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></td><td class="param-cell">—</td><td class="precheck-cell">CustomerId="" or len(ParentOU/OUId)=0 or len(ChildOU/OUId)=0</td><td>OMX_OFFER_INCLUSION</td><td>CCBS_GET_AGREEMENT_HEADER</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">5</td><td class="step-id">CCBS_GET_AGREEMENT_HEADER</td><td class="fm-link"><a href="../FMlogic/Request_CCBS_GET_AGREEMENT_HEADER.html">CCBS_GET_AGREEMENT_HEADER</a></td><td class="param-cell">—</td><td class="precheck-cell">(ParentOU/ChildOU OUId empty) and AgreementId present</td><td>CCBS_GET_ACCOUNT_HEADER</td><td>CCBS_L9_CREATE_SUBS</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">6</td><td class="step-id">CCBS_L9_CREATE_SUBS</td><td class="fm-link"><a href="../FMlogic/Request_CCBS_L9_CREATE_SUBS.html">CCBS_L9_CREATE_SUBS</a> <span class="badge badge-new">★</span></td><td class="param-cell">—</td><td class="precheck-cell">not(exists(//Subscriber/SubscriberId))</td><td>CCBS_GET_AGREEMENT_HEADER</td><td>OMX_CAL_OFFERS_EFF_DATE</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr><td class="step-num">7</td><td class="step-id">OMX_CAL_OFFERS_EFF_DATE</td><td class="fm-link"><a href="../FMlogic/Request_OMX_CAL_OFFERS_EFF_DATE.html">OMX_CAL_OFFERS_EFF_DATE</a></td><td class="param-cell">—</td><td class="precheck-cell">—</td><td>CCBS_L9_CREATE_SUBS</td><td>OMX_ADD_FUT_OFFERS</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">8</td><td class="step-id">OMX_ADD_FUT_OFFERS</td><td class="fm-link"><a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS.html">OMX_ADD_FUT_OFFERS</a></td><td class="param-cell">128</td><td class="precheck-cell">FUT FE SubscriberOffers or Agreement Offers (non-80/79)</td><td>OMX_CAL_OFFERS_EFF_DATE</td><td>OMX_ADD_FUT_OFFERS_PRICEPLAN</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">9</td><td class="step-id">OMX_ADD_FUT_OFFERS_PRICEPLAN</td><td class="fm-link"><a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS.html">OMX_ADD_FUT_OFFERS</a></td><td class="param-cell">128</td><td class="precheck-cell">FUT FE SubscriberOffers ServiceType=80, ADD count&gt;0</td><td>OMX_ADD_FUT_OFFERS</td><td>OMX_ADD_FUT_OFFERS_PARAM</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">10</td><td class="step-id">OMX_ADD_FUT_OFFERS_PARAM</td><td class="fm-link"><a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS_PARAM.html">OMX_ADD_FUT_OFFERS_PARAM</a></td><td class="param-cell">—</td><td class="precheck-cell">CHG_PARAM FUT param for Subscriber or Agreement Offers</td><td>OMX_ADD_FUT_OFFERS_PRICEPLAN</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">11</td><td class="step-id">CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td class="fm-link"><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td><td class="param-cell">—</td><td class="precheck-cell">ParentOU.Subscriber present, FE offers non-79/80, no contract, IM/BD EFF_TYPE</td><td>OMX_ADD_FUT_OFFERS_PARAM</td><td>OMX_ADD_FUT_OFFERS_REMOVE</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">12</td><td class="step-id">OMX_ADD_FUT_OFFERS_REMOVE</td><td class="fm-link"><a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS.html">OMX_ADD_FUT_OFFERS</a></td><td class="param-cell">128</td><td class="precheck-cell">FUT ExpirationDate FE offers (non-80/79)</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td>CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">13</td><td class="step-id">CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</td><td class="fm-link"><a href="../FMlogic/Request_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO.html">CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</a></td><td class="param-cell">—</td><td class="precheck-cell">OLD_BAN / OLD_BAN_DATE / PROJECT_CODE / MARKET_CODE / SALE_CHANNEL / PHASE_CODE / INSTALLATION_TYPE present</td><td>OMX_ADD_FUT_OFFERS_REMOVE</td><td>BL_CREATE_CHARGE</td><td><span class="badge badge-green">✓</span></td></tr>
+<tr class="has-precheck"><td class="step-num">14</td><td class="step-id">BL_CREATE_CHARGE</td><td class="fm-link"><a href="../FMlogic/Request_BL_CREATE_CHARGE.html">BL_CREATE_CHARGE</a></td><td class="param-cell">—</td><td class="precheck-cell">//SubscriberOffers/ServiceType/text()=79</td><td>CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</td><td>END</td><td><span class="badge badge-green">✓</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§3 — Key Conditional Execution Rules (PreExecCheck)</div>
+  <div class="card-body">
+    <details>
+      <summary>Step 4 — CCBS_GET_ACCOUNT_HEADER</summary>
+      <pre>/ns0:OrderRequest/OrderData/Customer/CustomerId/text()=""
+or string-length(//ParentOU/OUId/text())=0
+or string-length(//ChildOU/OUId/text())=0</pre>
+      <p style="font-size:0.83rem;margin-top:6px;color:#555">Retrieves account header when the CRM customer has not yet been resolved to a CCBS OUId.</p>
+    </details>
+    <details>
+      <summary>Step 5 — CCBS_GET_AGREEMENT_HEADER</summary>
+      <pre>(string-length(//ParentOU/OUId/text())=0 or string-length(//ChildOU/OUId/text())=0)
+and
+(string-length(//ParentOU/Agreement/AgreementId/text()) &gt; 0
+ or string-length(//ChildOU/Agreement/AgreementId/text()) &gt; 0)</pre>
+      <p style="font-size:0.83rem;margin-top:6px;color:#555">OUId is missing but AgreementId is present — look up OU via agreement.</p>
+    </details>
+    <details>
+      <summary>Step 6 — CCBS_L9_CREATE_SUBS ★ (key guard)</summary>
+      <pre>not(exists(//Subscriber/SubscriberId))</pre>
+      <p style="font-size:0.83rem;margin-top:6px;color:#555">Only creates subscriber when SubscriberId has not yet been assigned. Idempotent on resubmit.</p>
+    </details>
+    <details>
+      <summary>Step 11 — CCBS_CHANGE_PACKAGE_SUBSCRIBER (complex)</summary>
+      <pre>exists(//ParentOU/Subscriber)
+and string-length(//SubscriberOffers/Soc/text()) &gt; 0
+and //SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='FE'
+and //SubscriberOffers/ServiceType/text() != '79'
+and //SubscriberOffers/ServiceType/text() != '80'
+and not(//SubscriberOffers[contains(SocProperties,'TR_CONTRACT_IND=Y')])
+and (
+  boolean(//Subscriber/SubscriberOffers/ExtendedInfo[Name='OfferActivityDate' and Value='IM'])
+  or boolean(//Subscriber/SubscriberOffers/ExtendedInfo[Name='OfferActivityDate' and Value='BD'])
+)
+or boolean(//Subscriber/SubscriberOffers/ParameterInfo[ExtendedInfo[Name='OfferParamActivityDate' and Value='IM']])
+or boolean(//Subscriber/SubscriberOffers/ParameterInfo[ExtendedInfo[Name='OfferParamActivityDate' and Value='BD']])
+or boolean(//Subscriber/SubscriberOffers/Action/text() = 'CHG_CHARGE')</pre>
+    </details>
+    <details>
+      <summary>Step 13 — CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</summary>
+      <pre>//Subscriber/ExtendedInfo[Name='OLD_BAN']/Value/text()!=''
+or //Subscriber/ExtendedInfo[Name='OLD_BAN_DATE']/Value/text()!=''
+or //Subscriber/ExtendedInfo[Name='PROJECT_CODE']/Value/text()!=''
+or //Subscriber/ExtendedInfo[Name='MARKET_CODE']/Value/text()!=''
+or //Subscriber/ExtendedInfo[Name='SALE_CHANNEL']/Value/text()!=''
+or //Subscriber/ExtendedInfo[Name='PHASE_CODE']/Value/text()!=''
+or //Subscriber/ExtendedInfo[Name='INSTALLATION_TYPE']/Value/text()!=''</pre>
+    </details>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§4 — FM Documentation Index</div>
+  <div class="card-body">
+    <div class="fm-grid">
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></h4><div class="steps">Step 1</div><p style="font-size:0.77rem;color:#555">Resolves SOC codes against CCBS catalogue.</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></h4><div class="steps">Step 2</div><p style="font-size:0.77rem;color:#555">Get Order Data from CCBS for existing subscriber.</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">OMX_OFFER_INCLUSION</a></h4><div class="steps">Step 3</div><p style="font-size:0.77rem;color:#555">Internal offer inclusion/enrichment logic.</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></h4><div class="steps">Step 4</div><p style="font-size:0.77rem;color:#555">Retrieves CCBS account header — OUId resolution.</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_AGREEMENT_HEADER.html">CCBS_GET_AGREEMENT_HEADER</a></h4><div class="steps">Step 5</div><p style="font-size:0.77rem;color:#555">Retrieves CCBS agreement header by AgreementId.</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_L9_CREATE_SUBS.html">CCBS_L9_CREATE_SUBS</a> <span class="badge badge-new">★ NEW</span></h4><div class="steps">Step 6</div><p style="font-size:0.77rem;color:#555">Creates TNP postpaid subscriber via L9 API. Name, address, resources, offers, payment channels, MNP fields.</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_CAL_OFFERS_EFF_DATE.html">OMX_CAL_OFFERS_EFF_DATE</a></h4><div class="steps">Step 7</div><p style="font-size:0.77rem;color:#555">Calculates effective dates for offers.</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS.html">OMX_ADD_FUT_OFFERS</a></h4><div class="steps">Steps 8, 9, 12</div><p style="font-size:0.77rem;color:#555">Adds future-dated offers. Used for standard, PP/priceplan, and removal variants (step 8, 9, 12).</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS_PARAM.html">OMX_ADD_FUT_OFFERS_PARAM</a></h4><div class="steps">Step 10</div><p style="font-size:0.77rem;color:#555">Adds future-dated offer parameter changes.</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></h4><div class="steps">Step 11</div><p style="font-size:0.77rem;color:#555">Applies immediate/BD offer changes to subscriber package in CCBS.</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO.html">CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</a></h4><div class="steps">Step 13</div><p style="font-size:0.77rem;color:#555">Updates subscriber general info: OLD_BAN, PROJECT_CODE, MARKET_CODE, SALE_CHANNEL, etc.</p></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_BL_CREATE_CHARGE.html">BL_CREATE_CHARGE</a></h4><div class="steps">Step 14</div><p style="font-size:0.77rem;color:#555">Creates BL charge for ServiceType=79 offers.</p></div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Sequence Diagram</div>
+  <div class="card-body">
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+    participant OMX as OMX (internal)
+    participant BL as BL
+
+    opt count(Offers)>0 or count(SubscriberOffers)>0
+        O->>CCBS: CCBS_RESOLVE_SOC_CODE
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_RESOLVE_SOC_CODE
+    end
+    opt count(Offers)>0 or count(SubscriberOffers)>0
+        O->>CCBS: CCBS_GOD
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GOD
+    end
+    O->>OMX: OMX_OFFER_INCLUSION
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_OFFER_INCLUSION
+    opt CustomerId empty or OUId empty
+        O->>CCBS: CCBS_GET_ACCOUNT_HEADER
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_ACCOUNT_HEADER
+    end
+    opt OUId empty and AgreementId present
+        O->>CCBS: CCBS_GET_AGREEMENT_HEADER
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_AGREEMENT_HEADER
+    end
+    opt not(exists SubscriberId)
+        O->>CCBS: CCBS_L9_CREATE_SUBS
+        CCBS-->>O: response [SubscriberId written back]
+        Note over O,CCBS: FM: CCBS_L9_CREATE_SUBS NEW
+    end
+    O->>OMX: OMX_CAL_OFFERS_EFF_DATE
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_CAL_OFFERS_EFF_DATE
+    opt FUT FE offers non-80/79
+        O->>OMX: OMX_ADD_FUT_OFFERS [128]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFERS
+    end
+    opt FUT FE offers ServiceType=80
+        O->>OMX: OMX_ADD_FUT_OFFERS_PRICEPLAN [128]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFERS
+    end
+    opt CHG_PARAM FUT param
+        O->>OMX: OMX_ADD_FUT_OFFERS_PARAM
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFERS_PARAM
+    end
+    opt FE offers IM/BD EFF_TYPE, no contract
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER
+    end
+    opt FUT ExpirationDate FE offers
+        O->>OMX: OMX_ADD_FUT_OFFERS_REMOVE [128]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFERS
+    end
+    opt OLD_BAN or PROJECT_CODE etc present
+        O->>CCBS: CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO
+    end
+    opt ServiceType=79
+        O->>BL: BL_CREATE_CHARGE
+        BL-->>O: response
+        Note over O,BL: FM: BL_CREATE_CHARGE
+    end
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§6 — Flow Diagram</div>
+  <div class="card-body">
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1
+    S1{CCBS_RESOLVE_SOC_CODE\nFM: CCBS_RESOLVE_SOC_CODE\nConditional: Offers present} --> S2
+    S2{CCBS_GOD\nFM: CCBS_GOD\nConditional: Offers present} --> S3
+    S3[OMX_OFFER_INCLUSION\nFM: OMX_OFFER_INCLUSION] --> S4
+    S4{CCBS_GET_ACCOUNT_HEADER\nFM: CCBS_GET_ACCOUNT_HEADER\nConditional: OUId empty} --> S5
+    S5{CCBS_GET_AGREEMENT_HEADER\nFM: CCBS_GET_AGREEMENT_HEADER\nConditional: OUId empty and AgreId present} --> S6
+    S6{CCBS_L9_CREATE_SUBS\nFM: CCBS_L9_CREATE_SUBS NEW\nConditional: no SubscriberId} --> S7
+    S7[OMX_CAL_OFFERS_EFF_DATE\nFM: OMX_CAL_OFFERS_EFF_DATE] --> S8
+    S8{OMX_ADD_FUT_OFFERS\nFM: OMX_ADD_FUT_OFFERS\nConditional: FUT FE non-80/79} --> S9
+    S9{OMX_ADD_FUT_OFFERS_PRICEPLAN\nFM: OMX_ADD_FUT_OFFERS\nConditional: FUT PP ServiceType=80} --> S10
+    S10{OMX_ADD_FUT_OFFERS_PARAM\nFM: OMX_ADD_FUT_OFFERS_PARAM\nConditional: CHG_PARAM FUT} --> S11
+    S11{CCBS_CHANGE_PACKAGE_SUBSCRIBER\nFM: CCBS_CHANGE_PACKAGE_SUBSCRIBER\nConditional: IM/BD EFF_TYPE} --> S12
+    S12{OMX_ADD_FUT_OFFERS_REMOVE\nFM: OMX_ADD_FUT_OFFERS\nConditional: FUT ExpirationDate} --> S13
+    S13{CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO\nFM: CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO\nConditional: OLD_BAN etc} --> S14
+    S14{BL_CREATE_CHARGE\nFM: BL_CREATE_CHARGE\nConditional: ServiceType=79} --> END([END])
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO Order Management · TNP_CREATE_SUB Order Journey Documentation</footer>
+</body>
+</html>

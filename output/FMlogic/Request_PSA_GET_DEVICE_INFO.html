@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_PSA_GET_DEVICE_INFO</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem;margin-bottom:14px}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:18px;border-radius:8px;overflow-x:auto;font-size:.8rem;border-left:3px solid var(--true-red)}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:.78rem}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.88rem}
+.callout-warn{border-color:#e65100;background:#FFF3E0}
+.callout-info{border-color:#1565c0;background:#E3F0FD}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_PSA_GET_DEVICE_INFO</h1>
+  <div class="subtitle">Queries PSA for device information (IMEI lookup returning brand-name and Knox status) per qualifying subscriber offer; writes BRAND_NAME and DEVICE_STATUS back into the matched offer's ExtendedInfo on response.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: PSA (GetDeviceInfo)</span>
+    <span class="meta-badge">Pattern: Per-offer fan-out</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Author: DESKTOP-995HR2V</span>
+    <span class="meta-badge">Used in step: 64</span>
+    <span class="meta-badge">Generated: 2026-08-07</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Sends one <strong>PSA getDeviceInfoReq</strong> call per qualifying subscriber offer, searching PSA by IMEI (key-search="IMEI-ID") sourced from <code>ExtendedInfo[IMEI_KNOX]</code>. The response handler locates the matching offer and writes two PSA response fields back into the offer's ExtendedInfo: <code>BRAND_NAME</code> (device brand) and <code>DEVICE_STATUS</code> (current Knox status). These enriched fields are consumed by downstream FMs (KNOX_SAVE_DEVICE, PSA_UPDATE_KNOX_STATUS).</p>
+    <ul style="margin:12px 0 0 20px;line-height:2">
+      <li><strong>Request payload:</strong> minimal — only 3 fields: key-search (hardcoded "IMEI-ID"), key-value (IMEI_KNOX), channel-access (hardcoded "OMX")</li>
+      <li><strong>offerRefId:</strong> <code>subRefId + ":" + offer.Soc + ":" + filter</code> — same 3-part pattern as MCS_REGISTER but uses Soc (not OfferName)</li>
+      <li><strong>Response write-back:</strong> BRAND_NAME ← brand-name; DEVICE_STATUS ← current-knox-status; both appended to matched offer.ExtendedInfo</li>
+      <li><strong>Offer matching in response:</strong> split RefID by ":" → [subRefId, soc, source]; match subscriber.RefId + offer.Soc + feOrCcbs</li>
+      <li><strong>COU PreExecCheck builder:</strong> <code>GetXMLForSubscriberInChildOU</code> (not FilterWithExtendedInfo) — offer-level filter context missing for COU</li>
+      <li><strong>No PurgePendingRequestsBeforeResubmit</strong></li>
+    </ul>
+    <div class="callout callout-warn" style="margin-top:14px">
+      <strong>[MEDIUM] COU PreExecCheck context mismatch:</strong> POU uses <code>GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, pSubRefId, offer.Soc, filter)</code> (offer-specific context including FE_OR_CCBS filter), but COU uses <code>GetXMLForSubscriberInChildOU(orderRequest, cSubRefId, pOuRefId)</code> (subscriber-level context, no offer or filter). If PreExecCheck references offer-level or FE_OR_CCBS data, COU evaluation will behave differently from POU.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[MEDIUM] No PurgePendingRequestsBeforeResubmit:</strong> isActResub suppresses RequestCount++ but pending events from a failed run remain. PSA may receive duplicate getDeviceInfo calls on resubmit if prior responses never arrived.
+    </div>
+    <div class="callout callout-info">
+      <strong>[NOTE] Response write-back not guarded by success code:</strong> BRAND_NAME and DEVICE_STATUS are appended to offer.ExtendedInfo regardless of ResponseCode — even on a failed PSA response (non-"000"), brand-name and current-knox-status from the failure payload are written. Downstream FMs must validate these fields before use.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_PSA_GET_DEVICE_INFO.rule</code></td><td>152 lines</td></tr>
+      <tr><td>Rule namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td><td></td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_PSA_GET_DEVICE_INFO.rulefunction</code></td><td>114 lines — complex write-back logic</td></tr>
+      <tr><td>Author</td><td>DESKTOP-995HR2V</td><td>Machine hostname as author</td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td>true</td><td></td></tr>
+      <tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.PSA_GET_DEVICE_INFO</code></td><td></td></tr>
+      <tr><td>Payload root</td><td><code>ns3:getDeviceInfoReq</code></td><td>PSA device info request</td></tr>
+      <tr><td>Schema NS (ns3)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/PSA/GetDeviceInfoRequest.xsd</code></td><td>Request payload</td></tr>
+      <tr><td>Schema NS (ns1)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/PSA/UserInfoType.xsd</code></td><td>user-info sub-element</td></tr>
+      <tr><td>Response schema (xsd2)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/PSA/GetDeviceInfoResponse.xsd</code></td><td>xsd2:getDeviceInfoRes</td></tr>
+      <tr><td>offerRefId format</td><td><code>subRefId + ":" + offer.Soc + ":" + filter</code></td><td>Uses Soc (not OfferName)</td></tr>
+      <tr><td>IMEI source</td><td><code>offer/ExtendedInfo[IMEI_KNOX]/Value</code></td><td>Not MaterialInfo</td></tr>
+      <tr><td>Dispatch</td><td><code>Event.Ext.sendEventImmediate</code></td><td>Per-offer immediate fan-out</td></tr>
+      <tr><td>isActResub</td><td><code>RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted</code></td><td>Suppresses RequestCount++ only</td></tr>
+      <tr><td>Resub purge</td><td><strong>ABSENT</strong></td><td>No PurgePendingRequestsBeforeResubmit</td></tr>
+      <tr><td>POU PreExecCheck builder</td><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, pSubRefId, offer.Soc, filter)</code></td><td>Offer-level context</td></tr>
+      <tr><td>COU PreExecCheck builder</td><td><code>GetXMLForSubscriberInChildOU(orderRequest, cSubRefId, pOuRefId)</code></td><td><span class="badge badge-orange">[MEDIUM]</span> Subscriber-level only — no offer/filter context</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td><td>Standard 4 fields</td></tr>
+      <tr><td>Response write-back</td><td>BRAND_NAME + DEVICE_STATUS → offer.ExtendedInfo[]</td><td>Written on every response regardless of success code</td></tr>
+      <tr><td>Fan-in</td><td><code>RequestCount == successResponseCount</code></td><td>success = ResponseCode suffix "000"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="card">
+  <div class="card-header">§3 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "PSA_GET_DEVICE_INFO"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "PSA_GET_DEVICE_INFO"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Request Payload -->
+<div class="card">
+  <div class="card-header">§4 — Request Payload — getDeviceInfoReq</div>
+  <div class="card-body">
+    <p style="margin-bottom:12px">The payload is minimal — only 3 fields, two of which are hardcoded string literals:</p>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Type</th></tr>
+      <tr><td><code>ns3:key-search</code></td><td><code>"IMEI-ID"</code></td><td>Hardcoded literal — PSA lookup key type</td></tr>
+      <tr><td><code>ns3:key-value</code></td><td><code>offer/ExtendedInfo[Name="IMEI_KNOX"]/Value</code></td><td>IMEI from offer ExtendedInfo</td></tr>
+      <tr><td><code>ns1:channel-access</code> (inside ns3:user-info)</td><td><code>"OMX"</code></td><td>Hardcoded literal — calling system identifier</td></tr>
+    </table>
+    <div class="callout callout-warn" style="margin-top:12px">
+      <strong>[LOW] IMEI_KNOX may be absent:</strong> If <code>ExtendedInfo[IMEI_KNOX]</code> is not present on the offer, <code>ns3:key-value</code> will be empty. PSA will receive an empty IMEI — the behavior (error vs. empty result set) depends on PSA's validation. No guard exists in the rule.
+    </div>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p style="margin-bottom:12px">POU and COU use identical XSLT — only the offer variable (<code>$offer</code>) differs, bound to POU or COU SubscriberOffers respectively.</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$offerRefId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-purple">Credential-gated</span><span class="tree-cond">IsEnableUserPass='true' AND User exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns3:getDeviceInfoReq</span><span class="tree-ns">ns3=http://…/PSA/GetDeviceInfoRequest.xsd</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns3:device-info</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns3:key-search</span><span class="tree-arrow">←</span><span class="tree-src-static">"IMEI-ID"</span><span class="badge badge-green">Always</span><span class="tree-cond">hardcoded literal</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns3:key-value</span><span class="tree-arrow">←</span><span class="tree-src">$offer/ExtendedInfo[Name="IMEI_KNOX"]/Value</span><span class="badge badge-green">Always</span><span class="tree-cond">empty if IMEI_KNOX absent</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns3:user-info</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns1:channel-access</span><span class="tree-arrow">←</span><span class="tree-src-static">"OMX"</span><span class="badge badge-green">Always</span><span class="tree-cond">hardcoded literal</span></div></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>PSA (Partner Service Access)</td></tr>
+      <tr><td>Operation</td><td>getDeviceInfoReq — device lookup by IMEI</td></tr>
+      <tr><td>Request schema NS (ns3)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/PSA/GetDeviceInfoRequest.xsd</code></td></tr>
+      <tr><td>Response schema NS (xsd2)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/PSA/GetDeviceInfoResponse.xsd</code></td></tr>
+      <tr><td>Lookup key type</td><td>"IMEI-ID" (hardcoded)</td></tr>
+      <tr><td>Lookup key value</td><td>offer.ExtendedInfo[IMEI_KNOX].Value</td></tr>
+      <tr><td>Channel identifier</td><td>"OMX" (hardcoded)</td></tr>
+      <tr><td>Correlation</td><td>RefID = subRefId:Soc:filter</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§8.5 ExtendedInfo Fields</h3>
+    <table>
+      <tr><th>Name</th><th>Direction</th><th>Purpose</th><th>Required?</th></tr>
+      <tr><td>FE_OR_CCBS</td><td>INPUT — from offer</td><td>filter segment in offerRefId</td><td>Optional (blank if absent)</td></tr>
+      <tr><td>IMEI_KNOX</td><td>INPUT — from offer</td><td>ns3:key-value (IMEI to look up)</td><td>Optional (empty PSA query if absent)</td></tr>
+      <tr><td>BRAND_NAME</td><td>OUTPUT — written to offer</td><td>PSA brand-name response → offer.ExtendedInfo</td><td>Written on every response</td></tr>
+      <tr><td>DEVICE_STATUS</td><td>OUTPUT — written to offer</td><td>PSA current-knox-status response → offer.ExtendedInfo</td><td>Written on every response</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_PSA_GET_DEVICE_INFO (rule)
+├── isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── [NOTE: NO PurgePendingRequestsBeforeResubmit]
+├── [POU loop p → ps → psof]:
+│   ├── filter = XPath.evalAsString(offer/ExtendedInfo[FE_OR_CCBS]/Value)
+│   ├── offerRefId = pSubRefId + ":" + offer.Soc + ":" + filter
+│   ├── [Resub guard]: scan Response[] for CompletionStatus==2 &amp;&amp; ReferenceId==offerRefId
+│   ├── [if !reqSuccess]:
+│   │   ├── [if PreExecCheck]: GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, pSubRefId, offer.Soc, filter)
+│   │   ├── XPath.execute(PreExecCheck)
+│   │   └── [if "true"]:
+│   │       ├── Event.createEvent(PSA_GET_DEVICE_INFO, XSLT: ns3:getDeviceInfoReq)
+│   │       ├── Event.Ext.sendEventImmediate(reqEvent)
+│   │       ├── isSkipped = false
+│   │       ├── [if !isActResub]: RequestCount++
+│   │       └── Event.Ext.sendEventImmediate(Logger: "Request Sent for PSA_GET_DEVICE_INFO")
+├── [COU loop p → c → cs → csof]:
+│   ├── filter = XPath.evalAsString(offer/ExtendedInfo[FE_OR_CCBS]/Value)
+│   ├── offerRefId = cSubRefId + ":" + offer.Soc + ":" + filter
+│   ├── [if PreExecCheck]: GetXMLForSubscriberInChildOU(orderRequest, cSubRefId, pOuRefId)  ← [MEDIUM] different context
+│   └── Event.createEvent(PSA_GET_DEVICE_INFO, XSLT: ns3:getDeviceInfoReq)
+├── [if !isSkipped]:
+│   ├── Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException(orderRequest, orderCurrentActivity, ae, "")
+
+Response_PSA_GET_DEVICE_INFO (rulefunction)
+├── activityRes = Instance.createInstance(ResponseBase) {extId, ResponseCode, ResponseMessage, CompletionStatus, ReferenceId}
+├── currActivity.Response[] ← activityRes
+├── refIDs = String.split(eventResponse.RefID, ":")
+│   ├── refIDs[0] = subRefId
+│   ├── refIDs[1] = soc
+│   └── refIDs[2] = source (FE_OR_CCBS value)
+├── [POU loop]: find subscriber[RefId==subRefId] → find offer[Soc==soc] → verify feOrCcbs==source
+│   ├── band = XPath.evalAsString(eventResponse/payload/xsd2:getDeviceInfoRes/xsd2:response/xsd2:data[1]/xsd2:brand-name)
+│   ├── Instance.createInstance(SubscriberOffersExtendedInfo) {Name="BRAND_NAME", Value=$band}
+│   ├── offer.ExtendedInfo[] ← bandExtendedInfo
+│   ├── status = XPath.evalAsString(.../xsd2:data[1]/xsd2:current-knox-status)
+│   ├── Instance.createInstance(SubscriberOffersExtendedInfo) {Name="DEVICE_STATUS", Value=$status}
+│   └── offer.ExtendedInfo[] ← statusExtendedInfo
+├── [COU loop]: same write-back pattern for COU subscribers
+├── Event.Ext.sendEventImmediate(Logger: "Response received for PSA_GET_DEVICE_INFO", LOG_LEVEL=INFO)
+├── successResponseCount = count(Response[tib:right(tib:trim(ResponseCode),3)="000"])
+└── return (RequestCount == successResponseCount) ? "true" : "false"</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Per-offer fan-out across POU and COU subscribers. One PSA getDeviceInfoReq per qualifying offer.</td></tr>
+      <tr><td>R2</td><td>Request payload: key-search = "IMEI-ID" (hardcoded); key-value = IMEI_KNOX from offer ExtendedInfo; channel-access = "OMX" (hardcoded).</td></tr>
+      <tr><td>R3</td><td>offerRefId: <code>subRefId:offer.Soc:filter</code> — 3-part key including FE_OR_CCBS value.</td></tr>
+      <tr><td>R4</td><td>Response write-back: extract brand-name and current-knox-status from <code>xsd2:getDeviceInfoRes/xsd2:response/xsd2:data[1]</code>; write as BRAND_NAME and DEVICE_STATUS ExtendedInfo entries on the matched offer.</td></tr>
+      <tr><td>R5</td><td>Offer matching in response: split RefID by ":" to get [subRefId, soc, source]; match subscriber.RefId + offer.Soc + feOrCcbs == source.</td></tr>
+      <tr><td>R6</td><td>POU PreExecCheck uses offer+filter context (GetXMLForSubscriberOfferFilterWithExtendedInfo). COU uses subscriber-only context (GetXMLForSubscriberInChildOU).</td></tr>
+      <tr><td>R7</td><td>Response write-back occurs regardless of ResponseCode — not success-gated.</td></tr>
+      <tr><td>R8</td><td>Fan-in: RequestCount == count(Response[ResponseCode suffix "000"]).</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>COU PreExecCheck uses subscriber-level context without offer/filter — inconsistent behavior from POU</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Align COU to use GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo for consistent offer-level PreExecCheck evaluation</td></tr>
+      <tr><td>No PurgePendingRequestsBeforeResubmit — duplicate PSA calls possible on resubmit</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Add purge if PSA cannot deduplicate concurrent IMEI lookups</td></tr>
+      <tr><td>Response write-back not success-gated — BRAND_NAME/DEVICE_STATUS written even on error responses</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Add ResponseCode "000" guard before write-back, or ensure downstream FMs validate these fields</td></tr>
+      <tr><td>IMEI_KNOX absent → empty key-value to PSA</td><td><span class="badge badge-blue">[LOW]</span></td><td>Add xsl:if guard on key-value or validate IMEI_KNOX presence before sending event</td></tr>
+      <tr><td>data[1] access — if PSA returns multiple data entries, only first is used</td><td><span class="badge badge-blue">[LOW]</span></td><td>Confirm PSA contract: is a single-device response expected per IMEI?</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule (Response_PSA_GET_DEVICE_INFO)</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§19.1 Overview</h3>
+    <p>Significantly more complex than a standard response handler. In addition to creating the ResponseBase concept, it parses the PSA payload and writes two device data fields back into the matched offer's ExtendedInfo in working memory.</p>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.3 ResponseBase Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span><span class="tree-cond">Concepts.FM.Base.ResponseBase</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">Msg→Message rename</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.4 Response Write-back to Offer ExtendedInfo</h3>
+    <p style="margin-bottom:10px">After creating ResponseBase, the handler locates the matching offer and appends two new ExtendedInfo entries:</p>
+    <table>
+      <tr><th>ExtendedInfo.Name</th><th>Source XPath</th><th>Guarded?</th></tr>
+      <tr><td><code>BRAND_NAME</code></td><td><code>eventResponse/payload/xsd2:getDeviceInfoRes/xsd2:response/xsd2:data[1]/xsd2:brand-name</code></td><td>No — always appended</td></tr>
+      <tr><td><code>DEVICE_STATUS</code></td><td><code>eventResponse/payload/xsd2:getDeviceInfoRes/xsd2:response/xsd2:data[1]/xsd2:current-knox-status</code></td><td>No — always appended</td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:.85rem">Offer match: <code>subscriber.RefId == refIDs[0] AND offer.Soc == refIDs[1] AND feOrCcbs == refIDs[2]</code></p>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.5 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code> → "true"/"false"</td></tr>
+      <tr><td>LOG_LEVEL</td><td>MSG_LOG_LEVEL/INFO</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

@@ -1,0 +1,723 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>PREPAID_REGISTRATION</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.header h1{font-size:2rem;font-weight:700;letter-spacing:1px;}
+.header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.header .meta{margin-top:16px;display:flex;gap:16px;flex-wrap:wrap;font-size:.83rem;opacity:.9;}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:12px;}
+.container{max-width:1400px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:28px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.84rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600;white-space:nowrap;}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+tr.has-preexec td{border-left:3px solid #FBC02D;}
+tr.has-preexec{background:#FFFDE7;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);}
+code.xpath{background:#FFF3E0;color:#BF360C;padding:2px 6px;border-radius:4px;font-size:.8rem;word-break:break-all;}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.75rem;font-weight:600;white-space:nowrap;}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-gray{background:#EEEEEE;color:#616161;}
+.step-num{font-weight:700;color:var(--true-dark);font-size:.95rem;}
+a{color:var(--true-dark);text-decoration:none;border-bottom:1px dashed var(--true-light);}
+a:hover{color:var(--true-red);border-bottom-style:solid;}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:14px;}
+.fm-card{background:#FFF;border:1px solid var(--border);border-radius:8px;padding:14px;border-top:3px solid var(--true-red);}
+.fm-card h4{font-size:.88rem;color:var(--true-dark);margin-bottom:6px;font-weight:700;}
+.fm-card .steps-label{font-size:.78rem;color:#666;margin-bottom:8px;}
+.fm-card a.btn{display:inline-block;background:var(--true-red);color:#fff;padding:4px 12px;border-radius:14px;font-size:.78rem;font-weight:600;border:none;margin-top:4px;}
+.fm-card a.btn:hover{background:var(--true-dark);}
+details{margin-bottom:10px;}
+details summary{cursor:pointer;padding:8px 12px;background:#FFF8E1;border-left:3px solid #FBC02D;border-radius:4px;font-weight:600;font-size:.88rem;color:var(--true-dark);}
+details[open] summary{border-radius:4px 4px 0 0;}
+details .detail-body{padding:12px;background:#FFFDE7;border:1px solid #FFF9C4;border-top:none;border-radius:0 0 4px 4px;}
+.mermaid-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:#fff;}
+footer{text-align:center;padding:24px;color:#888;font-size:.82rem;}
+.sys-tag{display:inline-block;padding:1px 6px;border-radius:4px;font-size:.72rem;font-weight:600;margin-left:4px;}
+.sys-crm{background:#FCE4EC;color:#880E4F;}
+.sys-ccp{background:#E8EAF6;color:#283593;}
+.sys-omx{background:#F3E5F5;color:#4A148C;}
+.sys-cat{background:#FBE9E7;color:#BF360C;}
+.sys-aa{background:#E8F5E9;color:#1B5E20;}
+.sys-sbm{background:#E3F2FD;color:#0D47A1;}
+.sys-mcs{background:#FFF3E0;color:#E65100;}
+.sys-gps{background:#E0F2F1;color:#00695C;}
+.sys-tmn{background:#FFF8E1;color:#F57F17;}
+.sys-sms{background:#F1F8E9;color:#558B2F;}
+.sys-status{background:#ECEFF1;color:#37474F;}
+.tag-param{background:#E3F0FD;color:#1565c0;padding:1px 6px;border-radius:4px;font-size:.75rem;font-family:monospace;margin:1px;display:inline-block;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>PREPAID_REGISTRATION</h1>
+  <div class="subtitle">Process Configuration for PREPAID_REGISTRATION — Prepaid SIM Registration, Wallet Setup, and CRM Record Creation</div>
+  <div class="meta">
+    <span class="meta-item">Total steps: 28</span>
+    <span class="meta-item">Unique FMs: 27</span>
+    <span class="meta-item">Entry point: CRM_GET_LAST_ASSET_ROOT</span>
+    <span class="meta-item">Steps with PreExecCheck: 21 of 28</span>
+    <span class="meta-item">Generated: 2026-09-11</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 -->
+<div class="section">
+  <div class="section-header">§1 — Header &amp; Process Summary</div>
+  <div class="section-body">
+    <table style="width:auto;min-width:500px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Process name</td><td><strong>PREPAID_REGISTRATION</strong></td></tr>
+      <tr><td>Description</td><td>Process Configuration for PREPAID_REGISTRATION.</td></tr>
+      <tr><td>Total activities</td><td>28</td></tr>
+      <tr><td>Unique FM names</td><td>27 (CAT_GOD appears at steps 4 and 11 with different parameters)</td></tr>
+      <tr><td>Entry activity</td><td><code>PREPAID_REGISTRATION:CRM_GET_LAST_ASSET_ROOT</code></td></tr>
+      <tr><td>Terminal activity</td><td><code>PREPAID_REGISTRATION:TMN_CREATE_WALLET_MINIMAL_PROFILE</code></td></tr>
+      <tr><td>Backend systems</td><td>CRM, CCP, OMX, CAT, AA, SBM, SMSGATEWAY, MCS, GPS, TMN</td></tr>
+      <tr><td>Activities with PreExecCheck</td><td>21 / 28 (75%)</td></tr>
+      <tr><td>FM docs generated</td><td>27 / 27 ✓</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 -->
+<div class="section">
+  <div class="section-header">§2 — Order Flow Table</div>
+  <div class="section-body">
+    <div style="overflow-x:auto;">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:40px">#</th>
+          <th>Step ID</th>
+          <th>FM (ActivityID)</th>
+          <th>Parameter(s)</th>
+          <th>PreExecCheck</th>
+          <th>Previous</th>
+          <th>Next</th>
+          <th>FM Doc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="has-preexec">
+          <td class="step-num">1</td>
+          <td>CRM_GET_LAST_ASSET_ROOT<span class="sys-tag sys-crm">CRM</span></td>
+          <td><a href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">CRM_GET_LAST_ASSET_ROOT</a></td>
+          <td><span class="tag-param">customerAddressFlag=Y</span> <span class="tag-param">OLPRD_DB_FLAG=Y</span></td>
+          <td><code class="xpath">boolean(//Subscriber/MSISDN!="")</code></td>
+          <td><span class="badge badge-blue">START</span></td>
+          <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">2</td>
+          <td>CRM_GET_ASSET_COMPONENT_LIST<span class="sys-tag sys-crm">CRM</span></td>
+          <td><a href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">CRM_GET_ASSET_COMPONENT_LIST</a></td>
+          <td><span class="tag-param">OLPRD_DB_FLAG=Y</span></td>
+          <td><code class="xpath">boolean(//Subscriber/AssetCrmId!="")</code></td>
+          <td>CRM_GET_LAST_ASSET_ROOT</td>
+          <td>OMX_GET_PARTIAL_ORDER_DATA</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">3</td>
+          <td>OMX_GET_PARTIAL_ORDER_DATA<span class="sys-tag sys-omx">OMX</span></td>
+          <td><a href="../FMlogic/Request_OMX_GET_PARTIAL_ORDER_DATA.html">OMX_GET_PARTIAL_ORDER_DATA</a></td>
+          <td>—</td>
+          <td><code class="xpath">//Order/ExtendedInfo[Name='ORG_CHANNEL' and Value='3GW_iservice']</code></td>
+          <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+          <td>CAT_GOD_A</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">4</td>
+          <td>CAT_GOD_A<span class="sys-tag sys-cat">CAT</span></td>
+          <td><a href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td>
+          <td><span class="tag-param">GET_SWITCH_FEATURE=N</span></td>
+          <td><code class="xpath">count(//Offers) &gt; 0 or count(//SubscriberOffers) &gt; 0</code></td>
+          <td>OMX_GET_PARTIAL_ORDER_DATA</td>
+          <td>OMX_BIZ_VAL</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td class="step-num">5</td>
+          <td>OMX_BIZ_VAL<span class="sys-tag sys-omx">OMX</span></td>
+          <td><a href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>CAT_GOD_A</td>
+          <td>OMX_BRMS_DB</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td class="step-num">6</td>
+          <td>OMX_BRMS_DB<span class="sys-tag sys-omx">OMX</span></td>
+          <td><a href="../FMlogic/Request_OMX_BRMS_DB.html">OMX_BRMS_DB</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>OMX_BIZ_VAL</td>
+          <td>CCP_ADD_HOME_ZONE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">7</td>
+          <td>CCP_ADD_HOME_ZONE<span class="sys-tag sys-ccp">CCP</span></td>
+          <td><a href="../FMlogic/Request_CCP_ADD_HOME_ZONE.html">CCP_ADD_HOME_ZONE</a></td>
+          <td>—</td>
+          <td><code class="xpath">boolean(//OrderData[ExtendedInfo[Name="igoHomeZoneCode" and Value!=""]])</code></td>
+          <td>OMX_BRMS_DB</td>
+          <td>OMX_RESOLVE_SOC_DATA</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">8</td>
+          <td>OMX_RESOLVE_SOC_DATA<span class="sys-tag sys-omx">OMX</span></td>
+          <td><a href="../FMlogic/Request_OMX_RESOLVE_SOC_DATA.html">OMX_RESOLVE_SOC_DATA</a></td>
+          <td>—</td>
+          <td><code class="xpath">boolean(//OrderData[ExtendedInfo[Name="igoHomeZoneCode" and Value!=""]])</code></td>
+          <td>CCP_ADD_HOME_ZONE</td>
+          <td>OMX_CALC_ACTIVITY_REASON</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td class="step-num">9</td>
+          <td>OMX_CALC_ACTIVITY_REASON<span class="sys-tag sys-omx">OMX</span></td>
+          <td><a href="../FMlogic/Request_OMX_CALC_ACTIVITY_REASON.html">OMX_CALC_ACTIVITY_REASON</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>OMX_RESOLVE_SOC_DATA</td>
+          <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">10</td>
+          <td>CCP_GET_PREPAID_CREDIT_INFO<span class="sys-tag sys-ccp">CCP</span></td>
+          <td><a href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">CCP_GET_PREPAID_CREDIT_INFO</a></td>
+          <td>—</td>
+          <td><code class="xpath">not(//SubscriberOffers/Soc/text()="10072810" and //SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and ../Soc='10072810']/Value/text()='CCBS')</code></td>
+          <td>OMX_CALC_ACTIVITY_REASON</td>
+          <td>CAT_GOD_B</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">11</td>
+          <td>CAT_GOD_B<span class="sys-tag sys-cat">CAT</span></td>
+          <td><a href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td>
+          <td><span class="tag-param">GET_SWITCH_FEATURE=N</span></td>
+          <td><code class="xpath">(count(//Offers) &gt; 0 or count(//SubscriberOffers) &gt; 0) and boolean(//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and (Value='CCP' or Value='BRMS')])</code></td>
+          <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+          <td>OMX_CAL_OFFER_FUT_DATE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">12</td>
+          <td>OMX_CAL_OFFER_FUT_DATE<span class="sys-tag sys-omx">OMX</span></td>
+          <td><a href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">OMX_CAL_OFFER_FUT_DATE</a></td>
+          <td>—</td>
+          <td><code class="xpath">boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]])</code></td>
+          <td>CAT_GOD_B</td>
+          <td>OMX_ADD_FUT_OFFER</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">13</td>
+          <td>OMX_ADD_FUT_OFFER<span class="sys-tag sys-omx">OMX</span></td>
+          <td><a href="../FMlogic/Request_OMX_ADD_FUT_OFFER.html">OMX_ADD_FUT_OFFER</a></td>
+          <td><span class="tag-param">ORDERTYPE=69</span> <span class="tag-param">USE_ROWID_CRM=Y</span></td>
+          <td><code class="xpath">boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')] and ExtendedInfo[Name='EFF_TYPE' and Value='FUT']])</code></td>
+          <td>OMX_CAL_OFFER_FUT_DATE</td>
+          <td>CAT_GET_SWF</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">14</td>
+          <td>CAT_GET_SWF<span class="sys-tag sys-cat">CAT</span></td>
+          <td><a href="../FMlogic/Request_CAT_GET_SWF.html">CAT_GET_SWF</a></td>
+          <td>—</td>
+          <td><code class="xpath">(not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))</code></td>
+          <td>OMX_ADD_FUT_OFFER</td>
+          <td>OMX_GET_SRV_TRX_NO</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">15</td>
+          <td>OMX_GET_SRV_TRX_NO<span class="sys-tag sys-omx">OMX</span></td>
+          <td><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></td>
+          <td><span class="tag-param">CCD</span></td>
+          <td><code class="xpath">//OrderData/Channel/text()!="TCC" and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))</code></td>
+          <td>CAT_GET_SWF</td>
+          <td>AA_PREPAID_PROVISIONING</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">16</td>
+          <td>AA_PREPAID_PROVISIONING<span class="sys-tag sys-aa">AA</span></td>
+          <td><a href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">AA_PREPAID_PROVISIONING</a></td>
+          <td><span class="tag-param">CCD</span></td>
+          <td><code class="xpath">not(//SubscriberOffers/Soc/text()="10072810" and FE_OR_CCBS[../Soc='10072810']='CCBS') and //OrderData/Channel!="TCC" and (not(EFF_TYPE) or EFF_TYPE!='FUT')</code></td>
+          <td>OMX_GET_SRV_TRX_NO</td>
+          <td>CCP_ACTIVATE_SIM</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">17</td>
+          <td>CCP_ACTIVATE_SIM<span class="sys-tag sys-ccp">CCP</span></td>
+          <td><a href="../FMlogic/Request_CCP_ACTIVATE_SIM.html">CCP_ACTIVATE_SIM</a></td>
+          <td>—</td>
+          <td><code class="xpath">//Order/ExtendedInfo[name='ACTIVATE_SIM' and value='Y']</code></td>
+          <td>AA_PREPAID_PROVISIONING</td>
+          <td>SBM_ADD_3GPREPAID</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">18</td>
+          <td>SBM_ADD_3GPREPAID<span class="sys-tag sys-sbm">SBM</span></td>
+          <td><a href="../FMlogic/Request_SBM_ADD_3GPREPAID.html">SBM_ADD_3GPREPAID</a></td>
+          <td>—</td>
+          <td><code class="xpath">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ServiceType='88'])</code></td>
+          <td>CCP_ACTIVATE_SIM</td>
+          <td>CCP_ADD_OFFER</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">19</td>
+          <td>CCP_ADD_OFFER<span class="sys-tag sys-ccp">CCP</span></td>
+          <td><a href="../FMlogic/Request_CCP_ADD_OFFER.html">CCP_ADD_OFFER</a></td>
+          <td>—</td>
+          <td><code class="xpath">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')] and ServiceType='89'])</code></td>
+          <td>SBM_ADD_3GPREPAID</td>
+          <td>CCP_CHANGE_PP</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">20</td>
+          <td>CCP_CHANGE_PP<span class="sys-tag sys-ccp">CCP</span></td>
+          <td><a href="../FMlogic/Request_CCP_CHANGE_PP.html">CCP_CHANGE_PP</a></td>
+          <td>—</td>
+          <td><code class="xpath">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ServiceType='80'])</code></td>
+          <td>CCP_ADD_OFFER</td>
+          <td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td class="step-num">21</td>
+          <td>STATUS_UPDATE_CREATING_PROFILE<span class="sys-tag sys-status">STATUS</span></td>
+          <td><a href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>CCP_CHANGE_PP</td>
+          <td>SMSGATEWAY_SEND_SMS</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">22</td>
+          <td>AA_CHECK_CONFIRMATION<span class="sys-tag sys-aa">AA</span></td>
+          <td><a href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a></td>
+          <td><span class="tag-param">CCD</span> <span class="tag-param">UPDATE_NETWORK_STATUS</span></td>
+          <td><code class="xpath">not(//SubscriberOffers/Soc/text()="10072810" and FE_OR_CCBS[../Soc='10072810']='CCBS') and //OrderData/Channel!="TCC"</code></td>
+          <td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td>SMSGATEWAY_SEND_SMS</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td class="step-num">23</td>
+          <td>SMSGATEWAY_SEND_SMS<span class="sys-tag sys-sms">SMS</span></td>
+          <td><a href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td>CRM_UPSERT_CUSTOMER_ACCOUNT</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td class="step-num">24</td>
+          <td>CRM_UPSERT_CUSTOMER_ACCOUNT<span class="sys-tag sys-crm">CRM</span></td>
+          <td><a href="../FMlogic/Request_CRM_UPSERT_CUSTOMER_ACCOUNT.html">CRM_UPSERT_CUSTOMER_ACCOUNT</a></td>
+          <td><span class="tag-param">mode=OR</span> <span class="tag-param">upsertAccountStatus=Active</span></td>
+          <td>—</td>
+          <td>SMSGATEWAY_SEND_SMS</td>
+          <td>CRM_CREATE_ORDER_PREPAID</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td class="step-num">25</td>
+          <td>CRM_CREATE_ORDER_PREPAID<span class="sys-tag sys-crm">CRM</span></td>
+          <td><a href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">CRM_CREATE_ORDER_PREPAID</a></td>
+          <td><span class="tag-param">command=Register</span> <span class="tag-param">orderType=N</span> <span class="tag-param">listOfRootLineItemAction=Update</span> <span class="tag-param">listOfRootLineItemStatus=Active</span> <span class="tag-param">listOfLineItemAction=Add</span> <span class="tag-param">listOfLineItemStatus=Active</span> <span class="tag-param">USE_ROWID_CRM=N</span></td>
+          <td>—</td>
+          <td>CRM_UPSERT_CUSTOMER_ACCOUNT</td>
+          <td>MCS_REGISTER_SUBSCRIPTION</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">26</td>
+          <td>MCS_REGISTER_SUBSCRIPTION<span class="sys-tag sys-mcs">MCS</span></td>
+          <td><a href="../FMlogic/Request_MCS_REGISTER_SUBSCRIPTION.html">MCS_REGISTER_SUBSCRIPTION</a></td>
+          <td><span class="tag-param">USE_ROWID_CRM=Y</span></td>
+          <td><code class="xpath">boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='BRMS' or Value='FE')] and ServiceType='69'])</code></td>
+          <td>CRM_CREATE_ORDER_PREPAID</td>
+          <td>GPS_INSERT_INFORMATION</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="has-preexec">
+          <td class="step-num">27</td>
+          <td>GPS_INSERT_INFORMATION<span class="sys-tag sys-gps">GPS</span></td>
+          <td><a href="../FMlogic/Request_GPS_INSERT_INFORMATION.html">GPS_INSERT_INFORMATION</a></td>
+          <td>—</td>
+          <td><code class="xpath">string-length(//Customer/CustomerGeneralInfo/BirthDate)&gt;0</code></td>
+          <td>MCS_REGISTER_SUBSCRIPTION</td>
+          <td>TMN_CREATE_WALLET_MINIMAL_PROFILE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td class="step-num">28</td>
+          <td>TMN_CREATE_WALLET_MINIMAL_PROFILE<span class="sys-tag sys-tmn">TMN</span></td>
+          <td><a href="../FMlogic/Request_TMN_CREATE_WALLET_MINIMAL_PROFILE.html">TMN_CREATE_WALLET_MINIMAL_PROFILE</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>GPS_INSERT_INFORMATION</td>
+          <td><span class="badge badge-orange">END</span></td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+      </tbody>
+    </table>
+    </div>
+    <p style="margin-top:10px;font-size:.8rem;color:#888;"><span style="display:inline-block;width:10px;height:10px;background:#FBC02D;border-radius:2px;margin-right:4px;vertical-align:middle;"></span>Yellow highlighted rows have a PreExecCheck — the activity may be skipped if the condition evaluates false.</p>
+  </div>
+</div>
+
+<!-- §3 -->
+<div class="section">
+  <div class="section-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="section-body">
+    <details>
+      <summary>Step 1 — CRM_GET_LAST_ASSET_ROOT</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">CRM_GET_LAST_ASSET_ROOT</a><br/><code>boolean(//Subscriber/MSISDN!="")</code><br/><em>Executes only when the subscriber has a non-empty MSISDN. Skips if MSISDN is absent (no asset to look up).</em></div>
+    </details>
+    <details>
+      <summary>Step 2 — CRM_GET_ASSET_COMPONENT_LIST</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">CRM_GET_ASSET_COMPONENT_LIST</a><br/><code>boolean(//Subscriber/AssetCrmId!="")</code><br/><em>Executes only when an AssetCrmId was returned from step 1. Skips if CRM asset lookup yielded no ID.</em></div>
+    </details>
+    <details>
+      <summary>Step 3 — OMX_GET_PARTIAL_ORDER_DATA</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_OMX_GET_PARTIAL_ORDER_DATA.html">OMX_GET_PARTIAL_ORDER_DATA</a><br/><code>//Order/ExtendedInfo[Name='ORG_CHANNEL' and Value='3GW_iservice']</code><br/><em>Executes only for orders originating from the 3GW iService channel (online self-service). Not executed for other channels.</em></div>
+    </details>
+    <details>
+      <summary>Step 4 — CAT_GOD_A</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a> (GET_SWITCH_FEATURE=N)<br/><code>count(//Offers) &gt; 0 or count(//SubscriberOffers) &gt; 0</code><br/><em>Executes when there is at least one Offer or SubscriberOffer — i.e., the order involves a product/tariff selection. Pure SIM-swap or admin orders with no offers skip this step.</em></div>
+    </details>
+    <details>
+      <summary>Step 7 — CCP_ADD_HOME_ZONE</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_CCP_ADD_HOME_ZONE.html">CCP_ADD_HOME_ZONE</a><br/><code>boolean(//OrderData[ExtendedInfo[Name="igoHomeZoneCode" and Value!=""]])</code><br/><em>Executes only when the order carries a non-empty igoHomeZoneCode. Home zone is an optional tariff feature for fixed-mobile convergence.</em></div>
+    </details>
+    <details>
+      <summary>Step 8 — OMX_RESOLVE_SOC_DATA</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_OMX_RESOLVE_SOC_DATA.html">OMX_RESOLVE_SOC_DATA</a><br/><code>boolean(//OrderData[ExtendedInfo[Name="igoHomeZoneCode" and Value!=""]])</code><br/><em>Same gate as step 7 — resolves SOC data for home zone offers. Only runs if home zone was also set in step 7.</em></div>
+    </details>
+    <details>
+      <summary>Step 10 — CCP_GET_PREPAID_CREDIT_INFO</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">CCP_GET_PREPAID_CREDIT_INFO</a><br/><code>not(//SubscriberOffers/Soc/text()="10072810" and //SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and ../Soc='10072810']/Value/text()='CCBS')</code><br/><em>Skips when SOC 10072810 is present as a pure CCBS (old prepaid) offer. Only executes for non-CCBS or CCP-routed prepaid orders.</em></div>
+    </details>
+    <details>
+      <summary>Step 11 — CAT_GOD_B</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a> (GET_SWITCH_FEATURE=N)<br/><code>(count(//Offers)&gt;0 or count(//SubscriberOffers)&gt;0) and boolean(//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and (Value='CCP' or Value='BRMS')])</code><br/><em>Second CAT_GOD call — executes when offers exist AND the offer routing is CCP or BRMS. Retrieves switch feature configuration for CCP/BRMS-routed offers.</em></div>
+    </details>
+    <details>
+      <summary>Step 12 — OMX_CAL_OFFER_FUT_DATE</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">OMX_CAL_OFFER_FUT_DATE</a><br/><code>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]])</code><br/><em>Calculates future effective dates for FE or BRMS-routed offers. Skips for CCP-only orders.</em></div>
+    </details>
+    <details>
+      <summary>Step 13 — OMX_ADD_FUT_OFFER</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_OMX_ADD_FUT_OFFER.html">OMX_ADD_FUT_OFFER</a> (ORDERTYPE=69, USE_ROWID_CRM=Y)<br/><code>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')] and ExtendedInfo[Name='EFF_TYPE' and Value='FUT']])</code><br/><em>Adds a future-dated offer (EFF_TYPE=FUT). Only when FE/BRMS routing AND the offer has a future effective type. ORDERTYPE=69 identifies prepaid future offer.</em></div>
+    </details>
+    <details>
+      <summary>Step 14 — CAT_GET_SWF</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_CAT_GET_SWF.html">CAT_GET_SWF</a><br/><code>(not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))</code><br/><em>Gets switch feature for immediately-effective offers. Skips when ALL offers are future-dated (EFF_TYPE=FUT).</em></div>
+    </details>
+    <details>
+      <summary>Step 15 — OMX_GET_SRV_TRX_NO</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a> (CCD)<br/><code>//OrderData/Channel/text()!="TCC" and (not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']])) or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))</code><br/><em>Gets service transaction number. Skips for TCC channel orders AND for future-only offer orders. CCD param indicates prepaid provisioning context.</em></div>
+    </details>
+    <details>
+      <summary>Step 16 — AA_PREPAID_PROVISIONING</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">AA_PREPAID_PROVISIONING</a> (CCD)<br/><code>not(//SubscriberOffers/Soc/text()="10072810" and FE_OR_CCBS[../Soc='10072810']/Value='CCBS') and //OrderData/Channel!="TCC" and (not(EFF_TYPE) or EFF_TYPE!='FUT')</code><br/><em>Network provisioning for prepaid. Excludes CCBS-type SOC 10072810 orders, TCC channel, and future-only orders.</em></div>
+    </details>
+    <details>
+      <summary>Step 17 — CCP_ACTIVATE_SIM</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_CCP_ACTIVATE_SIM.html">CCP_ACTIVATE_SIM</a><br/><code>//Order/ExtendedInfo[name='ACTIVATE_SIM' and value='Y']</code><br/><em>SIM activation in CCP. Only triggered when the order explicitly carries ACTIVATE_SIM=Y extended info. Allows orders that do not need SIM activation to skip this step.</em></div>
+    </details>
+    <details>
+      <summary>Step 18 — SBM_ADD_3GPREPAID</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_SBM_ADD_3GPREPAID.html">SBM_ADD_3GPREPAID</a><br/><code>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ServiceType='88'])</code><br/><em>Adds 3G prepaid profile in SBM. Only for FE-routed offers with ServiceType=88 (prepaid mobile data).</em></div>
+    </details>
+    <details>
+      <summary>Step 19 — CCP_ADD_OFFER</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_CCP_ADD_OFFER.html">CCP_ADD_OFFER</a><br/><code>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')] and ServiceType='89'])</code><br/><em>Adds tariff plan offer in CCP. ServiceType=89 = prepaid tariff plan. Runs for FE or BRMS-routed offers.</em></div>
+    </details>
+    <details>
+      <summary>Step 20 — CCP_CHANGE_PP</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_CCP_CHANGE_PP.html">CCP_CHANGE_PP</a><br/><code>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ServiceType='80'])</code><br/><em>Changes price plan in CCP. ServiceType=80 = price plan. Only for FE-routed offers. BRMS-routed price plans go through a different path.</em></div>
+    </details>
+    <details>
+      <summary>Step 22 — AA_CHECK_CONFIRMATION</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a> (CCD, UPDATE_NETWORK_STATUS)<br/><code>not(//SubscriberOffers/Soc/text()="10072810" and FE_OR_CCBS[../Soc='10072810']/Value='CCBS') and //OrderData/Channel!="TCC"</code><br/><em>Network confirmation check after provisioning. Skips for CCBS-type orders and TCC channel. UPDATE_NETWORK_STATUS param triggers status update post-confirmation.</em></div>
+    </details>
+    <details>
+      <summary>Step 26 — MCS_REGISTER_SUBSCRIPTION</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_MCS_REGISTER_SUBSCRIPTION.html">MCS_REGISTER_SUBSCRIPTION</a> (USE_ROWID_CRM=Y)<br/><code>boolean(//Subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='BRMS' or Value='FE')] and ServiceType='69'])</code><br/><em>Registers subscription in MCS. ServiceType=69 = content/VAS subscription. Only for FE or BRMS-routed VAS offers. USE_ROWID_CRM=Y uses CRM row ID for linkage.</em></div>
+    </details>
+    <details>
+      <summary>Step 27 — GPS_INSERT_INFORMATION</summary>
+      <div class="detail-body"><strong>FM:</strong> <a href="../FMlogic/Request_GPS_INSERT_INFORMATION.html">GPS_INSERT_INFORMATION</a><br/><code>string-length(//Customer/CustomerGeneralInfo/BirthDate)&gt;0</code><br/><em>Inserts birth date into GPS (geographic/personal subscriber data). Only runs when the customer's birth date is available. Required for prepaid registration identity records.</em></div>
+    </details>
+  </div>
+</div>
+
+<!-- §4 -->
+<div class="section">
+  <div class="section-header">§4 — FM Documentation Index</div>
+  <div class="section-body">
+    <div class="fm-grid">
+      <div class="fm-card"><h4>CRM_GET_LAST_ASSET_ROOT</h4><div class="steps-label">Step(s): 1</div><a class="btn" href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>CRM_GET_ASSET_COMPONENT_LIST</h4><div class="steps-label">Step(s): 2</div><a class="btn" href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>OMX_GET_PARTIAL_ORDER_DATA</h4><div class="steps-label">Step(s): 3</div><a class="btn" href="../FMlogic/Request_OMX_GET_PARTIAL_ORDER_DATA.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>CAT_GOD</h4><div class="steps-label">Step(s): 4 (CAT_GOD_A), 11 (CAT_GOD_B)</div><a class="btn" href="../FMlogic/Request_CAT_GOD.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>OMX_BIZ_VAL</h4><div class="steps-label">Step(s): 5</div><a class="btn" href="../FMlogic/Request_OMX_BIZ_VAL.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>OMX_BRMS_DB</h4><div class="steps-label">Step(s): 6</div><a class="btn" href="../FMlogic/Request_OMX_BRMS_DB.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>CCP_ADD_HOME_ZONE</h4><div class="steps-label">Step(s): 7</div><a class="btn" href="../FMlogic/Request_CCP_ADD_HOME_ZONE.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>OMX_RESOLVE_SOC_DATA</h4><div class="steps-label">Step(s): 8</div><a class="btn" href="../FMlogic/Request_OMX_RESOLVE_SOC_DATA.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>OMX_CALC_ACTIVITY_REASON</h4><div class="steps-label">Step(s): 9</div><a class="btn" href="../FMlogic/Request_OMX_CALC_ACTIVITY_REASON.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>CCP_GET_PREPAID_CREDIT_INFO</h4><div class="steps-label">Step(s): 10</div><a class="btn" href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>OMX_CAL_OFFER_FUT_DATE</h4><div class="steps-label">Step(s): 12</div><a class="btn" href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>OMX_ADD_FUT_OFFER</h4><div class="steps-label">Step(s): 13</div><a class="btn" href="../FMlogic/Request_OMX_ADD_FUT_OFFER.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>CAT_GET_SWF</h4><div class="steps-label">Step(s): 14</div><a class="btn" href="../FMlogic/Request_CAT_GET_SWF.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>OMX_GET_SRV_TRX_NO</h4><div class="steps-label">Step(s): 15</div><a class="btn" href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>AA_PREPAID_PROVISIONING</h4><div class="steps-label">Step(s): 16</div><a class="btn" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>CCP_ACTIVATE_SIM</h4><div class="steps-label">Step(s): 17</div><a class="btn" href="../FMlogic/Request_CCP_ACTIVATE_SIM.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>SBM_ADD_3GPREPAID</h4><div class="steps-label">Step(s): 18</div><a class="btn" href="../FMlogic/Request_SBM_ADD_3GPREPAID.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>CCP_ADD_OFFER</h4><div class="steps-label">Step(s): 19</div><a class="btn" href="../FMlogic/Request_CCP_ADD_OFFER.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>CCP_CHANGE_PP</h4><div class="steps-label">Step(s): 20</div><a class="btn" href="../FMlogic/Request_CCP_CHANGE_PP.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>STATUS_UPDATE_CREATING_PROFILE</h4><div class="steps-label">Step(s): 21</div><a class="btn" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>AA_CHECK_CONFIRMATION</h4><div class="steps-label">Step(s): 22</div><a class="btn" href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>SMSGATEWAY_SEND_SMS</h4><div class="steps-label">Step(s): 23</div><a class="btn" href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>CRM_UPSERT_CUSTOMER_ACCOUNT</h4><div class="steps-label">Step(s): 24</div><a class="btn" href="../FMlogic/Request_CRM_UPSERT_CUSTOMER_ACCOUNT.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>CRM_CREATE_ORDER_PREPAID</h4><div class="steps-label">Step(s): 25</div><a class="btn" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>MCS_REGISTER_SUBSCRIPTION</h4><div class="steps-label">Step(s): 26</div><a class="btn" href="../FMlogic/Request_MCS_REGISTER_SUBSCRIPTION.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>GPS_INSERT_INFORMATION</h4><div class="steps-label">Step(s): 27</div><a class="btn" href="../FMlogic/Request_GPS_INSERT_INFORMATION.html">View FM Doc</a></div>
+      <div class="fm-card"><h4>TMN_CREATE_WALLET_MINIMAL_PROFILE</h4><div class="steps-label">Step(s): 28</div><a class="btn" href="../FMlogic/Request_TMN_CREATE_WALLET_MINIMAL_PROFILE.html">View FM Doc</a></div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="section">
+  <div class="section-header">§5 — Sequence Diagram</div>
+  <div class="section-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CRM as CRM
+    participant OMX as OMX
+    participant CAT as CAT
+    participant CCP as CCP
+    participant AA as AA
+    participant SBM as SBM
+    participant STATUS as STATUS_UPDATE
+    participant SMS as SMSGATEWAY
+    participant MCS as MCS
+    participant GPS as GPS
+    participant TMN as TMN
+
+    opt boolean(Subscriber/MSISDN!="")
+        O->>CRM: CRM_GET_LAST_ASSET_ROOT [customerAddressFlag=Y|OLPRD_DB_FLAG=Y]
+        CRM-->>O: response
+        Note over O,CRM: FM: CRM_GET_LAST_ASSET_ROOT
+    end
+    opt boolean(Subscriber/AssetCrmId!="")
+        O->>CRM: CRM_GET_ASSET_COMPONENT_LIST [OLPRD_DB_FLAG=Y]
+        CRM-->>O: response
+        Note over O,CRM: FM: CRM_GET_ASSET_COMPONENT_LIST
+    end
+    opt ExtendedInfo ORG_CHANNEL=3GW_iservice
+        O->>OMX: OMX_GET_PARTIAL_ORDER_DATA
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_PARTIAL_ORDER_DATA
+    end
+    opt count(Offers)>0 or count(SubscriberOffers)>0
+        O->>CAT: CAT_GOD_A [GET_SWITCH_FEATURE=N]
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL
+    O->>OMX: OMX_BRMS_DB
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BRMS_DB
+    opt igoHomeZoneCode exists and not empty
+        O->>CCP: CCP_ADD_HOME_ZONE
+        CCP-->>O: response
+        Note over O,CCP: FM: CCP_ADD_HOME_ZONE
+    end
+    opt igoHomeZoneCode exists and not empty
+        O->>OMX: OMX_RESOLVE_SOC_DATA
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_RESOLVE_SOC_DATA
+    end
+    O->>OMX: OMX_CALC_ACTIVITY_REASON
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_CALC_ACTIVITY_REASON
+    opt SOC 10072810 is not CCBS-type
+        O->>CCP: CCP_GET_PREPAID_CREDIT_INFO
+        CCP-->>O: response
+        Note over O,CCP: FM: CCP_GET_PREPAID_CREDIT_INFO
+    end
+    opt Offers exist and FE_OR_CCBS=CCP or BRMS
+        O->>CAT: CAT_GOD_B [GET_SWITCH_FEATURE=N]
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+    opt SubscriberOffers[1] exists and FE/BRMS routing
+        O->>OMX: OMX_CAL_OFFER_FUT_DATE
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_CAL_OFFER_FUT_DATE
+    end
+    opt FE/BRMS routing and EFF_TYPE=FUT
+        O->>OMX: OMX_ADD_FUT_OFFER [ORDERTYPE=69|USE_ROWID_CRM=Y]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFER
+    end
+    opt not(EFF_TYPE) or EFF_TYPE!=FUT
+        O->>CAT: CAT_GET_SWF
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GET_SWF
+    end
+    opt Channel!=TCC and not future-only offers
+        O->>OMX: OMX_GET_SRV_TRX_NO [CCD]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+    end
+    opt not SOC10072810 CCBS and Channel!=TCC and not future-only
+        O->>AA: AA_PREPAID_PROVISIONING [CCD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_PREPAID_PROVISIONING
+    end
+    opt ACTIVATE_SIM=Y
+        O->>CCP: CCP_ACTIVATE_SIM
+        CCP-->>O: response
+        Note over O,CCP: FM: CCP_ACTIVATE_SIM
+    end
+    opt FE routing and ServiceType=88
+        O->>SBM: SBM_ADD_3GPREPAID
+        SBM-->>O: response
+        Note over O,SBM: FM: SBM_ADD_3GPREPAID
+    end
+    opt FE/BRMS routing and ServiceType=89
+        O->>CCP: CCP_ADD_OFFER
+        CCP-->>O: response
+        Note over O,CCP: FM: CCP_ADD_OFFER
+    end
+    opt FE routing and ServiceType=80
+        O->>CCP: CCP_CHANGE_PP
+        CCP-->>O: response
+        Note over O,CCP: FM: CCP_CHANGE_PP
+    end
+    O->>STATUS: STATUS_UPDATE_CREATING_PROFILE
+    STATUS-->>O: response
+    Note over O,STATUS: FM: STATUS_UPDATE_CREATING_PROFILE
+    opt not SOC10072810 CCBS and Channel!=TCC
+        O->>AA: AA_CHECK_CONFIRMATION [CCD|UPDATE_NETWORK_STATUS]
+        AA-->>O: response
+        Note over O,AA: FM: AA_CHECK_CONFIRMATION
+    end
+    O->>SMS: SMSGATEWAY_SEND_SMS
+    SMS-->>O: response
+    Note over O,SMS: FM: SMSGATEWAY_SEND_SMS
+    O->>CRM: CRM_UPSERT_CUSTOMER_ACCOUNT [mode=OR|upsertAccountStatus=Active]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_UPSERT_CUSTOMER_ACCOUNT
+    O->>CRM: CRM_CREATE_ORDER_PREPAID [command=Register|orderType=N|...]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_CREATE_ORDER_PREPAID
+    opt FE/BRMS routing and ServiceType=69
+        O->>MCS: MCS_REGISTER_SUBSCRIPTION [USE_ROWID_CRM=Y]
+        MCS-->>O: response
+        Note over O,MCS: FM: MCS_REGISTER_SUBSCRIPTION
+    end
+    opt BirthDate exists (len>0)
+        O->>GPS: GPS_INSERT_INFORMATION
+        GPS-->>O: response
+        Note over O,GPS: FM: GPS_INSERT_INFORMATION
+    end
+    O->>TMN: TMN_CREATE_WALLET_MINIMAL_PROFILE
+    TMN-->>O: response
+    Note over O,TMN: FM: TMN_CREATE_WALLET_MINIMAL_PROFILE
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="section">
+  <div class="section-header">§6 — Flow Diagram</div>
+  <div class="section-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1{CRM_GET_LAST_ASSET_ROOT\nFM: CRM_GET_LAST_ASSET_ROOT\nConditional: MSISDN exists}
+    S1 --> S2{CRM_GET_ASSET_COMPONENT_LIST\nFM: CRM_GET_ASSET_COMPONENT_LIST\nConditional: AssetCrmId exists}
+    S2 --> S3{OMX_GET_PARTIAL_ORDER_DATA\nFM: OMX_GET_PARTIAL_ORDER_DATA\nConditional: ORG_CHANNEL=3GW_iservice}
+    S3 --> S4{CAT_GOD_A\nFM: CAT_GOD\nConditional: Offers exist}
+    S4 --> S5[OMX_BIZ_VAL\nFM: OMX_BIZ_VAL]
+    S5 --> S6[OMX_BRMS_DB\nFM: OMX_BRMS_DB]
+    S6 --> S7{CCP_ADD_HOME_ZONE\nFM: CCP_ADD_HOME_ZONE\nConditional: igoHomeZoneCode set}
+    S7 --> S8{OMX_RESOLVE_SOC_DATA\nFM: OMX_RESOLVE_SOC_DATA\nConditional: igoHomeZoneCode set}
+    S8 --> S9[OMX_CALC_ACTIVITY_REASON\nFM: OMX_CALC_ACTIVITY_REASON]
+    S9 --> S10{CCP_GET_PREPAID_CREDIT_INFO\nFM: CCP_GET_PREPAID_CREDIT_INFO\nConditional: not SOC10072810 CCBS}
+    S10 --> S11{CAT_GOD_B\nFM: CAT_GOD\nConditional: Offers+FE_OR_CCBS=CCP/BRMS}
+    S11 --> S12{OMX_CAL_OFFER_FUT_DATE\nFM: OMX_CAL_OFFER_FUT_DATE\nConditional: FE/BRMS offers exist}
+    S12 --> S13{OMX_ADD_FUT_OFFER\nFM: OMX_ADD_FUT_OFFER\nConditional: FE/BRMS+EFF_TYPE=FUT}
+    S13 --> S14{CAT_GET_SWF\nFM: CAT_GET_SWF\nConditional: not future-only}
+    S14 --> S15{OMX_GET_SRV_TRX_NO\nFM: OMX_GET_SRV_TRX_NO\nConditional: Channel!=TCC+not future}
+    S15 --> S16{AA_PREPAID_PROVISIONING\nFM: AA_PREPAID_PROVISIONING\nConditional: not CCBS+Channel!=TCC}
+    S16 --> S17{CCP_ACTIVATE_SIM\nFM: CCP_ACTIVATE_SIM\nConditional: ACTIVATE_SIM=Y}
+    S17 --> S18{SBM_ADD_3GPREPAID\nFM: SBM_ADD_3GPREPAID\nConditional: FE+ServiceType=88}
+    S18 --> S19{CCP_ADD_OFFER\nFM: CCP_ADD_OFFER\nConditional: FE/BRMS+ServiceType=89}
+    S19 --> S20{CCP_CHANGE_PP\nFM: CCP_CHANGE_PP\nConditional: FE+ServiceType=80}
+    S20 --> S21[STATUS_UPDATE_CREATING_PROFILE\nFM: STATUS_UPDATE_CREATING_PROFILE]
+    S21 --> S22{AA_CHECK_CONFIRMATION\nFM: AA_CHECK_CONFIRMATION\nConditional: not CCBS+Channel!=TCC}
+    S22 --> S23[SMSGATEWAY_SEND_SMS\nFM: SMSGATEWAY_SEND_SMS]
+    S23 --> S24[CRM_UPSERT_CUSTOMER_ACCOUNT\nFM: CRM_UPSERT_CUSTOMER_ACCOUNT]
+    S24 --> S25[CRM_CREATE_ORDER_PREPAID\nFM: CRM_CREATE_ORDER_PREPAID]
+    S25 --> S26{MCS_REGISTER_SUBSCRIPTION\nFM: MCS_REGISTER_SUBSCRIPTION\nConditional: FE/BRMS+ServiceType=69}
+    S26 --> S27{GPS_INSERT_INFORMATION\nFM: GPS_INSERT_INFORMATION\nConditional: BirthDate exists}
+    S27 --> S28[TMN_CREATE_WALLET_MINIMAL_PROFILE\nFM: TMN_CREATE_WALLET_MINIMAL_PROFILE]
+    S28 --> END([END])
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default',sequence:{diagramMarginX:20,diagramMarginY:10,actorMargin:50,width:150,height:65,boxMargin:10,boxTextMargin:5,noteMargin:10,messageMargin:35,mirrorActors:false},flowchart:{htmlLabels:true,curve:'basis'}});</script>
+<footer>TRUE Corporation OMX · Order Journey Documentation · PREPAID_REGISTRATION</footer>
+</body>
+</html>

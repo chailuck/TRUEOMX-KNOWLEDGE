@@ -1,0 +1,610 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_SEND_SMS3CJ — FM Logic</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#333;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;letter-spacing:.4px;word-break:break-all}
+.breadcrumb{font-size:.78rem;opacity:.7;margin-bottom:8px}
+.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.82rem}
+.content{max-width:1400px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:8px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);line-height:1.5}
+code{background:#f0e8e8;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85em}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-amber{background:#FFF8E1;color:#e65100}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.section-num{color:var(--true-red);font-weight:700;margin-right:6px}
+.step-box{background:#fff8f8;border-left:4px solid var(--true-red);padding:10px 16px;margin-bottom:10px;border-radius:0 6px 6px 0}
+.step-num-inline{display:inline-block;background:var(--true-red);color:#fff;border-radius:50%;width:24px;height:24px;text-align:center;line-height:24px;font-size:.78rem;font-weight:700;margin-right:8px}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086;font-style:italic}.nm{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb">TRUE Corporation OMX &rsaquo; FM Logic Documentation</div>
+  <h1>Request_OMX_SEND_SMS3CJ</h1>
+  <div class="meta-row">
+    <span class="meta-chip">Priority 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Target: 3CJ SMS Gateway</span>
+    <span class="meta-chip">Author: TIT_CP-CHAYAT2</span>
+    <span class="meta-chip">Generated: 2026-09-15</span>
+  </div>
+</div>
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§1</span> Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>This FM sends an SMS notification to each prepaid subscriber via the 3CJ SMS gateway. It is conditional — it only executes if subscribers have a non-empty <code>SMS_MSG</code> ExtendedInfo entry (populated by the preceding <code>SMS3CJ_GET_TEMPLATE_PREPAID_SUSPEND</code> step). For each qualifying subscriber, it formats the mobile number to international format (+66), retrieves the current Bangkok time, constructs a WhatupSMS schema payload, and dispatches the SMS through the <code>OMX_SEND_SMS3CJ</code> ESB event.</p>
+    <p style="margin-top:10px">There is a commented-out WHATUP_SEND_SMS variant in the source; the active implementation uses the 3CJ gateway.</p>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_SEND_SMS3CJ</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Author</td><td>TIT_CP-CHAYAT2</td></tr>
+      <tr><td>ActivityID matched</td><td><code>OMX_SEND_SMS3CJ</code></td></tr>
+      <tr><td>Target event</td><td><code>/Events/OMConsumers/OMXFM/Request/OMX_SEND_SMS3CJ</code></td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_OMX_SEND_SMS3CJ</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Declared Objects -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§3</span> Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order request context</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity node</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity is the active next step</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_SEND_SMS3CJ"</code></td><td>FM selector</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_SEND_SMS3CJ"</code></td><td>Process flow confirmation</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity awaiting execution</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§5</span> Execution Flow Diagram</div>
+  <div class="card-body">
+    <div class="step-box"><span class="step-num-inline">1</span>Load <code>nextAct</code>; compute <code>isActResub</code></div>
+    <div class="step-box"><span class="step-num-inline">2</span>Loop over <code>ParentOU[i].Subscriber[j]</code></div>
+    <div class="step-box"><span class="step-num-inline">3</span><strong>Resubmit guard:</strong> skip subscriber if Response with matching SubscriberId + CompletionStatus=2 exists</div>
+    <div class="step-box"><span class="step-num-inline">4</span><strong>PreExecCheck gate:</strong> evaluate <code>count(//Subscriber//ExtendedInfo[Name='SMS_MSG' and Value != '']) &gt; 0</code></div>
+    <div class="step-box"><span class="step-num-inline">5</span>Extract <code>sms_message</code> via XPath on <code>subscriber.ExtendedInfo[Name='SMS_MSG']/Value</code></div>
+    <div class="step-box"><span class="step-num-inline">6</span>Format <code>mobile_number</code>: replace leading "0" with "66"</div>
+    <div class="step-box"><span class="step-num-inline">7</span>Format <code>createDate</code> in Asia/Bangkok timezone: <code>yyyy-MM-dd'T'HH:mm:ssZ</code></div>
+    <div class="step-box"><span class="step-num-inline">8</span>Get <code>basicAuthen</code> from <code>ExtendedInfo[Name='SMS_AUTHEN']/Value</code> → prepend "Basic "</div>
+    <div class="step-box"><span class="step-num-inline">9</span>Build <code>OMX_SEND_SMS3CJ</code> event via XSLT (WhatupSMS schema) and send</div>
+    <div class="step-box"><span class="step-num-inline">10</span>Increment <code>RequestCount</code> (non-resubmit only)</div>
+    <div class="step-box"><span class="step-num-inline">11</span>Send audit Logger event</div>
+    <div class="step-box"><span class="step-num-inline">12</span><strong>Post-loop:</strong> status "1" if any sent; SkipActivity("4") otherwise</div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§6</span> Rule Action (THEN) — Logic Detail</div>
+  <div class="card-body">
+    <p><strong>Resubmit detection:</strong> <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code> — checked against Response by SubscriberId (not RefId).</p>
+    <p style="margin-top:8px"><strong>PreExecCheck:</strong> evaluates <code>nextAct.PreExecCheck</code> against subscriber XML slice. In PREPAID_SUSPEND flow: <code>count(//Subscriber//ExtendedInfo[Name/text()='SMS_MSG' and Value/text()!='']) &gt; 0</code>.</p>
+    <p style="margin-top:8px"><strong>Mobile number formatting:</strong> <code>if (startsWith(MSISDN,"0")) → replaceFirst("0","66")</code>.</p>
+    <p style="margin-top:8px"><strong>Authentication:</strong> <code>basicAuthen = "Basic " + ExtendedInfo[Name='SMS_AUTHEN']/Value</code> (only prepended if non-blank).</p>
+    <p style="margin-top:8px"><strong>Service-id logic:</strong> uses <code>ExtendedInfo[Name='SMS_SERVICEID']</code> if present, else falls back to global variable <code>OMX_OM/Services/OMX_SEND_SMS_3CJ/serviceid</code>.</p>
+    <p style="margin-top:8px"><strong>Originate omission rule:</strong> <code>&lt;ns:originate&gt;</code> is omitted when serviceid starts-with "72", "21", or "22".</p>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§7</span> Data Extraction</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>sms_message</code></td><td><code>subscriber.ExtendedInfo[Name='SMS_MSG']/Value</code></td><td>XPath eval</td></tr>
+      <tr><td><code>mobile_number</code></td><td><code>pOu.Subscriber[subs].MSISDN</code></td><td>Leading "0" replaced with "66"</td></tr>
+      <tr><td><code>createDate</code></td><td><code>DateTime.now() → translateTime(Asia/Bangkok) → format(yyyy-MM-dd'T'HH:mm:ssZ)</code></td><td>Timestamp in Bangkok TZ</td></tr>
+      <tr><td><code>basicAuthen</code></td><td><code>orderRequest.OrderData.ExtendedInfo[Name='SMS_AUTHEN']/Value</code></td><td>Prefixed "Basic "; blank check via IsBlankOrStringNull</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§8</span> System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§8.1 Order Type Dependencies</h3>
+    <p>No order type restriction. Execution gated by <code>SMS_MSG</code> presence (PreExecCheck). Channel=DWH_SIMBOX already satisfied by the preceding template-fetch step.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.2 ESB / JMS Channels</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Path</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>/Events/OMConsumers/OMXFM/Request/OMX_SEND_SMS3CJ</code></td><td>Send SMS via 3CJ gateway</td></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>/Events/OMConsumers/OMXESB/Logger</code></td><td>Audit log</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Schema Namespace</th></tr>
+      <tr><td>3CJ SMS Gateway</td><td>Send SMS MT (mobile terminated)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/Whatup/WhatupSMS.xsd</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.4 BE Working Memory</h3>
+    <table>
+      <tr><th>Field</th><th>Access</th></tr>
+      <tr><td><code>orderCurrentActivity.RequestCount</code></td><td>Read/Write</td></tr>
+      <tr><td><code>orderCurrentActivity.Status</code></td><td>Write</td></tr>
+      <tr><td><code>subscriber.MSISDN</code></td><td>Read</td></tr>
+      <tr><td><code>subscriber.SubscriberId</code></td><td>Read (for resubmit guard)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.5 ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Name</th><th>Required?</th><th>Source</th><th>Purpose</th></tr>
+      <tr><td><code>SMS_MSG</code></td><td>Required (PreExecCheck)</td><td>subscriber.ExtendedInfo</td><td>SMS body content (written by template-fetch step)</td></tr>
+      <tr><td><code>SMS_AUTHEN</code></td><td>Optional</td><td>orderRequest.OrderData.ExtendedInfo</td><td>Basic auth credential for 3CJ gateway</td></tr>
+      <tr><td><code>SMS_SERVICEID</code></td><td>Optional</td><td>orderRequest.OrderData.ExtendedInfo</td><td>Override service-id; affects originate inclusion logic</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.6 Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Used For</th></tr>
+      <tr><td><code>OMX_OM/Services/OMX_SEND_SMS_3CJ/serviceid</code></td><td>Default service-id when SMS_SERVICEID ExtendedInfo absent</td></tr>
+      <tr><td><code>OMX_OM/Services/OMX_SEND_SMS_3CJ/shortcodesms</code></td><td>SMS source short code</td></tr>
+      <tr><td><code>OMX_OM/Services/OMX_SEND_SMS_3CJ/originate</code></td><td>Originate number (conditional inclusion)</td></tr>
+      <tr><td><code>OMX_OM/Services/OMX_SEND_SMS_3CJ/sender</code></td><td>Sender name</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit Logger COMPONENT_NAME</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit Logger TARGET_SYSTEM</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>Gate for payload logging</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§9</span> Detailed Payload Build</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§9.1 XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>Param</th><th>Bound From</th></tr>
+      <tr><td><code>orderRequest</code></td><td>OrderRequest concept</td></tr>
+      <tr><td><code>subscriber</code></td><td><code>orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j]</code></td></tr>
+      <tr><td><code>basicAuthen</code></td><td><code>"Basic " + ExtendedInfo[Name='SMS_AUTHEN']/Value</code></td></tr>
+      <tr><td><code>globalVariables</code></td><td>Global variable tree</td></tr>
+      <tr><td><code>mobile_number</code></td><td>Formatted MSISDN (66-prefix)</td></tr>
+      <tr><td><code>sms_message</code></td><td>ExtendedInfo[SMS_MSG]/Value</td></tr>
+      <tr><td><code>createDate</code></td><td>Bangkok datetime string</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.2 Event Container</h3>
+    <p>Event type: <code>Events.OMConsumers.OMXFM.Request.OMX_SEND_SMS3CJ</code> (no generated extId — event schema doesn't require it here)</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.3 JMS/Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>JMSPriority</td><td><code>$orderRequest/OrderPriority</code></td><td>Always</td></tr>
+      <tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Always</td></tr>
+      <tr><td>OrderID</td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Always</td></tr>
+      <tr><td>RefID</td><td><code>$subscriber/SubscriberId</code></td><td>if $subscriber/SubscriberId exists</td></tr>
+      <tr><td>OrderType</td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Always</td></tr>
+      <tr><td>SMS_AUTHEN</td><td><code>$basicAuthen</code></td><td>Always (may be empty)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.4 Payload Root Element</h3>
+    <p><code>ns:message/ns:sms</code> with attribute <code>@type="mt"</code> (mobile terminated)</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.5 Conditional Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Condition</th><th>Source</th></tr>
+      <tr><td><code>ns:destination/ns:address/ns:number</code></td><td><code>string-length(mobile_number) &gt; 0</code></td><td>formatted MSISDN</td></tr>
+      <tr><td><code>ns:originate</code></td><td>serviceid does NOT start-with "72", "21", or "22"</td><td><code>globalVars/.../originate</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.6 Core Payload Fields</h3>
+    <table>
+      <tr><th>Element</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>ns:service-id</code></td><td><code>ExtendedInfo[SMS_SERVICEID]</code> or globalVars default</td><td>Conditional select</td></tr>
+      <tr><td><code>ns:shortcodesms number</code></td><td><code>globalVars/.../shortcodesms</code></td><td>type="abbreviated"</td></tr>
+      <tr><td><code>ns:originate number</code></td><td><code>globalVars/.../originate</code></td><td>Conditional; type="international"</td></tr>
+      <tr><td><code>ns:sender</code></td><td><code>globalVars/.../sender</code></td><td>Always</td></tr>
+      <tr><td><code>ns:ud</code></td><td><code>$sms_message</code></td><td>type="text", encoding="unicode"</td></tr>
+      <tr><td><code>ns:scts</code></td><td><code>$createDate</code></td><td>ISO timestamp in Bangkok TZ</td></tr>
+      <tr><td><code>ns:dro</code></td><td><code>"true"</code> (static)</td><td>Delivery receipt requested</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.7 Complete Generated XML Example</h3>
+<pre>&lt;createEvent&gt;
+  &lt;event&gt;
+    &lt;JMSPriority&gt;<span class="nm">5</span>&lt;/JMSPriority&gt;
+    &lt;JMSCorrelationID&gt;<span class="st">OMX-TRK-2024-001</span>&lt;/JMSCorrelationID&gt;
+    &lt;OrderID&gt;<span class="st">ORD-12345</span>&lt;/OrderID&gt;
+    &lt;RefID&gt;<span class="st">SUB-001</span>&lt;/RefID&gt;
+    &lt;OrderType&gt;<span class="nm">68</span>&lt;/OrderType&gt;
+    &lt;SMS_AUTHEN&gt;<span class="st">Basic dXNlcjpwYXNz</span>&lt;/SMS_AUTHEN&gt;
+    &lt;payload&gt;
+      &lt;ns:message&gt;
+        &lt;ns:sms type=<span class="st">"mt"</span>&gt;
+          &lt;ns:service-id&gt;<span class="nm">31001</span>&lt;/ns:service-id&gt;
+          &lt;ns:destination&gt;
+            &lt;ns:address&gt;
+              &lt;ns:number type=<span class="st">"international"</span>&gt;<span class="nm">66812345678</span>&lt;/ns:number&gt;
+            &lt;/ns:address&gt;
+          &lt;/ns:destination&gt;
+          &lt;ns:source&gt;
+            &lt;ns:address&gt;
+              &lt;ns:number type=<span class="st">"abbreviated"</span>&gt;<span class="st">1331</span>&lt;/ns:number&gt;
+              &lt;ns:originate type=<span class="st">"international"</span>&gt;<span class="st">660000000</span>&lt;/ns:originate&gt;
+              &lt;ns:sender&gt;<span class="st">TrueMove H</span>&lt;/ns:sender&gt;
+            &lt;/ns:address&gt;
+          &lt;/ns:source&gt;
+          &lt;ns:ud type=<span class="st">"text"</span> encoding=<span class="st">"unicode"</span>&gt;<span class="st">Dear customer, your SIM is being suspended...</span>&lt;/ns:ud&gt;
+          &lt;ns:scts&gt;<span class="st">2026-09-15T10:30:00+0700</span>&lt;/ns:scts&gt;
+          &lt;ns:dro&gt;<span class="kw">true</span>&lt;/ns:dro&gt;
+        &lt;/ns:sms&gt;
+      &lt;/ns:message&gt;
+    &lt;/payload&gt;
+  &lt;/event&gt;
+&lt;/createEvent&gt;</pre>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.8 XSLT Stylesheet Source (Active Variant)</h3>
+<pre><span class="cm">&lt;!-- OMX_SEND_SMS3CJ Request XSLT (WhatupSMS schema) --&gt;</span>
+<span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:ns</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/Whatup/WhatupSMS.xsd"</span>
+  <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"subscriber"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"basicAuthen"</span><span class="xt">/&gt;</span>    <span class="cm">&lt;!-- "Basic " + SMS_AUTHEN ExtendedInfo --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"mobile_number"</span><span class="xt">/&gt;</span>   <span class="cm">&lt;!-- MSISDN with 0→66 prefix --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"sms_message"</span><span class="xt">/&gt;</span>    <span class="cm">&lt;!-- from ExtendedInfo[SMS_MSG] --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"createDate"</span><span class="xt">/&gt;</span>     <span class="cm">&lt;!-- Bangkok ISO timestamp --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="xt">&lt;JMSPriority&gt;</span>$orderRequest/OrderPriority<span class="xt">&lt;/JMSPriority&gt;</span>
+      <span class="xt">&lt;JMSCorrelationID&gt;</span>$orderRequest/OrderData/OMXTrackingId<span class="xt">&lt;/JMSCorrelationID&gt;</span>
+      <span class="xt">&lt;OrderID&gt;</span>$orderRequest/OrderData/OrderID<span class="xt">&lt;/OrderID&gt;</span>
+      <span class="cm">&lt;!-- RefID: conditional on subscriber/SubscriberId --&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$subscriber/SubscriberId"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;RefID&gt;</span>$subscriber/SubscriberId<span class="xt">&lt;/RefID&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;OrderType&gt;</span>$orderRequest/OrderData/OrderType<span class="xt">&lt;/OrderType&gt;</span>
+      <span class="xt">&lt;SMS_AUTHEN&gt;</span>$basicAuthen<span class="xt">&lt;/SMS_AUTHEN&gt;</span>
+      <span class="xt">&lt;payload&gt;&lt;ns:message&gt;&lt;ns:sms</span> <span class="xa">type</span>=<span class="st">"mt"</span><span class="xt">&gt;</span>
+        <span class="cm">&lt;!-- service-id: use SMS_SERVICEID ExtendedInfo if present, else globalVar --&gt;</span>
+        <span class="xt">&lt;ns:service-id&gt;</span>if count(SMS_SERVICEID)&gt;0 then SMS_SERVICEID else globalVars/.../serviceid<span class="xt">&lt;/ns:service-id&gt;</span>
+        <span class="cm">&lt;!-- destination: conditional on mobile_number length --&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"string-length($mobile_number) &gt; 0"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ns:destination&gt;&lt;ns:address&gt;&lt;ns:number</span> <span class="xa">type</span>=<span class="st">"international"</span><span class="xt">&gt;</span>$mobile_number<span class="xt">&lt;/ns:number&gt;&lt;/ns:address&gt;&lt;/ns:destination&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;ns:source&gt;&lt;ns:address&gt;</span>
+          <span class="xt">&lt;ns:number</span> <span class="xa">type</span>=<span class="st">"abbreviated"</span><span class="xt">&gt;</span>globalVars/.../shortcodesms<span class="xt">&lt;/ns:number&gt;</span>
+          <span class="cm">&lt;!-- originate: omit if serviceid starts-with 72, 21, or 22 --&gt;</span>
+          <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"not(starts-with(serviceid,'72') or starts-with(serviceid,'21') or starts-with(serviceid,'22'))"</span><span class="xt">&gt;</span>
+            <span class="xt">&lt;ns:originate</span> <span class="xa">type</span>=<span class="st">"international"</span><span class="xt">&gt;</span>globalVars/.../originate<span class="xt">&lt;/ns:originate&gt;</span>
+          <span class="xt">&lt;/xsl:if&gt;</span>
+          <span class="xt">&lt;ns:sender&gt;</span>globalVars/.../sender<span class="xt">&lt;/ns:sender&gt;</span>
+        <span class="xt">&lt;/ns:address&gt;&lt;/ns:source&gt;</span>
+        <span class="xt">&lt;ns:ud</span> <span class="xa">type</span>=<span class="st">"text"</span> <span class="xa">encoding</span>=<span class="st">"unicode"</span><span class="xt">&gt;</span>$sms_message<span class="xt">&lt;/ns:ud&gt;</span>
+        <span class="xt">&lt;ns:scts&gt;</span>$createDate<span class="xt">&lt;/ns:scts&gt;</span>
+        <span class="xt">&lt;ns:dro&gt;</span>true<span class="xt">&lt;/ns:dro&gt;</span>
+      <span class="xt">&lt;/ns:sms&gt;&lt;/ns:message&gt;&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§10</span> XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberId</span> <span class="badge badge-amber">Conditional</span> <span class="tree-cond">if $subscriber/SubscriberId exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">SMS_AUTHEN</span><span class="tree-arrow">←</span><span class="tree-src">$basicAuthen</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:message</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:sms</span> <span class="tree-attr">@type</span><span class="tree-arrow">←</span><span class="tree-src-static">"mt"</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:service-id</span><span class="tree-arrow">←</span><span class="tree-src">SMS_SERVICEID or globalVars/serviceid</span> <span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:destination/ns:address/ns:number</span> <span class="tree-attr">@type="international"</span><span class="tree-arrow">←</span><span class="tree-src">$mobile_number</span> <span class="badge badge-amber">Conditional</span> <span class="tree-cond">if mobile_number non-empty</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:source/ns:address</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns:number</span> <span class="tree-attr">@type="abbreviated"</span><span class="tree-arrow">←</span><span class="tree-src">globalVars/shortcodesms</span> <span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:originate</span> <span class="tree-attr">@type="international"</span><span class="tree-arrow">←</span><span class="tree-src">globalVars/originate</span> <span class="badge badge-amber">Conditional</span> <span class="tree-cond">if serviceid not starting with 72/21/22</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:sender</span><span class="tree-arrow">←</span><span class="tree-src">globalVars/sender</span> <span class="badge badge-green">Always</span></div></li>
+                            </ul>
+                          </li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:ud</span> <span class="tree-attr">@type="text" @encoding="unicode"</span><span class="tree-arrow">←</span><span class="tree-src">$sms_message</span> <span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:scts</span><span class="tree-arrow">←</span><span class="tree-src">$createDate</span> <span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:dro</span><span class="tree-arrow">←</span><span class="tree-src-static">"true"</span> <span class="badge badge-green">Always</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:12px;font-size:.82rem"><strong>Legend:</strong> <span class="tree-src">green=XPath</span> | <span class="tree-src-static">orange=literal</span> | <span class="tree-cond">purple=condition</span> | <span class="badge badge-green">Always</span> | <span class="badge badge-amber">Conditional</span></p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§11</span> Audit Logging</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"OMX_SEND_SMS3CJ"</code></td></tr>
+      <tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+      <tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Request for OMX_SEND_SMS3CJ"</code></td></tr>
+      <tr><td>payload</td><td><code>ns:ServicePayload = copy of $reqEvent</code> (gated on WritePayload=true)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§12</span> Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Condition</th><th>Status</th><th>Action</th></tr>
+      <tr><td>At least one SMS sent</td><td><span class="badge badge-blue">"1" IN_PROGRESS</span></td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td></tr>
+      <tr><td>All subscribers skipped</td><td><span class="badge badge-purple">"4" SKIPPED</span></td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§13</span> Exception / Error Handling</div>
+  <div class="card-body">
+    <p>Outer try/catch catches <code>Exception ae</code>. Delegates to <code>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code>.</p>
+  </div>
+</div>
+
+<!-- §14 Helpers -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§14</span> Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId)</code></td><td>Build subscriber-scoped XML for XPath PreExecCheck</td></tr>
+      <tr><td><code>XPath.evalAsString(..., $subscriber/ExtendedInfo[Name='SMS_MSG']/Value)</code></td><td>Extract SMS message body</td></tr>
+      <tr><td><code>XPath.evalAsString(..., $orderRequest/.../ExtendedInfo[Name='SMS_AUTHEN']/Value)</code></td><td>Extract basic auth credential</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(basicAuthen)</code></td><td>Null/blank check before "Basic " prefix</td></tr>
+      <tr><td><code>DateTime.now() / translateTime / format</code></td><td>Generate Bangkok-timezone timestamp</td></tr>
+      <tr><td><code>String.startsWith(mobile_number, "0")</code> + <code>replaceFirst</code></td><td>International number formatting</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetActivityStatusString, SendDataToDB, SkipActivity, HandleActivityException</code></td><td>Standard lifecycle helpers</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§15</span> Function Dependency Tree</div>
+  <div class="card-body">
+<pre>Request_OMX_SEND_SMS3CJ (THEN block)
+├── Instance.getByExtIdByUri(...)
+├── RuleFunctions.Helpers.GetXMLForSubscriber(...)
+├── XPath.execute(...)                                [PreExecCheck gate]
+├── XPath.evalAsString(... SMS_MSG ...)               [extract SMS body]
+├── String.startsWith / String.replaceFirst           [format mobile number]
+├── DateTime.now / translateTime / format              [Bangkok timestamp]
+├── XPath.evalAsString(... SMS_AUTHEN ...)            [extract auth]
+├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(...)
+├── Event.createEvent(xslt://OMX_SEND_SMS3CJ)
+├── Event.Ext.sendEventImmediate(reqEvent)
+├── Event.createEvent(xslt://Logger)
+├── Event.Ext.sendEventImmediate(logEvent)
+├── RuleFunctions.Helpers.GetActivityStatusString("1")
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(...)
+└── RuleFunctions.Helpers.HandleActivityException(...)</pre>
+  </div>
+</div>
+
+<!-- §16 Concepts -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§16</span> Concept Definitions Referenced</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Concept</th><th>Key Fields</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>OrderData.OrderID, OMXTrackingId, OrderType, OrderPriority, Customer.ParentOU[].Subscriber[], ExtendedInfo[SMS_AUTHEN/SMS_SERVICEID], IsOrderResubmitted</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>ActivityID, Status, RequestCount, PreExecCheck, Response[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>RefId, SubscriberId, MSISDN, ExtendedInfo[SMS_MSG]</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§17</span> Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Send SMS to subscriber via 3CJ gateway using pre-fetched template content</td></tr>
+      <tr><td>R2</td><td>Format MSISDN to international format (66-prefix)</td></tr>
+      <tr><td>R3</td><td>Use BasicAuth from order ExtendedInfo[SMS_AUTHEN]</td></tr>
+      <tr><td>R4</td><td>Skip if no SMS_MSG content (PreExecCheck gate)</td></tr>
+      <tr><td>R5</td><td>Support resubmit idempotency (SubscriberId-based response tracking)</td></tr>
+      <tr><td>R6</td><td>Conditional originate field based on service-id prefix</td></tr>
+    </table>
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Auth credential passed in event body (SMS_AUTHEN) — credential leakage risk</td><td><span class="badge badge-red">HIGH</span></td><td>Use secure credential store or vault in target architecture</td></tr>
+      <tr><td>Commented-out WHATUP_SEND_SMS alternative creates confusion</td><td><span class="badge badge-amber">MEDIUM</span></td><td>Remove dead code in migration</td></tr>
+      <tr><td>originate logic depends on service-id prefix matching — brittle</td><td><span class="badge badge-amber">MEDIUM</span></td><td>Externalize as configurable rule</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§18</span> Full Source Code</div>
+  <div class="card-body">
+<pre><span class="kw">rule</span> <span class="fn">Rules.OMConsumers.OMXFM.Request.Request_OMX_SEND_SMS3CJ</span> {
+  <span class="kw">attribute</span> { priority = <span class="nm">5</span>; forwardChain = <span class="kw">true</span>; }
+  <span class="kw">declare</span> {
+    Concepts.OrderRequest.OrderRequest orderRequest;
+    Concepts.OM.ProcessConfig.Activity orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="st">"OMX_SEND_SMS3CJ"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="st">"OMX_SEND_SMS3CJ"</span>;
+    orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    Concepts.OM.ProcessConfig.Activity nextAct = Instance.getByExtIdByUri(...);
+    <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nm">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">try</span> {
+      <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+      <span class="kw">for</span>(...ParentOU[iPOU].Subscriber[subs]...) {
+        <span class="cm">// Resubmit guard: skip if Response[SubscriberId + CompletionStatus=2] exists</span>
+        <span class="cm">// PreExecCheck gate: count(SMS_MSG non-empty) > 0</span>
+        <span class="kw">if</span>(chkRes.equals(<span class="st">"true"</span>)) {
+          String sms_message = XPath.evalAsString(<span class="cm">/* ExtendedInfo[SMS_MSG]/Value */</span>);
+          String mobile_number = ... <span class="cm">/* format 0→66 */</span>;
+          DateTime createDate = ... <span class="cm">/* Bangkok TZ */</span>;
+          String basicAuthen = XPath.evalAsString(<span class="cm">/* SMS_AUTHEN */</span>);
+          <span class="kw">if</span>(!IsBlankOrStringNull(basicAuthen)) basicAuthen = <span class="st">"Basic "</span> + basicAuthen;
+          <span class="cm">/* Build OMX_SEND_SMS3CJ request event via XSLT — see §9.8 */</span>
+          <span class="cm">/* Payload: WhatupSMS schema, MT, mobile_number, sms_message (unicode) */</span>
+          Event.Ext.sendEventImmediate(reqEvent);
+          <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+          <span class="cm">/* Send audit Logger event — see §11 */</span>
+          isSkipped = <span class="kw">false</span>;
+        }
+      }
+      <span class="kw">if</span>(!isSkipped) {
+        orderCurrentActivity.Status = RuleFunctions.Helpers.GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+        RuleFunctions.Helpers.SendDataToDB(orderRequest);
+      } <span class="kw">else</span> {
+        RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+      }
+    } <span class="kw">catch</span>(Exception ae) {
+      RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+    }
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§19</span> Response Message Rule</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.1 Overview</h3>
+    <p><code>Response_OMX_SEND_SMS3CJ</code> parses the 3CJ SMS gateway reply, appends a standard ResponseBase to the activity, sends an audit Logger event, and drives fan-in completion.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order context</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.OMX_SEND_SMS3CJ</code></td><td>Gateway response</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity for response appending</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">§19.3 ResponseBase Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span> <span class="badge badge-green">Always</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">§19.4 Response Completion Logic</h3>
+    <p><strong>Success XPath:</strong> <code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></p>
+    <p><strong>Fan-in:</strong> <code>currActivity.RequestCount == successResponseCount</code> → <code>"true"</code> / <code>"false"</code></p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">§19.5 Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat($pid, "_RES")</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"OMX_SEND_SMS_3CJ"</code></td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Response received for OMX_SEND_SMS_3CJ"</code></td></tr>
+      <tr><td>payload</td><td><code>ns:ServicePayload = copy of $eventResponse</code> (always)</td></tr>
+    </table>
+  </div>
+</div>
+
+</div><!-- /content -->
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &middot; Request_OMX_SEND_SMS3CJ &middot; Generated 2026-09-15</footer>
+</body>
+</html>

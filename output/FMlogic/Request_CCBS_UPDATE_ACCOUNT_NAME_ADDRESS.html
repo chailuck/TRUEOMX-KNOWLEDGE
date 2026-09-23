@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_CCBS_UPDATE_ACCOUNT_NAME_ADDRESS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.7rem;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem;margin-bottom:14px}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:18px;border-radius:8px;overflow-x:auto;font-size:.8rem;border-left:3px solid var(--true-red)}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.88rem}
+.callout-warn{border-color:#e65100;background:#FFF3E0}
+.callout-info{border-color:#1565c0;background:#E3F0FD}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_CCBS_UPDATE_ACCOUNT_NAME_ADDRESS</h1>
+  <div class="subtitle">Updates CCBS account name and address per Account (not per subscriber). Uses a 3-branch NameType dispatch (CORP/INDY/default) to build up to three ns:nameInfo blocks. Uses IntraActivitySequencing + LogicalDate. Fan-out unit is Account[], not OU/subscriber.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: CCBS (UpdateNameAddress)</span>
+    <span class="meta-badge">Pattern: Per-Account / IntraActivitySequencing</span>
+    <span class="meta-badge">RefID: Account RefId</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Author: SathidP-PC</span>
+    <span class="meta-badge">Used in step: 75</span>
+    <span class="meta-badge">Generated: 2026-08-11</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Sends one <strong>CCBS UpdateNameAddressRequest</strong> per Account in <code>OrderData.Customer.Account[]</code>. This is distinct from all other FMs in the POSTPAID_ADD_OFFER_SUB flow: the fan-out unit is the <em>Account</em>, not a subscriber or OU. The payload varies by <code>AccountNames.NameType</code>: corporate accounts (CORP), individual accounts (INDY), or a contact-number-only default. Each can carry up to three <code>ns:nameInfo</code> blocks: the primary name block, an extended info block (conditional on <code>isExtendedNameInfoExist</code>), and a payment channel block (conditional on <code>PayChannelFeeInfo</code>).</p>
+    <ul style="margin:12px 0 0 20px;line-height:2">
+      <li><strong>Fan-out unit:</strong> <code>OrderData.Customer.Account[]</code> — one request per account</li>
+      <li><strong>RefID:</strong> <code>accRefId</code> (Account RefId — not subscriber RefId)</li>
+      <li><strong>PreExecCheck builder:</strong> <code>GetXMLForAccount(orderRequest, accRefId)</code> — account-level context</li>
+      <li><strong>Dispatch:</strong> IntraActivitySequencing (assertEvent → ActionRequestEvent → SendFirstRequestEvent)</li>
+      <li><strong>LogicalDate:</strong> Read from BE concept and USED in ns:enclosedClientInfo and ns:ActivityDateInfo</li>
+      <li><strong>isExtendedNameInfoExist:</strong> computed in BE rule body before XSLT — "true" if ANY of 10 AccountNames extension fields is non-blank</li>
+      <li><strong>NameType dispatch:</strong> CORP → nameType=66, INDY → nameType=73, default → nameType=69 (contact only)</li>
+      <li><strong>UserName/Password:</strong> gated by global variable <code>IsEnableUserPass='true'</code> (not the standard order data guard)</li>
+      <li><strong>Response:</strong> dedicated <code>CCBS_UpdateAccountNameAddress</code> concept; fan-in via ActionResponseEvent</li>
+    </ul>
+    <div class="callout callout-info" style="margin-top:14px">
+      <strong>[INFO] This FM fans out per Account, not per subscriber.</strong> If an order has multiple accounts, one request is sent per account. The PreExecCheck context is account-level (<code>GetXMLForAccount</code>) — different from the subscriber-level context used in CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO.
+    </div>
+    <div class="callout callout-info">
+      <strong>[INFO] logicalDateVal is used here (unlike CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO).</strong> It is passed to XSLT and emitted in two places: <code>ns:activityInfo/ns:enclosedClientInfo/ns:logicalDate</code> and <code>ns:ActivityDateInfo/ns:activityDate</code> — both conditional on non-blank trimmed value.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] UserName/Password gated by global variable IsEnableUserPass:</strong> Unlike other CCBS FMs that gate on <code>$orderRequest/OrderData/User</code>, this FM checks <code>$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass='true'</code>. If this flag is absent/false, credentials are never sent regardless of order data.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_CCBS_UPDATE_ACCOUNT_NAME_ADDRESS.rule</code></td><td>92 lines</td></tr>
+      <tr><td>Author</td><td>SathidP-PC</td><td></td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td>true</td><td></td></tr>
+      <tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_UPDATE_ACCOUNT_NAME_ADDRESS</code></td><td>Dedicated</td></tr>
+      <tr><td>Payload root</td><td><code>ns:UpdateNameAddressRequest</code></td><td></td></tr>
+      <tr><td>Schema NS (ns)</td><td><code>http://services.omx.truecorp.co.th/FM/UpdateNameAddressRequest</code></td><td>Different domain from ESB schemas</td></tr>
+      <tr><td>Fan-out unit</td><td><code>OrderData.Customer.Account[]</code></td><td>Per account — NOT per subscriber/OU</td></tr>
+      <tr><td>RefID</td><td><code>accRefId</code> (Account RefId)</td><td>Always emitted</td></tr>
+      <tr><td>Resub guard</td><td><code>Response[ReferenceId == accRefId &amp;&amp; CompletionStatus==2]</code></td><td>Account-level</td></tr>
+      <tr><td>PurgePendingRequestsBeforeResubmit</td><td>✓ PRESENT</td><td>Called on resubmit</td></tr>
+      <tr><td>PreExecCheck builder</td><td><code>GetXMLForAccount(orderRequest, accRefId)</code></td><td>Account-level context</td></tr>
+      <tr><td>isExtendedNameInfoExist</td><td>Computed in BE body: "true" if ANY of 10 extension fields non-blank</td><td>Controls second nameInfo block</td></tr>
+      <tr><td>LogicalDate usage</td><td>READ AND USED in ns:enclosedClientInfo + ns:ActivityDateInfo</td><td>Unlike CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</td></tr>
+      <tr><td>Dispatch method</td><td><code>Event.assertEvent + IntraActivitySequencing.ActionRequestEvent</code></td><td>sendEventImmediate commented out</td></tr>
+      <tr><td>Send trigger</td><td><code>IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)</code></td><td></td></tr>
+      <tr><td>UserName/Password gate</td><td>Global variable <code>IsEnableUserPass='true'</code></td><td>Not standard OrderData.User guard [LOW]</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBS_UpdateAccountNameAddress</code></td><td>Dedicated — extId from pre-generated OMXUtils</td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td><td>Standard fan-in commented out</td></tr>
+      <tr><td>OPERATION_NAME (request)</td><td><code>$orderCurrentActivity/ActivityID</code> (dynamic)</td><td></td></tr>
+      <tr><td>OPERATION_NAME (response)</td><td><code>"CCBS_UPDATE_ACCOUNT_NAME_ADDRESS"</code></td><td>Hardcoded</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="card">
+  <div class="card-header">§3 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_UPDATE_ACCOUNT_NAME_ADDRESS"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_UPDATE_ACCOUNT_NAME_ADDRESS"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 NameType Dispatch -->
+<div class="card">
+  <div class="card-header">§7 — NameType-Based Payload Dispatch Logic</div>
+  <div class="card-body">
+    <table>
+      <tr><th>NameType</th><th>Primary nameInfo (nameType)</th><th>Name Fields</th><th>Extended Info Block</th><th>linkType</th></tr>
+      <tr>
+        <td><code>"CORP"</code></td>
+        <td>66 (Corporate)</td>
+        <td>OrgName(1), BranchCode(2), BranchName(3), StoreId(4), FaxNumber(5), Email(6), IdentificationType(7), Identification(8)</td>
+        <td>nameType=69 if isExtendedNameInfoExist='true' (10 fields)</td>
+        <td>65</td>
+      </tr>
+      <tr>
+        <td><code>"INDY"</code></td>
+        <td>73 (Individual)</td>
+        <td>Title(1), FirstName(2), MiddleName(3), LastName(4), MaritalStatus(5), FaxNumber(6), Email(7), Gender(8), IdentificationType(9), Identification(10)</td>
+        <td>nameType=69 if isExtendedNameInfoExist='true' (10 fields)</td>
+        <td>65</td>
+      </tr>
+      <tr>
+        <td>otherwise</td>
+        <td>69 (Extended/Contact)</td>
+        <td>Only nameElement2=PrefContactNumber</td>
+        <td>None</td>
+        <td>70</td>
+      </tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 8px">Extended nameInfo Block (nameType=69) — when isExtendedNameInfoExist='true' (CORP and INDY only)</h3>
+    <table>
+      <tr><th>nameElement</th><th>Source field</th></tr>
+      <tr><td>nameElement1</td><td>AccountNames.Language</td></tr>
+      <tr><td>nameElement2</td><td>AccountNames.PrefContactNumber</td></tr>
+      <tr><td>nameElement3</td><td>AccountNames.HomePhone</td></tr>
+      <tr><td>nameElement4</td><td>AccountNames.BizPhone</td></tr>
+      <tr><td>nameElement5</td><td>AccountNames.privatePhone</td></tr>
+      <tr><td>nameElement6</td><td>AccountNames.AuthFirstName</td></tr>
+      <tr><td>nameElement7</td><td>AccountNames.AuthLastName</td></tr>
+      <tr><td>nameElement8</td><td>AccountNames.AuthPersonalId</td></tr>
+      <tr><td>nameElement9</td><td>AccountNames.POAName</td></tr>
+      <tr><td>nameElement10</td><td>AccountNames.POAPersonalId</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 8px">Payment Channel nameInfo Block (nameType=67) — when exists(PayChannelFeeInfo) — all NameType branches</h3>
+    <table>
+      <tr><th>nameElement</th><th>Source field</th><th>Guard</th></tr>
+      <tr><td>nameElement1</td><td>PayChannelFeeInfo.CreditCardType</td><td>xsl:if</td></tr>
+      <tr><td>nameElement2</td><td>PayChannelFeeInfo.CreditCardNo</td><td>xsl:if</td></tr>
+      <tr><td>nameElement3</td><td>PayChannelFeeInfo.CreditCardName</td><td>xsl:if</td></tr>
+      <tr><td>nameElement4</td><td>PayChannelFeeInfo.CreditCardExpirationDate</td><td>xsl:if</td></tr>
+      <tr><td>nameElement5</td><td>PayChannelFeeInfo.BankCode</td><td>xsl:if</td></tr>
+      <tr><td>nameElement6</td><td>PayChannelFeeInfo.BankBranchNo</td><td>xsl:if</td></tr>
+      <tr><td>nameElement7</td><td>PayChannelFeeInfo.BankAccountNo</td><td>xsl:if</td></tr>
+      <tr><td>nameUpdateType</td><td>79 (hardcoded)</td><td>Always</td></tr>
+      <tr><td>linkType</td><td>84 (hardcoded)</td><td>Always</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 8px">CCBS Integer Code Reference</h3>
+    <table>
+      <tr><th>Code</th><th>Field</th><th>Meaning</th></tr>
+      <tr><td>66</td><td>nameType</td><td>Corporate (CORP) name block</td></tr>
+      <tr><td>67</td><td>nameType</td><td>Payment channel / credit card block</td></tr>
+      <tr><td>69</td><td>nameType</td><td>Extended info / contact info block</td></tr>
+      <tr><td>73</td><td>nameType</td><td>Individual (INDY) name block</td></tr>
+      <tr><td>65</td><td>linkType</td><td>Primary link (account-level)</td></tr>
+      <tr><td>70</td><td>linkType</td><td>Extended/secondary link</td></tr>
+      <tr><td>84</td><td>linkType</td><td>Payment channel link</td></tr>
+      <tr><td>79</td><td>nameUpdateType / addressUpdateType</td><td>Override/update mode</td></tr>
+      <tr><td>66</td><td>addressType</td><td>Primary billing address</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p style="margin-bottom:8px">Account indexed as <code>$orderRequest/OrderData/Customer/Account[$i+1]</code> (1-based XSLT). Variable <code>$i</code> is the 0-based BE loop counter.</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$accRefId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-purple">Credential-gated</span><span class="tree-cond">IsEnableUserPass='true' AND User present</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:UpdateNameAddressRequest</span><span class="tree-cond">ns=http://services.omx.truecorp.co.th/FM/UpdateNameAddressRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:entityNo</span><span class="tree-arrow">←</span><span class="tree-src">$acccountId (Account.AccountID)</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">[NameType dispatch — xsl:choose]</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">[CORP] ns:nameInfo</span><span class="tree-src-static">nameType=66</span><span class="tree-cond">OrgName(1), BranchCode(2), BranchName(3), StoreId(4), FaxNumber(5), Email(6), IdentificationType(7), Identification(8); nameUpdateType=79, linkType=65</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">[INDY] ns:nameInfo</span><span class="tree-src-static">nameType=73</span><span class="tree-cond">Title(1), FirstName(2), MiddleName(3), LastName(4), MaritalStatus(5), FaxNumber(6), Email(7), Gender(8), IdentificationType(9), Identification(10); nameUpdateType=79, linkType=65</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">[otherwise] ns:nameInfo</span><span class="tree-src-static">nameType=69</span><span class="tree-cond">only nameElement2=PrefContactNumber; nameUpdateType=79, linkType=70</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">[CORP/INDY] ns:nameInfo (extended)</span><span class="tree-src-static">nameType=69</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">if isExtendedNameInfoExist='true': Language(1), PrefContact(2), HomePhone(3), BizPhone(4), privatePhone(5), AuthFirst(6), AuthLast(7), AuthPersonalId(8), POAName(9), POAPersonalId(10); nameUpdateType=79, linkType=70</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">[all types] ns:nameInfo (payment)</span><span class="tree-src-static">nameType=67</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">if exists(PayChannelFeeInfo): CreditCardType(1), CreditCardNo(2), CreditCardName(3), ExpDate(4), BankCode(5), BranchNo(6), BankAccountNo(7); nameUpdateType=79, linkType=84</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:addressInfo</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">if exists(AccountAddress)</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-src-static">addressType=66, addressUpdateType=79, linkType=65</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">elements 1–15:</span><span class="tree-src">HouseNo, Moo, RoomNo, Floor, BuildingName, Soi, StreetName, Tumbon, Amphur, City, Zip, Country, TimeAtAddress, TypeOfAccomodation, subSoi</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:activityInfo</span><span class="badge badge-green">Always</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src">AccountActivityInfo.ActivityReason (tib:trim check) or "CREQ"</span><span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:userText</span><span class="tree-arrow">←</span><span class="tree-src">AccountActivityInfo.UserText</span><span class="badge badge-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:enclosedClientInfo/ns:logicalDate</span><span class="tree-arrow">←</span><span class="tree-src">$logicalDateVal</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">if tib:trim(logicalDateVal) non-empty</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ActivityDateInfo</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">if tib:trim(logicalDateVal) non-empty</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:activityDate</span><span class="tree-arrow">←</span><span class="tree-src">$logicalDateVal</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_CCBS_UPDATE_ACCOUNT_NAME_ADDRESS (rule)
+├── isActResub = (RequestCount > 0 && IsOrderResubmitted)
+├── logicalDateRes = Instance.getByExtIdByUri("LogicalDate", "/Concepts/OM/LogicalDate")
+│   └── logicalDateVal = logicalDateRes.LogicalDate  ← USED in XSLT (unlike CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── if isActResub: PurgePendingRequestsBeforeResubmit(orderCurrentActivity)  ✓
+├── [Account loop i]:
+│   ├── accRefId = OrderData.Customer.Account[i].RefId
+│   ├── [Resub guard]: Response[ReferenceId==accRefId && CompletionStatus==2]
+│   ├── [PreExecCheck]: GetXMLForAccount(orderRequest, accRefId)  ← Account-level context
+│   ├── [if chkRes=="true"]:
+│   │   ├── acccountId = Account[i].AccountID
+│   │   ├── isExtendedNameInfoExist = "true" if ANY of (Language, PrefContactNumber, HomePhone,
+│   │   │                            BizPhone, privatePhone, AuthFirstName, AuthLastName,
+│   │   │                            AuthPersonalId, POAName, POAPersonalId) is non-blank
+│   │   ├── Event.assertEvent(reqEvent)
+│   │   ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+│   │   ├── Logger (INFO level): OPERATION_NAME=$orderCurrentActivity/ActivityID
+│   │   └── isSkipped = false
+├── [if !isSkipped]:
+│   ├── IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)
+│   ├── orderCurrentActivity.Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException
+
+Response_CCBS_UPDATE_ACCOUNT_NAME_ADDRESS (rulefunction)
+├── extId = OMXUtils.generateTrackingID()  ← pre-generated, passed to XSLT as param
+├── activityRes = Instance.createInstance(CCBS_UpdateAccountNameAddress)
+│   ← extId from $extId param (pre-generated)
+│   ← ResponseCode, ResponseMessage, CompletionStatus, ReferenceId (conditional)
+├── currActivity.Response[] ← activityRes
+├── Logger: OPERATION_NAME="CCBS_UPDATE_ACCOUNT_NAME_ADDRESS"
+├── [NOTE] Standard RequestCount==successResponseCount block COMMENTED OUT
+└── return IntraActivitySequencing.ActionResponseEvent(currActivity) ? "true" : "false"</pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Per-Account fan-out: one UpdateNameAddressRequest per Account[]. RefID = Account.RefId.</td></tr>
+      <tr><td>R2</td><td>PurgePendingRequestsBeforeResubmit called on resubmit.</td></tr>
+      <tr><td>R3</td><td>isExtendedNameInfoExist computed in BE body: "true" if ANY of Language/PrefContactNumber/HomePhone/BizPhone/privatePhone/AuthFirstName/AuthLastName/AuthPersonalId/POAName/POAPersonalId is non-blank.</td></tr>
+      <tr><td>R4</td><td>NameType dispatch: CORP → nameType=66, INDY → nameType=73, default → nameType=69 (contact-only). Each branch can add extended (nameType=69) and payment (nameType=67) blocks.</td></tr>
+      <tr><td>R5</td><td>Address block emitted if exists(AccountAddress): 15 address elements, addressType=66, linkType=65.</td></tr>
+      <tr><td>R6</td><td>activityInfo always emitted: activityReason = Account.AccountActivityInfo.ActivityReason or "CREQ".</td></tr>
+      <tr><td>R7</td><td>logicalDateVal read from BE LogicalDate concept and passed to XSLT. Used in enclosedClientInfo and ActivityDateInfo when non-blank.</td></tr>
+      <tr><td>R8</td><td>UserName/PassWord gated by global variable IsEnableUserPass='true' (not standard order data guard).</td></tr>
+      <tr><td>R9</td><td>IntraActivitySequencing dispatch: assertEvent → ActionRequestEvent → SendFirstRequestEvent; fan-in via ActionResponseEvent.</td></tr>
+      <tr><td>R10</td><td>Response uses dedicated CCBS_UpdateAccountNameAddress concept; extId from OMXUtils.generateTrackingID().</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>UserName/Password gated by IsEnableUserPass global variable — inconsistent with other FMs</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Standardize credential gate; verify flag is set in all deployment environments</td></tr>
+      <tr><td>Schema domain is truecorp.co.th/FM/ not tibco.com/schemas — custom endpoint</td><td><span class="badge badge-blue">[INFO]</span></td><td>Document separate schema ownership; confirm endpoint stability</td></tr>
+      <tr><td>CCBS integer codes (nameType, linkType, addressType) are undocumented magic numbers</td><td><span class="badge badge-blue">[LOW]</span></td><td>Catalog in migration runbook: 66=CORP, 73=INDY, 69=EXT, 67=PayCh, 65=AccLink, 70=ExtLink, 84=PayLink, 79=Override</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule (Response_CCBS_UPDATE_ACCOUNT_NAME_ADDRESS)</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§19.3 CCBS_UpdateAccountNameAddress Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span><span class="tree-cond">Concepts.FM.Response.CCBS_UpdateAccountNameAddress (dedicated)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">$extId (OMXUtils.generateTrackingID() — pre-generated)</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.4 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Standard fan-in</td><td><em>COMMENTED OUT</em></td></tr>
+      <tr><td>Active fan-in</td><td><code>RuleFunctions.Helpers.IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Write-back</td><td>None</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

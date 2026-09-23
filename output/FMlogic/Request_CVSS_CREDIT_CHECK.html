@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CVSS_CREDIT_CHECK</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+.badge-high{background:#FFE0E0;color:var(--true-dark)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CVSS_CREDIT_CHECK</h1>
+  <div class="subtitle">CVSS Credit Evaluation — per-account EvaluateCreditRequest with customer-type dispatching</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: CVSS</span>
+    <span class="meta-chip">Author: awalia-t420</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: IntraActivitySequencing</span>
+    <span class="meta-chip">Iteration: Account[]</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>CVSS_CREDIT_CHECK</strong> evaluates credit class for each Account by submitting a full customer profile to CVSS (Credit Validation &amp; Scoring System). The response updates <code>Account.AccountManagementInfo.CreditClass</code> with the CVSS-evaluated value.
+    </div>
+    <div class="callout info">
+      <strong>Account-level iteration:</strong> Loops <code>Customer.Account[]</code>, sending one <code>EvaluateCreditRequest</code> per Account. Skips accounts where a CompletionStatus==2 response already exists (resubmit protection).
+    </div>
+    <div class="callout success">
+      <strong>Response write-backs (3):</strong> (1) Saves existing CreditClass as <code>CURRENT_CREDITCLASS</code> ExtInfo (backup). (2) Overwrites <code>Account.AccountManagementInfo.CreditClass</code> with CVSS value. (3) Appends <code>CVSS_CREDIT_CHECK_COMPLETE</code> ExtInfo marker.
+    </div>
+    <div class="callout warn">
+      <strong>Two XSLT variants:</strong> Old XSLT (commented out, OMX-2748) did not include CES field. Active XSLT adds <code>&lt;CES&gt;</code>. The payload structure is otherwise identical. OrderType=11002 extracts <code>approveCode</code> in the BE rule but this variable is not passed to the XSLT.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CVSS_CREDIT_CHECK</code></td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>CVSS</td></tr>
+      <tr><td>Event type (request)</td><td><code>Events.OMConsumers.OMXFM.Request.CVSS_CREDIT_CHECK</code></td></tr>
+      <tr><td>Event type (response)</td><td><code>Events.OMConsumers.OMXFM.Response.CVSS_CREDIT_CHECK</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.assertEvent</code> + <code>IntraActivitySequencing.ActionRequestEvent</code> per Account</td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Iteration target</td><td><code>Customer.Account[]</code> (one event per Account)</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CVSS_CreditCheckRes</code></td></tr>
+      <tr><td>Payload operation</td><td><code>ns:EvaluateCreditRequest / EvaluateCreditClassRequest</code></td></tr>
+      <tr><td>Payload namespace</td><td><code>http://services.omx.truecorp.co.th/FMServices/evaluateCreditRequest</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic Patterns -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns &amp; Dispatches</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Dispatch Logic</th></tr>
+      <tr><td><code>ns:source</code></td><td>3-way: Channel="EOC" → "EOC"; Channel="MNP" AND DonorOperator in {02,06,10} → "MNP_INT"; Channel="MNP" otherwise → "MNP_EXT"; else → "CCBS"</td></tr>
+      <tr><td><code>ns:customerLevel</code></td><td>CustomerTypeInfo.Type ≠ 73 (CORP/INDY) → Grading; else ""</td></tr>
+      <tr><td><code>ns:lastname</code></td><td>Type ≠ 73 → OrgName; Type = 73 (INDY) → LastName; else ""</td></tr>
+      <tr><td><code>ns:gender</code></td><td>Type = 73 (INDY) → CustomerName.Gender; else ""</td></tr>
+      <tr><td><code>ns:maritalstatus</code></td><td>Type = 73 → CustomerName.MaritalStatus; else ""</td></tr>
+      <tr><td><code>ns:typeofemp</code></td><td>Type = 73 → CustomerGeneralInfo.Occupation; else ""</td></tr>
+      <tr><td><code>ns:idexpdate</code></td><td>Type = 73 → format(IdentificationExpDate, "yyyyMMdd", +07:00); else ""</td></tr>
+      <tr><td><code>ns:dob</code></td><td>BirthDate non-empty → format(BirthDate, "yyyyMMdd", +07:00); else xsi:nil=true</td></tr>
+      <tr><td><code>ns:approveForSub</code></td><td>if maxAllowApproveCode exists → maxAllowApproveCode; else POU.ExtendedInfo[Name='APPROVE_CODE'].Value</td></tr>
+      <tr><td><code>ns:INDYIndicator</code></td><td>CustomerTypeInfo.Type = 73 → "true"; else "false"</td></tr>
+      <tr><td><code>ns:numberOfIDD/IR/Sub</code></td><td>if POU.Agreement[RefId=agreeRefId] exists → from POU; else from ChildOU by agreeRefId</td></tr>
+      <tr><td><code>ns:proofdoc</code></td><td>if POU[RefId=AgreementRefId] exists → POU.Subscriber[AccountRefId=refId].ProofDoc; else ChildOU[...].Subscriber[...].ProofDoc</td></tr>
+      <tr><td>Hardcoded fields</td><td>education="ED5", billcountry/regcountry="THA", roleid=1, sequencenum=0, userid=60001, nosofchildren=0, nosofemp=0, approveForIDD="", ccheld="", officephone="", poalname="", typeofcc="", empstatus="", debitstatus=""</td></tr>
+      <tr><td>OrderType=11002</td><td><code>approveCode</code> extracted from POU ExtInfo APPROVE_CODE in BE rule but NOT forwarded to XSLT as a parameter — appears to be dead code after OMX-2748 refactor</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority / JMSCorrelationID / OrderID</span><span class="tree-arrow">←</span><span class="tree-src">standard order fields</span><span class="badge badge-blue">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/RefId</span><span class="badge badge-blue">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.OrderType</span><span class="badge badge-blue">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.CES</span><span class="badge badge-blue">Conditional: exists</span><span class="tree-cond">Added in OMX-2748 active XSLT</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:EvaluateCreditRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:EvaluateCreditClassRequest</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:Prerequisiteinfo</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns:accountId</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/AccountID</span><span class="tree-cond">if AccountID non-empty</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:custNo</span><span class="tree-arrow">←</span><span class="tree-src">Customer.CustomerId</span><span class="tree-cond">if CustomerId non-empty</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:payChannelId</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/PayChannelId</span><span class="tree-cond">if non-empty</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:billingArrangementId</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/BillingArrangementId</span><span class="tree-cond">if non-empty</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:INDYIndicator</span><span class="tree-arrow">←</span><span class="tree-src-static">CustomerTypeInfo.Type=73 → "true" else "false"</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:PaginationInfo</span><span class="tree-arrow">←</span><span class="tree-src-static">pageSize=1000; pageNumber=0; numberOfRows=1000</span><span class="badge badge-green">Always (hardcoded)</span></div></li>
+                            </ul>
+                          </li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:info</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns:accommodation</span><span class="tree-arrow">←</span><span class="tree-src">CustomerAddress.TypeOfAccomodation</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:acctype</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/AccountManagementInfo.AccountSubType</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:approveForIDD</span><span class="tree-arrow">←</span><span class="tree-src-static">""</span><span class="badge badge-orange">Hardcoded empty</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:approveForIR</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.irApproveCode</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:approveForSimBundle</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.creditLimitApproveCode</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:approveForSub</span><span class="tree-arrow">←</span><span class="tree-src">maxAllowApproveCode → POU.ExtInfo[APPROVE_CODE].Value</span><span class="badge badge-orange">Priority chain</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:ban</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/AccountID</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:billadressnum/billcountry/billdistrict/...</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/BillingArrangementAddress.*</span><span class="tree-cond">billcountry hardcoded "THA"</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:category</span><span class="tree-arrow">←</span><span class="tree-src">CustomerTypeInfo.Type</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:companyCode</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/AccountManagementInfo.CompanyCode</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:compregcode</span><span class="tree-arrow">←</span><span class="tree-src">CustomerGeneralInfo.Identification</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:creditClass</span><span class="tree-arrow">←</span><span class="tree-src-static">xsi:nil=true</span><span class="badge badge-orange">Always nil</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:customerLevel</span><span class="tree-arrow">←</span><span class="tree-src">Type≠73 → Grading; else ""</span><span class="badge badge-orange">Customer-type dispatch</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:dob</span><span class="tree-arrow">←</span><span class="tree-src">format(BirthDate, "yyyyMMdd", +07:00)</span><span class="tree-cond">xsi:nil if BirthDate empty</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:education</span><span class="tree-arrow">←</span><span class="tree-src-static">"ED5"</span><span class="badge badge-orange">Hardcoded</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:firstname</span><span class="tree-arrow">←</span><span class="tree-src">CustomerName.FirstName</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:gender</span><span class="tree-arrow">←</span><span class="tree-src">Type=73 → Gender; else ""</span><span class="badge badge-orange">Dispatch</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:idexpdate</span><span class="tree-arrow">←</span><span class="tree-src">Type=73 → format(IdentificationExpDate, +07:00); else ""</span><span class="badge badge-orange">Dispatch</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:idnumber</span><span class="tree-arrow">←</span><span class="tree-src">CustomerGeneralInfo.Identification</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:idtype</span><span class="tree-arrow">←</span><span class="tree-src">CustomerGeneralInfo.IdentificationType</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:lastname</span><span class="tree-arrow">←</span><span class="tree-src">Type≠73 → OrgName; Type=73 → LastName; else ""</span><span class="badge badge-orange">3-way dispatch</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:maritalstatus</span><span class="tree-arrow">←</span><span class="tree-src">Type=73 → MaritalStatus; else ""</span><span class="badge badge-orange">Dispatch</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:numberOfIDD / ns:numberOfIR</span><span class="tree-arrow">←</span><span class="tree-src">POU[agreeRefId].NumberOfIDD/IR → ChildOU fallback</span><span class="badge badge-orange">Agreement lookup</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:numberOfSub</span><span class="tree-arrow">←</span><span class="tree-src">count(POU[agreeRefId]/Subscriber) → ChildOU fallback</span><span class="badge badge-orange">Agreement lookup</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:paymethod</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/PayChannelPaymentMethodInfo.PaymentMethod</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:poafname / ns:poaid</span><span class="tree-arrow">←</span><span class="tree-src">CustomerName.POAName / POAPersonalId</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:proofdoc</span><span class="tree-arrow">←</span><span class="tree-src">POU[AgreementRefId]/Subscriber[AccountRefId=refId].ProofDoc → ChildOU fallback</span><span class="badge badge-orange">Account↔POU lookup</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:regaddressnum/regcountry/regdistrict/...</span><span class="tree-arrow">←</span><span class="tree-src">CustomerAddress.*</span><span class="tree-cond">regcountry hardcoded "THA", regsubdistrict hardcoded ""</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:roleid</span><span class="tree-arrow">←</span><span class="tree-src-static">1</span><span class="badge badge-orange">Hardcoded</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:salrange</span><span class="tree-arrow">←</span><span class="tree-src">CustomerGeneralInfo.Salary</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:sequencenum</span><span class="tree-arrow">←</span><span class="tree-src-static">0</span><span class="badge badge-orange">Hardcoded</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:source</span><span class="tree-arrow">←</span><span class="tree-src">EOC → "EOC"; MNP(02/06/10) → "MNP_INT"; MNP else → "MNP_EXT"; else → "CCBS"</span><span class="badge badge-orange">3-way dispatch</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:timeatcurraddr</span><span class="tree-arrow">←</span><span class="tree-src">CustomerAddress.TimeAtAddress</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:timeinbusiness / ns:timeinemp</span><span class="tree-arrow">←</span><span class="tree-src">CustomerGeneralInfo.TimeInBusiness</span><span class="badge badge-green">Always (same field)</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:title</span><span class="tree-arrow">←</span><span class="tree-src">CustomerName.Title</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:typeofemp</span><span class="tree-arrow">←</span><span class="tree-src">Type=73 → Occupation; else ""</span><span class="badge badge-orange">Dispatch</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:userid</span><span class="tree-arrow">←</span><span class="tree-src-static">60001</span><span class="badge badge-orange">Hardcoded</span></div></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div style="margin-top:12px;font-size:0.8rem;color:#666">
+      <span style="color:#a6e3a1">■</span> XPath source &nbsp;
+      <span style="color:#fab387">■</span> Static literal or dispatch &nbsp;
+      <span style="color:#cba6f7;font-style:italic">■</span> Conditional note
+    </div>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_CVSS_CREDIT_CHECK
+├── [if resubmit] IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── Instance.getByExtIdByUri(NextActivityName, Activity)  ← nextAct for PreExecCheck
+├── [OrderType=11002] approveCode = XPath from POU.ExtInfo[APPROVE_CODE].Value  ← NOT used in XSLT
+├── for each Account[i]:
+│   ├── [skip if Response[ReferenceId==refId AND CompletionStatus==2] exists]
+│   ├── if PreExecCheck.length > 0:
+│   │   └── GetXMLForAccount(orderRequest, refId)
+│   │       XPath.execute(chkXPath, sXML, ns0=OrderRequest)
+│   └── if chkRes == "true":
+│       ├── Event.createEvent(CVSS_CREDIT_CHECK, XSLT with i/agreeRefId params)
+│       ├── Event.assertEvent(reqEvent)
+│       ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+│       ├── isSkipped = false
+│       └── sendEventImmediate(Logger REQ — "Request Sent for CVSS_CREDIT_CHECK")
+├── IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── GetActivityStatusString("1", false)
+└── SendDataToDB(orderRequest)
+
+Response_CVSS_CREDIT_CHECK
+├── OMXUtils.generateTrackingID() → extId
+├── Instance.createInstance(CVSS_CreditCheckRes: ResponseCode, ResponseMsg, CompletionStatus, ReferenceId)
+│   → currActivity.Response[n] = activityRes
+├── for each Account[i]: if Account[i].RefId == eventResponse.RefID:
+│   ├── if Account[i].AccountManagementInfo.CreditClass.length > 0:
+│   │   → Account[i].ExtendedInfo[] += AccountExtendedInfo(Name="CURRENT_CREDITCLASS",
+│   │       Value=Account[i].AccountManagementInfo.CreditClass)   ← backup before overwrite
+│   ├── Account[i].AccountManagementInfo.CreditClass ←
+│   │       eventResponse/payload/EvaluateCreditResponse/EvaluateCreditClassResponse/
+│   │       evaluateCreditClassReturn/creditClass
+│   └── Account[i].ExtendedInfo[] += AccountExtendedInfo(Name="CVSS_CREDIT_CHECK_COMPLETE")
+│       [no Value field — presence flag only]
+├── sendEventImmediate(Logger RES — "Response received for CVSS_CREDIT_CHECK")
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → "true"/"false"
+    [OLD fan-in commented out: count("000" responses) == RequestCount]</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>OrderType=11002 extracts <code>approveCode</code> in BE rule but does not pass it to the XSLT — dead code after OMX-2748 refactor. Active XSLT uses maxAllowApproveCode / POU.ExtInfo[APPROVE_CODE] directly</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Remove BE-level approveCode extraction in migration; confirm active XSLT path is correct for 11002</td>
+      </tr>
+      <tr>
+        <td><code>creditClass</code> in Prerequisiteinfo is always <code>xsi:nil=true</code> — CVSS receives no prior credit class hint</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document as intentional; CVSS independently evaluates</td>
+      </tr>
+      <tr>
+        <td>Hardcoded <code>userid=60001</code> and <code>education="ED5"</code> — undocumented constants</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Move to global variables or configuration in migration</td>
+      </tr>
+      <tr>
+        <td><code>timeinbusiness</code> and <code>timeinemp</code> both map to <code>CustomerGeneralInfo.TimeInBusiness</code> — likely intentional but field duplication</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Verify with CVSS API specification; may need distinct sources</td>
+      </tr>
+      <tr>
+        <td>CURRENT_CREDITCLASS backup written before overwrite only if CreditClass.length > 0 — if CreditClass empty, no backup is created</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Acceptable; backup is only needed when existing value is present</td>
+      </tr>
+      <tr>
+        <td>Large payload (40+ fields) with many hardcoded empty strings — CVSS may reject or ignore these</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Review CVSS schema; consider omitting xsi:nil / empty string fields in migration</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <p style="margin-bottom:12px;font-size:0.87rem;">Matches by <code>Account[i].RefId == eventResponse.RefID</code>. Three write-backs: backs up existing CreditClass, overwrites CreditClass with CVSS value, appends completion marker.</p>
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>CVSS_CreditCheckRes (ResponseCode, ResponseMsg, CompletionStatus, ReferenceId)</td><td>Always</td></tr>
+      <tr><td><code>Account[i].ExtendedInfo[]</code> Name="CURRENT_CREDITCLASS"</td><td><code>Account[i].AccountManagementInfo.CreditClass</code> (backup)</td><td>Account.RefId == RefID AND CreditClass.length &gt; 0</td></tr>
+      <tr><td><code>Account[i].AccountManagementInfo.CreditClass</code></td><td><code>EvaluateCreditClassResponse/evaluateCreditClassReturn/creditClass</code></td><td>Account.RefId == RefID</td></tr>
+      <tr><td><code>Account[i].ExtendedInfo[]</code> Name="CVSS_CREDIT_CHECK_COMPLETE"</td><td>Name only, no Value (presence flag)</td><td>Account.RefId == RefID</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:12px">
+      <strong>Fan-in:</strong> <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> — returns "true" when all outstanding Account requests answered. The old fan-in (count "000" responses == RequestCount) is commented out.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request_AA_CONFIRM_ACTION</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem}
+.meta-row{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.meta-pill{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem}
+.content{max-width:1200px;margin:0 auto;padding:24px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left}
+td{padding:9px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre-wrap}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;font-size:0.8rem;color:#888;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_AA_CONFIRM_ACTION</h1>
+  <div class="subtitle">Confirms the AA action for each subscriber by sending MSISDN and SrvTrxNo to the AA system. Also copies RequestCount to the AA_CHECK_CONFIRMATION activity.</div>
+  <div class="meta-row">
+    <span class="meta-pill">Activity: AA_CONFIRM_ACTION</span>
+    <span class="meta-pill">Backend: AA</span>
+    <span class="meta-pill">Pattern: Fire-and-Forget (RequestCount++)</span>
+    <span class="meta-pill">Scope: Subscriber (ParentOU + ChildOU)</span>
+    <span class="meta-pill">Generated: 2026-09-23</span>
+  </div>
+</div>
+<div class="content">
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Sends an <code>AAConfirmAction</code> message to the AA system for each subscriber, providing the subscriber's MSISDN and transaction number (<code>SrvTrxNo</code>). After the loop, it copies its own <code>RequestCount</code> to the <code>AA_CHECK_CONFIRMATION</code> activity so that the subsequent confirmation check knows how many responses to expect.</p>
+    <p style="margin-top:10px"><span class="badge badge-orange">[BUG]</span> The audit logger's <code>OPERATION_NAME</code> is hardcoded as <code>"CCBS_CANCEL_SUBS"</code> — a copy-paste error from a different rule. Functionally does not affect execution but misleads audit trails.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_AA_CONFIRM_ACTION</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Activity ID</td><td>AA_CONFIRM_ACTION</td></tr>
+      <tr><td>Backend</td><td>AA — AAConfirmAction endpoint</td></tr>
+      <tr><td>Pattern</td><td>Fire-and-Forget (<code>sendEventImmediate</code> + <code>RequestCount++</code>)</td></tr>
+      <tr><td>Iteration Scope</td><td>ParentOU.Subscriber + ChildOU.Subscriber</td></tr>
+      <tr><td>Response Concept</td><td>Concepts.FM.Response.AA_ConfirmActionRes</td></tr>
+      <tr><td>Response Event</td><td>Events.OMConsumers.OMXFM.Response.AA_CONFIRM_ACTION</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <pre>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName
+orderCurrentActivity.ActivityID == "AA_CONFIRM_ACTION"
+orderRequest.ProcessFlow.NextActivityID == "AA_CONFIRM_ACTION"
+orderCurrentActivity.Status == "WAITING"</pre>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol style="padding-left:20px;line-height:2">
+      <li>Iterate <code>ParentOU[i].Subscriber[j]</code></li>
+      <li>Check if already successfully responded (skip if yes)</li>
+      <li>Evaluate PreExecCheck (if set) via <code>GetXMLForSubscriber</code></li>
+      <li>If passes: build and send <code>AA_CONFIRM_ACTION</code> event (<code>sendEventImmediate</code>)</li>
+      <li>Fire audit logger (LOG_LEVEL=ERROR — note: unusual, likely copy-paste error)</li>
+      <li>If not resubmit: <code>RequestCount++</code></li>
+      <li>Repeat for <code>ChildOU[m].Subscriber[n]</code></li>
+      <li>After loop: find <code>AA_CHECK_CONFIRMATION</code> activity, set its <code>RequestCount = currentActivity.RequestCount</code></li>
+      <li>If not skipped: set status IN_PROGRESS; else: <code>SkipActivity("4")</code></li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§9 — Payload Build (AA_CONFIRM_ACTION)</div>
+  <div class="card-body">
+    <h4 style="margin-bottom:8px">ParentOU Variant</h4>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns2:AAConfirmAction</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:msisdn</span><span class="tree-arrow">←</span><span class="tree-src">$subscriberInstance/MSISDN</span><span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:srvTrxNo</span><span class="tree-arrow">←</span><span class="tree-src">$subscriberInstance/SrvTrxNoInfo[1]/SrvTrxNo</span><span class="tree-cond">[Conditional: SrvTrxNo != '']</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:10px;font-size:0.85rem">ChildOU variant is identical in structure (namespace <code>ns3:AAConfirmAction</code>; condition uses <code>if test="$subscriberInstance/SrvTrxNoInfo[1]/SrvTrxNo"</code> without <code>!=''</code>).</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_AA_CONFIRM_ACTION
+├── GetXMLForSubscriber(orderRequest, refId)
+├── GetXMLForSubscriberInChildOU(orderRequest, refId, POURefId)
+├── XPath.execute("/(preExecCheck)", sXML, ...)
+├── Event.Ext.sendEventImmediate(reqEvent)          ← fire-and-forget
+├── Event.Ext.sendEventImmediate(Logger)
+├── [Post-loop] Find AA_CHECK_CONFIRMATION activity, set RequestCount
+├── GetActivityStatusString("1", false)
+├── SendDataToDB(orderRequest)
+├── SkipActivity(req, activity, "4")
+└── HandleActivityException(req, activity, ae, "")</pre>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Requirement / Risk</th><th>Severity</th></tr>
+      <tr><td>R1</td><td>Must copy <code>RequestCount</code> to <code>AA_CHECK_CONFIRMATION</code> activity after the loop</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+      <tr><td>R2</td><td>Both ParentOU and ChildOU subscribers are sent to AA</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R3</td><td>SrvTrxNo conditional: ParentOU uses <code>!= ''</code>; ChildOU uses <code>exists</code> — subtly different</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>[BUG]</td><td>Audit logger OPERATION_NAME is hardcoded <code>"CCBS_CANCEL_SUBS"</code> (copy-paste error) — fix in migration</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R4</td><td>Response always returns "true" — no fan-in check in response rulefunction</td><td><span class="badge badge-blue">[LOW]</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule</div>
+  <div class="card-body">
+    <p>Creates <code>AA_ConfirmActionRes</code> concept from <code>eventResponse</code> fields. Response audit OPERATION_NAME is <code>"CCBS_CANCEL_SUBS"</code> (same copy-paste error). Always returns <code>"true"</code>.</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

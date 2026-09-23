@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_BL_LIST_UNINVOICED_CHARGES — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}.code-block .xa{color:#f9e2af}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-jms{background:#FFE0B2;color:#E65100}.badge-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.flow-text{flex:1}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.bug{border-color:#e53935;background:#FFEBEE}
+.callout.purple{border-color:var(--skip);background:#F3E5F5}
+.callout.dead{border-color:#78909c;background:#ECEFF1;color:#455a64}
+details>summary{cursor:pointer;padding:8px 4px;font-weight:600;color:var(--true-dark)}
+details[open]>summary{color:var(--true-red)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_BL_LIST_UNINVOICED_CHARGES</h1>
+    <div class="subtitle">Per-subscriber sequential charge lookup (BL3G) — computes uninvoiced charge total; writes UNINVOICED_CHARGE to SubscriberExtendedInfo via IntraActivitySequencing</div>
+    <div class="meta-row">
+      <span class="meta-badge">Target: BL3G (Amdocs Billing)</span>
+      <span class="meta-badge">Pattern: Per-subscriber sequential (IntraActivitySequencing)</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Author: snarayan-t430</span>
+      <span class="meta-badge">Generated: 2026-08-04</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This FM lists uninvoiced charges from the BL3G Amdocs billing system for each subscriber (POU and COU). It uses the <strong>IntraActivitySequencing pattern</strong>: requests are asserted to working memory and queued via <code>ActionRequestEvent</code>, then sent one-at-a-time via <code>SendFirstRequestEvent</code>. Responses trigger <code>ActionResponseEvent</code> to dispatch the next. This guarantees <strong>sequential ordering</strong> of per-subscriber calls — unlike fan-out patterns that send in parallel.</p>
+    <p style="margin-top:10px">For each subscriber, the FM computes a date window (today minus 1 month to today), filters charge items by absence of <code>Credit_Extracted_Ind</code> dynamic attribute, sums the <code>amount</code> field, and writes the total as a <code>SubscriberExtendedInfo</code> named <code>UNINVOICED_CHARGE</code>.</p>
+    <div class="callout purple">
+      <strong>IntraActivitySequencing pattern:</strong> Requests queued via <code>Event.assertEvent + ActionRequestEvent</code>; dispatched one-at-a-time via <code>SendFirstRequestEvent</code>. Response fan-in via <code>ActionResponseEvent</code> — NOT the standard "000" RequestCount comparison. There is no explicit <code>RequestCount++</code> in this FM; sequencing is managed internally by the helper.
+    </div>
+    <div class="callout bug">
+      <strong>[BUG — HIGH]:</strong> Credit_Extracted_Ind exists-check uses namespace <code>xsd2</code> (<code>amdocs.csm3g.datatypes.SubscriberInfo</code>) for the <code>ListUninvoicedChargesResponse</code> path, but the response XML uses <code>xsd3</code> (<code>ListUninvoicedChargesResponse.xsd</code>). The XPath will never match → <code>creditExtractInd</code> always returns <code>false</code> → ALL charges are summed including those with <code>Credit_Extracted_Ind</code> set, inflating the total.
+    </div>
+    <div class="callout warning">
+      <strong>[TYPO — LOW]:</strong> Concept field name is <code>ChargeAmout</code> (missing 'n') in both the concept definition and the response XSLT. This is consistent internally but will cause confusion in downstream consumers.
+    </div>
+    <div class="callout dead">
+      <strong>[DEAD CODE]:</strong> CustomerExtendedInfo block (lines 43–45 in response) is entirely commented out. The original intent was to write a <code>CHARGE_AMOUNT</code> ExtendedInfo to the Customer concept via <code>Cluster.DataGrid.CacheLoadConceptByExtIdByUri</code>, but this was abandoned.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_BL_LIST_UNINVOICED_CHARGES.rule</code></td><td>121 lines</td></tr>
+      <tr><td>Response file</td><td><code>Response_BL_LIST_UNINVOICED_CHARGES.rulefunction</code></td><td>59 lines</td></tr>
+      <tr><td>Author</td><td>snarayan-t430</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td></td></tr>
+      <tr><td>Request event</td><td><code>Events.OMConsumers.OMXFM.Request.BL_LIST_UNINVOICED_CHARGES</code></td><td>One per subscriber</td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.BL_LIST_UNINVOICED_CHARGES</code></td><td></td></tr>
+      <tr><td>Request schema NS</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/ListUninvoicedChargesRequest.xsd</code> (ns3)</td><td></td></tr>
+      <tr><td>Response schema NS</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/ListUninvoicedChargesResponse.xsd</code> (xsd3)</td><td></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.BL_ListUninvoicedChargesRes</code></td><td>Standard fields + ChargeAmout (typo)</td></tr>
+      <tr><td>Correlation key (RefID)</td><td>Subscriber RefId — <strong>always</strong> set (not conditional)</td><td>Used for Subscriber lookup in response</td></tr>
+      <tr><td>Fan-out level</td><td>Per-subscriber — POU Subscribers + COU Subscribers</td><td>Sequential via IntraActivitySequencing</td></tr>
+      <tr><td>Send pattern</td><td><code>Event.assertEvent + ActionRequestEvent → SendFirstRequestEvent</code></td><td>Sequential; one at a time</td></tr>
+      <tr><td>Fan-in pattern</td><td><code>IntraActivitySequencing.ActionResponseEvent</code></td><td>NOT standard "000" count</td></tr>
+      <tr><td>Resubmit handler</td><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit</code></td><td>Called early in THEN block</td></tr>
+      <tr><td>Credential gate</td><td>Yes — OrderData.User/Password → UserName/PassWord (conditional)</td><td>Same as MCS pattern</td></tr>
+      <tr><td>CES header</td><td>OrderData.CES → CES (conditional)</td><td>Extra header not in most FMs</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Source of subscriber lists; CustomerId; credentials</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity state; Response[] appended; sequencing managed by IntraActivitySequencing</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN Conditions -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "BL_LIST_UNINVOICED_CHARGES"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "BL_LIST_UNINVOICED_CHARGES"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>Resubmit flag + purge</strong> — <code>isActResub</code>; if true: <code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit</code></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-text"><strong>isSkipped = true</strong></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-text"><strong>POU Subscribers</strong> — for each POU × each Subscriber:
+      <ul style="margin:8px 0 0 16px;line-height:2">
+        <li>reqSuccess check: <code>Response[].ReferenceId == subId AND CompletionStatus==2</code></li>
+        <li>If !reqSuccess: evaluate PreExecCheck using <code>GetXMLForSubscriber(orderRequest, refId)</code></li>
+        <li>If passes: compute fromDate/toDate; assert+queue event via <code>ActionRequestEvent</code>; isSkipped=false</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>COU Subscribers</strong> — for each POU × each COU × each Subscriber:
+      <ul style="margin:8px 0 0 16px;line-height:2">
+        <li>Same reqSuccess check and PreExecCheck evaluation</li>
+        <li>PreExecCheck helper: <code>GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</code></li>
+        <li>If passes: compute fromDate/toDate; assert+queue event; isSkipped=false</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>Dispatch:</strong> if !isSkipped → <code>IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)</code> → sends first queued event; status set to "1" (RUNNING) + <code>SendDataToDB</code><br/>else → <code>SkipActivity("4")</code></div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-text"><strong>Exception:</strong> try/catch → <code>HandleActivityException</code></div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> Rule Action (THEN) — Key Details</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§6.1 — reqSuccess Dedup Check</h3>
+    <div class="code-block"><span class="kw">boolean</span> reqSuccess = <span class="kw">false</span>;
+<span class="kw">for</span>(<span class="kw">int</span> iResp=<span class="nu">0</span>; iResp &lt; orderCurrentActivity.Response@length; iResp++)
+    <span class="kw">if</span>(<span class="fn">String.equals</span>(orderCurrentActivity.Response[iResp].ReferenceId, subId)
+        &amp;&amp; orderCurrentActivity.Response[iResp].CompletionStatus==<span class="nu">2</span>)
+        reqSuccess = <span class="kw">true</span>;
+<span class="kw">if</span>(!reqSuccess) { <span class="cm">/* proceed */</span> }</div>
+    <p style="margin-top:8px;font-size:0.88rem">Note: dedup key is <code>subId</code> (SubscriberId), NOT <code>refId</code> (RefId). The <code>RefID</code> header uses <code>refId</code> for subscriber lookup, but the dedup check uses <code>SubscriberId</code>.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§6.2 — DateTime Window Calculation</h3>
+    <div class="code-block"><span class="kw">String</span> currDate = <span class="fn">DateTime.format</span>(<span class="fn">DateTime.now</span>(), <span class="str">"yyyy-MM-dd HH:mm:ss"</span>);
+<span class="ty">DateTime</span> toDate = <span class="fn">DateTime.parseString</span>(currDate, <span class="str">"yyyy-MM-dd"</span>);  <span class="cm">// today truncated to day</span>
+<span class="ty">DateTime</span> fromDate = <span class="fn">DateTime.addMonth</span>(toDate, <span class="nu">-1</span>);              <span class="cm">// 1 month back</span></div>
+    <p style="margin-top:8px;font-size:0.88rem">Computed independently inside each subscriber's conditional block. The format/parseString trick strips the time component to get 00:00:00 for today's date.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§6.3 — IntraActivitySequencing Dispatch Pattern</h3>
+    <div class="callout purple">
+      This is the <strong>IntraActivitySequencing</strong> pattern — fundamentally different from all other FMs documented so far. Requests are NOT sent immediately. They are queued and dispatched one by one.
+    </div>
+    <div class="code-block"><span class="cm">// Queue the request (one per subscriber):</span>
+<span class="ty">Events..BL_LIST_UNINVOICED_CHARGES</span> reqEvent = <span class="fn">Event.createEvent</span>(<span class="str">"xslt://..."</span>);
+<span class="fn">Event.assertEvent</span>(reqEvent);                                     <span class="cm">// assert to working memory</span>
+<span class="fn">RuleFunctions.Helpers.IntraActivitySequencing.ActionRequestEvent</span>(reqEvent, orderCurrentActivity);  <span class="cm">// queue</span>
+<span class="kw">long</span> pid = <span class="fn">System.nanoTime</span>();
+<span class="fn">Event.Ext.sendEventImmediate</span>(...audit...);
+
+<span class="cm">// After all subscribers queued, dispatch first:</span>
+<span class="fn">RuleFunctions.Helpers.IntraActivitySequencing.SendFirstRequestEvent</span>(orderCurrentActivity);</div>
+    <p style="margin-top:8px;font-size:0.88rem">Unlike fan-out (which sends all events simultaneously), this guarantees sequential processing — the next subscriber's request is only sent after the previous one completes. This avoids concurrent load on BL3G.</p>
+    <div class="callout warning">
+      The commented-out <code>//Event.Ext.sendEventImmediate(reqEvent);</code> at lines 57 and 97 suggests this FM was originally written as a direct send and later converted to IntraActivitySequencing. The <code>Event.assertEvent</code> call is required for the sequencing mechanism to work.
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§6.4 — PreExecCheck Helpers</h3>
+    <table>
+      <tr><th>Subscriber Type</th><th>Helper</th><th>Parameters</th></tr>
+      <tr><td>POU Subscriber</td><td><code>GetXMLForSubscriber(orderRequest, refId)</code></td><td>Subscriber RefId</td></tr>
+      <tr><td>COU Subscriber</td><td><code>GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</code></td><td>Subscriber RefId + POU RefId</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> Data Extraction</div>
+  <div class="section-body">
+    <p>No pipe-delimited or GROUP-field parsing. DateTime formatting/parsing for the charge window. Two subscriber identifier fields used differently:</p>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Used For</th></tr>
+      <tr><td><code>refId</code></td><td><code>Subscriber[j].RefId</code></td><td>RefID JMS header (correlation); PreExecCheck XML; Subscriber BE lookup in response</td></tr>
+      <tr><td><code>subId</code></td><td><code>Subscriber[j].SubscriberId</code></td><td>reqSuccess dedup check; <code>ns3:EntityIdInfo/entityId</code> in payload</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§8.1 — Order Type Dependencies</h3>
+    <p>No GoldenDB routing. Single backend: BL3G (Amdocs Billing). Event fires per-subscriber when PreExecCheck passes and no prior successful response found.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>FM JMS (via IntraActivitySequencing)</td><td>BL_LIST_UNINVOICED_CHARGES queue</td><td>Uninvoiced charge lookup per subscriber (sequential)</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td>FM JMS</td><td>BL_LIST_UNINVOICED_CHARGES response queue</td><td>ChargeDetailsListArray per subscriber</td></tr>
+      <tr><td><span class="badge badge-log">LOG</span></td><td>OMXESB Logger</td><td>Audit event</td><td>Request+response audit via <code>sendEventImmediate</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Backend</td><td>BL3G (Amdocs Billing)</td></tr>
+      <tr><td>Operation</td><td>ListUninvoicedCharges</td></tr>
+      <tr><td>Request root</td><td><code>ns3:ListUninvoicedChargesRequest</code></td></tr>
+      <tr><td>Response root</td><td><code>xsd3:ListUninvoicedChargesResponse</code></td></tr>
+      <tr><td>Entity type code</td><td><code>83</code> (hardcoded — BL3G entity type for subscriber)</td></tr>
+      <tr><td>billedChargesIsolated</td><td><code>89</code> (hardcoded — BL3G charge selection flag)</td></tr>
+      <tr><td>revenueCode</td><td><code>OC</code> (hardcoded — One-time Charges)</td></tr>
+      <tr><td>Pagination</td><td>pageSize=100, pageNumber=0, numberOfRows=100 (all hardcoded)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept</th><th>Field</th><th>Access</th><th>Notes</th></tr>
+      <tr><td>OrderRequest</td><td>OrderData.Customer.ParentOU[].Subscriber[].RefId/SubscriberId</td><td>READ</td><td>Per-subscriber RefId (correlation) and SubscriberId (dedup/payload)</td></tr>
+      <tr><td>OrderRequest</td><td>OrderData.Customer.CustomerId</td><td>READ</td><td>Payload CustomerIdInfo.customerNo</td></tr>
+      <tr><td>OrderRequest</td><td>OrderData.User/Password</td><td>READ</td><td>Credential gate (conditional)</td></tr>
+      <tr><td>OrderRequest</td><td>OrderData.CES</td><td>READ</td><td>CES header (conditional)</td></tr>
+      <tr><td>Activity</td><td>Response[] / Status</td><td>READ+WRITTEN</td><td>Response[] appended; Status set to "1"</td></tr>
+      <tr><td>Subscriber</td><td>ExtendedInfo[]</td><td>WRITTEN</td><td>SubscriberExtendedInfo Name="UNINVOICED_CHARGE" appended</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.5 — ExtendedInfo Fields</h3>
+    <table>
+      <tr><th>Type</th><th>Name</th><th>Written By</th><th>Value</th></tr>
+      <tr><td>SubscriberExtendedInfo</td><td>UNINVOICED_CHARGE</td><td>Response rulefunction</td><td>Sum of uninvoiced <code>amount</code> where Credit_Extracted_Ind absent (see Bug §1)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>Payload inclusion in audit</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§9.1 — XSLT Parameters</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th><th>Notes</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest concept serialized</td><td></td></tr>
+      <tr><td><code>$refId</code></td><td><code>Subscriber[j].RefId</code></td><td>Subscriber's RefId — used for RefID header and response lookup</td></tr>
+      <tr><td><code>$subId</code></td><td><code>Subscriber[j].SubscriberId</code></td><td>BL3G entity identifier in payload</td></tr>
+      <tr><td><code>$fromDate</code></td><td><code>DateTime.addMonth(today, -1)</code></td><td>Computed in THEN block — today minus 1 month</td></tr>
+      <tr><td><code>$toDate</code></td><td><code>DateTime.parseString(currDate, "yyyy-MM-dd")</code></td><td>Today's date at 00:00:00</td></tr>
+    </table>
+    <div class="callout warning" style="margin-top:8px">Dead variable: <code>$accountId</code> is declared inside the XSLT as <code>&lt;xsl:variable name="accountId" select="$orderRequest/OrderData/Customer/Account[1]/AccountID"/&gt;</code> but is never referenced in the output. It is evaluated but discarded every execution.</div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.2 — POU vs COU XSLT Variants</h3>
+    <table>
+      <tr><th>Aspect</th><th>POU Subscriber</th><th>COU Subscriber</th></tr>
+      <tr><td>XSLT exclude-result-prefixes</td><td>…ns2 ns1 xsl ns4 ns ns3 xsd tib xsi</td><td>…ns2 ns1 xsl ns ns4 ns3 xsd tib xsi (ns4 and ns order swapped)</td></tr>
+      <tr><td>Payload structure</td><td>Identical</td><td>Identical</td></tr>
+      <tr><td>Parameters</td><td>Identical</td><td>Identical</td></tr>
+    </table>
+    <p style="margin-top:8px;font-size:0.88rem">Both variants produce identical output XML. The exclude-result-prefixes difference is cosmetic.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Header</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>JMSPriority</td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional</td></tr>
+      <tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional</td></tr>
+      <tr><td>OrderID</td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional</td></tr>
+      <tr><td>RefID</td><td><code>$refId</code> (subscriber RefId)</td><td><strong>Always</strong> — no xsl:if</td></tr>
+      <tr><td>UserName</td><td><code>$orderRequest/OrderData/User</code></td><td>Conditional (credential gate)</td></tr>
+      <tr><td>PassWord</td><td><code>$orderRequest/OrderData/Password</code></td><td>Conditional (credential gate)</td></tr>
+      <tr><td>OrderType</td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional</td></tr>
+      <tr><td>CES</td><td><code>$orderRequest/OrderData/CES</code></td><td>Conditional — extra field</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.4 — Payload Fields</h3>
+    <table>
+      <tr><th>XML Element</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>ns3:ListUninvoicedChargesRequest</code></td><td>— root</td><td></td></tr>
+      <tr><td><code>ns3:CustomerIdInfo/customerNo</code></td><td><code>$orderRequest/OrderData/Customer/CustomerId</code></td><td>Always</td></tr>
+      <tr><td><code>ns3:EntityIdInfo/entityId</code></td><td><code>$subId</code> (SubscriberId)</td><td>Always</td></tr>
+      <tr><td><code>ns3:EntityIdInfo/entityType</code></td><td><code>"83"</code> (literal)</td><td>BL3G subscriber entity type code</td></tr>
+      <tr><td><code>ns3:ChargeSelectionInfo/billedChargesIsolated</code></td><td><code>89</code> (literal)</td><td>BL3G charge filter flag</td></tr>
+      <tr><td><code>ns3:ChargeSelectionInfo/dateRange/fromDate</code></td><td><code>$fromDate</code></td><td>Today minus 1 month</td></tr>
+      <tr><td><code>ns3:ChargeSelectionInfo/dateRange/toDate</code></td><td><code>$toDate</code></td><td>Today at 00:00:00</td></tr>
+      <tr><td><code>ns3:ChargeSelectionInfo/revenueCode</code></td><td><code>'OC'</code> (literal)</td><td>One-time Charges</td></tr>
+      <tr><td><code>ns3:PaginationInfo/ns4:pageSize</code></td><td><code>100</code> (literal)</td><td></td></tr>
+      <tr><td><code>ns3:PaginationInfo/ns4:pageNumber</code></td><td><code>0</code> (literal)</td><td></td></tr>
+      <tr><td><code>ns3:PaginationInfo/ns4:numberOfRows</code></td><td><code>100</code> (literal)</td><td></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.5 — Generated XML Example</h3>
+    <div class="code-block"><span class="xt">&lt;event&gt;</span>
+  <span class="xt">&lt;JMSPriority&gt;</span>5<span class="xt">&lt;/JMSPriority&gt;</span>
+  <span class="xt">&lt;JMSCorrelationID&gt;</span>OMX-TRK-20250804-001<span class="xt">&lt;/JMSCorrelationID&gt;</span>
+  <span class="xt">&lt;OrderID&gt;</span>ORD-001<span class="xt">&lt;/OrderID&gt;</span>
+  <span class="xt">&lt;RefID&gt;</span>SUB-REF-001<span class="xt">&lt;/RefID&gt;</span>  <span class="cm">&lt;!-- always set; subscriber RefId --&gt;</span>
+  <span class="xt">&lt;UserName&gt;</span>apiuser<span class="xt">&lt;/UserName&gt;</span>
+  <span class="xt">&lt;PassWord&gt;</span>***<span class="xt">&lt;/PassWord&gt;</span>
+  <span class="xt">&lt;OrderType&gt;</span>3<span class="xt">&lt;/OrderType&gt;</span>
+  <span class="xt">&lt;CES&gt;</span>false<span class="xt">&lt;/CES&gt;</span>
+  <span class="xt">&lt;payload&gt;</span>
+    <span class="xt">&lt;ns3:ListUninvoicedChargesRequest</span>
+      <span class="xa">xmlns:ns3</span>=<span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/ListUninvoicedChargesRequest.xsd"</span>
+      <span class="xa">xmlns:ns4</span>=<span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.bl3g.datatypes.PaginationInfo"</span><span class="xt">&gt;</span>
+      <span class="xt">&lt;ns3:CustomerIdInfo&gt;</span>
+        <span class="xt">&lt;customerNo&gt;</span>CUST-12345<span class="xt">&lt;/customerNo&gt;</span>
+      <span class="xt">&lt;/ns3:CustomerIdInfo&gt;</span>
+      <span class="xt">&lt;ns3:EntityIdInfo&gt;</span>
+        <span class="xt">&lt;entityId&gt;</span>SUB-999<span class="xt">&lt;/entityId&gt;</span>  <span class="cm">&lt;!-- SubscriberId --&gt;</span>
+        <span class="xt">&lt;entityType&gt;</span>83<span class="xt">&lt;/entityType&gt;</span>  <span class="cm">&lt;!-- hardcoded BL3G subscriber code --&gt;</span>
+      <span class="xt">&lt;/ns3:EntityIdInfo&gt;</span>
+      <span class="xt">&lt;ns3:ChargeSelectionInfo&gt;</span>
+        <span class="xt">&lt;billedChargesIsolated&gt;</span>89<span class="xt">&lt;/billedChargesIsolated&gt;</span>
+        <span class="xt">&lt;dateRange&gt;</span>
+          <span class="xt">&lt;fromDate&gt;</span>2026-07-04<span class="xt">&lt;/fromDate&gt;</span>
+          <span class="xt">&lt;toDate&gt;</span>2026-08-04<span class="xt">&lt;/toDate&gt;</span>
+        <span class="xt">&lt;/dateRange&gt;</span>
+        <span class="xt">&lt;revenueCode&gt;</span>OC<span class="xt">&lt;/revenueCode&gt;</span>
+      <span class="xt">&lt;/ns3:ChargeSelectionInfo&gt;</span>
+      <span class="xt">&lt;ns3:PaginationInfo&gt;</span>
+        <span class="xt">&lt;ns4:pageSize&gt;</span>100<span class="xt">&lt;/ns4:pageSize&gt;</span>
+        <span class="xt">&lt;ns4:pageNumber&gt;</span>0<span class="xt">&lt;/ns4:pageNumber&gt;</span>
+        <span class="xt">&lt;ns4:numberOfRows&gt;</span>100<span class="xt">&lt;/ns4:numberOfRows&gt;</span>
+      <span class="xt">&lt;/ns3:PaginationInfo&gt;</span>
+    <span class="xt">&lt;/ns3:ListUninvoicedChargesRequest&gt;</span>
+  <span class="xt">&lt;/payload&gt;</span>
+<span class="xt">&lt;/event&gt;</span></div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.6 — XSLT Stylesheet Source (POU variant)</h3>
+    <details>
+      <summary>Request XSLT (BL_LIST_UNINVOICED_CHARGES)</summary>
+      <div class="code-block" style="margin-top:8px"><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:ns2</span>=<span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.bl3g.datatypes.ChargeAttributeInfo"</span>
+  <span class="xa">xmlns:ns1</span>=<span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.bl3g.datatypes.ChargeInfo"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="str">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:ns4</span>=<span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.bl3g.datatypes.PaginationInfo"</span>
+  <span class="xa">xmlns:ns</span>=<span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/CreateChargeRequest.xsd"</span>
+  <span class="xa">xmlns:ns3</span>=<span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/ListUninvoicedChargesRequest.xsd"</span>
+  <span class="xa">version</span>=<span class="str">"1.0"</span>
+  <span class="xa">exclude-result-prefixes</span>=<span class="str">"ns2 ns1 xsl ns4 ns ns3 xsd tib xsi"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"refId"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"subId"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"fromDate"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"toDate"</span><span class="xt">/&gt;</span>
+  <span class="cm">&lt;!-- $accountId declared inside template — dead variable --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="str">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      [headers — see §9.3]
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns3:ListUninvoicedChargesRequest&gt;</span>
+          <span class="xt">&lt;ns3:CustomerIdInfo&gt;&lt;customerNo&gt;</span>← CustomerId<span class="xt">&lt;/customerNo&gt;&lt;/ns3:CustomerIdInfo&gt;</span>
+          <span class="xt">&lt;ns3:EntityIdInfo&gt;</span>
+            <span class="xt">&lt;entityId&gt;</span>← $subId<span class="xt">&lt;/entityId&gt;</span>
+            <span class="xt">&lt;entityType&gt;</span>"83"<span class="xt">&lt;/entityType&gt;</span>
+          <span class="xt">&lt;/ns3:EntityIdInfo&gt;</span>
+          <span class="xt">&lt;ns3:ChargeSelectionInfo&gt;</span>
+            <span class="xt">&lt;billedChargesIsolated&gt;</span>89<span class="xt">&lt;/billedChargesIsolated&gt;</span>
+            <span class="xt">&lt;dateRange&gt;&lt;fromDate&gt;</span>← $fromDate<span class="xt">&lt;/fromDate&gt;&lt;toDate&gt;</span>← $toDate<span class="xt">&lt;/toDate&gt;&lt;/dateRange&gt;</span>
+            <span class="xt">&lt;revenueCode&gt;</span>'OC'<span class="xt">&lt;/revenueCode&gt;</span>
+          <span class="xt">&lt;/ns3:ChargeSelectionInfo&gt;</span>
+          <span class="xt">&lt;ns3:PaginationInfo&gt;</span>
+            <span class="xt">&lt;ns4:pageSize&gt;</span>100<span class="xt">&lt;/ns4:pageSize&gt;</span>
+            <span class="xt">&lt;ns4:pageNumber&gt;</span>0<span class="xt">&lt;/ns4:pageNumber&gt;</span>
+            <span class="xt">&lt;ns4:numberOfRows&gt;</span>100<span class="xt">&lt;/ns4:numberOfRows&gt;</span>
+          <span class="xt">&lt;/ns3:PaginationInfo&gt;</span>
+        <span class="xt">&lt;/ns3:ListUninvoicedChargesRequest&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></div>
+    </details>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§10</span> XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">JMSPriority</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">RefID</span> <span class="tree-arrow">←</span> <span class="tree-src">$refId</span> <span class="badge badge-green" style="font-size:0.7rem">Always — no xsl:if</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">UserName</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/User</span> <span class="badge badge-purple" style="font-size:0.7rem">Credential-gated</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">PassWord</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/Password</span> <span class="badge badge-purple" style="font-size:0.7rem">Credential-gated</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CES</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/CES</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional — extra field</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-ns">ns3:</span><span class="tree-tag">ListUninvoicedChargesRequest</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-ns">ns3:</span><span class="tree-tag">CustomerIdInfo</span></div>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-tag">customerNo</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/Customer/CustomerId</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                          </ul>
+                        </li>
+                        <li><div class="tree-row"><span class="tree-ns">ns3:</span><span class="tree-tag">EntityIdInfo</span></div>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-tag">entityId</span> <span class="tree-arrow">←</span> <span class="tree-src">$subId</span> (SubscriberId) <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">entityType</span> <span class="tree-arrow">←</span> <span class="tree-src-static">"83"</span> (literal) <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                          </ul>
+                        </li>
+                        <li><div class="tree-row"><span class="tree-ns">ns3:</span><span class="tree-tag">ChargeSelectionInfo</span></div>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-tag">billedChargesIsolated</span> <span class="tree-arrow">←</span> <span class="tree-src-static">89</span> (literal)</div></li>
+                            <li><div class="tree-row"><span class="tree-tag">dateRange</span></div>
+                              <ul>
+                                <li><div class="tree-row"><span class="tree-tag">fromDate</span> <span class="tree-arrow">←</span> <span class="tree-src">$fromDate</span> (today − 1 month)</div></li>
+                                <li><div class="tree-row"><span class="tree-tag">toDate</span> <span class="tree-arrow">←</span> <span class="tree-src">$toDate</span> (today 00:00:00)</div></li>
+                              </ul>
+                            </li>
+                            <li><div class="tree-row"><span class="tree-tag">revenueCode</span> <span class="tree-arrow">←</span> <span class="tree-src-static">'OC'</span> (literal)</div></li>
+                          </ul>
+                        </li>
+                        <li><div class="tree-row"><span class="tree-ns">ns3:</span><span class="tree-tag">PaginationInfo</span></div>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-ns">ns4:</span><span class="tree-tag">pageSize</span> <span class="tree-arrow">←</span> <span class="tree-src-static">100</span></div></li>
+                            <li><div class="tree-row"><span class="tree-ns">ns4:</span><span class="tree-tag">pageNumber</span> <span class="tree-arrow">←</span> <span class="tree-src-static">0</span></div></li>
+                            <li><div class="tree-row"><span class="tree-ns">ns4:</span><span class="tree-tag">numberOfRows</span> <span class="tree-arrow">←</span> <span class="tree-src-static">100</span></div></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <p style="margin-top:10px;font-size:0.82rem"><strong>Legend:</strong> <span style="color:#a6e3a1">■</span> green → dynamic XPath source &nbsp; <span style="color:#fab387">■</span> orange → static/literal value &nbsp; Always = no xsl:if guard &nbsp; Conditional = inside xsl:if</p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header"><span class="num">§11</span> Audit Logging</div>
+  <div class="section-body">
+    <div class="grid2">
+      <div>
+        <h3 style="color:var(--true-dark);margin-bottom:10px">Request Audit</h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for BL_LIST_UNINVOICED_CHARGES"</code></td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"BL_LIST_UNINVOICED_CHARGES"</code></td></tr>
+          <tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate</code> <span class="badge badge-green">Immediate</span></td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="color:var(--true-dark);margin-bottom:10px">Response Audit</h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>"Response received for BL_LIST_UNINVOICED_CHARGES"</code></td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"BL_LIST_UNINVOICED_CHARGES"</code></td></tr>
+          <tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate</code> <span class="badge badge-green">Immediate</span></td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header"><span class="num">§12</span> Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Call</th><th>Code</th></tr>
+      <tr><td>At least one subscriber queued and dispatched</td><td><code>SendFirstRequestEvent</code> + <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" (RUNNING)</td></tr>
+      <tr><td>No subscribers qualify (isSkipped)</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" (SKIPPED)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header"><span class="num">§13</span> Exception / Error Handling</div>
+  <div class="section-body">
+    <div class="code-block"><span class="kw">catch</span> (Exception ae) {
+    <span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+}</div>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header"><span class="num">§14</span> Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)</code></td><td>Resubmit purge — clears previously queued events</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionRequestEvent(event, activity)</code></td><td>Queue a request event for sequential dispatch</td></tr>
+      <tr><td><code>IntraActivitySequencing.SendFirstRequestEvent(activity)</code></td><td>Dispatch the first queued event; subsequent events sent as each response arrives</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionResponseEvent(activity)</code></td><td>Fan-in: dispatches next queued event; returns true when all done</td></tr>
+      <tr><td><code>GetXMLForSubscriber(req, refId)</code></td><td>POU subscriber XML for PreExecCheck evaluation</td></tr>
+      <tr><td><code>GetXMLForSubscriberInChildOU(req, refId, pouRefId)</code></td><td>COU subscriber XML for PreExecCheck evaluation</td></tr>
+      <tr><td><code>DateTime.format / parseString / addMonth</code></td><td>Compute fromDate/toDate window</td></tr>
+      <tr><td><code>Event.assertEvent(event)</code></td><td>Assert event to BE working memory (required for IntraActivitySequencing)</td></tr>
+      <tr><td><code>GetActivityStatusString / SendDataToDB / SkipActivity</code></td><td>Activity lifecycle management</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§15</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_BL_LIST_UNINVOICED_CHARGES (rule)
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit  [if isActResub]
+├── [per POU × Subscriber]:
+│   ├── Response[].ReferenceId == subId AND CompletionStatus==2  [reqSuccess dedup]
+│   ├── GetXMLForSubscriber(orderRequest, refId)  [PreExecCheck XML]
+│   ├── XPath.execute(preExecCheck, sXML, ns)
+│   ├── DateTime.format / DateTime.parseString / DateTime.addMonth  [date window]
+│   ├── Event.createEvent("xslt://BL_LIST_UNINVOICED_CHARGES")  [XSLT build]
+│   ├── Event.assertEvent(reqEvent)
+│   ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+│   └── Event.Ext.sendEventImmediate(auditEvent)
+├── [per POU × COU × Subscriber]:
+│   ├── (same as above)
+│   └── GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)  [different helper]
+├── IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)  [dispatch]
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(...)  [if isSkipped]
+└── RuleFunctions.Helpers.HandleActivityException(...)  [catch]
+
+Response_BL_LIST_UNINVOICED_CHARGES (rulefunction)
+├── XPath.evalAsInt("count(.../xsd3:ChargeDetailsListInfo/chargeDetailsListArray)")
+├── [per charge item]:
+│   ├── XPath.evalAsBoolean("exists(.../xsd2:ListUninvoicedChargesResponse/.../Credit_Extracted_Ind)")
+│   │   └── ⚠ BUG: uses xsd2 NS not xsd3 → always returns false
+│   └── XPath.evalAsDouble(".../xsd3:ChargeDetailsListInfo/chargeDetailsListArray[$i+1]/amount")
+│       └── accumulated into chargeAmout (note typo)
+├── Instance.createInstance("xslt://BL_ListUninvoicedChargesRes")
+│   └── OMXUtils:generateTrackingID()  [extId]
+├── currActivity.Response[length] = activityRes
+├── Instance.getByExtIdByUri("SUB:"+OMXTrackingId+":"+RefID)  [subscriber lookup]
+│   └── CSUB: fallback if null
+├── Instance.createInstance("xslt://SubscriberExtendedInfo")
+│   └── Name="UNINVOICED_CHARGE", Value=chargeAmout
+├── subscriber.ExtendedInfo[length] = subExtInf
+├── Event.Ext.sendEventImmediate(auditLogEvent)
+└── IntraActivitySequencing.ActionResponseEvent(currActivity)  [fan-in]
+    └── returns "true" when all sequential responses done</div>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header"><span class="num">§16</span> Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Key Fields</th><th>Role</th></tr>
+      <tr><td><code>Concepts.FM.Response.BL_ListUninvoicedChargesRes</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId, <strong>ChargeAmout</strong> (typo)</td><td>Response concept with aggregated charge sum</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.ExtendedInfos.SubscriberExtendedInfo</code></td><td>Name, Value</td><td>Written with Name="UNINVOICED_CHARGE"</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>ExtendedInfo[]</td><td>UNINVOICED_CHARGE appended to ExtendedInfo[]</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§17</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Fire per-subscriber (POU + COU) using <code>SubscriberId</code> as payload entity key and <code>RefId</code> as correlation key (RefID header).</td></tr>
+      <tr><td>R2</td><td>Compute date window at execution time: <code>fromDate</code> = today minus 1 month (day precision), <code>toDate</code> = today (day precision).</td></tr>
+      <tr><td>R3</td><td>Use IntraActivitySequencing (assert + queue + send-first) for sequential, ordered execution — NOT parallel fan-out.</td></tr>
+      <tr><td>R4</td><td>reqSuccess dedup: skip subscriber if Response[] already contains CompletionStatus==2 with matching ReferenceId (SubscriberId).</td></tr>
+      <tr><td>R5</td><td>Credential gate: include UserName/PassWord headers when OrderData.User/Password present.</td></tr>
+      <tr><td>R6</td><td>Include CES header from OrderData.CES (conditional).</td></tr>
+      <tr><td>R7</td><td>Response: sum <code>amount</code> values for charge items where <code>Credit_Extracted_Ind</code> dynamic attribute is absent. (See Bug R7a.)</td></tr>
+      <tr><td>R7a</td><td><strong>[BUG]</strong> Fix: Credit_Extracted_Ind XPath uses wrong namespace prefix (<code>xsd2</code> → should be <code>xsd3</code> = ListUninvoicedChargesResponse.xsd). Migration target must correct this or implement the intended filter correctly.</td></tr>
+      <tr><td>R8</td><td>Write <code>SubscriberExtendedInfo</code> with Name="UNINVOICED_CHARGE", Value=charge sum to <code>subscriber.ExtendedInfo[]</code> (append).</td></tr>
+      <tr><td>R9</td><td>Fan-in via <code>IntraActivitySequencing.ActionResponseEvent</code>; complete when all sequential responses have been processed.</td></tr>
+      <tr><td>R10</td><td>BL3G hardcoded constants: entityType=83, billedChargesIsolated=89, revenueCode="OC", pageSize=100, pageNumber=0, numberOfRows=100. Externalize to configuration in migration target.</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:18px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td><strong>Credit_Extracted_Ind wrong namespace</strong> — check always returns false → credited charges included in total</td>
+        <td><span class="badge badge-red">HIGH</span></td>
+        <td>Fix namespace: use <code>xsd3</code> (ListUninvoicedChargesResponse.xsd) for the exists-check path, not <code>xsd2</code></td>
+      </tr>
+      <tr>
+        <td><strong>Sequential IntraActivitySequencing</strong> — each subscriber waits for previous to complete; can be slow with many subscribers</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Consider parallel fan-out if BL3G supports concurrent calls; or increase timeout budgets for large subscriber counts</td>
+      </tr>
+      <tr>
+        <td><strong>Pagination hardcoded to 100 rows</strong> — silent truncation if subscriber has &gt;100 uninvoiced charges</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Externalize pageSize to configuration; add response count check and loop/page if total &gt; pageSize</td>
+      </tr>
+      <tr>
+        <td><strong>ChargeAmout typo</strong> in concept field — breaks downstream code if field name is referenced</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Rename to <code>ChargeAmount</code> in migration; ensure all downstream references are updated</td>
+      </tr>
+      <tr>
+        <td>Dead variable <code>$accountId</code> in XSLT computed but unused</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Remove from migration implementation</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+  <div class="section-header"><span class="num">§18</span> Full Source Code</div>
+  <div class="section-body">
+    <details>
+      <summary>Request_BL_LIST_UNINVOICED_CHARGES.rule (121 lines — key structure)</summary>
+      <div class="code-block" style="margin-top:8px"><span class="kw">rule</span> <span class="fn">Rules.OMConsumers.OMXFM.Request.Request_BL_LIST_UNINVOICED_CHARGES</span> {
+  <span class="kw">attribute</span> { priority=<span class="nu">5</span>; forwardChain=<span class="kw">true</span>; }
+  <span class="kw">declare</span> { <span class="ty">OrderRequest</span> orderRequest; <span class="ty">Activity</span> orderCurrentActivity; }
+  <span class="kw">when</span> { <span class="cm">/* standard 4-condition WHEN */</span> }
+  <span class="kw">then</span> {
+    <span class="kw">boolean</span> isActResub = ...;
+    <span class="kw">try</span> {
+      <span class="kw">if</span>(isActResub)
+        <span class="fn">IntraActivitySequencing.PurgePendingRequestsBeforeResubmit</span>(orderCurrentActivity);
+      <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+      <span class="cm">/* POU Subscribers */</span>
+      <span class="kw">for</span>(int i ...) { <span class="kw">for</span>(int j ...) {
+        <span class="cm">// reqSuccess dedup: Response[].ReferenceId==subId && CompletionStatus==2</span>
+        <span class="kw">if</span>(!reqSuccess) {
+          chkRes = PreExecCheck via <span class="fn">GetXMLForSubscriber</span>(orderRequest, refId);
+          <span class="kw">if</span>(chkRes == <span class="str">"true"</span>) {
+            toDate = today; fromDate = today - 1 month;
+            <span class="cm">// [BL_LIST_UNINVOICED_CHARGES XSLT — see §9.6]</span>
+            <span class="fn">Event.assertEvent</span>(reqEvent);
+            <span class="fn">IntraActivitySequencing.ActionRequestEvent</span>(reqEvent, orderCurrentActivity);
+            isSkipped = <span class="kw">false</span>;
+          }
+        }
+      }}
+
+      <span class="cm">/* COU Subscribers */</span>
+      <span class="kw">for</span>(int i ...) { <span class="kw">for</span>(int k ...) { <span class="kw">for</span>(int j ...) {
+        chkRes = PreExecCheck via <span class="fn">GetXMLForSubscriberInChildOU</span>(orderRequest, refId, pouRefId);
+        <span class="kw">if</span>(chkRes == <span class="str">"true"</span>) {
+          toDate = today; fromDate = today - 1 month;
+          <span class="cm">// [same BL_LIST_UNINVOICED_CHARGES XSLT — see §9.6]</span>
+          <span class="fn">Event.assertEvent</span>(reqEvent);
+          <span class="fn">IntraActivitySequencing.ActionRequestEvent</span>(reqEvent, orderCurrentActivity);
+          isSkipped = <span class="kw">false</span>;
+        }
+      }}}
+
+      <span class="kw">if</span>(!isSkipped) {
+        <span class="fn">IntraActivitySequencing.SendFirstRequestEvent</span>(orderCurrentActivity);
+        <span class="fn">GetActivityStatusString</span>(<span class="str">"1"</span>); <span class="fn">SendDataToDB</span>();
+      } <span class="kw">else</span> { <span class="fn">SkipActivity</span>(<span class="str">"4"</span>); }
+    } <span class="kw">catch</span>(Exception ae) { <span class="fn">HandleActivityException</span>(...); }
+  }
+}</div>
+    </details>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="section">
+  <div class="section-header"><span class="num">§19</span> Response Message Rule</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§19.1 — Overview</h3>
+    <p>Aggregates uninvoiced charge amounts from the BL3G response — skipping items where <code>Credit_Extracted_Ind</code> attribute is present (intended; bugged by wrong namespace). Writes the total as a <code>SubscriberExtendedInfo</code> named <code>UNINVOICED_CHARGE</code> to the matched subscriber. Fan-in via <code>IntraActivitySequencing.ActionResponseEvent</code> which dispatches the next queued request event (not a count comparison).</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>READ — OMXTrackingId for subscriber lookup</td></tr>
+      <tr><td><code>eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.BL_LIST_UNINVOICED_CHARGES</td><td>Backend response</td></tr>
+      <tr><td><code>currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Response[] appended; fan-in checked via ActionResponseEvent</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.3 — Charge Aggregation Logic</h3>
+    <div class="code-block"><span class="kw">int</span> chargeDetailsListArray = <span class="fn">XPath.evalAsInt</span>(
+    <span class="str">"count($eventResponse/payload/xsd3:ListUninvoicedChargesResponse/xsd3:ChargeDetailsListInfo/chargeDetailsListArray)"</span>);
+<span class="cm">// xsd3 = ListUninvoicedChargesResponse.xsd ← CORRECT</span>
+
+<span class="kw">double</span> chargeAmout = <span class="nu">0</span>;  <span class="cm">// note: "Amout" typo</span>
+<span class="kw">for</span>(<span class="kw">int</span> i=<span class="nu">0</span>; i &lt; chargeDetailsListArray; i++) {
+    <span class="kw">boolean</span> creditExtractInd = <span class="fn">XPath.evalAsBoolean</span>(
+        <span class="str">"exists($eventResponse/payload/xsd2:ListUninvoicedChargesResponse/xsd2:ChargeDetailsListInfo/..."</span>);
+    <span class="cm">// ⚠ BUG: xsd2 = amdocs.csm3g.datatypes.SubscriberInfo — WRONG namespace!
+    // Should be xsd3 = ListUninvoicedChargesResponse.xsd
+    // → always returns false → all charges summed (no credit filter)</span>
+
+    <span class="kw">if</span>(!creditExtractInd) {  <span class="cm">// always true due to bug</span>
+        chargeAmout += <span class="fn">XPath.evalAsDouble</span>(
+            <span class="str">"...xsd3:ChargeDetailsListInfo/chargeDetailsListArray[number($i)+1]/amount"</span>);
+    }
+}</div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.4 — BL_ListUninvoicedChargesRes Concept Construction</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/RefID</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ChargeAmout</span> <span class="tree-arrow">←</span> <span class="tree-src">$chargeAmout</span> (pre-computed sum) <span class="badge badge-green" style="font-size:0.7rem">Always</span> <span class="badge badge-red" style="font-size:0.7rem">Typo: Amout</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.5 — Subscriber Lookup &amp; ExtendedInfo Write</h3>
+    <div class="code-block"><span class="cm">// Look up subscriber concept by extId:</span>
+subscriber = <span class="fn">Instance.getByExtIdByUri</span>(<span class="str">"SUB:"+</span>orderRequest.OMXTrackingId+<span class="str">":"+</span>eventResponse.RefID, Subscriber);
+<span class="kw">if</span>(subscriber == <span class="kw">null</span>)
+    subscriber = <span class="fn">Instance.getByExtIdByUri</span>(<span class="str">"CSUB:"+</span>orderRequest.OMXTrackingId+<span class="str">":"+</span>eventResponse.RefID, Subscriber);
+
+<span class="cm">// Write UNINVOICED_CHARGE ExtendedInfo:</span>
+<span class="kw">if</span>(subscriber != <span class="kw">null</span>) {
+    subExtInf = <span class="fn">Instance.createInstance</span>(<span class="str">"xslt://SubscriberExtendedInfo"</span>);
+    <span class="cm">// Name="UNINVOICED_CHARGE", Value=$chargeAmout</span>
+    subscriber.ExtendedInfo[subscriber.ExtendedInfo@length] = subExtInf;
+}</div>
+    <div class="callout dead" style="margin-top:10px">
+      <strong>Dead code (lines 43–45):</strong> CustomerExtendedInfo block is commented out. Original intent: write CHARGE_AMOUNT to Customer via CacheLoadConceptByExtIdByUri. Abandoned — the Customer-level write was never activated.
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.6 — Fan-in Completion Logic</h3>
+    <div class="code-block"><span class="cm">// IntraActivitySequencing fan-in (not "000" count):</span>
+<span class="kw">if</span>(<span class="fn">RuleFunctions.Helpers.IntraActivitySequencing.ActionResponseEvent</span>(currActivity)) {
+    <span class="kw">return</span> <span class="str">"true"</span>;   <span class="cm">// all sequential requests completed</span>
+} <span class="kw">else</span> {
+    <span class="kw">return</span> <span class="str">"false"</span>;  <span class="cm">// more requests still queued; next dispatched internally</span>
+}</div>
+    <p style="margin-top:8px;font-size:0.88rem"><code>ActionResponseEvent</code> internally dispatches the next queued request event (from the same queue populated by <code>ActionRequestEvent</code>) and returns <code>true</code> only when the queue is empty and all responses are received.</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

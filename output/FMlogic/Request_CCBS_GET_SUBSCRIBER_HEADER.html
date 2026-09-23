@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_GET_SUBSCRIBER_HEADER</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+.page-header .subtitle{opacity:.85;margin-top:6px;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap}
+.meta-item{background:rgba(255,255,255,.15);border-radius:6px;padding:6px 14px;font-size:.82rem}
+.meta-item strong{display:block;font-size:.72rem;opacity:.8;text-transform:uppercase;letter-spacing:.5px}
+.container{max-width:1300px;margin:0 auto;padding:28px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid #F0E0E0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FFF8F8}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px 20px;border-radius:8px;overflow-x:auto;border-left:3px solid var(--true-red);margin:8px 0}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:3px}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.badge-db{background:#E8EAF6;color:#3949AB}
+.badge-log{background:#F1F8E9;color:#558B2F}
+.badge-ccbs{background:#FFE0E0;color:#8B0000}
+.flow-steps{counter-reset:step;list-style:none}
+.flow-steps li{counter-increment:step;padding:8px 0 8px 42px;position:relative;border-left:2px solid #E0E0E0;margin-left:16px}
+.flow-steps li::before{content:counter(step);position:absolute;left:-14px;top:7px;width:26px;height:26px;background:var(--true-red);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-attr{color:#f9e2af}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-ns{color:#6c7086;font-size:.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nu{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.section-number{color:var(--true-red);font-weight:700;margin-right:6px}
+.warn-box{background:#FFF3E0;border-left:4px solid var(--warning);padding:12px 16px;border-radius:4px;margin:12px 0;font-size:.85rem}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);padding:12px 16px;border-radius:4px;margin:12px 0;font-size:.85rem}
+.highlight-row td{background:#FFFDE7}
+.toc{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px 20px;margin-bottom:24px}
+.toc h3{color:var(--true-dark);margin-bottom:10px;font-size:.9rem;text-transform:uppercase;letter-spacing:.5px}
+.toc ol{padding-left:20px;column-count:2;column-gap:24px;font-size:.85rem}
+.toc li{margin-bottom:4px}
+.toc a{color:var(--true-dark);text-decoration:none}
+.toc a:hover{text-decoration:underline}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+h3.sub{color:var(--true-dark);font-size:.88rem;margin:16px 0 8px;padding-left:4px;border-left:3px solid var(--true-red)}
+details summary{cursor:pointer;font-weight:600;color:var(--true-dark);padding:6px 0}
+details[open] summary{color:var(--true-red)}
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>Request_CCBS_GET_SUBSCRIBER_HEADER</h1>
+  <div class="subtitle">TIBCO BusinessEvents FM Logic — CCBS GetSubscriberHeader enrichment with IntraActivitySequencing fan-out throttle</div>
+  <div class="meta-row">
+    <div class="meta-item"><strong>Author</strong>warawich-nb</div>
+    <div class="meta-item"><strong>Target System</strong>CCBS (AMDOCS L9)</div>
+    <div class="meta-item"><strong>Protocol</strong>JMS / SOAP</div>
+    <div class="meta-item"><strong>Pattern</strong>IntraActivitySequencing (Throttled Fan-Out)</div>
+    <div class="meta-item"><strong>Response</strong>Response_CCBS_GET_SUBSCRIBER_HEADER</div>
+    <div class="meta-item"><strong>Generated</strong>2026-08-04</div>
+  </div>
+</div>
+
+<div class="container">
+
+<div class="toc">
+  <h3>Table of Contents</h3>
+  <ol>
+    <li><a href="#s1">Overview &amp; Purpose</a></li>
+    <li><a href="#s2">Rule Metadata</a></li>
+    <li><a href="#s3">Working Memory (Declared Objects)</a></li>
+    <li><a href="#s4">Rule Conditions (WHEN)</a></li>
+    <li><a href="#s5">Execution Flow</a></li>
+    <li><a href="#s6">Rule Action (THEN)</a></li>
+    <li><a href="#s8">System &amp; Integration Dependencies</a></li>
+    <li><a href="#s9">Payload Build</a></li>
+    <li><a href="#s10">XSLT Field Mapping Tree</a></li>
+    <li><a href="#s11">Audit Logging</a></li>
+    <li><a href="#s12">Activity Status Management</a></li>
+    <li><a href="#s14">Helper Functions</a></li>
+    <li><a href="#s15">Function Dependency Tree</a></li>
+    <li><a href="#s17">Migration Notes</a></li>
+    <li><a href="#s18">Source Code</a></li>
+    <li><a href="#s19">Response Message Rule (§19)</a></li>
+  </ol>
+</div>
+
+<!-- §1 Overview -->
+<div class="card" id="s1">
+  <div class="card-header"><span class="section-number">§1</span>Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p><strong>CCBS_GET_SUBSCRIBER_HEADER</strong> retrieves the full subscriber header record from CCBS (AMDOCS L9 billing system) and enriches the OMX order graph with name, address, status and account data.</p>
+    <br/>
+    <p>It is unique among OMXFM rules in that it uses the <strong>IntraActivitySequencing</strong> pattern — a throttled fan-out mechanism — rather than the standard parallel fan-out. This ensures that multiple subscriber requests within one order are sent one-at-a-time, preventing CCBS session contention.</p>
+    <br/>
+    <p>The response handler is among the most complex in the system: it populates up to six subscriber sub-concepts (SubscriberName, SubscriberName2, SubscriberAddress, SubscriberAddress2, SubscriberGeneralInfo, ExtendedInfo) using LinkType / NameType routing across up to 15 AddressElement slots, with full ClearField erasure support.</p>
+    <div class="info-box"><strong>ALT_CES Routing:</strong> An <code>ALT_CES</code> activity parameter enables alternate CES endpoint routing — when present and value != "", the CES host is overridden from the subscriber's ExtendedInfo rather than the order's default CES field.</div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card" id="s2">
+  <div class="card-header"><span class="section-number">§2</span>Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_GET_SUBSCRIBER_HEADER</code></td></tr>
+      <tr><td>Author</td><td>warawich-nb</td></tr>
+      <tr><td>Validity</td><td>ACTION</td></tr>
+      <tr><td>Priority</td><td>(default)</td></tr>
+      <tr><td>Forward chain</td><td>false</td></tr>
+      <tr><td>Backend system</td><td>CCBS / AMDOCS L9</td></tr>
+      <tr><td>Operation</td><td>GetSubscriberHeader</td></tr>
+      <tr><td>Request schema</td><td><code>tibco-ccbs-client/Schemas/SubscriberServices/Schema.xsd4</code></td></tr>
+      <tr><td>Request concept</td><td>N/A — direct event fire</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBS_GetSubscriberHeaderRes</code></td></tr>
+      <tr><td>Sequencing pattern</td><td>IntraActivitySequencing (throttled fan-out)</td></tr>
+      <tr><td>Corresponding response</td><td><code>Response_CCBS_GET_SUBSCRIBER_HEADER.rulefunction</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card" id="s3">
+  <div class="card-header"><span class="section-number">§3</span>Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order object graph — contains CES, subscribers, extended info</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity in process flow — used for ALT_CES param lookup and IntraActivitySequencing calls</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="card" id="s4">
+  <div class="card-header"><span class="section-number">§4</span>Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <p>Standard OMXFM rule activation conditions:</p>
+    <br/>
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Notes</th></tr>
+      <tr><td>1</td><td>Order request is in working memory</td><td>Must have at least one subscriber with a matching activity</td></tr>
+      <tr><td>2</td><td>Current activity has ActivityID = <code>CCBS_GET_SUBSCRIBER_HEADER</code></td><td>Activity node from ProcessConfig</td></tr>
+      <tr><td>3</td><td>IntraActivitySequencing gate passes</td><td>Only fires if <code>ActionRequestEvent</code> allows; throttles back if queue is full</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card" id="s5">
+  <div class="card-header"><span class="section-number">§5</span>Execution Flow Diagram</div>
+  <div class="card-body">
+    <ol class="flow-steps">
+      <li><strong>Resubmit check:</strong> If this is a retry, call <code>PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code> to clear previously queued but not yet sent requests.</li>
+      <li><strong>ALT_CES resolution:</strong> Read <code>ALT_CES</code> from activity parameters. If value = "Y" and ExtendedInfo[ALT_CES]/Value != "" → override CES from ExtendedInfo; otherwise use OrderData/CES.</li>
+      <li><strong>Credential gate:</strong> Read global <code>IsEnableUserPass</code>. If "true", add UserName (OrderData/User) and PassWord (OrderData/Password) headers to the JMS request event.</li>
+      <li><strong>Payload build:</strong> Construct <code>GetSubscriberHeaderRequest</code> with <code>SubscriberIdInfo/subscrNumber = SubscriberId</code> (from the matched subscriber).</li>
+      <li><strong>IntraActivitySequencing throttle:</strong> Call <code>ActionRequestEvent(reqEvent, orderCurrentActivity)</code>. The sequencing engine holds requests in a queue and releases them one at a time; if the slot is busy, this call parks the event without firing — throttling the fan-out.</li>
+      <li><strong>Completion path:</strong> Call <code>SendFirstRequestEvent(orderCurrentActivity)</code> + <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code> to persist the status.</li>
+      <li><strong>Skip path:</strong> Call <code>SkipActivity("4")</code> if PreExecCheck condition fails at the order level.</li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="card" id="s6">
+  <div class="card-header"><span class="section-number">§6</span>Rule Action (THEN) — Detailed Logic</div>
+  <div class="card-body">
+
+    <h3 class="sub">6.1 IntraActivitySequencing Fan-Out</h3>
+    <p>Unlike standard parallel fan-out, CCBS_GET_SUBSCRIBER_HEADER uses a <strong>throttled</strong> pattern:</p>
+    <table>
+      <tr><th>Call</th><th>When</th><th>Purpose</th></tr>
+      <tr><td><code>PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code></td><td>On resubmit</td><td>Cancels queued-but-unsent requests before rebuilding the queue</td></tr>
+      <tr><td><code>ActionRequestEvent(reqEvent, orderCurrentActivity)</code></td><td>Each subscriber request</td><td>Adds request to sequencing queue; throttles so only one is in-flight at a time</td></tr>
+      <tr><td><code>SendFirstRequestEvent(orderCurrentActivity)</code></td><td>After queuing all requests</td><td>Triggers the first release from the queue; sequencing engine dispatches next on response arrival</td></tr>
+    </table>
+
+    <h3 class="sub">6.2 ALT_CES Routing Logic</h3>
+    <pre><span class="kw">String</span> altParam = GetActivityParameterValueFromKey(orderCurrentActivity, <span class="st">"ALT_CES"</span>);
+<span class="cm">// xsl:choose inside XSLT payload builder:</span>
+<span class="kw">when</span>: altParam == <span class="st">"Y"</span> AND ExtendedInfo[Name=<span class="st">"ALT_CES"</span>]/Value != <span class="st">""</span>
+  → CES = ExtendedInfo[<span class="st">"ALT_CES"</span>]/Value   <span class="cm">// override from subscriber extended info</span>
+<span class="kw">otherwise</span>:
+  → CES = $orderRequest/OrderData/CES  <span class="cm">// (conditional if present in payload)</span></pre>
+
+    <h3 class="sub">6.3 Credential Gate</h3>
+    <pre><span class="kw">if</span> (IsEnableUserPass == <span class="st">'true'</span>) {
+  header.UserName = OrderData/User;
+  header.PassWord = OrderData/Password;
+}</pre>
+    <p><span class="badge badge-purple">Credential-gated</span> — headers only added when global variable <code>IsEnableUserPass</code> = "true".</p>
+
+    <h3 class="sub">6.4 Namespace Variants (POU vs COU)</h3>
+    <table>
+      <tr><th>Context</th><th>Namespace prefix</th><th>URI</th></tr>
+      <tr><td>POU (ParentOU) subscriber</td><td><code>ns1</code></td><td><code>http://www.tibco.com/schemas/tibco-ccbs-client/Schemas/SubscriberServices/Schema.xsd4</code></td></tr>
+      <tr><td>COU (ChildOU) subscriber</td><td><code>ns</code></td><td><code>http://www.tibco.com/schemas/tibco-ccbs-client/Schemas/SubscriberServices/Schema.xsd4</code></td></tr>
+    </table>
+    <p>Both use the same schema; only the namespace prefix differs. The XSLT template has two variants compiled inline.</p>
+  </div>
+</div>
+
+<!-- §8 Integration Dependencies -->
+<div class="card" id="s8">
+  <div class="card-header"><span class="section-number">§8</span>System &amp; Integration Dependencies</div>
+  <div class="card-body">
+
+    <h3 class="sub">8.1 Order Type Dependencies</h3>
+    <p>The request is unconditional (no PreExecCheck guard at FM level). Name/address enrichment in the response is gated on order type:</p>
+    <table>
+      <tr><th>Global Variable</th><th>Purpose</th></tr>
+      <tr><td><code>OMX_OM/OrderTypes/GetNameAddress</code></td><td>CSV list of OrderTypes that trigger full name/address mapping in response</td></tr>
+      <tr><td><code>OMX_OM/OrderTypes/UpdateNameAddress</code></td><td>CSV list of OrderTypes that are update-name-address flows; gates SubscriberName/Address population differently</td></tr>
+    </table>
+    <p>Special case: <strong>OrderType=129</strong> (Move Subscriber TOL, indy→corp or corp→indy) delegates address mapping to helper rulefunction.</p>
+
+    <h3 class="sub">8.2 ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Protocol</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>OMXFM CCBS channel</td><td>CCBS GetSubscriberHeader queue</td><td>JMS → SOAP</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td>OMXFM response channel</td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_GET_SUBSCRIBER_HEADER</code></td><td>JMS</td></tr>
+    </table>
+
+    <h3 class="sub">8.3 Backend API Details</h3>
+    <table>
+      <tr><th>Property</th><th>Value</th></tr>
+      <tr><td>System</td><td>CCBS / AMDOCS L9</td></tr>
+      <tr><td>Operation</td><td><code>GetSubscriberHeader</code></td></tr>
+      <tr><td>Schema</td><td><code>amdocs.csm3g.datatypes.SubscriberHeader</code> (xsd4)</td></tr>
+      <tr><td>Request root</td><td><code>GetSubscriberHeaderRequest/SubscriberIdInfo/subscrNumber</code></td></tr>
+      <tr><td>Response root</td><td><code>SubscriberHeader</code></td></tr>
+      <tr><td>Correlation</td><td>JMSCorrelationID + ":CCBS_GET_SUBSCRIBER_HEADER_RES:" + RefID</td></tr>
+    </table>
+
+    <h3 class="sub">8.4 BE Working Memory — Fields Written</h3>
+    <table>
+      <tr><th>Concept</th><th>Field</th><th>Source</th></tr>
+      <tr><td>Subscriber (POU)</td><td><code>ExtendedInfo["dealerCode"]</code></td><td>OrderData/DealerCode → fallback: response DealerCode</td></tr>
+      <tr><td>Subscriber (POU)</td><td><code>MSISDN</code></td><td>response SubscriberGeneralInfo/PrimResourceVal (only if blank)</td></tr>
+      <tr><td>Account</td><td><code>AccountID</code></td><td>response L9AccountId (only if param=ACCOUNT_ID and blank)</td></tr>
+      <tr><td>Subscriber</td><td><code>SubscriberGeneralInfo.ConvergenceCode</code></td><td>response L9ConvergenceCode</td></tr>
+      <tr><td>Subscriber</td><td><code>ExtendedInfo["CONVERGENT_CODE"]</code></td><td>from SubscriberGeneralInfo.ConvergenceCode</td></tr>
+      <tr><td>Subscriber</td><td><code>ExtendedInfo["subStatus"]</code></td><td><code>OMXUtils.asciiCodeToText(SubStatus int)</code></td></tr>
+      <tr><td>Subscriber</td><td><code>Status</code> (int)</td><td>response SubscriberStatusInfo/SubStatus</td></tr>
+      <tr><td>Subscriber</td><td><code>SubscriberGeneralInfo.Language</code></td><td>response Language (only if param=LANGUAGE)</td></tr>
+      <tr><td>Subscriber</td><td><code>SubscriberName.*</code></td><td>NameAddressInfoList (LinkType=83) — INDY or CORP variant</td></tr>
+      <tr><td>Subscriber</td><td><code>SubscriberName2.*</code></td><td>via CCBS_GET_SUBSCRIBER_HEADER_EXTEND helper (LinkType=72)</td></tr>
+      <tr><td>Subscriber</td><td><code>SubscriberAddress.*</code></td><td>NameAddressInfoList (LinkType=83, AddressInfo)</td></tr>
+      <tr><td>Subscriber</td><td><code>SubscriberAddress2.*</code></td><td>NameAddressInfoList (LinkType=72, AddressInfo)</td></tr>
+    </table>
+
+    <h3 class="sub">8.5 ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Key</th><th>Required</th><th>Usage</th></tr>
+      <tr><td><code>ALT_CES</code></td><td>Optional</td><td>Overrides CES endpoint when param ALT_CES=Y and this value != ""</td></tr>
+    </table>
+
+    <h3 class="sub">8.6 Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/IsEnableUserPass</code></td><td>Gate for credential headers</td></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/ClearField</code></td><td>Sentinel value — field set to null when response value equals this</td></tr>
+      <tr><td><code>OMX_OM/OrderTypes/GetNameAddress</code></td><td>CSV of order types that enable name/address backfill</td></tr>
+      <tr><td><code>OMX_OM/OrderTypes/UpdateNameAddress</code></td><td>CSV of order types that are name-address update flows</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Logger component name</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>Gate for payload capture in audit log</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="card" id="s9">
+  <div class="card-header"><span class="section-number">§9</span>Detailed Payload Build</div>
+  <div class="card-body">
+
+    <h3 class="sub">9.1 XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>XSLT Param</th><th>Bound from</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>Working memory: <code>Concepts.OrderRequest.OrderRequest</code></td></tr>
+      <tr><td><code>$orderCurrentActivity</code></td><td>Working memory: <code>Concepts.OM.ProcessConfig.Activity</code></td></tr>
+      <tr><td><code>$globalVariables</code></td><td>BE global variables store</td></tr>
+      <tr><td><code>$altParam</code></td><td><code>GetActivityParameterValueFromKey(orderCurrentActivity, "ALT_CES")</code></td></tr>
+      <tr><td><code>$subId</code></td><td>SubscriberId from matched subscriber</td></tr>
+    </table>
+
+    <h3 class="sub">9.2 Request Payload Structure</h3>
+    <pre><span class="xt">&lt;ns1:GetSubscriberHeaderRequest</span>
+  <span class="xa">xmlns:ns1</span>=<span class="st">"http://www.tibco.com/schemas/tibco-ccbs-client/Schemas/SubscriberServices/Schema.xsd4"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;ns1:SubscriberIdInfo&gt;</span>
+    <span class="xt">&lt;ns1:subscrNumber&gt;</span><span class="st">$subId (SubscriberId)</span><span class="xt">&lt;/ns1:subscrNumber&gt;</span>
+  <span class="xt">&lt;/ns1:SubscriberIdInfo&gt;</span>
+<span class="xt">&lt;/ns1:GetSubscriberHeaderRequest&gt;</span></pre>
+
+    <h3 class="sub">9.3 JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Header</th><th>Value</th><th>Condition</th></tr>
+      <tr><td><code>CES</code></td><td>ALT_CES value OR OrderData/CES</td><td>ALT_CES routing logic (see §6.2)</td></tr>
+      <tr><td><code>UserName</code></td><td>OrderData/User</td><td>Only when <code>IsEnableUserPass='true'</code></td></tr>
+      <tr><td><code>PassWord</code></td><td>OrderData/Password</td><td>Only when <code>IsEnableUserPass='true'</code></td></tr>
+      <tr><td><code>JMSCorrelationID</code></td><td>Set by OMX framework</td><td>Always</td></tr>
+    </table>
+
+    <h3 class="sub">9.4 Complete Generated XML Example (POU variant)</h3>
+    <pre><span class="xt">&lt;ns1:GetSubscriberHeaderRequest</span>
+  <span class="xa">xmlns:ns1</span>=<span class="st">"http://www.tibco.com/schemas/tibco-ccbs-client/Schemas/SubscriberServices/Schema.xsd4"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;ns1:SubscriberIdInfo&gt;</span>
+    <span class="xt">&lt;ns1:subscrNumber&gt;</span>0812345678<span class="xt">&lt;/ns1:subscrNumber&gt;</span>
+  <span class="xt">&lt;/ns1:SubscriberIdInfo&gt;</span>
+<span class="xt">&lt;/ns1:GetSubscriberHeaderRequest&gt;</span>
+
+<span class="cm">&lt;!-- Optional credential headers (when IsEnableUserPass=true) --&gt;</span>
+<span class="xt">&lt;UserName&gt;</span>omx_svc<span class="xt">&lt;/UserName&gt;</span>
+<span class="xt">&lt;PassWord&gt;</span>***<span class="xt">&lt;/PassWord&gt;</span></pre>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="card" id="s10">
+  <div class="card-header"><span class="section-number">§10</span>XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p><em>POU Variant (Variant ①) — ns1 namespace prefix</em></p>
+    <ul class="xslt-tree">
+      <li>
+        <div class="tree-row"><span class="tree-tag">GetSubscriberHeaderRequest</span><span class="tree-ns">(ns1: SubscriberServices/Schema.xsd4)</span></div>
+        <ul>
+          <li>
+            <div class="tree-row"><span class="tree-tag">SubscriberIdInfo</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">subscrNumber</span><span class="tree-arrow">←</span><span class="tree-src">$subId (SubscriberId from matched subscriber)</span><span class="badge badge-green">Always</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <br/>
+    <p><em>COU Variant (Variant ②) — identical payload but ns prefix instead of ns1</em></p>
+    <ul class="xslt-tree">
+      <li>
+        <div class="tree-row"><span class="tree-tag">GetSubscriberHeaderRequest</span><span class="tree-ns">(ns: SubscriberServices/Schema.xsd4)</span></div>
+        <ul>
+          <li>
+            <div class="tree-row"><span class="tree-tag">SubscriberIdInfo</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">subscrNumber</span><span class="tree-arrow">←</span><span class="tree-src">$subId (SubscriberId from matched subscriber)</span><span class="badge badge-green">Always</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <br/>
+    <p><em>JMS Event Headers (added alongside payload)</em></p>
+    <ul class="xslt-tree">
+      <li>
+        <div class="tree-row"><span class="tree-tag">event</span><span class="tree-ns">(JMS envelope)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[ALT_CES]/Value OR OrderData/CES</span><span class="tree-cond">[Conditional: ALT_CES routing]</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">OrderData/User</span><span class="tree-cond">[IsEnableUserPass='true']</span><span class="badge badge-purple">Credential-gated</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">OrderData/Password</span><span class="tree-cond">[IsEnableUserPass='true']</span><span class="badge badge-purple">Credential-gated</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <br/>
+    <p><em>Legend:</em> <span class="tree-src" style="color:#a6e3a1">Green = XPath source</span> &nbsp; <span class="tree-src-static" style="color:#fab387">Orange = static value</span> &nbsp; <span class="tree-cond" style="color:#cba6f7">Purple = condition</span></p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card" id="s11">
+  <div class="card-header"><span class="section-number">§11</span>Audit Logging</div>
+  <div class="card-body">
+    <p>Audit log is emitted in the <strong>response handler</strong> (not in the request rule). See §19.5.</p>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>OPERATION_NAME</td><td><code>CCBS_GET_SUBSCRIBER_HEADER</code></td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>Response received for CCBS_GET_SUBSCRIBER_HEADER</code></td></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat(pid, "_RES")</code></td></tr>
+      <tr><td>COMPONENT_NAME</td><td><code>OMX_CEP</code> global</td></tr>
+      <tr><td>TARGET_SYSTEM</td><td><code>OMX_FM</code> global</td></tr>
+      <tr><td>payload</td><td>Included when <code>WritePayload="true"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="card" id="s12">
+  <div class="card-header"><span class="section-number">§12</span>Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Call</th><th>Status Code</th><th>Meaning</th></tr>
+      <tr><td><code>GetActivityStatusString("1", false)</code></td><td>1</td><td>Active / In-Progress</td></tr>
+      <tr><td><code>SkipActivity("4")</code></td><td>4</td><td>Skipped (PreExecCheck failed)</td></tr>
+    </table>
+    <p>Status is persisted via <code>SendDataToDB</code> after <code>GetActivityStatusString</code>.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card" id="s14">
+  <div class="card-header"><span class="section-number">§14</span>Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Signature</th><th>Purpose</th></tr>
+      <tr><td><code>PurgePendingRequestsBeforeResubmit</code></td><td>(Activity) → void</td><td>Clears throttle queue before resubmit cycle</td></tr>
+      <tr><td><code>ActionRequestEvent</code></td><td>(Event, Activity) → boolean</td><td>Throttle-queues request; returns true if slot available and fires immediately</td></tr>
+      <tr><td><code>SendFirstRequestEvent</code></td><td>(Activity) → void</td><td>Dispatches first request from throttle queue</td></tr>
+      <tr><td><code>GetActivityParameterValueFromKey</code></td><td>(Activity, String) → String</td><td>Retrieves keyed parameter from current activity config</td></tr>
+      <tr><td><code>GetActivityStatusString</code></td><td>(String, boolean) → String</td><td>Returns activity status string for DB persistence</td></tr>
+      <tr><td><code>SkipActivity</code></td><td>(String) → void</td><td>Sets activity status to SKIP with given code</td></tr>
+      <tr><td><code>SendDataToDB</code></td><td>() → void</td><td>Persists current activity state to database</td></tr>
+      <tr><td><code>BRMS.IsBlank</code></td><td>(String) → boolean</td><td>Response handler: true if null or empty</td></tr>
+      <tr><td><code>BRMS.IsBlankOrStringNull</code></td><td>(String) → boolean</td><td>Response handler: true if null, empty, or "null"</td></tr>
+      <tr><td><code>OMXUtils.asciiCodeToText</code></td><td>(int) → String</td><td>Response handler: converts integer SubStatus code to human-readable text</td></tr>
+      <tr><td><code>ActionResponseEvent</code></td><td>(Activity) → boolean</td><td>Response handler: IntraActivitySequencing — releases next request from queue</td></tr>
+      <tr><td><code>CCBS_GET_SUBSCRIBER_HEADER_EXTEND</code></td><td>(orderRequest, eventResponse, i, j, k) → void</td><td>Response handler: maps SubscriberName2 fields from LinkType=72 NameAddressInfo</td></tr>
+      <tr><td><code>MapSubscriberAddressFromGetSubscriberHeader</code></td><td>(orderRequest, eventResponse, i, j, k) → void</td><td>Response handler: maps SubscriberAddress for OrderType=129 (TOL migration)</td></tr>
+      <tr><td><code>MapSubscriberAddress2FromGetSubscriberHeader</code></td><td>(orderRequest, eventResponse, i, j, k) → void</td><td>Response handler: maps SubscriberAddress2 for OrderType=129 (TOL migration)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card" id="s15">
+  <div class="card-header"><span class="section-number">§15</span>Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_CCBS_GET_SUBSCRIBER_HEADER (rule)
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit()  [on resubmit]
+├── GetActivityParameterValueFromKey(orderCurrentActivity, "ALT_CES")
+├── [XSLT payload build — namespace variant selection]
+├── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+├── IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)
+├── GetActivityStatusString("1", false)
+├── SendDataToDB()
+└── SkipActivity("4")  [skip path]
+
+Response_CCBS_GET_SUBSCRIBER_HEADER (rulefunction)
+├── GetActivityParameterValueFromKey(currActivity, "MAP_VALUE")
+├── Instance.createInstance(CCBS_GetSubscriberHeaderRes XSLT)
+├── [POU loop] BRMS.IsBlankOrStringNull(sub.MSISDN)
+├── [POU loop] BRMS.IsBlankOrStringNull(acct.AccountID)  [if MAP_VALUE="ACCOUNT_ID"]
+├── [COU+POU loop] OMXUtils.asciiCodeToText(SubStatus)
+├── [NameAddress loop]
+│   ├── BRMS.IsBlank(field)  [for each mapped field]
+│   ├── CCBS_GET_SUBSCRIBER_HEADER_EXTEND()  [SubscriberName2, LinkType=72]
+│   ├── MapSubscriberAddressFromGetSubscriberHeader()  [OrderType=129]
+│   └── MapSubscriberAddress2FromGetSubscriberHeader()  [OrderType=129]
+├── Event.Ext.sendEventImmediate(Logger)
+└── IntraActivitySequencing.ActionResponseEvent(currActivity)</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card" id="s17">
+  <div class="card-header"><span class="section-number">§17</span>Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 class="sub">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Must support ALT_CES routing override per-subscriber via activity parameter</td></tr>
+      <tr><td>R2</td><td>Must throttle CCBS requests (IntraActivitySequencing) — never send parallel requests for the same order</td></tr>
+      <tr><td>R3</td><td>Must support optional credential headers gated by global IsEnableUserPass flag</td></tr>
+      <tr><td>R4</td><td>Must enrich: MSISDN backfill, dealerCode, AccountID, subStatus (ASCII-to-text), ConvergenceCode/CONVERGENT_CODE, Language (conditional on MAP_VALUE param)</td></tr>
+      <tr><td>R5</td><td>Must map full name/address for INDY (NameType=73) and CORP (NameType=66) via LinkType=83 NameAddressInfo</td></tr>
+      <tr><td>R6</td><td>Must map extended contact info (Language, PrefContactNumber, HomePhone, BizPhone, etc.) via LinkType=72</td></tr>
+      <tr><td>R7</td><td>Must map 15 AddressElement slots to SubscriberAddress (LinkType=83) and SubscriberAddress2 (LinkType=72)</td></tr>
+      <tr><td>R8</td><td>Must apply ClearField erasure pattern (field == global ClearField → null) for all name/address fields</td></tr>
+      <tr><td>R9</td><td>Must support OrderType=129 (TOL move indy↔corp) via helper rulefunction delegation</td></tr>
+    </table>
+
+    <h3 class="sub" style="margin-top:16px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>IntraActivitySequencing serializes CCBS calls; high-volume orders will be slower than parallel fan-out</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Accept trade-off for CCBS session safety; tune queue timeout</td></tr>
+      <tr><td>551-line response rulefunction with complex nested loops and three helper delegates — hard to unit-test</td><td><span class="badge badge-red">HIGH</span></td><td>Break into atomic services in migration; separate name, address, and status enrichment</td></tr>
+      <tr><td>ClearField sentinel comparison uses string equality on global variable — brittle if global changes</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Replace with explicit null/empty-check in new system</td></tr>
+      <tr><td>AddressElement1-15 positional mapping has no schema enforcement — wrong index → silent data corruption</td><td><span class="badge badge-red">HIGH</span></td><td>Replace with named element mapping in modernised CCBS adapter</td></tr>
+      <tr><td>CCBS schema uses two namespace variants (ns1/ns) for identical payload — maintenance risk</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Unify namespace handling in REST/JSON successor</td></tr>
+      <tr><td>OrderType=129 special-case logic is silent — no audit trail for TOL delegation</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Add explicit event type logging in migration</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="card" id="s18">
+  <div class="card-header"><span class="section-number">§18</span>Full Source Code (Request Rule)</div>
+  <div class="card-body">
+    <pre><span class="cm">/**</span>
+<span class="cm"> * Request_CCBS_GET_SUBSCRIBER_HEADER</span>
+<span class="cm"> * Author: warawich-nb</span>
+<span class="cm"> */</span>
+<span class="kw">rule</span> <span class="fn">Rules.OMConsumers.OMXFM.Request.Request_CCBS_GET_SUBSCRIBER_HEADER</span> {
+  attribute { validity = ACTION; }
+  scope {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+  }
+  when { <span class="cm">/* standard OMXFM activation condition */</span> }
+  then {
+    <span class="cm">// On resubmit: purge previously queued-but-unsent requests</span>
+    IntraActivitySequencing.<span class="fn">PurgePendingRequestsBeforeResubmit</span>(orderCurrentActivity);
+
+    <span class="cm">// Resolve CES endpoint (ALT_CES routing)</span>
+    <span class="kw">String</span> altParam = <span class="fn">GetActivityParameterValueFromKey</span>(orderCurrentActivity, <span class="st">"ALT_CES"</span>);
+    <span class="cm">// ALT_CES XSLT logic embedded in event builder:
+    // when altParam="Y" AND ExtendedInfo[ALT_CES]/Value != "" → CES = ExtendedInfo[ALT_CES]/Value
+    // otherwise → CES = OrderData/CES</span>
+
+    <span class="cm">// Build JMS request event (POU variant — ns1 prefix):
+    // [§9.8: GetSubscriberHeaderRequest/SubscriberIdInfo/subscrNumber = SubscriberId]
+    // Credential headers added when IsEnableUserPass='true'</span>
+    Event reqEvent = Event.createEvent(<span class="st">"xslt://{{/Events/OMConsumers/OMXFM/Request/CCBS_GET_SUBSCRIBER_HEADER}}"</span>
+      <span class="cm">/* XSLT output: GetSubscriberHeaderRequest + credential headers — see §9 */</span>);
+
+    <span class="cm">// Throttle via IntraActivitySequencing (serialise CCBS calls)</span>
+    IntraActivitySequencing.<span class="fn">ActionRequestEvent</span>(reqEvent, orderCurrentActivity);
+    <span class="cm">// COU variant: same payload with ns prefix (not ns1)</span>
+
+    <span class="cm">// Completion path:</span>
+    IntraActivitySequencing.<span class="fn">SendFirstRequestEvent</span>(orderCurrentActivity);
+    <span class="kw">String</span> status = <span class="fn">GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+    <span class="fn">SendDataToDB</span>();
+
+    <span class="cm">// Skip path (PreExecCheck failed):</span>
+    <span class="cm">// SkipActivity("4");</span>
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="card" id="s19">
+  <div class="card-header"><span class="section-number">§19</span>Response Message Rule</div>
+  <div class="card-body">
+
+    <h3 class="sub">19.1 Overview</h3>
+    <p>The response rulefunction (<code>Response_CCBS_GET_SUBSCRIBER_HEADER.rulefunction</code>, 551 lines) is the data-enrichment heart of this FM. It:</p>
+    <ol style="padding-left:18px;margin:8px 0">
+      <li>Creates a custom <code>CCBS_GetSubscriberHeaderRes</code> concept (not standard ResponseBase)</li>
+      <li>Enriches POU subscriber: dealerCode, MSISDN backfill, AccountID (param-gated)</li>
+      <li>Enriches all subscribers: ConvergenceCode, CONVERGENT_CODE, subStatus (ASCII decode), Language (param-gated)</li>
+      <li>Maps full Name/Address from NameAddressInfoList using LinkType/NameType routing</li>
+      <li>Applies ClearField erasure pattern across all mapped fields</li>
+      <li>Delegates SubscriberName2 to <code>CCBS_GET_SUBSCRIBER_HEADER_EXTEND</code></li>
+      <li>Delegates OrderType=129 address mapping to <code>MapSubscriberAddress/Address2FromGetSubscriberHeader</code></li>
+      <li>Emits audit log event, then releases next queued request via <code>ActionResponseEvent</code></li>
+    </ol>
+
+    <h3 class="sub">19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order graph — read and enriched</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_GET_SUBSCRIBER_HEADER</code></td><td>CCBS response event</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity — holds Request/Response arrays, RequestCount</td></tr>
+    </table>
+
+    <h3 class="sub">19.3 Response Concept Construction</h3>
+    <p>Uses a <strong>custom concept</strong> with deterministic extId (not random like ResponseBase):</p>
+    <ul class="xslt-tree">
+      <li>
+        <div class="tree-row"><span class="tree-tag">CCBS_GetSubscriberHeaderRes</span><span class="tree-ns">(Concepts.FM.Response)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">extId</span><span class="tree-arrow">←</span><span class="tree-src">JMSCorrelationID + ":CCBS_GET_SUBSCRIBER_HEADER_RES:" + RefID</span><span class="tree-cond">[deterministic composite key for dedup]</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 class="sub">19.4 Data Enrichment — Name/Address Routing Matrix</h3>
+    <p>Each <code>NameAddressInfoList[k]</code> entry is dispatched by a 2-key routing matrix:</p>
+    <table>
+      <tr><th>LinkType</th><th>Code</th><th>NameType</th><th>Code</th><th>Target Concept</th><th>Fields Mapped</th></tr>
+      <tr><td>83</td><td>S (Subscriber)</td><td>73</td><td>I (Individual)</td><td>SubscriberName (INDY)</td><td>Title, FirstName, MiddleName, LastName, MaritalStatus, FaxNumber, Email, Gender, IdentificationType, Identification</td></tr>
+      <tr><td>83</td><td>S (Subscriber)</td><td>66</td><td>B (Business)</td><td>SubscriberName (CORP)</td><td>OrgName, BranchCode, BranchName, StoreId, FaxNumber, Email, IdentificationType, Identification</td></tr>
+      <tr><td>72</td><td>H (Extended)</td><td>73 or 66</td><td>—</td><td>SubscriberName2 (via helper)</td><td>Delegated to CCBS_GET_SUBSCRIBER_HEADER_EXTEND()</td></tr>
+      <tr><td>83</td><td>S</td><td>—</td><td>AddressInfo</td><td>SubscriberAddress</td><td>HouseNo, Moo, RoomNo, Floor, BuildingName, Soi, StreetName, Tumbon, Amphur, City, Zip, Country, TimeAtAddress, TypeOfAccomodation, subSoi (15 slots)</td></tr>
+      <tr><td>72</td><td>H</td><td>—</td><td>AddressInfo</td><td>SubscriberAddress2</td><td>Same 15 slots as SubscriberAddress</td></tr>
+    </table>
+    <p>LinkType=72 extended contact fields (not delegated):</p>
+    <table>
+      <tr><th>NameElement</th><th>Field</th></tr>
+      <tr><td>NameElement1</td><td>Language</td></tr>
+      <tr><td>NameElement2</td><td>PrefContactNumber</td></tr>
+      <tr><td>NameElement3</td><td>HomePhone</td></tr>
+      <tr><td>NameElement4</td><td>BizPhone</td></tr>
+      <tr><td>NameElement5</td><td>privatePhone</td></tr>
+      <tr><td>NameElement6</td><td>AuthFirstName</td></tr>
+      <tr><td>NameElement7</td><td>AuthLastName</td></tr>
+      <tr><td>NameElement8</td><td>AuthPersonalId</td></tr>
+      <tr><td>NameElement9</td><td>POAName</td></tr>
+      <tr><td>NameElement10</td><td>POAPersonalId</td></tr>
+    </table>
+
+    <h3 class="sub">19.5 ClearField Erasure Pattern</h3>
+    <div class="info-box">For every mapped field: if the current value (uppercased) equals the global <code>ClearField</code> sentinel → set the field to <code>null</code>. This allows downstream systems to explicitly request a field be erased by passing the ClearField token. The pattern is applied universally to all 40+ name/address fields.</div>
+
+    <h3 class="sub">19.6 Response Completion (IntraActivitySequencing)</h3>
+    <table>
+      <tr><th>Call</th><th>Return</th><th>Effect</th></tr>
+      <tr><td><code>ActionResponseEvent(currActivity)</code></td><td>"true"</td><td>All queued requests handled; activity can proceed</td></tr>
+      <tr><td><code>ActionResponseEvent(currActivity)</code></td><td>"false"</td><td>More queued requests remain; next one released from throttle queue</td></tr>
+    </table>
+    <div class="warn-box"><strong>Note:</strong> Unlike most response rulefunctions, there is NO <code>currActivity.RequestCount == successResponseCount</code> fan-in check. Completion is entirely managed by <code>ActionResponseEvent</code> which handles the throttle queue internally.</div>
+
+    <h3 class="sub">19.7 Response Audit Logging</h3>
+    <ul class="xslt-tree">
+      <li>
+        <div class="tree-row"><span class="tree-tag">createEvent</span><span class="tree-ns">(Events/OMConsumers/OMXESB/Logger)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ESBUUID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">PROCESS_ID</span><span class="tree-arrow">←</span><span class="tree-src-static">concat(pid, "_RES")</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">COMPONENT_NAME</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OPERATION_NAME</span><span class="tree-arrow">←</span><span class="tree-src-static">"CCBS_GET_SUBSCRIBER_HEADER"</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">TARGET_SYSTEM</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/OMX_COMMON/Component_Name/OMX_FM</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">LOG_LEVEL</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/.../MSG_LOG_LEVEL/INFO</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">AUDIT_TRACE</span><span class="tree-arrow">←</span><span class="tree-src-static">"Response received for CCBS_GET_SUBSCRIBER_HEADER"</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">AUDIT_TS</span><span class="tree-arrow">←</span><span class="tree-src-static">tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload/ns:ServicePayload</span><span class="tree-arrow">←</span><span class="tree-src">copy-of $eventResponse</span><span class="tree-cond">[WritePayload="true"]</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+</div><!-- end container -->
+
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCBS_GET_SUBSCRIBER_HEADER</footer>
+</body>
+</html>

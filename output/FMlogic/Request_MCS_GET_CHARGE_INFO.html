@@ -1,0 +1,743 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_MCS_GET_CHARGE_INFO — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}.code-block .xa{color:#f9e2af}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-jms{background:#FFE0B2;color:#E65100}.badge-db{background:#E8EAF6;color:#3949AB}.badge-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.flow-text{flex:1}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+.callout.purple{border-color:var(--skip);background:#F3E5F5}
+.callout.bug{border-color:#e53935;background:#FFEBEE}
+details>summary{cursor:pointer;padding:8px 4px;font-weight:600;color:var(--true-dark)}
+details[open]>summary{color:var(--true-red)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_MCS_GET_CHARGE_INFO</h1>
+    <div class="subtitle">Per-offer charge information retrieval from MCS — fan-out per subscriber offer with 3-part compound RefID (subRefId:Soc:FE_OR_CCBS), idempotent ExtendedInfo enrichment</div>
+    <div class="meta-row">
+      <span class="meta-badge">Target: MCS (Subscription Management)</span>
+      <span class="meta-badge">Pattern: Per-offer fan-out</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Author: DESKTOP-995HR2V</span>
+      <span class="meta-badge">Generated: 2026-08-04</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This FM retrieves charge information (price, VAT amount, charge flag, expiration date) from MCS for each SubscriberOffer across POU and COU subscribers. It fires one event <strong>per offer per subscriber</strong>, using a 3-part compound correlation key (<code>subRefId:Soc:FE_OR_CCBS</code>) that allows per-offer deduplication on resubmit. The response enriches the matching offer with <code>AMOUNT</code>, <code>IS_CHARGE</code>, and <code>AMOUNT_IN_VAT</code> ExtendedInfo entries, and optionally sets <code>offer.ExpirationDate</code>.</p>
+    <div class="callout purple">
+      <strong>Key differentiator:</strong> The compound RefID (<code>subRefId:Soc:FE_OR_CCBS</code>) enables offer-level resubmit dedup — before firing, the rule checks existing responses for a matching RefID with CompletionStatus == 2. This is distinct from standard RequestCount-based resubmit guards.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_MCS_GET_CHARGE_INFO.rule</code></td><td>Path: Rules/OMConsumers/OMXFM/Request/ (150 lines)</td></tr>
+      <tr><td>Response file</td><td><code>Response_MCS_GET_CHARGE_INFO.rulefunction</code></td><td>Path: RuleFunctions/OrderResponse/ (133 lines)</td></tr>
+      <tr><td>Author</td><td>DESKTOP-995HR2V</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td></td></tr>
+      <tr><td>Request event</td><td><code>Events.OMConsumers.OMXFM.Request.MCS_GET_CHARGE_INFO</code></td><td></td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.MCS_GET_CHARGE_INFO</code></td><td></td></tr>
+      <tr><td>Request schema NS</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MCS/GetChargeInfoRequest.xsd</code> (ns9)</td><td></td></tr>
+      <tr><td>Response schema NS</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MCS/GetChargeInfoResponse.xsd</code> (ns / xsd2)</td><td>Two namespace prefixes used</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td><td>Standard ResponseBase</td></tr>
+      <tr><td>Correlation key</td><td><code>subRefId + ":" + offer.Soc + ":" + FE_OR_CCBS</code></td><td>3-part compound key; enables per-offer dedup</td></tr>
+      <tr><td>Fan-out level</td><td>Per SubscriberOffer (POU + COU subscribers)</td><td>No Agreement offer processing</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Order data — subscriber/offer source; written with charge enrichment by response</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity state; Response[] checked for per-offer dedup</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN Conditions -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "MCS_GET_CHARGE_INFO"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "MCS_GET_CHARGE_INFO"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>Resubmit flag</strong> — <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-text"><strong>Obtain nextAct</strong> and extract <code>chkXPath = nextAct.PreExecCheck</code></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-text"><strong>isSkipped = true</strong> (default; set to false when first event fires)</div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>Loop POU Subscriber × SubscriberOffers:</strong>
+      <ul style="margin:8px 0 0 16px;line-height:2">
+        <li>Extract <code>filter = offer/ExtendedInfo[Name="FE_OR_CCBS"]/Value</code></li>
+        <li>Compose <code>offerRefId = pSubRefId + ":" + offer.Soc + ":" + filter</code></li>
+        <li><strong>reqSuccess dedup check:</strong> loop Response[] — if ReferenceId==offerRefId AND CompletionStatus==2 → skip this offer</li>
+        <li>If !reqSuccess: evaluate PreExecCheck via <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code></li>
+        <li>If chkRes=="true": fire event, <code>isSkipped=false</code>, if !isActResub then <code>RequestCount++</code>, send audit log</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>Loop COU Subscriber × SubscriberOffers</strong> — same pattern using <code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code></div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-text"><strong>Status update:</strong> if !isSkipped → <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code>; else <code>SkipActivity("4")</code></div></div>
+    <div class="flow-step"><div class="flow-num">7</div><div class="flow-text"><strong>Exception:</strong> try/catch → <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> Rule Action (THEN) — Step-by-Step Logic</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§6.1 — 3-Part Compound Correlation Key</h3>
+    <div class="callout purple">
+      <strong>Unique to MCS_GET_CHARGE_INFO:</strong> The RefID is a colon-delimited 3-part key:<br/>
+      <code>offerRefId = pSubRefId + ":" + offer.Soc + ":" + filter</code><br/>
+      where <code>filter = offer/ExtendedInfo[Name="FE_OR_CCBS"]/Value</code><br/>
+      This allows the response handler to unambiguously locate the exact offer being updated, including distinguishing FE vs CCBS variants of the same SOC.
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§6.2 — Per-Offer Resubmit Dedup Check</h3>
+    <div class="code-block"><span class="kw">boolean</span> reqSuccess = <span class="kw">false</span>;
+<span class="kw">for</span>(<span class="kw">int</span> iResp = <span class="nu">0</span>; iResp &lt; orderCurrentActivity.Response@length; iResp++) {
+    <span class="kw">if</span>(<span class="fn">String.equals</span>(orderCurrentActivity.Response[iResp].ReferenceId, offerRefId)
+        &amp;&amp; orderCurrentActivity.Response[iResp].CompletionStatus == <span class="nu">2</span>) {
+        reqSuccess = <span class="kw">true</span>;
+    }
+}
+<span class="kw">if</span> (!reqSuccess) {
+    <span class="cm">// proceed with PreExecCheck + fire event</span>
+}</div>
+    <p style="margin-top:10px;font-size:0.88rem">This check is independent of <code>isActResub</code>. An offer with a matching response (CompletionStatus==2) is silently skipped even on the first run if a prior execution already succeeded.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§6.3 — PreExecCheck Helpers (FilterWithExtendedInfo variants)</h3>
+    <table>
+      <tr><th>Context</th><th>Helper Function</th></tr>
+      <tr><td>POU Subscriber offer</td><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, pSubRefId, offer.Soc, filter)</code></td></tr>
+      <tr><td>COU Subscriber offer</td><td><code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, cSubRefId, offer.Soc, pOuRefId, filter)</code></td></tr>
+    </table>
+    <div class="callout info" style="margin-top:8px">These are <strong>extended variants</strong> that include the FE_OR_CCBS filter value in the serialized XML context, unlike the standard <code>GetXMLForSubscriberOffer</code> used in other FMs.</div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§6.4 — isSkipped Logic</h3>
+    <div class="callout warning">
+      <code>isSkipped</code> starts <code>true</code>. It is set to <code>false</code> the moment any event is sent. If the outer loop completes without sending any events (all offers failed PreExecCheck or reqSuccess), <code>SkipActivity("4")</code> is called.
+    </div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> Data Extraction — FE_OR_CCBS Filter</div>
+  <div class="section-body">
+    <p>The <code>filter</code> value is extracted per-offer using an inline XPath evaluation:</p>
+    <div class="code-block"><span class="kw">String</span> filter = <span class="fn">XPath.evalAsString</span>(<span class="str">"xpath://&lt;expr&gt;$offer/ExtendedInfo[Name=\"FE_OR_CCBS\"]/Value&lt;/expr&gt;..."</span>);</div>
+    <p style="margin-top:10px;font-size:0.88rem">This value (e.g., "FE", "CCBS", "CRM") is appended to the correlation key and later used in the response to filter the correct offer variant.</p>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§8.1 — Order Type Dependencies</h3>
+    <p>No order-type branching. Fires for all orders that include SubscriberOffers with a PROGRAM_CODE ExtendedInfo entry.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>OMX FM JMS</td><td>MCS_GET_CHARGE_INFO queue</td><td>Per-offer charge info request</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td>OMX FM JMS</td><td>MCS_GET_CHARGE_INFO response queue</td><td>Charge price, IS_CHARGE flag, VAT amount, expire date</td></tr>
+      <tr><td><span class="badge badge-log">LOG</span></td><td>OMXESB Logger</td><td>Audit event (immediate)</td><td>Per-offer request and response audit trail</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>MCS (Subscription Management / Charge Information)</td></tr>
+      <tr><td>Request operation</td><td>getChargeInfo</td></tr>
+      <tr><td>Request root element</td><td><code>ns9:getChargeInfoReq</code></td></tr>
+      <tr><td>Response root element</td><td><code>ns:getChargeInfoRes</code> / <code>xsd2:getChargeInfoRes</code></td></tr>
+      <tr><td>Correlation</td><td>3-part RefID: <code>subRefId:Soc:FE_OR_CCBS</code></td></tr>
+      <tr><td>Send pattern</td><td>Fan-out — one event per SubscriberOffer (POU + COU)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept</th><th>Field</th><th>Access</th><th>Notes</th></tr>
+      <tr><td>OrderRequest</td><td>ParentOU[].Subscriber[].SubscriberOffers[]</td><td>READ</td><td>Offer iteration source</td></tr>
+      <tr><td>OrderRequest</td><td>ParentOU[].ChildOU[].Subscriber[].SubscriberOffers[]</td><td>READ</td><td>COU offer iteration source</td></tr>
+      <tr><td>SubscriberOffers</td><td>ExtendedInfo[Name="FE_OR_CCBS"].Value</td><td>READ</td><td>Used in correlation key + response matching</td></tr>
+      <tr><td>SubscriberOffers</td><td>ExtendedInfo[Name="PROGRAM_CODE"].Value</td><td>READ</td><td>Sent as ns9:pack_code in request</td></tr>
+      <tr><td>SubscriberOffers</td><td>ExtendedInfo[Name="AMOUNT"].Value</td><td>WRITTEN</td><td>Populated from ns:charge_price (idempotent)</td></tr>
+      <tr><td>SubscriberOffers</td><td>ExtendedInfo[Name="IS_CHARGE"].Value</td><td>WRITTEN</td><td>Y/N from ns:isCharge (idempotent)</td></tr>
+      <tr><td>SubscriberOffers</td><td>ExtendedInfo[Name="AMOUNT_IN_VAT"].Value</td><td>WRITTEN</td><td>From ns:charge_price_vat_roundup (idempotent)</td></tr>
+      <tr><td>SubscriberOffers</td><td>ExpirationDate</td><td>WRITTEN</td><td>From xsd2:date_info/xsd2:expire_date (if present)</td></tr>
+      <tr><td>Activity</td><td>Response[].ReferenceId, Response[].CompletionStatus</td><td>READ</td><td>Per-offer dedup check</td></tr>
+      <tr><td>Activity</td><td>RequestCount / Response[]</td><td>READ+WRITTEN</td><td>Fan-out count + fan-in tracking</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.5 — ExtendedInfo Fields Required (Request-side)</h3>
+    <table>
+      <tr><th>Name</th><th>Usage</th><th>Required?</th></tr>
+      <tr><td><code>FE_OR_CCBS</code></td><td>3rd segment of RefID correlation key; used to distinguish offer variants</td><td>Required for correlation</td></tr>
+      <tr><td><code>PROGRAM_CODE</code></td><td>Sent as <code>ns9:pack_code</code> in request payload</td><td>Optional (conditional in XSLT)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><code>OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>Credential gate — adds UserName/PassWord headers</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>Payload inclusion in audit log</td></tr>
+    </table>
+
+    <div class="callout warning" style="margin-top:12px">
+      <strong>Credential gate difference:</strong> Unlike OMX_RESOLVE_SOC_DATA which uses global variables for credentials, MCS_GET_CHARGE_INFO reads them from the order data: <code>$orderRequest/OrderData/User</code> and <code>$orderRequest/OrderData/Password</code>.
+    </div>
+  </div>
+</div>
+
+<!-- §9 Detailed Payload Build -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§9.1 — XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>Full OrderRequest concept</td></tr>
+      <tr><td><code>$offerRefId</code></td><td>Computed 3-part key: <code>subRefId:Soc:FE_OR_CCBS</code></td></tr>
+      <tr><td><code>$globalVariables</code></td><td>BE global variables tree</td></tr>
+      <tr><td><code>$offer</code></td><td>Current SubscriberOffers concept (for PROGRAM_CODE lookup)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.2 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Header</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>JMSPriority</td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional — <span class="badge badge-orange">unique: JMS priority from order</span></td></tr>
+      <tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional</td></tr>
+      <tr><td>OrderID</td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional</td></tr>
+      <tr><td>RefID</td><td><code>$offerRefId</code> (3-part compound key)</td><td>Always</td></tr>
+      <tr><td>UserName</td><td><code>$orderRequest/OrderData/User</code></td><td>IsEnableUserPass="true" AND $orderRequest/OrderData/User exists</td></tr>
+      <tr><td>PassWord</td><td><code>$orderRequest/OrderData/Password</code></td><td>IsEnableUserPass="true" AND $orderRequest/OrderData/Password exists</td></tr>
+      <tr><td>OrderType</td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.3 — Payload Fields</h3>
+    <table>
+      <tr><th>XML Element</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>ns9:transaction_id</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional</td></tr>
+      <tr><td><code>ns9:pack_code</code></td><td><code>$offer/ExtendedInfo[Name="PROGRAM_CODE"]/Value</code></td><td>Conditional — only sent if PROGRAM_CODE exists</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.4 — Complete Generated XML Example</h3>
+    <div class="code-block"><span class="cm">&lt;!-- JMS Headers --&gt;</span>
+<span class="xt">&lt;JMSPriority&gt;</span>5<span class="xt">&lt;/JMSPriority&gt;</span>
+<span class="xt">&lt;JMSCorrelationID&gt;</span>OMX-TRK-20250804-001<span class="xt">&lt;/JMSCorrelationID&gt;</span>
+<span class="xt">&lt;OrderID&gt;</span>ORD-12345<span class="xt">&lt;/OrderID&gt;</span>
+<span class="xt">&lt;RefID&gt;</span>SUB-REF-001:SOC_PKG_A:FE<span class="xt">&lt;/RefID&gt;</span>
+<span class="xt">&lt;OrderType&gt;</span>3<span class="xt">&lt;/OrderType&gt;</span>
+
+<span class="cm">&lt;!-- Payload --&gt;</span>
+<span class="xt">&lt;ns9:getChargeInfoReq</span> <span class="xa">xmlns:ns9</span>=<span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MCS/GetChargeInfoRequest.xsd"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;ns9:transaction_id&gt;</span>OMX-TRK-20250804-001<span class="xt">&lt;/ns9:transaction_id&gt;</span>
+  <span class="xt">&lt;ns9:pack_code&gt;</span>PROG-001<span class="xt">&lt;/ns9:pack_code&gt;</span>
+<span class="xt">&lt;/ns9:getChargeInfoReq&gt;</span></div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.5 — XSLT Stylesheet Source (Request)</h3>
+    <details>
+      <summary>Show request XSLT</summary>
+      <div class="code-block" style="margin-top:8px"><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:ns9</span>=<span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MCS/GetChargeInfoRequest.xsd"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="str">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">version</span>=<span class="str">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"orderRequest"</span><span class="xt">/&gt;</span>    <span class="cm">&lt;!-- full OrderRequest --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"offerRefId"</span><span class="xt">/&gt;</span>     <span class="cm">&lt;!-- 3-part compound key: subRefId:Soc:FE_OR_CCBS --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"offer"</span><span class="xt">/&gt;</span>          <span class="cm">&lt;!-- current SubscriberOffers concept --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="str">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderPriority"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;JMSPriority&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;&lt;/JMSPriority&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;JMSCorrelationID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/JMSCorrelationID&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/OrderID"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;OrderID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;&lt;/OrderID&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;RefID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$offerRefId"</span><span class="xt">/&gt;&lt;/RefID&gt;</span>
+      <span class="cm">&lt;!-- Credential gate: reads from order data, NOT global variables --&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass='true'"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/User"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;UserName&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/User"</span><span class="xt">/&gt;&lt;/UserName&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/Password"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;PassWord&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/Password"</span><span class="xt">/&gt;&lt;/PassWord&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/OrderType"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;OrderType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;&lt;/OrderType&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns9:getChargeInfoReq&gt;</span>
+          <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">&gt;</span>
+            <span class="xt">&lt;ns9:transaction_id&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/ns9:transaction_id&gt;</span>
+          <span class="xt">&lt;/xsl:if&gt;</span>
+          <span class="cm">&lt;!-- pack_code from PROGRAM_CODE ExtendedInfo --&gt;</span>
+          <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$offer/ExtendedInfo[Name='PROGRAM_CODE']/Value"</span><span class="xt">&gt;</span>
+            <span class="xt">&lt;ns9:pack_code&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$offer/ExtendedInfo[Name='PROGRAM_CODE']/Value"</span><span class="xt">/&gt;&lt;/ns9:pack_code&gt;</span>
+          <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;/ns9:getChargeInfoReq&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></div>
+    </details>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header"><span class="num">§10</span> XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">JMSPriority</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">RefID</span> <span class="tree-arrow">←</span> <span class="tree-src">$offerRefId (subRefId:Soc:FE_OR_CCBS)</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">UserName</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/User</span> <span class="badge badge-purple" style="font-size:0.7rem">Credential-gated: IsEnableUserPass + User exists</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">PassWord</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/Password</span> <span class="badge badge-purple" style="font-size:0.7rem">Credential-gated: IsEnableUserPass + Password exists</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-ns">ns9:</span><span class="tree-tag">getChargeInfoReq</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-ns">ns9:</span><span class="tree-tag">transaction_id</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns9:</span><span class="tree-tag">pack_code</span> <span class="tree-arrow">←</span> <span class="tree-src">$offer/ExtendedInfo[Name="PROGRAM_CODE"]/Value</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div style="margin-top:14px;padding-top:10px;border-top:1px solid #444;font-size:0.78rem;color:#888">
+        <strong style="color:#cdd6f4">Legend:</strong>
+        <span style="color:#a6e3a1">green</span> = XPath source &nbsp;|&nbsp; <span style="color:#fab387">orange</span> = literal &nbsp;|&nbsp; <span class="badge badge-green" style="font-size:0.7rem">Always</span> always &nbsp;|&nbsp; <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span> xsl:if &nbsp;|&nbsp; <span class="badge badge-purple" style="font-size:0.7rem">Credential-gated</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header"><span class="num">§11</span> Audit Logging</div>
+  <div class="section-body">
+    <div class="grid2">
+      <div>
+        <h3 style="color:var(--true-dark);margin-bottom:10px">Request Audit (per offer)</h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for MCS_GET_CHARGE_INFO"</code> (static)</td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"MCS_GET_CHARGE_INFO"</code></td></tr>
+          <tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate()</code> — immediate</td></tr>
+          <tr><td>Audit payload</td><td>copy of <code>$reqEvent</code></td></tr>
+        </table>
+      </div>
+      <div>
+        <h3 style="color:var(--true-dark);margin-bottom:10px">Response Audit</h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>"Response received for MCS_MCS_GET_CHARGE_INFO"</code> <span class="badge badge-red">⚠ Typo: double MCS_</span></td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"MCS_GET_CHARGE_INFO"</code></td></tr>
+          <tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate()</code></td></tr>
+        </table>
+        <div class="callout bug" style="margin-top:8px;font-size:0.83rem">
+          <strong>Bug:</strong> Response AUDIT_TRACE reads <code>"Response received for MCS_MCS_GET_CHARGE_INFO"</code> — double "MCS_" prefix. Log searches for this FM need to account for this typo.
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header"><span class="num">§12</span> Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Call</th><th>Status Code</th></tr>
+      <tr><td>At least one event sent (!isSkipped)</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" (RUNNING)</td></tr>
+      <tr><td>No events sent (isSkipped)</td><td><code>SkipActivity("4")</code></td><td>"4" (SKIPPED)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header"><span class="num">§13</span> Exception / Error Handling</div>
+  <div class="section-body">
+    <div class="code-block"><span class="kw">try</span> {
+    <span class="cm">// ... entire rule body ...</span>
+} <span class="kw">catch</span> (Exception ae) {
+    <span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+}</div>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header"><span class="num">§14</span> Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, pSubRefId, soc, filter)</code></td><td>Serialize POU subscriber offer with FE_OR_CCBS filter for PreExecCheck</td></tr>
+      <tr><td><code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, cSubRefId, soc, pOuRefId, filter)</code></td><td>Serialize COU subscriber offer with filter for PreExecCheck</td></tr>
+      <tr><td><code>GetActivityStatusString(code, flag)</code></td><td>Activity status string builder</td></tr>
+      <tr><td><code>SendDataToDB(orderRequest)</code></td><td>Persist order state to DB</td></tr>
+      <tr><td><code>SkipActivity(orderRequest, activity, code)</code></td><td>Mark activity as skipped</td></tr>
+      <tr><td><code>HandleActivityException(orderRequest, activity, ae, msg)</code></td><td>Standard exception handler</td></tr>
+      <tr><td><code>XPath.evalAsString(xpath)</code></td><td>Extract FE_OR_CCBS / expire_date string values</td></tr>
+      <tr><td><code>XPath.evalAsBoolean(xpath)</code></td><td>Check exists() for idempotent ExtendedInfo creation</td></tr>
+      <tr><td><code>DateTime.parseString(str, format)</code></td><td>Parse MCS expire_date string to DateTime</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§15</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_MCS_GET_CHARGE_INFO (rule)
+├── Instance.getByExtIdByUri(NextActivityName, conceptPath)
+├── XPath.evalAsString(...)  [extract FE_OR_CCBS filter per offer]
+├── String.equals(Response[i].ReferenceId, offerRefId)  [resubmit dedup]
+├── GetXMLForSubscriberOfferFilterWithExtendedInfo(...)  [POU PreExecCheck]
+├── GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(...)  [COU PreExecCheck]
+├── XPath.execute(chkXPath, sXML, ns)  [evaluate PreExecCheck]
+├── Event.createEvent("xslt://MCS_GET_CHARGE_INFO...")  [build request event]
+├── Event.Ext.sendEventImmediate(reqEvent)  [fire per-offer request]
+├── Event.Ext.sendEventImmediate(auditEvent)  [fire audit log]
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(orderRequest, activity, "4")
+└── RuleFunctions.Helpers.HandleActivityException(...)  [catch]
+
+Response_MCS_GET_CHARGE_INFO (rulefunction)
+├── Instance.createInstance("xslt://{{ResponseBase}}")  [standard ResponseBase]
+├── String.split(eventResponse.RefID, ":")  [parse 3-part key → subRefId, soc, source]
+├── XPath.evalAsString(FE_OR_CCBS per offer)  [match filter in response]
+├── String.equals(subscriber.RefId, subRefId)  [find target subscriber]
+├── String.equals(offer.Soc, soc)  [find target offer]
+├── String.equals(feOrCcbs, source)  [validate filter match]
+├── XPath.evalAsBoolean("exists($offer/ExtendedInfo[Name='AMOUNT']/Value)")  [idempotent check]
+├── Instance.createInstance("xslt://{{SubscriberOffersExtendedInfo}}")  [AMOUNT]
+├── XPath.evalAsBoolean("exists($offer/ExtendedInfo[Name='IS_CHARGE']/Value)")  [idempotent]
+├── Instance.createInstance("xslt://{{SubscriberOffersExtendedInfo}}")  [IS_CHARGE: xsl:choose]
+├── XPath.evalAsBoolean("exists($offer/ExtendedInfo[Name='AMOUNT_IN_VAT']/Value)")  [idempotent]
+├── Instance.createInstance("xslt://{{SubscriberOffersExtendedInfo}}")  [AMOUNT_IN_VAT]
+├── XPath.evalAsBoolean("exists(xsd2:date_info/xsd2:expire_date)")  [expire date check]
+├── XPath.evalAsString(expire_date path)  [extract date string]
+├── DateTime.parseString(mcs_expire_date, "yyyy-MM-dd HH:mm:ss")  [parse to DateTime]
+├── Event.Ext.sendEventImmediate(auditLogEvent)
+└── XPath.evalAsInt("count(Response[tib:right(tib:trim(ResponseCode),3)='000'])")  [fan-in]</div>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header"><span class="num">§16</span> Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Key Fields</th><th>Role</th></tr>
+      <tr><td><code>Concepts.FM.Base.ResponseBase</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId</td><td>Standard response holder</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>Soc, ExtendedInfo[], ExpirationDate</td><td>Per-offer source and enrichment target</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.ExtendedInfos.SubscriberOffersExtendedInfo</code></td><td>Name, Value</td><td>AMOUNT / IS_CHARGE / AMOUNT_IN_VAT entries</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§17</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Fire one MCS request per SubscriberOffer across POU and COU subscribers.</td></tr>
+      <tr><td>R2</td><td>Correlation key must be 3-part: <code>subRefId + ":" + offer.Soc + ":" + FE_OR_CCBS</code>.</td></tr>
+      <tr><td>R3</td><td>Before firing per offer, check existing responses for matching RefID + CompletionStatus==2 (per-offer resubmit dedup).</td></tr>
+      <tr><td>R4</td><td>PreExecCheck uses <code>FilterWithExtendedInfo</code> helper variants that include FE_OR_CCBS in serialized XML context.</td></tr>
+      <tr><td>R5</td><td>Send <code>ns9:pack_code</code> from <code>offer/ExtendedInfo[Name="PROGRAM_CODE"]/Value</code> (not from standard SOC fields).</td></tr>
+      <tr><td>R6</td><td>Credential gate reads UserName/Password from <code>OrderData.User</code> / <code>OrderData.Password</code> — NOT from global variables.</td></tr>
+      <tr><td>R7</td><td>Set JMSPriority from <code>$orderRequest/OrderPriority</code>.</td></tr>
+      <tr><td>R8</td><td>Response handler: parse RefID as 3-part split; match subscriber by RefId, offer by Soc, validate filter match.</td></tr>
+      <tr><td>R9</td><td>Idempotent ExtendedInfo creation — only create AMOUNT/IS_CHARGE/AMOUNT_IN_VAT if not already exists.</td></tr>
+      <tr><td>R10</td><td>IS_CHARGE: xsl:choose — "Y" if <code>ns:isCharge="true"</code> else "N".</td></tr>
+      <tr><td>R11</td><td>ExpirationDate: set from <code>xsd2:date_info/xsd2:expire_date</code> using format <code>"yyyy-MM-dd HH:mm:ss"</code>.</td></tr>
+      <tr><td>R12</td><td>Fan-in: <code>RequestCount == count(Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code>.</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:18px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>AUDIT_TRACE typo: <code>"Response received for MCS_MCS_GET_CHARGE_INFO"</code> — double MCS_ prefix</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Fix in migration — use <code>"Response received for MCS_GET_CHARGE_INFO"</code>; update log search queries</td>
+      </tr>
+      <tr>
+        <td>Two namespace prefixes (<code>ns:</code> and <code>xsd2:</code>) for GetChargeInfoResponse.xsd — inconsistent</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Standardize to one prefix in migration; verify both paths return correct data</td>
+      </tr>
+      <tr>
+        <td>Credential source inconsistency — this FM uses OrderData.User/Password while other FMs use global variables</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Standardize credential source in migration; document which FM uses which source</td>
+      </tr>
+      <tr>
+        <td>Per-offer dedup check (reqSuccess) is an O(Responses × Offers) scan — expensive for large orders</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Modern impl: use a Set/Map for O(1) dedup lookup</td>
+      </tr>
+      <tr>
+        <td>isSkipped logic — if all offers fail PreExecCheck, activity is silently skipped; no warning logged</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Add debug logging when SkipActivity is called; confirm expected business behavior</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+  <div class="section-header"><span class="num">§18</span> Full Source Code</div>
+  <div class="section-body">
+    <details>
+      <summary>Request_MCS_GET_CHARGE_INFO.rule (150 lines)</summary>
+      <div class="code-block" style="margin-top:8px"><span class="cm">/**
+ * Request_MCS_GET_CHARGE_INFO
+ * Author: DESKTOP-995HR2V
+ * Per-offer MCS charge info retrieval
+ */</span>
+<span class="kw">rule</span> <span class="fn">Rules.OMConsumers.OMXFM.Request.Request_MCS_GET_CHARGE_INFO</span> {
+  <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+  <span class="kw">declare</span> {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="str">"MCS_GET_CHARGE_INFO"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="str">"MCS_GET_CHARGE_INFO"</span>;
+    orderCurrentActivity.Status == <span class="str">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">try</span> {
+      <span class="ty">Activity</span> nextAct = <span class="fn">Instance.getByExtIdByUri</span>(orderRequest.ProcessFlow.NextActivityName, ...);
+      <span class="kw">String</span> chkXPath = nextAct.PreExecCheck;
+      <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+      <span class="cm">/*** POU Subscriber × SubscriberOffers loop ***/</span>
+      <span class="kw">for</span> (<span class="kw">int</span> p...) {
+        <span class="kw">for</span> (<span class="kw">int</span> ps...) {
+          <span class="kw">for</span> (<span class="kw">int</span> psof...) {
+            <span class="kw">String</span> filter = <span class="fn">XPath.evalAsString</span>(<span class="str">"$offer/ExtendedInfo[Name='FE_OR_CCBS']/Value"</span>);
+            <span class="kw">String</span> offerRefId = pSubRefId + <span class="str">":"</span> + offer.Soc + <span class="str">":"</span> + filter;
+
+            <span class="cm">// Per-offer resubmit dedup check</span>
+            <span class="kw">boolean</span> reqSuccess = <span class="kw">false</span>;
+            <span class="kw">for</span> (<span class="kw">int</span> iResp...) {
+              <span class="kw">if</span> (<span class="fn">String.equals</span>(Response[iResp].ReferenceId, offerRefId) &amp;&amp; Response[iResp].CompletionStatus == <span class="nu">2</span>) reqSuccess = <span class="kw">true</span>;
+            }
+
+            <span class="kw">if</span> (!reqSuccess) {
+              <span class="kw">String</span> chkRes = <span class="str">"true"</span>;
+              <span class="kw">if</span> (<span class="fn">String.length</span>(nextAct.PreExecCheck) &gt; <span class="nu">0</span>) {
+                <span class="kw">String</span> sXML = <span class="fn">GetXMLForSubscriberOfferFilterWithExtendedInfo</span>(orderRequest, pSubRefId, offer.Soc, filter);
+                chkRes = <span class="fn">XPath.execute</span>(<span class="str">"/("</span> + chkXPath + <span class="str">")"</span>, sXML, ns);
+              }
+              <span class="kw">if</span> (<span class="fn">String.equals</span>(chkRes, <span class="str">"true"</span>)) {
+                <span class="cm">// [XSLT: ns9:getChargeInfoReq with transaction_id + pack_code from PROGRAM_CODE]</span>
+                <span class="cm">// [See §9.5 for full XSLT source]</span>
+                <span class="ty">Event</span> reqEvent = <span class="fn">Event.createEvent</span>(<span class="str">"xslt://{{MCS_GET_CHARGE_INFO}}..."</span>);
+                <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+                isSkipped = <span class="kw">false</span>;
+                <span class="kw">if</span> (!isActResub) orderCurrentActivity.RequestCount++;
+                <span class="fn">Event.Ext.sendEventImmediate</span>(auditEvent);
+              }
+            }
+          }
+        }
+      }
+
+      <span class="cm">/*** COU Subscriber × SubscriberOffers loop (same pattern) ***/</span>
+      <span class="cm">// [uses GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo]</span>
+
+      <span class="kw">if</span> (!isSkipped) {
+        orderCurrentActivity.Status = <span class="fn">GetActivityStatusString</span>(<span class="str">"1"</span>, <span class="kw">false</span>);
+        <span class="fn">SendDataToDB</span>(orderRequest);
+      } <span class="kw">else</span> {
+        <span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="str">"4"</span>);
+      }
+    } <span class="kw">catch</span> (Exception ae) {
+      <span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+    }
+  }
+}</div>
+    </details>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="section">
+  <div class="section-header"><span class="num">§19</span> Response Message Rule</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§19.1 — Overview</h3>
+    <p>The response handler parses the 3-part RefID to locate the target subscriber/offer, then idempotently appends <code>AMOUNT</code>, <code>IS_CHARGE</code>, and <code>AMOUNT_IN_VAT</code> ExtendedInfo entries and optionally sets <code>offer.ExpirationDate</code>. The triple before-write checks prevent duplicate ExtendedInfo entries on retry/resubmit.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>WRITTEN — offer ExtendedInfo + ExpirationDate updated</td></tr>
+      <tr><td><code>eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.MCS_GET_CHARGE_INFO</td><td>Backend response event</td></tr>
+      <tr><td><code>currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Response[] appended; fan-in checked</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.3 — ResponseBase Construction</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseMsg</span> <span class="tree-cond">(source=ResponseMsg)</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/RefID</span> <span class="tree-cond">(source=RefID; 3-part key echoed back)</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.4 — RefID Parsing &amp; Offer Matching</h3>
+    <div class="code-block"><span class="kw">String</span>[] refIDs = <span class="fn">String.split</span>(eventResponse.RefID, <span class="str">":"</span>);
+<span class="kw">String</span> subRefId = refIDs[<span class="nu">0</span>]; <span class="cm">// subscriber RefId</span>
+<span class="kw">String</span> soc      = refIDs[<span class="nu">1</span>]; <span class="cm">// offer.Soc</span>
+<span class="kw">String</span> source   = refIDs[<span class="nu">2</span>]; <span class="cm">// FE_OR_CCBS filter value</span>
+
+<span class="cm">// Find subscriber: subscriber.RefId == subRefId</span>
+<span class="cm">// Find offer:      offer.Soc == soc</span>
+<span class="cm">// Validate filter: feOrCcbs (from offer ExtendedInfo) == source</span></div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.5 — ExtendedInfo Enrichment (Idempotent)</h3>
+    <table>
+      <tr><th>ExtendedInfo Name</th><th>Value Source</th><th>Logic</th></tr>
+      <tr><td><code>AMOUNT</code></td><td><code>ns:getChargeInfoRes/ns:charge_price</code></td><td>Create only if not exists; Value conditional on charge_price present</td></tr>
+      <tr><td><code>IS_CHARGE</code></td><td><code>ns:getChargeInfoRes/ns:isCharge</code></td><td>Create only if not exists; xsl:choose: "Y" if isCharge="true" else "N" (always set)</td></tr>
+      <tr><td><code>AMOUNT_IN_VAT</code></td><td><code>ns:getChargeInfoRes/ns:charge_price_vat_roundup</code></td><td>Create only if not exists; Value conditional on charge_price_vat_roundup present</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.6 — ExpirationDate</h3>
+    <div class="code-block"><span class="cm">// Namespace note: expire_date uses xsd2: prefix for same schema as ns: above</span>
+<span class="kw">if</span> (<span class="fn">XPath.evalAsBoolean</span>(<span class="str">"exists($eventResponse/payload/xsd2:getChargeInfoRes/xsd2:date_info/xsd2:expire_date)"</span>)) {
+    <span class="kw">String</span> mcs_expire_date = <span class="fn">XPath.evalAsString</span>(<span class="str">"$eventResponse/payload/xsd2:getChargeInfoRes/xsd2:date_info/xsd2:expire_date"</span>);
+    offer.ExpirationDate = <span class="fn">DateTime.parseString</span>(mcs_expire_date, <span class="str">"yyyy-MM-dd HH:mm:ss"</span>);
+}</div>
+    <div class="callout warning" style="font-size:0.83rem;margin-top:8px">Note: <code>ns:</code> and <code>xsd2:</code> both refer to <code>GetChargeInfoResponse.xsd</code>. The response XSLT uses <code>ns:</code> for charge_price/isCharge but the inline XPath for expire_date uses the <code>xsd2:</code> prefix — both map to the same schema.</div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.7 — Fan-in Completion Logic</h3>
+    <div class="code-block"><span class="kw">int</span> successResponseCount = <span class="fn">XPath.evalAsInt</span>(
+    <span class="str">"count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = '000'])"</span>);
+<span class="kw">if</span>(currActivity.RequestCount == successResponseCount) {
+    <span class="kw">return</span> <span class="str">"true"</span>;
+} <span class="kw">else</span> {
+    <span class="kw">return</span> <span class="str">"false"</span>;
+}</div>
+    <p style="margin-top:10px;font-size:0.88rem">Standard "000" success count fan-in — returns "true" only when all per-offer requests have received a "000" response. One failed offer (non-"000" ResponseCode) will cause the fan-in to wait indefinitely.</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

@@ -1,0 +1,888 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px 24px;}
+.page-header h1{font-size:1.8rem;font-weight:700;letter-spacing:0.5px;margin-bottom:6px;}
+.page-header .subtitle{font-size:0.95rem;opacity:0.85;margin-bottom:14px;}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:3px 12px;font-size:0.78rem;}
+.container{max-width:1280px;margin:0 auto;padding:24px 32px;}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:22px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);font-weight:600;padding:9px 12px;text-align:left;border-bottom:2px solid var(--true-red);}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:nth-child(even){background:#FDF5F5;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:0.82rem;border-left:3px solid var(--true-red);line-height:1.5;}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:0.85em;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600;}
+.b-red{background:#FFE0E0;color:var(--true-dark);}
+.b-green{background:#E8F5E9;color:var(--success);}
+.b-orange{background:#FFF3E0;color:var(--warning);}
+.b-blue{background:#E3F0FD;color:var(--info);}
+.b-purple{background:#F3E5F5;color:var(--skip);}
+.b-teal{background:#E0F2F1;color:#00695c;}
+.b-jms{background:#FFE0B2;color:#E65100;}
+.b-db{background:#E8EAF6;color:#3949AB;}
+.b-log{background:#F1F8E9;color:#558B2F;}
+.b-high{background:#FFE0E0;color:#B71C1C;}
+.b-medium{background:#FFF3E0;color:#E65100;}
+.b-low{background:#E8F5E9;color:#2E7D32;}
+.warn-box{background:#FFF8E1;border-left:4px solid #FFB300;padding:10px 14px;border-radius:4px;margin:10px 0;font-size:0.88rem;}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);padding:10px 14px;border-radius:4px;margin:10px 0;font-size:0.88rem;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:6px 0 6px 36px;position:relative;border-bottom:1px dashed #f0e0e0;}
+.step-list li::before{content:counter(step);position:absolute;left:0;top:6px;background:var(--true-red);color:#fff;width:22px;height:22px;border-radius:50%;text-align:center;line-height:22px;font-size:0.75rem;font-weight:700;}
+.kw{color:#cba6f7;}
+.ty{color:#89b4fa;}
+.st{color:#a6e3a1;}
+.cm{color:#6c7086;font-style:italic;}
+.nu{color:#fab387;}
+.fn{color:#f38ba8;}
+.xt{color:#89dceb;}
+.xa{color:#f9e2af;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px;}
+.tree-ns{color:#6c7086;font-size:0.78rem;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.legend{display:flex;flex-wrap:wrap;gap:10px;padding:10px 0;font-size:0.8rem;}
+.legend-item{display:flex;align-items:center;gap:4px;}
+.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+footer{text-align:center;padding:24px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN</h1>
+  <div class="subtitle">TIBCO BusinessEvents FM Logic — ATS Campaign Rule Change Campaign Request Handler</div>
+  <div class="meta-chips">
+    <span class="chip">Priority: 5</span>
+    <span class="chip">ForwardChain: true</span>
+    <span class="chip">Backend: ATS</span>
+    <span class="chip">Operation: ChangeCampaign</span>
+    <span class="chip">Dispatch: sendEventImmediate</span>
+    <span class="chip">Fan-out: per-BundleInfo</span>
+    <span class="chip">Fan-in: ResponseCode suffix "000"</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This rule fires when <code>ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN</code> becomes the next activity in the order process flow. It sends one <strong>ChangeCampaign</strong> request to ATS per <code>BundleInfo</code> entry in the order, instructing ATS to update convergence campaign rules for all subscribers linked to that bundle. The request payload carries the CampaignCode, ConvergenceType, and a product list of matching TMV subscribers with their current SOC offers, price plan, and contract metadata.</p>
+    <p style="margin-top:10px;">If no <code>BundleInfo</code> entries exist the step is skipped via <code>SkipActivity("4")</code>. The response handler enriches working memory by writing the ATS-resolved <code>ConvergenceAction</code> back to the <code>BundleInfo</code> concept and updating each subscriber's <code>SubscriberOffers.Action</code> and <code>FE_OR_CCBS</code> extended-info based on the <code>benefitCampaignList</code> returned by ATS.</p>
+    <div class="info-box">Operates at <strong>order-level BundleInfo fan-out</strong>: one request per bundle (not per subscriber). Subscribers are aggregated into a single request's <code>productList</code> by matching <code>ExtendedInfo[Name='CampaignCode']/Value</code> against the bundle's <code>CampaignCode</code>.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Rule type</td><td>Request dispatcher</td></tr>
+      <tr><td>Target backend</td><td>ATS — Campaign Management</td></tr>
+      <tr><td>Operation</td><td>ChangeCampaign (ns:requestName = "ChangeCampaign")</td></tr>
+      <tr><td>Channel</td><td>OMX-Mobile (ns:channel = "OMX-Mobile")</td></tr>
+      <tr><td>Dispatch method</td><td><code>Event.Ext.sendEventImmediate</code></td></tr>
+      <tr><td>Request event type</td><td><code>Events.OMConsumers.OMXFM.Request.ATS_CAMPAIGN_RULE</code></td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.ATS_CAMPAIGN_RULE</code></td></tr>
+      <tr><td>Fan-out granularity</td><td>Per BundleInfo (order-level)</td></tr>
+      <tr><td>Fan-in mechanism</td><td>ResponseCode suffix "000" count vs RequestCount</td></tr>
+      <tr><td>Skip trigger</td><td>BundleInfo count = 0 → SkipActivity("4")</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Declared Objects -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order concept; provides BundleInfo array, subscriber data, order metadata</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current process step; provides Status, RequestCount, Response[]</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Matches the activity concept to the current order's next step</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"</code></td><td>Ensures this rule fires only for this specific FM</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"</code></td><td>Double-check on ProcessFlow routing state</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity must be in waiting state before dispatching</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li>Compute <code>isActResub</code> = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</li>
+      <li>Resolve activity by extId; read <code>PreExecCheck</code> XPath</li>
+      <li>If PreExecCheck present: serialize orderRequest and evaluate XPath; store result in <code>chkRes</code></li>
+      <li>If <code>chkRes == "true"</code>: count <code>BundleInfo</code> elements in orderRequest.OrderData</li>
+      <li>For each BundleInfo[i]: build <code>ATS_CAMPAIGN_RULE</code> request event via XSLT (CampaignCode, ConvergenceType, subscriber product list)</li>
+      <li>Dispatch each request via <code>Event.Ext.sendEventImmediate</code></li>
+      <li>If <code>!isActResub</code>: increment <code>orderCurrentActivity.RequestCount++</code></li>
+      <li>Send audit log event (OPERATION_NAME = "ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN")</li>
+      <li>Mark <code>isSkipped = false</code></li>
+      <li>If any request was sent: set activity Status = "1"; call <code>SendDataToDB</code></li>
+      <li>If no requests sent (skipped): call <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></li>
+      <li>On exception: call <code>HandleActivityException</code></li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 Action Logic -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Step-by-Step Logic</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:8px;color:var(--true-dark);">Resubmission flag</h3>
+    <p><code>boolean isActResub = (orderCurrentActivity.RequestCount &gt; 0 &amp;&amp; orderRequest.IsOrderResubmitted);</code> — prevents double-incrementing RequestCount on retry.</p>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">PreExecCheck gate</h3>
+    <p>If <code>nextAct.PreExecCheck</code> is non-empty, the rule serializes <code>orderRequest</code> using <code>Instance.serializeUsingDefaults</code> and evaluates the XPath string. Only if result is "true" does dispatch proceed.</p>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">BundleInfo fan-out</h3>
+    <p>Counts <code>orderRequest/OrderData/BundleInfo</code> elements. For each index <code>i</code>, creates one <code>ATS_CAMPAIGN_RULE</code> request event and dispatches it immediately. The payload includes:</p>
+    <ul style="margin-left:20px;margin-top:6px;">
+      <li>channel = "OMX-Mobile", requestName = "ChangeCampaign"</li>
+      <li>function = <code>BundleInfo[$i+1]/ConvergenceType</code></li>
+      <li>convergenceCode = <code>BundleInfo[$i+1]/CampaignCode</code></li>
+      <li>A <code>productList</code> per subscriber whose <code>ExtendedInfo[Name='CampaignCode']/Value</code> matches the bundle's CampaignCode</li>
+    </ul>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">nextRCnextPP (null fallback)</h3>
+    <div class="warn-box">The variable <code>nextRCnextPP</code> is declared and initialized to <code>null</code> but is never populated. It is used as fallback for <code>rcRate</code>, <code>nextRcRate</code>, and <code>nextPricePlan</code> in the XSLT. This means those fields will be empty string when CCBS SubscriberOffers data is absent. <span class="badge b-medium">[MEDIUM]</span> Risk: ATS may reject requests with empty rate fields depending on configuration.</div>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">Skip and status transitions</h3>
+    <table>
+      <tr><th>Scenario</th><th>Action</th><th>Status</th></tr>
+      <tr><td>BundleInfo count = 0 (after PreExecCheck)</td><td>SkipActivity("4")</td><td>Skip</td></tr>
+      <tr><td>PreExecCheck returns "false"</td><td>SkipActivity("4")</td><td>Skip</td></tr>
+      <tr><td>At least 1 request dispatched</td><td>Status = "1", SendDataToDB</td><td>Running</td></tr>
+      <tr><td>Exception</td><td>HandleActivityException</td><td>Error</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction</div>
+  <div class="section-body">
+    <p>No pipe-delimited or GROUP-format parsing. Data is extracted via XPath directly from in-memory concepts:</p>
+    <table>
+      <tr><th>Field</th><th>Source XPath</th><th>Notes</th></tr>
+      <tr><td>BundleInfo count</td><td><code>count($orderRequest/OrderData/BundleInfo)</code></td><td>Drives fan-out loop count</td></tr>
+      <tr><td>ConvergenceType</td><td><code>$orderRequest/OrderData/BundleInfo[$i+1]/ConvergenceType</code></td><td>Maps to ns:function</td></tr>
+      <tr><td>CampaignCode</td><td><code>$orderRequest/OrderData/BundleInfo[$i+1]/CampaignCode</code></td><td>Maps to ns:convergenceCode; also used as filter for subscriber selection</td></tr>
+      <tr><td>Subscriber filter</td><td><code>Subscriber[contains(ExtendedInfo[Name='CampaignCode']/Value, BundleInfo[$i+1]/CampaignCode)]</code></td><td>Selects subscribers belonging to the bundle</td></tr>
+      <tr><td>rcRate (CCBS)</td><td><code>SubscriberOffers[ServiceType='80' and FE_OR_CCBS='CCBS']/OfferRate</code></td><td>Falls back to null (empty) if absent</td></tr>
+      <tr><td>nextRcRate (FE)</td><td><code>SubscriberOffers[ServiceType='80' and FE_OR_CCBS='FE']/OfferRate</code></td><td>Falls back to null if absent</td></tr>
+      <tr><td>pricePlan</td><td><code>SubscriberOffers[ServiceType='80' and FE_OR_CCBS='CCBS']/OfferName</code></td><td>Conditional (xsl:if)</td></tr>
+      <tr><td>nextPricePlan</td><td><code>SubscriberOffers[ServiceType='80' and FE_OR_CCBS='FE']/OfferName</code></td><td>Falls back to null if absent</td></tr>
+      <tr><td>Contract SOCs</td><td><code>SubscriberOffers[ServiceType='85' and TR_CONTRACT_IND=Y and !expired]</code></td><td>Date-filtered; only non-expired contracts included</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="margin-bottom:8px;color:var(--true-dark);">§8.1 — Order Type Dependencies</h3>
+    <p>The rule fires for any order reaching <code>ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN</code> in the process flow. Within the payload, <strong>OrderType=4</strong> triggers special SOC list logic:</p>
+    <table>
+      <tr><th>OrderType</th><th>SOC list (socListInfo) logic</th></tr>
+      <tr><td>4 + FE_OR_CCBS=ATS</td><td>Loops ServiceType=85 with TR_CONTRACT_IND=Y, non-expired; contractNew="Existing"</td></tr>
+      <tr><td>4 + FE_OR_CCBS != ATS</td><td>Loops FE SubscriberOffers; contractNew="New" if FE, else "Existing"</td></tr>
+      <tr><td>Other</td><td>Loops ServiceType=85 with TR_CONTRACT_IND=Y, non-expired; contractNew determined by FE_OR_CCBS</td></tr>
+    </table>
+    <p style="margin-top:8px;">Additionally, when <code>OrderType=4</code> and <code>FE_OR_CCBS != ATS</code>: appends <code>ns:extendedInfo</code> with name=REMOVE_CONTRACT value=Y.</p>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Dispatch</th><th>Backend</th></tr>
+      <tr>
+        <td><span class="badge b-jms">OUTBOUND</span></td>
+        <td><code>Events.OMConsumers.OMXFM.Request.ATS_CAMPAIGN_RULE</code></td>
+        <td><code>Event.Ext.sendEventImmediate</code></td>
+        <td>ATS — ChangeCampaign</td>
+      </tr>
+      <tr>
+        <td><span class="badge b-log">LOG</span></td>
+        <td><code>Events.OMConsumers.OMXESB.Logger</code></td>
+        <td><code>Event.Ext.sendEventImmediate</code></td>
+        <td>Audit log sink</td>
+      </tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Schema NS</th><th>Key Fields Sent</th></tr>
+      <tr>
+        <td>ATS</td>
+        <td>ChangeCampaign</td>
+        <td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/ATS/CampaignRule.xsd</code></td>
+        <td>channel, requestName, function(ConvergenceType), convergenceCode(CampaignCode), productList[]/productType, accessNumber, familyType, isChange, tmhProductInfo</td>
+      </tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept Field</th><th>Access</th><th>Purpose</th></tr>
+      <tr><td><code>orderRequest.OrderData.BundleInfo[*]</code></td><td>READ</td><td>Fan-out source; CampaignCode and ConvergenceType drive request</td></tr>
+      <tr><td><code>orderRequest.OrderData.OrderID</code></td><td>READ</td><td>Request correlation</td></tr>
+      <tr><td><code>orderRequest.OrderData.OMXTrackingId</code></td><td>READ</td><td>JMSCorrelationID; audit ESBUUID</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.RefId</code></td><td>READ</td><td>RefID in request</td></tr>
+      <tr><td><code>orderRequest.OrderData.OrderType</code></td><td>READ</td><td>Drives SOC list branching logic</td></tr>
+      <tr><td><code>orderRequest.OrderPriority</code></td><td>READ</td><td>JMSPriority</td></tr>
+      <tr><td><code>Subscriber.MSISDN</code></td><td>READ</td><td>accessNumber in productList</td></tr>
+      <tr><td><code>Subscriber.ExtendedInfo[Name='CampaignCode']/Value</code></td><td>READ</td><td>Filter: subscriber belongs to this bundle</td></tr>
+      <tr><td><code>Subscriber.ExtendedInfo[Name='FamilyType']/Value</code></td><td>READ</td><td>familyType in productList (conditional)</td></tr>
+      <tr><td><code>Subscriber.ExtendedInfo[Name='FE_OR_CCBS']/Value</code></td><td>READ</td><td>isChange logic (ATS→N, other→Y); OrderType=4 SOC branching</td></tr>
+      <tr><td><code>SubscriberOffers[ServiceType='80']</code></td><td>READ</td><td>rcRate / nextRcRate / pricePlan / nextPricePlan in tmhProductInfo</td></tr>
+      <tr><td><code>SubscriberOffers[ServiceType='85']</code></td><td>READ</td><td>Contract SOCs (socListInfo)</td></tr>
+      <tr><td><code>orderCurrentActivity.RequestCount</code></td><td>READ/WRITE</td><td>Fan-in counter; incremented per dispatched request</td></tr>
+      <tr><td><code>orderCurrentActivity.Status</code></td><td>WRITE</td><td>Set to "1" after successful dispatch</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§8.5 — ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Name</th><th>Required/Optional</th><th>Where Used</th></tr>
+      <tr><td>CampaignCode</td><td>Required (filter)</td><td>Subscriber selection for productList — must match BundleInfo.CampaignCode</td></tr>
+      <tr><td>FamilyType</td><td>Optional</td><td>ns:familyType in productList (emitted only if present)</td></tr>
+      <tr><td>FE_OR_CCBS</td><td>Required</td><td>isChange flag (ATS→N); OrderType=4 SOC branching; REMOVE_CONTRACT extendedInfo trigger</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Usage</th></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>LOG_LEVEL in audit log</td></tr>
+      <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Guards payload inclusion in audit log</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3 style="margin-bottom:8px;color:var(--true-dark);">§9.1 — XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>XSLT Param</th><th>Bound From</th><th>Purpose</th></tr>
+      <tr><td><code>$orderRequest</code></td><td><code>orderRequest</code> (working memory concept)</td><td>Order data source</td></tr>
+      <tr><td><code>$i</code></td><td>Loop index (0-based)</td><td>BundleInfo array index</td></tr>
+      <tr><td><code>$nextRCnextPP</code></td><td><code>null</code> (never set)</td><td>Fallback for rate/plan fields (always empty)</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§9.2 — Event Container Construction</h3>
+    <p>Event extId is generated via <code>OMXUtils:generateTrackingID()</code> (custom function).</p>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th></tr>
+      <tr><td>JMSPriority</td><td><code>$orderRequest/OrderPriority</code></td></tr>
+      <tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+      <tr><td>OrderID</td><td><code>$orderRequest/OrderData/OrderID</code></td></tr>
+      <tr><td>RefID</td><td><code>$orderRequest/OrderData/Customer/RefId</code></td></tr>
+      <tr><td>OrderType</td><td><code>$orderRequest/OrderData/OrderType</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§9.4 — Payload Root Element</h3>
+    <p>Root: <code>ns:CampaignRuleRequest</code> (ns = <code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/ATS/CampaignRule.xsd</code>)</p>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§9.5 — Conditional Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Condition</th><th>Value when met</th></tr>
+      <tr><td>ns:familyType</td><td><code>ExtendedInfo[Name='FamilyType']/Value</code> exists</td><td>FamilyType extended-info value</td></tr>
+      <tr><td>ns:pricePlan</td><td><code>SubscriberOffers[ServiceType='80' and CCBS]/OfferName</code> exists</td><td>CCBS offer name</td></tr>
+      <tr><td>socListInfo (contract SOC)</td><td>ServiceType=85, TR_CONTRACT_IND=Y, TR_ORIG_CONTRACT_EXPIRE_DATE &gt;= today</td><td>soc, serviceType, contractInd=Y, contractNew</td></tr>
+      <tr><td>ns:extendedInfo[REMOVE_CONTRACT=Y]</td><td>OrderType=4 AND FE_OR_CCBS != ATS</td><td>name=REMOVE_CONTRACT, value=Y</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§9.6 — Core Payload / Product Block</h3>
+    <p>For each subscriber in <code>ParentOU/Subscriber</code> matching the BundleInfo CampaignCode:</p>
+    <table>
+      <tr><th>Element</th><th>Value</th></tr>
+      <tr><td>ns:productType</td><td>"TMV" (static)</td></tr>
+      <tr><td>ns:accessNumber</td><td>MSISDN</td></tr>
+      <tr><td>ns:familyType</td><td>FamilyType extended-info (if present)</td></tr>
+      <tr><td>ns:isChange</td><td>"N" if FE_OR_CCBS=ATS; "Y" otherwise</td></tr>
+      <tr><td>ns:rcRate</td><td>CCBS offer rate (ServiceType=80, FE_OR_CCBS=CCBS); null fallback</td></tr>
+      <tr><td>ns:nextRcRate</td><td>FE offer rate (ServiceType=80, FE_OR_CCBS=FE); null fallback</td></tr>
+      <tr><td>ns:pricePlan</td><td>CCBS offer name if present</td></tr>
+      <tr><td>ns:nextPricePlan</td><td>FE offer name if present; null fallback</td></tr>
+      <tr><td>ns:socListInfo[*]</td><td>Contract SOCs (ServiceType=85, TR_CONTRACT_IND=Y, non-expired)</td></tr>
+      <tr><td>ns:extendedInfo[REMOVE_CONTRACT]</td><td>Only when OrderType=4 and not ATS</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§9.7 — Complete Generated XML Example</h3>
+    <pre><span class="cm">&lt;!-- ATS_CAMPAIGN_RULE request — one per BundleInfo --&gt;</span>
+<span class="xt">&lt;ns:CampaignRuleRequest&gt;</span>
+  <span class="xt">&lt;ns:channel&gt;</span>OMX-Mobile<span class="xt">&lt;/ns:channel&gt;</span>
+  <span class="xt">&lt;ns:requestName&gt;</span>ChangeCampaign<span class="xt">&lt;/ns:requestName&gt;</span>
+  <span class="xt">&lt;ns:function&gt;</span>MobileSoftBundle<span class="xt">&lt;/ns:function&gt;</span>        <span class="cm">&lt;!-- ConvergenceType --&gt;</span>
+  <span class="xt">&lt;ns:convergenceCode&gt;</span>CAMP001<span class="xt">&lt;/ns:convergenceCode&gt;</span>  <span class="cm">&lt;!-- CampaignCode --&gt;</span>
+  <span class="xt">&lt;ns:productList&gt;</span>
+    <span class="xt">&lt;ns:productType&gt;</span>TMV<span class="xt">&lt;/ns:productType&gt;</span>
+    <span class="xt">&lt;ns:accessNumber&gt;</span>0812345678<span class="xt">&lt;/ns:accessNumber&gt;</span>
+    <span class="xt">&lt;ns:familyType&gt;</span>MAIN<span class="xt">&lt;/ns:familyType&gt;</span>            <span class="cm">&lt;!-- if FamilyType present --&gt;</span>
+    <span class="xt">&lt;ns:isChange&gt;</span>Y<span class="xt">&lt;/ns:isChange&gt;</span>                   <span class="cm">&lt;!-- N if FE_OR_CCBS=ATS --&gt;</span>
+    <span class="xt">&lt;ns:tmhProductInfo&gt;</span>
+      <span class="xt">&lt;ns:rcRate&gt;</span>599<span class="xt">&lt;/ns:rcRate&gt;</span>
+      <span class="xt">&lt;ns:nextRcRate&gt;</span>699<span class="xt">&lt;/ns:nextRcRate&gt;</span>
+      <span class="xt">&lt;ns:pricePlan&gt;</span>TRUE_PP_599<span class="xt">&lt;/ns:pricePlan&gt;</span>
+      <span class="xt">&lt;ns:nextPricePlan&gt;</span>TRUE_PP_699<span class="xt">&lt;/ns:nextPricePlan&gt;</span>
+      <span class="xt">&lt;ns:socListInfo&gt;</span>                        <span class="cm">&lt;!-- repeat per contract SOC --&gt;</span>
+        <span class="xt">&lt;ns:soc&gt;</span>SOC_CONTRACT_01<span class="xt">&lt;/ns:soc&gt;</span>
+        <span class="xt">&lt;ns:serviceType&gt;</span>85<span class="xt">&lt;/ns:serviceType&gt;</span>
+        <span class="xt">&lt;ns:contractInd&gt;</span>Y<span class="xt">&lt;/ns:contractInd&gt;</span>
+        <span class="xt">&lt;ns:contractNew&gt;</span>Existing<span class="xt">&lt;/ns:contractNew&gt;</span>
+      <span class="xt">&lt;/ns:socListInfo&gt;</span>
+      <span class="cm">&lt;!-- OrderType=4, not ATS: --&gt;</span>
+      <span class="xt">&lt;ns:extendedInfo&gt;</span>
+        <span class="xt">&lt;ns:name&gt;</span>REMOVE_CONTRACT<span class="xt">&lt;/ns:name&gt;</span>
+        <span class="xt">&lt;ns:value&gt;</span>Y<span class="xt">&lt;/ns:value&gt;</span>
+      <span class="xt">&lt;/ns:extendedInfo&gt;</span>
+    <span class="xt">&lt;/ns:tmhProductInfo&gt;</span>
+  <span class="xt">&lt;/ns:productList&gt;</span>
+<span class="xt">&lt;/ns:CampaignRuleRequest&gt;</span></pre>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§9.8 — XSLT Stylesheet Source</h3>
+    <pre><span class="cm">&lt;!-- Request XSLT — ATS_CAMPAIGN_RULE event; one per BundleInfo[i] --&gt;</span>
+<span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:OMXUtils</span>=<span class="st">"www.tibco.com/be/custom/OMXUtils"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:ns</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/ATS/CampaignRule.xsd"</span>
+  <span class="xa">xmlns:xsd</span>=<span class="st">"http://www.w3.org/2001/XMLSchema"</span>
+  <span class="xa">xmlns:tib</span>=<span class="st">"http://www.tibco.com/bw/xslt/custom-functions"</span>
+  <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:output</span> <span class="xa">method</span>=<span class="st">"xml"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderRequest"</span><span class="xt">/&gt;</span>  <span class="cm">&lt;!-- bound from orderRequest concept --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"i"</span><span class="xt">/&gt;</span>             <span class="cm">&lt;!-- loop index (0-based) --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"nextRCnextPP"</span><span class="xt">/&gt;</span> <span class="cm">&lt;!-- always null — empty fallback --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;</span>
+      <span class="xt">&lt;event&gt;</span>
+        <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="st">"extId"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"OMXUtils:generateTrackingID()"</span><span class="xt">/&gt;</span>
+        <span class="xt">&lt;/xsl:attribute&gt;</span>
+        <span class="xt">&lt;JMSPriority&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;&lt;/JMSPriority&gt;</span>
+        <span class="xt">&lt;JMSCorrelationID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/JMSCorrelationID&gt;</span>
+        <span class="xt">&lt;OrderID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;&lt;/OrderID&gt;</span>
+        <span class="xt">&lt;RefID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/Customer/RefId"</span><span class="xt">/&gt;&lt;/RefID&gt;</span>
+        <span class="xt">&lt;OrderType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;&lt;/OrderType&gt;</span>
+        <span class="xt">&lt;payload&gt;</span>
+          <span class="xt">&lt;ns:CampaignRuleRequest&gt;</span>
+            <span class="xt">&lt;ns:channel&gt;</span>OMX-Mobile<span class="xt">&lt;/ns:channel&gt;</span>
+            <span class="xt">&lt;ns:requestName&gt;</span>ChangeCampaign<span class="xt">&lt;/ns:requestName&gt;</span>
+            <span class="xt">&lt;ns:function&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/BundleInfo[$i+1]/ConvergenceType"</span><span class="xt">/&gt;&lt;/ns:function&gt;</span>
+            <span class="xt">&lt;ns:convergenceCode&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/BundleInfo[$i+1]/CampaignCode"</span><span class="xt">/&gt;&lt;/ns:convergenceCode&gt;</span>
+            <span class="cm">&lt;!-- Select subscribers whose CampaignCode ExtendedInfo matches this bundle --&gt;</span>
+            <span class="xt">&lt;xsl:for-each</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/Customer/ParentOU/Subscriber[contains(ExtendedInfo[Name='CampaignCode']/Value,$orderRequest/OrderData/BundleInfo[$i+1]/CampaignCode)]"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns:productList&gt;</span>
+                <span class="xt">&lt;ns:productType&gt;</span>TMV<span class="xt">&lt;/ns:productType&gt;</span>
+                <span class="xt">&lt;ns:accessNumber&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"MSISDN"</span><span class="xt">/&gt;&lt;/ns:accessNumber&gt;</span>
+                <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"ExtendedInfo[Name='FamilyType']/Value"</span><span class="xt">&gt;</span>
+                  <span class="xt">&lt;ns:familyType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"ExtendedInfo[Name='FamilyType']/Value"</span><span class="xt">/&gt;&lt;/ns:familyType&gt;</span>
+                <span class="xt">&lt;/xsl:if&gt;</span>
+                <span class="xt">&lt;xsl:choose&gt;</span>
+                  <span class="xt">&lt;xsl:when</span> <span class="xa">test</span>=<span class="st">"ExtendedInfo[Name='FE_OR_CCBS']/Value='ATS'"</span><span class="xt">&gt;</span>
+                    <span class="xt">&lt;ns:isChange&gt;</span>N<span class="xt">&lt;/ns:isChange&gt;</span>
+                  <span class="xt">&lt;/xsl:when&gt;</span>
+                  <span class="xt">&lt;xsl:otherwise&gt;</span>
+                    <span class="xt">&lt;ns:isChange&gt;</span>Y<span class="xt">&lt;/ns:isChange&gt;</span>
+                  <span class="xt">&lt;/xsl:otherwise&gt;</span>
+                <span class="xt">&lt;/xsl:choose&gt;</span>
+                <span class="xt">&lt;ns:tmhProductInfo&gt;</span>
+                  <span class="cm">&lt;!-- rcRate: from CCBS offer (ServiceType=80, FE_OR_CCBS=CCBS), else $nextRCnextPP(null) --&gt;</span>
+                  <span class="xt">&lt;xsl:choose&gt;</span>
+                    <span class="xt">&lt;xsl:when</span> <span class="xa">test</span>=<span class="st">"exists(SubscriberOffers[ServiceType='80' and ExtendedInfo[Name='FE_OR_CCBS']/Value='CCBS']/OfferRate)"</span><span class="xt">&gt;</span>
+                      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"SubscriberOffers[ServiceType='80' and ExtendedInfo[Name='FE_OR_CCBS']/Value='CCBS']/OfferRate"</span><span class="xt">&gt;</span>
+                        <span class="xt">&lt;ns:rcRate&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"SubscriberOffers[ServiceType='80' and ExtendedInfo[Name='FE_OR_CCBS']/Value='CCBS']/OfferRate"</span><span class="xt">/&gt;&lt;/ns:rcRate&gt;</span>
+                      <span class="xt">&lt;/xsl:if&gt;</span>
+                    <span class="xt">&lt;/xsl:when&gt;</span>
+                    <span class="xt">&lt;xsl:otherwise&gt;&lt;ns:rcRate&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$nextRCnextPP"</span><span class="xt">/&gt;&lt;/ns:rcRate&gt;&lt;/xsl:otherwise&gt;</span>
+                  <span class="xt">&lt;/xsl:choose&gt;</span>
+                  <span class="cm">&lt;!-- nextRcRate: from FE offer (ServiceType=80, FE_OR_CCBS=FE), else null --&gt;</span>
+                  <span class="xt">&lt;xsl:choose&gt;</span>
+                    <span class="xt">&lt;xsl:when</span> <span class="xa">test</span>=<span class="st">"exists(SubscriberOffers[ServiceType='80' and ExtendedInfo[Name='FE_OR_CCBS']/Value='FE']/OfferRate)"</span><span class="xt">&gt;</span>
+                      <span class="xt">&lt;ns:nextRcRate&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"SubscriberOffers[ServiceType='80' and ExtendedInfo[Name='FE_OR_CCBS']/Value='FE']/OfferRate"</span><span class="xt">/&gt;&lt;/ns:nextRcRate&gt;</span>
+                    <span class="xt">&lt;/xsl:when&gt;</span>
+                    <span class="xt">&lt;xsl:otherwise&gt;&lt;ns:nextRcRate&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$nextRCnextPP"</span><span class="xt">/&gt;&lt;/ns:nextRcRate&gt;&lt;/xsl:otherwise&gt;</span>
+                  <span class="xt">&lt;/xsl:choose&gt;</span>
+                  <span class="cm">&lt;!-- pricePlan: CCBS OfferName, conditional --&gt;</span>
+                  <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"SubscriberOffers[ServiceType='80' and FE_OR_CCBS='CCBS']/OfferName"</span><span class="xt">&gt;</span>
+                    <span class="xt">&lt;ns:pricePlan&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"SubscriberOffers[ServiceType='80' and FE_OR_CCBS='CCBS']/OfferName"</span><span class="xt">/&gt;&lt;/ns:pricePlan&gt;</span>
+                  <span class="xt">&lt;/xsl:if&gt;</span>
+                  <span class="cm">&lt;!-- nextPricePlan: FE OfferName or null --&gt;</span>
+                  <span class="xt">&lt;xsl:choose&gt;</span>
+                    <span class="xt">&lt;xsl:when</span> <span class="xa">test</span>=<span class="st">"exists(SubscriberOffers[ServiceType='80' and FE_OR_CCBS='FE']/OfferName)"</span><span class="xt">&gt;</span>
+                      <span class="xt">&lt;ns:nextPricePlan&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"SubscriberOffers[ServiceType='80' and FE_OR_CCBS='FE']/OfferName"</span><span class="xt">/&gt;&lt;/ns:nextPricePlan&gt;</span>
+                    <span class="xt">&lt;/xsl:when&gt;</span>
+                    <span class="xt">&lt;xsl:otherwise&gt;&lt;ns:nextPricePlan&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$nextRCnextPP"</span><span class="xt">/&gt;&lt;/ns:nextPricePlan&gt;&lt;/xsl:otherwise&gt;</span>
+                  <span class="xt">&lt;/xsl:choose&gt;</span>
+                  <span class="cm">&lt;!-- socListInfo: contract SOCs (ServiceType=85, TR_CONTRACT_IND=Y, non-expired) --&gt;</span>
+                  <span class="cm">&lt;!-- ... OrderType=4 branching omitted for brevity — see §9.8 source ... --&gt;</span>
+                  <span class="cm">&lt;!-- ns:extendedInfo[REMOVE_CONTRACT=Y]: only if OrderType=4 AND FE_OR_CCBS != ATS --&gt;</span>
+                <span class="xt">&lt;/ns:tmhProductInfo&gt;</span>
+              <span class="xt">&lt;/ns:productList&gt;</span>
+            <span class="xt">&lt;/xsl:for-each&gt;</span>
+          <span class="xt">&lt;/ns:CampaignRuleRequest&gt;</span>
+        <span class="xt">&lt;/payload&gt;</span>
+      <span class="xt">&lt;/event&gt;</span>
+    <span class="xt">&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;overflow-x:auto;">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge b-green">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/RefId</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span> <span class="badge b-green">Always</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-tag">ns:CampaignRuleRequest</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-tag">ns:channel</span><span class="tree-arrow">←</span><span class="tree-src-static">"OMX-Mobile"</span> <span class="badge b-green">Always</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">ns:requestName</span><span class="tree-arrow">←</span><span class="tree-src-static">"ChangeCampaign"</span> <span class="badge b-green">Always</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">ns:function</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/BundleInfo[$i+1]/ConvergenceType</span> <span class="badge b-green">Always</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">ns:convergenceCode</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/BundleInfo[$i+1]/CampaignCode</span> <span class="badge b-green">Always</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">ns:productList</span> <span class="tree-cond">[xsl:for-each: Subscriber matching CampaignCode]</span> <span class="badge b-orange">Conditional</span></div>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-tag">ns:productType</span><span class="tree-arrow">←</span><span class="tree-src-static">"TMV"</span> <span class="badge b-green">Always</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:accessNumber</span><span class="tree-arrow">←</span><span class="tree-src">MSISDN</span> <span class="badge b-green">Always</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:familyType</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[Name='FamilyType']/Value</span> <span class="tree-cond">if ExtendedInfo[FamilyType] exists</span> <span class="badge b-orange">Conditional</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:isChange</span><span class="tree-arrow">←</span><span class="tree-src-static">"N"</span> <span class="tree-cond">if FE_OR_CCBS=ATS; else "Y"</span> <span class="badge b-green">Always</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:tmhProductInfo</span></div>
+                              <ul>
+                                <li><div class="tree-row"><span class="tree-tag">ns:rcRate</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers[ServiceType=80,CCBS]/OfferRate</span> <span class="tree-cond">else $nextRCnextPP (null→empty)</span> <span class="badge b-green">Always</span></div></li>
+                                <li><div class="tree-row"><span class="tree-tag">ns:nextRcRate</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers[ServiceType=80,FE]/OfferRate</span> <span class="tree-cond">else null</span> <span class="badge b-green">Always</span></div></li>
+                                <li><div class="tree-row"><span class="tree-tag">ns:pricePlan</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers[ServiceType=80,CCBS]/OfferName</span> <span class="tree-cond">if exists</span> <span class="badge b-orange">Conditional</span></div></li>
+                                <li><div class="tree-row"><span class="tree-tag">ns:nextPricePlan</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers[ServiceType=80,FE]/OfferName</span> <span class="tree-cond">else null</span> <span class="badge b-green">Always</span></div></li>
+                                <li><div class="tree-row"><span class="tree-tag">ns:socListInfo</span> <span class="tree-cond">[xsl:for-each: ServiceType=85, TR_CONTRACT_IND=Y, non-expired; OrderType=4 branching]</span> <span class="badge b-orange">Conditional</span></div>
+                                  <ul>
+                                    <li><div class="tree-row"><span class="tree-tag">ns:soc</span><span class="tree-arrow">←</span><span class="tree-src">OfferName</span></div></li>
+                                    <li><div class="tree-row"><span class="tree-tag">ns:serviceType</span><span class="tree-arrow">←</span><span class="tree-src">ServiceType</span></div></li>
+                                    <li><div class="tree-row"><span class="tree-tag">ns:contractInd</span><span class="tree-arrow">←</span><span class="tree-src-static">"Y"</span></div></li>
+                                    <li><div class="tree-row"><span class="tree-tag">ns:contractNew</span><span class="tree-arrow">←</span><span class="tree-src-static">"New"</span> <span class="tree-cond">if FE_OR_CCBS=FE; else "Existing"</span></div></li>
+                                  </ul>
+                                </li>
+                                <li><div class="tree-row"><span class="tree-tag">ns:extendedInfo</span> <span class="tree-cond">if OrderType=4 AND FE_OR_CCBS != ATS</span> <span class="badge b-orange">Conditional</span></div>
+                                  <ul>
+                                    <li><div class="tree-row"><span class="tree-tag">ns:name</span><span class="tree-arrow">←</span><span class="tree-src-static">"REMOVE_CONTRACT"</span></div></li>
+                                    <li><div class="tree-row"><span class="tree-tag">ns:value</span><span class="tree-arrow">←</span><span class="tree-src-static">"Y"</span></div></li>
+                                  </ul>
+                                </li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#a6e3a1;"></span> XPath source</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#fab387;"></span> Static literal</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#cba6f7;"></span> Condition (xsl:if / xsl:choose)</div>
+      <div class="legend-item"><span class="badge b-green">Always</span> Emitted unconditionally</div>
+      <div class="legend-item"><span class="badge b-orange">Conditional</span> Emitted conditionally</div>
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Phase</th><th>Field</th><th>Value</th></tr>
+      <tr><td>Request</td><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+      <tr><td>Request</td><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code> — nanoTime</td></tr>
+      <tr><td>Request</td><td>COMPONENT_NAME</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+      <tr><td>Request</td><td>OPERATION_NAME</td><td>"ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"</td></tr>
+      <tr><td>Request</td><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+      <tr><td>Request</td><td>LOG_LEVEL</td><td>INFO</td></tr>
+      <tr><td>Request</td><td>AUDIT_TRACE</td><td>"Request Sent for ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"</td></tr>
+      <tr><td>Request</td><td>payload</td><td>Conditional: <code>WritePayload="true"</code></td></tr>
+      <tr><td>Response</td><td>PROCESS_ID</td><td><code>concat($pid, "_RES")</code></td></tr>
+      <tr><td>Response</td><td>OPERATION_NAME</td><td>"ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"</td></tr>
+      <tr><td>Response</td><td>AUDIT_TRACE</td><td>"Response received for ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Transition</th><th>Code</th><th>Trigger</th></tr>
+      <tr><td>Running</td><td>"1"</td><td>At least one BundleInfo request dispatched</td></tr>
+      <tr><td>Skip</td><td>"4"</td><td>PreExecCheck=false OR BundleInfo count=0</td></tr>
+      <tr><td>Error</td><td>HandleActivityException</td><td>Any uncaught exception</td></tr>
+    </table>
+    <p style="margin-top:10px;"><code>SendDataToDB</code> is called after status set to "1" to persist the activity state.</p>
+  </div>
+</div>
+
+<!-- §13 Exception -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <p>The entire <code>then</code> block is wrapped in <code>try { ... } catch (Exception ae) { RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, ""); }</code></p>
+    <p style="margin-top:8px;">No partial-send recovery — if any BundleInfo iteration throws after earlier ones have dispatched, the exception handler is called without compensating the already-sent requests.</p>
+  </div>
+</div>
+
+<!-- §14 Helpers -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetActivityStatusString("1", false)</code></td><td>Returns status string for "Running"</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.SendDataToDB(orderRequest)</code></td><td>Persists orderRequest state to DB</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>Marks activity as skipped and advances flow</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td><td>Central exception handler</td></tr>
+      <tr><td><code>Instance.serializeUsingDefaults(orderRequest)</code></td><td>Serializes working memory concept to XML for XPath PreExecCheck evaluation</td></tr>
+      <tr><td><code>OMXUtils:generateTrackingID()</code></td><td>Custom XSLT function generating unique tracking IDs for events</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><span class="st">Request_ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN.rule</span>
+├── Instance.serializeUsingDefaults(orderRequest)        [PreExecCheck gate]
+├── XPath.execute(chkXPath, sXML)                        [PreExecCheck evaluation]
+├── XPath.evalAsInt(count BundleInfo)                    [fan-out count]
+├── Event.createEvent(XSLT → ATS_CAMPAIGN_RULE)          [build request event per BundleInfo]
+│   └── OMXUtils:generateTrackingID()                    [custom: generate extId]
+├── Event.Ext.sendEventImmediate(reqEvent)               [immediate dispatch to ATS]
+├── orderCurrentActivity.RequestCount++                   [fan-in counter increment]
+├── Event.createEvent(XSLT → Logger)                     [build audit log event]
+├── Event.Ext.sendEventImmediate(logEvent)               [dispatch audit log]
+├── RuleFunctions.Helpers.GetActivityStatusString(...)   [status string lookup]
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)     [persist to DB]
+├── RuleFunctions.Helpers.SkipActivity(...)              [skip handler]
+└── RuleFunctions.Helpers.HandleActivityException(...)   [error handler]</pre>
+  </div>
+</div>
+
+<!-- §16 Concepts -->
+<div class="section">
+  <div class="section-header">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Key Properties Used</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>OrderData.BundleInfo[], OrderData.OrderID, OrderData.OMXTrackingId, OrderData.Customer.RefId, OrderData.OrderType, OrderPriority, IsOrderResubmitted, ProcessFlow.NextActivityName/ID</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.BundleInfo</code></td><td>CampaignCode, ConvergenceType</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>MSISDN, ExtendedInfo[], SubscriberOffers[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>ServiceType, OfferRate, OfferName, SocProperties, ParameterInfo[], ExtendedInfo[]</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>ActivityID, Status, RequestCount, Response[], PreExecCheck</td></tr>
+      <tr><td><code>Events.OMConsumers.OMXFM.Request.ATS_CAMPAIGN_RULE</code></td><td>Request event sent to ATS</td></tr>
+      <tr><td><code>Events.OMConsumers.OMXFM.Response.ATS_CAMPAIGN_RULE</code></td><td>Response event from ATS</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:8px;color:var(--true-dark);">Functional Requirements</h3>
+    <table>
+      <tr><th>#</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Invoke ATS ChangeCampaign once per BundleInfo entry in the order (fan-out by bundle, not by subscriber)</td></tr>
+      <tr><td>R2</td><td>Aggregate all subscribers matching the bundle's CampaignCode into a single request's productList</td></tr>
+      <tr><td>R3</td><td>Include tmhProductInfo: rcRate/nextRcRate from CCBS offers (ServiceType=80), price plan names, and contract SOC list (ServiceType=85, non-expired)</td></tr>
+      <tr><td>R4</td><td>Apply OrderType=4 branching for socListInfo and REMOVE_CONTRACT extendedInfo</td></tr>
+      <tr><td>R5</td><td>Skip step if no BundleInfo present (SkipActivity)</td></tr>
+      <tr><td>R6</td><td>Treat resubmission correctly: do not double-increment RequestCount</td></tr>
+      <tr><td>R7</td><td>Fan-in: wait for all dispatched requests (count ResponseCode suffix "000" = RequestCount)</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td><code>nextRCnextPP</code> is always null — rcRate/nextRcRate/nextPricePlan will be empty when CCBS offer data absent</td>
+        <td><span class="badge b-medium">[MEDIUM]</span></td>
+        <td>Verify with ATS team whether empty rate fields are acceptable or cause rejections; if not, add rate lookup step prior to this FM</td>
+      </tr>
+      <tr>
+        <td>No partial-send compensation: exception after partial BundleInfo dispatch leaves some bundles sent and others not</td>
+        <td><span class="badge b-medium">[MEDIUM]</span></td>
+        <td>Implement transactional fan-out or compensating call pattern in modern platform</td>
+      </tr>
+      <tr>
+        <td>Contract SOC date filtering uses <code>tib:compare-date</code> / <code>tib:parse-date</code> TIBCO custom functions — not portable</td>
+        <td><span class="badge b-high">[HIGH]</span></td>
+        <td>Replace with standard Java/platform date comparison in target implementation</td>
+      </tr>
+      <tr>
+        <td>Subscriber filter uses <code>contains(ExtendedInfo[Name='CampaignCode']/Value, CampaignCode)</code> — a substring match, not equality</td>
+        <td><span class="badge b-low">[LOW]</span></td>
+        <td>Verify if partial campaign code matching is intentional or a defect; use equality in migration if codes are exact</td>
+      </tr>
+      <tr>
+        <td><code>sendEventImmediate</code> — synchronous dispatch; high BundleInfo count will block the rule engine thread</td>
+        <td><span class="badge b-medium">[MEDIUM]</span></td>
+        <td>Assess maximum BundleInfo cardinality per order; consider async dispatch for large fan-outs</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Request Rule)</div>
+  <div class="section-body">
+    <pre><span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN</span> {
+  <span class="kw">attribute</span> {
+    priority = <span class="nu">5</span>;
+    forwardChain = <span class="kw">true</span>;
+  }
+  <span class="kw">declare</span> {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="st">"ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="st">"ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"</span>;
+    orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="ty">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">try</span> {
+      <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct = Instance.getByExtIdByUri(
+        orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+      <span class="ty">String</span> chkXPath = nextAct.PreExecCheck;
+      <span class="ty">String</span> chkRes = <span class="st">"true"</span>;
+      <span class="ty">boolean</span> isSkipped = <span class="kw">true</span>;
+      <span class="ty">String</span> nextRCnextPP = <span class="kw">null</span>;  <span class="cm">// always null — empty fallback for rate/plan fields</span>
+
+      <span class="kw">if</span>(String.length(nextAct.PreExecCheck) &gt; <span class="nu">0</span>) {
+        <span class="ty">String</span> sXML = Instance.serializeUsingDefaults(orderRequest);
+        chkRes = XPath.execute(<span class="st">"/("</span> + chkXPath + <span class="st">")"</span>, sXML, <span class="st">"ns0=www.tibco.com/be/ontology/..."</span>);
+      }
+
+      <span class="kw">if</span>(String.equals(chkRes, <span class="st">"true"</span>)) {
+        <span class="ty">int</span> bundleInfoSize = XPath.evalAsInt(<span class="cm">/* count($orderRequest/OrderData/BundleInfo) */</span>);
+        <span class="kw">for</span> (<span class="ty">int</span> i=<span class="nu">0</span>; i&lt;bundleInfoSize; i++) {
+          <span class="ty">Events.OMConsumers.OMXFM.Request.ATS_CAMPAIGN_RULE</span> reqEvent =
+            Event.createEvent(<span class="cm">/* XSLT → CampaignRuleRequest — see §9.8 */</span>);
+          Event.Ext.sendEventImmediate(reqEvent);
+
+          <span class="kw">if</span>(!isActResub) {
+            orderCurrentActivity.RequestCount++;
+          }
+
+          <span class="ty">long</span> pid = System.nanoTime();
+          Event.Ext.sendEventImmediate(Event.createEvent(<span class="cm">/* Logger XSLT — see §11 */</span>));
+          isSkipped = <span class="kw">false</span>;
+        }
+      }
+
+      <span class="kw">if</span> (!isSkipped) {
+        orderCurrentActivity.Status = RuleFunctions.Helpers.GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+        RuleFunctions.Helpers.SendDataToDB(orderRequest);
+      } <span class="kw">else</span> {
+        RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+      }
+    } <span class="kw">catch</span> (<span class="ty">Exception</span> ae) {
+      RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+    }
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+
+    <h3 style="margin-bottom:8px;color:var(--true-dark);">§19.1 — Overview</h3>
+    <p>The response handler (<code>Response_ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN</code>) receives one <code>ATS_CAMPAIGN_RULE</code> response event per dispatched BundleInfo request. It appends a <code>ResponseBase</code> concept to <code>currActivity.Response[]</code>, then enriches working memory by writing the ATS-resolved <code>ConvergenceAction</code> to the matching <code>BundleInfo</code> concept and updating each subscriber's <code>SubscriberOffers</code> records with <code>benefitAction</code> and <code>FE_OR_CCBS</code> values. Fan-in completes when all dispatched requests have returned a ResponseCode with suffix "000".</p>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order concept — read for matching, written for enrichment</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.ATS_CAMPAIGN_RULE</code></td><td>ATS response carrying CampaignRuleResponse payload</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity; Response[] appended; RequestCount compared for fan-in</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§19.3 — ResponseBase Concept Construction</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;overflow-x:auto;">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge b-green">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span> <span class="tree-cond">if ResponseCode present</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span> <span class="tree-cond">if ResponseMsg present</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span> <span class="tree-cond">if CompletionStatus present</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span> <span class="tree-cond">if RefID present</span> <span class="badge b-orange">Conditional</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <p style="margin-top:8px;">Created instance is appended: <code>currActivity.Response[currActivity.Response@length] = activityRes;</code></p>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§19.4 — Working Memory Enrichment (Response Processing)</h3>
+    <p>After creating the ResponseBase concept, the handler performs enrichment:</p>
+    <table>
+      <tr><th>Step</th><th>Action</th><th>Condition</th></tr>
+      <tr><td>1</td><td>Extract <code>campaignCode</code> from <code>CampaignRuleResponse/productList[1]/existingCampaignList[1]/campaignCode</code></td><td>Always attempted</td></tr>
+      <tr><td>2</td><td>Extract <code>convergenceAction</code> from <code>CampaignRuleResponse/convergenceAction</code></td><td>If campaignCode != null</td></tr>
+      <tr><td>3</td><td>Write <code>bundleInfo.ConvergenceAction = convergenceAction</code> (BundleInfo matched by CampaignCode)</td><td>If convergenceAction != null</td></tr>
+      <tr><td>4</td><td>Iterate <code>productList</code>; for productType="TMV": find subscriber by MSISDN</td><td>If campaignCode != null</td></tr>
+      <tr><td>5</td><td>Iterate <code>benefitCampaignList</code>; extract benefitCode + benefitAction</td><td>If subscriber found</td></tr>
+      <tr><td>6a</td><td>Find matching SubscriberOffer by OfferName=benefitCode; set <code>subscriberOffer.Action = benefitAction</code></td><td>If both benefitCode and benefitAction non-empty</td></tr>
+      <tr><td>6b</td><td>Update existing FE_OR_CCBS ExtendedInfo: set to "ATS_REMOVE" if benefitAction=REMOVE, else "ATS" — unless value is blank or "FE"</td><td>If ExtendedInfo[FE_OR_CCBS] found</td></tr>
+      <tr><td>6c</td><td>Create new FE_OR_CCBS ExtendedInfo (ATS_REMOVE/ATS) and append to offer</td><td>If ExtendedInfo[FE_OR_CCBS] not found</td></tr>
+      <tr><td>6d</td><td>Create new SubscriberOffers with OfferName=benefitCode, Action=ADD, FE_OR_CCBS=ATS and append to subscriber</td><td>If SubscriberOffer not found AND benefitAction=ADD</td></tr>
+    </table>
+
+    <div class="warn-box"><strong>Note:</strong> FE_OR_CCBS update guard: the code only changes FE_OR_CCBS if the existing value is not blank AND not "FE". This protects FE-tagged offers from being overwritten by ATS response data.</div>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§19.5 — Response Completion Logic (Fan-in)</h3>
+    <table>
+      <tr><th>Expression</th><th>Value</th></tr>
+      <tr><td>Success count XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+      <tr><td>Returns "true"</td><td>All dispatched requests have returned success — caller advances process flow</td></tr>
+      <tr><td>Returns "false"</td><td>Still waiting for remaining responses — caller waits</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§19.6 — Response Audit Logging</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;overflow-x:auto;margin-bottom:12px;">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span> <span class="tree-ns">(Logger event)</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ESBUUID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="tree-cond">if present</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">PROCESS_ID</span><span class="tree-arrow">←</span><span class="tree-src">concat($pid, "_RES")</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">COMPONENT_NAME</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OPERATION_NAME</span><span class="tree-arrow">←</span><span class="tree-src-static">"ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">TARGET_SYSTEM</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/OMX_COMMON/Component_Name/OMX_FM</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">LOG_LEVEL</span><span class="tree-arrow">←</span><span class="tree-src">INFO global variable</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">AUDIT_TRACE</span><span class="tree-arrow">←</span><span class="tree-src-static">"Response received for ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN"</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">AUDIT_TS</span><span class="tree-arrow">←</span><span class="tree-src">tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload/ns:ServicePayload</span><span class="tree-arrow">←</span><span class="tree-src">copy-of $eventResponse</span> <span class="tree-cond">if WritePayload="true"</span> <span class="badge b-orange">Conditional</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3 style="margin-top:14px;margin-bottom:8px;color:var(--true-dark);">§19.7 — Response XSLT Source (ResponseBase)</h3>
+    <pre><span class="cm">&lt;!-- ResponseBase XSLT — Response_ATS_CAMPAIGN_RULE_CHANGE_CAMPAIGN --&gt;</span>
+<span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:OMXUtils</span>=<span class="st">"www.tibco.com/be/custom/OMXUtils"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:xsd</span>=<span class="st">"http://www.w3.org/2001/XMLSchema"</span>
+  <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:output</span> <span class="xa">method</span>=<span class="st">"xml"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"eventResponse"</span><span class="xt">/&gt;</span>  <span class="cm">&lt;!-- ATS_CAMPAIGN_RULE response event --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createObject&gt;</span>
+      <span class="xt">&lt;object&gt;</span>
+        <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="st">"extId"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"OMXUtils:generateTrackingID()"</span><span class="xt">/&gt;</span>
+        <span class="xt">&lt;/xsl:attribute&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/ResponseCode"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ResponseCode&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/ResponseCode"</span><span class="xt">/&gt;&lt;/ResponseCode&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/ResponseMsg"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ResponseMessage&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/ResponseMsg"</span><span class="xt">/&gt;&lt;/ResponseMessage&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/CompletionStatus"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;CompletionStatus&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/CompletionStatus"</span><span class="xt">/&gt;&lt;/CompletionStatus&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/RefID"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ReferenceId&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/RefID"</span><span class="xt">/&gt;&lt;/ReferenceId&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;/object&gt;</span>
+    <span class="xt">&lt;/createObject&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+  </div>
+</div>
+
+</div><!-- end container -->
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &middot; Generated 2026-08-13</footer>
+</body>
+</html>

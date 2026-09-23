@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_OMX_SUBMIT_REMOVE_OFFER</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;line-height:1.6;font-size:14px;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.page-header h1{font-size:1.8rem;font-weight:700;}
+.page-header .sub{opacity:.85;font-size:.95rem;margin-top:4px;}
+.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:16px;}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:4px 12px;font-size:.78rem;}
+.container{max-width:1300px;margin:0 auto;padding:24px 32px;}
+.section{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:20px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 18px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light);}
+.section-body{padding:18px;}
+table{width:100%;border-collapse:collapse;font-size:.84rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600;}
+td{padding:7px 10px;border-bottom:1px solid #eee;vertical-align:top;}
+tr:hover{background:#FFF8F8;}
+code,pre{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.8rem;white-space:pre-wrap;word-break:break-word;}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.75rem;font-weight:600;}
+.badge-high{background:#FFE0E0;color:var(--true-dark);}
+.badge-med{background:#FFF3E0;color:#e65100;}
+.badge-low{background:#E3F0FD;color:#1565c0;}
+.risk-box{border-left:4px solid var(--true-red);background:var(--true-pale);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;font-size:.85rem;}
+.risk-box.info{border-color:#1565c0;background:#E3F0FD;}
+.risk-box.warn{border-color:#e65100;background:#FFF3E0;}
+.flow-step{display:flex;align-items:flex-start;gap:12px;padding:8px 0;border-bottom:1px solid #eee;}
+.flow-num{min-width:28px;height:28px;background:var(--true-red);color:#fff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;}
+.flow-text{flex:1;font-size:.86rem;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.74rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.diff-vs{background:#E8F5E9;border-left:3px solid #2e7d32;padding:6px 10px;border-radius:0 4px 4px 0;font-size:.82rem;margin:4px 0;}
+h3{color:var(--true-dark);margin:16px 0 8px;font-size:.95rem;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_OMX_SUBMIT_REMOVE_OFFER</h1>
+  <div class="sub">Submits a child remove-offer order to the OMX SubmitOrder service per subscriber, targeting IR offers (REMOVE_PACK). ORDER_TYPE and SERVICE_TYPE driven by activity parameters.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: OMX SubmitOrder (Child Order — IR Remove)</span>
+    <span class="meta-badge">Fan-out: POU + COU subscribers</span>
+    <span class="meta-badge">Event: OMX_CREATE_CHILD_ORDER</span>
+    <span class="meta-badge">Author: DESKTOP-995HR2V</span>
+    <span class="meta-badge">Lines: 135</span>
+    <span class="meta-badge">Step: 84</span>
+    <span class="meta-badge">forwardChain: true</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+<div class="section-header">§1 — Overview &amp; Purpose</div>
+<div class="section-body">
+<p>Submits a child order to the OMX SubmitOrder service to remove IR (International Roaming) offers per subscriber. Uses the same <code>OMX_CREATE_CHILD_ORDER</code> event and fan-out structure as <code>OMX_SUBMIT_POSTPAID_ADD_BENEFIT</code>, but targets FE offers with a non-empty <code>REMOVE_PACK</code> ExtendedInfo key, and takes two activity parameters: <code>ORDER_TYPE</code> and <code>SERVICE_TYPE</code>. Contains multiple copy-paste logger bugs where OPERATION_NAME is wrong.</p>
+<br>
+<table>
+<tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+<tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_CREATE_CHILD_ORDER</code></td><td>Internal OMX child order (IR remove)</td></tr>
+<tr><td>Schema NS (ns)</td><td><code>http://services.omx.truecorp.co.th/SubmitOrder</code></td><td>SubmitOrder service payload</td></tr>
+<tr><td>Payload root</td><td><code>ns:submitOrderRequest</code></td><td></td></tr>
+<tr><td>Fan-out</td><td>POU direct subscribers first, then COU subscribers</td><td>POU→Sub, then POU→COU→Sub</td></tr>
+<tr><td>RefID</td><td>Subscriber RefId (bare)</td><td>Always emitted</td></tr>
+<tr><td>childIndex</td><td>Monotonic counter (POU+COU combined) — increments before resub guard</td><td>Computed but NEVER used in orderId (see §1 Risk)</td></tr>
+<tr><td>orderId</td><td><code>concat("IR_", OrderID)</code></td><td>SAME for all subscribers — NOT unique per subscriber</td></tr>
+<tr><td>ORDER_TYPE</td><td>From activity parameter <code>ORDER_TYPE</code></td><td>→ <code>ns:orderType</code></td></tr>
+<tr><td>SERVICE_TYPE</td><td>From activity parameter <code>SERVICE_TYPE</code></td><td>→ <code>ns:serviceType</code> inside offer (overrides offer's own ServiceType)</td></tr>
+<tr><td>channel</td><td><code>Channel</code> (no "-OMX" suffix)</td><td>Different from OMX_SUBMIT_POSTPAID_ADD_BENEFIT</td></tr>
+<tr><td>Offer filter</td><td>FE_OR_CCBS="FE" AND ExtendedInfo[REMOVE_PACK] != ""</td><td>IR removal offers; offerName from REMOVE_PACK value</td></tr>
+<tr><td>IR_DMC_TRX_ID</td><td>Conditional ExtendedInfo — emitted when string-length &gt; 0</td><td>IR DMC transaction ID for correlation</td></tr>
+<tr><td>ns:subscriberGeneralInfo</td><td>Always emitted as empty element</td><td>No children — contrast with OMX_SUBMIT_POSTPAID_ADD_BENEFIT which sends language</td></tr>
+<tr><td>PurgePendingRequestsBeforeResubmit</td><td>ABSENT</td><td></td></tr>
+<tr><td>Response concept</td><td><code>Concepts.FM.Response.OMX_CreateChildOrder</code></td><td>Same as OMX_SUBMIT_POSTPAID_ADD_BENEFIT; captures childOmxTrackingId</td></tr>
+<tr><td>Fan-in</td><td>RequestCount == successResponseCount (suffix "000")</td><td>Standard count-match</td></tr>
+</table>
+
+<div class="risk-box">
+<strong>[HIGH]</strong> <code>orderId = concat("IR_", OrderID)</code> is the SAME for all subscribers. <code>childIndex</code> is computed but never used in the orderId. If multiple subscribers are processed, all child orders share the same orderId — risk of duplicate key violations or conflation at the SubmitOrder service.
+</div>
+<div class="risk-box">
+<strong>[HIGH]</strong> Request audit logger <code>OPERATION_NAME = "OMX_SUBMIT_POSTPAID_ADD_IR"</code> (wrong — should be <code>"OMX_SUBMIT_REMOVE_OFFER"</code>). Same wrong AUDIT_TRACE. Both POU and COU logger blocks have this bug.
+</div>
+<div class="risk-box">
+<strong>[HIGH]</strong> Response audit logger <code>OPERATION_NAME = "OMX_SUBMIT_POSTPAID_ADD_BENEFIT"</code> (wrong — should be <code>"OMX_SUBMIT_REMOVE_OFFER"</code>). Audit trail mislabels this FM's responses as belonging to OMX_SUBMIT_POSTPAID_ADD_BENEFIT.
+</div>
+<div class="risk-box warn">
+<strong>[MEDIUM]</strong> <code>childIndex++</code> before resub guard — same orderId-on-resubmit issue as OMX_SUBMIT_POSTPAID_ADD_BENEFIT. compounded here because orderId doesn't use childIndex at all.
+</div>
+<div class="risk-box warn">
+<strong>[MEDIUM]</strong> <code>PurgePendingRequestsBeforeResubmit</code> absent. Duplicate child orders on resubmit are possible.
+</div>
+</div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+<div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="section-body">
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule file</td><td><code>Request_OMX_SUBMIT_REMOVE_OFFER.rule</code> (135 lines)</td></tr>
+<tr><td>Author</td><td>DESKTOP-995HR2V</td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>forwardChain</td><td>true</td></tr>
+<tr><td>ActivityID guard</td><td><code>OMX_SUBMIT_REMOVE_OFFER</code></td></tr>
+<tr><td>Activity params read</td><td><code>ORDER_TYPE</code> → <code>order_type</code>; <code>SERVICE_TYPE</code> → <code>service_type</code></td></tr>
+<tr><td>Global var read</td><td>None in payload (only in logger)</td></tr>
+<tr><td>extId</td><td>Auto-generated by runtime</td></tr>
+<tr><td>childIndex</td><td>Starts at 0, increments per subscriber — NEVER used in orderId</td></tr>
+<tr><td>POU PreExecCheck</td><td><code>GetXMLForSubscriber(orderRequest, pSubRefId)</code></td></tr>
+<tr><td>COU PreExecCheck</td><td><code>GetXMLForSubscriberInChildOU(orderRequest, cSubRefId, pOuRefId)</code></td></tr>
+<tr><td>OPERATION_NAME (intended)</td><td>"OMX_SUBMIT_REMOVE_OFFER" (but logger hardcodes wrong values — see §11)</td></tr>
+<tr><td>Response concept</td><td><code>Concepts.FM.Response.OMX_CreateChildOrder</code> (dedicated)</td></tr>
+<tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.OMX_CREATE_CHILD_ORDER</code></td></tr>
+</table>
+
+<h3>Comparison vs OMX_SUBMIT_POSTPAID_ADD_BENEFIT</h3>
+<table>
+<tr><th>Feature</th><th>OMX_SUBMIT_REMOVE_OFFER</th><th>OMX_SUBMIT_POSTPAID_ADD_BENEFIT</th></tr>
+<tr><td>Activity params</td><td>ORDER_TYPE + SERVICE_TYPE</td><td>ORDER_TYPE only</td></tr>
+<tr><td>orderId</td><td><code>concat("IR_", OrderID)</code> — same for all</td><td><code>concat(OrderID, "-", childIndex)</code> — unique per subscriber</td></tr>
+<tr><td>channel</td><td>Channel (raw)</td><td>concat(Channel, "-OMX")</td></tr>
+<tr><td>billCycleNo</td><td>ABSENT</td><td>Present (conditional)</td></tr>
+<tr><td>Order ExtendedInfo</td><td>ABSENT</td><td>MAIN_TRACKING_ID + SBM_CHANNEL</td></tr>
+<tr><td>Offer filter</td><td>FE + REMOVE_PACK != ""</td><td>FE + TR_SPECIAL_OFFER_IND=LY</td></tr>
+<tr><td>offerName source</td><td>ExtendedInfo[REMOVE_PACK]/Value</td><td>OfferName</td></tr>
+<tr><td>serviceType source</td><td>$service_type (activity param)</td><td>ServiceType (from offer)</td></tr>
+<tr><td>Secondary offer block</td><td>ABSENT</td><td>Present (CCBS gated)</td></tr>
+<tr><td>ns:subscriberGeneralInfo</td><td>Empty element (always)</td><td>Contains language (conditional)</td></tr>
+<tr><td>IR_DMC_TRX_ID</td><td>Present (conditional)</td><td>ABSENT</td></tr>
+<tr><td>Logger OPERATION_NAME</td><td>WRONG ("OMX_SUBMIT_POSTPAID_ADD_IR" / "OMX_SUBMIT_POSTPAID_ADD_BENEFIT")</td><td>Correct ("OMX_SUBMIT_POSTPAID_ADD_BENEFIT")</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="section">
+<div class="section-header">§3 — Rule Conditions (WHEN)</div>
+<div class="section-body">
+<table>
+<tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_SUBMIT_REMOVE_OFFER"</code></td><td>FM type guard</td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_SUBMIT_REMOVE_OFFER"</code></td><td>Process flow alignment</td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+<div class="section-header">§5 — Execution Flow</div>
+<div class="section-body">
+<div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>Init:</strong> <code>isActResub</code> = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted). Read <code>order_type</code> (ORDER_TYPE) and <code>service_type</code> (SERVICE_TYPE). <code>isSkipped = true</code>. <code>childIndex = 0</code>.</div></div>
+<div class="flow-step"><div class="flow-num">2</div><div class="flow-text"><strong>POU subscriber loop</strong> (POU p → Sub ps): <code>childIndex++</code> (before resub guard). Resub guard. PreExecCheck. Send <code>OMX_CREATE_CHILD_ORDER</code> with <code>orderId = concat("IR_", OrderID)</code>. RequestCount++ if !isActResub. Logger (wrong OPERATION_NAME). isSkipped = false.</div></div>
+<div class="flow-step"><div class="flow-num">3</div><div class="flow-text"><strong>COU subscriber loop</strong> (POU p → COU c → Sub cs): same — <code>childIndex++</code> first. PreExecCheck = GetXMLForSubscriberInChildOU. Same orderId = <code>concat("IR_", OrderID)</code>. Logger (same wrong OPERATION_NAME).</div></div>
+<div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>Completion:</strong> if (!isSkipped) → Status = GetActivityStatusString("1", false); SendDataToDB. Else → SkipActivity("4").</div></div>
+<div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>Exception:</strong> catch(Exception ae) → HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</div></div>
+</div>
+</div>
+
+<!-- §9 Payload -->
+<div class="section">
+<div class="section-header">§9 — Detailed Payload Build</div>
+<div class="section-body">
+
+<h3>9.1 Activity Parameters</h3>
+<table>
+<tr><th>Parameter Key</th><th>Variable</th><th>Effect</th></tr>
+<tr><td>ORDER_TYPE</td><td><code>order_type</code></td><td>→ <code>ns:orderType</code> — the type of remove-offer child order</td></tr>
+<tr><td>SERVICE_TYPE</td><td><code>service_type</code></td><td>→ <code>ns:serviceType</code> inside every <code>ns:offers</code> block — overrides per-offer ServiceType</td></tr>
+</table>
+
+<h3>9.2 orderId — Non-Unique Bug</h3>
+<pre>ns:orderId = concat("IR_", OrderID)</pre>
+<p>This is IDENTICAL for all subscribers. Example: three subscribers all get <code>IR_ORD-123</code>. <code>childIndex</code> is computed (0→1→2→…) but is unused in the orderId construction.</p>
+
+<h3>9.3 Offer Filtering &amp; IR_DMC_TRX_ID</h3>
+<table>
+<tr><th>Filter</th><th>Value</th></tr>
+<tr><td>Offer selector</td><td><code>SubscriberOffers[FE_OR_CCBS="FE" AND ExtendedInfo[REMOVE_PACK] != ""]</code></td></tr>
+<tr><td>ns:offerName</td><td><code>ExtendedInfo[Name="REMOVE_PACK"]/Value</code> — the pack name to remove</td></tr>
+<tr><td>ns:serviceType</td><td><code>$service_type</code> (activity parameter SERVICE_TYPE) — same for all offers</td></tr>
+<tr><td>ns:ExtendedInfo[IR_DMC_TRX_ID]</td><td><code>ExtendedInfo[Name="IR_DMC_TRX_ID"]/Value</code> — only when string-length &gt; 0</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="section">
+<div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+<div class="section-body">
+<p>Two XSLT variants: POU (<code>psub</code>, <code>pSubRefId</code>) and COU (<code>csub</code>, <code>cSubRefId</code>). Identical structure; subscriber reference differs.</p>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$pSubRefId / $cSubRefId</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:submitOrderRequest</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:Order</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:channel</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Channel</span><span class="tree-cond">[Always — no "-OMX" suffix]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:orderId</span><span class="tree-arrow">←</span><span class="tree-src">concat("IR_", OrderID)</span><span class="tree-cond">[Always — same for ALL subscribers ⚠]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:orderType</span><span class="tree-arrow">←</span><span class="tree-src">$order_type (ORDER_TYPE activity param)</span><span class="tree-cond">[Always]</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:Customer</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:OU</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:subscriber</span><span class="tree-cond">[for-each: $psub/$csub]</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns:activityInfo</span></div>
+                                <ul>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/ActivityReason</span><span class="tree-cond">[Conditional]</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:userText</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/UserText</span><span class="tree-cond">[Conditional]</span></div></li>
+                                </ul>
+                              </li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:offers</span><span class="tree-cond">[FE_OR_CCBS="FE" AND ExtendedInfo[REMOVE_PACK] != "" — loop]</span></div>
+                                <ul>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:offerName</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[REMOVE_PACK]/Value</span><span class="tree-cond">[Conditional]</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:serviceType</span><span class="tree-arrow">←</span><span class="tree-src">$service_type (SERVICE_TYPE activity param)</span><span class="tree-cond">[Always — same for all offers]</span></div></li>
+                                  <li><div class="tree-row"><span class="tree-tag">ns:ExtendedInfo</span><span class="tree-cond">[IR_DMC_TRX_ID — only when string-length &gt; 0]</span></div>
+                                    <ul>
+                                      <li><div class="tree-row"><span class="tree-tag">ns:name</span><span class="tree-arrow">←</span><span class="tree-src-static">"IR_DMC_TRX_ID"</span></div></li>
+                                      <li><div class="tree-row"><span class="tree-tag">ns:value</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[IR_DMC_TRX_ID]/Value</span></div></li>
+                                    </ul>
+                                  </li>
+                                </ul>
+                              </li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:subscriberGeneralInfo</span><span class="tree-cond">[Always — empty element, no children]</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns:subscriberNumber</span><span class="tree-arrow">←</span><span class="tree-src">MSISDN</span><span class="tree-cond">[Conditional]</span></div></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<br>
+<p><strong>Legend:</strong> <span style="color:#a6e3a1">Green</span> = XPath from order data | <span style="color:#fab387">Orange</span> = Static literal | <span style="color:#cba6f7;font-style:italic">Purple italic</span> = Condition | ⚠ = Known bug</p>
+</div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+<div class="section-header">§11 — Audit Logging (Copy-Paste Bugs)</div>
+<div class="section-body">
+<table>
+<tr><th>Log Point</th><th>Actual OPERATION_NAME in code</th><th>Correct value (should be)</th></tr>
+<tr><td>POU request logger</td><td><code style="color:var(--true-red)">"OMX_SUBMIT_POSTPAID_ADD_IR"</code></td><td><code>"OMX_SUBMIT_REMOVE_OFFER"</code></td></tr>
+<tr><td>COU request logger</td><td><code style="color:var(--true-red)">"OMX_SUBMIT_POSTPAID_ADD_IR"</code></td><td><code>"OMX_SUBMIT_REMOVE_OFFER"</code></td></tr>
+<tr><td>Response logger</td><td><code style="color:var(--true-red)">"OMX_SUBMIT_POSTPAID_ADD_BENEFIT"</code></td><td><code>"OMX_SUBMIT_REMOVE_OFFER"</code></td></tr>
+</table>
+<br>
+<div class="risk-box">
+<strong>[HIGH]</strong> All three logger blocks carry wrong OPERATION_NAME values. Any audit query filtered by OPERATION_NAME="OMX_SUBMIT_REMOVE_OFFER" will return zero results. Requests will be attributed to a different FM in audit dashboards.
+</div>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+<div class="section-header">§15 — Function Dependency Tree</div>
+<div class="section-body">
+<pre>Request_OMX_SUBMIT_REMOVE_OFFER (rule)
+├── isActResub = (RequestCount > 0 &amp;&amp; IsOrderResubmitted)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── order_type = GetActivityParamValueFromKey(orderCurrentActivity, "ORDER_TYPE")
+├── service_type = GetActivityParamValueFromKey(orderCurrentActivity, "SERVICE_TYPE")
+├── chkXPath = nextAct.PreExecCheck
+├── isSkipped = true; childIndex = 0
+│
+├── [POU loop: POU p → Sub ps]
+│   ├── childIndex++ [BEFORE resub guard — and NEVER used in orderId!]
+│   ├── pSubRefId = ParentOU[p].Subscriber[ps].RefId
+│   ├── resub guard: Response[ReferenceId==pSubRefId &amp;&amp; CompletionStatus==2] → reqSuccess=true
+│   ├── [if !reqSuccess]:
+│   │   ├── [if PreExecCheck set]: GetXMLForSubscriber(orderRequest, pSubRefId) → XPath.execute
+│   │   └── [if chkRes=="true"]:
+│   │       ├── reqEvent = Event.createEvent(OMX_CREATE_CHILD_ORDER, XSLT):
+│   │       │   ├── RefID = pSubRefId
+│   │       │   ├── channel = Channel (raw, no "-OMX")
+│   │       │   ├── orderId = concat("IR_", OrderID) [same for ALL subscribers]
+│   │       │   ├── orderType = $order_type
+│   │       │   ├── [no Order ExtendedInfo blocks]
+│   │       │   ├── [no billCycleNo]
+│   │       │   ├── offers: FE + REMOVE_PACK != "" filter
+│   │       │   │   ├── offerName = ExtendedInfo[REMOVE_PACK]/Value
+│   │       │   │   ├── serviceType = $service_type (activity param)
+│   │       │   │   └── ExtendedInfo[IR_DMC_TRX_ID] = ... (conditional)
+│   │       │   ├── subscriberGeneralInfo = EMPTY element
+│   │       │   └── subscriberNumber = MSISDN
+│   │       ├── sendEventImmediate(reqEvent)
+│   │       ├── isSkipped = false
+│   │       ├── [if !isActResub]: RequestCount++
+│   │       └── Logger [BUG: OPERATION_NAME="OMX_SUBMIT_POSTPAID_ADD_IR"]
+│
+├── [COU loop: POU p → COU c → Sub cs]
+│   ├── childIndex++ [same issue — unused in orderId]
+│   ├── cSubRefId = ChildOU[c].Subscriber[cs].RefId
+│   └── [same resub guard + PreExecCheck (GetXMLForSubscriberInChildOU) + payload + Logger]
+│       └── Logger [BUG: OPERATION_NAME="OMX_SUBMIT_POSTPAID_ADD_IR"]
+│
+├── [if !isSkipped]:
+│   ├── orderCurrentActivity.Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException(orderRequest, orderCurrentActivity, ae, "")
+
+Response_OMX_SUBMIT_REMOVE_OFFER (rulefunction)
+├── activityRes = Instance.createInstance(OMX_CreateChildOrder){
+│     extId=generateTrackingID(), ResponseCode, ResponseMessage,
+│     CompletionStatus, ReferenceId, childOmxTrackingId}
+├── currActivity.Response[] ← activityRes
+├── Logger [BUG: OPERATION_NAME="OMX_SUBMIT_POSTPAID_ADD_BENEFIT"]
+├── successResponseCount = count(Response[tib:right(tib:trim(ResponseCode), 3) = "000"])
+└── return (RequestCount == successResponseCount) ? "true" : "false"</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+<div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="section-body">
+
+<h3>Functional Requirements</h3>
+<table>
+<tr><th>Ref</th><th>Requirement</th></tr>
+<tr><td>R1</td><td>Fan-out: POU direct subscribers first, then COU. One child order per subscriber.</td></tr>
+<tr><td>R2</td><td>orderId = concat("IR_", OrderID) — as coded. Verify with SubmitOrder team whether this should be unique per subscriber; if yes, fix to use childIndex or RefId.</td></tr>
+<tr><td>R3</td><td>ORDER_TYPE and SERVICE_TYPE are both required activity parameters.</td></tr>
+<tr><td>R4</td><td>channel = raw Channel (no "-OMX" suffix — different from OMX_SUBMIT_POSTPAID_ADD_BENEFIT).</td></tr>
+<tr><td>R5</td><td>Offer filter: FE_OR_CCBS="FE" AND ExtendedInfo[REMOVE_PACK] non-empty. offerName = REMOVE_PACK value (not OfferName field).</td></tr>
+<tr><td>R6</td><td>serviceType in offers = SERVICE_TYPE activity parameter (same for all offers).</td></tr>
+<tr><td>R7</td><td>IR_DMC_TRX_ID ExtendedInfo emitted when non-empty.</td></tr>
+<tr><td>R8</td><td>ns:subscriberGeneralInfo always emitted as empty element.</td></tr>
+<tr><td>R9</td><td>Fan-in: RequestCount == successResponseCount (suffix "000").</td></tr>
+<tr><td>R10</td><td>Response captures childOmxTrackingId from submitOrderResponse payload.</td></tr>
+</table>
+
+<h3>Design Risks</h3>
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td>orderId = concat("IR_", OrderID) — same for all subscribers. childIndex unused. Risk of duplicate orderId at SubmitOrder service when multiple subscribers exist</td><td><span class="badge badge-high">[HIGH]</span></td><td>Change orderId to concat("IR_", OrderID, "-", childIndex) — mirrors OMX_SUBMIT_POSTPAID_ADD_BENEFIT pattern. Confirm with SubmitOrder team.</td></tr>
+<tr><td>Request logger OPERATION_NAME = "OMX_SUBMIT_POSTPAID_ADD_IR" (wrong) — audit trail broken</td><td><span class="badge badge-high">[HIGH]</span></td><td>Fix both POU and COU logger blocks to use "OMX_SUBMIT_REMOVE_OFFER"</td></tr>
+<tr><td>Response logger OPERATION_NAME = "OMX_SUBMIT_POSTPAID_ADD_BENEFIT" (wrong)</td><td><span class="badge badge-high">[HIGH]</span></td><td>Fix response rulefunction logger to use "OMX_SUBMIT_REMOVE_OFFER"</td></tr>
+<tr><td>PurgePendingRequestsBeforeResubmit absent — duplicate child orders on resubmit</td><td><span class="badge badge-med">[MEDIUM]</span></td><td>Add PurgePendingRequestsBeforeResubmit if SubmitOrder is not idempotent</td></tr>
+<tr><td>childIndex increments before resub guard</td><td><span class="badge badge-med">[MEDIUM]</span></td><td>Move childIndex++ after resub guard, or use RefId-based orderId instead</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+<div class="section-header">§19 — Response Message Rule (Response_OMX_SUBMIT_REMOVE_OFFER)</div>
+<div class="section-body">
+
+<h3>§19.1 Overview</h3>
+<p>Identical response concept and XSLT to <code>Response_OMX_SUBMIT_POSTPAID_ADD_BENEFIT</code> — uses <code>Concepts.FM.Response.OMX_CreateChildOrder</code>. Captures <code>childOmxTrackingId</code>. The only difference is the logger bug: <code>OPERATION_NAME = "OMX_SUBMIT_POSTPAID_ADD_BENEFIT"</code> instead of <code>"OMX_SUBMIT_REMOVE_OFFER"</code>.</p>
+
+<h3>§19.2 Scope Variables</h3>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td>orderRequest</td><td>Concepts.OrderRequest.OrderRequest</td><td>Order context</td></tr>
+<tr><td>eventResponse</td><td>Events.OMConsumers.OMXFM.Response.OMX_CREATE_CHILD_ORDER</td><td>OMX child order response event</td></tr>
+<tr><td>currActivity</td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity state &amp; response list</td></tr>
+</table>
+
+<h3>§19.3 OMX_CreateChildOrder Concept Construction</h3>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">object (OMX_CreateChildOrder)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">childOmxTrackingId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:submitOrderResponse/ns:OMXTrackingId</span><span class="tree-cond">[Conditional]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<h3>§19.4 Fan-in Completion Logic</h3>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+<tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+<tr><td>Return "true"</td><td>All child order submissions completed with ResponseCode suffix "000"</td></tr>
+</table>
+</div>
+</div>
+
+<div style="text-align:center;color:#999;font-size:.8rem;padding:20px 0;">
+TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &middot; Request_OMX_SUBMIT_REMOVE_OFFER
+</div>
+</div>
+</body>
+</html>

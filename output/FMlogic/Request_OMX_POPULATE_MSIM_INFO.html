@@ -1,0 +1,290 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_OMX_POPULATE_MSIM_INFO — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+.callout.purple{border-color:var(--skip);background:#F3E5F5}
+.callout.danger{border-color:#c62828;background:#FFEBEE}
+h3{color:var(--true-dark);margin:16px 0 10px;font-size:0.95rem}
+.mode-box{border:2px solid;border-radius:8px;padding:14px;margin:10px 0}
+.mode-normal{border-color:#1565c0;background:#E3F0FD}.mode-cancel{border-color:#6a1b9a;background:#F3E5F5}
+.mode-title{font-weight:700;font-size:0.85rem;margin-bottom:8px}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_OMX_POPULATE_MSIM_INFO</h1>
+    <div class="subtitle">Pure in-memory MultiSIM population — builds Master + Minor[] array in MultiSIMInfo concept from subscriber offer SocProperties (TR_MULTISIM_IND); two modes: normal offer-based and AUTO_CANCEL replication. No external system call.</div>
+    <div class="meta-row">
+      <span class="meta-badge">Type: In-memory orchestration (no JMS/backend)</span>
+      <span class="meta-badge">Pattern: Synchronous → NextActivity</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Author: RS33-BANDIT</span>
+      <span class="meta-badge">Used in step: 39</span>
+      <span class="meta-badge">Generated: 2026-08-06</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>Populates <code>Concepts.MultiSIM.MultiSIMInfo</code> (Master SIM + Minor[] array) for each subscriber that has at least one offer with a <code>TR_MULTISIM_IND</code> SocProperty. The rule operates in two modes controlled by the <code>SPC</code> activity parameter:</p>
+    <ul style="margin-left:18px;font-size:0.88rem;line-height:2">
+      <li><strong>Normal mode</strong> — iterates SubscriberOffers, classifies each by <code>TR_MULTISIM_IND</code> value (RES/REE vs RCM/RCE), creates MinorSIM accordingly</li>
+      <li><strong>AUTO_CANCEL mode</strong> (<code>SPC="AUTO_CANCEL"</code>) — iterates existing <code>Minor[]</code> with <code>Source="PREV_MSIM"</code>, creates new MinorSIM entries linked to matching CCBS SOCs</li>
+    </ul>
+    <div class="callout info"><strong>No external system call:</strong> Pure in-memory — manipulates BE concepts only, then calls <code>NextActivity</code>.</div>
+    <div class="callout danger"><strong>Two bugs in source:</strong> (1) MasterSIM IMSI reads <code>$msim/Master/SIM</code> instead of <code>$msim/Master/IMSI</code> when IMSI already exists. (2) COU block uses <code>if (msim == null)</code> instead of <code>if (msim.Master == null)</code> — Master is never created for COU subscribers when MultiSIMInfo was freshly initialised.</div>
+    <div class="callout purple"><strong>Rule namespace:</strong> <code>Rules.OMConsumers.OMXOM</code> — internal calculation, not OMXFM.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>OMX_POPULATE_MSIM_INFO.rule</code></td><td>183 lines; no <code>Request_</code> prefix</td></tr>
+      <tr><td>Rule namespace</td><td><code>Rules.OMConsumers.OMXOM</code></td><td></td></tr>
+      <tr><td>Response rulefunction</td><td><span class="badge badge-orange">None</span></td><td>Synchronous — no backend</td></tr>
+      <tr><td>Author</td><td>RS33-BANDIT</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td></td></tr>
+      <tr><td>Logger</td><td><code>Log.getLogger</code> + <code>Log.log</code></td><td>Primary log; also uses <code>System.debugOut</code> for debug traces</td></tr>
+      <tr><td>Activity parameter</td><td><code>SPC</code></td><td>If "AUTO_CANCEL" → triggers replication mode</td></tr>
+      <tr><td>External system</td><td><span class="badge badge-green">None</span></td><td></td></tr>
+      <tr><td>Completion</td><td><code>NextActivity()</code> if any subscriber processed; else <code>SkipActivity("4")</code></td><td></td></tr>
+      <tr><td>Source field (hardcoded)</td><td><code>"FE"</code></td><td>Applied to all MasterSIM and MinorSIM concepts created</td></tr>
+      <tr><td>Audit</td><td><span class="badge badge-green">UNCONDITIONAL</span></td><td><code>AUDIT_TRACE = "OMX_POPULATE_MSIM_INFO Completed."</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_POPULATE_MSIM_INFO"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_POPULATE_MSIM_INFO"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 TR_MULTISIM_IND values -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> TR_MULTISIM_IND SocProperty Values</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Value</th><th>Meaning</th><th>isMsim gate</th><th>MinorSIM type in normal mode</th></tr>
+      <tr><td><code>RES</code></td><td>Reserve — new minor SIM being added</td><td>✓</td><td>isRes — from ParameterInfo (Related SIM/IMSI)</td></tr>
+      <tr><td><code>REE</code></td><td>Reserve Existing — existing minor SIM</td><td>✓</td><td>isRes — from ParameterInfo (Related SIM/IMSI)</td></tr>
+      <tr><td><code>RCM</code></td><td>RC Minor — master sub's own SIM becomes minor</td><td>✓</td><td>isRcm — from ResourceInfo (subscriber's own SIM)</td></tr>
+      <tr><td><code>RCE</code></td><td>RC Existing — existing RC minor</td><td>✓</td><td>isRcm — from ResourceInfo (subscriber's own SIM)</td></tr>
+    </table>
+    <div class="callout info">A subscriber qualifies (<code>isMsim=true</code>) if it has at least one offer with any of RES / RCM / REE / RCE in SocProperties.</div>
+  </div>
+</div>
+
+<!-- §5 Two Modes -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> Two Operating Modes (SPC Parameter)</div>
+  <div class="section-body">
+
+    <div class="mode-box mode-normal">
+      <div class="mode-title" style="color:#1565c0">Normal Mode (SPC ≠ "AUTO_CANCEL")</div>
+      <p style="font-size:0.88rem;margin-bottom:8px">Iterates each qualifying subscriber's <code>SubscriberOffers</code>. For each offer passing PreExecCheck:</p>
+      <ul style="margin-left:18px;font-size:0.88rem;line-height:1.9">
+        <li><strong>RES/REE</strong> (<code>isRes=true</code>) → create MinorSIM from offer ParameterInfo:
+          <ul style="margin-left:18px">
+            <li>SIM ← ParameterInfo["Related SIM"]/ValuesArray</li>
+            <li>IMSI ← ParameterInfo["Related IMSI"]/ValuesArray</li>
+            <li>Alias ← ParameterInfo["IMSI_Alias_Name"]/ValuesArray</li>
+            <li>RCOfferIn ← 3-way: "RC Minor SOC code out" / "RC Minor SOC code In" / offer.Soc</li>
+          </ul>
+        </li>
+        <li><strong>RCM/RCE</strong> (<code>isRcm=true</code>, not already cross-linked by RES) → create MinorSIM from subscriber ResourceInfo:
+          <ul style="margin-left:18px">
+            <li>SIM ← ResourceInfo["SIM"]/ValuesArray</li>
+            <li>IMSI ← ResourceInfo["IMSI"]/ValuesArray</li>
+            <li>RCOfferIn ← offer.Soc</li>
+          </ul>
+        </li>
+      </ul>
+      <div class="callout warning" style="margin-top:8px"><strong>isRcm cross-link exclusion:</strong> An RCM/RCE offer is NOT processed if there is already an RES/REE offer whose <code>ParameterInfo["RC Minor SOC code out"]</code> points to this offer's Soc — preventing duplicate MinorSIM creation.</div>
+    </div>
+
+    <div class="mode-box mode-cancel" style="margin-top:12px">
+      <div class="mode-title" style="color:#6a1b9a">AUTO_CANCEL Mode (SPC = "AUTO_CANCEL")</div>
+      <p style="font-size:0.88rem;margin-bottom:8px">Iterates existing <code>sub.MultiSIMInfo.Minor[]</code>. For each Minor where <code>Source="PREV_MSIM"</code>:</p>
+      <ul style="margin-left:18px;font-size:0.88rem;line-height:1.9">
+        <li>Creates new MinorSIM with SIM/IMSI from the existing minor (if non-null)</li>
+        <li><strong>POU RCOfferIn</strong>: looks up <code>SubscriberOffers[FE_OR_CCBS=CCBS AND (RCM OR RCE)][m+1]/Soc</code></li>
+        <li><strong>COU RCOfferIn</strong>: looks up <code>SubscriberOffers[FE_OR_CCBS=CCBS AND RCM][m+1]/Soc</code> (RCE not included in COU)</li>
+        <li>Appends new MinorSIM to <code>sub.MultiSIMInfo.Minor[]</code></li>
+      </ul>
+    </div>
+
+  </div>
+</div>
+
+<!-- §6 POU vs COU differences -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> POU vs COU Processing Differences</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Aspect</th><th>POU Subscriber</th><th>COU Subscriber</th></tr>
+      <tr><td>PreExecCheck XML builder</td><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code></td><td><code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code> (passes <code>pOuRefId</code>)</td></tr>
+      <tr><td>Master null guard</td><td><code>if (msim.Master == null)</code></td><td><code>if (msim == null)</code> <span class="badge badge-red">BUG</span> — always false after MultiSIMInfo init; Master never created for COU</td></tr>
+      <tr><td>isRes condition</td><td>TR_MULTISIM_IND=RES or REE (any)</td><td>TR_MULTISIM_IND=RES or REE <strong>AND FE_OR_CCBS="FE"</strong> (extra gate)</td></tr>
+      <tr><td>AUTO_CANCEL RCOfferIn lookup</td><td>FE_OR_CCBS=CCBS AND (RCM OR RCE)</td><td>FE_OR_CCBS=CCBS AND RCM only (RCE excluded)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 MasterSIM bug -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> MasterSIM Construction &amp; Known Bug</div>
+  <div class="section-body">
+    <p>For each qualifying subscriber (both POU and COU), the rule ensures a <code>MultiSIMInfo</code> exists and then creates a <code>MasterSIM</code> if needed:</p>
+    <table>
+      <tr><th>Field</th><th>Condition</th><th>Source</th><th>Bug?</th></tr>
+      <tr><td><code>SIM</code></td><td>if <code>sub.MultiSIMInfo/Master/SIM</code> exists</td><td><code>$msim/Master/SIM</code></td><td></td></tr>
+      <tr><td><code>SIM</code></td><td>else</td><td><code>ResourceInfo[SIM]/ValuesArray</code></td><td></td></tr>
+      <tr><td><code>IMSI</code></td><td>if <code>sub.MultiSIMInfo/Master/IMSI</code> exists</td><td><code>$msim/Master/SIM</code> <span class="badge badge-red">BUG</span></td><td>Should be <code>$msim/Master/IMSI</code></td></tr>
+      <tr><td><code>IMSI</code></td><td>else</td><td><code>ResourceInfo[IMSI]/ValuesArray</code></td><td></td></tr>
+      <tr><td><code>Source</code></td><td>always</td><td><code>"FE"</code> (hardcoded)</td><td></td></tr>
+    </table>
+    <div class="callout danger"><strong>Bug §7:</strong> When <code>sub.MultiSIMInfo/Master/IMSI</code> already exists, the IMSI field is incorrectly populated with the <strong>SIM</strong> value (<code>$msim/Master/SIM</code>) instead of the IMSI value. This is a copy-paste bug — the IMSI of the Master will be corrupted in re-processing scenarios.</div>
+  </div>
+</div>
+
+<!-- §8 RCOfferIn 3-way priority -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> RCOfferIn 3-Way Priority (Normal Mode, RES/REE)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Priority</th><th>Condition</th><th>Source</th></tr>
+      <tr><td>1</td><td><code>exists(ParameterInfo[ParamName="RC Minor SOC code out"]/ValuesArray)</code></td><td><code>ParameterInfo["RC Minor SOC code out"]/ValuesArray</code></td></tr>
+      <tr><td>2</td><td><code>exists(ParameterInfo[ParamName="RC Minor SOC code In"]/ValuesArray)</code></td><td><code>ParameterInfo["RC Minor SOC code In"]/ValuesArray</code></td></tr>
+      <tr><td>3 (default)</td><td>else</td><td><code>offer.Soc</code></td></tr>
+    </table>
+    <div class="callout info">Priority 1 ("out") takes precedence over priority 2 ("in") — note the case difference: "SOC code out" vs "SOC code In".</div>
+  </div>
+</div>
+
+<!-- §9 Function Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">OMX_POPULATE_MSIM_INFO (rule)
+├── Log.getLogger("Rules.OMConsumers.OMXOM.OMX_POPULATE_MSIM_INFO")
+├── GetActivityParamValueFromKey(activity, "SPC")
+├── [POU loop p]:
+│   └── [POU Subscriber loop ps]:
+│       ├── XPath.evalAsBoolean(isMsim: exists(SubscriberOffers[RES/RCM/REE/RCE]))
+│       ├── [if isMsim]:
+│       │   ├── [if MultiSIMInfo==null]: Instance.createInstance(MultiSIMInfo{extId})
+│       │   ├── [if msim.Master==null]: Instance.createInstance(MasterSIM{SIM,IMSI,Source="FE"})
+│       │   │   ← SIM: PREV or ResourceInfo[SIM]; IMSI: PREV or ResourceInfo[IMSI] [BUG: uses SIM]
+│       │   ├── [if param=="AUTO_CANCEL"]:
+│       │   │   └── [Minor loop m where Source=="PREV_MSIM"]:
+│       │   │       └── Instance.createInstance(MinorSIM{SIM,IMSI,RCOfferIn(CCBS+RCM/RCE),Source="FE"})
+│       │   └── [else — normal mode]:
+│       │       └── [SubscriberOffers loop o]:
+│       │           ├── FE_OR_CCBS filter → GetXMLForSubscriberOfferFilterWithExtendedInfo
+│       │           ├── XPath.execute(PreExecCheck)
+│       │           ├── [if chkRes=="true"]:
+│       │           │   ├── XPath.evalAsBoolean(isRes: RES or REE)
+│       │           │   │   → Instance.createInstance(MinorSIM{RelatedSIM,RelatedIMSI,Alias,RCOfferIn 3-way,Source="FE"})
+│       │           │   └── [else] XPath.evalAsBoolean(isRcm: RCM/RCE AND not cross-linked)
+│       │           │       → Instance.createInstance(MinorSIM{ResourceSIM,ResourceIMSI,RCOfferIn=Soc,Source="FE"})
+│       │           └── isSkipped = false
+├── [COU loop c → cs]:  [same structure as POU; differences: §6]
+│   ├── [if msim==null] BUG: condition never true after MultiSIMInfo init
+│   └── COU isRes adds FE_OR_CCBS="FE" gate; GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo
+├── [if !isSkipped]:
+│   ├── RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)
+│   └── Event.Ext.sendEventImmediate(Logger: "OMX_POPULATE_MSIM_INFO Completed.")
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch] HandleActivityException</div>
+  </div>
+</div>
+
+<!-- §10 Migration Notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§10</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Pure in-memory — no external system call required.</td></tr>
+      <tr><td>R2</td><td>Subscriber is eligible only if it has at least one offer with TR_MULTISIM_IND=RES/RCM/REE/RCE.</td></tr>
+      <tr><td>R3</td><td>Normal mode classifies offers as isRes (RES/REE) or isRcm (RCM/RCE). isRcm is suppressed if an existing RES offer already cross-links to the offer's Soc via "RC Minor SOC code out".</td></tr>
+      <tr><td>R4</td><td>AUTO_CANCEL mode (SPC="AUTO_CANCEL") replicates existing PREV_MSIM Minor entries with updated RCOfferIn from CCBS SOCs.</td></tr>
+      <tr><td>R5</td><td>COU isRes requires additional FE_OR_CCBS="FE" gate (POU does not).</td></tr>
+      <tr><td>R6</td><td>RCOfferIn 3-way priority: "RC Minor SOC code out" → "RC Minor SOC code In" → offer.Soc.</td></tr>
+      <tr><td>R7</td><td>Source="FE" is hardcoded on all created MasterSIM and MinorSIM concepts (distinguishes from "PREV_MSIM" from prior INTX lookups).</td></tr>
+    </table>
+
+    <h3 style="margin-top:18px">Known Bugs — Fix Before Migration</h3>
+    <table>
+      <tr><th>Bug</th><th>Location</th><th>Severity</th><th>Fix</th></tr>
+      <tr>
+        <td>MasterSIM IMSI copies SIM value when existing IMSI present</td>
+        <td>POU block and COU block, MasterSIM XSLT — <code>xsl:when test="exists($sub/MultiSIMInfo/Master/IMSI)"</code></td>
+        <td><span class="badge badge-red">HIGH</span></td>
+        <td>Change <code>$msim/Master/SIM</code> to <code>$msim/Master/IMSI</code> in the IMSI xsl:when branch</td>
+      </tr>
+      <tr>
+        <td>COU Master never created when MultiSIMInfo is freshly initialised</td>
+        <td>COU block — <code>if (msim == null)</code> after <code>msim = sub.MultiSIMInfo</code></td>
+        <td><span class="badge badge-red">HIGH</span></td>
+        <td>Change <code>if (msim == null)</code> to <code>if (msim.Master == null)</code> (matching POU logic)</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

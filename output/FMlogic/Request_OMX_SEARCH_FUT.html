@@ -1,0 +1,511 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_OMX_SEARCH_FUT — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}.code-block .xa{color:#f9e2af}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+.flow-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.flow-text{flex:1}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.variant-label{background:#1e2a3a;color:#89b4fa;font-weight:700;padding:6px 14px;border-radius:4px;margin-bottom:8px;font-size:0.8rem;display:inline-block}
+h3{color:var(--true-dark);margin:16px 0 10px;font-size:0.95rem}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_OMX_SEARCH_FUT</h1>
+    <div class="subtitle">Tri-level OMX future order search — sequential fan-out to Subscriber (nodeLevel=5), POU (nodeLevel=3), COU (nodeLevel=3) using IntraActivitySequencing; STATUS and ORDER_TYPE driven by activity parameters</div>
+    <div class="meta-row">
+      <span class="meta-badge">Target: OMX (FutureOrder)</span>
+      <span class="meta-badge">Pattern: IntraActivitySequencing (sequential)</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Author: usuf-chu</span>
+      <span class="meta-badge">Generated: 2026-08-06</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>Searches OMX for existing FutureOrder records matching a given status and order type. Sends up to three sequential requests — one per hierarchy level: Subscriber (nodeLevel=5), Parent OU (nodeLevel=3), Child OU (nodeLevel=3). Events are dispatched one at a time via <code>IntraActivitySequencing</code>: all events are queued with <code>ActionRequestEvent</code>, then <code>SendFirstRequestEvent</code> dispatches the first; each response triggers the next. The response aggregates <code>FutureOrders[]</code> records into a custom <code>OMX_SearchFutureRes</code> concept.</p>
+    <div class="callout success">
+      <strong>[ACTIVE]:</strong> <code>PurgePendingRequestsBeforeResubmit</code> is present and NOT commented out — resubmit purges the pending queue before re-queuing events.
+    </div>
+    <div class="callout info">
+      <strong>Tri-level pattern:</strong> Unlike per-subscriber fan-out FMs, OMX_SEARCH_FUT sends to up to three specific hierarchy nodes (first subscriber, first POU with OUId, first COU with OUId). The events are sequential (not parallel). Any of the three nodes may be absent; if all are absent the activity is skipped.
+    </div>
+    <div class="callout warning">
+      <strong>No credential gate:</strong> UserName/PassWord are included in the payload only if non-empty in orderRequest (standard <code>xsl:if</code>) — there is no <code>IsEnableUserPass</code> global variable check as seen in INTX FMs.
+    </div>
+    <div class="callout">
+      <strong>Audit unconditional:</strong> No <code>AllowWriteLog(OrderType)</code> gate — audit events are sent for every request and every response regardless of OrderType.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_OMX_SEARCH_FUT.rule</code></td><td>123 lines</td></tr>
+      <tr><td>Response file</td><td><code>Response_OMX_SEARCH_FUT.rulefunction</code></td><td>31 lines</td></tr>
+      <tr><td>Author</td><td>usuf-chu</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td></td></tr>
+      <tr><td>Schema NS (ns)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/FutureOrder.xsd</code></td><td></td></tr>
+      <tr><td>Request payload root</td><td><code>ns:futureOrder</code></td><td></td></tr>
+      <tr><td>Response payload root</td><td><code>ns:futureOrders/ns:futureOrder[]</code></td><td>Collection</td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.OMX_SEARCH_FUTURE</code></td><td></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.OMX_SearchFutureRes</code></td><td>Custom — NOT ResponseBase; has FutureOrders[]</td></tr>
+      <tr><td>extId generation</td><td>Inside XSLT via <code>ns1:generateTrackingID()</code></td><td>Not passed from BE</td></tr>
+      <tr><td>Fan-out type</td><td>IntraActivitySequencing (sequential)</td><td>ActionRequestEvent + SendFirstRequestEvent</td></tr>
+      <tr><td>Max events</td><td>3 (Subscriber + POU + COU)</td><td>Each conditional on node existence</td></tr>
+      <tr><td>PurgePendingRequestsBeforeResubmit</td><td><span class="badge badge-green">ACTIVE</span></td><td>Not commented out</td></tr>
+      <tr><td>Credential gate</td><td>None (<code>IsEnableUserPass</code> not used)</td><td>UserName/PassWord included if non-empty in orderRequest</td></tr>
+      <tr><td>Audit gate (request)</td><td><span class="badge badge-green">UNCONDITIONAL</span></td><td>No AllowWriteLog</td></tr>
+      <tr><td>Audit gate (response)</td><td><span class="badge badge-green">UNCONDITIONAL</span></td><td>No AllowWriteLog</td></tr>
+      <tr><td>PreExecCheck source</td><td><code>nextAct.PreExecCheck</code> via live Activity lookup</td><td></td></tr>
+      <tr><td>Logger pattern</td><td><code>Log.getLogger</code> + <code>Log.log</code></td><td>Used in response only; request uses direct sendEventImmediate</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Subscriber/POU/COU data; OMXTrackingId; OrderID</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Parameter[]; RequestCount; Response[]; Status</td></tr>
+      <tr><td><code>nextAct</code></td><td>Concepts.OM.ProcessConfig.Activity (local)</td><td>Live lookup — PreExecCheck</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_SEARCH_FUT"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_SEARCH_FUT"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Parameter Extraction -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> Activity Parameter Extraction</div>
+  <div class="section-body">
+    <p>Parameters are extracted by looping over <code>orderCurrentActivity.Parameter[]</code> and using <code>tib:tokenize(param, "=")</code> to split key/value pairs. This is different from <code>GetActivityParameterValueFromKey</code> used in other FMs.</p>
+    <div class="code-block"><span class="kw">for</span>(<span class="ty">int</span> iParam=<span class="nu">0</span>; iParam&lt;orderCurrentActivity.Parameter@length; iParam++) {
+    <span class="ty">String</span> param     = XPath.evalAsString(<span class="str">"Parameter[(number($iParam)+1)]"</span>, ...);
+    <span class="ty">String</span> paramKey   = XPath.evalAsString(<span class="str">"tib:tokenize($param, '=')[1]"</span>, ...);
+    <span class="ty">String</span> paramValue = XPath.evalAsString(<span class="str">"tib:tokenize($param, '=')[2]"</span>, ...);
+    <span class="kw">if</span>(String.equals(<span class="str">"STATUS"</span>, paramKey))     futStatus = paramValue;
+    <span class="kw">if</span>(String.equals(<span class="str">"ORDER_TYPE"</span>, paramKey)) futOrderType = paramValue;
+}</div>
+    <table style="margin-top:12px">
+      <tr><th>Activity Parameter Key</th><th>Variable</th><th>Used in XSLT</th></tr>
+      <tr><td><code>STATUS</code></td><td><code>futStatus</code></td><td><code>ns:status</code> in futureOrder payload</td></tr>
+      <tr><td><code>ORDER_TYPE</code></td><td><code>futOrderType</code></td><td><code>ns:orderType</code> in futureOrder payload</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:10px">In the POSTPAID_ADD_OFFER_SUB process, step 33 has no parameters listed — both <code>futStatus</code> and <code>futOrderType</code> will be empty strings.</div>
+  </div>
+</div>
+
+<!-- §6 Execution Flow -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>Setup:</strong> isActResub; nextAct live lookup; isSkipped=true; extract futStatus/futOrderType from Parameter[]</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-text">PreExecCheck gate — if present, evaluate against orderRequest XML</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-text">If isActResub → <code>PurgePendingRequestsBeforeResubmit</code> <span class="badge badge-green">ACTIVE</span></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>[Subscriber branch]</strong>: <code>tib:if-absent(POU[1]/Subscriber[1]/@extId, POU[1]/COU[1]/Subscriber[1]/@extId)</code>
+      <ul style="margin:6px 0 0 16px;line-height:2">
+        <li>If subExtId != null: create reqEvent (nodeLevel=<strong>5</strong>, nodeId=subscriber.SubscriberId)</li>
+        <li><code>Event.assertEvent</code> → <code>ActionRequestEvent</code> (queue) → RequestCount++ → audit → isSkipped=false</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>[ParentOU branch]</strong>: <code>POU[OUId/text()][1]/@extId</code>
+      <ul style="margin:6px 0 0 16px;line-height:2">
+        <li>If pOuExtId != null: create reqEvent (nodeLevel=<strong>3</strong>, nodeId=pOu.OUId)</li>
+        <li><code>ActionRequestEvent</code> → RequestCount++ → audit → isSkipped=false</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-text"><strong>[ChildOU branch]</strong>: <code>POU[1]/COU[OUId/text()][1]/@extId</code>
+      <ul style="margin:6px 0 0 16px;line-height:2">
+        <li>If cOuExtId != null: create reqEvent (nodeLevel=<strong>3</strong>, nodeId=cOu.OUId)</li>
+        <li><code>ActionRequestEvent</code> → RequestCount++ → audit → isSkipped=false</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">7</div><div class="flow-text">If !isSkipped → <code>SendFirstRequestEvent</code> (dispatch first queued event) → Status="1" → <code>SendDataToDB</code></div></div>
+    <div class="flow-step"><div class="flow-num">8</div><div class="flow-text">If isSkipped → <code>SkipActivity("4")</code></div></div>
+    <div class="flow-step"><div class="flow-num">9</div><div class="flow-text">Catch → <code>HandleActivityException</code></div></div>
+  </div>
+</div>
+
+<!-- §7 Node Resolution -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> Node Resolution &amp; nodeLevel Mapping</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Branch</th><th>Node extId XPath</th><th>Concept type</th><th>nodeLevel</th><th>nodeId source</th></tr>
+      <tr>
+        <td><strong>Subscriber</strong></td>
+        <td><code>tib:if-absent(POU[1]/Subscriber[1]/@extId, POU[1]/COU[1]/Subscriber[1]/@extId)</code></td>
+        <td>Concepts.OrderRequest.OrderElements.Subscriber</td>
+        <td><span class="badge badge-blue">5</span></td>
+        <td><code>number($subscriber/SubscriberId)</code></td>
+      </tr>
+      <tr>
+        <td><strong>ParentOU</strong></td>
+        <td><code>POU[OUId/text()][1]/@extId</code></td>
+        <td>Concepts.OrderRequest.OrderElements.ParentOU</td>
+        <td><span class="badge badge-orange">3</span></td>
+        <td><code>number($pOu/OUId)</code></td>
+      </tr>
+      <tr>
+        <td><strong>ChildOU</strong></td>
+        <td><code>POU[1]/COU[OUId/text()][1]/@extId</code></td>
+        <td>Concepts.OrderRequest.OrderElements.ChildOU</td>
+        <td><span class="badge badge-orange">3</span></td>
+        <td><code>number($cOu/OUId)</code></td>
+      </tr>
+    </table>
+    <div class="callout info" style="margin-top:10px">Subscriber is picked with <code>tib:if-absent</code>: first tries POU[1]/Subscriber[1]; if absent, falls back to COU[1]/Subscriber[1]. POU and COU branches filter on <code>[OUId/text()]</code> — only nodes with a populated OUId are targeted.</div>
+  </div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.1 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.OMX_SEARCH_FUTURE</code></td><td>FutureOrder search request</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Response.OMX_SEARCH_FUTURE</code></td><td>FutureOrder list response</td></tr>
+    </table>
+
+    <h3>§8.2 — Backend API</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Backend</td><td>OMX (internal FutureOrder service)</td></tr>
+      <tr><td>Operation</td><td>SearchFuture</td></tr>
+      <tr><td>Schema NS</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/FutureOrder.xsd</code></td></tr>
+      <tr><td>Request root</td><td><code>ns:futureOrder</code></td></tr>
+      <tr><td>Response root</td><td><code>ns:futureOrders/ns:futureOrder[]</code></td></tr>
+    </table>
+
+    <h3>§8.3 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept</th><th>Field</th><th>Access</th><th>Notes</th></tr>
+      <tr><td>Activity</td><td>Parameter[]</td><td>READ</td><td>futStatus and futOrderType extraction</td></tr>
+      <tr><td>Activity</td><td>RequestCount / Response[] / Status</td><td>READ+WRITTEN</td><td>Standard</td></tr>
+      <tr><td>Subscriber</td><td>SubscriberId</td><td>READ</td><td>nodeId for subscriber branch</td></tr>
+      <tr><td>ParentOU</td><td>OUId / RefId</td><td>READ</td><td>nodeId / RefID for POU branch</td></tr>
+      <tr><td>ChildOU</td><td>OUId / RefId</td><td>READ</td><td>nodeId / RefID for COU branch</td></tr>
+      <tr><td>OMX_SearchFutureRes</td><td>FutureOrders[]</td><td>WRITTEN</td><td>Created by response handler</td></tr>
+    </table>
+
+    <h3>§8.4 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>Audit payload inclusion</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> Detailed Payload Build</div>
+  <div class="section-body">
+    <h3>§9.1 — XSLT Parameters (common to all three variants)</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th><th>Notes</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest concept</td><td></td></tr>
+      <tr><td><code>$subscriber</code> / <code>$pOu</code> / <code>$cOu</code></td><td>Respective concept instance</td><td>One per variant</td></tr>
+      <tr><td><code>$futStatus</code></td><td>Activity Parameter STATUS</td><td>XSLT value-of → ns:status</td></tr>
+      <tr><td><code>$futOrderType</code></td><td>Activity Parameter ORDER_TYPE</td><td>XSLT value-of → ns:orderType</td></tr>
+    </table>
+
+    <h3>§9.2 — XSLT Field Mapping Tree (three variants, differing only in nodeLevel and nodeId)</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <div class="variant-label">Shared structure — all three variants</div>
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">JMSPriority</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderPriority</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">RefID</span> <span class="tree-arrow">←</span> <span class="tree-src">$subscriber/RefId</span> <em style="color:#6c7086;font-size:0.78rem">/ $pOu/RefId / $cOu/RefId</em> <span class="tree-cond">[xsl:if — per variant]</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">UserName</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/User</span> <span class="tree-cond">[xsl:if — no IsEnableUserPass gate]</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">PassWord</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/Password</span> <span class="tree-cond">[xsl:if — no IsEnableUserPass gate]</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">futureOrder</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">status</span> <span class="tree-arrow">←</span> <span class="tree-src">$futStatus</span> <span class="badge badge-orange" style="font-size:0.7rem">From Parameter[STATUS]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">orderType</span> <span class="tree-arrow">←</span> <span class="tree-src">$futOrderType</span> <span class="badge badge-orange" style="font-size:0.7rem">From Parameter[ORDER_TYPE]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">nodeLevel</span> <span class="tree-arrow">←</span> <span class="tree-src-static">5</span> <span class="badge badge-blue" style="font-size:0.7rem">Subscriber variant</span> <span class="tree-src-static">/ 3</span> <span class="badge badge-orange" style="font-size:0.7rem">POU/COU variants</span> <span class="badge badge-red" style="font-size:0.7rem">Hardcoded</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">nodeId</span> <span class="tree-arrow">←</span> <span class="tree-src">number($subscriber/SubscriberId)</span> <em style="color:#6c7086;font-size:0.78rem">/ number($pOu/OUId) / number($cOu/OUId)</em></div></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3>§9.3 — Variant Comparison Table</h3>
+    <table>
+      <tr><th>Field</th><th>Subscriber variant</th><th>POU variant</th><th>COU variant</th></tr>
+      <tr><td>XSLT param</td><td><code>$subscriber</code></td><td><code>$pOu</code></td><td><code>$cOu</code></td></tr>
+      <tr><td><code>RefID</code></td><td><code>$subscriber/RefId</code></td><td><code>$pOu/RefId</code></td><td><code>$cOu/RefId</code></td></tr>
+      <tr><td><code>ns:nodeLevel</code></td><td><code>5</code> (hardcoded)</td><td><code>3</code> (hardcoded)</td><td><code>3</code> (hardcoded)</td></tr>
+      <tr><td><code>ns:nodeId</code></td><td><code>number($subscriber/SubscriberId)</code></td><td><code>number($pOu/OUId)</code></td><td><code>number($cOu/OUId)</code></td></tr>
+      <tr><td>Event type</td><td><code>OMX_SEARCH_FUTURE</code></td><td><code>OMX_SEARCH_FUTURE</code></td><td><code>OMX_SEARCH_FUTURE</code></td></tr>
+    </table>
+
+    <h3>§9.4 — Generated XML Example (Subscriber variant)</h3>
+    <div class="code-block"><span class="xt">&lt;event&gt;</span>
+  <span class="xt">&lt;JMSPriority&gt;</span>5<span class="xt">&lt;/JMSPriority&gt;</span>
+  <span class="xt">&lt;JMSCorrelationID&gt;</span>OMX-TRK-001<span class="xt">&lt;/JMSCorrelationID&gt;</span>
+  <span class="xt">&lt;OrderID&gt;</span>ORD-001<span class="xt">&lt;/OrderID&gt;</span>
+  <span class="xt">&lt;RefID&gt;</span>SUB-REF-001<span class="xt">&lt;/RefID&gt;</span>
+  <span class="xt">&lt;OrderType&gt;</span>3<span class="xt">&lt;/OrderType&gt;</span>
+  <span class="xt">&lt;payload&gt;</span>
+    <span class="xt">&lt;ns:futureOrder</span>
+      <span class="xa">xmlns:ns</span>=<span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/FutureOrder.xsd"</span><span class="xt">&gt;</span>
+      <span class="xt">&lt;ns:status&gt;</span>PENDING<span class="xt">&lt;/ns:status&gt;</span>           <span class="cm">&lt;!-- from STATUS parameter --&gt;</span>
+      <span class="xt">&lt;ns:orderType&gt;</span>ADD<span class="xt">&lt;/ns:orderType&gt;</span>         <span class="cm">&lt;!-- from ORDER_TYPE parameter --&gt;</span>
+      <span class="xt">&lt;ns:nodeLevel&gt;</span>5<span class="xt">&lt;/ns:nodeLevel&gt;</span>          <span class="cm">&lt;!-- hardcoded: 5 for Subscriber --&gt;</span>
+      <span class="xt">&lt;ns:nodeId&gt;</span>12345678<span class="xt">&lt;/ns:nodeId&gt;</span>         <span class="cm">&lt;!-- number(subscriber.SubscriberId) --&gt;</span>
+    <span class="xt">&lt;/ns:futureOrder&gt;</span>
+  <span class="xt">&lt;/payload&gt;</span>
+<span class="xt">&lt;/event&gt;</span></div>
+  </div>
+</div>
+
+<!-- §10 Response Concept -->
+<div class="section">
+  <div class="section-header"><span class="num">§10</span> Response — OMX_SearchFutureRes Concept Construction</div>
+  <div class="section-body">
+    <h3>§10.1 — OMX_SearchFutureRes XSLT Mapping Tree</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span> (Concepts.FM.Response.OMX_SearchFutureRes)</div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">ns1:generateTrackingID()</span> <span class="badge badge-green" style="font-size:0.7rem">Inside XSLT</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseCode</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseMsg</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/CompletionStatus</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">FutureOrders[]</span> <span class="tree-cond">[xsl:for-each: $eventResponse/payload/ns:futureOrders/ns:futureOrder]</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-tag">FutureOrders</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">ns1:generateTrackingID()</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-tag">FutureOrderId</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:futureOrderId</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">EffectiveDate</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:effectiveDate</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">Status</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:status</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:orderType</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">NodeLevel</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:nodeLevel</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">NodeId</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:nodeId</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">RequestedDate</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:requestedDate</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">RequestedBy</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:requestedBy</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">UpdatedDate</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:updatedDate</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">UpdatedBy</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:updatedBy</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">DealerCode</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:dealerCode</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">ActivityReason</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:activityReason</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">ExtendedInfos[]</span> <span class="tree-cond">[xsl:for-each: ns:extendedInfo]</span></div>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-tag">Name</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:name</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">Value</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:value</span></div></li>
+                          </ul>
+                        </li>
+                        <li><div class="tree-row"><span class="tree-tag">fromOrderId</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:fromOrderId</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">ToOMXId</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:toOMXId</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">UserText</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:userText</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">Remark</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:remark</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">futureType</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:futureType</span> <span class="tree-cond">[xsl:if]</span></div></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="callout info" style="margin-top:10px">Unlike most response FMs that store a single summary record, <code>OMX_SearchFutureRes</code> stores a <strong>full collection</strong> (<code>FutureOrders[]</code>) of matching future order records. Each per-node response may return multiple FutureOrder entries. Downstream business logic reads this collection to determine conflicts or scheduling.</div>
+  </div>
+</div>
+
+<!-- §11 Audit -->
+<div class="section">
+  <div class="section-header"><span class="num">§11</span> Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Phase</th><th>Gate</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th></tr>
+      <tr><td>Request (×3 max)</td><td><span class="badge badge-green">UNCONDITIONAL</span></td><td><code>"OMX_SEARCH_FUT"</code></td><td><code>"Request Sent for OMX_SEARCH_FUT"</code></td></tr>
+      <tr><td>Response</td><td><span class="badge badge-green">UNCONDITIONAL</span></td><td><code>"OMX_SEARCH_FUT"</code></td><td><code>"Response received for OMX_SEARCH_FUT"</code></td></tr>
+    </table>
+    <div class="callout" style="margin-top:10px">No <code>AllowWriteLog(OrderType)</code> gate — contrast with INTX FMs that gate audit on OrderType. OMX_SEARCH_FUT always logs regardless of order type.</div>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="section">
+  <div class="section-header"><span class="num">§12</span> Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Call</th><th>Code</th></tr>
+      <tr><td>Each event queued</td><td><code>GetActivityStatusString("1", false)</code> (per-branch)</td><td>"1" (RUNNING)</td></tr>
+      <tr><td>After all events queued</td><td><code>SendFirstRequestEvent</code> + <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" (RUNNING)</td></tr>
+      <tr><td>No nodes found</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" (SKIPPED)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Function Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§13</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_OMX_SEARCH_FUT (rule)
+├── Instance.getByExtIdByUri(NextActivityName, Activity)  [nextAct]
+├── XPath loop: tib:tokenize(Parameter[i], "=") → futStatus, futOrderType
+├── [isActResub] PurgePendingRequestsBeforeResubmit(orderCurrentActivity)
+├── [Subscriber branch — tib:if-absent]:
+│   ├── Instance.getByExtIdByUri(subExtId, Subscriber)
+│   ├── Event.createEvent(XSLT: $subscriber → nodeLevel=5, nodeId=SubscriberId)
+│   ├── Event.assertEvent + ActionRequestEvent + RequestCount++ + sendAudit + SendDataToDB
+├── [POU branch — POU[OUId/text()][1]]:
+│   ├── Instance.getByExtIdByUri(pOuExtId, ParentOU)
+│   ├── Event.createEvent(XSLT: $pOu → nodeLevel=3, nodeId=OUId)
+│   ├── Event.assertEvent + ActionRequestEvent + RequestCount++ + sendAudit + SendDataToDB
+├── [COU branch — POU[1]/COU[OUId/text()][1]]:
+│   ├── Instance.getByExtIdByUri(cOuExtId, ChildOU)
+│   ├── Event.createEvent(XSLT: $cOu → nodeLevel=3, nodeId=OUId)
+│   ├── Event.assertEvent + ActionRequestEvent + RequestCount++ + sendAudit + SendDataToDB
+├── SendFirstRequestEvent(orderCurrentActivity)  [dispatch first queued event]
+├── GetActivityStatusString("1", false) + SendDataToDB
+├── SkipActivity("4")  [if isSkipped]
+└── HandleActivityException  [catch]
+
+Response_OMX_SEARCH_FUT (rulefunction)
+├── Log.getLogger + Log.log("debug", ...)
+├── Instance.createInstance("xslt://OMX_SearchFutureRes")
+│   ├── extId = ns1:generateTrackingID()  [inside XSLT]
+│   ├── ResponseCode, ResponseMessage, CompletionStatus  [conditional]
+│   └── FutureOrders[] via xsl:for-each ns:futureOrders/ns:futureOrder
+│       └── FutureOrderId, EffectiveDate, Status, OrderType, NodeLevel, NodeId,
+│           RequestedDate, RequestedBy, UpdatedDate, UpdatedBy, DealerCode,
+│           ActivityReason, ExtendedInfos[], fromOrderId, ToOMXId, UserText,
+│           Remark, futureType
+├── currActivity.Response[length] = resEvent
+├── sendAudit (unconditional)
+├── Log.log("debug", "Completed")
+└── return "true"</div>
+  </div>
+</div>
+
+<!-- §14 Migration Notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§14</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Extract <code>STATUS</code> and <code>ORDER_TYPE</code> from Activity Parameters via tokenize loop; pass as query filters.</td></tr>
+      <tr><td>R2</td><td>Send up to 3 sequential requests: Subscriber (nodeLevel=5), POU (nodeLevel=3), COU (nodeLevel=3). Skip any absent node.</td></tr>
+      <tr><td>R3</td><td>PurgePendingRequestsBeforeResubmit is ACTIVE — resubmit must purge queue before re-queuing.</td></tr>
+      <tr><td>R4</td><td>Subscriber selection uses <code>tib:if-absent</code>: prefer POU[1]/Subscriber[1], fall back to COU[1]/Subscriber[1].</td></tr>
+      <tr><td>R5</td><td>POU/COU selection filters on <code>[OUId/text()]</code> — only nodes with a populated OUId are included.</td></tr>
+      <tr><td>R6</td><td>No <code>IsEnableUserPass</code> credential gate — credentials included if non-empty in orderRequest.</td></tr>
+      <tr><td>R7</td><td>Audit is unconditional — no AllowWriteLog gate; log on every request and every response.</td></tr>
+      <tr><td>R8</td><td>Response stores <code>FutureOrders[]</code> collection — downstream logic reads this array to check for conflicting/existing future orders.</td></tr>
+      <tr><td>R9</td><td>Response rulefunction returns <code>"true"</code>; no explicit count-based fan-in — sequencing handled by IntraActivitySequencing mechanism.</td></tr>
+    </table>
+
+    <h3 style="margin-top:18px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Subscriber selection <code>tib:if-absent</code> picks the FIRST subscriber only — does not iterate all subscribers</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Verify with business that searching only the first subscriber (or first COU subscriber) is the correct scope for this order type</td>
+      </tr>
+      <tr>
+        <td>Parameter extraction uses XPath tokenize loop — fragile if parameter format changes from <code>KEY=VALUE</code></td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Replace with <code>GetActivityParameterValueFromKey</code> in migration for consistency with other FMs</td>
+      </tr>
+      <tr>
+        <td>No credential gate — credentials always included if present; could leak if request is not over a secure channel</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Align with INTX FM pattern (IsEnableUserPass) in migration</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

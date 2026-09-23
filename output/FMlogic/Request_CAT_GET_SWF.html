@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_CAT_GET_SWF</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.header h1{font-size:2rem;font-weight:700;letter-spacing:1px;}
+.header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.header .meta{margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;opacity:.9;}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:12px;}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600;}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-purple{background:#F3E5F5;color:var(--skip);}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-db{background:#E8EAF6;color:#3949AB;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.callout{padding:12px 16px;border-radius:6px;margin:12px 0;border-left:4px solid;}
+.callout-warning{background:#FFF8E1;border-color:var(--warning);color:#5D4037;}
+.callout-info{background:#E3F2FD;border-color:var(--info);color:#0D47A1;}
+.callout-error{background:#FFEBEE;border-color:var(--true-red);color:var(--true-dark);}
+.callout-success{background:#E8F5E9;border-color:var(--success);color:#1B5E20;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:8px 12px 8px 48px;position:relative;border-left:3px solid var(--border);margin-bottom:6px;}
+.step-list li::before{content:counter(step);position:absolute;left:-16px;top:6px;background:var(--true-red);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.kw{color:#cba6f7;}
+.ty{color:#89b4fa;}
+.st{color:#a6e3a1;}
+.cm{color:#6c7086;font-style:italic;}
+.nu{color:#fab387;}
+.fn{color:#f38ba8;}
+.xt{color:#89dceb;}
+.xa{color:#f9e2af;}
+footer{text-align:center;padding:24px;color:#888;font-size:.82rem;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Request_CAT_GET_SWF</h1>
+  <div class="subtitle">FM Logic Documentation — Product Catalog Switch Feature Lookup</div>
+  <div class="meta">
+    <span class="meta-item">Rule: Rules.OMConsumers.OMXFM.Request.Request_CAT_GET_SWF</span>
+    <span class="meta-item">Priority: 5</span>
+    <span class="meta-item">Backend: Product Catalog (CAT)</span>
+    <span class="meta-item">Pattern: Single-shot JMS Batch</span>
+    <span class="meta-item">Generated: 2026-09-09</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>CAT_GET_SWF</strong> (Get Switch Features) queries the Product Catalog ESB to retrieve switch feature (<em>SWF</em>) metadata for all unique service offering codes (SOCs) present in the order. It builds a deduplicated list of SOC names from every offer — across all ParentOU/ChildOU agreements and subscriber offers — then sends a single <code>SearchOfferNameListReq</code> batch request to the CAT backend. The response enriches the order's offer objects (<code>AgreementOffers</code>, <code>SubscriberOffers</code>, <code>RelatedOffersArray</code>) with <code>SwitchFeature</code> sub-objects required by downstream provisioning activities.</p>
+    <div class="callout callout-info" style="margin-top:12px;">
+      <strong>Shared Event Type:</strong> CAT_GET_SWF reuses the <code>Events.OMConsumers.OMXFM.Request.CAT_GOD</code> event and the <code>Concepts.FM.Response.CAT_GOD.CatGodResponse</code> concept — the same types used by the <strong>CAT_GOD</strong> activity. The rule is distinguished by the <code>ActivityID == "CAT_GET_SWF"</code> WHEN condition.
+    </div>
+    <table style="margin-top:12px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule file</td><td>Request_CAT_GET_SWF.rule</td></tr>
+      <tr><td>Response rulefunction</td><td>Response_CAT_GET_SWF.rulefunction</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>Forward chain</td><td>true</td></tr>
+      <tr><td>Backend system</td><td>Product Catalog (CAT) via ESB</td></tr>
+      <tr><td>Request event type</td><td><code>Events.OMConsumers.OMXFM.Request.CAT_GOD</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CAT_GOD.CatGodResponse</code></td></tr>
+      <tr><td>Payload operation</td><td><code>SearchOfferNameListReq</code></td></tr>
+      <tr><td>Schema namespace</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/ProductCatalog/SearchOfferNameList.xsd</code></td></tr>
+      <tr><td>Activity parameter</td><td><code>IGNORE_CCP</code> — if "Y", skips SWF mapping for offers with <code>FE_OR_CCBS=CCP</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>priority</td><td>5</td><td>Standard FM priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Enables forward chaining after execution</td></tr>
+      <tr><td>Rule type</td><td>Standard JMS request</td><td>Single <code>Event.Ext.sendEventImmediate</code></td></tr>
+      <tr><td>RequestCount increment</td><td>Yes (if not resubmit)</td><td><code>orderCurrentActivity.RequestCount++</code></td></tr>
+      <tr><td>Skip mechanism</td><td>Yes</td><td>Skips if no SOCs found: <code>RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Main order state — supplies customer/offers data and OrderType</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity instance — matched by ActivityID and Status</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity extId matches process flow pointer</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CAT_GET_SWF"</code></td><td>Constrains rule to CAT_GET_SWF activity only</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CAT_GET_SWF"</code></td><td>Double-check via process flow NextActivityID</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity is ready to be executed</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li><strong>Resubmit flag</strong> — compute <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code></li>
+      <li><strong>Load activity config</strong> — <code>Instance.getByExtIdByUri(NextActivityName)</code> → <code>nextAct</code>; read <code>PreExecCheck</code></li>
+      <li><strong>Collect SOCs from ParentOU agreements</strong> — iterate all ParentOU → Agreement.Offers; apply PreExecCheck if set; deduplicate into <code>arrLstSOCs</code></li>
+      <li><strong>Collect SOCs from ParentOU subscribers</strong> — iterate all ParentOU → Subscriber → SubscriberOffers; extract <code>FE_OR_CCBS</code> ExtendedInfo as filter; call <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code>; apply PreExecCheck; add RelatedOffersArray SOCs</li>
+      <li><strong>Collect SOCs from ChildOU agreements</strong> — same pattern as step 3, via <code>GetXMLForAgreementOfferInChildOU</code></li>
+      <li><strong>Collect SOCs from ChildOU subscribers</strong> — same pattern as step 4, via <code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code>; add RelatedOffersArray SOCs</li>
+      <li><strong>Guard: empty SOC list</strong> — if <code>socIDs</code> null or empty → call <code>SkipActivity("4")</code> → exit</li>
+      <li><strong>Build &amp; send SearchOfferNameListReq</strong> — create <code>CAT_GOD</code> event with payload listing all SOC names; <code>Event.Ext.sendEventImmediate</code></li>
+      <li><strong>Audit log request</strong> — if <code>AllowWriteLog(OrderType)</code> → send Logger event: <code>OPERATION_NAME="CAT_GET_SWF"</code>, <code>AUDIT_TRACE="Request Sent for CAT_GET_SWF"</code></li>
+      <li><strong>Increment RequestCount</strong> — <code>orderCurrentActivity.RequestCount++</code> (skipped if resubmit)</li>
+      <li><strong>Status transition</strong> — <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></li>
+    </ol>
+    <div class="callout callout-info" style="margin-top:12px;">
+      <strong>Single-shot batch design:</strong> Unlike per-offer parallel dispatches, CAT_GET_SWF sends ONE request containing all SOC names. RequestCount is always 1 after this rule fires. The response RF handles all SOCs in a single callback.
+    </div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Annotated Logic</div>
+  <div class="section-body">
+    <pre><code><span class="cm">// 1. Resubmit guard</span>
+<span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount&gt;<span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+
+<span class="cm">// 2. Load activity config for PreExecCheck</span>
+<span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct = Instance.getByExtIdByUri(...);
+<span class="kw">String</span> chkXPath = nextAct.PreExecCheck;
+
+<span class="cm">// 3–6. SOC deduplication across all ParentOU/ChildOU agreements + subscribers</span>
+<span class="ty">Object</span> arrLstSOCs = Collections.List.createArrayList();
+<span class="cm">// ... loops described above ...</span>
+
+<span class="cm">// 7. Skip guard</span>
+<span class="ty">Object</span>[] socIDs = Collections.toArray(arrLstSOCs);
+<span class="kw">if</span>(socIDs != <span class="kw">null</span> &amp;&amp; Collections.size(arrLstSOCs) &gt; <span class="nu">0</span>) {
+
+    <span class="cm">// 8. Build SearchOfferNameListReq with all SOC names + pagination</span>
+    Events.OMConsumers.OMXFM.Request.<span class="ty">CAT_GOD</span> reqEvent = Event.createEvent(<span class="st">"xslt://..."</span>);
+    Event.Ext.sendEventImmediate(reqEvent);
+
+    <span class="cm">// 9. Audit log</span>
+    <span class="kw">if</span>(RuleFunctions.Helpers.<span class="fn">AllowWriteLog</span>(orderRequest.OrderData.OrderType)) {
+        <span class="cm">// OPERATION_NAME="CAT_GET_SWF", AUDIT_TRACE="Request Sent for CAT_GET_SWF"</span>
+        Event.Ext.sendEventImmediate(Event.createEvent(<span class="st">"xslt://Logger..."</span>));
+    }
+
+    <span class="cm">// 10. Increment RequestCount if not resubmit</span>
+    <span class="kw">if</span>(!isActResub) { orderCurrentActivity.RequestCount++; }
+    isSkipped = <span class="kw">false</span>;
+}
+
+<span class="cm">// 11. Status transition or skip</span>
+<span class="kw">if</span>(!isSkipped) {
+    orderCurrentActivity.Status = RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+    RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+} <span class="kw">else</span> {
+    RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+}</code></pre>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction — SOC Collection Logic</div>
+  <div class="section-body">
+    <p>The SOC (Service Offering Code) list is built by traversing the entire customer offer hierarchy:</p>
+    <table>
+      <tr><th>Source path</th><th>Helper used</th><th>PreExecCheck applied</th><th>Notes</th></tr>
+      <tr><td>ParentOU[i] → Agreement.Offers[j].OfferName</td><td><code>GetXMLForAgreementOffer</code></td><td>Yes (if set)</td><td>Standard agreement offer</td></tr>
+      <tr><td>ParentOU[i] → Subscriber[j] → SubscriberOffers[k].OfferName</td><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code></td><td>Yes (if set)</td><td>Filtered by FE_OR_CCBS ExtendedInfo</td></tr>
+      <tr><td>ParentOU[i] → Subscriber[j] → SubscriberOffers[k] → RelatedOffersArray[l].OfferName</td><td>— (no PreExecCheck)</td><td>No</td><td>Added unconditionally if parent SOC passed</td></tr>
+      <tr><td>ParentOU[i] → ChildOU[k] → Agreement.Offers[j].OfferName</td><td><code>GetXMLForAgreementOfferInChildOU</code></td><td>Yes (if set)</td><td>ChildOU agreement variant</td></tr>
+      <tr><td>ParentOU[i] → ChildOU[k] → Subscriber[j] → SubscriberOffers[m].OfferName</td><td><code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code></td><td>Yes (if set)</td><td>ChildOU subscriber with ExtendedInfo filter</td></tr>
+      <tr><td>ParentOU[i] → ChildOU[k] → Subscriber[j] → SubscriberOffers[m] → RelatedOffersArray[l].OfferName</td><td>— (condition: chkRes="true")</td><td>Inherits from parent</td><td>Added if parent SOC passed check</td></tr>
+    </table>
+    <div class="callout callout-warning" style="margin-top:12px;">
+      <strong>Bug — ChildOU subscriber PreExecCheck uses wrong RefId (rule line 122):</strong>
+      The helper call for ChildOU subscriber offers uses <code>orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].RefId</code> (the ParentOU subscriber's RefId) instead of <code>orderRequest.OrderData.Customer.ParentOU[i].ChildOU[k].Subscriber[j].RefId</code> (the ChildOU subscriber's RefId). This causes incorrect PreExecCheck XML to be generated for ChildOU subscriber offers when orders have nested OU structures.
+    </div>
+    <p style="margin-top:12px;"><strong>Deduplication:</strong> <code>Collections.contains(arrLstSOCs, currSoc)</code> ensures each SOC name appears only once in the batch request.</p>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="margin-bottom:8px;">§8.1 — Order Type Dependencies</h3>
+    <p>Fires for any order that contains offers (SOC list non-empty). AllowWriteLog gates audit per OrderType — no specific order type restriction in the rule itself. The IGNORE_CCP activity parameter is configured at the ProcessConfig level per order type to control SWF mapping for CCP-type offers.</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Channel</th><th>Purpose</th></tr>
+      <tr>
+        <td><span class="badge badge-jms">OUTBOUND</span></td>
+        <td><code>Events.OMConsumers.OMXFM.Request.CAT_GOD</code></td>
+        <td>OMXFM Request channel</td>
+        <td>Send SearchOfferNameListReq to Product Catalog</td>
+      </tr>
+      <tr>
+        <td><span class="badge badge-log">LOG</span></td>
+        <td><code>Events.OMConsumers.OMXESB.Logger</code></td>
+        <td>Audit log channel</td>
+        <td>Request audit trace (conditional on AllowWriteLog)</td>
+      </tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Protocol</th><th>Schema</th></tr>
+      <tr>
+        <td>Product Catalog (CAT)</td>
+        <td>SearchOfferNameList</td>
+        <td>JMS async</td>
+        <td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/ProductCatalog/SearchOfferNameList.xsd</code></td>
+      </tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept path</th><th>Access</th><th>Fields used</th></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].Agreement.Offers[*].OfferName</code></td><td>Read</td><td>SOC name for batch</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].Subscriber[*].SubscriberOffers[*].OfferName</code></td><td>Read</td><td>SOC name for batch</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].Subscriber[*].SubscriberOffers[*].RelatedOffersArray[*].OfferName</code></td><td>Read</td><td>Related SOC names</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].ChildOU[*].Agreement.Offers[*].OfferName</code></td><td>Read</td><td>ChildOU SOC names</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[*].ChildOU[*].Subscriber[*].SubscriberOffers[*].OfferName</code></td><td>Read</td><td>ChildOU subscriber SOC names</td></tr>
+      <tr><td><code>orderRequest.OrderData.OMXTrackingId</code></td><td>Read</td><td>Correlation ID (JMSCorrelationID)</td></tr>
+      <tr><td><code>orderRequest.OrderData.OrderType</code></td><td>Read</td><td>Audit log gate</td></tr>
+      <tr><td><code>orderCurrentActivity.RequestCount</code></td><td>Read/Write</td><td>Fan-in counter</td></tr>
+      <tr><td><code>orderCurrentActivity.Status</code></td><td>Write</td><td>Status transition</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.5 — ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Key</th><th>Source concept</th><th>Required?</th><th>Purpose</th></tr>
+      <tr><td><code>FE_OR_CCBS</code></td><td>SubscriberOffers.ExtendedInfo</td><td>Optional</td><td>Used as XPath filter param in <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code>; also read by response RF IGNORE_CCP logic</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Variable path</th><th>Used in</th></tr>
+      <tr><td><code>$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>Request XSLT — include UserName/PassWord if "true"</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit log COMPONENT_NAME</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit log TARGET_SYSTEM</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit log LOG_LEVEL</td></tr>
+      <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Conditional payload logging in audit</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Detailed Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3 style="margin-bottom:8px;">§9.1 — XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>XSLT param</th><th>Bound from</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>Working memory <code>orderRequest</code> concept</td></tr>
+      <tr><td><code>$globalVariables</code></td><td>Global variable store</td></tr>
+      <tr><td><code>$socIDs</code></td><td><code>arrLstSOCs</code> ArrayList converted to array — each element is one SOC name</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.2 — Event Container Construction</h3>
+    <p>Event type: <code>Events.OMConsumers.OMXFM.Request.CAT_GOD</code> (shared with CAT_GOD FM)</p>
+    <p>The created event wraps the <code>SearchOfferNameListReq</code> payload along with routing headers.</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td>If OrderPriority present</td></tr>
+      <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>If OMXTrackingId present</td></tr>
+      <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td>If OrderID present</td></tr>
+      <tr><td><code>UserName</code></td><td><code>$orderRequest/OrderData/User</code></td><td>If IsEnableUserPass="true" and User present</td></tr>
+      <tr><td><code>PassWord</code></td><td><code>$orderRequest/OrderData/Password</code></td><td>If IsEnableUserPass="true" and Password present</td></tr>
+      <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>If OrderType present</td></tr>
+      <tr><td><code>CES</code></td><td><code>$orderRequest/OrderData/CES</code></td><td>If CES present</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.4 — Payload Root Element</h3>
+    <p><code>&lt;ns1:SearchOfferNameListReq&gt;</code> (namespace: <code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/ProductCatalog/SearchOfferNameList.xsd</code>)</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.5 — Core Payload Fields</h3>
+    <table>
+      <tr><th>XML element</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>ns1:name</code> (repeated)</td><td>Each element in <code>$socIDs/elements</code></td><td>One element per unique SOC name; <code>xsl:for-each</code></td></tr>
+      <tr><td><code>ns1:pagination/ns1:page</code></td><td>Static: <code>1</code></td><td>Always page 1</td></tr>
+      <tr><td><code>ns1:pagination/ns1:perPage</code></td><td>Static: <code>100</code></td><td>Max 100 results per page; no pagination handling in response</td></tr>
+    </table>
+
+    <div class="callout callout-warning" style="margin-top:12px;">
+      <strong>Pagination risk:</strong> The request hardcodes <code>perPage=100</code> and always requests page 1. If an order has more than 100 unique SOCs, results will be silently truncated. The response RF does not check for additional pages.
+    </div>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.6 — Complete Generated XML Example</h3>
+    <pre><code><span class="xt">&lt;ns1:SearchOfferNameListReq</span> <span class="xa">xmlns:ns1</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/ProductCatalog/SearchOfferNameList.xsd"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;ns1:name&gt;</span>SOC_CODE_01<span class="xt">&lt;/ns1:name&gt;</span>
+  <span class="xt">&lt;ns1:name&gt;</span>SOC_CODE_02<span class="xt">&lt;/ns1:name&gt;</span>
+  <span class="xt">&lt;ns1:name&gt;</span>SOC_CODE_03<span class="xt">&lt;/ns1:name&gt;</span>
+  <span class="cm">&lt;!-- ... one per unique SOC name (max 100) --&gt;</span>
+  <span class="xt">&lt;ns1:pagination&gt;</span>
+    <span class="xt">&lt;ns1:page&gt;</span>1<span class="xt">&lt;/ns1:page&gt;</span>
+    <span class="xt">&lt;ns1:perPage&gt;</span>100<span class="xt">&lt;/ns1:perPage&gt;</span>
+  <span class="xt">&lt;/ns1:pagination&gt;</span>
+<span class="xt">&lt;/ns1:SearchOfferNameListReq&gt;</span></code></pre>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.7 — XSLT Stylesheet Source (Request)</h3>
+    <pre><code><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:ns1</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/ProductCatalog/SearchOfferNameList.xsd"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:xsd</span>=<span class="st">"http://www.w3.org/2001/XMLSchema"</span>
+  <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="cm">&lt;!-- params: $orderRequest, $globalVariables, $socIDs --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="cm">&lt;!-- JMSPriority: $orderRequest/OrderPriority (if exists) --&gt;</span>
+      <span class="cm">&lt;!-- JMSCorrelationID: $orderRequest/OrderData/OMXTrackingId --&gt;</span>
+      <span class="cm">&lt;!-- OrderID, UserName, PassWord, OrderType, CES --&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns1:SearchOfferNameListReq&gt;</span>
+          <span class="xt">&lt;xsl:for-each</span> <span class="xa">select</span>=<span class="st">"$socIDs/elements"</span><span class="xt">&gt;</span>
+            <span class="xt">&lt;ns1:name&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"."</span><span class="xt">/&gt;&lt;/ns1:name&gt;</span>
+          <span class="xt">&lt;/xsl:for-each&gt;</span>
+          <span class="xt">&lt;ns1:pagination&gt;</span>
+            <span class="xt">&lt;ns1:page&gt;</span>1<span class="xt">&lt;/ns1:page&gt;</span>
+            <span class="xt">&lt;ns1:perPage&gt;</span>100<span class="xt">&lt;/ns1:perPage&gt;</span>
+          <span class="xt">&lt;/ns1:pagination&gt;</span>
+        <span class="xt">&lt;/ns1:SearchOfferNameListReq&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></code></pre>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="tree-cond">if IsEnableUserPass="true" and User exists</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="tree-cond">if IsEnableUserPass="true" and Password exists</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge badge-green">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:SearchOfferNameListReq</span><span class="badge badge-green">Always</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:name</span> <em>(repeated N times)</em><span class="tree-arrow">←</span><span class="tree-src">$socIDs/elements</span><span class="tree-cond">xsl:for-each — one per unique SOC</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:pagination</span><span class="badge badge-green">Always</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:page</span><span class="tree-arrow">←</span><span class="tree-src-static">"1" (static)</span><span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:perPage</span><span class="tree-arrow">←</span><span class="tree-src-static">"100" (static)</span><span class="badge badge-green">Always</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:12px;font-size:.8rem;color:#666;"><strong>Legend:</strong> <span class="badge badge-green">Always</span> = unconditional &nbsp; <span class="badge badge-orange">Conditional</span> = inside xsl:if &nbsp; <span class="badge badge-purple">Credential-gated</span> = behind IsEnableUserPass flag &nbsp; <span class="tree-src" style="display:inline-block;">green</span> = XPath source &nbsp; <span class="tree-src-static" style="display:inline-block;">orange</span> = static literal</p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Event</th><th>Trigger</th><th>Key fields</th></tr>
+      <tr>
+        <td>Request audit</td>
+        <td><code>AllowWriteLog(OrderType)</code> = true</td>
+        <td><code>OPERATION_NAME="CAT_GET_SWF"</code>, <code>AUDIT_TRACE="Request Sent for CAT_GET_SWF"</code>, <code>PROCESS_ID=concat(pid,"_REQ")</code></td>
+      </tr>
+      <tr>
+        <td>Response audit</td>
+        <td><code>AllowWriteLog(OrderType)</code> = true</td>
+        <td><code>OPERATION_NAME="CAT_GET_SWF"</code>, <code>AUDIT_TRACE="Response received for CAT_GET_SWF"</code>, <code>PROCESS_ID=concat(pid,"_RES")</code></td>
+      </tr>
+    </table>
+    <div class="callout callout-success" style="margin-top:12px;">
+      <strong>No trailing space:</strong> Both OPERATION_NAME and AUDIT_TRACE strings are clean (no trailing space), unlike some other FMs in this codebase.
+    </div>
+  </div>
+</div>
+
+<!-- §12 Activity Status Management -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Action</th><th>Status code</th></tr>
+      <tr><td>SOCs found and event sent</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" = PROCESSING / SENT</td></tr>
+      <tr><td>No SOCs found (empty offer list)</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" = SKIPPED</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <pre><code><span class="kw">catch</span>(<span class="ty">Exception</span> ae) {
+    RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</code></pre>
+    <p>Standard catch-all; delegates to <code>HandleActivityException</code> which logs the error and transitions the activity to a failed state.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>RuleFunctions.Helpers.AllowWriteLog(orderType)</code></td><td>Returns boolean — permits audit logging for the given order type</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetActivityStatusString(code, flag)</code></td><td>Translates status code string to activity status string</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.SendDataToDB(orderRequest)</code></td><td>Persists current order state to database</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.SkipActivity(orderRequest, activity, code)</code></td><td>Marks activity as skipped with given code and advances flow</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.HandleActivityException(orderRequest, activity, ex, msg)</code></td><td>Logs exception, transitions activity to error state</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetXMLForAgreementOffer(orderRequest, refId, soc)</code></td><td>Builds XML for PreExecCheck evaluation against a ParentOU agreement offer</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, refId, soc, filter)</code></td><td>Builds XML for PreExecCheck with FE_OR_CCBS ExtendedInfo filter param</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetXMLForAgreementOfferInChildOU(orderRequest, refId, soc, parentRefId)</code></td><td>Builds XML for PreExecCheck against ChildOU agreement offer</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, refId, offerName, parentRefId, filter)</code></td><td>Builds XML for PreExecCheck against ChildOU subscriber offer with filter</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetActivityParamValueFromKey(activity, key)</code></td><td>Reads a named parameter from the activity's Parameter array (used in response RF for IGNORE_CCP)</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(str)</code></td><td>Null/blank check for BRMS parameter values</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><code>Request_CAT_GET_SWF (rule)
+├── Instance.getByExtIdByUri()                    [BE built-in]
+├── Collections.List.createArrayList()            [BE built-in]
+├── XPath.execute()                               [BE built-in — PreExecCheck evaluation]
+├── Collections.contains()                        [BE built-in]
+├── Collections.add()                             [BE built-in]
+├── Collections.toArray()                         [BE built-in]
+├── Collections.size()                            [BE built-in]
+├── Helpers.GetXMLForAgreementOffer()
+├── Helpers.GetXMLForSubscriberOfferFilterWithExtendedInfo()
+├── Helpers.GetXMLForAgreementOfferInChildOU()
+├── Helpers.GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo()
+├── XPath.evalAsString()                          [BE built-in — FE_OR_CCBS extraction]
+├── Event.createEvent()                           [BE built-in — XSLT-based event build]
+├── Event.Ext.sendEventImmediate()                [BE built-in — JMS dispatch]
+├── Helpers.AllowWriteLog()
+├── System.nanoTime()                             [BE built-in — PID generation]
+├── Helpers.GetActivityStatusString()
+├── Helpers.SendDataToDB()
+├── Helpers.SkipActivity()
+└── Helpers.HandleActivityException()
+
+Response_CAT_GET_SWF (rulefunction)
+├── Log.getLogger() / Log.log()                  [BE built-in]
+├── XPath.evalAsBoolean()                         [BE built-in — guard + IGNORE_CCP checks]
+├── XPath.evalAsString()                          [BE built-in — LogicalDate, swCode]
+├── XPath.evalAsInt()                             [BE built-in — totalResponse, SWF counts]
+├── Helpers.GetActivityParamValueFromKey()        [read IGNORE_CCP]
+├── Instance.getByExtIdByUri()                    [BE built-in — LogicalDate concept]
+├── Instance.createInstance()                     [BE built-in — CatGodResponse, SwitchFeature, RelatedOffers, etc.]
+├── Helpers.AllowWriteLog()
+├── Event.createEvent()                           [BE built-in — Logger event]
+└── Event.Ext.sendEventImmediate()               [BE built-in — audit log dispatch]</code></pre>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Used in</th><th>Key fields</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Request rule, Response RF</td><td>OrderData, ProcessFlow, IsOrderResubmitted</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Request rule, Response RF</td><td>ActivityID, Status, RequestCount, Response[], PreExecCheck, Parameter[]</td></tr>
+      <tr><td><code>Concepts.FM.Response.CAT_GOD.CatGodResponse</code></td><td>Response RF</td><td>ResponseCode, ResponseMessage, Name, Code, Description, OfferType, ProductType, SaleContext, SaleEffectiveDate, SaleExpirationDate, SocProperties, SwitchFeature[], RelatedOffers[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.AgreementOffers</code></td><td>Response RF (write)</td><td>OfferName, SwitchFeature[], RelatedOffersArray[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>Response RF (write)</td><td>OfferName, SwitchFeature[], RelatedOffersArray[], ExtendedInfo[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.AgreementSwitchFeature</code></td><td>Response RF (create)</td><td>item_cd, swparam, switchcode</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberSwitchFeature</code></td><td>Response RF (create)</td><td>item_cd, swparam, switchcode</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.RelatedOffresSwitchFeature</code></td><td>Response RF (create)</td><td>item_cd, swparam, switchcode</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.RelatedOffersArray</code></td><td>Response RF (read/write)</td><td>OfferName, SwitchFeature[]</td></tr>
+      <tr><td><code>Concepts.OM.LogicalDate</code></td><td>Response RF</td><td>LogicalDate — effective date for offer mapping</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:8px;">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Collect all unique SOC names from ParentOU and ChildOU agreements and subscriber offers, deduplicated</td></tr>
+      <tr><td>R2</td><td>Apply PreExecCheck XPath filter on each SOC before including in the batch (per-offer evaluation)</td></tr>
+      <tr><td>R3</td><td>Use FE_OR_CCBS ExtendedInfo as an additional filter parameter for subscriber offer PreExecCheck</td></tr>
+      <tr><td>R4</td><td>Send a single batch SearchOfferNameListReq with max 100 SOCs and page=1</td></tr>
+      <tr><td>R5</td><td>Skip activity if no SOCs found</td></tr>
+      <tr><td>R6</td><td>Enrich all matching AgreementOffers, SubscriberOffers, and RelatedOffersArray with SwitchFeature objects from response</td></tr>
+      <tr><td>R7</td><td>Support IGNORE_CCP activity parameter to bypass SWF mapping for CCP-type offers</td></tr>
+      <tr><td>R8</td><td>Map RelatedOffers children from response, including nested SwitchFeatures</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td><strong>BUG: SelectedByDefault ASCII encoding</strong> — Response RF uses <code>if (ns1:selectedByDefault = 'true') then 89 else 64</code>. ASCII 89='Y' is correct; ASCII 64='@' is wrong — should be 78='N'. RelatedOffers.SelectedByDefault will contain '@' instead of 'N' for non-default offers.</td>
+        <td><span class="badge badge-red">HIGH</span></td>
+        <td>Fix to <code>then 89 else 78</code> or use string literals 'Y'/'N'</td>
+      </tr>
+      <tr>
+        <td><strong>BUG: ChildOU subscriber RefId mismatch</strong> — In the request rule at line 122, <code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code> passes <code>ParentOU[i].Subscriber[j].RefId</code> instead of <code>ParentOU[i].ChildOU[k].Subscriber[j].RefId</code>. PreExecCheck evaluation uses wrong subscriber context for ChildOU subscribers.</td>
+        <td><span class="badge badge-red">HIGH</span></td>
+        <td>Fix the RefId path to reference the ChildOU subscriber</td>
+      </tr>
+      <tr>
+        <td><strong>Pagination not handled:</strong> Hard-coded <code>perPage=100</code> with no follow-up page requests. Orders with more than 100 unique SOCs will silently lose SWF data for SOCs beyond position 100.</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Add pagination loop or increase perPage limit; validate max SOC count at runtime</td>
+      </tr>
+      <tr>
+        <td><strong>Namespace prefix inconsistency in response RF:</strong> Guard check uses prefix <code>xsd4</code> while totalResponse XPath uses <code>xsd2</code> — both map to the same SearchOfferNameList schema URI. Not a runtime bug (each XPath is self-contained) but increases maintenance confusion.</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Standardize to a single namespace prefix alias across all XPath blocks</td>
+      </tr>
+      <tr>
+        <td><strong>Shared event type with CAT_GOD:</strong> Uses the same <code>CAT_GOD</code> event type. The discriminator is only the ActivityID condition. If the router routes responses by event type, a response for CAT_GET_SWF could theoretically trigger the CAT_GOD response handler and vice versa.</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Verify the JMS correlation mechanism correctly routes responses to the right response RF; consider separate event types in migration</td>
+      </tr>
+      <tr>
+        <td><strong>LogicalDate fallback:</strong> If <code>Concepts.OM.LogicalDate</code> instance is null or blank, falls back to <code>current-dateTime()</code>. This is appropriate but the LogicalDate concept retrieval lacks null-guard on the concept instance itself (only on the value).</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Add null check on <code>logicalDateRes</code> before accessing <code>.LogicalDate</code></td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Request Rule)</div>
+  <div class="section-body">
+    <pre><code><span class="cm">/**
+ * @description
+ * @author LAPTOP-C0A601K3
+ */</span>
+<span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.<span class="ty">Request_CAT_GET_SWF</span> {
+    <span class="kw">attribute</span> {
+        priority = <span class="nu">5</span>;
+        forwardChain = <span class="kw">true</span>;
+    }
+    <span class="kw">declare</span> {
+        Concepts.OrderRequest.<span class="ty">OrderRequest</span> orderRequest;
+        Concepts.OM.ProcessConfig.<span class="ty">Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"CAT_GET_SWF"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"CAT_GET_SWF"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">try</span> {
+            Concepts.OM.ProcessConfig.<span class="ty">Activity</span> nextAct =
+                Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="kw">String</span> chkXPath = nextAct.PreExecCheck;
+            <span class="kw">String</span> chkRes = <span class="st">"true"</span>;
+            <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="cm">// --- Collect unique SOCs from all ParentOU/ChildOU agreements and subscribers ---</span>
+            <span class="kw">String</span> strSOCs = <span class="st">""</span>;
+            <span class="ty">Object</span> arrLstSOCs = Collections.List.createArrayList();
+            <span class="kw">int</span> iPOULen = orderRequest.OrderData.Customer.ParentOU@length;
+
+            <span class="kw">for</span>(<span class="kw">int</span> i = <span class="nu">0</span>; i &lt; iPOULen; i++) {
+                <span class="cm">// ParentOU Agreement Offers</span>
+                <span class="kw">int</span> iAgreeOffersLen = <span class="nu">0</span>;
+                Concepts.OrderRequest.OrderElements.<span class="ty">ParentOU</span> parentOU = orderRequest.OrderData.Customer.ParentOU[i];
+                <span class="kw">if</span>(orderRequest.OrderData.Customer.ParentOU[i].Agreement != <span class="kw">null</span>)
+                    iAgreeOffersLen = orderRequest.OrderData.Customer.ParentOU[i].Agreement.Offers@length;
+                <span class="kw">for</span>(<span class="kw">int</span> j = <span class="nu">0</span>; j &lt; iAgreeOffersLen; j++) {
+                    <span class="kw">String</span> currSoc = orderRequest.OrderData.Customer.ParentOU[i].Agreement.Offers[j].OfferName;
+                    chkRes = <span class="st">"true"</span>;
+                    <span class="kw">if</span>(String.length(nextAct.PreExecCheck) &gt; <span class="nu">0</span>) {
+                        <span class="kw">String</span> sXML = RuleFunctions.Helpers.<span class="fn">GetXMLForAgreementOffer</span>(orderRequest,
+                            orderRequest.OrderData.Customer.ParentOU[i].Agreement.RefId, currSoc);
+                        chkRes = XPath.execute(<span class="st">"/("+chkXPath+")"</span>, sXML, <span class="st">"ns0=..."</span>);
+                    }
+                    <span class="kw">if</span>(!Collections.contains(arrLstSOCs, currSoc) &amp;&amp; String.equals(chkRes, <span class="st">"true"</span>))
+                        Collections.add(arrLstSOCs, currSoc);
+                }
+
+                <span class="cm">// ParentOU Subscriber Offers (with FE_OR_CCBS filter for PreExecCheck)</span>
+                <span class="kw">int</span> iSubCnt = orderRequest.OrderData.Customer.ParentOU[i].Subscriber@length;
+                <span class="kw">for</span>(<span class="kw">int</span> j = <span class="nu">0</span>; j &lt; iSubCnt; j++) {
+                    <span class="kw">int</span> iSubOffCnt = orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].SubscriberOffers@length;
+                    <span class="kw">for</span>(<span class="kw">int</span> k = <span class="nu">0</span>; k &lt; iSubOffCnt; k++) {
+                        <span class="kw">String</span> currSoc = orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].SubscriberOffers[k].OfferName;
+                        Concepts.OrderRequest.OrderElements.<span class="ty">SubscriberOffers</span> subOff = ...;
+                        <span class="kw">String</span> filter = XPath.evalAsString(<span class="st">"xpath:// ... FE_OR_CCBS/Value ..."</span>);
+                        chkRes = <span class="st">"true"</span>;
+                        <span class="kw">if</span>(String.length(nextAct.PreExecCheck) &gt; <span class="nu">0</span>) {
+                            <span class="kw">String</span> sXML = RuleFunctions.Helpers.<span class="fn">GetXMLForSubscriberOfferFilterWithExtendedInfo</span>(
+                                orderRequest, ..., currSoc, filter);
+                            chkRes = XPath.execute(...);
+                        }
+                        <span class="kw">if</span>(!Collections.contains(arrLstSOCs, currSoc) &amp;&amp; String.equals(chkRes, <span class="st">"true"</span>))
+                            Collections.add(arrLstSOCs, currSoc);
+                        <span class="cm">// ... add RelatedOffersArray SOCs ...</span>
+                    }
+                }
+
+                <span class="cm">// ChildOU loop (same pattern) — NOTE BUG at line 122: wrong subscriber RefId used</span>
+                <span class="kw">for</span>(<span class="kw">int</span> k = <span class="nu">0</span>; k &lt; orderRequest.OrderData.Customer.ParentOU[i].ChildOU@length; k++) {
+                    <span class="cm">// ... ChildOU Agreement Offers + ChildOU Subscriber Offers ...</span>
+                    <span class="cm">// BUG: GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo uses</span>
+                    <span class="cm">//      ParentOU[i].Subscriber[j].RefId instead of ChildOU[k].Subscriber[j].RefId</span>
+                }
+            }
+
+            <span class="cm">// Send batch request if SOCs found</span>
+            <span class="ty">Object</span>[] socIDs = Collections.toArray(arrLstSOCs);
+            <span class="kw">if</span>(socIDs != <span class="kw">null</span> &amp;&amp; Collections.size(arrLstSOCs) &gt; <span class="nu">0</span>) {
+                <span class="cm">// [XSLT builds SearchOfferNameListReq — see §9.7]</span>
+                Events.OMConsumers.OMXFM.Request.<span class="ty">CAT_GOD</span> reqEvent = Event.createEvent(<span class="st">"xslt://..."</span>);
+                Event.Ext.sendEventImmediate(reqEvent);
+                <span class="kw">if</span>(RuleFunctions.Helpers.<span class="fn">AllowWriteLog</span>(orderRequest.OrderData.OrderType)) {
+                    <span class="cm">// [Logger XSLT: OPERATION_NAME="CAT_GET_SWF", AUDIT_TRACE="Request Sent for CAT_GET_SWF"]</span>
+                    Event.Ext.sendEventImmediate(Event.createEvent(<span class="st">"xslt://..."</span>));
+                }
+                <span class="kw">if</span>(!isActResub) { orderCurrentActivity.RequestCount++; }
+                isSkipped = <span class="kw">false</span>;
+            }
+
+            <span class="kw">if</span>(!isSkipped) {
+                orderCurrentActivity.Status = RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+                RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+            } <span class="kw">else</span> {
+                RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+            }
+        }
+        <span class="kw">catch</span>(<span class="ty">Exception</span> ae) {
+            RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule (Response_CAT_GET_SWF)</div>
+  <div class="section-body">
+
+    <h3 style="margin-bottom:8px;">§19.1 — Overview</h3>
+    <p>Processes the <code>SearchOfferNameListResponse</code> from the Product Catalog. For each <code>data</code> item where <code>result='true'</code>, creates a <code>CatGodResponse</code> concept and maps switch features back to all matching offers in the order (Agreement, Subscriber, and Related offers across all ParentOU/ChildOU levels). Returns <code>"true"</code> (fan-in complete) since RequestCount is always 1 for this FM.</p>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      <strong>Bug: SelectedByDefault ASCII error</strong> — <code>if (ns1:selectedByDefault = 'true') then 89 else 64</code> — ASCII 64 is '@' instead of the expected 'N' (ASCII 78). All non-default related offers will have SelectedByDefault='@'.
+    </div>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order state; target for SWF enrichment</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CAT_GOD</code></td><td>Response event from Product Catalog containing SearchOfferNameListResponse</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity; accumulates Response[] instances</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.3 — CatGodResponse Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">@extId</span><span class="tree-arrow">←</span><span class="tree-src">concat("GETSWF:", OMXTrackingId, ":", activityExtId_suffix, ":", ns1:code)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">../../../ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">../../../ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">../../../CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Code</span><span class="tree-arrow">←</span><span class="tree-src">ns1:code</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Description</span><span class="tree-arrow">←</span><span class="tree-src">ns1:description</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Name</span><span class="tree-arrow">←</span><span class="tree-src">ns1:name</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OfferType</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:textToAscii(ns1:type)</span><span class="tree-cond">if string-length(ns1:type)&gt;0</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ProductType</span><span class="tree-arrow">←</span><span class="tree-src">ns1:productType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">SaleContext</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:textToAscii(ns1:saleContext)</span><span class="tree-cond">if string-length(ns1:saleContext)&gt;0</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">SaleEffectiveDate</span><span class="tree-arrow">←</span><span class="tree-src">ns1:saleEffDate</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">SaleExpirationDate</span><span class="tree-arrow">←</span><span class="tree-src">ns1:saleExpDate</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">SocProperties</span><span class="tree-arrow">←</span><span class="tree-src-static">concat("TR_ACCOUNT_SUB_TYPE=",ns1:properties/TR_ACCOUNT_SUB_TYPE,";","TR_CONTRACT_TERM=",... )</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">SwitchFeature</span> <em>(per ns1:offerItem)</em><span class="tree-cond">if count(ns1:offerItem)&gt;0</span><span class="badge badge-orange">Conditional</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">item_cd</span><span class="tree-arrow">←</span><span class="tree-src">ns1:code</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">swparam</span><span class="tree-arrow">←</span><span class="tree-src">ns1:offerItemProperties/ns1:Default_sw_params</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">switchcode</span><span class="tree-arrow">←</span><span class="tree-src">ns1:offerItemProperties/ns1:Switch_code</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">RelatedOffers</span> <em>(per ns1:childOffer where name non-empty)</em><span class="tree-cond">if count(ns1:childOffer[string-length(ns1:name)&gt;0])&gt;0</span><span class="badge badge-orange">Conditional</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">Code, Description, Name, OfferType, ProductType, RelationType, SaleContext, SaleEffectiveDate, SaleExpirationDate</span><span class="tree-arrow">←</span><span class="tree-src">ns1:childOffer/ns1:*</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">SelectedByDefault</span><span class="tree-arrow">←</span><span class="tree-src-static">89 ('Y') if ns1:selectedByDefault='true'; else 64 ('@') ← BUG: should be 78 ('N')</span><span class="badge badge-red">BUG</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">SocProperties</span><span class="tree-arrow">←</span><span class="tree-src-static">same TR_* concat pattern as parent</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">SwitchFeatures</span> <em>(per ns1:childOffer/ns1:offerItem)</em></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">item_cd, swparam, switchcode</span><span class="tree-arrow">←</span><span class="tree-src">ns1:offerItem/ns1:*</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.4 — Response Completion Logic</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Guard (throws)</td><td><code>not(exists($eventResponse/payload/xsd4:SearchOfferNameListResponse/xsd4:data))</code> → throws <code>DATA_ISSUE: No offer detail returned.</code></td></tr>
+      <tr><td>Success XPath</td><td>None explicit — single request; first valid response is final</td></tr>
+      <tr><td>Fan-in condition</td><td>Implicit: RequestCount=1, returns <code>"true"</code> unconditionally (no exception)</td></tr>
+      <tr><td>Return value</td><td><code>"true"</code> — signals activity completion to orchestrator</td></tr>
+    </table>
+    <p>The response RF does not perform the standard <code>count(Response[...="000"]) == RequestCount</code> fan-in check because CAT_GET_SWF sends exactly one batch request and the response RF handles all SOCs in one pass.</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.5 — Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td><code>OPERATION_NAME</code></td><td><code>"CAT_GET_SWF"</code> (no trailing space)</td></tr>
+      <tr><td><code>AUDIT_TRACE</code></td><td><code>"Response received for CAT_GET_SWF"</code> (no trailing space)</td></tr>
+      <tr><td><code>PROCESS_ID</code></td><td><code>concat(pid, "_RES")</code></td></tr>
+      <tr><td><code>payload</code></td><td>Full <code>$eventResponse</code> copy, gated on <code>WritePayload="true"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CAT_GET_SWF</footer>
+</body>
+</html>

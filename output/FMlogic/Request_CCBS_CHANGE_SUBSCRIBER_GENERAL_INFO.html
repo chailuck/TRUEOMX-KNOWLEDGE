@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.75rem;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem;margin-bottom:14px}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:18px;border-radius:8px;overflow-x:auto;font-size:.8rem;border-left:3px solid var(--true-red)}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.88rem}
+.callout-warn{border-color:#e65100;background:#FFF3E0}
+.callout-info{border-color:#1565c0;background:#E3F0FD}
+.diff-table{width:100%;border-collapse:collapse;font-size:.83rem;font-family:'Cascadia Code','Consolas',monospace}
+.diff-table th{background:#F5E6E6;color:var(--true-dark);padding:7px 12px;border-bottom:2px solid var(--true-red)}
+.diff-table td{padding:7px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+.diff-pou{background:#E8F5E9}.diff-cou{background:#FFF3E0}.diff-bug{background:#FFE0E0}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</h1>
+  <div class="subtitle">Updates CCBS subscriber general info (convergence code, IMSI alias, L9 fields, SMSInd, ActivityReason etc.) per subscriber using IntraActivitySequencing for ordered/queued dispatch. Two POU/COU divergence bugs documented.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: CCBS (ChangeSubscriberGeneralInfo)</span>
+    <span class="meta-badge">Pattern: Per-subscriber / IntraActivitySequencing</span>
+    <span class="meta-badge">RefID: bare subRefId</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Author: mranade-T420</span>
+    <span class="meta-badge">Used in step: 74</span>
+    <span class="meta-badge">Generated: 2026-08-11</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Updates the CCBS subscriber record with L9 convergence and general profile fields. Unlike most FMs which use <code>Event.Ext.sendEventImmediate</code>, this FM uses the <strong>IntraActivitySequencing</strong> dispatch pattern: events are first <em>asserted</em> via <code>Event.assertEvent</code>, registered via <code>ActionRequestEvent</code>, and only dispatched after all are queued via <code>SendFirstRequestEvent</code>. Completion is determined by <code>ActionResponseEvent</code> rather than the standard RequestCount/successResponseCount comparison.</p>
+    <ul style="margin:12px 0 0 20px;line-height:2">
+      <li><strong>Fan-out:</strong> per POU subscriber + per COU subscriber (standard nested loop using index iterators)</li>
+      <li><strong>RefID:</strong> bare <code>subRefId</code> (always emitted)</li>
+      <li><strong>Dispatch:</strong> IntraActivitySequencing — <code>assertEvent</code> → <code>ActionRequestEvent</code> → <code>SendFirstRequestEvent</code></li>
+      <li><strong>OLD_BAN_DATE:</strong> two-step parse from string ExtendedInfo → DateTime, passed to XSLT as typed parameter</li>
+      <li><strong>LogicalDate:</strong> read from BE working memory concept (but value unused in XSLT)</li>
+      <li><strong>Response concept:</strong> dedicated <code>CCBS_ChangeSubscriberGeneralInfoRes</code> (not generic ResponseBase)</li>
+      <li><strong>Fan-in:</strong> <code>IntraActivitySequencing.ActionResponseEvent</code> (not RequestCount==successResponseCount)</li>
+    </ul>
+    <div class="callout" style="margin-top:14px">
+      <strong>[HIGH] COU L9RelatedSubscriber bug (wrong condition + wrong value):</strong>
+      POU correctly reads <code>ExtendedInfo[RELATED_SUBSCRIBER]/Value</code>. COU XSLT checks <code>INSTALLATION_TYPE</code> as condition guard and emits hardcoded <code>0</code> as value. Any COU subscriber with an INSTALLATION_TYPE present will send <code>L9RelatedSubscriber=0</code> to CCBS regardless of the actual RELATED_SUBSCRIBER value. Fix: COU should check <code>RELATED_SUBSCRIBER!=""</code> and emit that value.
+    </div>
+    <div class="callout">
+      <strong>[MEDIUM] COU ActivityReason missing CAN→SHOT translation:</strong>
+      POU XSLT: <code>if ActivityReason=='CAN' → 'SHOT'; else ActivityReason or 'CREQ'</code>. COU XSLT: only <code>ActivityReason or 'CREQ'</code> — no CAN→SHOT branch. COU subscribers with ActivityReason='CAN' send 'CAN' to CCBS instead of the required 'SHOT'.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] logicalDateVal read but never used:</strong> <code>logicalDateRes.LogicalDate</code> is extracted into <code>logicalDateVal</code> but never passed to the XSLT or used anywhere. Dead assignment.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] Request logger uses ERROR log level:</strong> <code>MSG_LOG_LEVEL/ERROR</code> instead of the typical <code>MSG_LOG_LEVEL/INFO</code> — likely a development artifact.
+    </div>
+    <div class="callout callout-info">
+      <strong>[INFO] POU vs COU OLD_BAN_DATE parse method differs:</strong> POU uses <code>XPath.evalAsDateTime($OLD_BAN_DATE_PARAM)</code>; COU uses <code>DateTime.parseString(L9RFActStr, "yyyy-MM-dd'T'HH:mm:ssZ")</code>. Same net result but different APIs.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO.rule</code></td><td>129 lines</td></tr>
+      <tr><td>Author</td><td>mranade-T420</td><td>Older style: index loops, debugOut, IntraActivitySequencing</td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td>true</td><td></td></tr>
+      <tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</code></td><td>Dedicated</td></tr>
+      <tr><td>Payload schema (ns3)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/ESB/ChangeSubscriberGeneralInfo.xsd</code></td><td></td></tr>
+      <tr><td>ns1</td><td><code>www.tibco.com/plugin/java/xmlSchema/amdocs.csm3g.datatypes.SubscriberGeneralInfo</code></td><td></td></tr>
+      <tr><td>ns2</td><td><code>www.tibco.com/plugin/java/xmlSchema/amdocs.csm3g.datatypes.ActivityInfo</code></td><td></td></tr>
+      <tr><td>ns4</td><td><code>www.tibco.com/plugin/java/xmlSchema/amdocs.csm3g.datatypes.SubscriberIdInfo</code></td><td></td></tr>
+      <tr><td>Fan-out pattern</td><td>Per-subscriber (POU + COU), integer index iterators</td><td>Not variable-binding style</td></tr>
+      <tr><td>RefID</td><td>bare <code>refId</code> (always)</td><td>Emitted unconditionally</td></tr>
+      <tr><td>Resub guard</td><td><code>Response[ReferenceId == refId &amp;&amp; CompletionStatus==2]</code></td><td></td></tr>
+      <tr><td>PurgePendingRequestsBeforeResubmit</td><td>✓ PRESENT</td><td>Called on resubmit before any dispatch</td></tr>
+      <tr><td>LogicalDate</td><td><code>Instance.getByExtIdByUri("LogicalDate", "/Concepts/OM/LogicalDate")</code></td><td>Read but unused [LOW]</td></tr>
+      <tr><td>OLD_BAN_DATE parse (POU)</td><td><code>XPath.evalAsDateTime($OLD_BAN_DATE_PARAM)</code></td><td>Two-step: evalAsString first</td></tr>
+      <tr><td>OLD_BAN_DATE parse (COU)</td><td><code>DateTime.parseString(str, "yyyy-MM-dd'T'HH:mm:ssZ")</code></td><td>Different API from POU</td></tr>
+      <tr><td>Dispatch method</td><td><code>Event.assertEvent + IntraActivitySequencing.ActionRequestEvent</code></td><td>NOT sendEventImmediate</td></tr>
+      <tr><td>Send trigger</td><td><code>IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)</code></td><td>After all events queued</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBS_ChangeSubscriberGeneralInfoRes</code></td><td>Dedicated — not generic ResponseBase</td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td><td>NOT RequestCount==successResponseCount</td></tr>
+      <tr><td>Request LOG_LEVEL</td><td>ERROR</td><td>[LOW] Should be INFO</td></tr>
+      <tr><td>OPERATION_NAME (request)</td><td><code>$orderCurrentActivity/ActivityID</code> (dynamic)</td><td>Not hardcoded</td></tr>
+      <tr><td>OPERATION_NAME (response)</td><td><code>"CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO"</code></td><td>Hardcoded</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="card">
+  <div class="card-header">§3 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 POU vs COU Diff -->
+<div class="card">
+  <div class="card-header">§7 — POU vs COU XSLT Differences</div>
+  <div class="card-body">
+    <table class="diff-table">
+      <tr><th>Field</th><th class="diff-pou">POU XSLT</th><th class="diff-cou">COU XSLT</th><th>Finding</th></tr>
+      <tr>
+        <td>L9RelatedSubscriber</td>
+        <td class="diff-pou"><code>if RELATED_SUBSCRIBER != '' → emit RELATED_SUBSCRIBER value</code></td>
+        <td class="diff-bug"><code>if INSTALLATION_TYPE != '' → emit literal 0</code></td>
+        <td><span class="badge badge-red">[HIGH]</span> Wrong condition and wrong value in COU</td>
+      </tr>
+      <tr>
+        <td>ns2:ActivityReason</td>
+        <td class="diff-pou"><code>if=='CAN' → 'SHOT'; else ActivityReason or 'CREQ'</code></td>
+        <td class="diff-cou"><code>ActivityReason or 'CREQ'</code> (no CAN→SHOT)</td>
+        <td><span class="badge badge-orange">[MEDIUM]</span> COU misses CAN→SHOT translation</td>
+      </tr>
+      <tr>
+        <td>OLD_BAN_DATE parse</td>
+        <td class="diff-pou"><code>XPath.evalAsDateTime($OLD_BAN_DATE_PARAM)</code></td>
+        <td class="diff-cou"><code>DateTime.parseString(str, "yyyy-MM-dd'T'HH:mm:ssZ")</code></td>
+        <td><span class="badge badge-blue">[INFO]</span> Different API, same result</td>
+      </tr>
+      <tr>
+        <td>L9ConvergenceCode guard</td>
+        <td class="diff-pou"><code>!=''</code></td>
+        <td class="diff-cou"><code>string-length() &gt; 0</code></td>
+        <td><span class="badge badge-blue">[INFO]</span> Equivalent</td>
+      </tr>
+      <tr>
+        <td>L9ProofDate guard</td>
+        <td class="diff-pou"><code>string-length() &gt; 0</code></td>
+        <td class="diff-cou"><code>exists()</code></td>
+        <td><span class="badge badge-blue">[INFO]</span> Different guard style, same effect</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p style="margin-bottom:8px">POU indexed: <code>$orderRequest/.../ParentOU[$iOUItr]/Subscriber[$iSub]/</code> — COU adds <code>ChildOU[$iCOUItr]</code>. Abbreviations: <em>sub</em> = subscriber node. Divergences noted inline.</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">xsl:if</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId (bare subRefId)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns3:ChangeSubscriberGeneralInfo</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns4:SubscriberIdInfo</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns4:SubscrNumber</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberId</span><span class="badge badge-green">Always</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:SubscriberGeneralInfo</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:EffectiveDate</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberGeneralInfo.EffectiveDate</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">exists()</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9ConvergenceCode</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberGeneralInfo.ConvergenceCode</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">!=""</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9IMSIAlias</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberGeneralInfo.IMSIAlias</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">string-length &gt; 0</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9InstallationType</span><span class="tree-arrow">←</span><span class="tree-src">sub.ExtendedInfo[INSTALLATION_TYPE].Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">!=""</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9MarketingCode</span><span class="tree-arrow">←</span><span class="tree-src">sub.ExtendedInfo[MARKET_CODE].Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">!=""</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9PhaseCode</span><span class="tree-arrow">←</span><span class="tree-src">sub.ExtendedInfo[PHASE_CODE].Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">!=""</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9ProjectCode</span><span class="tree-arrow">←</span><span class="tree-src">sub.ExtendedInfo[PROJECT_CODE].Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">!=""</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9ProofDate</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberGeneralInfo.ProofDate</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">string-length &gt; 0 (POU) / exists() (COU)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9ProofDoc</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberGeneralInfo.ProofDoc</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">string-length &gt; 0</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9RFActDate</span><span class="tree-arrow">←</span><span class="tree-src">$L9RFActDateFormat (parsed DateTime from ExtendedInfo[OLD_BAN_DATE])</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">exists(OLD_BAN_DATE)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9RFBan</span><span class="tree-arrow">←</span><span class="tree-src">sub.ExtendedInfo[OLD_BAN].Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">!="" (POU) / string-length &gt; 0 (COU)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9RelatedSubscriber</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="badge badge-green">POU ✓</span><span class="tree-arrow">←</span><span class="tree-src">sub.ExtendedInfo[RELATED_SUBSCRIBER].Value</span><span class="tree-cond">if RELATED_SUBSCRIBER != ''</span></div></li>
+                              <li><div class="tree-row"><span class="badge badge-red">[HIGH] COU ✗</span><span class="tree-arrow">←</span><span class="tree-src-static">hardcoded 0</span><span class="tree-cond">if INSTALLATION_TYPE != '' (WRONG condition and WRONG value)</span></div></li>
+                            </ul>
+                          </li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9SaleChannel</span><span class="tree-arrow">←</span><span class="tree-src">sub.ExtendedInfo[SALE_CHANNEL].Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">!=""</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9SaleId</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberGeneralInfo.saleId</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">!=""</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9SmsInd</span><span class="tree-arrow">←</span><span class="tree-src-static">89 (Y) or 78 (N)</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">exists(SMSInd) — SMSInd=='Y'→89, else→78</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9SmsLanguage</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberGeneralInfo.smsLang</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">!=""</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9SplitPeriod</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberGeneralInfo.SplitPeriod</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">string-length &gt; 0</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9TMVSrvsLvl</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberGeneralInfo.l9TmvServiceLevel</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">string-length &gt; 0</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:L9TrueLifeId</span><span class="tree-arrow">←</span><span class="tree-src">sub.ExtendedInfo[TRUELIFE_ID].Value</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">count &gt; 0</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:Language</span><span class="tree-arrow">←</span><span class="tree-src">sub.SubscriberGeneralInfo.Language</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">string-length &gt; 0</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:ActivityInfo</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:ActivityReason</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="badge badge-green">POU</span><span class="tree-arrow">←</span><span class="tree-src">if=='CAN'→'SHOT'; else ActivityReason or 'CREQ'</span><span class="badge badge-green">Always</span></div></li>
+                              <li><div class="tree-row"><span class="badge badge-red">[MEDIUM] COU</span><span class="tree-arrow">←</span><span class="tree-src">ActivityReason or 'CREQ'</span><span class="badge badge-green">Always</span><span class="tree-cond">No CAN→SHOT translation</span></div></li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §8 ExtendedInfo -->
+<div class="card">
+  <div class="card-header">§8 — ExtendedInfo Fields Referenced</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Name</th><th>Level</th><th>Direction</th><th>XSLT Target</th></tr>
+      <tr><td>INSTALLATION_TYPE</td><td>Subscriber</td><td>INPUT</td><td><code>ns1:L9InstallationType</code></td></tr>
+      <tr><td>MARKET_CODE</td><td>Subscriber</td><td>INPUT</td><td><code>ns1:L9MarketingCode</code></td></tr>
+      <tr><td>PHASE_CODE</td><td>Subscriber</td><td>INPUT</td><td><code>ns1:L9PhaseCode</code></td></tr>
+      <tr><td>PROJECT_CODE</td><td>Subscriber</td><td>INPUT</td><td><code>ns1:L9ProjectCode</code></td></tr>
+      <tr><td>OLD_BAN_DATE</td><td>Subscriber</td><td>INPUT</td><td><code>ns1:L9RFActDate</code> — parsed to DateTime</td></tr>
+      <tr><td>OLD_BAN</td><td>Subscriber</td><td>INPUT</td><td><code>ns1:L9RFBan</code></td></tr>
+      <tr><td>RELATED_SUBSCRIBER</td><td>Subscriber</td><td>INPUT</td><td><code>ns1:L9RelatedSubscriber</code> (POU only — COU has bug)</td></tr>
+      <tr><td>SALE_CHANNEL</td><td>Subscriber</td><td>INPUT</td><td><code>ns1:L9SaleChannel</code></td></tr>
+      <tr><td>TRUELIFE_ID</td><td>Subscriber</td><td>INPUT</td><td><code>ns1:L9TrueLifeId</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO (rule)
+├── isActResub = (RequestCount > 0 && IsOrderResubmitted)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── if isActResub: PurgePendingRequestsBeforeResubmit(orderCurrentActivity)  ✓
+├── logicalDateRes = Instance.getByExtIdByUri("LogicalDate", LogicalDate concept)
+│   └── logicalDateVal = logicalDateRes.LogicalDate   ← UNUSED [LOW]
+├── [POU loop iPOUItr → iSubItr]:
+│   ├── refId = POU[iPOUItr].Subscriber[iSubItr].RefId
+│   ├── [Resub guard]: Response[ReferenceId==refId && CompletionStatus==2]
+│   ├── [PreExecCheck]: GetXMLForSubscriber(orderRequest, refId)
+│   ├── [if chkRes=="true"]:
+│   │   ├── OLD_BAN_DATE_PARAM = XPath.evalAsString(sub.ExtendedInfo[OLD_BAN_DATE])
+│   │   ├── [if not blank]: L9RFActDateFormat = XPath.evalAsDateTime($OLD_BAN_DATE_PARAM)
+│   │   ├── reqEvent = Event.createEvent(CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO, XSLT)
+│   │   ├── Event.assertEvent(reqEvent)
+│   │   ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+│   │   └── Logger (ERROR level): OPERATION_NAME=$orderCurrentActivity/ActivityID
+├── [COU loop iPOUItr → iCOUItr → iSubItr]:
+│   ├── refId = POU[iPOUItr].ChildOU[iCOUItr].Subscriber[iSubItr].RefId
+│   ├── [Resub guard / PreExecCheck / OLD_BAN_DATE parse (DateTime.parseString)]
+│   ├── reqEvent = Event.createEvent(CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO, XSLT_COU)
+│   ├── Event.assertEvent(reqEvent)
+│   └── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+├── [if !isSkipped]:
+│   ├── IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)
+│   ├── orderCurrentActivity.Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException
+
+Response_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO (rulefunction)
+├── activityRes = Instance.createInstance(CCBS_ChangeSubscriberGeneralInfoRes)
+│   ← extId from $eventResponse/@extId (NOT pre-generated)
+│   ← ResponseCode, ResponseMessage, CompletionStatus, ReferenceId (conditional)
+├── currActivity.Response[] ← activityRes
+├── Logger: OPERATION_NAME="CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO"
+├── [NOTE] Standard RequestCount==successResponseCount block is COMMENTED OUT
+└── return IntraActivitySequencing.ActionResponseEvent(currActivity) ? "true" : "false"</pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Per-subscriber fan-out (POU + COU). Standard nested index loops.</td></tr>
+      <tr><td>R2</td><td>PurgePendingRequestsBeforeResubmit called on resubmit.</td></tr>
+      <tr><td>R3</td><td>OLD_BAN_DATE from sub.ExtendedInfo parsed to DateTime and emitted as ns1:L9RFActDate.</td></tr>
+      <tr><td>R4</td><td>SMSInd 'Y' → 89, else → 78 (CCBS integer encoding).</td></tr>
+      <tr><td>R5</td><td>ActivityReason 'CAN' → 'SHOT' for POU. This translation MUST be applied to COU as well (currently missing).</td></tr>
+      <tr><td>R6</td><td>ns1:L9RelatedSubscriber = sub.ExtendedInfo[RELATED_SUBSCRIBER].Value. COU bug must be fixed (currently emits 0 when INSTALLATION_TYPE present).</td></tr>
+      <tr><td>R7</td><td>IntraActivitySequencing dispatch: assertEvent → ActionRequestEvent → SendFirstRequestEvent; fan-in via ActionResponseEvent.</td></tr>
+      <tr><td>R8</td><td>Response uses dedicated CCBS_ChangeSubscriberGeneralInfoRes concept (not generic ResponseBase).</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>COU sends L9RelatedSubscriber=0 when INSTALLATION_TYPE present, ignoring actual RELATED_SUBSCRIBER value</td><td><span class="badge badge-red">[HIGH]</span></td><td>Fix COU XSLT: check RELATED_SUBSCRIBER value and emit it (mirror POU logic)</td></tr>
+      <tr><td>COU missing ActivityReason CAN→SHOT translation</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Add CAN→SHOT branch to COU XSLT ActivityInfo/ActivityReason xsl:choose</td></tr>
+      <tr><td>logicalDateVal read from LogicalDate concept but never used</td><td><span class="badge badge-blue">[LOW]</span></td><td>Remove dead assignment or confirm intended future use</td></tr>
+      <tr><td>Request logger LOG_LEVEL=ERROR instead of INFO</td><td><span class="badge badge-blue">[LOW]</span></td><td>Change to MSG_LOG_LEVEL/INFO for consistency</td></tr>
+      <tr><td>OLD_BAN_DATE parse method differs between POU and COU</td><td><span class="badge badge-blue">[INFO]</span></td><td>Standardize on one approach in modernized implementation</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule (Response_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO)</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§19.3 CCBS_ChangeSubscriberGeneralInfoRes Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span><span class="tree-cond">Concepts.FM.Response.CCBS_ChangeSubscriberGeneralInfoRes (dedicated)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/@extId</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">From event — not pre-generated</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.4 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Standard fan-in</td><td><em>COMMENTED OUT</em> — RequestCount==successResponseCount block disabled</td></tr>
+      <tr><td>Active fan-in</td><td><code>RuleFunctions.Helpers.IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Write-back</td><td>None</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

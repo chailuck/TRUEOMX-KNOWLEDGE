@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_UPD_CREDIT_CLASS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+.callout.critical{border-color:#B71C1C;background:#FFEBEE}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+.badge-high{background:#FFE0E0;color:var(--true-dark)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CCBS_UPD_CREDIT_CLASS</h1>
+  <div class="subtitle">CCBS Credit Class Update — fire-and-forget pattern with complex multi-source credit class priority chain</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: CCBS</span>
+    <span class="meta-chip">Author: awalia-t420</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: FIRE-AND-FORGET (no IntraActivitySequencing)</span>
+    <span class="meta-chip">Fan-in: IsAllResponseSuccess</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout critical">
+      <strong>CRITICAL ARCHITECTURE DIFFERENCE — Fire-and-Forget:</strong> This FM does NOT use <code>IntraActivitySequencing.ActionRequestEvent</code> or <code>Event.assertEvent</code>. Instead it calls <code>Event.Ext.sendEventImmediate(reqEvent)</code> directly and manually increments <code>orderCurrentActivity.RequestCount++</code>. Fan-in uses <code>IsAllResponseSuccess(currActivity)</code> rather than <code>IntraActivitySequencing.ActionResponseEvent</code>.
+    </div>
+    <div class="callout">
+      <strong>CCBS_UPD_CREDIT_CLASS</strong> updates the credit class on each CCBS Account. The credit class value comes from a complex 5-source priority chain: CVSS result, ODS result, existing/source credit class, and CCBS default — gated by account type, customer type, and exclusion lists.
+    </div>
+    <div class="callout info">
+      <strong>5-way credit class priority (L9CreditClass):</strong> carrySource (OT=8 carry logic) → carryODS (ODS ExtInfo present + active account) → ODS present → CVSS present → CCBS default (no-op, don't send event).
+    </div>
+    <div class="callout warn">
+      <strong>Global exclusion lists:</strong> Three global variables gate whether credit class is updated: <code>NoCreditClassChangeCC</code>, <code>NoCreditClassChangeSubType</code>, <code>NoCreditClassChangeTargetCC</code>. If the order's credit class / subtype / target CC is on any list, the event is NOT sent.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_UPD_CREDIT_CLASS</code></td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>CCBS</td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> — NO IntraActivitySequencing</td></tr>
+      <tr><td>RequestCount</td><td>Manually incremented: <code>orderCurrentActivity.RequestCount++</code></td></tr>
+      <tr><td>Fan-in</td><td><code>IsAllResponseSuccess(currActivity)</code> — NOT ActionResponseEvent</td></tr>
+      <tr><td>Iteration target</td><td><code>Customer.Account[]</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBS_UpdateCreditClassRes</code></td></tr>
+      <tr><td>Payload operation</td><td><code>ns:UpdateCreditClassRequest</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Credit Class Priority Logic -->
+<div class="section">
+  <div class="section-header">§7 — Credit Class Priority Chain (L9CreditClass)</div>
+  <div class="section-body">
+    <div class="callout info">Priority is evaluated top-to-bottom; first match wins. If no source produces a credit class, the event is NOT sent (CCBS default — account keeps existing class).</div>
+    <table>
+      <tr><th>Priority</th><th>Source</th><th>Condition</th><th>Action</th></tr>
+      <tr><td>1 — carrySource</td><td>SOURCECreditClass (from source order/account)</td><td>OrderType=8 (account type change): postpaid→postpaid OR hybrid→hybrid; non-empty SOURCECreditClass</td><td>Use SOURCECreditClass</td></tr>
+      <tr><td>2 — carryODS</td><td>ODS ExtInfo (ODS_CREDIT_CLASS)</td><td>ODS present AND Account is active (not new) AND account type qualifies</td><td>Use ODSCreditClass from ExtInfo</td></tr>
+      <tr><td>3a — ODS new active</td><td>ODS ExtInfo</td><td>ODS present AND new account AND AccountSubType in active set</td><td>Use ODSCreditClass</td></tr>
+      <tr><td>3b — ODS other</td><td>ODS ExtInfo</td><td>ODS present AND other conditions</td><td>Use ODSCreditClass</td></tr>
+      <tr><td>4 — CVSS</td><td>CVSSCreditClass (from Account.AccountManagementInfo.CreditClass after FM19)</td><td>CVSSCreditClass non-empty</td><td>Use CVSSCreditClass</td></tr>
+      <tr><td>5 — CCBS default</td><td>(none)</td><td>All above failed</td><td>Do NOT send event (keep CCBS as-is)</td></tr>
+    </table>
+    <div style="margin-top:12px">
+      <strong>ActivityReason:</strong>
+      <table>
+        <tr><th>Condition</th><th>ActivityReason Value</th></tr>
+        <tr><td>ActivityReasonODS global var non-empty (ODS provided reason)</td><td>ActivityReasonODS value</td></tr>
+        <tr><td>AccountActivityInfo.ActivityReason non-empty</td><td>AccountActivityInfo.ActivityReason</td></tr>
+        <tr><td>else</td><td>"CREQ"</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority / JMSCorrelationID / OrderID / RefID / OrderType</span><span class="tree-arrow">←</span><span class="tree-src">standard order/Account fields</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:UpdateCreditClassRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ban</span><span class="tree-arrow">←</span><span class="tree-src">Account[$i]/AccountID</span><span class="badge badge-orange">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:creditClass</span><span class="tree-arrow">←</span><span class="tree-src">L9CreditClass (priority chain result)</span><span class="badge badge-orange">Always — resolved from 5-source chain</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src">ActivityReasonODS → AccountActivityInfo.ActivityReason → "CREQ"</span><span class="badge badge-orange">3-way dispatch</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:companyCode</span><span class="tree-arrow">←</span><span class="tree-src">Account[$i]/AccountManagementInfo.CompanyCode</span><span class="badge badge-orange">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:grading</span><span class="tree-arrow">←</span><span class="tree-src">targetGrading value (derived from account type transition)</span><span class="tree-cond">Conditional: account type transition present</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:source</span><span class="tree-arrow">←</span><span class="tree-src">3-way dispatch: EOC / MNP_INT/EXT / CCBS</span><span class="badge badge-orange">Dispatch</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:userId</span><span class="tree-arrow">←</span><span class="tree-src-static">60001</span><span class="badge badge-orange">Hardcoded</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_CCBS_UPD_CREDIT_CLASS
+├── [if resubmit] PurgePendingRequestsBeforeResubmit (manual — checks RequestCount, clears)
+├── Instance.getByExtIdByUri(NextActivityName, Activity) → nextAct
+├── Read global vars:
+│   ├── NoCreditClassChangeCC (exclusion list 1)
+│   ├── NoCreditClassChangeSubType (exclusion list 2)
+│   └── NoCreditClassChangeTargetCC (exclusion list 3)
+├── for each Account[i]:
+│   ├── [skip if Response[ReferenceId==refId AND CompletionStatus==2] exists]
+│   ├── Resolve credit class variables:
+│   │   ├── CVSSCreditClass ← Account[i].AccountManagementInfo.CreditClass (after FM19 overwrite)
+│   │   ├── ODSCreditClass ← Account[i].ExtendedInfo[Name='ODS_CREDIT_CLASS'].Value (written by FM20)
+│   │   ├── SOURCECreditClass ← AccountExtendedInfo[CURRENT_CREDITCLASS].Value (backup written by FM19)
+│   │   ├── sourceAccountSubType / targetAccountSubType / sourceCustomerType / targetCustomerType
+│   │   └── targetGrading ← AccountManagementInfo.Grading
+│   ├── Check exclusion lists:
+│   │   ├── if CVSSCreditClass in NoCreditClassChangeCC → skip this Account
+│   │   ├── if AccountSubType in NoCreditClassChangeSubType → skip
+│   │   └── if targetCreditClass in NoCreditClassChangeTargetCC → skip
+│   ├── Evaluate L9CreditClass (5-priority chain — see §7)
+│   ├── Evaluate ActivityReason (3-way)
+│   ├── if L9CreditClass non-empty:
+│   │   ├── Event.createEvent(CCBS_UPD_CREDIT_CLASS, active XSLT)
+│   │   ├── Event.Ext.sendEventImmediate(reqEvent)  ← FIRE-AND-FORGET
+│   │   ├── orderCurrentActivity.RequestCount++      ← MANUAL increment
+│   │   ├── isSkipped = false
+│   │   └── sendEventImmediate(Logger REQ)
+│   └── else → no event sent for this Account (priority chain produced nothing)
+├── GetActivityStatusString("1", false)
+└── SendDataToDB(orderRequest)
+
+Response_CCBS_UPD_CREDIT_CLASS
+├── Instance.createInstance(CCBS_UpdateCreditClassRes:
+│   ResponseCode, ResponseMsg, CompletionStatus, ReferenceId)
+│   → currActivity.Response[n]
+├── [no order data write-backs — response is acknowledgement only]
+├── sendEventImmediate(Logger RES)
+└── IsAllResponseSuccess(currActivity)  ← DIFFERENT from ActionResponseEvent
+    → "true" if all responses are success codes; "false" otherwise</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Fire-and-forget pattern (sendEventImmediate + manual RequestCount++) does NOT go through IntraActivitySequencing. If RequestCount is miscounted (e.g., due to resubmit), fan-in via IsAllResponseSuccess may hang or complete prematurely</td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td>In migration, standardize on IntraActivitySequencing or implement explicit request tracking with idempotency</td>
+      </tr>
+      <tr>
+        <td>L9CreditClass priority chain has 5 sources; the logic depends on correct ordering of FM19 (CVSS) and FM20 (ODS) completing before FM21</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document FM19→FM20→FM21 dependency chain; validate ProcessConfig activity sequencing enforces it</td>
+      </tr>
+      <tr>
+        <td>Three global exclusion lists (NoCreditClassChangeCC, SubType, TargetCC) — if these lists change, behaviour changes silently without code change</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Externalise exclusion lists to a configuration store with change audit trail</td>
+      </tr>
+      <tr>
+        <td>CVSSCreditClass read directly from Account.AccountManagementInfo.CreditClass — this is the value FM19 OVERWROTE. The original value is backed up in CURRENT_CREDITCLASS. This means FM21's "CVSS" source is the post-FM19 value, not the raw CVSS API response</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document data flow clearly: FM19 writes CVSS result to Account.CreditClass; FM21 reads it from there</td>
+      </tr>
+      <tr>
+        <td>Hardcoded userId=60001 in CCBS request</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Externalise to configuration in migration</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <p style="margin-bottom:12px;font-size:0.87rem;">Minimal response — 4 standard fields, no order data write-backs. Fan-in via <code>IsAllResponseSuccess</code>.</p>
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>CCBS_UpdateCreditClassRes (4 std fields: ResponseCode, ResponseMsg, CompletionStatus, ReferenceId)</td><td>Always</td></tr>
+    </table>
+    <div class="callout warn" style="margin-top:12px">
+      <strong>Fan-in:</strong> <code>IsAllResponseSuccess(currActivity)</code> — checks that all responses have success codes. This is NOT <code>IntraActivitySequencing.ActionResponseEvent</code>. The response rulefunction returns "true" only when all sent events have received successful responses.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Request_CCBS_APPLY_COLL_ACTIVITIES</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#333;font-size:14px;line-height:1.6}
+.hero{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.hero h1{font-size:1.8rem;font-weight:700;letter-spacing:-0.5px}
+.hero .sub{opacity:.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px}
+.meta-chip{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#FFF9F9}
+code{font-family:'Cascadia Code','Consolas',monospace;background:rgba(139,0,0,0.07);color:var(--true-dark);padding:2px 6px;border-radius:4px;font-size:0.85em}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.83rem;border-left:3px solid var(--true-red);line-height:1.5}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:0.75rem;font-weight:600}
+.b-green{background:#E8F5E9;color:var(--success)}
+.b-orange{background:#FFF3E0;color:var(--warning)}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-blue{background:#E3F0FD;color:var(--info)}
+.b-purple{background:#F3E5F5;color:var(--skip)}
+.section-title{font-size:1.1rem;font-weight:700;color:var(--true-dark);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--true-pale)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>Request_CCBS_APPLY_COLL_ACTIVITIES</h1>
+  <div class="sub">TIBCO BusinessEvents FM — CCBS Apply Collection Activities (multi-service-type, dual-loop)</div>
+  <div class="meta-row">
+    <span class="meta-chip">Rule: Rules.OMConsumers.OMXFM.Request.Request_CCBS_APPLY_COLL_ACTIVITIES</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Author: awalia-t420</span>
+    <span class="meta-chip">Backend: CCBS</span>
+    <span class="meta-chip">Generated: 2026-09-16</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header">§1 — Overview &amp; Purpose</div>
+<div class="card-body">
+<p>Fires when <code>ActivityID == "CCBS_APPLY_COLL_ACTIVITIES"</code>. Loops over all ParentOU and ChildOU subscribers, applies a PreExecCheck per subscriber, and fires a <code>CCBS_APPLY_COLL_ACTIVITIES</code> JMS event for each qualifying subscriber. The payload varies based on the <code>serviceType</code> parameter (from <code>Parameter[0]</code>), selecting the appropriate collection action code and SOC add/remove operation.</p>
+<p style="margin-top:8px"><strong>In FULL_SUSPEND context:</strong> serviceType=<code>FULL_SUSPEND</code> → <code>collectionAct=83</code>, removes SOC <code>50412</code>. This is the CCBS-channel collection suspension path (triggered only when <code>Channel="CCBS"</code>).</p>
+</div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+<div class="card-header">§2 — Rule Metadata</div>
+<div class="card-body">
+<table>
+<thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_APPLY_COLL_ACTIVITIES</code></td></tr>
+<tr><td>Priority</td><td>5 / forwardChain: true</td></tr>
+<tr><td>Author</td><td>awalia-t420</td></tr>
+<tr><td>serviceType source</td><td><code>orderCurrentActivity.Parameter[0]</code></td></tr>
+<tr><td>Loop</td><td>Dual: ParentOU.Subscriber + ChildOU.Subscriber</td></tr>
+<tr><td>RefId</td><td>Per POU subscriber: <code>Subscriber[j].RefId</code>; per COU: <code>Subscriber[j].RefId</code>; event RefID uses <code>pouRefId</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="card">
+<div class="card-header">§4 — Rule Conditions (WHEN)</div>
+<div class="card-body">
+<table>
+<thead><tr><th>#</th><th>Condition</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_APPLY_COLL_ACTIVITIES"</code></td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_APPLY_COLL_ACTIVITIES"</code></td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §7 Service Type Routing -->
+<div class="card">
+<div class="card-header">§7 — serviceType Routing Table</div>
+<div class="card-body">
+<table>
+<thead><tr><th>serviceType (Parameter[0])</th><th>collectionAct</th><th>SOC Operation</th><th>SOC Code</th></tr></thead>
+<tbody>
+<tr><td><code>FULL_SUSPEND</code></td><td>83</td><td>offersToRemove</td><td>50412</td></tr>
+<tr><td><code>SOFT_SUSPEND</code></td><td>71</td><td>offersToAdd</td><td>50412</td></tr>
+<tr><td><code>RESTORE</code></td><td>82</td><td>offersToRemove</td><td>50412</td></tr>
+<tr><td><code>CANCEL</code></td><td>67</td><td>(none)</td><td>—</td></tr>
+<tr><td>default (OrderType=13)</td><td>67</td><td>(none)</td><td>—</td></tr>
+<tr><td>default (OrderType=18)</td><td>83</td><td>offersToRemove</td><td>50412</td></tr>
+<tr><td>default (other)</td><td>83</td><td>offersToRemove</td><td>50412</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+<div class="card-header">§8 — System &amp; Integration Dependencies</div>
+<div class="card-body">
+<div class="section-title">§8.2 ESB / JMS</div>
+<table>
+<thead><tr><th>Direction</th><th>Event</th><th>Schema</th></tr></thead>
+<tbody>
+<tr><td><span class="badge b-orange">OUTBOUND</span></td><td>CCBS_APPLY_COLL_ACTIVITIES</td><td>applyCollectionActivitiesRequest (truecorp.co.th CCBS)</td></tr>
+<tr><td><span class="badge b-blue">LOG</span></td><td>OMXESB/Logger</td><td>AuditLogging/V1_0</td></tr>
+</tbody>
+</table>
+<br/>
+<div class="section-title">§8.4 Fields Used</div>
+<table>
+<thead><tr><th>Field</th><th>Access</th><th>Used In</th></tr></thead>
+<tbody>
+<tr><td><code>Subscriber.SubscriberId</code></td><td>READ</td><td>entityId</td></tr>
+<tr><td><code>SubscriberActivityInfo.ActivityReason</code></td><td>READ</td><td>activityReason</td></tr>
+<tr><td><code>SubscriberActivityInfo.UserText</code></td><td>READ</td><td>userText (conditional)</td></tr>
+<tr><td><code>Subscriber.MSISDN</code></td><td>READ</td><td>msisdn header field</td></tr>
+<tr><td><code>LogicalDate</code></td><td>READ</td><td>logicalDate (conditional)</td></tr>
+<tr><td><code>orderCurrentActivity.Parameter[0]</code></td><td>READ</td><td>serviceType selector</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §9 Payload -->
+<div class="card">
+<div class="card-header">§9 — Payload (FULL_SUSPEND variant)</div>
+<div class="card-body">
+<pre>&lt;createEvent&gt;
+  &lt;event&gt;
+    &lt;JMSCorrelationID&gt;TRK-20250101-001&lt;/JMSCorrelationID&gt;
+    &lt;OrderID&gt;ORD-12345&lt;/OrderID&gt;
+    &lt;RefID&gt;REF-POU-001&lt;/RefID&gt;   &lt;!-- pouRefId --&gt;
+    &lt;msisdn&gt;0812345678&lt;/msisdn&gt;
+    &lt;payload&gt;
+      &lt;ns:applyCollectionActivitiesRequest&gt;
+        &lt;ns:basicAgreementCollectionInfo&gt;
+          &lt;ns:entityIdInfo&gt;
+            &lt;ns:entityId&gt;SUB-ID-001&lt;/ns:entityId&gt;
+            &lt;ns:entityType&gt;SUBSCRIBER&lt;/ns:entityType&gt;
+          &lt;/ns:entityIdInfo&gt;
+          &lt;ns:collectionActivityInfo&gt;
+            &lt;ns:collectionAct&gt;83&lt;/ns:collectionAct&gt;   &lt;!-- FULL_SUSPEND --&gt;
+          &lt;/ns:collectionActivityInfo&gt;
+          &lt;ns:offersToRemove&gt;
+            &lt;ns:soc&gt;50412&lt;/ns:soc&gt;
+          &lt;/ns:offersToRemove&gt;
+        &lt;/ns:basicAgreementCollectionInfo&gt;
+        &lt;ns:activityInfo&gt;
+          &lt;ns:activityReason&gt;COLL&lt;/ns:activityReason&gt;
+          &lt;ns:userText&gt;Collection suspension&lt;/ns:userText&gt;
+          &lt;ns:logicalDate&gt;2025-12-01&lt;/ns:logicalDate&gt;   &lt;!-- if logicalDateVal present --&gt;
+        &lt;/ns:activityInfo&gt;
+      &lt;/ns:applyCollectionActivitiesRequest&gt;
+    &lt;/payload&gt;
+  &lt;/event&gt;
+&lt;/createEvent&gt;</pre>
+</div>
+</div>
+
+<!-- §10 Tree -->
+<div class="card">
+<div class="card-header">§10 — XSLT Field Mapping Tree (FULL_SUSPEND variant)</div>
+<div class="card-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">applyCollectionActivitiesRequest</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">basicAgreementCollectionInfo</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">entityIdInfo → entityId</span><span class="tree-arrow">←</span><span class="tree-src">Subscriber[$iSubs]/SubscriberId</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">entityIdInfo → entityType</span><span class="tree-arrow">←</span><span class="tree-src-static">"SUBSCRIBER"</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">collectionActivityInfo → collectionAct</span><span class="tree-arrow">←</span><span class="tree-src-static">83 (FULL_SUSPEND) / 71 (SOFT) / 82 (RESTORE) / 67 (CANCEL)</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">offersToRemove → soc</span><span class="tree-arrow">←</span><span class="tree-src-static">"50412"</span><span class="tree-cond">FULL_SUSPEND / RESTORE only</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">offersToAdd → soc</span><span class="tree-arrow">←</span><span class="tree-src-static">"50412"</span><span class="tree-cond">SOFT_SUSPEND only</span></div></li>
+        </ul>
+      </li>
+      <li><div class="tree-row"><span class="tree-tag">activityInfo</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">activityReason</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/ActivityReason</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">userText</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberActivityInfo/UserText</span><span class="badge b-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">logicalDate</span><span class="tree-arrow">←</span><span class="tree-src">logicalDateVal</span><span class="tree-cond">if string-length(tib:trim(logicalDateVal)) &gt; 0</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+</div>
+
+<!-- §12 Status -->
+<div class="card">
+<div class="card-header">§12 — Activity Status Management</div>
+<div class="card-body">
+<table>
+<thead><tr><th>Condition</th><th>Action</th></tr></thead>
+<tbody>
+<tr><td>At least one request fired</td><td><code>SendFirstRequestEvent</code> → status "1" → DB persist</td></tr>
+<tr><td>All skipped</td><td><code>SkipActivity("4")</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §15 Tree -->
+<div class="card">
+<div class="card-header">§15 — Function Dependency Tree</div>
+<div class="card-body">
+<pre>Request_CCBS_APPLY_COLL_ACTIVITIES
+├── RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit
+├── RuleFunctions.Helpers.GetXMLForSubscriber / GetXMLForSubscriberInChildOU
+├── XPath.execute (PreExecCheck)
+├── Event.createEvent (CCBS_APPLY_COLL_ACTIVITIES XSLT × 2 variants)
+├── RuleFunctions.Helpers.IntraActivitySequencing.ActionRequestEvent
+├── Event.Ext.sendEventImmediate (audit)
+├── RuleFunctions.Helpers.IntraActivitySequencing.SendFirstRequestEvent
+├── RuleFunctions.Helpers.GetActivityStatusString
+├── RuleFunctions.Helpers.SendDataToDB
+├── RuleFunctions.Helpers.SkipActivity
+└── RuleFunctions.Helpers.HandleActivityException</pre>
+</div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+<div class="card-header">§19 — Response Message Rule</div>
+<div class="card-body">
+<div class="section-title">§19.1 Overview</div>
+<p><code>Response_CCBS_APPLY_COLL_ACTIVITIES</code> maps <code>CCBS_APPLY_COLL_ACTIVITIES</code> response into <code>ApplyCollActivitiesRes</code> concept (ResponseCode, ResponseMessage, CompletionStatus, ReferenceId). Uses <code>ActionResponseEvent</code> (commented-out manual XPath fan-in).</p>
+<br/>
+<div class="section-title">§19.4 Fan-in</div>
+<p>Uses <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code>. The explicit <code>count(Response[ResponseCode suffix "000"]) == RequestCount</code> block is commented out.</p>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>POSTPAID_ADD_OFFER_SUB — Order Journey</title>
+<style>
+:root{--red:#CC0000;--dark:#8B0000;--deep:#5C0000;--light:#FF5252;--pale:#FFF5F5;
+  --bg:#F4F4F6;--card:#FFF;--bdr:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#333;font-size:13px;line-height:1.6;}
+a{color:var(--red);text-decoration:none;}a:hover{text-decoration:underline;}
+code{font-family:'Cascadia Code',Consolas,monospace;font-size:.8em;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:10px 14px;border-radius:6px;font-size:.75rem;white-space:pre-wrap;word-break:break-word;border-left:3px solid var(--red);}
+
+/* PAGE HEADER */
+.ph{background:linear-gradient(135deg,var(--deep),var(--dark),var(--red));color:#fff;padding:28px 40px 24px;}
+.ph h1{font-size:2rem;font-weight:700;letter-spacing:-.5px;}
+.ph .sub{opacity:.85;font-size:.95rem;margin-top:4px;}
+.ph .desc{opacity:.75;font-size:.82rem;margin-top:6px;}
+.meta-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+.mb{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.25);border-radius:20px;padding:3px 12px;font-size:.78rem;}
+.mb.warn{background:rgba(255,193,7,.25);border-color:rgba(255,193,7,.5);}
+
+/* LAYOUT */
+.wrap{max-width:1400px;margin:0 auto;padding:20px 24px;}
+.sec{background:var(--card);border:1px solid var(--bdr);border-radius:8px;margin-bottom:16px;overflow:hidden;}
+.sh{background:linear-gradient(90deg,var(--dark),var(--red));color:#fff;padding:9px 16px;font-weight:600;font-size:.9rem;border-left:4px solid var(--light);display:flex;align-items:center;gap:10px;}
+.sh .sh-right{margin-left:auto;font-size:.78rem;opacity:.8;}
+.sb{padding:16px;}
+
+/* NAV */
+.nav-pills{display:flex;flex-wrap:wrap;gap:8px;padding:12px 16px;}
+.nav-pills a{color:var(--red);border:1px solid #e0c0c0;padding:4px 12px;border-radius:14px;font-size:.8rem;}
+.nav-pills a:hover{background:var(--pale);}
+
+/* STAT CARDS */
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(160px,1fr));gap:12px;margin-bottom:16px;}
+.stat-card{background:#fff;border:1px solid var(--bdr);border-radius:8px;padding:14px 16px;border-top:3px solid var(--red);}
+.stat-card .sv{font-size:1.8rem;font-weight:700;color:var(--red);}
+.stat-card .sl{font-size:.78rem;color:#666;margin-top:2px;}
+
+/* PHASE OVERVIEW CARDS */
+.phase-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px;}
+.pc{border:1px solid var(--bdr);border-radius:8px;overflow:hidden;}
+.pc-head{padding:8px 12px;color:#fff;font-weight:600;font-size:.82rem;display:flex;align-items:center;gap:8px;}
+.pc-head .pn{background:rgba(255,255,255,.25);border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:.72rem;font-weight:700;flex-shrink:0;}
+.pc-body{padding:10px 12px;font-size:.78rem;}
+.pc-body .prange{color:#888;font-size:.72rem;margin-top:4px;}
+.pc-body .psys{display:flex;flex-wrap:wrap;gap:4px;margin-top:6px;}
+
+/* PHASE SECTION HEADERS */
+.phase-sec{margin-bottom:20px;}
+.phase-hdr{display:flex;align-items:center;gap:12px;padding:10px 16px;border-radius:8px 8px 0 0;color:#fff;font-weight:700;font-size:.92rem;}
+.phase-hdr .ph-num{background:rgba(255,255,255,.25);border-radius:6px;padding:2px 9px;font-size:.8rem;}
+.phase-hdr .ph-steps{margin-left:auto;font-size:.78rem;opacity:.8;}
+.phase-desc{background:#F8F8F8;border:1px solid var(--bdr);border-top:none;padding:10px 16px;font-size:.8rem;color:#555;line-height:1.5;}
+.steps-list{border:1px solid var(--bdr);border-top:none;border-radius:0 0 8px 8px;overflow:hidden;}
+
+/* STEP CARDS */
+.step-card{padding:12px 16px;border-bottom:1px solid #F0F0F0;transition:background .15s;}
+.step-card:last-child{border-bottom:none;}
+.step-card:hover{background:#FAFAFA;}
+.step-card.cond{border-left:3px solid #F9A825;background:#FFFFF8;}
+.step-card.cond:hover{background:#FFFDE7;}
+.step-card.nf{border-left:3px solid #e65100;background:#FFF8F5;}
+.step-card.skip{border-left:3px solid #9C27B0;background:#FCF5FF;}
+.step-head{display:flex;align-items:flex-start;gap:10px;margin-bottom:6px;}
+.snum{background:var(--red);color:#fff;border-radius:50%;width:26px;height:26px;font-size:.72rem;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;}
+.snum.nf-num{background:#e65100;}
+.snum.skip-num{background:#9C27B0;}
+.step-title{flex:1;}
+.bname{font-weight:700;font-size:.88rem;color:#222;line-height:1.3;}
+.fmline{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin-top:3px;}
+.fm-code{font-family:'Cascadia Code',Consolas,monospace;font-size:.75rem;color:var(--dark);background:#FFF5F5;padding:1px 7px;border-radius:4px;border:1px solid #F0D0D0;}
+.purpose{font-size:.81rem;color:#444;margin-bottom:6px;line-height:1.5;}
+/* CONDITION */
+.cond-box{background:#FFFDE7;border:1px solid #F9A825;border-radius:6px;padding:7px 10px;margin-bottom:6px;font-size:.8rem;}
+.cond-always{background:#E8F5E9;border:1px solid #81C784;border-radius:6px;padding:7px 10px;margin-bottom:6px;font-size:.8rem;color:#2e7d32;}
+.cond-label{font-weight:600;margin-right:6px;}
+.cond-human{color:#555;}
+details.xp{margin-top:5px;}
+details.xp summary{cursor:pointer;color:var(--dark);font-size:.75rem;font-weight:600;padding:2px 0;}
+details.xp summary::marker{color:var(--red);}
+/* SYSTEM CHIPS */
+.chip{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600;color:#fff;}
+.c-ccbs{background:#1565c0;} .c-omx{background:#CC0000;} .c-omxc{background:#8B0000;}
+.c-bl{background:#2e7d32;} .c-aa{background:#283593;} .c-sbm{background:#4e342e;}
+.c-asrm{background:#e65100;} .c-intx{background:#00695c;} .c-mcs{background:#6a1b9a;}
+.c-psa{background:#00838f;} .c-knox{background:#1a237e;} .c-tdg{background:#33691e;}
+.c-bdh{background:#e65100;} .c-sms{background:#880e4f;} .c-apigw{background:#bf360c;}
+.c-mldd{background:#4a148c;} .c-cvss{background:#004d40;} .c-kafka{background:#37474f;}
+.c-blacklist{background:#c62828;} .c-unknown{background:#9e9e9e;}
+/* DOC STATUS */
+.ds{font-size:.7rem;font-weight:600;padding:2px 7px;border-radius:10px;}
+.ds-gen{background:#E8F5E9;color:#2e7d32;} .ds-reuse{background:#E3F0FD;color:#1565c0;}
+.ds-nf{background:#FFF3E0;color:#e65100;} .ds-skip{background:#F3E5F5;color:#9C27B0;}
+/* PARAMS */
+.sparams{font-size:.75rem;color:#666;}
+.sparams span{background:#F5E6E6;color:var(--dark);padding:1px 7px;border-radius:4px;margin-left:4px;font-family:Consolas,monospace;}
+
+/* SYSTEMS KEY */
+.sys-key{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
+
+/* TABLE */
+table{width:100%;border-collapse:collapse;font-size:.78rem;}
+th{background:#F5E6E6;color:var(--dark);border-bottom:2px solid var(--red);padding:7px 8px;text-align:left;white-space:nowrap;font-weight:600;}
+td{padding:5px 8px;border-bottom:1px solid #eee;vertical-align:top;}
+tr:hover td{background:#FFF8F8;}
+.tr-cond td{background:#FFFFF8;}
+.tr-nf td{background:#FFF8F5;}
+.tr-skip td{background:#FCF5FF;}
+
+/* FM GRID */
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;}
+.fmc{border:1px solid var(--bdr);border-radius:6px;padding:10px;background:#fff;}
+.fmc h4{font-size:.8rem;color:var(--dark);margin-bottom:4px;word-break:break-all;}
+.fmc .fsteps{font-size:.73rem;color:#888;}
+
+/* GAP CARDS */
+.gap-card{border:1px solid #FFB74D;background:#FFF8F0;border-radius:8px;padding:14px;margin-bottom:10px;}
+.gap-card h4{color:#e65100;font-size:.88rem;margin-bottom:6px;}
+.gap-card p{font-size:.8rem;color:#555;line-height:1.5;}
+.gap-card .impact{background:#FFF3E0;border-left:3px solid #FF9800;padding:6px 10px;margin-top:8px;border-radius:4px;font-size:.78rem;color:#e65100;}
+
+/* OVERVIEW BOX */
+.ovr-box{background:#FFF5F5;border:1px solid #F0D0D0;border-radius:8px;padding:16px;margin-bottom:14px;font-size:.83rem;line-height:1.7;color:#333;}
+.ovr-box h3{color:var(--dark);font-size:.9rem;margin-bottom:8px;}
+.key-fact{display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-top:10px;}
+.kf{background:#fff;border:1px solid #E0D0D0;border-radius:6px;padding:8px 12px;}
+.kf .kl{font-size:.7rem;color:#888;text-transform:uppercase;letter-spacing:.5px;}
+.kf .kv{font-size:.82rem;font-weight:600;color:#333;margin-top:2px;}
+
+/* PHASE COLORS */
+.ph-c1{background:#c62828;} .ph-c2{background:#1565c0;} .ph-c3{background:#283593;}
+.ph-c4{background:#4a148c;} .ph-c5{background:#6a1b9a;} .ph-c6{background:#004d40;}
+.ph-c7{background:#f57f17;} .ph-c8{background:#e65100;} .ph-c9{background:#bf360c;}
+.ph-c10{background:#3e2723;} .ph-c11{background:#1b5e20;} .ph-c12{background:#880e4f;}
+.ph-c13{background:#37474f;} .ph-c14{background:#1a237e;} .ph-c15{background:#33691e;}
+.ph-c16{background:#b71c1c;}
+</style>
+</head>
+<body>
+
+<div class="ph">
+  <h1>POSTPAID_ADD_OFFER_SUB</h1>
+  <div class="sub">Postpaid Add-Offer Subscription — End-to-End Order Processing Journey</div>
+  <div class="desc">Process Configuration for POSTPAID_ADD_OFFER_SUB. Entry point: <strong>IOM_CHECK_SEQUENCING</strong></div>
+  <div class="meta-row">
+    <span class="mb">84 Steps</span>
+    <span class="mb">16 Phases</span>
+    <span class="mb">55 Unique FMs</span>
+    <span class="mb">14 Backend Systems</span>
+    <span class="mb warn">4 Rule Files Not Found</span>
+    <span class="mb">Generated: 2026-08-11</span>
+  </div>
+</div>
+
+<div class="wrap">
+
+<!-- NAV -->
+<div class="sec">
+  <div class="nav-pills">
+    <a href="#s1">§1 Overview</a>
+    <a href="#s2">§2 Phases at a Glance</a>
+    <a href="#s3">§3 Step-by-Step Journey</a>
+    <a href="#s4">§4 Technical Reference</a>
+    <a href="#s5">§5 Coverage Gaps</a>
+    <a href="#s6">§6 FM Index</a>
+  </div>
+</div>
+
+<!-- §1 OVERVIEW -->
+<div class="sec" id="s1">
+  <div class="sh">§1 — Process Overview <span class="sh-right">Business &amp; Technical Context</span></div>
+  <div class="sb">
+    <div class="ovr-box">
+      <h3>What does this process do?</h3>
+      <p>POSTPAID_ADD_OFFER_SUB is the <strong>primary end-to-end order orchestration process</strong> for adding postpaid service offers to an existing subscriber. It is triggered when a customer selects a new add-on service (e.g. data pack, roaming, content subscription, or loyalty benefit) through any front-end channel (retail, BSNS enterprise portal, CCBS back-office, or third-party API).</p>
+      <p style="margin-top:8px;">The process follows a structured pipeline: first it <strong>collects and validates</strong> all customer, account, and subscriber data; then it <strong>resolves and prices</strong> the selected offers; then it <strong>provisions</strong> the services across multiple backend systems (CCBS, AA, SBM, MCS, Knox); and finally it <strong>notifies</strong> the customer and submits any required child orders to downstream OMX processes.</p>
+      <div class="key-fact">
+        <div class="kf"><div class="kl">Entry Channel</div><div class="kv">Any (Retail, BSNS, CCBS, API, USSD…)</div></div>
+        <div class="kf"><div class="kl">Entry Condition</div><div class="kv">POMX_ETG / APPLE: sequenced; others: direct</div></div>
+        <div class="kf"><div class="kl">Core Systems</div><div class="kv">CCBS · AA · SBM · MCS · INTX · OMX</div></div>
+        <div class="kf"><div class="kl">Fan-out Model</div><div class="kv">Per-subscriber (POU → Sub, POU → COU → Sub)</div></div>
+        <div class="kf"><div class="kl">Offer Sources</div><div class="kv">FE (Front-End), BRMS, CCBS legacy</div></div>
+        <div class="kf"><div class="kl">COVID-19 / STUDENT</div><div class="kv">Many steps skipped for these order types</div></div>
+        <div class="kf"><div class="kl">Child Orders</div><div class="kv">Steps 83–84 submit sub-orders to OMX</div></div>
+        <div class="kf"><div class="kl">Known Bugs</div><div class="kv">Step 84: orderId not unique; 3× wrong OPERATION_NAME</div></div>
+      </div>
+    </div>
+
+    <div class="stat-grid">
+      <div class="stat-card"><div class="sv">84</div><div class="sl">Total Process Steps</div></div>
+      <div class="stat-card"><div class="sv">16</div><div class="sl">Business Phases</div></div>
+      <div class="stat-card"><div class="sv">55</div><div class="sl">Unique FM Functions</div></div>
+      <div class="stat-card"><div class="sv">65</div><div class="sl">Conditional Steps (PreExecCheck)</div></div>
+      <div class="stat-card"><div class="sv">4</div><div class="sl" style="color:#e65100">Rule Files Not Found</div></div>
+      <div class="stat-card"><div class="sv">14</div><div class="sl">Backend Systems Touched</div></div>
+    </div>
+
+    <div style="font-size:.8rem;color:#555;margin-top:4px;line-height:1.8;">
+      <strong>How to read this document:</strong>
+      <span style="background:#FFFFF8;border-left:3px solid #F9A825;padding:1px 8px;margin:0 4px;border-radius:3px;">Yellow left border</span> = Conditional step (has PreExecCheck — only runs when condition is met).
+      <span style="background:#FFF8F5;border-left:3px solid #e65100;padding:1px 8px;margin:0 4px;border-radius:3px;">Orange left border</span> = Rule file not found.
+      <span style="background:#FCF5FF;border-left:3px solid #9C27B0;padding:1px 8px;margin:0 4px;border-radius:3px;">Purple left border</span> = FM doc skipped by user.
+      White = Always executed (no condition).
+    </div>
+  </div>
+</div>
+
+<!-- §2 PHASE OVERVIEW -->
+<div class="sec" id="s2">
+  <div class="sh">§2 — Order Journey at a Glance <span class="sh-right">16 Business Phases</span></div>
+  <div class="sb">
+    <div class="phase-grid" id="phase-grid"></div>
+  </div>
+</div>
+
+<!-- §3 JOURNEY BY PHASE -->
+<div class="sec" id="s3">
+  <div class="sh">§3 — Step-by-Step Order Journey <span class="sh-right">84 steps across 16 phases</span></div>
+  <div class="sb" style="padding:0;">
+    <div id="journey"></div>
+  </div>
+</div>
+
+<!-- §4 TECHNICAL REFERENCE -->
+<div class="sec" id="s4">
+  <div class="sh">§4 — Technical Reference Table</div>
+  <div class="sb" style="overflow-x:auto;">
+    <table id="ref-table">
+      <thead><tr>
+        <th>#</th><th>Step ID</th><th>FM (ActivityID)</th><th>System</th>
+        <th>Parameter(s)</th><th>Trigger Condition (abbreviated)</th><th>Doc</th>
+      </tr></thead>
+      <tbody id="ref-tbody"></tbody>
+    </table>
+  </div>
+</div>
+
+<!-- §5 GAPS -->
+<div class="sec" id="s5">
+  <div class="sh">§5 — Coverage Gaps &amp; Missing Rule Files</div>
+  <div class="sb">
+    <div class="gap-card">
+      <h4>Step 22 — OMX_OFFER_INCLUSION</h4>
+      <p>Rule file <code>Request_OMX_OFFER_INCLUSION.rule</code> was not found in the codebase. This step applies offer inclusion business rules — ensuring required companion offers, bundles, or promotional packs are included with the primary offer where business rules mandate it.</p>
+      <div class="impact">⚠ Impact: Offer inclusion logic is undocumented. During modernization, inclusion rules must be sourced from business specifications or BRMS configuration rather than BE rule code.</div>
+    </div>
+    <div class="gap-card">
+      <h4>Step 34 — OMX_BIZ_VAL (Business Validation)</h4>
+      <p>Rule file <code>Request_OMX_BIZ_VAL.rule</code> was not found. This step applies configurable business validation rules that may reject or modify the order based on subscriber eligibility criteria not covered by upstream checks.</p>
+      <div class="impact">⚠ Impact: Custom business validation logic is unknown. Any modernization must replicate these rules; missing them could lead to orders being accepted that should be rejected.</div>
+    </div>
+    <div class="gap-card">
+      <h4>Step 57 — UPDATE_NETWORK_STATUS</h4>
+      <p>Rule file <code>Request_UPDATE_NETWORK_STATUS.rule</code> was not found. This step is expected to update the network-level provisioning status after SBM data pack provisioning for service types 86 and 87.</p>
+      <div class="impact">⚠ Impact: Post-SBM network status update logic is undocumented. This may be handled by SBM internally or by middleware not present in this codebase.</div>
+    </div>
+    <div class="gap-card">
+      <h4>Step 77 — STATUS_UPDATE_CREATING_PROFILE</h4>
+      <p>Rule file <code>Request_STATUS_UPDATE_CREATING_PROFILE.rule</code> was not found. This step is expected to update the OMX order status to a "Creating Profile" state during provisioning.</p>
+      <div class="impact">⚠ Impact: Order status lifecycle is incomplete. The "Creating Profile" status transition is not captured in documentation, making order state tracking analysis partial.</div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 FM INDEX -->
+<div class="sec" id="s6">
+  <div class="sh">§6 — FM Documentation Index</div>
+  <div class="sb">
+    <div class="fm-grid" id="fm-grid"></div>
+  </div>
+</div>
+
+<div style="text-align:center;color:#999;font-size:.78rem;padding:16px 0 24px;">
+TRUE Corporation OMX · Order Journey Documentation · POSTPAID_ADD_OFFER_SUB · 2026-08-11
+</div>
+</div><!-- wrap -->
+
+<script>
+/* ============================================================
+   PHASE DEFINITIONS
+   ============================================================ */
+const PHASES=[
+ {n:1,name:"Order Entry & Sequencing",color:"ph-c1",range:"1",steps:[1],
+  desc:"Determine whether this order requires sequential processing. POMX_ETG (eTG portal) and Apple channel orders are held in a sequencing queue to prevent concurrent conflicts when multiple orders arrive for the same subscriber.",
+  systems:["OMX Internal"]},
+ {n:2,name:"Customer & Account Data Collection",color:"ph-c2",range:"2–10",steps:[2,3,4,5,6,7,8,9,10],
+  desc:"Gather all core data needed for the rest of the process: subscriber identity, customer profile, blacklist/fraud status, account details, billing account, and service agreement. Steps 5–7 (blacklist checks) are skipped for government accounts, COVID-19 relief orders, and Student channel.",
+  systems:["CCBS","Blacklist"]},
+ {n:3,name:"Subscriber Status & Eligibility",color:"ph-c3",range:"11–12",steps:[11,12],
+  desc:"Retrieve full subscriber service data (current packages, SIMs, extended info) and — for enterprise BSNS orders with Knox-enrolled devices — fetch Knox MDM preferences. Suspended or disconnecting subscribers (status 67, 76, 84) skip the subscriber info retrieval.",
+  systems:["CCBS","INTX"]},
+ {n:4,name:"Offer Catalogue Resolution",color:"ph-c4",range:"13–17",steps:[13,14,15,16,17],
+  desc:"Resolve all selected offers to their full CCBS service definitions. Runs BRMS evaluation to add rule-engine-sourced offers, then resolves SOC codes and fetches full GOD (Get Offer Details) data for both FE and BRMS offers. Skipped for COVID-19 orders and Student channel.",
+  systems:["CCBS","OMX / BRMS"]},
+ {n:5,name:"Extended Offer & Pricing Data",color:"ph-c5",range:"18–24",steps:[18,19,20,21,22,23,24],
+  desc:"Retrieve extended SOC attributes, MCS charge info for TPC offers, existing future-order conflicts, and calculated effective dates for future-dated offers. Apply offer inclusion and exclusion rules to finalize the offer set, then retrieve pricing rates. Most steps skipped for COVID-19 orders.",
+  systems:["OMX Internal","CCBS","MCS"]},
+ {n:6,name:"Financial & Content Service Assessment",color:"ph-c6",range:"25–28",steps:[25,26,27,28],
+  desc:"Assess financial exposure: check uninvoiced charges, retrieve MCS subscriber data, mark MCS subscriptions as used, and run credit obligation checks via INTX. The INTX credit check is skipped for e-wallet, USSD, 711POS, and future channels, and when a credit waiver is active.",
+  systems:["BL Billing","MLDD","MCS","INTX"]},
+ {n:7,name:"Special Feature & MultiSIM Detection",color:"ph-c7",range:"29–34",steps:[29,30,31,32,33,34],
+  desc:"Identify switch-feature offers, set MultiSIM eligibility flags (TR_MULTISIM_IND=RES for new reservation, REE for existing enrollment), retrieve SIM relationship data, search for conflicting future orders, and run business validation. These flags gate the entire MultiSIM provisioning phase (Steps 38–46).",
+  systems:["AA","OMX Internal","INTX"]},
+ {n:8,name:"Pre-Provisioning Calculations",color:"ph-c8",range:"35–37",steps:[35,36,37],
+  desc:"Schedule related companion future offers, calculate full-bill-cycle discounts for proration, and notify the credit evaluation system (CVSS) of new subscriber service additions. These steps prepare financial adjustments before actual provisioning begins.",
+  systems:["OMX Internal","CVSS"]},
+ {n:9,name:"MultiSIM & Switch Feature Provisioning",color:"ph-c9",range:"38–46",steps:[38,39,40,41,42,43,44,45,46],
+  desc:"Reserve and activate minor SIM resources in ASRM, populate MultiSIM context into the order, obtain service transaction numbers, and call AA to provision MultiSIM (ADD or UPDATE) and standard SwitchFeature services. The two-phase reserve→activate pattern ensures idempotent SIM resource allocation.",
+  systems:["ASRM","OMX Internal","AA"]},
+ {n:10,name:"Credit Limit Management",color:"ph-c10",range:"47–49",steps:[47,48,49],
+  desc:"Calculate and apply credit limit adjustments for corporate postpaid customers (CustomerType=73) who are adding international roaming or TPC services. Skipped when a credit waiver is active or the subscriber is not corporate type.",
+  systems:["OMX Internal","CCBS"]},
+ {n:11,name:"SBM Data Pack Management",color:"ph-c11",range:"50–57",steps:[50,51,52,53,54,55,56,57],
+  desc:"Provision SBM (Subscription/Bundle Management) data packs: adjust FUP speed caps, buy data packs (ST 86/87), add 3G prepaid bundles (ST 88), schedule future offers, and cancel or expire existing SBM packs. Step 57 (UPDATE_NETWORK_STATUS) rule file is missing.",
+  systems:["SBM","OMX Internal","CCBS"]},
+ {n:12,name:"Billing Charges",color:"ph-c12",range:"58",steps:[58],
+  desc:"Create one-time billing charge records in the BL billing system for service type 79 (manual/one-time fee) offers. Generates the billing record that will appear on the subscriber's next invoice.",
+  systems:["BL Billing"]},
+ {n:13,name:"CCBS Package Provisioning",color:"ph-c13",range:"59–63",steps:[59,60,61,62,63],
+  desc:"Core CCBS package changes: remove old packages (FE_REMOVE and Loyalty SOC), add new packages (ADD), and register content subscriptions with MCS (recurring ST=69 and TPC one-time ST=85/69). These are the primary activation calls for most offer service types.",
+  systems:["CCBS","MCS"]},
+ {n:14,name:"Knox Enterprise Device Management",color:"ph-c14",range:"64–70",steps:[64,65,66,67,68,69,70],
+  desc:"Register and activate devices in Samsung Knox MDM for enterprise BSNS orders and consumer FE/BRMS offers that include a Knox IMEI. Publishes ADD and NOTIFY events to Kafka. Knox steps fire only when IMEI_KNOX is populated on the offer.",
+  systems:["PSA","Knox MDM","Kafka"]},
+ {n:15,name:"Supplementary & Ancillary Actions",color:"ph-c15",range:"71–79",steps:[71,72,73,74,75,76,77,78,79],
+  desc:"Handle specialized add-ons: TDG IoT subscriber creation (ST=70), next-offer pre-booking, installment sale contracts (CT_INST), subscriber/account info updates (IMSI alias, address), SBM memos, and cleanup of conflicting future offers. Step 77 rule file is missing.",
+  systems:["TDG","OMX Internal","BDH","CCBS"]},
+ {n:16,name:"Order Completion & Notification",color:"ph-c16",range:"80–84",steps:[80,81,82,83,84],
+  desc:"Finalize the order: verify service activation confirmation (AA), send customer SMS, trigger CBSC opt-in/out via API Gateway, and submit loyalty benefit and IR removal child orders to OMX. Steps 83–84 use the OMX child order mechanism (not ESB) and fan out per subscriber.",
+  systems:["AA","SMS Gateway","APIGW","OMX Child Order"]}
+];
+
+/* ============================================================
+   STEP DEFINITIONS
+   Each: [num, bname, extId_short, fmId, sysLabel, sysCls,
+          purpose, whenHuman, xpath, params, status, docFile]
+   status: gen|reuse|nf|skip
+   ============================================================ */
+const STEPS=[
+[1,"Order Sequencing Check","IOM_CHECK_SEQUENCING","IOM_CHECK_SEQUENCING","OMX Internal","omx",
+ "Holds the order in a sequencing queue to prevent parallel processing conflicts when the same subscriber has multiple orders in flight through the POMX_ETG or Apple channel.",
+ "Only for POMX_ETG (eTG portal) or Apple channel orders",
+ '/ns0:OrderRequest/OrderData/Channel/text()="POMX_ETG" or\n/ns0:OrderRequest/OrderData/Channel/text()="APPLE"',
+ "—","gen","Request_IOM_CHECK_SEQUENCING.html"],
+
+[2,"Load Subscriber Base Record","CCBS_GET_SUBSCRIBER_HEADER","CCBS_GET_SUBSCRIBER_HEADER","CCBS","ccbs",
+ "Retrieves the subscriber's core identification data from CCBS, establishing the subscriber context required by all subsequent steps that reference subscriber information.",
+ "Executed when a SubscriberId is present in the order (skipped for account-only orders)",
+ "exists(//Subscriber/SubscriberId)",
+ "—","gen","Request_CCBS_GET_SUBSCRIBER_HEADER.html"],
+
+[3,"Resolve Customer & Account ID Hierarchy","CCBS_GET_CUST_ACC_SUB_ID","CCBS_GET_CUST_ACC_SUB_ID","CCBS","ccbs",
+ "Retrieves the linked customer, account, and subscriber IDs, establishing the complete account hierarchy. This mapping is required for downstream calls that must reference the customer or account independently of the subscriber.",
+ "Always executed (no condition)",
+ "","—","gen","Request_CCBS_GET_CUST_ACC_SUB_ID.html"],
+
+[4,"Fetch Customer Profile & Address","CCBS_GET_CUSTOMER_HEADER","CCBS_GET_CUSTOMER_HEADER","CCBS","ccbs",
+ "Retrieves customer name and address details (GET_NAME_ADDRESS=Y). Required for billing correspondence, KYC verification, and address-based eligibility checks.",
+ "Always executed (no condition)",
+ "","GET_NAME_ADDRESS=Y","gen","Request_CCBS_GET_CUSTOMER_HEADER.html"],
+
+[5,"General Blacklist Screening","BLACKLIST_CHECK_BLACKLIST","BLACKLIST_CHECK_BLACKLIST","Blacklist","blacklist",
+ "Checks whether the customer appears on the general blacklist. Blocks service activation for known non-paying or banned customers before any provisioning begins.",
+ "Skipped for government/special accounts (CustomerType=70), COVID-19 relief orders, and Student channel",
+ '/ns0:OrderRequest/OrderData/Customer/CustomerTypeInfo/Type/text()!="70"\nand not(starts-with(/ns0:OrderRequest/OrderData/OrderID,"COVID19"))\nand /ns0:OrderRequest/OrderData/Channel/text()!="STUDENT"',
+ "—","gen","Request_BLACKLIST_CHECK_BLACKLIST.html"],
+
+[6,"Collections Blacklist Check","BLACKLIST_CHECK_COLL_BY_ID_NUM","BLACKLIST_CHECK_COLL_BY_ID_NUM","Blacklist","blacklist",
+ "Verifies the customer is not listed in the collections system by ID number. Prevents new service additions for customers with outstanding debt referred to collections.",
+ "Skipped for government/special accounts (CustomerType=70), COVID-19 relief orders, and Student channel",
+ '/ns0:OrderRequest/OrderData/Customer/CustomerTypeInfo/Type/text()!="70"\nand not(starts-with(/ns0:OrderRequest/OrderData/OrderID,"COVID19"))\nand /ns0:OrderRequest/OrderData/Channel/text()!="STUDENT"',
+ "—","gen","Request_BLACKLIST_CHECK_COLL_BY_ID_NUM.html"],
+
+[7,"Fraud Screening","BLACKLIST_CHECK_FRAUD","BLACKLIST_CHECK_FRAUD","Blacklist","blacklist",
+ "Screens the customer and order against the fraud detection list. Halts processing for orders flagged as potentially fraudulent by the fraud management system.",
+ "Skipped for government/special accounts (CustomerType=70), COVID-19 relief orders, and Student channel",
+ '/ns0:OrderRequest/OrderData/Customer/CustomerTypeInfo/Type/text()!="70"\nand not(starts-with(/ns0:OrderRequest/OrderData/OrderID,"COVID19"))\nand /ns0:OrderRequest/OrderData/Channel/text()!="STUDENT"',
+ "—","gen","Request_BLACKLIST_CHECK_FRAUD.html"],
+
+[8,"Fetch Account Information","CCBS_GET_ACCOUNT_HEADER","CCBS_GET_ACCOUNT_HEADER","CCBS","ccbs",
+ "Retrieves account-level data including billing settings and account status. Provides context for downstream credit and billing decisions.",
+ "Always executed (no condition)",
+ "","—","gen","Request_CCBS_GET_ACCOUNT_HEADER.html"],
+
+[9,"Fetch Billing Account Details","CCBS_GET_BA_HEADER","CCBS_GET_BA_HEADER","CCBS","ccbs",
+ "Retrieves the billing account header including name and address (GET_NAME_ADDRESS=Y). Used for invoice generation and correspondence.",
+ "Always executed (no condition)",
+ "","GET_NAME_ADDRESS=Y","gen","Request_CCBS_GET_BA_HEADER.html"],
+
+[10,"Fetch Service Agreement","CCBS_GET_AGREEMENT_HEADER","CCBS_GET_AGREEMENT_HEADER","CCBS","ccbs",
+ "Retrieves the subscriber's service agreement details. Provides contractual context required for offer eligibility assessment and provisioning.",
+ "Always executed (no condition)",
+ "","—","gen","Request_CCBS_GET_AGREEMENT_HEADER.html"],
+
+[11,"Retrieve Full Subscriber Service Data","CCBS_GET_SUBS_INFO","CCBS_GET_SUBS_INFO","CCBS","ccbs",
+ "Fetches comprehensive subscriber data: current active services, packages, SIM details, extended info (TR_SPECIAL_OFFER_IND, FE_OR_CCBS flags, IMEI_KNOX, etc.). This is the primary data source for offer resolution and provisioning in all downstream steps.",
+ "Skipped if subscriber is in process of disconnection (Status 84), pending disconnection (Status 67), or suspended (Status 76)",
+ "boolean(//Subscriber[Status !=67 and Status !=76 and Status !=84])",
+ "—","gen","Request_CCBS_GET_SUBS_INFO.html"],
+
+[12,"Retrieve Knox Device Preferences","INTX_GET_ACCOUNT_CUSTOMER_PREFERENCE_LIST","INTX_GET_ACCOUNT_CUSTOMER_PREFERENCE_LIST","INTX","intx",
+ "Fetches Knox MDM enrollment preferences for enterprise BSNS channel orders where a Knox IMEI is already registered in CCBS. Used to determine Knox device management requirements.",
+ "Only for enterprise (BSNS) channel orders where the subscriber already has a Knox IMEI in CCBS",
+ 'starts-with(/ns0:OrderRequest/OrderData/OrderID,"BSNS")\nand boolean(//Subscriber/SubscriberOffers[\n  ExtendedInfo[Name=\'FE_OR_CCBS\' and Value=\'CCBS\']\n  and ExtendedInfo[Name=\'IMEI_KNOX\' and Value!=\'\']])',
+ "—","gen","Request_INTX_GET_ACCOUNT_CUSTOMER_PREFERENCE_LIST.html"],
+
+[13,"Resolve Missing Offer SOC Codes","CCBS_RESOLVE_SOC_CODE","CCBS_RESOLVE_SOC_CODE","CCBS","ccbs",
+ "Looks up CCBS Service Offer Codes (SOC) for offers in the order that are missing SOC values. SOC codes are mandatory for CCBS package provisioning and must be resolved before GOD calls.",
+ "Only when one or more subscriber offers are missing their SOC code",
+ "boolean(//SubscriberOffers[not(Soc/text())])",
+ "—","reuse","Request_CCBS_RESOLVE_SOC_CODE.html"],
+
+[14,"Retrieve FE/BRMS Offer Details (CCBS GOD)","CCBS_GOD","CCBS_GOD","CCBS","ccbs",
+ "Calls the CCBS 'Get Offer Details' (GOD) API to enrich Front-End and BRMS offers with full service definitions: service type, pricing flags, SocProperties, provisioning attributes.",
+ "When the order contains FE (Front-End) or BRMS sourced offers",
+ "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]])",
+ "—","reuse","Request_CCBS_GOD.html"],
+
+[15,"BRMS Offer Eligibility Evaluation","OMX_BRMS_DB","OMX_BRMS_DB","OMX / BRMS","omx",
+ "Invokes the Business Rules Management System (BRMS) to evaluate eligibility and add BRMS-sourced offers to the order. Returns additional eligible offers based on customer profile, contract, and business rules not expressed in FE catalogue.",
+ "When FE offers are present; skipped for COVID-19 orders, enterprise (BSNS) orders, and Student channel",
+ "boolean(//Subscriber/SubscriberOffers[1]\n  and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']])\nand not(starts-with(OrderID,\"COVID19\"))\nand not(starts-with(OrderID,\"BSNS\"))\nand Channel!=\"STUDENT\"",
+ "—","gen","Request_OMX_BRMS_DB.html"],
+
+[16,"Resolve BRMS Offer SOC Codes","CCBS_RESOLVE_SOC_CODE_BRMS","CCBS_RESOLVE_SOC_CODE","CCBS","ccbs",
+ "Resolves SOC codes specifically for BRMS-sourced offers added by Step 15. This is the same FM as Step 13, executed again in the BRMS offer context.",
+ "When BRMS offers exist in the order; skipped for COVID-19 orders and Student channel",
+ "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS']])\nand not(COVID19) and Channel!=\"STUDENT\"",
+ "—","reuse","Request_CCBS_RESOLVE_SOC_CODE.html"],
+
+[17,"Retrieve BRMS Offer Details (CCBS GOD)","CCBS_GOD_BRMS","CCBS_GOD","CCBS","ccbs",
+ "Enriches BRMS offers with full CCBS service details after their SOC codes are resolved (Step 16). Completes the data needed for BRMS offer provisioning.",
+ "When BRMS offers exist; skipped for COVID-19 orders and Student channel",
+ "boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS']])\nand not(COVID19) and Channel!=\"STUDENT\"",
+ "—","reuse","Request_CCBS_GOD.html"],
+
+[18,"Resolve Extended SOC & Provisioning Attributes","OMX_RESOLVE_SOC_DATA","OMX_RESOLVE_SOC_DATA","OMX Internal","omx",
+ "Retrieves extended provisioning attributes for all resolved SOC codes: SBM_PROVISIONING flags, FUP indicators, special offer types. These attributes control which SBM/AA provisioning steps fire for each offer.",
+ "Always executed except for COVID-19 relief orders",
+ 'not(starts-with(/ns0:OrderRequest/OrderData/OrderID,"COVID19"))',
+ "—","gen","Request_OMX_RESOLVE_SOC_DATA.html"],
+
+[19,"Retrieve MCS TPC Charge Information","MCS_GET_CHARGE_INFO","MCS_GET_CHARGE_INFO","MCS","mcs",
+ "Fetches charge and tariff information from MCS for TPC (True Partner Content) offers with service type 85 or 69. Required to determine correct one-time or recurring charge amounts before billing charge creation.",
+ "Only for TPC-branded offers with service type 85 or 69 that are not flagged as recurring (RECURRING_SOC)",
+ "boolean(//SubscriberOffers[(ServiceType='85' or ServiceType='69')\n  and ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']\n  and contains(SocProperties,'TR_SPECIAL_OFFER_IND=TPC')\n  and not RECURRING_SOC=Y])",
+ "—","gen","Request_MCS_GET_CHARGE_INFO.html"],
+
+[20,"Retrieve Existing Future Order Information","OMX_GET_FUT_INFO_BY_SUB","OMX_GET_FUT_INFO_BY_SUB","OMX Internal","omx",
+ "Fetches any future-dated orders currently pending for this subscriber. Used to detect scheduling conflicts and manage the interaction between the new offer and already-queued future orders.",
+ "Always executed except for COVID-19 relief orders",
+ 'not(starts-with(/ns0:OrderRequest/OrderData/OrderID,"COVID19"))',
+ "—","gen","Request_OMX_GET_FUT_INFO_BY_SUB.html"],
+
+[21,"Calculate Future Offer Effective Dates","OMX_CAL_OFFER_FUT_DATE","OMX_CAL_OFFER_FUT_DATE","OMX Internal","omx",
+ "Computes the correct effective start date for future-dated (EFF_TYPE=FUT) offers, accounting for billing cycle boundaries and expiry parameters (CAL_PARAM_EXP=Y). Required before scheduling future offer records.",
+ "Only when future-dated FE or BRMS offers exist in the order; skipped for COVID-19 orders",
+ "boolean(//SubscriberOffers[\n  ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]\n  and ExtendedInfo[Name='EFF_TYPE' and Value='FUT']])\nand not(COVID19)",
+ "CAL_PARAM_EXP=Y","gen","Request_OMX_CAL_OFFER_FUT_DATE.html"],
+
+[22,"Apply Offer Inclusion Business Rules","OMX_OFFER_INCLUSION","OMX_OFFER_INCLUSION","OMX Internal","unknown",
+ "Evaluates offer inclusion rules — ensures required companion offers, bundles, or promotional packs are included with the primary offer where business rules mandate it. ⚠ Rule file not found in codebase.",
+ "For non-EOC channel orders with immediate or logical-date provisions; skipped for COVID-19 and Student channel",
+ 'Channel!="EOC"\nand (immediate or LOGICALDATE_PROV offers exist)\nand not(COVID19) and Channel!="STUDENT"',
+ "—","nf",""],
+
+[23,"Apply Offer Exclusion Rules","CCBS_OFFER_EXCLUSION","CCBS_OFFER_EXCLUSION","CCBS","ccbs",
+ "Evaluates CCBS exclusion rules and removes conflicting or ineligible offers from the order. Ensures mutually exclusive services are not provisioned together (e.g., cannot have two competing data packs).",
+ "For orders with immediate or logical-date provision effective type; skipped for COVID-19 orders and Student channel",
+ "(immediate or LOGICALDATE_PROV offers exist)\nand not(COVID19) and Channel!=\"STUDENT\"",
+ "—","gen","Request_CCBS_OFFER_EXCLUSION.html"],
+
+[24,"Retrieve Offer Pricing Rates","OMX_GET_OFFER_RATE","OMX_GET_OFFER_RATE","OMX Internal","omx",
+ "Fetches current pricing rates for FE and BRMS offers with service type 85 (add-on pack) or 68. Rate data is used for billing charge creation and credit obligation checks.",
+ "Only for FE/BRMS offers with service type 85 or 68; skipped for COVID-19 orders and Student channel",
+ "boolean(//SubscriberOffers[\n  ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]\n  and (ServiceType='85' or ServiceType='68')])\nand not(COVID19) and Channel!=\"STUDENT\"",
+ "—","gen","Request_OMX_GET_OFFER_RATE.html"],
+
+[25,"Check Existing Uninvoiced Charges","BL_LIST_UNINVOICED_CHARGES","BL_LIST_UNINVOICED_CHARGES","BL Billing","bl",
+ "Queries the billing system for any uninvoiced charges on the account for service types 85, 86, 87. Prevents double-billing when a subscriber already has charges pending for the same service.",
+ "When FE/BRMS offers with service type 85, 86, or 87 have a non-zero price, and offer is for immediate or logical-date execution",
+ "boolean(//SubscriberOffers[\n  ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]\n  and (ServiceType='85' or '86' or '87') and OfferRate > 0])\nand (immediate or LOGICALDATE_PROV)",
+ "—","gen","Request_BL_LIST_UNINVOICED_CHARGES.html"],
+
+[26,"Retrieve MCS Subscriber Profile Data","MLDD_GET_SUB_DATA","MLDD_GET_SUB_DATA","MLDD","mldd",
+ "Fetches MCS subscriber data (pack code, flow ID) from the MLDD system. Required to resolve MCS subscription details and flow parameters for content subscription management.",
+ "Only when the order contains MCS_PACKCODE and FLOW_ID in extended info",
+ "exists(//SubscriberOffers[ExtendedInfo[Name='MCS_PACKCODE']])\nand exists(//SubscriberOffers[ExtendedInfo[Name='FLOW_ID']])",
+ "—","gen","Request_MLDD_GET_SUB_DATA.html"],
+
+[27,"Mark MCS Subscription Slot as Used","MCS_SUBSCRIPTION_MARKUSED","MCS_SUBSCRIPTION_MARKUSED","MCS","mcs",
+ "Marks the MCS subscription record as 'used' in the designated flow (DEFAULT_FLOW_ID=FVM003). Prevents double-allocation of the same MCS subscription slot across concurrent orders.",
+ "Only for FE or BRMS offers with MCS service type 69 (content subscription)",
+ "boolean(//SubscriberOffers[\n  ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]\n  and ServiceType='69'])",
+ "DEFAULT_FLOW_ID=FVM003","gen","Request_MCS_SUBSCRIPTION_MARKUSED.html"],
+
+[28,"Credit Obligation Assessment","INTX_GET_TOTAL_OBLIGATION_INFO","INTX_GET_TOTAL_OBLIGATION_INFO","INTX","intx",
+ "Retrieves the subscriber's total outstanding financial obligation from INTX. A critical credit risk gate — the order may be rejected if the subscriber's obligations exceed allowed credit limits. Not applicable to e-wallet payment or USSD channels.",
+ "Skipped for e-wallet (TMNWEBEWAL/TMNMBAEWAL), USSD714, 711POSCASH, future channels, suspended subscribers, zero-rate offers, credit waiver active, COVID-19 orders, or when skipCheckCreditLimit flag is set",
+ 'Channel not in (TMNWEBEWAL,TMNMBAEWAL,USSD714,711POSCASH,FUT_*)\nand Subscriber Status not in (67,76,84)\nand sum(FE/BRMS OfferRate) > 0\nand CreditLimitWaiverInd != "U"\nand not(COVID19)\nand skipCheckCreditLimit != "Y"',
+ "—","gen","Request_INTX_GET_TOTAL_OBLIGATION_INFO.html"],
+
+[29,"Identify Switch Feature Upgrade Path","AA_GET_SWITCH_FEATURE_OFFER","AA_GET_SWITCH_FEATURE_OFFER","AA","aa",
+ "Queries the AA activation system for switch feature offers associated with this subscription. Switch features handle SIM upgrade and handset service transitions that require network-level changes.",
+ "For orders with immediate or logical-date provisions; skipped for COVID-19 orders and Student channel",
+ "(immediate or LOGICALDATE_PROV offers exist)\nand not(COVID19) and Channel!=\"STUDENT\"",
+ "—","gen","Request_AA_GET_SWITCH_FEATURE_OFFER.html"],
+
+[30,"Detect Special Offer Flags (MultiSIM & Loyalty)","GET_SPECIAL_OFFER_INDICATOR","GET_SPECIAL_OFFER_INDICATOR","OMX Internal","omx",
+ "Adds two critical indicator flags: TR_MULTISIM_IND (RES=new MultiSIM reservation, REE=existing enrolled) and loyalty SOC eligibility. These flags gate the entire MultiSIM provisioning sub-process (Steps 38–46) and loyalty benefit submission (Step 83).",
+ "For orders with immediate or logical-date provisions; skipped for COVID-19 orders and Student channel",
+ "(immediate or LOGICALDATE_PROV offers exist)\nand not(COVID19) and Channel!=\"STUDENT\"",
+ "ADD_PROP=TR_MULTISIM_IND | CHECK_LOYALTY_SOC=Y","gen","Request_GET_SPECIAL_OFFER_INDICATOR.html"],
+
+[31,"Retrieve Minor SIM Details","INTX_GET_SIM_INFO_BY_SIM","INTX_GET_SIM_INFO_BY_SIM","INTX","intx",
+ "Fetches information about the minor SIM (the data-only SIM in a MultiSIM pair) from INTX. Required before reserving the minor SIM resource in ASRM (Step 38).",
+ "Only when TR_MULTISIM_IND=RES (subscriber wants to reserve a new MultiSIM data SIM)",
+ "TR_MULTISIM_IND = 'RES'",
+ "—","gen","Request_INTX_GET_SIM_INFO_BY_SIM.html"],
+
+[32,"Retrieve MultiSIM Master/Minor Relationship","INTX_GET_MASTER_MINOR_SIM_INFO","INTX_GET_MASTER_MINOR_SIM_INFO","INTX","intx",
+ "Fetches the complete master-minor SIM relationship: both the primary (voice) SIM and secondary (data) SIM details. Used for both new enrollment (RES) and existing enrolled (REE) MultiSIM scenarios.",
+ "When TR_MULTISIM_IND is RES (new reservation) or REE (already enrolled)",
+ "TR_MULTISIM_IND = 'RES' or TR_MULTISIM_IND = 'REE'",
+ "—","gen","Request_INTX_GET_MASTER_MINOR_SIM_INFO.html"],
+
+[33,"Search for Conflicting Future Orders","OMX_SEARCH_FUT","OMX_SEARCH_FUT","OMX Internal","omx",
+ "Searches the existing future-order queue (STATUS=1, ORDER_TYPE=12) for the subscriber. Identifies conflicts or duplicates with the current offer to prevent redundant future scheduling.",
+ "When FE/BRMS offers with service type 85, 86, or 87 have a non-zero price",
+ "boolean(//SubscriberOffers[\n  ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]\n  and (ServiceType='85' or '86' or '87') and OfferRate > 0])",
+ "STATUS=1 | ORDER_TYPE=12","gen","Request_OMX_SEARCH_FUT.html"],
+
+[34,"Business Validation Rules","OMX_BIZ_VAL","OMX_BIZ_VAL","OMX Internal","unknown",
+ "Applies configurable business validation rules to the order. ⚠ Rule file not found — may have been refactored into BRMS or is a middleware-level validation not present in this codebase.",
+ "Always executed except for COVID-19 orders and Student channel",
+ "not(COVID19) and Channel!=\"STUDENT\"",
+ "—","nf",""],
+
+[35,"Schedule Related Companion Future Offer","OMX_ADD_FUT_OFFER_RELATED","OMX_ADD_FUT_OFFER","OMX Internal","omx",
+ "Creates a future-dated order entry for related/companion offers (e.g., a complementary service that must activate alongside a primary future offer). Handles the RELATED_OFFER link between primary and secondary offers.",
+ "When FE/BRMS future-dated offers exist that have a RELATED_OFFER reference and are not IR data offers",
+ "FE/BRMS EFF_TYPE=FUT\nand not IR_DATA='Y'\nand RELATED_OFFER present",
+ "—","reuse","Request_OMX_ADD_FUT_OFFER.html"],
+
+[36,"Calculate Full Billing Cycle Discount","OMX_CAL_DISCOUNT_FULL_BILL","OMX_CAL_DISCOUNT_FULL_BILL","OMX Internal","omx",
+ "Computes the discount amount for offers that span a full billing cycle. Used for proration when an offer's effective date falls mid-cycle, ensuring correct charge amounts on the first invoice.",
+ "For future-dated FE/BRMS offers with related offers; skipped for COVID-19 orders and Student channel",
+ "FE/BRMS EFF_TYPE=FUT and not IR_DATA and RELATED_OFFER\nand not(COVID19) and Channel!=\"STUDENT\"",
+ "—","gen","Request_OMX_CAL_DISCOUNT_FULL_BILL.html"],
+
+[37,"Notify Credit System of New Subscriber","CVSS_UPDATE_SUBSCRIBER_COUNT","CVSS_UPDATE_SUBSCRIBER_COUNT","CVSS","cvss",
+ "Notifies the credit evaluation system (CVSS) that a new subscriber service has been added. Updates the account's subscriber count, which factors into credit limit recalculations for the account.",
+ "When EVAL_CREDIT_FLG=Y and the offer is for immediate or logical-date execution",
+ "ExtendedInfo EVAL_CREDIT_FLG='Y'\nand (immediate or LOGICALDATE_PROV offers exist)",
+ "—","gen","Request_CVSS_UPDATE_SUBSCRIBER_COUNT.html"],
+
+[38,"Reserve Minor SIM Resource","ASRM_INVOKE_MINOR_SIM_RESERVE","ASRM_INVOKE_MINOR_SIM","ASRM","asrm",
+ "Reserves the minor SIM slot in the ASRM resource management system (ACTIVITY=RESERVE). Locks the SIM resource for the MultiSIM enrollment, preventing it from being allocated to another concurrent order.",
+ "Only when FE or BRMS offers exist AND TR_MULTISIM_IND=RES (new MultiSIM reservation was detected in Step 30)",
+ "FE/BRMS offers present\nand TR_MULTISIM_IND = 'RES'",
+ "ACTIVITY=RESERVE","reuse","Request_ASRM_INVOKE_MINOR_SIM.html"],
+
+[39,"Copy MultiSIM Info into Order Context","OMX_POPULATE_MSIM_INFO","OMX_POPULATE_MSIM_INFO","OMX Internal","omx",
+ "Copies the reserved minor SIM details (MSISDN, IMSI, SIM serial) into the working order context. This data is referenced by Steps 40–41 for the AA activation call.",
+ "When FE offers are present AND TR_MULTISIM_IND=RES",
+ "FE offers present and TR_MULTISIM_IND = 'RES'",
+ "—","gen","Request_OMX_POPULATE_MSIM_INFO.html"],
+
+[40,"Get Transaction Number for MultiSIM Add","OMX_GET_SRV_TRX_NO_MSIM_ADD","OMX_GET_SRV_TRX_NO_MSIM","OMX Internal","omx",
+ "Requests a service transaction number from OMX for a new MultiSIM enrollment (ADD). The transaction number ensures idempotent processing — AA uses it to detect and ignore duplicate activation requests.",
+ "When minor SIM source is FE, provisioning is allowed, and offer is for immediate or logical-date execution",
+ "Minor SIM Source=FE\nand SBM_PROVISIONING allowed\nand (immediate or LOGICALDATE_PROV)",
+ "CCD","reuse","Request_OMX_GET_SRV_TRX_NO_MSIM.html"],
+
+[41,"Activate MultiSIM Service (New Enrollment)","AA_ACTIVATE_SUBS_MSIM_ADD","AA_ACTIVATE_SUBS_MSIM","AA","aa",
+ "Sends the MultiSIM service activation request (ADD) to the AA activation system. Creates the master-minor SIM relationship at the network level, enabling the subscriber to use both voice and data SIMs simultaneously.",
+ "Same as Step 40 — minor SIM source is FE, provisioning is allowed, immediate or logical-date execution",
+ "Minor SIM Source=FE\nand SBM_PROVISIONING allowed\nand (immediate or LOGICALDATE_PROV)",
+ "CCD | ADD","reuse","Request_AA_ACTIVATE_SUBS_MSIM.html"],
+
+[42,"Get Transaction Number for MultiSIM Update","OMX_GET_SRV_TRX_NO_MSIM_UPDATE","OMX_GET_SRV_TRX_NO_MSIM","OMX Internal","omx",
+ "Requests a transaction number for updating an existing MultiSIM association (e.g., changing the minor SIM or data plan). Used for MultiSIM modification scenarios where a previous minor SIM exists.",
+ "When a previous MultiSIM exists (PREV_MSIM), no RES/RCM conflict, provisioning is OK, and SwitchFeature offer is present",
+ "PREV_MSIM present\nand not(RES or RCM conflict)\nand SBM_PROVISIONING allowed\nand SwitchFeature offer present",
+ "CCD","reuse","Request_OMX_GET_SRV_TRX_NO_MSIM.html"],
+
+[43,"Activate MultiSIM Service (Update)","AA_ACTIVATE_SUBS_MSIM_UPDATE","AA_ACTIVATE_SUBS_MSIM","AA","aa",
+ "Sends the MultiSIM service UPDATE request to AA, modifying an existing master-minor SIM relationship. Used when a subscriber changes their MultiSIM data plan or minor SIM assignment.",
+ "Same as Step 42 — existing MultiSIM update scenario",
+ "PREV_MSIM present\nand SBM_PROVISIONING allowed\nand SwitchFeature offer present",
+ "CCD | UPDATE","reuse","Request_AA_ACTIVATE_SUBS_MSIM.html"],
+
+[44,"Get Service Transaction Number (Standard)","OMX_GET_SRV_TRX_NO","OMX_GET_SRV_TRX_NO","OMX Internal","omx",
+ "Obtains a service transaction number for standard (non-MultiSIM) service activation where a SwitchFeature offer is present. Ensures idempotent processing in AA for handset service upgrades and SIM switches.",
+ "When not a MultiSIM minor SIM (FE source), not a previous MSIM update, provisioning is OK, and SwitchFeature offer present",
+ "not(Minor FE) and not(PREV_MSIM)\nand SBM_PROVISIONING allowed\nand SwitchFeature offer present",
+ "CCD","gen","Request_OMX_GET_SRV_TRX_NO.html"],
+
+[45,"Activate Subscriber Service (Standard SwitchFeature)","AA_ACTIVATE_SUBS","AA_ACTIVATE_SUBS","AA","aa",
+ "Sends the standard service activation request to AA for SwitchFeature offers. Core provisioning call for handset service upgrades and SIM switches not involving MultiSIM.",
+ "Same as Step 44 — non-MultiSIM provisioning with SwitchFeature present",
+ "not(Minor FE) and not(PREV_MSIM)\nand SBM_PROVISIONING allowed\nand SwitchFeature offer present",
+ "CCD","gen","Request_AA_ACTIVATE_SUBS.html"],
+
+[46,"Activate Minor SIM Resource in ASRM","ASRM_INVOKE_MINOR_SIM_ACTIVATE","ASRM_INVOKE_MINOR_SIM","ASRM","asrm",
+ "Finalizes the minor SIM activation in ASRM (ACTIVITY=ACTIVATE) after AA has created the MultiSIM link. Completes the two-phase reserve→activate lifecycle ensuring the SIM resource is fully committed.",
+ "When FE or BRMS offers exist AND TR_MULTISIM_IND=RES (the same condition that triggered Step 38)",
+ "FE/BRMS offers present\nand TR_MULTISIM_IND = 'RES'",
+ "ACTIVITY=ACTIVATE","reuse","Request_ASRM_INVOKE_MINOR_SIM.html"],
+
+[47,"Calculate IR Credit Limit Adjustment","OMX_CAL_CREDIT_LIMIT_FOR_IR","OMX_CAL_CREDIT_LIMIT_FOR_IR","OMX Internal","omx",
+ "Calculates the credit limit increase required to accommodate international roaming (IR) service charges. The calculation considers the subscriber's current limit and the expected exposure from IR usage, applicable only to corporate postpaid accounts.",
+ "For corporate postpaid customers (CustomerType=73) when CAL_CR_FLG=Y, no credit waiver is active, and offer is for immediate execution",
+ "ExtendedInfo CAL_CR_FLG='Y'\nand CustomerType = 73\nand CreditLimitWaiverInd != 'U'\nand (immediate or LOGICALDATE_PROV)",
+ "—","gen","Request_OMX_CAL_CREDIT_LIMIT_FOR_IR.html"],
+
+[48,"Apply Credit Limit Change to Account","CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO","CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO","CCBS","ccbs",
+ "Updates the subscriber's credit limit in CCBS based on the calculation from Step 47. Ensures the account can financially accommodate the new services being activated.",
+ "When CAL_CR_FLG=Y, IS_CHANGE_CREDIT_LIMIT=Y, corporate customer type, and calculated PersonalCreditLimit > 0",
+ "CAL_CR_FLG='Y' and IS_CHANGE_CREDIT_LIMIT='Y'\nand CustomerType=73 and PersonalCreditLimit > 0",
+ "—","reuse","Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO.html"],
+
+[49,"Apply TPC Credit Limit Adjustment","CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO_TPC","CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO","CCBS","ccbs",
+ "Applies a separate credit limit adjustment specifically for TPC (True Partner Content) SOC offers, using reason code G165. Handles TPC credit exposure independently from the IR credit limit flow.",
+ "For corporate customers (CustomerType=73) with a TPC SOC offer that is not a recurring subscription, and PersonalCreditLimit > 0",
+ "CustomerType=73 and PersonalCreditLimit > 0\nand CreditLimitWaiverInd != 'U'\nand TPC SOC present\nand not RECURRING_SOC",
+ "CAL_CREDITLIMIT=Y | reasonCode=G165","reuse","Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO.html"],
+
+[50,"Adjust Data Speed Cap Maximum","SBM_FUP_CHANGE_CAP_MAX","SBM_FUP_CHANGE_CAP_MAX","SBM","sbm",
+ "Increases the Fair Usage Policy (FUP) data speed cap maximum in SBM for FCA (Fair Cap Add) special offers. Applied when the subscriber's bundle includes a speed cap upgrade component.",
+ "When FE or BRMS offers have SPECIAL_OFFER_INDICATOR=FCA and are for immediate or logical-date execution",
+ "FE/BRMS SPECIAL_OFFER_INDICATOR = 'FCA'\nand (immediate or LOGICALDATE_PROV)",
+ "ADD","gen","Request_SBM_FUP_CHANGE_CAP_MAX.html"],
+
+[51,"Activate SBM Data Pack","SBM_BUY_DATA_PACK","SBM_BUY_DATA_PACK","SBM","sbm",
+ "Provisions a data pack through SBM for service types 86 (data add-on) and 87 (SBM-managed data services). Primary SBM call for immediate data add-on activation.",
+ "When SBM_PROVISIONING is allowed and FE or BRMS offers with service type 86 or 87 exist",
+ "SBM_PROVISIONING allowed\nand FE/BRMS (ServiceType='86' or '87')",
+ "—","gen","Request_SBM_BUY_DATA_PACK.html"],
+
+[52,"Add 3G Prepaid Bundle via SBM","SBM_ADD_3GPREPAID","SBM_ADD_3GPREPAID","SBM","sbm",
+ "Adds a 3G prepaid data bundle (service type 88) through SBM. Used for hybrid prepaid/postpaid bundle offers where the data component is managed as a prepaid allocation.",
+ "When FE or BRMS offers with service type 88 (3G prepaid) exist",
+ "FE/BRMS ServiceType = '88'",
+ "—","gen","Request_SBM_ADD_3GPREPAID.html"],
+
+[53,"Schedule Standalone Future Offer","OMX_ADD_FUT_OFFER","OMX_ADD_FUT_OFFER","OMX Internal","omx",
+ "Creates a future-dated order entry for FE/BRMS offers without a companion related offer (contrast with Step 35 which handles offers WITH a related offer). The offer will be activated on the date calculated in Step 21.",
+ "When FE or BRMS future-dated offers exist WITHOUT a RELATED_OFFER reference",
+ "FE/BRMS EFF_TYPE='FUT'\nand not RELATED_OFFER",
+ "—","reuse","Request_OMX_ADD_FUT_OFFER.html"],
+
+[54,"Resolve SOC Code for SBM Pack Cancellation","CCBS_RESOLVE_SOC_CODE_SBM_CANCEL","CCBS_RESOLVE_SOC_CODE","CCBS","ccbs",
+ "Looks up the SOC code for existing SBM offers that need immediate cancellation (EXP_TYPE=IM) but are missing their SOC. Required before CCBS can process the package removal in Step 55.",
+ "When an SBM offer is missing its SOC code and flagged for immediate expiry (EXP_TYPE=IM)",
+ "no Soc text on SBM offer\nand SBM EXP_TYPE = 'IM'",
+ "—","reuse","Request_CCBS_RESOLVE_SOC_CODE.html"],
+
+[55,"Cancel SBM Pack (Immediate)","SBM_CANCEL_PACK","CCBS_CHANGE_PACKAGE_SUBSCRIBER","CCBS","ccbs",
+ "Removes an existing SBM data pack from CCBS via package change (REMOVE) when it needs immediate cancellation. Used when replacing an existing SBM pack with the new offer being added.",
+ "When SBM offers are flagged for immediate expiry (EXP_TYPE=IM)",
+ "SBM EXP_TYPE = 'IM'",
+ "REMOVE","reuse","Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html"],
+
+[56,"Schedule SBM Pack for Future Expiry","SBM_EXPIRE_PACK","OMX_ADD_FUT_OFFER","OMX Internal","omx",
+ "Creates a future-dated order to expire the current SBM pack at the next billing cycle boundary (EXP_TYPE=FUT). Used when transitioning from one SBM pack to another on a future date rather than immediately.",
+ "When SBM offers are flagged for future-dated expiry (EXP_TYPE=FUT)",
+ "SBM EXP_TYPE = 'FUT'",
+ "—","reuse","Request_OMX_ADD_FUT_OFFER.html"],
+
+[57,"Update Network Status Post-SBM","UPDATE_NETWORK_STATUS","UPDATE_NETWORK_STATUS","Unknown","unknown",
+ "Updates the network-level provisioning status after SBM data pack provisioning. ⚠ Rule file not found — this may be handled by SBM internally or by network middleware not present in this codebase.",
+ "When SBM_PROVISIONING is allowed and FE or BRMS offers with service type 86 or 87 exist",
+ "SBM_PROVISIONING allowed\nand FE/BRMS (ServiceType='86' or '87')",
+ "—","nf",""],
+
+[58,"Create One-Time Billing Charge","BL_CREATE_CHARGE","BL_CREATE_CHARGE","BL Billing","bl",
+ "Creates a one-time charge entry in the BL billing system for service type 79 (manual/one-time fee) offers. Generates the billing record that will appear on the subscriber's next invoice.",
+ "When FE or BRMS offers with service type 79 (one-time charge) exist and are for immediate or logical-date execution",
+ "FE/BRMS ServiceType='79'\nand (immediate or LOGICALDATE_PROV)",
+ "—","gen","Request_BL_CREATE_CHARGE.html"],
+
+[59,"Remove Old Package from Subscriber","CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE","CCBS_CHANGE_PACKAGE_SUBSCRIBER","CCBS","ccbs",
+ "Removes the subscriber's existing package(s) from CCBS for FE_REMOVE type offers. Typically the old package being replaced by the new offer. Handles service types 85, 86, 87, and 68.",
+ "For FE_REMOVE offers with service type 85/86/87/68, not effective-order-date, and not logical-date provisioning",
+ "FE_REMOVE offers with ST=85/86/87/68\nand not EFF_ORD_DT\nand not LOGICALDATE_PROV",
+ "REMOVE","reuse","Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html"],
+
+[60,"Remove Old Loyalty SOC Package","CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE_LOYALTY","CCBS_CHANGE_PACKAGE_SUBSCRIBER","CCBS","ccbs",
+ "Removes the subscriber's previous loyalty SOC package from CCBS. Handles the OLD_LOYALTY_SOC scenario where the subscriber is upgrading their loyalty offer and the existing loyalty package must first be removed.",
+ "Only when CCBS OLD_LOYALTY_SOC flag is Y — subscriber has an old loyalty package that must be replaced",
+ "CCBS OLD_LOYALTY_SOC = 'Y'",
+ "REMOVE","reuse","Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html"],
+
+[61,"Add New Package to Subscriber","CCBS_CHANGE_PACKAGE_SUBSCRIBER","CCBS_CHANGE_PACKAGE_SUBSCRIBER","CCBS","ccbs",
+ "Adds the new offer package to the subscriber in CCBS (ADD). This is the primary CCBS provisioning call — activates the new service contract/SOC for service types 85, 86, 87, and 68. Core step of the add-offer process.",
+ "For FE or BRMS offers with service type 85/86/87/68, not effective-order-date, and not logical-date provisioning",
+ "FE/BRMS ST=85/86/87/68\nand not EFF_ORD_DT\nand not LOGICALDATE_PROV",
+ "ADD","reuse","Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html"],
+
+[62,"Register Recurring MCS Subscription","MCS_REGISTER_SUBSCRIPTION","MCS_REGISTER_SUBSCRIPTION","MCS","mcs",
+ "Registers a recurring content subscription in MCS (service type 69) using the front-end recurring flow (USE_FE_RECURRING=Y). Creates the subscription billing record for monthly content service charges.",
+ "For FE or BRMS offers with service type 69 (content subscription) that are not TPC-branded",
+ "FE/BRMS ServiceType='69'\nand not TPC (TR_SPECIAL_OFFER_IND=TPC)",
+ "USE_FE_RECURRING=Y","gen","Request_MCS_REGISTER_SUBSCRIPTION.html"],
+
+[63,"Register TPC Content Service in MCS","MCS_REGISTER","MCS_REGISTER","MCS","mcs",
+ "Registers a TPC (True Partner Content) subscription or one-time service in MCS for service types 85 and 69. Handles the TPC-specific MCS registration flow distinct from standard recurring subscriptions.",
+ "For TPC-branded offers with service type 85 or 69 that are not flagged as recurring",
+ "TPC (TR_SPECIAL_OFFER_IND=TPC)\nand (ServiceType='85' or '69')\nand not RECURRING_SOC='Y'",
+ "—","gen","Request_MCS_REGISTER.html"],
+
+[64,"Fetch Knox Device Information","PSA_GET_DEVICE_INFO","PSA_GET_DEVICE_INFO","PSA","psa",
+ "Fetches the device's current Knox MDM enrollment status and information from PSA (Product & Service Administration). Required before saving or updating Knox-enrolled devices in the next step.",
+ "When any FE, BRMS, or CCBS offer is associated with a Knox IMEI (IMEI_KNOX is populated)",
+ "FE/BRMS/CCBS offers with ExtendedInfo IMEI_KNOX present",
+ "—","gen","Request_PSA_GET_DEVICE_INFO.html"],
+
+[65,"Register Device in Knox MDM","KNOX_SAVE_DEVICE","KNOX_SAVE_DEVICE","Knox MDM","knox",
+ "Registers or updates the device in the Samsung Knox MDM system. Creates the Knox enrollment record that enables enterprise Mobile Device Management (MDM) capabilities for the device.",
+ "When FE or BRMS offers have a Knox IMEI (device needs Knox enrollment)",
+ "FE/BRMS offers with IMEI_KNOX present",
+ "—","gen","Request_KNOX_SAVE_DEVICE.html"],
+
+[66,"Publish Knox Device Add Event to Kafka","OMX_NOTIFY_KNOX_EVENT","OMX_NOTI_TO_KAFKA","Kafka","kafka",
+ "Publishes a Knox 'ADD' event to the Kafka event stream (knoxEvent=ADD). Downstream Knox system consumers and event-driven services are notified that a new device has been enrolled in Knox MDM.",
+ "When FE or BRMS offers have a Knox IMEI",
+ "FE/BRMS offers with IMEI_KNOX present",
+ "knoxEvent=ADD","reuse","Request_OMX_NOTI_TO_KAFKA.html"],
+
+[67,"Activate Knox Device Status","PSA_UPDATE_KNOX_STATUS","PSA_UPDATE_KNOX_STATUS","PSA","psa",
+ "Sets the device's Knox status to ACTIVE in PSA (KNOX_STATUS=ACTIVE), completing the Knox enrollment lifecycle. The device is now fully registered and active in Knox MDM.",
+ "When FE or BRMS offers have a Knox IMEI",
+ "FE/BRMS offers with IMEI_KNOX present",
+ "KNOX_STATUS=ACTIVE","gen","Request_PSA_UPDATE_KNOX_STATUS.html"],
+
+[68,"Send Knox B2B Device Notification","KNOX_NOTIFICATION_DEVICE","KNOX_NOTIFICATION_DEVICE","Knox / BSNS","knox",
+ "Sends a Knox device notification to the enterprise B2B system via TEL channel 1242 for BSNS orders. Notifies the enterprise customer's Knox administrator that a new device has been enrolled and activated.",
+ "For enterprise (BSNS) orders where CCBS has a Knox IMEI enrolled and COLLECTION_IND is not N (device not pending collection)",
+ 'BSNS order\nand CCBS offers with IMEI_KNOX\nand COLLECTION_IND != "N"',
+ "TEL=1242","gen","Request_KNOX_NOTIFICATION_DEVICE.html"],
+
+[69,"Publish Knox Notify Event to Kafka","OMX_NOTIFY_KNOX_EVENT_NOTIFY","OMX_NOTI_TO_KAFKA","Kafka","kafka",
+ "Publishes a Knox 'NOTIFY' event to Kafka (knoxEvent=NOTIFY), signaling downstream consumers that Knox device notification has been completed for this enterprise device.",
+ "Same as Step 68 — enterprise BSNS orders with Knox IMEI and active device (COLLECTION_IND not N)",
+ 'BSNS order and CCBS IMEI_KNOX\nand COLLECTION_IND != "N"',
+ "knoxEvent=NOTIFY","reuse","Request_OMX_NOTI_TO_KAFKA.html"],
+
+[70,"Update Device Status to Active in PSA","PSA_UPDATE_DEVICE","PSA_UPDATE_DEVICE","PSA","psa",
+ "Updates the device's overall status to ACTIVE (deviceStatus=ACTIVE) in PSA for material/device items not associated with FE or CCBS offers. Covers device activations tied to hardware-only or other offer types.",
+ "When the order includes material/device info (MaterialInfo) without an FE_OR_CCBS extended info flag",
+ "MaterialInfo present\nand no FE_OR_CCBS ExtendedInfo flag",
+ "deviceStatus=ACTIVE","gen","Request_PSA_UPDATE_DEVICE.html"],
+
+[71,"Create TDG IoT/Data Subscriber","TDG_CREATE_SUBSCRIBER","TDG_CREATE_SUBSCRIBER","TDG","tdg",
+ "Creates a subscriber record in the TDG (True Digital Group / IoT platform) system for service type 70 (IoT or M2M data service). Registers the subscriber in TDG's platform to enable IoT service lifecycle management.",
+ "When any subscriber offer has service type 70 (IoT / Machine-to-Machine data service)",
+ "SubscriberOffers ServiceType = '70'",
+ "—","gen","Request_TDG_CREATE_SUBSCRIBER.html"],
+
+[72,"Schedule Next-Cycle Offer","OMX_ADD_NEXT_OFFER","OMX_ADD_NEXT_OFFER","OMX Internal","omx",
+ "Creates a 'next offer' record in OMX to pre-schedule the subscriber's next renewal or upgrade offer for the following billing cycle. Used for retention and plan upgrade pre-booking.",
+ "For FE or BRMS offers with service type 85/86/87/68 for immediate execution (not effective-order-date, not logical-date provisioning)",
+ "FE/BRMS ST=85/86/87/68\nand not EFF_ORD_DT and not LOGICALDATE_PROV",
+ "—","skip","Request_OMX_ADD_NEXT_OFFER.html"],
+
+[73,"Register Device Installment Sale","BDH_INSTALLMENT_SALE","BDH_INSTALLMENT_SALE","BDH","bdh",
+ "Creates an installment sale contract in the BDH (billing/hardware finance) system for device financing offers (TR_OFFER_GROUP=CT_INST). Establishes the monthly payment schedule for device purchase agreements.",
+ "When FE offers include related offers with TR_OFFER_GROUP=CT_INST (device installment plan)",
+ "FE SubscriberOffers RelatedOffersArray\n  contains(SocProperties,'TR_OFFER_GROUP=CT_INST')",
+ "—","gen","Request_BDH_INSTALLMENT_SALE.html"],
+
+[74,"Update Subscriber Identity Info (IMSI/SIM)","CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO","CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO","CCBS","ccbs",
+ "Updates the subscriber's general information in CCBS — primarily IMSI alias assignment or SIM split period data. Used when a SIM swap or IMSI re-assignment is part of the offer provisioning.",
+ "When the order includes IMSIAlias records (count > 0) or SplitPeriod data",
+ "count(IMSIAlias) > 0 or count(SplitPeriod) > 0",
+ "—","gen","Request_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO.html"],
+
+[75,"Update Account Billing Address","CCBS_UPDATE_ACCOUNT_NAME_ADDRESS","CCBS_UPDATE_ACCOUNT_NAME_ADDRESS","CCBS","ccbs",
+ "Updates the account's name and address in CCBS when a new payment channel with different billing details is selected. Reflects address changes in PayChannelFeeInfo on the account record.",
+ "When the order includes PayChannelFeeInfo records (count > 0)",
+ "count(PayChannelFeeInfo) > 0",
+ "—","gen","Request_CCBS_UPDATE_ACCOUNT_NAME_ADDRESS.html"],
+
+[76,"Create SBM Transaction Memo in CCBS","CCBS_CREATE_MEMO_FOR_SBM","CCBS_CREATE_MEMO_FOR_SBM","CCBS","ccbs",
+ "Creates an audit memo in CCBS documenting the SBM data pack transaction (MEMO_TYPE_ID=90051, MEMO_SYSTEM_TEXT=082). Provides a human-readable service history note visible to CS agents in CCBS.",
+ "When SBM provisioning is active, FE or BRMS offer is service type 86, and for immediate execution",
+ "SBM_PROVISIONING allowed\nand FE/BRMS ServiceType='86'\nand (immediate or LOGICALDATE_PROV)",
+ "ENTITY_TYPE_ID=6 | MEMO_TEXT_CONCAT=... | MEMO_TYPE_ID=90051 | MEMO_SYSTEM_TEXT=082","gen","Request_CCBS_CREATE_MEMO_FOR_SBM.html"],
+
+[77,"Set Order Status to Creating Profile","STATUS_UPDATE_CREATING_PROFILE","STATUS_UPDATE_CREATING_PROFILE","Unknown","unknown",
+ "Updates the OMX order status to indicate the profile creation phase has begun. ⚠ Rule file not found — this status transition may be handled by OMX middleware outside the TIBCO BE layer.",
+ "For offers with immediate or logical-date provisions; skipped for COVID-19 orders and Student channel",
+ "(immediate or LOGICALDATE_PROV offers exist)\nand not(COVID19) and Channel!=\"STUDENT\"",
+ "—","nf",""],
+
+[78,"Expire Conflicting Future Offer","OMX_EXP_FUT_OFFER","OMX_EXP_FUT_OFFER","OMX Internal","omx",
+ "Expires an existing future-dated order that is superseded by the current offer being activated. Used when the current offer replaces a previously scheduled future offer for the same service.",
+ "For immediate FE/BRMS offers (ServiceType ≠ 69) that have a conflicting future-dated record (EXP_TYPE=FUT); skipped for COVID-19",
+ "FE/BRMS ST!='69'\nand immediate effective\nand EXP_TYPE='FUT'\nand not(COVID19)",
+ "—","skip","Request_OMX_EXP_FUT_OFFER.html"],
+
+[79,"Expire Future Related/Companion Offer","OMX_EXP_FUT_RELATED_OFFER","OMX_EXP_FUT_RELATED_OFFER","OMX Internal","omx",
+ "Expires existing future-dated related/companion offers superseded by the current activation. Ensures no orphaned companion offers remain in the future-order queue after the primary offer is activated.",
+ "When RelatedOffersArray FE/BRMS offers are immediate-effective but have a future expiry type; skipped for COVID-19 and Student channel",
+ "RelatedOffersArray FE/BRMS\nwhere immediate but EXP_TYPE='FUT'\nand not(COVID19) and Channel!=\"STUDENT\"",
+ "—","gen","Request_OMX_EXP_FUT_RELATED_OFFER.html"],
+
+[80,"Verify Service Activation Confirmation","AA_CHECK_CONFIRMATION","AA_CHECK_CONFIRMATION","AA","aa",
+ "Verifies that the AA service activation (Steps 41–45) has been confirmed and any network status update is complete. Acts as a synchronization gate — ensures provisioning is fully confirmed before proceeding to customer notifications.",
+ "When MultiSIMInfo is present, OR provisioning is active AND SwitchFeature offer exists AND offer is for immediate/logical-date execution",
+ "MultiSIMInfo present\nOR (SBM_PROVISIONING allowed\n    AND SwitchFeature offer present\n    AND immediate or LOGICALDATE_PROV)",
+ "CCD | UPDATE_NETWORK_STATUS","skip","Request_AA_CHECK_CONFIRMATION.html"],
+
+[81,"Send SMS Notification to Subscriber","SMSGATEWAY_SEND_SMS","SMSGATEWAY_SEND_SMS","SMS Gateway","sms",
+ "Sends a service confirmation SMS to the subscriber's mobile number. Informs the customer that their new service or offer has been activated. Skipped for internal back-office channels and non-customer-facing orders.",
+ "When subscriber has a MSISDN, and the channel is not CCBS/OMX (excluding service type 68), OR is SFF channel with service type 68 or 85",
+ 'MSISDN present\nand (Channel not in (CCBS,OMX) excluding ST=68)\nor (Channel="SFF" and ST=68 or 85)',
+ "—","gen","Request_SMSGATEWAY_SEND_SMS.html"],
+
+[82,"Trigger CBSC Offer Opt-In via API Gateway","APIGW_OPT_IN_OUT","APIGW_OPT_IN_OUT","APIGW / CBSC","apigw",
+ "Sends an opt-in request (ACTION=1) to the API Gateway for CBSC (Central Bundled Service Center) offers. Registers the subscriber's enrollment with the CBSC third-party system for CBSC-group service offers.",
+ "When FE offers include a CBSC offer group (TR_OFFER_GROUP=CBSC in SocProperties)",
+ "FE SubscriberOffers\nwhere contains(SocProperties,'TR_OFFER_GROUP=CBSC')",
+ "ACTION=1","gen","Request_APIGW_OPT_IN_OUT.html"],
+
+[83,"Submit Loyalty Benefit Child Order","OMX_SUBMIT_POSTPAID_ADD_BENEFIT","OMX_SUBMIT_POSTPAID_ADD_BENEFIT","OMX Child Order","omxc",
+ "Submits a child order to OMX (ORDER_TYPE=11022) to provision loyalty benefit services. Fans out one child order per subscriber (POU and COU). Uses TR_SPECIAL_OFFER_IND=LY filter to select loyalty offers. Response captures childOmxTrackingId.",
+ "When the order includes LOYALTY extended info (subscriber qualifies for loyalty benefit); skipped for COVID-19 orders",
+ 'ExtendedInfo LOYALTY != ""\nand not(COVID19)',
+ "ORDER_TYPE=11022","gen","Request_OMX_SUBMIT_POSTPAID_ADD_BENEFIT.html"],
+
+[84,"Submit IR Add-On Pack Removal Child Order","OMX_SUBMIT_REMOVE_OFFER_IR","OMX_SUBMIT_REMOVE_OFFER","OMX Child Order","omxc",
+ "Submits a child order to OMX to remove an existing IR (International Roaming) add-on pack (ORDER_TYPE=4, SERVICE_TYPE=85). Uses REMOVE_PACK ExtendedInfo filter. ⚠ Known bugs: orderId = 'IR_'+OrderID (not unique per subscriber); logger blocks have wrong OPERATION_NAME.",
+ "When ADD_IR_PACK=Y is set in the order's extended info (subscriber has an existing IR pack requiring removal)",
+ "ExtendedInfo ADD_IR_PACK = 'Y'",
+ "ORDER_TYPE=4 | SERVICE_TYPE=85","gen","Request_OMX_SUBMIT_REMOVE_OFFER.html"]
+];
+
+/* ============================================================
+   HELPERS
+   ============================================================ */
+function stepById(n){return STEPS.find(s=>s[0]===n);}
+function statusBadge(s){
+  const m={gen:["ds-gen","✓ Doc"],reuse:["ds-reuse","↩ Reuse"],nf:["ds-nf","⚠ Not Found"],skip:["ds-skip","— Skipped"]};
+  const [cls,label]=m[s]||["ds-nf","?"];
+  return `<span class="ds ${cls}">${label}</span>`;
+}
+function sysBadge(label,cls){return `<span class="chip c-${cls}">${label}</span>`;}
+function condBox(whenHuman,xpath){
+  if(!whenHuman||whenHuman.startsWith("Always")){
+    return `<div class="cond-always"><span class="cond-label">✓ Always executed</span> <span class="cond-human">${whenHuman||""}</span></div>`;
+  }
+  const xpBlock=xpath?`<details class="xp"><summary>View XPath condition</summary><pre>${xpath}</pre></details>`:"";
+  return `<div class="cond-box"><span class="cond-label">⚡ When active:</span> <span class="cond-human">${whenHuman}</span>${xpBlock}</div>`;
+}
+function docLink(status,docFile,fm){
+  if(status==="nf"||!docFile) return `<span style="color:#e65100;font-size:.75rem">Rule file not found</span>`;
+  return `<a href="../FMlogic/${docFile}" style="font-size:.75rem;color:var(--red)">View FM Documentation →</a>`;
+}
+
+/* ============================================================
+   RENDER §2 PHASE CARDS
+   ============================================================ */
+function renderPhaseGrid(){
+  return PHASES.map(p=>`
+<div class="pc">
+  <div class="pc-head ${p.color}">
+    <span class="pn">${p.n}</span>${p.name}
+  </div>
+  <div class="pc-body">
+    <div>${p.desc.substring(0,110)}${p.desc.length>110?"…":""}</div>
+    <div class="prange">Steps ${p.range} &nbsp;·&nbsp; ${p.steps.length} step${p.steps.length>1?"s":""}</div>
+    <div class="psys">${p.systems.map(s=>`<span style="background:#F0F0F0;color:#555;padding:1px 7px;border-radius:10px;font-size:.68rem;">${s}</span>`).join("")}</div>
+  </div>
+</div>`).join("");
+}
+
+/* ============================================================
+   RENDER §3 JOURNEY BY PHASE
+   ============================================================ */
+function renderJourney(){
+  return PHASES.map(p=>{
+    const stepsHtml=p.steps.map(n=>{
+      const s=stepById(n);
+      if(!s)return "";
+      const [,bname,extId,fm,sys,sysCls,purpose,whenHuman,xpath,params,status,docFile]=s;
+      const cardCls=status==="nf"?"nf":whenHuman&&!whenHuman.startsWith("Always")?"cond":status==="skip"?"skip":"";
+      const numCls=status==="nf"?"nf-num":status==="skip"?"skip-num":"";
+      return `
+<div class="step-card ${cardCls}">
+  <div class="step-head">
+    <div class="snum ${numCls}">${n}</div>
+    <div class="step-title">
+      <div class="bname">${bname}</div>
+      <div class="fmline">
+        <span class="fm-code">${fm}</span>
+        ${sysBadge(sys,sysCls)}
+        ${statusBadge(status)}
+      </div>
+    </div>
+    ${docLink(status,docFile,fm)}
+  </div>
+  <p class="purpose">${purpose}</p>
+  ${condBox(whenHuman,xpath)}
+  ${params&&params!=="—"?`<div class="sparams">Params: <span>${params}</span></div>`:""}
+</div>`;
+    }).join("");
+
+    return `
+<div class="phase-sec">
+  <div class="phase-hdr ${p.color}">
+    <span class="ph-num">Phase ${p.n}</span>
+    ${p.name}
+    <span class="ph-steps">Steps ${p.range}</span>
+  </div>
+  <div class="phase-desc">${p.desc}</div>
+  <div class="steps-list">${stepsHtml}</div>
+</div>`;
+  }).join("");
+}
+
+/* ============================================================
+   RENDER §4 REFERENCE TABLE
+   ============================================================ */
+function renderTable(){
+  return STEPS.map(s=>{
+    const [n,bname,extId,fm,sys,sysCls,purpose,whenHuman,,params,status,docFile]=s;
+    const rowCls=status==="nf"?"tr-nf":status==="skip"?"tr-skip":whenHuman&&!whenHuman.startsWith("Always")?"tr-cond":"";
+    const fmCell=docFile?`<a href="../FMlogic/${docFile}">${fm}</a>`:fm;
+    return `<tr class="${rowCls}"><td style="text-align:center;font-weight:700">${n}</td>
+<td><code style="font-size:.73rem">${extId}</code></td>
+<td>${fmCell}</td>
+<td>${sysBadge(sys,sysCls)}</td>
+<td style="color:#1565c0;font-size:.73rem">${params}</td>
+<td style="color:#555;font-size:.73rem">${whenHuman?whenHuman.substring(0,80)+(whenHuman.length>80?"…":""):"Always"}</td>
+<td>${statusBadge(status)}</td></tr>`;
+  }).join("");
+}
+
+/* ============================================================
+   RENDER §6 FM INDEX
+   ============================================================ */
+function renderFMIndex(){
+  const seen={};const fms=[];
+  STEPS.forEach(s=>{
+    const [n,,extId,fm,sys,sysCls,,,,params,status,docFile]=s;
+    if(!seen[fm]){seen[fm]={fm,sys,sysCls,status,docFile,steps:[]};fms.push(seen[fm]);}
+    seen[fm].steps.push(n);
+  });
+  return fms.map(f=>`
+<div class="fmc">
+  <h4>${f.docFile?`<a href="../FMlogic/${f.docFile}">${f.fm}</a>`:f.fm}</h4>
+  <div class="fsteps">Steps: ${f.steps.join(", ")}</div>
+  <div style="margin-top:4px">${sysBadge(f.sys,f.sysCls)} ${statusBadge(f.status)}</div>
+</div>`).join("");
+}
+
+/* ============================================================
+   MOUNT
+   ============================================================ */
+document.getElementById("phase-grid").innerHTML=renderPhaseGrid();
+document.getElementById("journey").innerHTML=renderJourney();
+document.getElementById("ref-tbody").innerHTML=renderTable();
+document.getElementById("fm-grid").innerHTML=renderFMIndex();
+</script>
+</body>
+</html>

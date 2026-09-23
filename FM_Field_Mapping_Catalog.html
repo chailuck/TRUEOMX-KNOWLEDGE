@@ -1,0 +1,1236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TRUEOMX – FM Interface Field Mapping Catalog</title>
+<style>
+  :root {
+    --primary: #1a3c5e;
+    --accent:  #e8711a;
+    --bg:      #f4f6f9;
+    --card:    #ffffff;
+    --border:  #d0d7e3;
+    --req:     #d4edda;
+    --opt:     #fff3cd;
+    --hdr-bg:  #1a3c5e;
+    --hdr-fg:  #ffffff;
+    --tag-req: #28a745;
+    --tag-opt: #ffc107;
+    --tag-out: #17a2b8;
+    --sidebar-w: 280px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', Arial, sans-serif; background: var(--bg); color: #333; display: flex; min-height: 100vh; }
+
+  /* ── Sidebar ── */
+  #sidebar {
+    width: var(--sidebar-w); min-height: 100vh; background: var(--primary);
+    color: #cde; position: fixed; top: 0; left: 0; overflow-y: auto; z-index: 100;
+    display: flex; flex-direction: column;
+  }
+  #sidebar h2 { font-size: 13px; padding: 18px 16px 6px; text-transform: uppercase;
+    letter-spacing: 1px; color: #7bb3e0; border-top: 1px solid #2d5a8a; margin-top: 10px; }
+  #sidebar .brand { padding: 20px 16px 14px; background: #122a45; }
+  #sidebar .brand span { font-size: 18px; font-weight: 700; color: #fff; display: block; }
+  #sidebar .brand small { font-size: 11px; color: #7bb3e0; }
+  #sidebar ul { list-style: none; padding: 0 0 20px; }
+  #sidebar ul li a {
+    display: block; padding: 8px 20px; font-size: 13px; color: #c8dff0;
+    text-decoration: none; border-left: 3px solid transparent; transition: all .15s;
+  }
+  #sidebar ul li a:hover, #sidebar ul li a.active {
+    background: #0d2035; border-left-color: var(--accent); color: #fff;
+  }
+  #sidebar ul li a .badge {
+    float: right; font-size: 10px; background: var(--accent); color: #fff;
+    border-radius: 8px; padding: 1px 6px; margin-top: 1px;
+  }
+
+  /* ── Main ── */
+  #main { margin-left: var(--sidebar-w); flex: 1; padding: 30px; max-width: 1200px; }
+  .page-header { margin-bottom: 28px; }
+  .page-header h1 { font-size: 26px; color: var(--primary); }
+  .page-header p { margin-top: 6px; color: #555; font-size: 14px; }
+  .meta-bar { display: flex; gap: 20px; margin-top: 10px; flex-wrap: wrap; }
+  .meta-bar span { font-size: 12px; background: #e2ecf6; color: var(--primary);
+    padding: 3px 10px; border-radius: 12px; }
+
+  /* ── FM Card ── */
+  .fm-card { background: var(--card); border: 1px solid var(--border); border-radius: 10px;
+    margin-bottom: 40px; overflow: hidden; scroll-margin-top: 20px; }
+  .fm-card-header {
+    background: var(--hdr-bg); color: var(--hdr-fg); padding: 16px 22px;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .fm-card-header .fm-icon { font-size: 24px; }
+  .fm-card-header h2 { font-size: 18px; font-weight: 700; }
+  .fm-card-header .fm-ns { font-size: 11px; color: #7bb3e0; margin-top: 2px; font-family: monospace; }
+  .fm-card-header .fm-type {
+    margin-left: auto; font-size: 11px; padding: 3px 10px; border-radius: 12px;
+    font-weight: 600; white-space: nowrap;
+  }
+  .fm-type.postpaid  { background: #1565c0; }
+  .fm-type.prepaid   { background: #6a1b9a; }
+  .fm-type.both      { background: #00695c; }
+  .fm-type.credit    { background: #bf360c; }
+  .fm-type.offer     { background: #e65100; }
+  .fm-type.update    { background: #37474f; }
+  .fm-type.query     { background: #33691e; }
+
+  .fm-desc { padding: 14px 22px; background: #f0f4fb; border-bottom: 1px solid var(--border);
+    font-size: 13.5px; color: #444; }
+
+  .fm-body { padding: 20px 22px; }
+
+  /* ── Sections ── */
+  .section { margin-bottom: 24px; }
+  .section-title {
+    font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: .7px;
+    color: var(--primary); padding-bottom: 6px; border-bottom: 2px solid var(--border);
+    margin-bottom: 12px;
+  }
+
+  /* ── Info grid ── */
+  .info-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px,1fr)); gap: 10px; }
+  .info-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 6px; padding: 10px 14px; }
+  .info-item .label { font-size: 11px; color: #888; text-transform: uppercase; letter-spacing: .5px; }
+  .info-item .value { font-size: 13px; font-weight: 600; color: #222; margin-top: 2px; }
+
+  /* ── Tables ── */
+  .tbl-wrap { overflow-x: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  thead tr { background: var(--primary); color: #fff; }
+  thead th { padding: 9px 12px; text-align: left; font-weight: 600; white-space: nowrap; }
+  tbody tr:nth-child(even) { background: #f7f9fc; }
+  tbody tr:hover { background: #eef3fb; }
+  td { padding: 8px 12px; border-bottom: 1px solid #e8edf5; vertical-align: top; }
+  td code { font-family: 'Consolas', monospace; font-size: 12px; background: #eef3fb;
+    padding: 1px 5px; border-radius: 3px; }
+  .tag { display: inline-block; font-size: 10px; font-weight: 700; padding: 2px 7px;
+    border-radius: 10px; color: #fff; white-space: nowrap; }
+  .tag.M { background: var(--tag-req); }
+  .tag.O { background: var(--tag-opt); color: #333; }
+  .tag.C { background: #6c757d; }
+  .tag.out { background: var(--tag-out); }
+
+  /* ── Trigger box ── */
+  .trigger-box { background: #fff8e1; border-left: 4px solid var(--accent); border-radius: 4px;
+    padding: 12px 16px; font-size: 13px; line-height: 1.7; }
+  .trigger-box ul { margin: 6px 0 0 18px; }
+  .trigger-box li { margin-bottom: 3px; }
+
+  /* ── Flow arrow ── */
+  .flow { display: flex; align-items: center; gap: 0; margin-bottom: 16px; flex-wrap: wrap; }
+  .flow-step { background: #1a3c5e; color: #fff; font-size: 12px; padding: 6px 14px;
+    border-radius: 4px; font-weight: 600; }
+  .flow-arrow { font-size: 18px; color: var(--accent); padding: 0 6px; }
+
+  /* ── Mapping table source col ── */
+  .src { font-family: monospace; font-size: 11.5px; color: #1a3c5e; }
+  .tgt { font-family: monospace; font-size: 11.5px; color: #6a1b9a; }
+
+  .note { font-size: 12px; color: #666; font-style: italic; }
+
+  /* TOC on top */
+  #toc { background: #fff; border: 1px solid var(--border); border-radius: 8px;
+    padding: 18px 22px; margin-bottom: 30px; }
+  #toc h3 { color: var(--primary); margin-bottom: 12px; font-size: 15px; }
+  #toc-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(240px,1fr)); gap: 8px; }
+  #toc-grid a { display: block; padding: 8px 12px; background: #f0f4fb; border: 1px solid var(--border);
+    border-radius: 6px; font-size: 13px; color: var(--primary); text-decoration: none;
+    font-weight: 600; transition: background .15s; }
+  #toc-grid a:hover { background: #dce8f6; }
+  #toc-grid a small { display: block; font-size: 11px; color: #777; font-weight: 400; margin-top: 1px; }
+</style>
+</head>
+<body>
+
+<!-- ══════════ SIDEBAR ══════════ -->
+<nav id="sidebar">
+  <div class="brand">
+    <span>TRUEOMX FM Catalog</span>
+    <small>TIBCO BE · OMX-OM Engine</small>
+  </div>
+  <h2>Subscriber</h2>
+  <ul>
+    <li><a href="#fm-activate-subs">FM_ActivateSubscriber <span class="badge">AA</span></a></li>
+    <li><a href="#fm-prepaid-prov">FM_PrepaidProvisioning <span class="badge">AA</span></a></li>
+    <li><a href="#fm-create-subs">FM_CreateSubscriber <span class="badge">CCBS</span></a></li>
+    <li><a href="#fm-l9-create-subs">FM_L9CreateSubscriber <span class="badge">CCBS</span></a></li>
+    <li><a href="#fm-update-subs">FM_UpdateSubscriber <span class="badge">CCBS</span></a></li>
+  </ul>
+  <h2>Agreement / Offer</h2>
+  <ul>
+    <li><a href="#fm-create-agr">FM_CreateAgreement <span class="badge">CCBS</span></a></li>
+    <li><a href="#fm-add-offer">FM_AddOffer <span class="badge">CCBS</span></a></li>
+    <li><a href="#fm-change-pp">FM_ChangePricePlanOu <span class="badge">CCBS</span></a></li>
+    <li><a href="#fm-change-msisdn">FM_ChangeMSISDN <span class="badge">CCBS</span></a></li>
+    <li><a href="#fm-renew-subs">FM_RenewSubscriber <span class="badge">CCBS</span></a></li>
+  </ul>
+  <h2>Credit</h2>
+  <ul>
+    <li><a href="#fm-eval-credit">FM_EvaluateCredit <span class="badge">CVSS</span></a></li>
+    <li><a href="#fm-update-credit">FM_UpdateCreditLimit <span class="badge">CCBS</span></a></li>
+  </ul>
+  <h2>Other</h2>
+  <ul>
+    <li><a href="#fm-validate-acct">FM_ValidateAccountStatus <span class="badge">CCBS</span></a></li>
+    <li><a href="#fm-get-brms">FM_GetBRMSActions <span class="badge">BRMS</span></a></li>
+    <li><a href="#fm-create-memo">FM_CreateMemo <span class="badge">CCBS</span></a></li>
+    <li><a href="#fm-insert-aa">FM_InsertAAAction <span class="badge">AA</span></a></li>
+  </ul>
+</nav>
+
+<!-- ══════════ MAIN ══════════ -->
+<main id="main">
+
+<div class="page-header">
+  <h1>FM Interface Field Mapping Catalog</h1>
+  <p>TRUEOMX Order Management System · TIBCO BusinessEvents OMX-OM Engine · Generated 2026-06-16</p>
+  <div class="meta-bar">
+    <span>16 FM Interfaces</span>
+    <span>Source: OMX-OM Rule Functions &amp; XSD Schemas</span>
+    <span>Engine: TIBCO BE 5.x</span>
+    <span>Protocol: JMS/SOAP via ESB</span>
+  </div>
+</div>
+
+<!-- TOC -->
+<div id="toc">
+  <h3>Quick Navigation</h3>
+  <div id="toc-grid">
+    <a href="#fm-activate-subs">FM_ActivateSubscriberRequest<small>Postpaid activation on AA system</small></a>
+    <a href="#fm-prepaid-prov">FM_PrepaidProvisioningRequest<small>Prepaid provisioning on AA system</small></a>
+    <a href="#fm-create-subs">FM_CreateSubscriberRequest<small>Create postpaid subscriber in CCBS</small></a>
+    <a href="#fm-l9-create-subs">FM_L9CreateSubscriberRequest<small>L9/Franchise create subscriber</small></a>
+    <a href="#fm-update-subs">FM_UpdateSubscriberRequest<small>Update subscriber name/address/offers</small></a>
+    <a href="#fm-create-agr">FM_CreateAgreementRequest<small>Create agreement in CCBS</small></a>
+    <a href="#fm-add-offer">FM_AddOfferRequest<small>Add SOC/offer to agreement</small></a>
+    <a href="#fm-change-pp">FM_ChangePricePlanOu<small>Change price plan at OU level</small></a>
+    <a href="#fm-change-msisdn">FM_ChangeMSISDN<small>Change subscriber MSISDN</small></a>
+    <a href="#fm-renew-subs">FM_RenewSubscriber<small>Renew subscriber contract</small></a>
+    <a href="#fm-eval-credit">FM_EvaluateCreditRequest<small>Evaluate credit class via CVSS</small></a>
+    <a href="#fm-update-credit">FM_UpdateCreditLimitRequest<small>Update account credit limit</small></a>
+    <a href="#fm-validate-acct">FM_ValidateAccountStatusRootOU<small>Validate account/OU status</small></a>
+    <a href="#fm-get-brms">FM_GetBRMSActions<small>Retrieve BRMS action list</small></a>
+    <a href="#fm-create-memo">FM_CreateMemo<small>Create CRM memo note</small></a>
+    <a href="#fm-insert-aa">FM_InsertAAAction<small>Insert action notification to AA</small></a>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════
+  FM 1 · FM_ActivateSubscriberRequest
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-activate-subs">
+  <div class="fm-card-header">
+    <div class="fm-icon">📡</div>
+    <div>
+      <h2>FM_ActivateSubscriberRequest</h2>
+      <div class="fm-ns">http://services.omx.truecorp.co.th/FMServices/activateSubscriberRequest</div>
+    </div>
+    <div class="fm-type postpaid">Postpaid · AA</div>
+  </div>
+  <div class="fm-desc">
+    Sends a subscriber activation request to the AA (Activation Agent) system. Triggered during postpaid subscriber activation flows. Includes AA feature tags (switch features) for service provisioning. Supports hybrid customers and shared-plan scenarios.
+  </div>
+  <div class="fm-body">
+
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>AA_ACTIVATE_SUBS</code><br>
+        <strong>Rule File:</strong> <code>Rules/OMConsumers/OMXFM/Request/Request_AA_ACTIVATE_SUBS.rule</code><br>
+        <strong>Triggered when:</strong>
+        <ul>
+          <li>Activity status transitions to PENDING / IN_PROGRESS for AA_ACTIVATE_SUBS</li>
+          <li>Subscriber exists in OrderData (ParentOU or ChildOU)</li>
+          <li>MSISDN logical resource assigned to subscriber</li>
+        </ul>
+        <strong>Order Types:</strong> NEW_SUBS, PORT_IN, CHANGE_OWNERSHIP, PRE_TO_POST
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Integration Flow</div>
+      <div class="flow">
+        <div class="flow-step">SubmitOrder Event</div><div class="flow-arrow">→</div>
+        <div class="flow-step">OrderData Concept</div><div class="flow-arrow">→</div>
+        <div class="flow-step">AA_ACTIVATE_SUBS Rule</div><div class="flow-arrow">→</div>
+        <div class="flow-step">FM_ActivateSubscriberRequest (JMS)</div><div class="flow-arrow">→</div>
+        <div class="flow-step">AA System</div>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Request Fields – ActivateSubscriberOnAARequest / subscriptioninfo</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source (Order Request)</th></tr></thead>
+        <tbody>
+          <tr><td><code>customerNo</code></td><td>int</td><td><span class="tag M">M</span></td><td>Customer number in CCBS</td><td class="src">OrderData/Customer/customerNo</td></tr>
+          <tr><td><code>subscriberId</code></td><td>int</td><td><span class="tag O">O</span></td><td>Subscriber ID in CCBS</td><td class="src">OrderData/Subscriber/subscriberId</td></tr>
+          <tr><td><code>payChannelId</code></td><td>int</td><td><span class="tag O">O</span></td><td>Payment channel (billing arrangement) ID</td><td class="src">OrderData/BillingArrangement/payChannelId</td></tr>
+          <tr><td><code>MSISDN</code></td><td>string</td><td><span class="tag O">O</span></td><td>Mobile number assigned to subscriber</td><td class="src">OrderData/Subscriber/LogicalResource[type='MSISDN']/value</td></tr>
+          <tr><td><code>BAN</code></td><td>string</td><td><span class="tag O">O</span></td><td>Billing account number</td><td class="src">OrderData/Account/ban</td></tr>
+          <tr><td><code>IMSI</code></td><td>string</td><td><span class="tag O">O</span></td><td>SIM IMSI number</td><td class="src">OrderData/Subscriber/PhysicalResource[type='SIM']/imsi</td></tr>
+          <tr><td><code>SIM_NO</code></td><td>string</td><td><span class="tag O">O</span></td><td>SIM serial number</td><td class="src">OrderData/Subscriber/PhysicalResource[type='SIM']/simSerialNo</td></tr>
+          <tr><td><code>SRV_TRX_TP_CD</code></td><td>string</td><td><span class="tag O">O</span></td><td>Service transaction type code (e.g. NAC, DSD, RCL, SSP)</td><td class="src">Derived from Order activityType / orderType</td></tr>
+          <tr><td><code>SRV_TRX_S_NO</code></td><td>string</td><td><span class="tag O">O</span></td><td>Service transaction sequence number</td><td class="src">GetSrvTrxNo() helper / sequence counter</td></tr>
+          <tr><td><code>SRV_TRX_NM_CD</code></td><td>string</td><td><span class="tag O">O</span></td><td>Service transaction name code</td><td class="src">Derived from orderType mapping</td></tr>
+          <tr><td><code>PP</code></td><td>string</td><td><span class="tag O">O</span></td><td>Price plan code</td><td class="src">OrderData/Subscriber/PricePlan/ppCode</td></tr>
+          <tr><td><code>PROVISIONING_DATE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Effective provisioning date</td><td class="src">OrderData/effectiveDate or Order/logicalDate</td></tr>
+          <tr><td><code>OPERATOR_ID</code></td><td>string</td><td><span class="tag O">O</span></td><td>Operator/user ID submitting the order</td><td class="src">OrderData/operatorId / submitOrderEvent/userId</td></tr>
+          <tr><td><code>ACCOUNT_CATEGORY</code></td><td>string</td><td><span class="tag O">O</span></td><td>Account category (INDY/CORP/etc.)</td><td class="src">OrderData/Account/accountCategory</td></tr>
+          <tr><td><code>ACCOUNT_TYPE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Account type code</td><td class="src">OrderData/Account/accountType</td></tr>
+          <tr><td><code>FIRST_NAME</code></td><td>string</td><td><span class="tag O">O</span></td><td>Subscriber first name</td><td class="src">OrderData/Customer/Name[nameType='INDY']/firstName</td></tr>
+          <tr><td><code>LAST_NAME</code></td><td>string</td><td><span class="tag O">O</span></td><td>Subscriber last name</td><td class="src">OrderData/Customer/Name[nameType='INDY']/lastName</td></tr>
+          <tr><td><code>BIRTH_DATE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Date of birth (YYYYMMDD)</td><td class="src">OrderData/Customer/dateOfBirth</td></tr>
+          <tr><td><code>GENDER</code></td><td>string</td><td><span class="tag O">O</span></td><td>Gender code (M/F)</td><td class="src">OrderData/Customer/gender → TransformGender()</td></tr>
+          <tr><td><code>CERTIFICATE_NUMBER</code></td><td>string</td><td><span class="tag O">O</span></td><td>ID card / passport number</td><td class="src">OrderData/Customer/idNumber</td></tr>
+          <tr><td><code>CERTIFICATE_TYPE</code></td><td>string</td><td><span class="tag O">O</span></td><td>ID type code (e.g. 01=Thai ID, 02=Passport)</td><td class="src">OrderData/Customer/idType</td></tr>
+          <tr><td><code>BILL_CYCLE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Billing cycle day</td><td class="src">ConvertBillCycleDate(OrderData/Account/billCycle)</td></tr>
+          <tr><td><code>SUB_STATUS</code></td><td>string</td><td><span class="tag O">O</span></td><td>Subscriber status code</td><td class="src">OrderData/Subscriber/subscriberStatus</td></tr>
+          <tr><td><code>COMPANY_CODE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Company/dealer code</td><td class="src">OrderData/Account/companyCode</td></tr>
+          <tr><td><code>HOME_TELNO</code></td><td>string</td><td><span class="tag O">O</span></td><td>Home telephone number</td><td class="src">OrderData/Customer/homePhone</td></tr>
+          <tr><td><code>CFU_NUM</code></td><td>string</td><td><span class="tag O">O</span></td><td>Call Forward Unconditional number</td><td class="src">OrderData/Subscriber/ExtendedInfo[name='CFU_NUM']/value</td></tr>
+          <tr><td><code>CFNRC_NUM</code></td><td>string</td><td><span class="tag O">O</span></td><td>Call Forward No Reply Cancel number</td><td class="src">OrderData/Subscriber/ExtendedInfo[name='CFNRC_NUM']/value</td></tr>
+          <tr><td><code>CFB_NUM</code></td><td>string</td><td><span class="tag O">O</span></td><td>Call Forward Busy number</td><td class="src">OrderData/Subscriber/ExtendedInfo[name='CFB_NUM']/value</td></tr>
+          <tr><td><code>CFNRY_NUM</code></td><td>string</td><td><span class="tag O">O</span></td><td>Call Forward No Reply number</td><td class="src">OrderData/Subscriber/ExtendedInfo[name='CFNRY_NUM']/value</td></tr>
+          <tr><td><code>PREV_SUBSCRIBER_NO</code></td><td>string</td><td><span class="tag O">O</span></td><td>Previous subscriber ID (for port-in)</td><td class="src">OrderData/Subscriber/prevSubscriberId</td></tr>
+          <tr><td><code>PREV_BAN</code></td><td>string</td><td><span class="tag O">O</span></td><td>Previous BAN (for port-in)</td><td class="src">OrderData/Account/prevBan</td></tr>
+          <tr><td><code>PREV_IMSI</code></td><td>string</td><td><span class="tag O">O</span></td><td>Previous IMSI</td><td class="src">OrderData/Subscriber/prevImsi</td></tr>
+          <tr><td><code>PREV_PP</code></td><td>string</td><td><span class="tag O">O</span></td><td>Previous price plan code</td><td class="src">OrderData/Subscriber/prevPricePlan</td></tr>
+          <tr><td><code>CUST_HYBRID</code></td><td>boolean</td><td><span class="tag O">O</span></td><td>Hybrid customer flag</td><td class="src">OrderData/Account/ExtendedInfo[name='IS_HYBRID']/value</td></tr>
+          <tr><td><code>SOURCE_ID</code></td><td>string</td><td><span class="tag O">O</span></td><td>Source system identifier</td><td class="src">OrderData/sourceId / submitOrderEvent/sourceChannel</td></tr>
+          <tr><td><code>ZONE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Zone/region code</td><td class="src">OrderData/Account/zone</td></tr>
+          <tr><td><code>IOT</code></td><td>string</td><td><span class="tag O">O</span></td><td>IoT subscriber flag</td><td class="src">OrderData/Subscriber/ExtendedInfo[name='IOT']/value</td></tr>
+          <tr><td><code>AATags/AAXML[*]</code></td><td>complex</td><td><span class="tag O">O</span></td><td>AA feature tags array (switch features)</td><td class="src">GenerateAATag(switchFeatures, orderType) → NEW_OR_PREVIOUS, FTR_GRP, FTR_PARAM, FTR_VALUE</td></tr>
+          <tr><td><code>ACC_PASSWORD</code></td><td>string</td><td><span class="tag O">O</span></td><td>Account password</td><td class="src">OrderData/Account/accPassword</td></tr>
+          <tr><td><code>SUB_PASSWORD</code></td><td>string</td><td><span class="tag O">O</span></td><td>Subscriber PIN/password</td><td class="src">OrderData/Subscriber/subPassword</td></tr>
+          <tr><td><code>BILLING_LANGUAGE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Billing language preference</td><td class="src">OrderData/Account/billingLanguage</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Response Fields – FM_ActivateSubscriberResponse</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th><th>Used By</th></tr></thead>
+        <tbody>
+          <tr><td><code>SubscriberIdInfo/subscriberId</code></td><td>int</td><td>Assigned subscriber ID from AA</td><td>Order completion, status update</td></tr>
+          <tr><td><code>SubscriberStatusInfo/status</code></td><td>string</td><td>Resulting subscriber status</td><td>Activity result validation</td></tr>
+          <tr><td><code>Services/Service[*]/soc</code></td><td>string</td><td>Provisioned SOC codes</td><td>Offer reconciliation</td></tr>
+          <tr><td><code>CreditInfo/creditClass</code></td><td>string</td><td>Assigned credit class</td><td>Post-activation credit update</td></tr>
+          <tr><td><code>AddressInfo</code></td><td>complex</td><td>Confirmed address from AA</td><td>Address synchronisation</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /fm-activate-subs -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 2 · FM_PrepaidProvisioningRequest
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-prepaid-prov">
+  <div class="fm-card-header">
+    <div class="fm-icon">📱</div>
+    <div>
+      <h2>FM_PrepaidProvisioningRequest</h2>
+      <div class="fm-ns">http://services.omx.truecorp.co.th/FMServices/prepaidProvisioningRequest</div>
+    </div>
+    <div class="fm-type prepaid">Prepaid · AA</div>
+  </div>
+  <div class="fm-desc">
+    Provisions a prepaid subscriber on the AA system. Mirrors the postpaid activation structure but targets prepaid service transaction types (e.g., ACT, SWAP, RENEWAL). Handles IOT subscriber variants, new IMSI swaps, and pre-activation/deactivation flows.
+  </div>
+  <div class="fm-body">
+
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>AA_PREPAID_PROVISIONING</code><br>
+        <strong>Rule File:</strong> <code>Rules/OMConsumers/OMXFM/Request/Request_AA_PREPAID_PROVISIONING.rule</code><br>
+        <strong>Order Types:</strong> PREPAID_ACT, PREPAID_SWAP_SIM, PREPAID_ADD_REMOVE_OFFER, PREPAID_RENEWAL, PORT_IN (prepaid), POST_TO_PRE
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Request Fields – PrepaidProvisioningOnAARequest / subscriptioninfo</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source (Order Request)</th></tr></thead>
+        <tbody>
+          <tr><td><code>SUBSCRIBERID</code></td><td>string</td><td><span class="tag M">M</span></td><td>Subscriber ID (string form for prepaid)</td><td class="src">OrderData/Subscriber/subscriberId</td></tr>
+          <tr><td><code>customerNo</code></td><td>int</td><td><span class="tag M">M</span></td><td>Customer number</td><td class="src">OrderData/Customer/customerNo</td></tr>
+          <tr><td><code>MSISDN</code></td><td>string</td><td><span class="tag M">M</span></td><td>Prepaid mobile number</td><td class="src">OrderData/Subscriber/LogicalResource[type='MSISDN']/value</td></tr>
+          <tr><td><code>IMSI</code></td><td>string</td><td><span class="tag O">O</span></td><td>New SIM IMSI (for SIM swap uses NEW_IMSI)</td><td class="src">OrderData/Subscriber/PhysicalResource[type='SIM']/imsi</td></tr>
+          <tr><td><code>SIM_NO</code></td><td>string</td><td><span class="tag O">O</span></td><td>SIM serial number</td><td class="src">OrderData/Subscriber/PhysicalResource[type='SIM']/simSerialNo</td></tr>
+          <tr><td><code>PP</code></td><td>string</td><td><span class="tag O">O</span></td><td>Price plan code</td><td class="src">OrderData/Subscriber/PricePlan/ppCode</td></tr>
+          <tr><td><code>SRV_TRX_TP_CD</code></td><td>string</td><td><span class="tag O">O</span></td><td>Service transaction type (ACT/SWAP/RENEWAL)</td><td class="src">Derived from orderType + activityType</td></tr>
+          <tr><td><code>PROVISIONING_DATE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Effective date of provisioning</td><td class="src">OrderData/effectiveDate</td></tr>
+          <tr><td><code>OPERATOR_ID</code></td><td>string</td><td><span class="tag O">O</span></td><td>Submitting operator/user ID</td><td class="src">OrderData/operatorId</td></tr>
+          <tr><td><code>ACCOUNT_CATEGORY</code></td><td>string</td><td><span class="tag O">O</span></td><td>Account category</td><td class="src">OrderData/Account/accountCategory</td></tr>
+          <tr><td><code>ACCOUNT_TYPE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Account type code</td><td class="src">OrderData/Account/accountType</td></tr>
+          <tr><td><code>FIRST_NAME</code></td><td>string</td><td><span class="tag O">O</span></td><td>First name</td><td class="src">OrderData/Customer/Name[nameType='INDY']/firstName</td></tr>
+          <tr><td><code>LAST_NAME</code></td><td>string</td><td><span class="tag O">O</span></td><td>Last name</td><td class="src">OrderData/Customer/Name[nameType='INDY']/lastName</td></tr>
+          <tr><td><code>BIRTH_DATE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Date of birth</td><td class="src">OrderData/Customer/dateOfBirth</td></tr>
+          <tr><td><code>GENDER</code></td><td>string</td><td><span class="tag O">O</span></td><td>Gender code</td><td class="src">OrderData/Customer/gender</td></tr>
+          <tr><td><code>CERTIFICATE_NUMBER</code></td><td>string</td><td><span class="tag O">O</span></td><td>National ID / passport</td><td class="src">OrderData/Customer/idNumber</td></tr>
+          <tr><td><code>COMPANY_CODE</code></td><td>string</td><td><span class="tag O">O</span></td><td>Company code</td><td class="src">OrderData/Account/companyCode</td></tr>
+          <tr><td><code>IOT</code></td><td>string</td><td><span class="tag O">O</span></td><td>IoT flag (Y/N)</td><td class="src">OrderData/Subscriber/ExtendedInfo[name='IOT']/value</td></tr>
+          <tr><td><code>PREV_SUBSCRIBER_NO</code></td><td>string</td><td><span class="tag O">O</span></td><td>Previous subscriber (port-in)</td><td class="src">OrderData/Subscriber/prevSubscriberId</td></tr>
+          <tr><td><code>AATags/AAXML[*]</code></td><td>complex</td><td><span class="tag O">O</span></td><td>AA feature tags for prepaid SOC provisioning</td><td class="src">GenerateAAXML() from offer/SOC data</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /fm-prepaid-prov -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 3 · FM_CreateSubscriberRequest
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-create-subs">
+  <div class="fm-card-header">
+    <div class="fm-icon">🆕</div>
+    <div>
+      <h2>FM_CreateSubscriberRequest</h2>
+      <div class="fm-ns">http://services.omx.truecorp.co.th/FMServices/createSubscriberRequest</div>
+    </div>
+    <div class="fm-type postpaid">Postpaid · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Creates a new postpaid subscriber record in CCBS (Amdocs). Covers both Individual (INDY) and Corporate (CORP) subscriber types. Includes price plan, SIM/MSISDN physical and logical resources, offers (SOCs), parameters, and charge distribution.
+  </div>
+  <div class="fm-body">
+
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>CCBS_CREATE_SUBS</code><br>
+        <strong>Rule File:</strong> <code>Rules/OMConsumers/OMXFM/Request/Request_CCBS_CREATE_SUBS.rule</code><br>
+        <strong>Order Types:</strong> NEW_SUBS, PORT_IN, PRE_TO_POST, CHANGE_OWNERSHIP (new sub creation leg)
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Request Fields – CreateNewActivateSubscriberRequest</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source (Order Request)</th></tr></thead>
+        <tbody>
+          <tr><td><code>CustomerIdInfo/customerNo</code></td><td>int</td><td><span class="tag M">M</span></td><td>Parent customer number</td><td class="src">OrderData/Customer/customerNo</td></tr>
+          <tr><td><code>SubscriberTypeInfo/subscriberType</code></td><td>string</td><td><span class="tag M">M</span></td><td>Subscriber type code</td><td class="src">OrderData/Subscriber/subscriberType</td></tr>
+          <tr><td><code>SubscriberGeneralInfo/ppCode</code></td><td>string</td><td><span class="tag M">M</span></td><td>Price plan code assigned at creation</td><td class="src">OrderData/Subscriber/PricePlan/ppCode</td></tr>
+          <tr><td><code>SubscriberGeneralInfo/subStatus</code></td><td>string</td><td><span class="tag O">O</span></td><td>Initial subscriber status</td><td class="src">OrderData/Subscriber/subscriberStatus</td></tr>
+          <tr><td><code>NameInfo[*]/nameType</code></td><td>string</td><td><span class="tag M">M</span></td><td>Name type (INDY / CORP)</td><td class="src">OrderData/Customer/Name/nameType</td></tr>
+          <tr><td><code>NameInfo[*]/firstName</code></td><td>string</td><td><span class="tag C">C</span></td><td>First name (INDY only)</td><td class="src">OrderData/Customer/Name/firstName → TransformTitle()</td></tr>
+          <tr><td><code>NameInfo[*]/lastName</code></td><td>string</td><td><span class="tag C">C</span></td><td>Last name (INDY only)</td><td class="src">OrderData/Customer/Name/lastName</td></tr>
+          <tr><td><code>NameInfo[*]/companyName</code></td><td>string</td><td><span class="tag C">C</span></td><td>Company name (CORP only)</td><td class="src">OrderData/Customer/Name/companyName</td></tr>
+          <tr><td><code>AddressInfo[*]</code></td><td>complex</td><td><span class="tag O">O</span></td><td>Address block (addressType, houseNo, moo, soi, road, subDistrict, district, province, zipCode)</td><td class="src">OrderData/Customer/Address[*]</td></tr>
+          <tr><td><code>offer/srvAgrInfo[*]/soc</code></td><td>string</td><td><span class="tag M">M</span></td><td>SOC code for each offer</td><td class="src">OrderData/Subscriber/Offers/Offer/socCode</td></tr>
+          <tr><td><code>offer/srvAgrInfo[*]/deployMode</code></td><td>string</td><td><span class="tag O">O</span></td><td>Offer deploy mode (ADD/REMOVE)</td><td class="src">OrderData/Subscriber/Offers/Offer/command</td></tr>
+          <tr><td><code>offer/srvAgrInfo[*]/effectiveDate</code></td><td>dateTime</td><td><span class="tag O">O</span></td><td>Offer effective date</td><td class="src">OrderData/Subscriber/Offers/Offer/effectiveDate</td></tr>
+          <tr><td><code>LogicalResourceInfo/msisdn</code></td><td>string</td><td><span class="tag M">M</span></td><td>MSISDN assigned to new subscriber</td><td class="src">OrderData/Subscriber/LogicalResource[type='MSISDN']/value</td></tr>
+          <tr><td><code>PhysicalResourceInfo/simSerialNo</code></td><td>string</td><td><span class="tag O">O</span></td><td>SIM serial number</td><td class="src">OrderData/Subscriber/PhysicalResource[type='SIM']/simSerialNo</td></tr>
+          <tr><td><code>PhysicalResourceInfo/imsi</code></td><td>string</td><td><span class="tag O">O</span></td><td>IMSI of assigned SIM</td><td class="src">OrderData/Subscriber/PhysicalResource[type='SIM']/imsi</td></tr>
+          <tr><td><code>ParameterInfo[*]/name</code></td><td>string</td><td><span class="tag O">O</span></td><td>Service parameter name</td><td class="src">OrderData/Subscriber/ProcessParams/Param/name</td></tr>
+          <tr><td><code>ParameterInfo[*]/value</code></td><td>string</td><td><span class="tag O">O</span></td><td>Service parameter value</td><td class="src">OrderData/Subscriber/ProcessParams/Param/value</td></tr>
+          <tr><td><code>DefaultRCPayChannelInfo/payChannelId</code></td><td>int</td><td><span class="tag O">O</span></td><td>Recurring charge payment channel</td><td class="src">OrderData/BillingArrangement/payChannelId</td></tr>
+          <tr><td><code>ChargeDistributionDetailsInfo/chargeSplitType</code></td><td>string</td><td><span class="tag O">O</span></td><td>Charge split type</td><td class="src">OrderData/Subscriber/chargeSplitType</td></tr>
+          <tr><td><code>ActivityInfo/activityReason</code></td><td>string</td><td><span class="tag O">O</span></td><td>Activity reason code</td><td class="src">SetSubActivityReason() derived from orderType</td></tr>
+          <tr><td><code>ActivityInfo/userText</code></td><td>string</td><td><span class="tag O">O</span></td><td>Free-text reason for audit</td><td class="src">OrderData/orderRemarks or constant</td></tr>
+          <tr><td><code>ActivityDateInfo/effectiveDate</code></td><td>dateTime</td><td><span class="tag O">O</span></td><td>Subscriber effective date</td><td class="src">OrderData/effectiveDate / logicalDate</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Response Fields – createSubscriberResponse</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>SubscriberIdsInfo/SubscriberId</code></td><td>long</td><td>New CCBS subscriber ID</td></tr>
+          <tr><td><code>SubscriberIdsInfo/ExternalId</code></td><td>string</td><td>External system subscriber ID</td></tr>
+          <tr><td><code>ReopenedOffers[*]/Soc</code></td><td>string</td><td>Reopened SOC codes</td></tr>
+          <tr><td><code>ReopenedOffers[*]/NewOfferInstanceId</code></td><td>long</td><td>New offer instance IDs</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /fm-create-subs -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 4 · FM_L9CreateSubscriberRequest
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-l9-create-subs">
+  <div class="fm-card-header">
+    <div class="fm-icon">🏢</div>
+    <div>
+      <h2>FM_L9CreateSubscriberRequest</h2>
+      <div class="fm-ns">http://services.omx.truecorp.co.th/FMServices/l9CreateSubscriberRequest</div>
+    </div>
+    <div class="fm-type postpaid">Corporate L9 · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Creates a subscriber under an L9 / Franchise / Corporate Hierarchy OU structure. Functionally identical to FM_CreateSubscriberRequest but routes through the L9 (Corporate) CCBS endpoint and may apply different OU/BN assignment logic.
+  </div>
+  <div class="fm-body">
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>CCBS_L9_CREATE_SUBS</code><br>
+        <strong>Rule File:</strong> <code>Rules/OMConsumers/OMXFM/Request/Request_CCBS_L9_CREATE_SUBS.rule</code><br>
+        <strong>Order Types:</strong> NEW_SUBS (Corporate/L9 customers), BN corporate add-line
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Request Fields</div>
+      <p class="note">Same structure as FM_CreateSubscriberRequest. Additional fields:</p>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>UserGroupResourceInfo/ouId</code></td><td>int</td><td><span class="tag M">M</span></td><td>Organisational Unit ID for L9 hierarchy</td><td class="src">OrderData/ParentOU/ouId or ChildOU/ouId</td></tr>
+          <tr><td><code>GuidingResourceInfo/agreementNo</code></td><td>string</td><td><span class="tag O">O</span></td><td>Agreement number for OU attachment</td><td class="src">OrderData/Agreement/agreementNo</td></tr>
+          <tr><td><code>ResourceInfo/resourceType</code></td><td>string</td><td><span class="tag O">O</span></td><td>Resource type for corporate SIM pool</td><td class="src">OrderData/Subscriber/resourceType</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Response Fields – l9CreateSubscriberResponse</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>SubscriberIdsInfo/SubscriberId</code></td><td>long</td><td>Assigned CCBS subscriber ID</td></tr>
+          <tr><td><code>SubscriberIdsInfo/ExternalId</code></td><td>string</td><td>External ID</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /fm-l9-create-subs -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 5 · FM_UpdateSubscriberRequest
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-update-subs">
+  <div class="fm-card-header">
+    <div class="fm-icon">✏️</div>
+    <div>
+      <h2>FM_UpdateSubscriberRequest</h2>
+      <div class="fm-ns">http://services.omx.truecorp.co.th/FMServices/updateSubscriberRequest</div>
+    </div>
+    <div class="fm-type update">Update · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Multi-purpose subscriber update. Covers name/address changes, offer add/remove/modify, parameter changes, SIM replacement, charge distribution updates, and price plan migration. Each sub-operation is a distinct input element; only relevant ones are populated per order type.
+  </div>
+  <div class="fm-body">
+
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity IDs:</strong> <code>CCBS_UPDATE_SUB_NAME_ADDRESS2</code>, <code>CCBS_UPDATE_IMEI</code>, <code>CCBS_CHANGE_PP_SUB</code>, <code>CCBS_REMOVE_SUB_OFFER</code>, <code>CCBS_UPDATE_ACCT_COLLECTION_FIX_INFO</code><br>
+        <strong>Order Types:</strong> CHANGE_NAME_ADDRESS, CHANGE_PACKAGE, CANCEL, SUSPENSION, RESUME, SWAP_SIM, REMOVE_OFFER, CHANGE_PP
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Sub-Operation: ChangeSubscriberNameAddress</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>subscriberId</code></td><td>long</td><td><span class="tag M">M</span></td><td>Subscriber to update</td><td class="src">OrderData/Subscriber/subscriberId</td></tr>
+          <tr><td><code>nameType</code></td><td>string</td><td><span class="tag M">M</span></td><td>INDY or CORP</td><td class="src">OrderData/Customer/Name/nameType</td></tr>
+          <tr><td><code>firstName / lastName</code></td><td>string</td><td><span class="tag C">C</span></td><td>Updated name (INDY)</td><td class="src">OrderData/Customer/Name/firstName|lastName</td></tr>
+          <tr><td><code>companyName</code></td><td>string</td><td><span class="tag C">C</span></td><td>Updated company name (CORP)</td><td class="src">OrderData/Customer/Name/companyName</td></tr>
+          <tr><td><code>address/houseNo</code></td><td>string</td><td><span class="tag O">O</span></td><td>House number</td><td class="src">OrderData/Customer/Address/houseNo</td></tr>
+          <tr><td><code>address/moo</code></td><td>string</td><td><span class="tag O">O</span></td><td>Moo / village number</td><td class="src">OrderData/Customer/Address/moo</td></tr>
+          <tr><td><code>address/soi</code></td><td>string</td><td><span class="tag O">O</span></td><td>Soi (lane)</td><td class="src">OrderData/Customer/Address/soi</td></tr>
+          <tr><td><code>address/road</code></td><td>string</td><td><span class="tag O">O</span></td><td>Road/street name</td><td class="src">OrderData/Customer/Address/road</td></tr>
+          <tr><td><code>address/subDistrict</code></td><td>string</td><td><span class="tag O">O</span></td><td>Sub-district (Tambon)</td><td class="src">OrderData/Customer/Address/subDistrict</td></tr>
+          <tr><td><code>address/district</code></td><td>string</td><td><span class="tag O">O</span></td><td>District (Amphoe)</td><td class="src">OrderData/Customer/Address/district</td></tr>
+          <tr><td><code>address/province</code></td><td>string</td><td><span class="tag O">O</span></td><td>Province / city</td><td class="src">OrderData/Customer/Address/province</td></tr>
+          <tr><td><code>address/zipCode</code></td><td>string</td><td><span class="tag O">O</span></td><td>Postal code</td><td class="src">OrderData/Customer/Address/zipCode</td></tr>
+          <tr><td><code>activityInfo/activityReason</code></td><td>string</td><td><span class="tag O">O</span></td><td>Activity reason code</td><td class="src">SetSubActivityReason(orderType)</td></tr>
+          <tr><td><code>activityInfo/logicalDate</code></td><td>dateTime</td><td><span class="tag O">O</span></td><td>Logical effective date</td><td class="src">OrderData/logicalDate</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Sub-Operation: ChangeSubscriberOffersWithRelatedOffers</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>subscriberId</code></td><td>long</td><td><span class="tag M">M</span></td><td>Target subscriber</td><td class="src">OrderData/Subscriber/subscriberId</td></tr>
+          <tr><td><code>srvAgrInfo[*]/soc</code></td><td>string</td><td><span class="tag M">M</span></td><td>SOC to add/remove</td><td class="src">OrderData/Subscriber/Offers/Offer/socCode</td></tr>
+          <tr><td><code>srvAgrInfo[*]/deployMode</code></td><td>string</td><td><span class="tag M">M</span></td><td>ADD or REMOVE</td><td class="src">OrderData/Subscriber/Offers/Offer/command</td></tr>
+          <tr><td><code>srvAgrInfo[*]/effectiveDate</code></td><td>dateTime</td><td><span class="tag O">O</span></td><td>Offer effective date</td><td class="src">CalcEffectiveDate(Offer)</td></tr>
+          <tr><td><code>srvAgrInfo[*]/refId</code></td><td>long</td><td><span class="tag O">O</span></td><td>Existing offer instance reference (for remove)</td><td class="src">CCBS/ExistingOffer/offerInstanceId</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Sub-Operation: ReplacePhysicalResource (SIM Swap)</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>oldSimSerialNo</code></td><td>string</td><td><span class="tag M">M</span></td><td>Current SIM serial number</td><td class="src">CCBS/Subscriber/currentSim/simSerialNo</td></tr>
+          <tr><td><code>newSimSerialNo</code></td><td>string</td><td><span class="tag M">M</span></td><td>New SIM serial number</td><td class="src">OrderData/Subscriber/PhysicalResource[type='SIM']/simSerialNo</td></tr>
+          <tr><td><code>newImsi</code></td><td>string</td><td><span class="tag M">M</span></td><td>New IMSI</td><td class="src">OrderData/Subscriber/PhysicalResource[type='SIM']/imsi</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /fm-update-subs -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 6 · FM_CreateAgreementRequest
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-create-agr">
+  <div class="fm-card-header">
+    <div class="fm-icon">📄</div>
+    <div>
+      <h2>FM_CreateAgreementRequest</h2>
+      <div class="fm-ns">http://services.omx.truecorp.co.th/FMServices/createAgreementRequest</div>
+    </div>
+    <div class="fm-type postpaid">Agreement · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Creates a billing agreement (OU/account agreement) in CCBS. Composed of two underlying CCBS calls: GetSequenceValue (to reserve agreement number) and UpdateAgreementOnUnit (to persist the agreement). Used for new corporate OU setup and new billing arrangement creation.
+  </div>
+  <div class="fm-body">
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>CCBS_CREATE_AGREEMENT</code><br>
+        <strong>Order Types:</strong> NEW_SUBS (corporate), ADD_OU, CHANGE_OWNERSHIP (agreement leg)
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Composed Sub-Requests</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Sub-Request</th><th>Key Field</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>GetSequenceValueRequest</code></td><td>sequenceType</td><td>Reserve next agreement sequence number</td><td class="src">Constant: "AGREEMENT"</td></tr>
+          <tr><td><code>UpdateAgreementOnUnitRequest/ouId</code></td><td>ouId</td><td>OU to attach agreement to</td><td class="src">OrderData/ParentOU/ouId or ChildOU/ouId</td></tr>
+          <tr><td><code>UpdateAgreementOnUnitRequest/agreementNo</code></td><td>agreementNo</td><td>Agreement number from sequence</td><td class="src">GetSequenceValue response</td></tr>
+          <tr><td><code>UpdateAgreementOnUnitRequest/ppCode</code></td><td>ppCode</td><td>Price plan assigned to agreement</td><td class="src">OrderData/Agreement/ppCode</td></tr>
+          <tr><td><code>UpdateAgreementOnUnitRequest/startDate</code></td><td>startDate</td><td>Agreement start date</td><td class="src">OrderData/effectiveDate</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /fm-create-agr -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 7 · FM_AddOfferRequest
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-add-offer">
+  <div class="fm-card-header">
+    <div class="fm-icon">➕</div>
+    <div>
+      <h2>FM_AddOfferRequest</h2>
+      <div class="fm-ns">http://services.omx.truecorp.co.th/FMServices/addOfferRequest</div>
+    </div>
+    <div class="fm-type offer">Offer · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Adds one or more SOC offers to an existing CCBS agreement. Used for all post-activation offer additions including add-on packages, data bundles, value-added services, and BRMS-driven offers. Supports related/dependency SOCs, parameters, and charge distribution.
+  </div>
+  <div class="fm-body">
+
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>CCBS_ADD_AGREEOFFER</code><br>
+        <strong>Rule File:</strong> <code>Rules/OMConsumers/OMXFM/Request/Request_CCBS_ADD_AGREEOFFER.rule</code><br>
+        <strong>Order Types:</strong> ADD_OFFER, CHANGE_PACKAGE, NEW_SUBS (offer leg), PORT_IN (offer leg), BRMS-triggered offer add
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Request Fields – AddOfferRequest</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source (Order Request)</th></tr></thead>
+        <tbody>
+          <tr><td><code>AgreementIdInfo/agreementNo</code></td><td>string</td><td><span class="tag M">M</span></td><td>Target agreement number</td><td class="src">OrderData/Agreement/agreementNo</td></tr>
+          <tr><td><code>services/srvAgrInfo[*]/soc</code></td><td>string</td><td><span class="tag M">M</span></td><td>SOC code to add</td><td class="src">OrderData/Subscriber/Offers/Offer/socCode</td></tr>
+          <tr><td><code>services/srvAgrInfo[*]/deployMode</code></td><td>string</td><td><span class="tag M">M</span></td><td>Always "ADD"</td><td class="src">Constant "ADD"</td></tr>
+          <tr><td><code>services/srvAgrInfo[*]/effectiveDate</code></td><td>dateTime</td><td><span class="tag O">O</span></td><td>Offer effective date</td><td class="src">CalcEffectiveDate(Offer) / logicalDate</td></tr>
+          <tr><td><code>services/srvAgrInfo[*]/expiryDate</code></td><td>dateTime</td><td><span class="tag O">O</span></td><td>Offer expiry date</td><td class="src">CalcExpiryDate(Offer) from duration param</td></tr>
+          <tr><td><code>services/srvAgrInfo[*]/breakProtection</code></td><td>boolean</td><td><span class="tag O">O</span></td><td>Break protection flag</td><td class="src">OrderData/Offer/breakProtection</td></tr>
+          <tr><td><code>parameterInfo[*]/name</code></td><td>string</td><td><span class="tag O">O</span></td><td>Parameter name for offer</td><td class="src">OrderData/Offer/Parameters/Param/name</td></tr>
+          <tr><td><code>parameterInfo[*]/value</code></td><td>string</td><td><span class="tag O">O</span></td><td>Parameter value</td><td class="src">OrderData/Offer/Parameters/Param/value</td></tr>
+          <tr><td><code>parameterInfo[*]/soc</code></td><td>string</td><td><span class="tag O">O</span></td><td>SOC this parameter belongs to</td><td class="src">OrderData/Offer/socCode</td></tr>
+          <tr><td><code>chargeDistributionDetailsInfo/chargeSplitType</code></td><td>string</td><td><span class="tag O">O</span></td><td>Charge split type code</td><td class="src">OrderData/chargeSplitType</td></tr>
+          <tr><td><code>chargeDistributionDetailsInfo/targetPayChannelId</code></td><td>int</td><td><span class="tag O">O</span></td><td>Target billing payment channel</td><td class="src">OrderData/BillingArrangement/payChannelId</td></tr>
+          <tr><td><code>chargeDistributionDetailsInfo/soc</code></td><td>string</td><td><span class="tag O">O</span></td><td>SOC for charge distribution</td><td class="src">OrderData/Offer/socCode (split offer indicator)</td></tr>
+          <tr><td><code>activityInfo/activityReason</code></td><td>string</td><td><span class="tag O">O</span></td><td>Activity reason code</td><td class="src">SetAcctActivityReason(orderType)</td></tr>
+          <tr><td><code>activityInfo/userText</code></td><td>string</td><td><span class="tag O">O</span></td><td>User text / remarks</td><td class="src">OrderData/orderRemarks</td></tr>
+          <tr><td><code>activityInfo/logicalDate</code></td><td>dateTime</td><td><span class="tag O">O</span></td><td>Logical date override (large customer)</td><td class="src">OrderData/logicalDate (if LCI flag set)</td></tr>
+          <tr><td><code>activityInfo/lockInfo/lockType</code></td><td>string</td><td><span class="tag O">O</span></td><td>Locking type for concurrent control</td><td class="src">Derived from order concurrency config</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Response Fields – addOfferResponse</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td><code>OfferDetails[*]/SocID</code></td><td>string</td><td>SOC ID of successfully added offer</td></tr>
+          <tr><td><code>OfferDetails[*]/OfferInstanceCode</code></td><td>long</td><td>New offer instance ID in CCBS</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /fm-add-offer -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 8 · FM_ChangePricePlanOu
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-change-pp">
+  <div class="fm-card-header">
+    <div class="fm-icon">🔄</div>
+    <div>
+      <h2>FM_ChangePricePlanOu</h2>
+      <div class="fm-ns">http://www.tibco.com/schemas/OMX-COMMON/.../FM/ChangePricePlanOu.xsd</div>
+    </div>
+    <div class="fm-type update">Price Plan · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Changes the price plan at the OU (agreement) level in CCBS. Composed of GetSequenceValue + changePricePlanOu. Used for postpaid price plan change orders affecting an entire agreement/OU.
+  </div>
+  <div class="fm-body">
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>CCBS_CHANGE_PP_OU</code><br>
+        <strong>Order Types:</strong> CHANGE_PP, CHANGE_PACKAGE (OU-level)
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Request Fields – changePricePlanOu</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>GetSequenceValueRequest/sequenceType</code></td><td>string</td><td><span class="tag M">M</span></td><td>Sequence type for new PP SOC numbering</td><td class="src">Constant "SOC"</td></tr>
+          <tr><td><code>AgreementIdInfo/agreementNo</code></td><td>string</td><td><span class="tag M">M</span></td><td>Agreement to update</td><td class="src">OrderData/Agreement/agreementNo</td></tr>
+          <tr><td><code>SrvAgrInfo/soc</code></td><td>string</td><td><span class="tag M">M</span></td><td>New price plan SOC code</td><td class="src">OrderData/Subscriber/PricePlan/ppCode → GetSocCodeFromResolveSocCode()</td></tr>
+          <tr><td><code>SrvAgrInfo/effectiveDate</code></td><td>dateTime</td><td><span class="tag O">O</span></td><td>Price plan change effective date</td><td class="src">CalcEffectiveDate() / nextBillDate</td></tr>
+          <tr><td><code>parameterInfoWithSoc[*]/name</code></td><td>string</td><td><span class="tag O">O</span></td><td>PP parameter name</td><td class="src">OrderData/Offer/Parameters/Param/name</td></tr>
+          <tr><td><code>ChargeDistributionDetailsInfo</code></td><td>complex</td><td><span class="tag O">O</span></td><td>Charge distribution for new PP</td><td class="src">OrderData/BillingArrangement/payChannelId</td></tr>
+          <tr><td><code>ActivityInfo/activityReason</code></td><td>string</td><td><span class="tag O">O</span></td><td>Activity reason</td><td class="src">SetAcctActivityReason(orderType)</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /fm-change-pp -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 9 · FM_ChangeMSISDN
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-change-msisdn">
+  <div class="fm-card-header">
+    <div class="fm-icon">📞</div>
+    <div>
+      <h2>FM_ChangeMSISDN</h2>
+      <div class="fm-ns">http://www.tibco.com/schemas/OMX-COMMON/.../FM/ChangeMSISDN.xsd</div>
+    </div>
+    <div class="fm-type update">MSISDN Change · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Changes a subscriber's MSISDN. Composed of three CCBS calls: ChangeAccountingManagementInfo (update billing), ChangeSubscriberGeneralInfo (update subscriber record), and UpdateSubscriberRequest (physical resource replacement).
+  </div>
+  <div class="fm-body">
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>CCBS_CHANGE_MSISDN</code><br>
+        <strong>Order Types:</strong> CHANGE_MSISDN, SWAP_NUMBER
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Composed Sub-Requests Field Mapping</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Sub-Request</th><th>Key Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>ChangeAccountingManagementInfo</td><td>subscriberId</td><td>long</td><td><span class="tag M">M</span></td><td>Target subscriber</td><td class="src">OrderData/Subscriber/subscriberId</td></tr>
+          <tr><td>ChangeAccountingManagementInfo</td><td>newMsisdn</td><td>string</td><td><span class="tag M">M</span></td><td>New mobile number</td><td class="src">OrderData/Subscriber/newMSISDN</td></tr>
+          <tr><td>ChangeSubscriberGeneralInfo</td><td>subscriberId</td><td>long</td><td><span class="tag M">M</span></td><td>Target subscriber</td><td class="src">OrderData/Subscriber/subscriberId</td></tr>
+          <tr><td>ChangeSubscriberGeneralInfo</td><td>msisdn</td><td>string</td><td><span class="tag M">M</span></td><td>Updated MSISDN</td><td class="src">OrderData/Subscriber/newMSISDN</td></tr>
+          <tr><td>UpdateSubscriberRequest</td><td>oldLogicalResourceValue</td><td>string</td><td><span class="tag M">M</span></td><td>Current MSISDN to replace</td><td class="src">OrderData/Subscriber/LogicalResource[type='MSISDN']/value</td></tr>
+          <tr><td>UpdateSubscriberRequest</td><td>newLogicalResourceValue</td><td>string</td><td><span class="tag M">M</span></td><td>New MSISDN</td><td class="src">OrderData/Subscriber/newMSISDN</td></tr>
+          <tr><td>UpdateSubscriberRequest</td><td>activityReason</td><td>string</td><td><span class="tag O">O</span></td><td>Activity reason</td><td class="src">SetSubActivityReason(orderType)</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /fm-change-msisdn -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 10 · FM_RenewSubscriber
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-renew-subs">
+  <div class="fm-card-header">
+    <div class="fm-icon">🔁</div>
+    <div>
+      <h2>FM_RenewSubscriber</h2>
+      <div class="fm-ns">http://www.tibco.com/schemas/OMX-COMMON/.../FM/RenewSubscriber.xsd</div>
+    </div>
+    <div class="fm-type both">Renewal · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Renews a subscriber's contract/price plan. Composed of: RenewSubscriber (core), ChangeAccountingManagementInfo (billing update), ChangeSubscriberGeneralInfo (status update), and CustomerTypeInfo (type update). Used for contract renewal and prepaid-to-postpaid type renewal.
+  </div>
+  <div class="fm-body">
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>CCBS_RENEW_SUBSCRIBER</code><br>
+        <strong>Order Types:</strong> RENEWAL, CONTRACT_RENEWAL, PRE_TO_POST (renewal leg)
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Key Field Mappings</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>RenewSubscriber/subscriberId</code></td><td>long</td><td><span class="tag M">M</span></td><td>Subscriber to renew</td><td class="src">OrderData/Subscriber/subscriberId</td></tr>
+          <tr><td><code>RenewSubscriber/ppCode</code></td><td>string</td><td><span class="tag M">M</span></td><td>New price plan for renewal</td><td class="src">OrderData/Subscriber/PricePlan/ppCode</td></tr>
+          <tr><td><code>RenewSubscriber/renewalDate</code></td><td>dateTime</td><td><span class="tag O">O</span></td><td>Renewal effective date</td><td class="src">OrderData/effectiveDate / CalcEffectiveDate()</td></tr>
+          <tr><td><code>ChangeAccountingManagementInfo/billCycle</code></td><td>string</td><td><span class="tag O">O</span></td><td>New billing cycle</td><td class="src">ConvertBillCycleDate(OrderData/Account/billCycle)</td></tr>
+          <tr><td><code>ChangeSubscriberGeneralInfo/subStatus</code></td><td>string</td><td><span class="tag O">O</span></td><td>Updated subscriber status</td><td class="src">OrderData/Subscriber/subscriberStatus</td></tr>
+          <tr><td><code>CustomerTypeInfo/customerType</code></td><td>string</td><td><span class="tag O">O</span></td><td>Customer type after renewal</td><td class="src">OrderData/Account/accountCategory</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /fm-renew-subs -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 11 · FM_EvaluateCreditRequest
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-eval-credit">
+  <div class="fm-card-header">
+    <div class="fm-icon">💳</div>
+    <div>
+      <h2>FM_EvaluateCreditRequest</h2>
+      <div class="fm-ns">http://services.omx.truecorp.co.th/FMServices/evaluateCreditRequest</div>
+    </div>
+    <div class="fm-type credit">Credit · CVSS</div>
+  </div>
+  <div class="fm-desc">
+    Evaluates a customer's credit class by sending customer demographic and financial data to the CVSS (Credit Verification &amp; Scoring System). Returns credit class, deposit requirement, IDD/IR approval flags, and number of subscribers. Used in new subscription and credit upgrade flows.
+  </div>
+  <div class="fm-body">
+
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>OMX_EVALUATE_CREDIT</code> / <code>OMX_EVALUATE_CORP_CREDIT_LIMIT</code><br>
+        <strong>Rule File:</strong> <code>Rules/OMConsumers/OMXFM/Request/Request_OMX_EVALUATE_CORP_CREDIT_LIMIT.rule</code><br>
+        <strong>Order Types:</strong> NEW_SUBS, CHANGE_OWNERSHIP, CREDIT_UPGRADE, PRE_TO_POST
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Request Fields – Prerequisiteinfo</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>accountId</code></td><td>int</td><td><span class="tag O">O</span></td><td>CCBS account ID</td><td class="src">OrderData/Account/accountId</td></tr>
+          <tr><td><code>custNo</code></td><td>int</td><td><span class="tag O">O</span></td><td>Customer number</td><td class="src">OrderData/Customer/customerNo</td></tr>
+          <tr><td><code>payChannelId</code></td><td>int</td><td><span class="tag O">O</span></td><td>Payment channel ID</td><td class="src">OrderData/BillingArrangement/payChannelId</td></tr>
+          <tr><td><code>billingArrangementId</code></td><td>int</td><td><span class="tag O">O</span></td><td>Billing arrangement ID</td><td class="src">OrderData/BillingArrangement/billingArrangementId</td></tr>
+          <tr><td><code>INDYIndicator</code></td><td>string</td><td><span class="tag O">O</span></td><td>Individual/Corporate indicator (INDY/CORP)</td><td class="src">OrderData/Account/accountCategory</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Request Fields – CustomerInfo (93 fields)</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>ban</code></td><td>int</td><td><span class="tag M">M</span></td><td>Billing account number</td><td class="src">OrderData/Account/ban</td></tr>
+          <tr><td><code>firstname</code></td><td>string</td><td><span class="tag O">O</span></td><td>First name</td><td class="src">OrderData/Customer/Name[INDY]/firstName</td></tr>
+          <tr><td><code>lastname</code></td><td>string</td><td><span class="tag O">O</span></td><td>Last name</td><td class="src">OrderData/Customer/Name[INDY]/lastName</td></tr>
+          <tr><td><code>title</code></td><td>string</td><td><span class="tag O">O</span></td><td>Title / salutation</td><td class="src">OrderData/Customer/Name[INDY]/title → TransformTitle()</td></tr>
+          <tr><td><code>gender</code></td><td>string</td><td><span class="tag O">O</span></td><td>Gender (M/F)</td><td class="src">OrderData/Customer/gender</td></tr>
+          <tr><td><code>dob</code></td><td>string</td><td><span class="tag O">O</span></td><td>Date of birth</td><td class="src">OrderData/Customer/dateOfBirth</td></tr>
+          <tr><td><code>idnumber</code></td><td>string</td><td><span class="tag O">O</span></td><td>National ID number</td><td class="src">OrderData/Customer/idNumber</td></tr>
+          <tr><td><code>idtype</code></td><td>string</td><td><span class="tag O">O</span></td><td>ID type code</td><td class="src">OrderData/Customer/idType</td></tr>
+          <tr><td><code>idexpdate</code></td><td>string</td><td><span class="tag O">O</span></td><td>ID expiry date</td><td class="src">OrderData/Customer/idExpDate</td></tr>
+          <tr><td><code>nationality</code></td><td>string</td><td><span class="tag O">O</span></td><td>Nationality code</td><td class="src">OrderData/Customer/nationality → TransformNationality()</td></tr>
+          <tr><td><code>maritalstatus</code></td><td>string</td><td><span class="tag O">O</span></td><td>Marital status</td><td class="src">OrderData/Customer/maritalStatus → TransformMaritalStatus()</td></tr>
+          <tr><td><code>category</code></td><td>string</td><td><span class="tag O">O</span></td><td>Account category</td><td class="src">OrderData/Account/accountCategory</td></tr>
+          <tr><td><code>acctype</code></td><td>string</td><td><span class="tag O">O</span></td><td>Account type</td><td class="src">OrderData/Account/accountType</td></tr>
+          <tr><td><code>companyCode</code></td><td>string</td><td><span class="tag O">O</span></td><td>Company code</td><td class="src">OrderData/Account/companyCode</td></tr>
+          <tr><td><code>homephone</code></td><td>string</td><td><span class="tag O">O</span></td><td>Home telephone</td><td class="src">OrderData/Customer/homePhone</td></tr>
+          <tr><td><code>officephone</code></td><td>string</td><td><span class="tag O">O</span></td><td>Office telephone</td><td class="src">OrderData/Customer/officePhone</td></tr>
+          <tr><td><code>regaddressnum</code></td><td>string</td><td><span class="tag O">O</span></td><td>Registered address number</td><td class="src">OrderData/Customer/Address[REG]/houseNo</td></tr>
+          <tr><td><code>regsoi / regstreet</code></td><td>string</td><td><span class="tag O">O</span></td><td>Registered soi/street</td><td class="src">OrderData/Customer/Address[REG]/soi|road</td></tr>
+          <tr><td><code>regsubdistrict / regdistrict</code></td><td>string</td><td><span class="tag O">O</span></td><td>Registered sub-district/district</td><td class="src">OrderData/Customer/Address[REG]/subDistrict|district</td></tr>
+          <tr><td><code>regprovince / regzipcode</code></td><td>string</td><td><span class="tag O">O</span></td><td>Registered province/zip code</td><td class="src">OrderData/Customer/Address[REG]/province|zipCode</td></tr>
+          <tr><td><code>billadressnum … billzipcode</code></td><td>string</td><td><span class="tag O">O</span></td><td>Billing address (same structure as registered)</td><td class="src">OrderData/Customer/Address[BILL]/…</td></tr>
+          <tr><td><code>salrange</code></td><td>string</td><td><span class="tag O">O</span></td><td>Salary range code</td><td class="src">OrderData/Customer/ExtendedInfo[name='SAL_RANGE']/value</td></tr>
+          <tr><td><code>education</code></td><td>string</td><td><span class="tag O">O</span></td><td>Education level</td><td class="src">OrderData/Customer/ExtendedInfo[name='EDUCATION']/value</td></tr>
+          <tr><td><code>empstatus</code></td><td>string</td><td><span class="tag O">O</span></td><td>Employment status</td><td class="src">OrderData/Customer/ExtendedInfo[name='EMP_STATUS']/value</td></tr>
+          <tr><td><code>profession</code></td><td>string</td><td><span class="tag O">O</span></td><td>Profession / occupation</td><td class="src">OrderData/Customer/occupation → TransformOccupation()</td></tr>
+          <tr><td><code>paymethod</code></td><td>string</td><td><span class="tag O">O</span></td><td>Payment method</td><td class="src">OrderData/BillingArrangement/payMethod</td></tr>
+          <tr><td><code>creditClass</code></td><td>string</td><td><span class="tag O">O</span></td><td>Current credit class (input hint)</td><td class="src">OrderData/Account/creditClass</td></tr>
+          <tr><td><code>approveForIDD</code></td><td>string</td><td><span class="tag O">O</span></td><td>IDD approval flag</td><td class="src">OrderData/Account/ExtendedInfo[name='APPROVE_IDD']/value</td></tr>
+          <tr><td><code>approveForIR</code></td><td>string</td><td><span class="tag O">O</span></td><td>IR approval flag</td><td class="src">OrderData/Account/ExtendedInfo[name='APPROVE_IR']/value</td></tr>
+          <tr><td><code>numberOfSub</code></td><td>int</td><td><span class="tag O">O</span></td><td>Number of existing subscribers</td><td class="src">Count(OrderData/Subscribers)</td></tr>
+          <tr><td><code>numberOfIDD</code></td><td>int</td><td><span class="tag O">O</span></td><td>Number of IDD-enabled subscribers</td><td class="src">Count IDD offers on account</td></tr>
+          <tr><td><code>numberOfIR</code></td><td>int</td><td><span class="tag O">O</span></td><td>Number of IR-enabled subscribers</td><td class="src">Count IR offers on account</td></tr>
+          <tr><td><code>timeatcurraddr</code></td><td>string</td><td><span class="tag O">O</span></td><td>Time at current address</td><td class="src">OrderData/Customer/ExtendedInfo[name='TIME_AT_ADDR']/value</td></tr>
+          <tr><td><code>accommodation</code></td><td>string</td><td><span class="tag O">O</span></td><td>Accommodation type</td><td class="src">OrderData/Customer/ExtendedInfo[name='ACCOMMODATION']/value → TransformTypeOfAccommodation()</td></tr>
+          <tr><td><code>dealercode</code></td><td>string</td><td><span class="tag O">O</span></td><td>Dealer code</td><td class="src">OrderData/Account/dealerCode</td></tr>
+          <tr><td><code>source</code></td><td>string</td><td><span class="tag O">O</span></td><td>Source channel</td><td class="src">OrderData/sourceId</td></tr>
+          <tr><td><code>userid</code></td><td>int</td><td><span class="tag O">O</span></td><td>User/operator ID</td><td class="src">OrderData/operatorId</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Response Fields – EvaluateCreditClassResponse / CvssResultBean</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th><th>Used By</th></tr></thead>
+        <tbody>
+          <tr><td><code>creditClass</code></td><td>string</td><td>Assigned credit class code</td><td>FM_UpdateCreditLimit, order completion</td></tr>
+          <tr><td><code>requestDeposit</code></td><td>decimal</td><td>Required deposit amount</td><td>Deposit collection flow</td></tr>
+          <tr><td><code>internationalDialingFlag</code></td><td>string</td><td>IDD approval result</td><td>Update approveForIDD on account</td></tr>
+          <tr><td><code>internationalRoamingFlag</code></td><td>string</td><td>IR approval result</td><td>Update approveForIR on account</td></tr>
+          <tr><td><code>statusCode</code></td><td>string</td><td>Result status code (0 = success)</td><td>Activity success/fail determination</td></tr>
+          <tr><td><code>statusMessage</code></td><td>string</td><td>Result description message</td><td>Error logging</td></tr>
+          <tr><td><code>reasonCode</code></td><td>string</td><td>Reason for credit decision</td><td>Audit trail</td></tr>
+          <tr><td><code>numberOfSubscribers</code></td><td>int</td><td>Total subscribers under this customer</td><td>Credit limit calculation</td></tr>
+          <tr><td><code>ban</code></td><td>int</td><td>Confirmed BAN</td><td>Cross-check</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+
+  </div>
+</div><!-- /fm-eval-credit -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 12 · FM_UpdateCreditLimitRequest
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-update-credit">
+  <div class="fm-card-header">
+    <div class="fm-icon">💰</div>
+    <div>
+      <h2>FM_UpdateCreditLimitRequest</h2>
+      <div class="fm-ns">http://services.omx.truecorp.co.th/FMServices/updateCreditLimitRequest</div>
+    </div>
+    <div class="fm-type credit">Credit Limit · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Updates the account credit limit and credit class in CCBS after credit evaluation. Composed of three CCBS calls: GetAccountHeader (read current state), l9GetAccountCreditHistory (retrieve credit history), and ChangeAccountingManagementInfo (apply new credit limit). Corporate credit limits are calculated based on subscriber RC rates, grading multipliers, and IR installment amounts.
+  </div>
+  <div class="fm-body">
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>OMX_UPDATE_CREDIT_LIMIT</code><br>
+        <strong>Order Types:</strong> NEW_SUBS, CREDIT_UPGRADE — always follows FM_EvaluateCredit
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Composed Sub-Requests</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Sub-Request</th><th>Key Fields</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td>GetAccountHeaderRequest</td><td>accountId, customerId</td><td>Read current account credit info</td><td class="src">OrderData/Account/accountId, customerNo</td></tr>
+          <tr><td>l9GetAccountCreditHistoryRequest</td><td>accountId</td><td>Retrieve credit history for scoring</td><td class="src">OrderData/Account/accountId</td></tr>
+          <tr><td>ChangeAccountingManagementInfo/creditLimit</td><td>creditLimit (decimal)</td><td>New credit limit (min 1000, rounded to 100)</td><td class="src">Calculated: max(1000, round(ΣRC×multiplier + ΣIR, 100))</td></tr>
+          <tr><td>ChangeAccountingManagementInfo/creditClass</td><td>creditClass (string)</td><td>New credit class from CVSS result</td><td class="src">FM_EvaluateCredit response/creditClass</td></tr>
+          <tr><td>ChangeAccountingManagementInfo/creditWaiverInd</td><td>creditWaiverInd (string)</td><td>Credit waiver indicator</td><td class="src">OrderData/Account/ExtendedInfo[name='CREDIT_WAIVER']/value</td></tr>
+          <tr><td>ChangeAccountingManagementInfo/approveForIDD</td><td>approveForIDD (string)</td><td>IDD approval (from CVSS)</td><td class="src">FM_EvaluateCredit response/internationalDialingFlag</td></tr>
+          <tr><td>ChangeAccountingManagementInfo/approveForIR</td><td>approveForIR (string)</td><td>IR approval (from CVSS)</td><td class="src">FM_EvaluateCredit response/internationalRoamingFlag</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Credit Limit Calculation Logic</div>
+      <div class="trigger-box">
+        <ul>
+          <li>VIP Customer: flat 16,000 THB per subscriber</li>
+          <li>TOP/PREMIUM grading: ΣAgreement RC × 5 (or × 5/2 for IOT)</li>
+          <li>Standard: ΣSubscriber offer RC × multiplier from grading table</li>
+          <li>Add IR installment amount if present in order parameters</li>
+          <li>Floor: 1,000 THB · Rounding: nearest 100 THB</li>
+          <li>Waiver indicator set to Y if creditClass = 'W'</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div><!-- /fm-update-credit -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 13 · FM_ValidateAccountStatusRootOURequest
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-validate-acct">
+  <div class="fm-card-header">
+    <div class="fm-icon">✅</div>
+    <div>
+      <h2>FM_ValidateAccountStatusRootOU</h2>
+      <div class="fm-ns">http://services.omx.truecorp.co.th/FMServices/validateAccountStatusRootOURequest</div>
+    </div>
+    <div class="fm-type query">Validation · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Validates the account status at the Root OU (Organisational Unit) level before proceeding with corporate order processing. Calls GetAccountList and GetAgreementHeaderList to confirm the account is active and eligible.
+  </div>
+  <div class="fm-body">
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>CCBS_VALIDATE_ACCOUNT_STATUS_ROOT_OU</code><br>
+        <strong>Order Types:</strong> ADD_OU, NEW_SUBS (corporate), CHANGE_OWNERSHIP — corporate hierarchy validation
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Request Fields</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>OUId</code></td><td>int</td><td><span class="tag M">M</span></td><td>Organisational unit ID to validate</td><td class="src">OrderData/ParentOU/ouId</td></tr>
+          <tr><td><code>customerId</code></td><td>int</td><td><span class="tag M">M</span></td><td>Customer owning the OU</td><td class="src">OrderData/Customer/customerNo</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /fm-validate-acct -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 14 · FM_GetBRMSActions
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-get-brms">
+  <div class="fm-card-header">
+    <div class="fm-icon">🧠</div>
+    <div>
+      <h2>FM_GetBRMSActions</h2>
+      <div class="fm-ns">http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd4</div>
+    </div>
+    <div class="fm-type query">BRMS · Rules Engine</div>
+  </div>
+  <div class="fm-desc">
+    Retrieves the list of automated SOC actions from the BRMS (Business Rules Management System) engine for a given order. BRMS returns add/remove SOC directives that the order engine then executes as follow-up FM calls. Central to dynamic offer provisioning for data packages, IDD, IR, and value-added services.
+  </div>
+  <div class="fm-body">
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>BRMS_GET_ACTIONS</code><br>
+        <strong>Order Types:</strong> All order types — typically called early in orchestration to determine automated offer actions
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Request Fields – GetBRMSActionsRequest</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>RefId</code></td><td>string</td><td><span class="tag M">M</span></td><td>Order reference ID</td><td class="src">OrderData/orderId</td></tr>
+          <tr><td><code>OMXTrackingId</code></td><td>string</td><td><span class="tag M">M</span></td><td>OMX internal tracking ID</td><td class="src">OrderData/omxTrackingId</td></tr>
+          <tr><td><code>MSISDN</code></td><td>string</td><td><span class="tag O">O</span></td><td>Mobile number context</td><td class="src">OrderData/Subscriber/LogicalResource[type='MSISDN']/value</td></tr>
+          <tr><td><code>OrderType</code></td><td>string</td><td><span class="tag M">M</span></td><td>Order type code</td><td class="src">OrderData/orderType</td></tr>
+          <tr><td><code>EffectiveDate</code></td><td>string</td><td><span class="tag M">M</span></td><td>Order effective date</td><td class="src">OrderData/effectiveDate (ISO format)</td></tr>
+          <tr><td><code>ListInput</code></td><td>string</td><td><span class="tag M">M</span></td><td>Serialised input parameters for BRMS evaluation (SOC list, account attributes, etc.)</td><td class="src">GetBrmsItems() → serialised XML of current subscriber offers + account attributes</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Response – BRMS Action List</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>Field</th><th>Type</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td>Action items (&&-separated)</td><td>string</td><td>ADD/REMOVE SOC directives parsed by GetBrmsItems()</td></tr>
+          <tr><td>effectiveDate per action</td><td>string</td><td>nextBill or mainEffectiveDate per SOC action</td></tr>
+          <tr><td>Offer parameters per action</td><td>string</td><td>Name/value pairs for each SOC</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /fm-get-brms -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 15 · FM_CreateMemo
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-create-memo">
+  <div class="fm-card-header">
+    <div class="fm-icon">📝</div>
+    <div>
+      <h2>FM_CreateMemo</h2>
+      <div class="fm-ns">http://www.tibco.com/schemas/OMX-COMMON/.../FM/CreateMemo.xsd</div>
+    </div>
+    <div class="fm-type update">Memo · CCBS</div>
+  </div>
+  <div class="fm-desc">
+    Creates a CRM memo note against a customer account or subscriber in CCBS. Wraps the underlying ESB_CreateMemoRequest. Used to record order remarks, cancellation reasons, and operator notes for audit trail.
+  </div>
+  <div class="fm-body">
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>CCBS_CREATE_MEMO</code><br>
+        <strong>Order Types:</strong> CANCEL, SUSPENSION, CANCELLATION — always paired with order completion
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Request Fields – createMemo</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>customerId</code></td><td>int</td><td><span class="tag M">M</span></td><td>Target customer</td><td class="src">OrderData/Customer/customerNo</td></tr>
+          <tr><td><code>subscriberId</code></td><td>long</td><td><span class="tag O">O</span></td><td>Target subscriber (if subscriber-level memo)</td><td class="src">OrderData/Subscriber/subscriberId</td></tr>
+          <tr><td><code>memoText</code></td><td>string</td><td><span class="tag M">M</span></td><td>Memo content text</td><td class="src">OrderData/orderRemarks or SetMemoWithCalendar() formatted string</td></tr>
+          <tr><td><code>memoType</code></td><td>string</td><td><span class="tag O">O</span></td><td>Memo type code</td><td class="src">Derived from orderType</td></tr>
+          <tr><td><code>operatorId</code></td><td>string</td><td><span class="tag O">O</span></td><td>Operator creating memo</td><td class="src">OrderData/operatorId</td></tr>
+          <tr><td><code>memoDate</code></td><td>dateTime</td><td><span class="tag O">O</span></td><td>Memo creation date</td><td class="src">System current date/time</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /fm-create-memo -->
+
+
+<!-- ═══════════════════════════════════════════
+  FM 16 · FM_InsertAAAction
+════════════════════════════════════════════ -->
+<div class="fm-card" id="fm-insert-aa">
+  <div class="fm-card-header">
+    <div class="fm-icon">🔔</div>
+    <div>
+      <h2>FM_InsertAAAction</h2>
+      <div class="fm-ns">http://www.tibco.com/schemas/OMX-COMMON/.../FM/InsertAAAction.xsd</div>
+    </div>
+    <div class="fm-type both">AA Notification · AA</div>
+  </div>
+  <div class="fm-desc">
+    Inserts an order status notification action into the AA system. Wraps an orderStatusNotification element from the OM OrderStatus schema. Used to notify AA of completed or failed order states for downstream provisioning coordination.
+  </div>
+  <div class="fm-body">
+    <div class="section">
+      <div class="section-title">Trigger &amp; Activity</div>
+      <div class="trigger-box">
+        <strong>Activity ID:</strong> <code>AA_INSERT_ACTION</code><br>
+        <strong>Order Types:</strong> All — end-of-order notification or failure escalation
+      </div>
+    </div>
+    <div class="section">
+      <div class="section-title">Request Fields – InsertAAAction / orderStatusNotification</div>
+      <div class="tbl-wrap">
+      <table>
+        <thead><tr><th>FM Field</th><th>Type</th><th>Req</th><th>Description</th><th>Source</th></tr></thead>
+        <tbody>
+          <tr><td><code>orderId</code></td><td>string</td><td><span class="tag M">M</span></td><td>Order ID</td><td class="src">OrderData/orderId</td></tr>
+          <tr><td><code>orderStatus</code></td><td>string</td><td><span class="tag M">M</span></td><td>Final order status (COMPLETED/FAILED)</td><td class="src">OrderData/orderStatus</td></tr>
+          <tr><td><code>subscriberId</code></td><td>long</td><td><span class="tag O">O</span></td><td>Affected subscriber</td><td class="src">OrderData/Subscriber/subscriberId</td></tr>
+          <tr><td><code>msisdn</code></td><td>string</td><td><span class="tag O">O</span></td><td>Mobile number</td><td class="src">OrderData/Subscriber/LogicalResource[type='MSISDN']/value</td></tr>
+          <tr><td><code>errorCode</code></td><td>string</td><td><span class="tag O">O</span></td><td>Error code if failed</td><td class="src">OrderData/lastErrorCode</td></tr>
+          <tr><td><code>errorMessage</code></td><td>string</td><td><span class="tag O">O</span></td><td>Error description</td><td class="src">OrderData/lastErrorMessage</td></tr>
+          <tr><td><code>trackingId</code></td><td>string</td><td><span class="tag O">O</span></td><td>OMX tracking ID</td><td class="src">OrderData/omxTrackingId</td></tr>
+          <tr><td><code>operatorId</code></td><td>string</td><td><span class="tag O">O</span></td><td>Operator</td><td class="src">OrderData/operatorId</td></tr>
+        </tbody>
+      </table>
+      </div>
+    </div>
+  </div>
+</div><!-- /fm-insert-aa -->
+
+
+<!-- Footer -->
+<div style="margin-top:40px; padding:20px; text-align:center; color:#aaa; font-size:12px; border-top:1px solid #e0e0e0;">
+  TRUEOMX FM Interface Catalog · Generated from OMX-OM source code analysis · 2026-06-16<br>
+  Source: TRUEOMX_20250719 - AI/OMX-OM · TIBCO BusinessEvents 5.x · TRUE Corporation
+</div>
+
+</main>
+
+<script>
+  // Highlight active sidebar link on scroll
+  const cards = document.querySelectorAll('.fm-card');
+  const links = document.querySelectorAll('#sidebar a');
+  const obs = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        links.forEach(l => l.classList.remove('active'));
+        const id = e.target.id;
+        const active = document.querySelector('#sidebar a[href="#' + id + '"]');
+        if (active) active.classList.add('active');
+      }
+    });
+  }, { threshold: 0.3 });
+  cards.forEach(c => obs.observe(c));
+</script>
+</body>
+</html>

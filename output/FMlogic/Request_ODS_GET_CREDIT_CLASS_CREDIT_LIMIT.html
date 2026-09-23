@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_ODS_GET_CREDIT_CLASS_CREDIT_LIMIT</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+.badge-high{background:#FFE0E0;color:var(--true-dark)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_ODS_GET_CREDIT_CLASS_CREDIT_LIMIT</h1>
+  <div class="subtitle">ODS Credit Assessment — multi-SIM pre-pass across all subscribers then per-account evaluation</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: ODS</span>
+    <span class="meta-chip">Author: awalia-t420</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: IntraActivitySequencing</span>
+    <span class="meta-chip">Iteration: Account[] (with subscriber pre-pass)</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>ODS_GET_CREDIT_CLASS_CREDIT_LIMIT</strong> calls ODS (Offer &amp; Data Service) to retrieve a credit class and credit limit for each Account. The results are written back to Account ExtInfo as <code>ODS_CREDIT_CLASS</code> and <code>ODS_CREDIT_LIMIT</code> for downstream use by FM21 (CCBS_UPD_CREDIT_CLASS) and FM22 (CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT).
+    </div>
+    <div class="callout warn">
+      <strong>Multi-SIM pre-pass (unique pattern):</strong> Before the Account loop, the rule scans ALL subscribers across ALL POU/ChildOU to identify multi-SIM subscribers (<code>TR_MULTISIM_IND=RCM</code> AND <code>FE_OR_CCBS=FE</code>). The accumulated <code>sumMinorRC</code> (sum of OfferRate) is passed as an XSLT parameter to every Account's request.
+    </div>
+    <div class="callout info">
+      <strong>Two XSLT variants (OMX-2605):</strong> Old XSLT (commented out) omitted <code>priceplanRC</code> for DIY offers, included an OrderType=53 creditClass default, and lacked <code>relaxBlacklist</code>. Active XSLT adds all three. OrderType=11002 has special <code>primaryResourceValue</code> and <code>priceplanName</code> paths.
+    </div>
+    <div class="callout success">
+      <strong>Response write-backs (2):</strong> Writes <code>ODS_CREDIT_CLASS</code> and <code>ODS_CREDIT_LIMIT</code> as AccountExtendedInfo to the matching Account, using extId pattern <code>ACCEXT:{trackId}:{RefID}:CREDIT_CLASS/CREDIT_LIMIT</code>.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_ODS_GET_CREDIT_CLASS_CREDIT_LIMIT</code></td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>ODS</td></tr>
+      <tr><td>Event type (request)</td><td><code>Events.OMConsumers.OMXFM.Request.ODS_GET_CREDIT_CLASS_CREDIT_LIMIT</code></td></tr>
+      <tr><td>Event type (response)</td><td><code>Events.OMConsumers.OMXFM.Response.ODS_GET_CREDIT_CLASS_CREDIT_LIMIT</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.assertEvent</code> + <code>IntraActivitySequencing.ActionRequestEvent</code> per Account</td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Iteration target</td><td>Pre-pass: all subscribers; Main loop: <code>Customer.Account[]</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.ODS_GetCreditClassCreditLimitRes</code></td></tr>
+      <tr><td>Payload operation</td><td><code>ns:getCreditClassAndCreditLimitRequest</code></td></tr>
+      <tr><td>Key XSLT params</td><td>i (Account index), isMultiSIM, sumMinorRC, logicalDate, agreeRefId</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic Patterns -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns &amp; Dispatches</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr>
+        <td><strong>Multi-SIM pre-pass</strong></td>
+        <td>Scans all POU[i].ChildOU[k].Subscriber[j].SubscriberOffer[] AND POU[i].Subscriber[j].SubscriberOffer[]. Sets <code>isMultiSIM=true</code> when <code>ExtendedInfo[Name='TR_MULTISIM_IND'].Value='RCM'</code> AND <code>ExtendedInfo[Name='FE_OR_CCBS'].Value='FE'</code>. Accumulates <code>sumMinorRC += SubscriberOffer.OfferRate</code> when condition met.</td>
+      </tr>
+      <tr>
+        <td><strong>LogicalDate</strong></td>
+        <td><code>logicalDate = GetFirstBillDate(orderRequest)</code> — billing calculation function, not the order creation date.</td>
+      </tr>
+      <tr>
+        <td><strong>agreeRefId</strong></td>
+        <td>From POU.Agreement[RefId=AgreementRefId] linked to Account[i]. Used in ODS for agreement-scoped priceplan lookups.</td>
+      </tr>
+      <tr>
+        <td><strong>OrderType=11002 paths</strong></td>
+        <td><code>primaryResourceValue</code>: from POU[agreeRefId]/Subscriber[AccountRefId=AccountRefId].MSISDN → ChildOU fallback.<br><code>priceplanName</code>: from POU.Agreement[agreeRefId].Offer[0].ProductId.</td>
+      </tr>
+      <tr>
+        <td><strong>DIY priceplanRC (OMX-2605)</strong></td>
+        <td>If <code>Subscriber.SubscriberOffer[isDIYOffer='Y'].OfferRate</code> exists → include in <code>priceplanRC</code>. Active XSLT only.</td>
+      </tr>
+      <tr>
+        <td><strong>relaxBlacklist (OMX-2605)</strong></td>
+        <td><code>RELAX_STATUS</code> ExtInfo appended by NAS response. Active XSLT reads it from Subscriber ExtInfo and passes as <code>&lt;relaxBlacklist&gt;</code>. Old XSLT omitted this field.</td>
+      </tr>
+      <tr>
+        <td><strong>OrderType=53 creditClass default</strong></td>
+        <td>Old XSLT sent hardcoded creditClass=3 for OrderType=53. Active XSLT removes this — ODS always evaluates.</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority / JMSCorrelationID / OrderID</span><span class="tree-arrow">←</span><span class="tree-src">standard order fields</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">Account[$i]/RefId</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.OrderType</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:getCreditClassAndCreditLimitRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:accountId</span><span class="tree-arrow">←</span><span class="tree-src">Account[$i]/AccountID</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ban</span><span class="tree-arrow">←</span><span class="tree-src">Account[$i]/AccountID</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:creditClass</span><span class="tree-arrow">←</span><span class="tree-src-static">xsi:nil=true</span><span class="badge badge-orange">Always nil</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:creditLimit</span><span class="tree-arrow">←</span><span class="tree-src-static">xsi:nil=true</span><span class="badge badge-orange">Always nil</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:logicalDate</span><span class="tree-arrow">←</span><span class="tree-src">GetFirstBillDate(orderRequest)</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:isMultiSIM</span><span class="tree-arrow">←</span><span class="tree-src">pre-pass flag: TR_MULTISIM_IND=RCM AND FE_OR_CCBS=FE</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:sumMinorRC</span><span class="tree-arrow">←</span><span class="tree-src">accumulated OfferRate from multi-SIM pre-pass</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:accType</span><span class="tree-arrow">←</span><span class="tree-src">Account[$i]/AccountManagementInfo.AccountSubType</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:primaryResourceValue</span><span class="tree-arrow">←</span><span class="tree-src">OT=11002: POU[agreeRefId]/Subscriber[AccountRefId].MSISDN → ChildOU fallback</span><span class="badge badge-orange">Conditional: OT=11002</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:priceplanName</span><span class="tree-arrow">←</span><span class="tree-src">OT=11002: POU.Agreement[agreeRefId].Offer[0].ProductId<br>else: POU[agreeRefId].Subscriber[AccountRefId].SubscriberOffer[0].ProductId (active main subscriber)</span><span class="badge badge-orange">Conditional: OT-driven</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:priceplanRC</span><span class="tree-arrow">←</span><span class="tree-src">POU.Subscriber.SubscriberOffer[isDIYOffer='Y'].OfferRate</span><span class="badge badge-orange">Conditional: DIY offer exists</span><span class="tree-cond">Added OMX-2605</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:relaxBlacklist</span><span class="tree-arrow">←</span><span class="tree-src">Subscriber.ExtendedInfo[Name='RELAX_STATUS'].Value</span><span class="badge badge-orange">Conditional: exists</span><span class="tree-cond">Added OMX-2605; written by NAS response</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:custNo</span><span class="tree-arrow">←</span><span class="tree-src">Customer.CustomerId</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:companyCode</span><span class="tree-arrow">←</span><span class="tree-src">Account[$i]/AccountManagementInfo.CompanyCode</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:payChannelId</span><span class="tree-arrow">←</span><span class="tree-src">Account[$i]/PayChannelId</span><span class="badge badge-green">Always</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div style="margin-top:12px;font-size:0.8rem;color:#666">
+      <span style="color:#a6e3a1">■</span> XPath source &nbsp;
+      <span style="color:#fab387">■</span> Static literal or dispatch &nbsp;
+      <span style="color:#cba6f7;font-style:italic">■</span> Conditional note
+    </div>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_ODS_GET_CREDIT_CLASS_CREDIT_LIMIT
+├── [if resubmit] IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── Instance.getByExtIdByUri(NextActivityName, Activity) → nextAct
+├── GetFirstBillDate(orderRequest) → logicalDate
+├── ── MULTI-SIM PRE-PASS ──
+│   for each POU[i].ChildOU[k].Subscriber[j].SubscriberOffer[l]:
+│   │   if ExtInfo[TR_MULTISIM_IND]=RCM AND ExtInfo[FE_OR_CCBS]=FE:
+│   │       isMultiSIM = true
+│   │       sumMinorRC += SubscriberOffer.OfferRate
+│   for each POU[i].Subscriber[j].SubscriberOffer[l]:
+│       if ExtInfo[TR_MULTISIM_IND]=RCM AND ExtInfo[FE_OR_CCBS]=FE:
+│           isMultiSIM = true
+│           sumMinorRC += SubscriberOffer.OfferRate
+├── ── ACCOUNT LOOP ──
+│   for each Account[i]:
+│   ├── [skip if Response[ReferenceId==refId AND CompletionStatus==2] exists]
+│   ├── agreeRefId = Account[i].AgreementRefId
+│   ├── if PreExecCheck.length > 0:
+│   │   └── GetXMLForAccount(orderRequest, refId) → XPath.execute(chkXPath)
+│   └── if chkRes == "true":
+│       ├── Event.createEvent(ODS_GET_CREDIT_CLASS_CREDIT_LIMIT, active XSLT
+│       │   params: i, isMultiSIM, sumMinorRC, logicalDate, agreeRefId)
+│       ├── Event.assertEvent(reqEvent)
+│       ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+│       ├── isSkipped = false
+│       └── sendEventImmediate(Logger REQ)
+├── IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── GetActivityStatusString("1", false)
+└── SendDataToDB(orderRequest)
+
+Response_ODS_GET_CREDIT_CLASS_CREDIT_LIMIT
+├── OMXUtils.generateTrackingID() → trackId
+├── Instance.createInstance(ODS_GetCreditClassCreditLimitRes:
+│   ResponseCode, ResponseMsg, CompletionStatus, ReferenceId, CreditClass, CreditLimit)
+│   [NOTE: 6 fields — 2 extra vs standard 4-field ResponseBase]
+│   → currActivity.Response[n] = activityRes
+├── for each Account[i]: if Account[i].RefId == eventResponse.RefID:
+│   ├── Account[i].ExtendedInfo[] +=
+│   │   AccountExtendedInfo(
+│   │     Name="ODS_CREDIT_CLASS",
+│   │     Value=eventResponse.CreditClass,
+│   │     extId="ACCEXT:{trackId}:{RefID}:CREDIT_CLASS")
+│   └── Account[i].ExtendedInfo[] +=
+│       AccountExtendedInfo(
+│         Name="ODS_CREDIT_LIMIT",
+│         Value=eventResponse.CreditLimit,
+│         extId="ACCEXT:{trackId}:{RefID}:CREDIT_LIMIT")
+├── sendEventImmediate(Logger RES)
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → "true"/"false"
+    [OLD fan-in commented out]</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Multi-SIM pre-pass accumulates sumMinorRC across ALL subscribers globally — if the subscriber list is large, this loop is O(N×M) (accounts × subscribers × offers) before the account loop begins</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>In migration, consider streaming aggregation or pre-aggregating OfferRate at order construction time</td>
+      </tr>
+      <tr>
+        <td>relaxBlacklist reads RELAX_STATUS written by NAS_ACTIVATE_NEW_SUBS response — FM20 has an implicit ordering dependency on FM18</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document FM18→FM20 dependency explicitly in ProcessConfig. Validate that activity sequencing enforces this.</td>
+      </tr>
+      <tr>
+        <td>Old XSLT (pre-OMX-2605) hardcoded creditClass=3 for OrderType=53 — completely removed in active XSLT</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Confirm OrderType=53 behaviour is correct without the default; ODS now evaluates fully</td>
+      </tr>
+      <tr>
+        <td>ODS_GetCreditClassCreditLimitRes has 6 fields (adds CreditClass + CreditLimit to standard 4) — downstream code reads these from the response concept, not ExtInfo directly in the response function</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Ensure migration keeps both response concept fields and ExtInfo write-backs; they serve different consumers</td>
+      </tr>
+      <tr>
+        <td>extId pattern "ACCEXT:{trackId}:{RefID}:CREDIT_CLASS" ties the ODS result to the tracking ID at call time — if trackId changes on resubmit, lookup in FM21/FM22 may fail</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>FM21/FM22 should search ExtInfo by Name, not by extId, to be resubmit-safe</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <p style="margin-bottom:12px;font-size:0.87rem;">Matches by <code>Account[i].RefId == eventResponse.RefID</code>. Writes two ExtInfo keys with structured extIds to the matching Account.</p>
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>ODS_GetCreditClassCreditLimitRes (6 fields: std 4 + CreditClass + CreditLimit)</td><td>Always</td></tr>
+      <tr><td><code>Account[i].ExtendedInfo[]</code> Name="ODS_CREDIT_CLASS"<br>extId="ACCEXT:{trackId}:{RefID}:CREDIT_CLASS"</td><td><code>eventResponse.CreditClass</code></td><td>Account.RefId == RefID</td></tr>
+      <tr><td><code>Account[i].ExtendedInfo[]</code> Name="ODS_CREDIT_LIMIT"<br>extId="ACCEXT:{trackId}:{RefID}:CREDIT_LIMIT"</td><td><code>eventResponse.CreditLimit</code></td><td>Account.RefId == RefID</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:12px">
+      <strong>Fan-in:</strong> <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code>. <strong>Downstream consumers:</strong> FM21 reads <code>ODS_CREDIT_CLASS</code> via Account.ExtendedInfo[Name='ODS_CREDIT_CLASS'].Value; FM22 reads <code>ODS_CREDIT_LIMIT</code> similarly.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

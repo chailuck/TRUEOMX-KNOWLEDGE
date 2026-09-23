@@ -1,0 +1,541 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_TDG_CANCEL_SUBSCRIBER</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px 24px;}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px;}
+.page-header .subtitle{font-size:0.95rem;opacity:0.85;margin-bottom:14px;}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:3px 12px;font-size:0.78rem;}
+.container{max-width:1280px;margin:0 auto;padding:24px 32px;}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:22px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);font-weight:600;padding:9px 12px;text-align:left;border-bottom:2px solid var(--true-red);}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:nth-child(even){background:#FDF5F5;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:0.82rem;border-left:3px solid var(--true-red);line-height:1.5;}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:0.85em;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600;}
+.b-green{background:#E8F5E9;color:var(--success);}.b-orange{background:#FFF3E0;color:var(--warning);}.b-blue{background:#E3F0FD;color:var(--info);}.b-purple{background:#F3E5F5;color:var(--skip);}.b-jms{background:#FFE0B2;color:#E65100;}.b-log{background:#F1F8E9;color:#558B2F;}.b-high{background:#FFE0E0;color:#B71C1C;}.b-medium{background:#FFF3E0;color:#E65100;}.b-low{background:#E8F5E9;color:#2E7D32;}
+.warn-box{background:#FFF8E1;border-left:4px solid #FFB300;padding:10px 14px;border-radius:4px;margin:10px 0;font-size:0.88rem;}
+.alert-box{background:#FFEBEE;border-left:4px solid #C62828;padding:10px 14px;border-radius:4px;margin:10px 0;font-size:0.88rem;}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);padding:10px 14px;border-radius:4px;margin:10px 0;font-size:0.88rem;}
+.ok-box{background:#E8F5E9;border-left:4px solid var(--success);padding:10px 14px;border-radius:4px;margin:10px 0;font-size:0.88rem;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:6px 0 6px 36px;position:relative;border-bottom:1px dashed #f0e0e0;}
+.step-list li::before{content:counter(step);position:absolute;left:0;top:6px;background:var(--true-red);color:#fff;width:22px;height:22px;border-radius:50%;text-align:center;line-height:22px;font-size:0.75rem;font-weight:700;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}.tree-attr{color:#f9e2af;}.tree-arrow{color:#6c7086;margin:0 6px;}.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px;}.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px;}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px;}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.legend{display:flex;flex-wrap:wrap;gap:10px;padding:10px 0;font-size:0.8rem;}
+.legend-item{display:flex;align-items:center;gap:4px;}.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+footer{text-align:center;padding:24px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:8px;}
+h3{color:var(--true-dark);margin:14px 0 8px;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_TDG_CANCEL_SUBSCRIBER</h1>
+  <div class="subtitle">TIBCO BusinessEvents FM Logic — TDG TRUE Digital: Cancel Subscriber (Per-Material Fan-out)</div>
+  <div class="meta-chips">
+    <span class="chip">Priority: 5</span>
+    <span class="chip">ForwardChain: true</span>
+    <span class="chip">Backend: TDG (TRUE Digital)</span>
+    <span class="chip">Event: TDG_CANCEL_SUBSCRIBER (dedicated)</span>
+    <span class="chip">Fan-out: Per subscriber×material (MatCode key)</span>
+    <span class="chip">Fan-in: RequestCount == successResponseCount</span>
+    <span class="chip">Author: CHAYATORN P.</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This FM sends a device cancellation request to TDG (TRUE Digital) for each <strong>Material</strong> (physical device/hardware) attached to each subscriber. Unlike most FMs that fan out per subscriber or per offer, this rule fans out per <strong>subscriber×material</strong>, using a composite key <code>subscriberRefId + ":" + MatCode</code> for both the event RefID and the resubmit skip check.</p>
+    <p style="margin-top:10px;">The <code>ns:propositioncode</code> is derived from a RelatedOffersArray XPath that finds a trade-in offer (ServiceType="85" and TR_CONTRACT_IND=Y in SocProperties). Both POU and COU subscriber sets are processed in parallel.</p>
+    <div class="alert-box"><strong>Critical [HIGH] — COU Audit Log Name Wrong:</strong> The COU dispatch block (lines 139–140) logs <code>OPERATION_NAME="TDG_CREATE_SUBSCRIBER"</code> and <code>AUDIT_TRACE="Request Sent for TDG_CREATE_SUBSCRIBER"</code> — this is a copy-paste bug from a create FM. The POU audit (line 80) correctly says <code>"TDG_CANCEL_SUBSCRIBER"</code>. Fix: update the COU Logger event XSLT OPERATION_NAME and AUDIT_TRACE strings.</div>
+    <div class="warn-box"><strong>[MEDIUM] ns:propositioncode always emitted (no xsl:if):</strong> The XPath over <code>SubscriberOffers/RelatedOffersArray[ServiceType="85" and contains(SocProperties,'TR_CONTRACT_IND=Y')]</code> is emitted unconditionally. If no matching RelatedOffersArray exists, TDG receives an empty <code>&lt;ns:propositioncode/&gt;</code> element.</div>
+    <div class="warn-box"><strong>[MEDIUM] MatCode vs MatSerial composite key inconsistency:</strong> <code>pmatchRefId = subscriberRefId + ":" + MatCode</code> always uses MatCode. But when MatCode is blank, the PreExecCheck falls back to MatSerial for the XML lookup. The composite key becomes <code>"subRefId:"</code> (trailing colon with empty second part) — the resubmit check would match any response whose ReferenceId also has that key, but the XML lookup uses a different identifier.</div>
+    <div class="ok-box"><strong>Response rulefunction is clean:</strong> Uses <code>OMXUtils:generateTrackingID()</code> inside the XSLT (correct pattern), standard fan-in, no dead variables or commented-out code.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_TDG_CANCEL_SUBSCRIBER</code></td></tr>
+      <tr><td>Author</td><td>CHAYATORN P.</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Target backend</td><td>TDG — TRUE Digital (Cancel Subscriber / Device)</td></tr>
+      <tr><td>Request event type</td><td><code>Events.OMConsumers.OMXFM.Request.TDG_CANCEL_SUBSCRIBER</code> (dedicated)</td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.TDG_CANCEL_SUBSCRIBER</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code> (standard, extId generated inside XSLT)</td></tr>
+      <tr><td>Payload schema NS</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/TDG/CancelSubscriber.xsd</code></td></tr>
+      <tr><td>Dispatch method</td><td><code>Event.Ext.sendEventImmediate</code> (parallel)</td></tr>
+      <tr><td>Fan-out granularity</td><td>Per subscriber×material — one event per Material entry in subscriber's MaterialInfo</td></tr>
+      <tr><td>Fan-out gate</td><td><code>MaterialInfo != null &amp;&amp; Material@length &gt; 0</code></td></tr>
+      <tr><td>RefID / resubmit key</td><td>Composite: <code>subscriberRefId + ":" + MatCode</code></td></tr>
+      <tr><td>Fan-in mechanism</td><td>Standard: <code>currActivity.RequestCount == successResponseCount</code> where success = ResponseCode ends in "000"</td></tr>
+      <tr><td>RequestCount tracking</td><td><code>orderCurrentActivity.RequestCount++</code> only if <code>!isActResub</code></td></tr>
+      <tr><td>PreExecCheck helper (POU)</td><td><code>GetXMLForSubscriberMaterialInfo(orderRequest, pSubRefId, matCode/matSerial)</code></td></tr>
+      <tr><td>PreExecCheck helper (COU)</td><td><code>GetXMLForSubscriberMaterialInChildOU(orderRequest, cSubRefId, pOuRefId, matCode/matSerial)</code></td></tr>
+      <tr><td>POU audit OPERATION_NAME</td><td>"TDG_CANCEL_SUBSCRIBER" (correct)</td></tr>
+      <tr><td>COU audit OPERATION_NAME</td><td>"TDG_CREATE_SUBSCRIBER" [HIGH BUG — copy-paste error]</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Declared -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order; subscriber, material, and offer data</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current process step; Response[], Status, RequestCount</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Matches activity to order's next step</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "TDG_CANCEL_SUBSCRIBER"</code></td><td>FM identity</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "TDG_CANCEL_SUBSCRIBER"</code></td><td>ProcessFlow routing</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity must be waiting</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li>Compute <code>isActResub</code>; fetch current activity via <code>Instance.getByExtIdByUri</code>; read <code>chkXPath</code>; set <code>isSkipped=true</code></li>
+      <li><strong>POU loop</strong>: iterate ParentOU[p]; capture <code>pOuId</code> (dead), <code>pOuRefId</code></li>
+      <li><strong>POU Subscriber loop</strong>: iterate Subscriber[ps]; capture <code>psub</code>, <code>pSubRefId</code></li>
+      <li>Gate check: <code>MaterialInfo != null &amp;&amp; Material@length &gt; 0</code> — skip subscriber if no materials</li>
+      <li><strong>POU Material loop</strong>: iterate MaterialInfo.Material[pmat]; build <code>pmatchRefId = pSubRefId + ":" + MatCode</code></li>
+      <li>Resubmit skip: linear scan of <code>Response[]</code> for <code>ReferenceId == pmatchRefId AND CompletionStatus == 2</code></li>
+      <li>If <code>!reqSuccess</code>: build PreExecCheck XML via <code>GetXMLForSubscriberMaterialInfo</code> (MatCode preferred; MatSerial fallback); execute <code>chkXPath</code></li>
+      <li>If <code>chkRes=="true"</code>: build &amp; <code>sendEventImmediate</code> TDG_CANCEL_SUBSCRIBER event; <code>isSkipped=false</code>; <code>RequestCount++</code> if !isActResub; dispatch POU audit log (correct name)</li>
+      <li><strong>COU loop</strong>: iterate ChildOU[c]; same Material-level fan-out — dispatch TDG event; dispatch COU audit log <strong>[HIGH BUG: says "TDG_CREATE_SUBSCRIBER"]</strong></li>
+      <li>If <code>!isSkipped</code>: Status="1", SendDataToDB; else SkipActivity("4")</li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 Data Extraction -->
+<div class="section">
+  <div class="section-header">§6 — Data Extraction</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>pOuId</code> / <code>cOuId</code></td><td><code>ParentOU[p].OUId</code> / <code>ChildOU[c].OUId</code></td><td>[LOW] Extracted but never used in XSLT or elsewhere</td></tr>
+      <tr><td><code>pOuRefId</code></td><td><code>ParentOU[p].RefId</code></td><td>Used in COU PreExecCheck helper call</td></tr>
+      <tr><td><code>material</code></td><td><code>Subscriber[ps].MaterialInfo.Material[pmat]</code></td><td>Device record; MatCode, MatSerial are key fields</td></tr>
+      <tr><td><code>pmatchRefId</code></td><td><code>pSubRefId + ":" + material.MatCode</code> (POU) / <code>cSubRefId + ":" + material.MatCode</code> (COU)</td><td>Composite resubmit key AND event RefID. Always uses MatCode — if blank, becomes <code>"subRefId:"</code> [MEDIUM]</td></tr>
+      <tr><td>PreExecCheck material arg</td><td>MatCode preferred; <code>MatSerial</code> if <code>BRMS.IsBlankOrStringNull(MatCode)</code></td><td>MatCode/MatSerial inconsistency with composite key [MEDIUM]</td></tr>
+      <tr><td><code>ns:propositioncode</code></td><td><code>$psub/SubscriberOffers/RelatedOffersArray[ServiceType="85" and contains(SocProperties,'TR_CONTRACT_IND=Y')]/OfferName</code></td><td>TR contract offer name; emitted unconditionally [MEDIUM]</td></tr>
+      <tr><td><code>ns:reason</code></td><td><code>Channel='CCBS'</code> → <code>'C'</code>; else → <code>'R'</code></td><td>Always one value via xsl:choose</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Dependencies -->
+<div class="section">
+  <div class="section-header">§7 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§7.1 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Dispatch</th></tr>
+      <tr><td><span class="badge b-jms">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.TDG_CANCEL_SUBSCRIBER</code></td><td><code>sendEventImmediate</code> — one per qualifying subscriber×material</td></tr>
+      <tr><td><span class="badge b-log">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td><code>sendEventImmediate</code> — POU: correct name; COU: wrong name [HIGH BUG]</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§7.2 — Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>API / Operation</th><th>Payload Root</th><th>Schema NS</th></tr>
+      <tr><td>TDG (TRUE Digital)</td><td>CancelSubscriber</td><td><code>ns:CancelSubscriberRequest</code></td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/TDG/CancelSubscriber.xsd</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§7.3 — Material Concept Fields Referenced</h3>
+    <table>
+      <tr><th>Field</th><th>Usage</th><th>Notes</th></tr>
+      <tr><td><code>MatCode</code></td><td>Composite key (<code>pmatchRefId</code>); PreExecCheck primary arg</td><td>Preferred over MatSerial for PreExecCheck</td></tr>
+      <tr><td><code>MatSerial</code></td><td>PreExecCheck fallback when MatCode blank; <code>ns:serial</code> in payload</td><td>Conditional (<code>xsl:if test="$material/MatSerial"</code>)</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§7.4 — RelatedOffersArray Filter (ns:propositioncode)</h3>
+    <table>
+      <tr><th>Predicate</th><th>Value / Purpose</th></tr>
+      <tr><td><code>ServiceType</code></td><td><code>"85"</code> — TDG service type identifier</td></tr>
+      <tr><td><code>SocProperties</code></td><td><code>contains(SocProperties, 'TR_CONTRACT_IND=Y')</code> — TR contract indicator</td></tr>
+      <tr><td>Result field</td><td><code>OfferName</code> of first matching RelatedOffersArray → <code>ns:propositioncode</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 Payload Build -->
+<div class="section">
+  <div class="section-header">§8 — Detailed Payload Build</div>
+  <div class="section-body">
+    <h3>§8.1 — XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>XSLT Param</th><th>Bound From</th><th>Notes</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest concept</td><td>Root order — OrderData, Channel</td></tr>
+      <tr><td><code>$pmatchRefId</code></td><td><code>subscriberRefId + ":" + MatCode</code></td><td>Event RefID; resubmit composite key</td></tr>
+      <tr><td><code>$material</code></td><td>Material concept</td><td>MatSerial → ns:serial</td></tr>
+      <tr><td><code>$psub</code> (POU) / <code>$csub</code> (COU)</td><td>Subscriber concept</td><td>MSISDN → ns:id; SubscriberOffers/RelatedOffersArray → ns:propositioncode</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§8.2 — POU vs COU Variant Differences</h3>
+    <table>
+      <tr><th>Aspect</th><th>POU Variant</th><th>COU Variant</th></tr>
+      <tr><td>Subscriber param</td><td><code>$psub</code></td><td><code>$csub</code></td></tr>
+      <tr><td>compositeRefId base</td><td><code>pSubRefId</code></td><td><code>cSubRefId</code></td></tr>
+      <tr><td>PreExecCheck helper</td><td><code>GetXMLForSubscriberMaterialInfo(req, pSubRefId, matArg)</code></td><td><code>GetXMLForSubscriberMaterialInChildOU(req, cSubRefId, pOuRefId, matArg)</code></td></tr>
+      <tr><td>ns:id source</td><td><code>$psub/MSISDN</code></td><td><code>$csub/MSISDN</code></td></tr>
+      <tr><td>ns:propositioncode XPath</td><td><code>$psub/SubscriberOffers/RelatedOffersArray[...]</code></td><td><code>$csub/SubscriberOffers/RelatedOffersArray[...]</code></td></tr>
+      <tr><td>Audit OPERATION_NAME</td><td>"TDG_CANCEL_SUBSCRIBER" ✓</td><td>"TDG_CREATE_SUBSCRIBER" [HIGH BUG]</td></tr>
+      <tr><td>All payload fields</td><td colspan="2">Identical logic — same CancelSubscriberRequest structure</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 XSLT Tree -->
+<div class="section">
+  <div class="section-header">§9 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;overflow-x:auto;">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge b-green">Always</span> <span class="tree-cond">Correct — extId, not Id</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$pmatchRefId</span> (subscriberRefId + ":" + MatCode) <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-tag">ns:CancelSubscriberRequest</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-tag">ns:serial</span><span class="tree-arrow">←</span><span class="tree-src">$material/MatSerial</span> <span class="badge b-orange">Conditional</span> <span class="tree-cond">xsl:if test="$material/MatSerial"</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">ns:id</span><span class="tree-arrow">←</span><span class="tree-src">$psub/MSISDN</span> (POU) / <span class="tree-src">$csub/MSISDN</span> (COU) <span class="badge b-orange">Conditional</span> <span class="tree-cond">xsl:if test="$psub/MSISDN"</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">ns:propositioncode</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers/RelatedOffersArray[ServiceType="85" and TR_CONTRACT_IND=Y]/OfferName</span> <span class="badge b-green">Always</span> <span class="tree-cond">[MEDIUM — no xsl:if, may be empty]</span></div></li>
+                        <li><div class="tree-row"><span class="tree-tag">ns:reason</span> <span class="tree-cond">xsl:choose:</span></div>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-cond">when Channel='CCBS':</span><span class="tree-arrow">←</span><span class="tree-src-static">'C'</span></div></li>
+                            <li><div class="tree-row"><span class="tree-cond">otherwise:</span><span class="tree-arrow">←</span><span class="tree-src-static">'R'</span></div></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#a6e3a1;"></span>XPath source</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#fab387;"></span>Static literal</div>
+      <div class="legend-item"><span class="badge b-green">Always</span>Unconditional</div>
+      <div class="legend-item"><span class="badge b-orange">Conditional</span>Inside xsl:if</div>
+    </div>
+  </div>
+</div>
+
+<!-- §10 Audit -->
+<div class="section">
+  <div class="section-header">§10 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Phase</th><th>Variant</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th></tr>
+      <tr><td>Request</td><td>POU (correct)</td><td>"TDG_CANCEL_SUBSCRIBER"</td><td>"Request Sent for TDG_CANCEL_SUBSCRIBER"</td></tr>
+      <tr><td>Request</td><td>COU <span class="badge b-high">[HIGH BUG]</span></td><td>"TDG_CREATE_SUBSCRIBER"</td><td>"Request Sent for TDG_CREATE_SUBSCRIBER"</td></tr>
+      <tr><td>Response</td><td>Both</td><td>"TDG_CANCEL_SUBSCRIBER"</td><td>"Response received for TDG_CANCEL_SUBSCRIBER"</td></tr>
+      <tr><td>Audit gate</td><td colspan="3">Only when event is dispatched (inside PreExecCheck pass block)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §11 Status -->
+<div class="section">
+  <div class="section-header">§11 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Transition</th><th>Code</th><th>Trigger</th></tr>
+      <tr><td>Running</td><td>"1"</td><td>At least one event dispatched</td></tr>
+      <tr><td>Skip</td><td>"4"</td><td>No events dispatched (all subscribers have no materials, or all failed PreExecCheck)</td></tr>
+      <tr><td>Error</td><td>HandleActivityException</td><td>Any uncaught exception</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Exception -->
+<div class="section">
+  <div class="section-header">§12 — Exception / Error Handling</div>
+  <div class="section-body">
+    <p><code>try { ... } catch (Exception ae) { HandleActivityException(orderRequest, orderCurrentActivity, ae, ""); }</code></p>
+  </div>
+</div>
+
+<!-- §13 Helpers -->
+<div class="section">
+  <div class="section-header">§13 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Instance.getByExtIdByUri(extId, uri)</code></td><td>Fetches current activity to read PreExecCheck</td></tr>
+      <tr><td><code>BRMS.IsBlankOrStringNull(value)</code></td><td>Null/blank check for MatCode to decide PreExecCheck helper arg</td></tr>
+      <tr><td><code>GetXMLForSubscriberMaterialInfo(orderRequest, subRefId, matArg)</code></td><td>Builds PreExecCheck XML for POU subscriber with material key</td></tr>
+      <tr><td><code>GetXMLForSubscriberMaterialInChildOU(orderRequest, cSubRefId, pOuRefId, matArg)</code></td><td>Builds PreExecCheck XML for COU subscriber with material key</td></tr>
+      <tr><td><code>GetActivityStatusString("1", false)</code></td><td>Returns "Running" status</td></tr>
+      <tr><td><code>SendDataToDB(orderRequest)</code></td><td>Persists order state</td></tr>
+      <tr><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>Marks activity as skipped</td></tr>
+      <tr><td><code>HandleActivityException(...)</code></td><td>Central exception handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §14 Dependency Tree -->
+<div class="section">
+  <div class="section-header">§14 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><span class="st">Request_TDG_CANCEL_SUBSCRIBER.rule</span>
+├── isActResub check
+├── Instance.getByExtIdByUri(NextActivityName, ".../Activity") → nextAct
+├── nextAct.PreExecCheck → chkXPath
+│
+├── [POU loop: ParentOU[p]]
+│   ├── pOuId = ParentOU[p].OUId  [DEAD — never used]
+│   ├── pOuRefId = ParentOU[p].RefId
+│   └── [POU Subscriber loop: Subscriber[ps]]
+│       ├── psub, pSubRefId
+│       └── [Gate: MaterialInfo != null AND Material@length > 0]
+│           └── [POU Material loop: Material[pmat]]
+│               ├── pmatchRefId = pSubRefId + ":" + material.MatCode
+│               ├── Linear scan: Response[i].ReferenceId == pmatchRefId AND CompletionStatus==2 → reqSuccess
+│               └── [if !reqSuccess]
+│                   ├── BRMS.IsBlankOrStringNull(material.MatCode)
+│                   │   ├── if false: GetXMLForSubscriberMaterialInfo(req, pSubRefId, MatCode)
+│                   │   └── if true:  GetXMLForSubscriberMaterialInfo(req, pSubRefId, MatSerial)
+│                   ├── XPath.execute("/(" + chkXPath + ")", sXML) → chkRes
+│                   └── [if chkRes=="true"]
+│                       ├── Event.createEvent(TDG_CANCEL_SUBSCRIBER XSLT — $psub variant)
+│                       ├── Event.Ext.sendEventImmediate(reqEvent)
+│                       ├── isSkipped = false
+│                       ├── if(!isActResub): orderCurrentActivity.RequestCount++
+│                       └── Event.Ext.sendEventImmediate(Logger — "TDG_CANCEL_SUBSCRIBER") ✓
+│
+├── [COU loop: ParentOU[p].ChildOU[c]]
+│   ├── cOuId = ChildOU[c].OUId  [DEAD — never used]
+│   ├── cOuRefId = ChildOU[c].RefId
+│   └── [COU Subscriber loop: Subscriber[cs]]
+│       ├── csub, cSubRefId
+│       └── [Gate: MaterialInfo != null AND Material@length > 0]
+│           └── [COU Material loop: Material[pmat]]
+│               ├── pmatchRefId = cSubRefId + ":" + material.MatCode
+│               ├── Linear scan: Response[i].ReferenceId == pmatchRefId AND CompletionStatus==2 → reqSuccess
+│               └── [if !reqSuccess]
+│                   ├── BRMS.IsBlankOrStringNull(material.MatCode)
+│                   │   ├── if false: GetXMLForSubscriberMaterialInChildOU(req, cSubRefId, pOuRefId, MatCode)
+│                   │   └── if true:  GetXMLForSubscriberMaterialInChildOU(req, cSubRefId, pOuRefId, MatSerial)
+│                   ├── XPath.execute("/(" + chkXPath + ")", sXML) → chkRes
+│                   └── [if chkRes=="true"]
+│                       ├── Event.createEvent(TDG_CANCEL_SUBSCRIBER XSLT — $csub variant)
+│                       ├── Event.Ext.sendEventImmediate(reqEvent)
+│                       ├── isSkipped = false
+│                       ├── if(!isActResub): orderCurrentActivity.RequestCount++
+│                       └── Event.Ext.sendEventImmediate(Logger — "TDG_CREATE_SUBSCRIBER") [HIGH BUG]
+│
+├── if(!isSkipped): GetActivityStatusString("1") + SendDataToDB
+├── else: SkipActivity(..., "4")
+└── HandleActivityException(...)</pre>
+  </div>
+</div>
+
+<!-- §15 Concepts -->
+<div class="section">
+  <div class="section-header">§15 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Key Properties Used</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>OrderData.OMXTrackingId, OrderData.OrderID, OrderData.OrderType, OrderData.OrderPriority, OrderData.Channel, Customer.ParentOU[].RefId/OUId, Customer.ParentOU[].Subscriber[], Customer.ParentOU[].ChildOU[].Subscriber[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>RefId, MSISDN, MaterialInfo.Material[], SubscriberOffers[].RelatedOffersArray[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Material</code></td><td>MatCode, MatSerial</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.RelatedOffersArray</code></td><td>ServiceType, SocProperties, OfferName</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>ActivityID, Status, RequestCount, Response[], PreExecCheck</td></tr>
+      <tr><td><code>Concepts.FM.Base.ResponseBase</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId (= composite pmatchRefId)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §16 Migration -->
+<div class="section">
+  <div class="section-header">§16 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>#</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Cancel TDG subscriber entry for each Material (device) attached to each POU and COU subscriber that passes PreExecCheck</td></tr>
+      <tr><td>R2</td><td>Fan-out key: composite <code>subscriberRefId + ":" + MatCode</code> — one event per material per subscriber</td></tr>
+      <tr><td>R3</td><td>Skip subscriber if MaterialInfo is null or has no Material entries</td></tr>
+      <tr><td>R4</td><td>ns:serial = MatSerial (conditional); ns:id = subscriber MSISDN (conditional)</td></tr>
+      <tr><td>R5</td><td>ns:propositioncode = OfferName from RelatedOffersArray[ServiceType="85" and TR_CONTRACT_IND=Y]</td></tr>
+      <tr><td>R6</td><td>ns:reason = 'C' if Channel=CCBS; else 'R'</td></tr>
+      <tr><td>R7</td><td>Standard fan-in: RequestCount == count(Response[ResponseCode ends in "000"])</td></tr>
+    </table>
+    <h3 style="margin-top:14px;">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>COU audit Logger OPERATION_NAME/AUDIT_TRACE says "TDG_CREATE_SUBSCRIBER" instead of "TDG_CANCEL_SUBSCRIBER" — copy-paste bug from create FM</td><td><span class="badge b-high">[HIGH]</span></td><td>Fix COU Logger XSLT: change OPERATION_NAME and AUDIT_TRACE strings to "TDG_CANCEL_SUBSCRIBER"</td></tr>
+      <tr><td>ns:propositioncode always emitted without xsl:if — empty element sent to TDG if no RelatedOffersArray[ServiceType="85" and TR_CONTRACT_IND=Y] exists</td><td><span class="badge b-medium">[MEDIUM]</span></td><td>Wrap in xsl:if; verify TDG accepts absent propositioncode</td></tr>
+      <tr><td>pmatchRefId always uses MatCode but PreExecCheck may use MatSerial — composite key inconsistency when MatCode blank</td><td><span class="badge b-medium">[MEDIUM]</span></td><td>Align: if MatCode blank, use MatSerial in pmatchRefId too; or always require MatCode</td></tr>
+      <tr><td>pOuId and cOuId extracted but never used in XSLT or logic</td><td><span class="badge b-low">[LOW]</span></td><td>Remove unused variable assignments to reduce confusion</td></tr>
+      <tr><td>Multiple RelatedOffersArray matches for ServiceType="85" and TR_CONTRACT_IND=Y — xsl:value-of selects first; remaining offers ignored</td><td><span class="badge b-low">[LOW]</span></td><td>Verify if only one RelatedOffer per subscriber can match; document assumption</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Source -->
+<div class="section">
+  <div class="section-header">§17 — Full Source Code (abbreviated)</div>
+  <div class="section-body">
+    <pre><span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_TDG_CANCEL_SUBSCRIBER</span> {
+  <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+  <span class="kw">declare</span> {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+  }
+  <span class="kw">when</span> { <span class="cm">/* activityId == "TDG_CANCEL_SUBSCRIBER" AND Status == "WAITING" */</span> }
+  <span class="kw">then</span> {
+    <span class="ty">boolean</span> isActResub = ...;
+    <span class="kw">try</span> {
+      <span class="ty">Activity</span> nextAct = Instance.getByExtIdByUri(...);
+      <span class="ty">boolean</span> isSkipped = <span class="kw">true</span>;
+      <span class="kw">for</span> (POU loop) {
+        pOuId = ParentOU[p].OUId;  <span class="cm">// DEAD VARIABLE</span>
+        pOuRefId = ParentOU[p].RefId;
+        <span class="kw">for</span> (psub loop) {
+          <span class="kw">if</span> (MaterialInfo != null &amp;&amp; Material@length &gt; <span class="nu">0</span>) {
+            <span class="kw">for</span> (Material[pmat]) {
+              pmatchRefId = pSubRefId + <span class="st">":"</span> + material.MatCode;
+              <span class="cm">// resubmit check against pmatchRefId</span>
+              <span class="kw">if</span>(!reqSuccess) {
+                <span class="cm">// PreExecCheck: MatCode preferred, MatSerial fallback</span>
+                <span class="kw">if</span>(chkRes==<span class="st">"true"</span>) {
+                  reqEvent = Event.createEvent(<span class="cm">/* TDG_CANCEL_SUBSCRIBER XSLT — $psub variant, see §9 */</span>);
+                  Event.Ext.sendEventImmediate(reqEvent);
+                  isSkipped = <span class="kw">false</span>; RequestCount++;
+                  Event.Ext.sendEventImmediate(Logger <span class="cm">/* POU: "TDG_CANCEL_SUBSCRIBER" ✓ */</span>);
+                }
+              }
+            }
+          }
+        }
+      }
+      <span class="kw">for</span> (COU loop) {
+        cOuId = ChildOU[c].OUId;  <span class="cm">// DEAD VARIABLE</span>
+        <span class="kw">for</span> (csub loop) {
+          <span class="kw">if</span> (MaterialInfo != null &amp;&amp; Material@length &gt; <span class="nu">0</span>) {
+            <span class="kw">for</span> (Material[pmat]) {
+              pmatchRefId = cSubRefId + <span class="st">":"</span> + material.MatCode;
+              <span class="kw">if</span>(!reqSuccess) {
+                <span class="cm">// PreExecCheck: uses GetXMLForSubscriberMaterialInChildOU</span>
+                <span class="kw">if</span>(chkRes==<span class="st">"true"</span>) {
+                  reqEvent = Event.createEvent(<span class="cm">/* TDG_CANCEL_SUBSCRIBER XSLT — $csub variant */</span>);
+                  Event.Ext.sendEventImmediate(reqEvent);
+                  isSkipped = <span class="kw">false</span>; RequestCount++;
+                  Event.Ext.sendEventImmediate(Logger <span class="cm">/* COU: "TDG_CREATE_SUBSCRIBER" [HIGH BUG] */</span>);
+                }
+              }
+            }
+          }
+        }
+      }
+      <span class="kw">if</span>(!isSkipped) { Status=<span class="st">"1"</span>; SendDataToDB; }
+      <span class="kw">else</span> { SkipActivity(<span class="st">"4"</span>); }
+    } <span class="kw">catch</span>(<span class="ty">Exception</span> ae) { HandleActivityException(...); }
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- §18 Response -->
+<div class="section">
+  <div class="section-header">§18 — Response Message Rule</div>
+  <div class="section-body">
+    <h3>§18.1 — Overview</h3>
+    <p>Clean, correct implementation. Creates a <code>ResponseBase</code> concept with <code>OMXUtils:generateTrackingID()</code> called inside the XSLT, appends to <code>currActivity.Response[]</code>, logs audit, then evaluates standard fan-in: <code>RequestCount == count(Response[ResponseCode ends in "000"])</code>.</p>
+    <div class="ok-box">No dead variables, no commented-out code, no @Id/@extId anomaly — this response rulefunction follows the correct pattern.</div>
+
+    <h3 style="margin-top:14px;">§18.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Audit log</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.TDG_CANCEL_SUBSCRIBER</code></td><td>TDG response event</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Response[] appended</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§18.3 — ResponseBase Concept Construction</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;overflow-x:auto;margin-top:10px;">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge b-green">Always</span> <span class="tree-cond">Correct — generated inside XSLT</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span> (= pmatchRefId composite key) <span class="badge b-orange">Conditional</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3 style="margin-top:14px;">§18.4 — Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Expression</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code> → return "true"</td></tr>
+      <tr><td>Not yet done</td><td>return "false"</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &middot; Generated 2026-08-14</footer>
+</body>
+</html>

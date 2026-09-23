@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_OMX_GET_SRV_TRX_NO_MSIM — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}.code-block .xa{color:#f9e2af}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}.badge-teal{background:#E0F2F1;color:#00695c}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+.callout.purple{border-color:var(--skip);background:#F3E5F5}
+h3{color:var(--true-dark);margin:16px 0 10px;font-size:0.95rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_OMX_GET_SRV_TRX_NO_MSIM</h1>
+    <div class="subtitle">Fetches service transaction sequence numbers for MultiSIM — counts qualifying MASTER + MINOR SIM entries, sends one OMX request for all, then distributes individual sequence numbers back to each SIM's SrvTrxNoInfo array. Also writes the total count to AA_CHECK_CONFIRMATION.RequestCount for downstream fan-in.</div>
+    <div class="meta-row">
+      <span class="meta-badge">Backend: OMX FM (OMX_GET_SRV_TRX_NO)</span>
+      <span class="meta-badge">Pattern: Single-shot JMS (count=N, array response)</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Author: mranade-T420</span>
+      <span class="meta-badge">Used in steps: 40, 42</span>
+      <span class="meta-badge">Generated: 2026-08-06</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>Fetches service transaction sequence numbers (SrvTrxNo) for MultiSIM activation. The rule counts all qualifying MASTER and MINOR SIM entries across all POU subscribers, sends a single <code>OMX_GET_SRV_TRX_NO</code> request with <code>amount=countSrvTrxNo</code>, and receives an array of sequence numbers back. The response handler then distributes one sequence number per SIM into each SIM's <code>SrvTrxNoInfo[]</code> concept array.</p>
+    <ul style="margin-left:18px;font-size:0.88rem;line-height:2;margin-top:8px">
+      <li>Subscribers without <code>MultiSIMInfo</code> are silently skipped (no error)</li>
+      <li>PreExecCheck uses <code>GetXMLForSubscriberFilterWithMultiSIMInfo</code> — a MSIM-specific helper that passes role ("MASTER"/"MINOR"), Source filter, and IMSI</li>
+      <li>If <code>countSrvTrxNo == 0</code> → SkipActivity("4"); no JMS event sent</li>
+      <li>Resubmit guard: <code>isActResub</code> prevents double-counting of RequestCount</li>
+      <li>AA_CHECK_CONFIRMATION write-back: response sets <code>RequestCount = countSrvTrxNo</code> on the matching downstream activity (matched by <code>Parameter[0]</code>)</li>
+    </ul>
+    <div class="callout info"><strong>Single backend call:</strong> Unlike per-SIM fan-out, this FM sends one call with <code>ns:amount=N</code> and the OMX sequence service returns N values as <code>ns:sequenceValue[1..N]</code>. The response handler indexes into this array using <code>countSrvTrxNo</code> as a running pointer.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_OMX_GET_SRV_TRX_NO_MSIM.rule</code></td><td>112 lines</td></tr>
+      <tr><td>Rule namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td><td></td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_OMX_GET_SRV_TRX_NO_MSIM.rulefunction</code></td><td>111 lines</td></tr>
+      <tr><td>Author</td><td>mranade-T420</td><td></td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td></td></tr>
+      <tr><td>param1</td><td>Activity parameter (comment: NAC,DSD)</td><td>Service transaction type → SrvTrxTp; also matched to AA_CHECK_CONFIRMATION.Parameter[0]</td></tr>
+      <tr><td>param2</td><td>Activity parameter (comment: SOURCE,TARGET)</td><td>Read but not used in current code</td></tr>
+      <tr><td>Backend event type</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_GET_SRV_TRX_NO</code></td><td></td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.OMX_GET_SRV_TRX_NO</code></td><td>Shared with non-MSIM OMX_GET_SRV_TRX_NO</td></tr>
+      <tr><td>Schema NS</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/GetSrvTrxNoRequest.xsd</code></td><td></td></tr>
+      <tr><td>Sequence name</td><td><code>"AA_TRX_NO_SEQ"</code> (hardcoded)</td><td></td></tr>
+      <tr><td>isActResub</td><td><code>RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted</code></td><td>Suppresses RequestCount++ on resub; no PurgePending call</td></tr>
+      <tr><td>Skip condition</td><td><code>countSrvTrxNo == 0</code></td><td>SkipActivity("4")</td></tr>
+      <tr><td>Audit gate</td><td><span class="badge badge-orange">CONDITIONAL</span></td><td>AllowWriteLog(OrderType)</td></tr>
+      <tr><td>AUDIT_TRACE (request)</td><td>"Request Sent for OMX_GET_SRV_TRX_NO_MSIM"</td><td></td></tr>
+      <tr><td>AUDIT_TRACE (response)</td><td>"Response received for OMX_GET_SRV_TRX_NO_MSIM"</td><td></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_GET_SRV_TRX_NO_MSIM"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_GET_SRV_TRX_NO_MSIM"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Request counting logic -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> SIM Counting Logic (Request Rule THEN)</div>
+  <div class="section-body">
+    <p style="font-size:0.88rem;margin-bottom:10px">The request rule traverses all POU → Subscribers and counts qualifying SIM slots:</p>
+    <table>
+      <tr><th>SIM slot</th><th>Condition to qualify</th><th>PreExecCheck XML builder</th><th>Filter param</th></tr>
+      <tr><td><strong>MASTER</strong></td><td><code>sub.MultiSIMInfo != null</code> (null → continue/skip sub)</td><td><code>GetXMLForSubscriberFilterWithMultiSIMInfo(orderRequest, refId, "MASTER", Master.Source, "")</code></td><td><code>Master.Source</code> (e.g., "FE" / "PREV_MSIM")</td></tr>
+      <tr><td><strong>MINOR[k]</strong></td><td>Inner loop after MASTER check; no null guard on MultiSIMInfo (relies on outer skip)</td><td><code>GetXMLForSubscriberFilterWithMultiSIMInfo(orderRequest, refId, "MINOR", Minor[k].Source, Minor[k].IMSI)</code></td><td><code>Minor[k].Source</code> + <code>Minor[k].IMSI</code></td></tr>
+    </table>
+    <div class="callout warning"><strong>One count per SIM slot:</strong> Each MASTER that passes PreExecCheck → +1; each MINOR[k] that passes → +1. The total is the <code>amount</code> sent to the backend — one sequence number will be returned per qualifying slot.</div>
+    <div class="callout info"><strong>COU Subscribers:</strong> The request rule only traverses <code>ParentOU[i].Subscriber[j]</code> — there is NO COU (ChildOU) traversal in this FM. Only POU subscribers are processed.</div>
+  </div>
+</div>
+
+<!-- §5 Request payload -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> Request Payload — OMX_GET_SRV_TRX_NO</div>
+  <div class="section-body">
+    <h3>JMS Event Headers</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent / event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Conditional: if OrderPriority]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Conditional: if OMXTrackingId]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Conditional: if OrderID]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/RefId</span><span class="tree-cond">[Conditional: if Customer/RefId]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Conditional: if OrderType]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:GetSrvTrxNoRequest</span><span class="tree-cond">(ns=http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/GetSrvTrxNoRequest.xsd)</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:sequenceName</span><span class="tree-arrow">←</span><span class="tree-src-static">"AA_TRX_NO_SEQ"</span><span class="tree-cond">[Always, hardcoded]</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:amount</span><span class="tree-arrow">←</span><span class="tree-src">$countSrvTrxNo</span><span class="tree-cond">[Always — total qualifying MASTER + MINOR SIM count]</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §6 Response logic -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> Response Handler — SrvTrxNo Distribution</div>
+  <div class="section-body">
+    <p style="font-size:0.88rem;margin-bottom:12px">The response rulefunction traverses the same POU → Subscriber structure. It uses <code>countSrvTrxNo</code> (starts at 0, increments per qualifying SIM) as an index into the backend's <code>ns:sequenceValue[]</code> array:</p>
+
+    <h3>For each qualifying MASTER SIM:</h3>
+    <ol style="margin-left:18px;font-size:0.88rem;line-height:1.9">
+      <li>Re-runs PreExecCheck via <code>GetXMLForSubscriberFilterWithMultiSIMInfo(…, "MASTER", filter, "")</code></li>
+      <li>Creates <code>OMX_GetSrvTrxNoRes</code>:
+        <ul style="margin-left:18px">
+          <li>extId = <code>concat("OMX_GET_SRV_TRX_NO:", eventResponse/ns:sequenceValue[countSrvTrxNo+1])</code></li>
+          <li>ResponseCode, ResponseMessage, CompletionStatus ← eventResponse (conditional)</li>
+          <li>srvTrxNo ← <code>eventResponse/payload/ns:GetSrvTrxNoResponse/ns:sequenceValue[countSrvTrxNo+1]</code></li>
+          <li>OMXTrackingId ← JMSCorrelationID (conditional)</li>
+          <li>srv_trx_tp_cd ← param1</li>
+        </ul>
+      </li>
+      <li>Appends <code>seqResBySeq</code> to <code>currActivity.Response[]</code></li>
+      <li>Creates <code>SrvTrxNoMSIMInfo</code>:
+        <ul style="margin-left:18px">
+          <li>extId = <code>OMXUtils.generateTrackingID()</code></li>
+          <li>SrvTrxNo ← srvTrxNo</li>
+          <li>SrvTrxTp ← srv_trx_tp_cd (=param1)</li>
+          <li>SrvStatus ← <code>master.Source</code> ("FE"/"PREV_MSIM")</li>
+        </ul>
+      </li>
+      <li>Appends <code>SrvTrxNoMSIMInfo</code> to <code>master.SrvTrxNoInfo[]</code></li>
+      <li><code>countSrvTrxNo++</code></li>
+    </ol>
+
+    <h3>For each qualifying MINOR[k] SIM:</h3>
+    <ol style="margin-left:18px;font-size:0.88rem;line-height:1.9">
+      <li>Re-runs PreExecCheck via <code>GetXMLForSubscriberFilterWithMultiSIMInfo(…, "MINOR", minor.Source, minor.IMSI)</code></li>
+      <li>Creates another <code>OMX_GetSrvTrxNoRes</code> (same logic, same countSrvTrxNo index)</li>
+      <li>Appends to <code>currActivity.Response[]</code></li>
+      <li>Creates <code>SrvTrxNoMSIMInfo</code> with <code>SrvStatus ← minor.Source</code></li>
+      <li>Appends to <code>minor.SrvTrxNoInfo[]</code></li>
+      <li><code>countSrvTrxNo++</code></li>
+    </ol>
+
+    <div class="callout warning"><strong>Index alignment dependency:</strong> The request rule and response handler must traverse SIMs in the same order and apply the same PreExecCheck to produce the same <code>countSrvTrxNo</code> sequence — otherwise the sequence number distribution will be misaligned. Any state change between request and response that alters qualifier results would corrupt the mapping.</div>
+  </div>
+</div>
+
+<!-- §7 AA_CHECK_CONFIRMATION write-back -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> AA_CHECK_CONFIRMATION Write-Back</div>
+  <div class="section-body">
+    <p style="font-size:0.88rem">After all SIM processing, the response handler scans all Process Flow activities looking for an AA_CHECK_CONFIRMATION step whose <code>Parameter[0]</code> matches <code>currActivity.Parameter[0]</code> (i.e., param1, e.g., "NAC" or "DSD"):</p>
+    <div class="code-block" style="margin-top:10px"><code><span class="kw">for</span>(int i=0; i&lt;iActLen; i++) {
+    <span class="kw">if</span>(String.equals(activities[i].ActivityID, <span class="str">"AA_CHECK_CONFIRMATION"</span>)
+       &amp;&amp; String.equals(activities[i].Parameter[0], currActivity.Parameter[0])) {
+        activities[i].RequestCount = countSrvTrxNo;
+    }
+}</code></div>
+    <div class="callout info"><strong>Purpose:</strong> Sets <code>AA_CHECK_CONFIRMATION.RequestCount</code> to the actual number of SIMs processed. AA_CHECK_CONFIRMATION uses this value as its fan-in threshold — it waits for this many activation confirmations before advancing the process.</div>
+    <table style="margin-top:12px">
+      <tr><th>param1 value</th><th>Meaning</th><th>AA_CHECK_CONFIRMATION matched by</th></tr>
+      <tr><td><code>NAC</code></td><td>Network Activation Confirmation (new SIM path)</td><td>AA_CHECK_CONFIRMATION step with Parameter[0]="NAC"</td></tr>
+      <tr><td><code>DSD</code></td><td>Deactivation/Status Dispatch</td><td>AA_CHECK_CONFIRMATION step with Parameter[0]="DSD"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 ResponseBase Concept -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> Response Concepts Created</div>
+  <div class="section-body">
+    <h3>§8.1 OMX_GetSrvTrxNoRes (per qualifying SIM)</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">concat("OMX_GET_SRV_TRX_NO:", eventResponse/ns:sequenceValue[countSrvTrxNo+1])</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">srvTrxNo</span><span class="tree-arrow">←</span><span class="tree-src">eventResponse/payload/ns:GetSrvTrxNoResponse/ns:sequenceValue[countSrvTrxNo+1]</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OMXTrackingId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/JMSCorrelationID</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">srv_trx_tp_cd</span><span class="tree-arrow">←</span><span class="tree-src">$param1</span><span class="tree-cond">[Always — from activity Parameter[0]]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px">§8.2 SrvTrxNoMSIMInfo (appended to master.SrvTrxNoInfo[] or minor.SrvTrxNoInfo[])</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">ns:generateTrackingID()</span><span class="tree-cond">[Always — random UUID]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">SrvTrxNo</span><span class="tree-arrow">←</span><span class="tree-src">$seqResBySeq/srvTrxNo</span><span class="tree-cond">[Conditional: if srvTrxNo]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">SrvTrxTp</span><span class="tree-arrow">←</span><span class="tree-src">$seqResBySeq/srv_trx_tp_cd</span><span class="tree-cond">[Conditional: if srv_trx_tp_cd] ← param1 (NAC/DSD)</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">SrvStatus</span><span class="tree-arrow">←</span><span class="tree-src">$master/Source or $minor/Source</span><span class="tree-cond">[Conditional] ← "FE" or "PREV_MSIM"</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §9 Function tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_OMX_GET_SRV_TRX_NO_MSIM (rule)
+├── isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)
+├── param1, param2 ← Parameter[0], Parameter[1]
+├── [POU loop i]:
+│   └── [Subscriber loop j]:
+│       ├── [if MultiSIMInfo == null]: continue   ← skip this subscriber
+│       ├── MASTER check:
+│       │   ├── filter = sub.MultiSIMInfo.Master.Source
+│       │   ├── GetXMLForSubscriberFilterWithMultiSIMInfo(orderRequest, refId, "MASTER", filter, "")
+│       │   ├── XPath.execute("/("+chkXPath+")", sXML, ...)   [PreExecCheck]
+│       │   └── [if "true"]: countSrvTrxNo++
+│       └── MINOR loop k:
+│           ├── filter = Minor[k].Source; minorImsi = Minor[k].IMSI
+│           ├── GetXMLForSubscriberFilterWithMultiSIMInfo(orderRequest, refId, "MINOR", filter, minorImsi)
+│           ├── XPath.execute("/("+chkXPath+")", sXML, ...)   [PreExecCheck]
+│           └── [if "true"]: countSrvTrxNo++
+├── [if countSrvTrxNo == 0]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+├── [else]:
+│   ├── Event.createEvent(OMX_GET_SRV_TRX_NO, XSLT: sequenceName="AA_TRX_NO_SEQ", amount=$countSrvTrxNo)
+│   ├── Event.Ext.sendEventImmediate(gchReq)
+│   ├── Status = GetActivityStatusString("1", false)   → "PROCESSING"
+│   ├── [if AllowWriteLog]: Event.Ext.sendEventImmediate(Logger: "Request Sent for OMX_GET_SRV_TRX_NO_MSIM")
+│   └── [if !isActResub]: RequestCount++
+└── [catch] HandleActivityException
+
+Response_OMX_GET_SRV_TRX_NO_MSIM (rulefunction)
+├── currActivity.ProcessID = String.valueOfLong(System.nanoTime())
+├── param1, param2 ← currActivity.Parameter[0], [1]
+├── countSrvTrxNo = 0
+├── [POU loop i]:
+│   └── [Subscriber loop j]:
+│       ├── filter = Master.Source (if MultiSIMInfo &amp;&amp; Master not null; else "")
+│       ├── GetXMLForSubscriberFilterWithMultiSIMInfo(…, "MASTER", filter, "")
+│       ├── XPath.execute(PreExecCheck)
+│       ├── [if "true"]:
+│       │   ├── Instance.createInstance(OMX_GetSrvTrxNoRes) { extId, ResponseCode, srvTrxNo[k+1], srv_trx_tp_cd=param1 }
+│       │   ├── currActivity.Response[] ← seqResBySeq
+│       │   ├── Instance.createInstance(SrvTrxNoMSIMInfo) { SrvTrxNo, SrvTrxTp=param1, SrvStatus=master.Source }
+│       │   ├── master.SrvTrxNoInfo[] ← SrvTrxNoMSIMInfo
+│       │   └── countSrvTrxNo++
+│       └── MINOR loop k:
+│           ├── GetXMLForSubscriberFilterWithMultiSIMInfo(…, "MINOR", minor.Source, minor.IMSI)
+│           ├── [if "true"]:
+│           │   ├── Instance.createInstance(OMX_GetSrvTrxNoRes) { same XSLT, countSrvTrxNo index }
+│           │   ├── currActivity.Response[] ← seqResBySeq
+│           │   ├── Instance.createInstance(SrvTrxNoMSIMInfo) { SrvStatus=minor.Source }
+│           │   ├── minor.SrvTrxNoInfo[] ← SrvTrxNoMSIMInfo
+│           │   └── countSrvTrxNo++
+├── [AA_CHECK_CONFIRMATION write-back]:
+│   └── scan ProcessFlow.Activities → find AA_CHECK_CONFIRMATION with Parameter[0]==param1
+│       → set its RequestCount = countSrvTrxNo
+├── [if AllowWriteLog]: Logger("Response received for OMX_GET_SRV_TRX_NO_MSIM")
+└── return "true"</div>
+  </div>
+</div>
+
+<!-- §10 Migration notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§10</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Only POU subscribers are traversed — no COU traversal in this FM.</td></tr>
+      <tr><td>R2</td><td>Subscribers without MultiSIMInfo are skipped (both request and response).</td></tr>
+      <tr><td>R3</td><td>Single OMX call with <code>sequenceName="AA_TRX_NO_SEQ"</code> and <code>amount=N</code> — one call regardless of SIM count.</td></tr>
+      <tr><td>R4</td><td>Response must distribute <code>sequenceValue[k+1]</code> per SIM in traversal order — index alignment between request count and response distribution is critical.</td></tr>
+      <tr><td>R5</td><td><code>SrvTrxTp</code> comes from param1 (activity parameter); <code>SrvStatus</code> comes from <code>Master.Source</code> / <code>Minor.Source</code>.</td></tr>
+      <tr><td>R6</td><td>After response: update <code>AA_CHECK_CONFIRMATION.RequestCount = countSrvTrxNo</code> for the matching activity (matched by Parameter[0] == param1).</td></tr>
+      <tr><td>R7</td><td>Resubmit: <code>isActResub = RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted</code> → suppress RequestCount increment; no PurgePendingRequestsBeforeResubmit.</td></tr>
+    </table>
+
+    <h3 style="margin-top:18px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Index alignment: request and response must use the same PreExecCheck evaluation order and same SIM traversal sequence to correctly pair sequenceValue[k] with each SIM</td>
+        <td><span class="badge badge-red">HIGH</span></td>
+        <td>Verify that no state change (e.g., concept mutation by concurrent rules) can alter PreExecCheck results between request dispatch and response handling</td>
+      </tr>
+      <tr>
+        <td>param2 is read but never used in the current code — dead parameter</td>
+        <td><span class="badge badge-teal">LOW</span></td>
+        <td>Remove param2 read or document its future intent</td>
+      </tr>
+      <tr>
+        <td>AA_CHECK_CONFIRMATION write-back scans ALL activities for param1 match — if multiple instances exist with the same param1, all get overwritten</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Verify that param1 values (NAC/DSD) are unique per process config; add defensive first-match-only logic if needed</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

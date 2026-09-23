@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_OMX_NOTI_TO_KAFKA</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem;margin-bottom:14px}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:10px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:28px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:18px;border-radius:8px;overflow-x:auto;font-size:.8rem;border-left:3px solid var(--true-red)}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.82rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:.78rem}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.88rem}
+.callout-warn{border-color:#e65100;background:#FFF3E0}
+.callout-info{border-color:#1565c0;background:#E3F0FD}
+.tag-grid{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+.tag{background:#F5E6E6;color:var(--true-dark);border-radius:4px;padding:2px 8px;font-size:.78rem;font-family:'Cascadia Code','Consolas',monospace}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_OMX_NOTI_TO_KAFKA</h1>
+  <div class="subtitle">Publishes a complete order-status notification to Kafka — a single request per invocation serializing the full OrderRequest snapshot into ns5:orderStatusNotification. Used at two points in the Knox device flow (step 66: Knox event, step 69: Knox notify) with different ProcessConfig Parameter keys.</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: Kafka (Order Status Notification)</span>
+    <span class="meta-badge">Pattern: Single request (not per-offer)</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Used in steps: 66, 69</span>
+    <span class="meta-badge">Generated: 2026-08-07</span>
+  </div>
+</div>
+
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Publishes one <strong>Kafka order-status notification</strong> per invocation. Unlike most OMXFM rules this is <strong>not a per-offer fan-out</strong> — it fires once, serializes the complete <code>OrderRequest</code>, and sends it as a single <code>ns5:orderStatusNotification</code> message. The same FM is reused at two workflow steps (66 and 69) with different <code>Parameter[1]</code> values that control the Kafka message header key/value (allowing routing to different Kafka topics or consumers).</p>
+    <ul style="margin:12px 0 0 20px;line-height:2">
+      <li><strong>Pattern:</strong> Single request — no SubscriberOffer loop; whole OrderRequest serialized</li>
+      <li><strong>PreExecCheck context:</strong> <code>Instance.serializeUsingDefaults(orderRequest)</code> — full serialization</li>
+      <li><strong>Parameter dispatch:</strong> <code>Parameter[1]</code> parsed as <code>key=value</code> → <code>headerName</code>/<code>value</code> in event headers</li>
+      <li><strong>Payload:</strong> <code>ns5:orderStatusNotification</code> — 250+ fields covering Order, Customer, Account, Subscriber, Agreement, Product, contacts, billing, service, resource, MNP, and extended info</li>
+      <li><strong>Response audit log:</strong> OPERATION_NAME dynamically derived from step extId (different per step)</li>
+      <li><strong>Debug traces:</strong> <code>System.debugOut("Response OMX_NOTI_TO_KAFKA : 001–005")</code> left in production rulefunction</li>
+      <li><strong>Dead code:</strong> Commented-out second <code>Event.createEvent</code> on line 39 (replaced by active version)</li>
+    </ul>
+    <div class="callout callout-warn" style="margin-top:14px">
+      <strong>[LOW] System.debugOut traces in production:</strong> The response rulefunction contains 5 debug trace statements. These have no functional impact but add noise to logs and indicate the file was not cleaned after development.
+    </div>
+    <div class="callout callout-warn">
+      <strong>[LOW] Dead code — commented-out Event.createEvent:</strong> Line 39 contains a commented-out alternative XSLT for the Kafka event. It is not executed but inflates the file to 656KB. Should be removed.
+    </div>
+    <div class="callout callout-info">
+      <strong>Step reuse pattern:</strong> The same FM at step 66 (OMX_NOTIFY_KNOX_EVENT) and step 69 (OMX_NOTIFY_KNOX_EVENT_NOTIFY) sends different notifications by varying the ProcessConfig Parameter[1] key=value. The audit log OPERATION_NAME is derived dynamically from the step's extId, so each invocation logs its step identity correctly.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_OMX_NOTI_TO_KAFKA.rule</code></td><td>656KB — primarily XSLT blob</td></tr>
+      <tr><td>Rule namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td><td></td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_OMX_NOTI_TO_KAFKA.rulefunction</code></td><td>34 lines; contains debug traces</td></tr>
+      <tr><td>Priority</td><td>5</td><td></td></tr>
+      <tr><td>forwardChain</td><td>true</td><td></td></tr>
+      <tr><td>Pattern</td><td><strong>Single request</strong> — no offer loop</td><td>One dispatch per activity invocation</td></tr>
+      <tr><td>Backend event</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_NOTI_TO_KAFKA</code></td><td>Dedicated Kafka notification event</td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.OMX_NOTI_TO_KAFKA</code></td><td></td></tr>
+      <tr><td>Payload root</td><td><code>ns5:orderStatusNotification</code></td><td>Full order snapshot</td></tr>
+      <tr><td>Schema NS (ns5)</td><td><code>http://services.omx.truecorp.co.th/OrderStatus</code></td><td>Order status notification schema</td></tr>
+      <tr><td>Schema NS (ns2)</td><td><code>http://services.omx.truecorp.co.th/OrderStatusNotification</code></td><td>Outer notification wrapper</td></tr>
+      <tr><td>PreExecCheck context</td><td><code>Instance.serializeUsingDefaults(orderRequest)</code></td><td>Full OrderRequest serialization (not offer-level)</td></tr>
+      <tr><td>Parameter dispatch</td><td><code>Parameter[1]</code> → <code>tib:tokenize($param, "=")[1/2]</code></td><td>Produces headerName + value JMS headers</td></tr>
+      <tr><td>Used in steps</td><td>66 (OMX_NOTIFY_KNOX_EVENT), 69 (OMX_NOTIFY_KNOX_EVENT_NOTIFY)</td><td>Same FM, different parameters</td></tr>
+      <tr><td>isActResub</td><td><code>RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted</code></td><td>Suppresses RequestCount++ only</td></tr>
+      <tr><td>Resub purge</td><td>Not applicable</td><td>Single request; resub would re-send notification</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td><td>Standard 4 fields; extId pre-generated before XSLT</td></tr>
+      <tr><td>Fan-in</td><td><code>RequestCount == successResponseCount</code></td><td>success = ResponseCode suffix "000"; always 1 request</td></tr>
+      <tr><td>Dead code</td><td>Commented-out Event.createEvent on line 39</td><td>Previous version of XSLT; file 656KB due to this</td></tr>
+      <tr><td>Debug traces</td><td><code>System.debugOut</code> × 5 in rulefunction</td><td>Should be removed for production</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 WHEN -->
+<div class="card">
+  <div class="card-header">§3 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_NOTI_TO_KAFKA"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_NOTI_TO_KAFKA"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Parameter Parsing -->
+<div class="card">
+  <div class="card-header">§4 — Parameter Dispatch (ProcessConfig Parameter[1])</div>
+  <div class="card-body">
+    <p>The first activity Parameter is parsed as a <code>key=value</code> string and mapped to JMS event headers:</p>
+    <table>
+      <tr><th>Variable</th><th>XPath</th><th>Maps to</th></tr>
+      <tr><td><code>param</code></td><td><code>$orderCurrentActivity/Parameter[1]</code></td><td>Raw key=value string from ProcessConfig</td></tr>
+      <tr><td><code>paramKey</code></td><td><code>tib:tokenize($param, "=")[1]</code></td><td><code>headerName</code> in event — Kafka routing key</td></tr>
+      <tr><td><code>paramValue</code></td><td><code>tib:tokenize($param, "=")[2]</code></td><td><code>value</code> in event — Kafka routing value</td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:12px">
+      Step 66 (OMX_NOTIFY_KNOX_EVENT) and step 69 (OMX_NOTIFY_KNOX_EVENT_NOTIFY) each have a different Parameter[1] in the ProcessConfig XML, allowing the same FM to publish to different Kafka header destinations. The actual Kafka topic is routed externally by the ESB based on these headers.
+    </div>
+  </div>
+</div>
+
+<!-- §10 XSLT Mapping -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p style="margin-bottom:12px">The payload is a complete order snapshot. Only the top-level structure and key sections are shown; the full payload maps 250+ fields from the OrderRequest.</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green">Always</span><span class="tree-cond">no xsl:if guard</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">headerName</span><span class="tree-arrow">←</span><span class="tree-src">$paramKey</span><span class="badge badge-green">Always</span><span class="tree-cond">from Parameter[1] key part; Kafka routing header name</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">value</span><span class="tree-arrow">←</span><span class="tree-src">$paramValue</span><span class="badge badge-green">Always</span><span class="tree-cond">from Parameter[1] value part; Kafka routing header value</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns5:orderStatusNotification</span><span class="tree-ns">ns5=http://services.omx.truecorp.co.th/OrderStatus</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:OMXTrackingID</span><span class="tree-arrow">←</span><span class="tree-src">OMXTrackingId</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:Order</span><span class="tree-cond">channel, orderId, orderType, FileID, creditLimitApproveCode, irApproveCode, maxAllowApproveCode, effectiveDate, operatorId, dealerCode, IntegrationMethod, user, password, MNPInfo, OrderStatus, ProfileStatus, NetworkStatus, saleChannel…</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:Customer</span><span class="tree-cond">customerId, customerCrmId, customerType, identifcation, name, contact, address, billing, credit, account sub-type…</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:Account</span><span class="tree-cond">accountId, accountRefId, billingAccount, billingAddress, billingArrangement…</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:OU</span><span class="tree-cond">ouId, ouName, ouDescription, agreements, products, offers…</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:subscriber</span><span class="tree-cond">subscriberId, subscriberNumber, MSISDN, subscriberType, subscriberGeneralInfo, subscriberAddress, resourceInfo, offers with offerName/soc/effectiveDate/offerParameterInfo/ExtendedInfo…</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:Agreement</span><span class="tree-cond">agreementId, agreementType, agreementGeneralInfo, agreementDescription, discountList…</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:Product / ns5:ProductList</span><span class="tree-cond">productId, productCode, productName, productType, productSubtype, service, attrList…</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:ExtendedInfo</span><span class="tree-cond">Extended info key/value pairs</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:SaleInfo</span><span class="tree-cond">saleId, saleName, storeId, branchCode, branchName…</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:ReasonInfo</span><span class="tree-cond">reasonCode, reasonDesc, activityReason…</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:ChangeInfoList</span><span class="tree-cond">change tracking fields…</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns5:activityInfo / ns5:ResponseCode / ns5:ResponseMsg</span><span class="tree-cond">Order processing metadata</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <h3 style="font-size:.88rem;color:var(--true-dark);margin:16px 0 8px">All ns5 elements mapped (250+):</h3>
+    <div class="tag-grid">
+      <span class="tag">ns5:OMXTrackingID</span><span class="tag">ns5:Order</span><span class="tag">ns5:channel</span><span class="tag">ns5:orderId</span><span class="tag">ns5:orderType</span><span class="tag">ns5:FileID</span><span class="tag">ns5:creditLimitApproveCode</span><span class="tag">ns5:irApproveCode</span><span class="tag">ns5:maxAllowApproveCode</span><span class="tag">ns5:effectiveDate</span><span class="tag">ns5:operatorId</span><span class="tag">ns5:dealerCode</span><span class="tag">ns5:IntegrationMethod</span><span class="tag">ns5:user</span><span class="tag">ns5:password</span><span class="tag">ns5:MNPInfo</span><span class="tag">ns5:donorOperator</span><span class="tag">ns5:donorZoneCode</span><span class="tag">ns5:rcpOperator</span><span class="tag">ns5:rcpZoneCode</span><span class="tag">ns5:OrderStatus</span><span class="tag">ns5:ProfileStatus</span><span class="tag">ns5:NetworkStatus</span><span class="tag">ns5:Customer</span><span class="tag">ns5:customerId</span><span class="tag">ns5:customerCrmId</span><span class="tag">ns5:customerType</span><span class="tag">ns5:identification</span><span class="tag">ns5:identificationType</span><span class="tag">ns5:identificationExpDate</span><span class="tag">ns5:firstName</span><span class="tag">ns5:lastName</span><span class="tag">ns5:middleName</span><span class="tag">ns5:title</span><span class="tag">ns5:birthDate</span><span class="tag">ns5:nationality</span><span class="tag">ns5:gender</span><span class="tag">ns5:Account</span><span class="tag">ns5:accountId</span><span class="tag">ns5:accountRefId</span><span class="tag">ns5:BillingAccount</span><span class="tag">ns5:billingAccountId</span><span class="tag">ns5:BillingAddress</span><span class="tag">ns5:subscriber</span><span class="tag">ns5:subscriberId</span><span class="tag">ns5:subscriberNumber</span><span class="tag">ns5:subscriberType</span><span class="tag">ns5:offers</span><span class="tag">ns5:offerName</span><span class="tag">ns5:soc</span><span class="tag">ns5:offerInstanceId</span><span class="tag">ns5:Agreement</span><span class="tag">ns5:agreementId</span><span class="tag">ns5:agreementType</span><span class="tag">ns5:Product</span><span class="tag">ns5:productId</span><span class="tag">ns5:productCode</span><span class="tag">ns5:productName</span><span class="tag">ns5:SaleInfo</span><span class="tag">ns5:saleId</span><span class="tag">ns5:saleChannel</span><span class="tag">ns5:ReasonInfo</span><span class="tag">ns5:reasonCode</span><span class="tag">ns5:reasonDesc</span><span class="tag">ns5:ExtendedInfo</span><span class="tag">ns5:ResponseCode</span><span class="tag">ns5:ResponseMsg</span><span class="tag">…and 190+ more</span>
+    </div>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>Kafka (via OMX ESB)</td></tr>
+      <tr><td>Operation</td><td>Order status notification publish</td></tr>
+      <tr><td>Payload schema NS (ns5)</td><td><code>http://services.omx.truecorp.co.th/OrderStatus</code></td></tr>
+      <tr><td>Outer NS (ns2)</td><td><code>http://services.omx.truecorp.co.th/OrderStatusNotification</code></td></tr>
+      <tr><td>Routing</td><td>Kafka topic/header controlled by ProcessConfig Parameter[1] key=value</td></tr>
+      <tr><td>Step 66 purpose</td><td>Knox event notification (OMX_NOTIFY_KNOX_EVENT)</td></tr>
+      <tr><td>Step 69 purpose</td><td>Knox notify event (OMX_NOTIFY_KNOX_EVENT_NOTIFY)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_OMX_NOTI_TO_KAFKA (rule)
+├── isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)
+├── nextAct = Instance.getByExtIdByUri(NextActivityName, Activity)
+├── [if PreExecCheck]:
+│   ├── sXML = Instance.serializeUsingDefaults(orderRequest)   ← full OrderRequest, not offer-level
+│   └── chkRes = XPath.execute(PreExecCheck, sXML)
+├── [if chkRes == "true"]:
+│   ├── param = XPath(orderCurrentActivity/Parameter[1])
+│   ├── paramKey   = tib:tokenize(param, "=")[1]              ← Kafka header name
+│   ├── paramValue = tib:tokenize(param, "=")[2]              ← Kafka header value
+│   ├── Event.createEvent(OMX_NOTI_TO_KAFKA, XSLT: ns5:orderStatusNotification)
+│   ├── Event.Ext.sendEventImmediate(reqEvent)
+│   ├── [if !isActResub]: RequestCount++
+│   ├── pid = System.nanoTime()
+│   ├── Event.Ext.sendEventImmediate(Logger: "Request Sent for KNOX_SAVE_DEVICE" → dynamic OPERATION_NAME)
+│   ├── Status = GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [else]: SkipActivity(orderRequest, orderCurrentActivity, "4")
+└── [catch]: HandleActivityException(orderRequest, orderCurrentActivity, ae, "")
+
+Response_OMX_NOTI_TO_KAFKA (rulefunction)
+├── System.debugOut("Response OMX_NOTI_TO_KAFKA : 001")        ← debug trace [LOW]
+├── extId = OMXUtils.generateTrackingID()                      ← pre-generated, passed to XSLT
+├── System.debugOut("Response CJ_OMX_NOTI_TO_KAFKA : 002")     ← debug trace [LOW]
+├── activityRes = Instance.createInstance(ResponseBase) {extId=$extId, ResponseCode, ResponseMessage, CompletionStatus, ReferenceId}
+├── System.debugOut × 3 more
+├── currActivity.Response[] ← activityRes
+├── Event.Ext.sendEventImmediate(Logger: OPERATION_NAME=tib:substring-after-last(currActivity@extId, ":"))
+│   ← dynamic: step 66 → "OMX_NOTIFY_KNOX_EVENT"; step 69 → "OMX_NOTIFY_KNOX_EVENT_NOTIFY"
+├── successResponseCount = count(Response[tib:right(tib:trim(ResponseCode),3)="000"])
+└── return (RequestCount == successResponseCount) ? "true" : "false"</pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Single Kafka notification per invocation (not per offer). Full OrderRequest snapshot sent.</td></tr>
+      <tr><td>R2</td><td>ProcessConfig Parameter[1] parsed as <code>key=value</code>; key → <code>headerName</code>, value → <code>value</code> in event. Controls Kafka routing.</td></tr>
+      <tr><td>R3</td><td>PreExecCheck evaluated against <code>Instance.serializeUsingDefaults(orderRequest)</code> — full OrderRequest context.</td></tr>
+      <tr><td>R4</td><td>Payload: <code>ns5:orderStatusNotification</code> (ns5=http://services.omx.truecorp.co.th/OrderStatus) containing 250+ fields from OrderRequest.</td></tr>
+      <tr><td>R5</td><td>Response audit OPERATION_NAME is dynamic: <code>tib:substring-after-last(currActivity@extId, ":")</code> — different per step invocation.</td></tr>
+      <tr><td>R6</td><td>Fan-in: RequestCount == successResponseCount (suffix "000"). Always 1 request, so fan-in completes on first response.</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>656KB rule file due to commented-out dead XSLT (line 39) — compilation and parsing overhead</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Remove commented-out Event.createEvent block to reduce file to ~200KB</td></tr>
+      <tr><td>System.debugOut × 5 in production rulefunction — log noise</td><td><span class="badge badge-blue">[LOW]</span></td><td>Remove all System.debugOut calls before production hardening</td></tr>
+      <tr><td>Password field included in ns5:orderStatusNotification payload sent to Kafka — data sensitivity</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Review whether plaintext password should be included in Kafka notifications; mask or omit if not required by consumers</td></tr>
+      <tr><td>paramKey/paramValue parsing via tib:tokenize("=") — fragile if Parameter[1] contains "=" in value part</td><td><span class="badge badge-blue">[LOW]</span></td><td>[2] only returns first token after "="; values with "=" embedded will be truncated</td></tr>
+      <tr><td>On resubmit — re-publishes notification to Kafka; consumers must be idempotent</td><td><span class="badge badge-blue">[LOW]</span></td><td>Confirm Kafka consumers handle duplicate notifications gracefully</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule (Response_OMX_NOTI_TO_KAFKA)</div>
+  <div class="card-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§19.1 Notable Differences from Standard Response Handlers</h3>
+    <ul style="margin:0 0 12px 20px;line-height:2">
+      <li><code>extId</code> is pre-generated via <code>OMXUtils.generateTrackingID()</code> before the XSLT call (not via OMXUtils inside XSLT)</li>
+      <li>OPERATION_NAME in audit log = <code>tib:substring-after-last(currActivity@extId, ":")</code> — dynamic per step</li>
+      <li>5 <code>System.debugOut</code> traces remaining in code</li>
+    </ul>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px">§19.3 ResponseBase Construction</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Note</th></tr>
+      <tr><td>extId</td><td><code>$extId</code> (pre-computed)</td><td>Passed as XSLT param — not inline OMXUtils call</td></tr>
+      <tr><td>ResponseCode</td><td><code>$eventResponse/ResponseCode</code></td><td>Conditional</td></tr>
+      <tr><td>ResponseMessage</td><td><code>$eventResponse/ResponseMsg</code></td><td>Conditional; Msg→Message rename</td></tr>
+      <tr><td>CompletionStatus</td><td><code>$eventResponse/CompletionStatus</code></td><td>Conditional</td></tr>
+      <tr><td>ReferenceId</td><td><code>$eventResponse/RefID</code></td><td>Conditional</td></tr>
+    </table>
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px">§19.4 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code> — always 1 vs 1</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

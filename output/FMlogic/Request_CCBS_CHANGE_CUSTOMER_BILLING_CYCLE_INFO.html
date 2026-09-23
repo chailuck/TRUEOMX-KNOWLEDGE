@@ -1,0 +1,589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.8rem;font-weight:700}
+header p{opacity:.85;margin-top:6px;font-size:.93rem}
+.meta-row{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap}
+.meta-item{background:rgba(255,255,255,.15);border-radius:6px;padding:4px 12px;font-size:.82rem}
+main{max-width:1300px;margin:0 auto;padding:32px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:28px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+h3{color:var(--true-dark);margin:16px 0 8px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;margin:8px 0}
+code{background:#f3e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px}
+.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:#2e7d32}.badge-orange{background:#FFF3E0;color:#e65100}.badge-blue{background:#E3F0FD;color:#1565c0}.badge-purple{background:#F3E5F5;color:#6a1b9a}.badge-jms{background:#FFE0B2;color:#E65100}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nm{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.info-box{background:#E3F0FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:4px;margin:10px 0;font-size:.88rem}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:16px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</h1>
+  <p>TIBCO BusinessEvents FM Logic — CCBS Change Customer Billing Cycle</p>
+  <div class="meta-row">
+    <span class="meta-item">System: CCBS</span>
+    <span class="meta-item">Event: CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</span>
+    <span class="meta-item">Concept: CCBS_ChangeCustomerBillingCycleInfoRes</span>
+    <span class="meta-item">Author: Sakrapee-SCM-PC</span>
+    <span class="meta-item">Generated: 2026-09-14</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 -->
+<div class="card">
+<div class="card-header">§1 — Overview &amp; Purpose</div>
+<div class="card-body">
+<p>Sends a <code>CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</code> request to CCBS to update the billing cycle for a customer. The payload contains the customer ID and the new billing cycle number, plus activity reason and user text from the order request. This is a single-shot FM (one request per activity, no subscriber loop).</p>
+<p style="margin-top:10px">Uses the <strong>ActionRequestEvent + SendFirstRequestEvent</strong> pattern (not direct sendEventImmediate for the main payload). On resubmit, pending requests are purged first.</p>
+</div>
+</div>
+
+<!-- §2 -->
+<div class="card">
+<div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="card-body">
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule File</td><td>Request_CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO.rule</td></tr>
+<tr><td>Response File</td><td>Response_CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO.rulefunction</td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>ForwardChain</td><td>true</td></tr>
+<tr><td>Target System</td><td><span class="badge badge-red">CCBS</span></td></tr>
+<tr><td>Event Sent</td><td>Events.OMConsumers.OMXFM.Request.CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</td></tr>
+<tr><td>Response Concept</td><td>Concepts.FM.Response.CCBS_ChangeCustomerBillingCycleInfoRes</td></tr>
+<tr><td>Send Pattern</td><td>assertEvent + ActionRequestEvent + SendFirstRequestEvent</td></tr>
+<tr><td>Iteration</td><td>Single-shot (no loop)</td></tr>
+<tr><td>Fan-in Type</td><td>count(Response[code ends "000"]) == RequestCount</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 -->
+<div class="card">
+<div class="card-header">§3 — Working Memory — Declared Objects</div>
+<div class="card-body">
+<table>
+<tr><th>Variable</th><th>Type Path</th><th>Role</th></tr>
+<tr><td>orderRequest</td><td>Concepts.OrderRequest.OrderRequest</td><td>Master order request</td></tr>
+<tr><td>orderCurrentActivity</td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity</td></tr>
+<tr><td>logicalDateRes</td><td>Concepts.OM.LogicalDate</td><td>Logical date (read but not passed to XSLT)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 -->
+<div class="card">
+<div class="card-header">§4 — Rule Conditions (WHEN)</div>
+<div class="card-body">
+<table>
+<tr><th>Condition</th><th>Expression</th></tr>
+<tr><td>Activity match</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+<tr><td>ActivityID check</td><td><code>orderCurrentActivity.ActivityID == "CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO"</code></td></tr>
+<tr><td>NextActivity check</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO"</code></td></tr>
+<tr><td>Status check</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 -->
+<div class="card">
+<div class="card-header">§5 — Execution Flow Diagram</div>
+<div class="card-body">
+<ol style="line-height:2;margin-left:18px">
+  <li>Read logicalDate (unused in XSLT)</li>
+  <li>Get nextAct from working memory by extId</li>
+  <li><strong>PreExecCheck gate</strong>: if <code>nextAct.PreExecCheck</code> length &gt; 0 → serialize OrderData → XPath.execute</li>
+  <li>If chkRes == "true": proceed; else SkipActivity("4")</li>
+  <li>Check isActResub: if resubmit → PurgePendingRequestsBeforeResubmit</li>
+  <li>Build <code>CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</code> event via XSLT</li>
+  <li>assertEvent(reqEvent) → ActionRequestEvent(reqEvent, orderCurrentActivity)</li>
+  <li>Send audit log event</li>
+  <li>SendFirstRequestEvent(orderCurrentActivity)</li>
+  <li>Status = GetActivityStatusString("1", false); SendDataToDB</li>
+</ol>
+</div>
+</div>
+
+<!-- §6 -->
+<div class="card">
+<div class="card-header">§6 — Rule Action (THEN)</div>
+<div class="card-body">
+<pre><span class="cm">// 1. Read logical date (unused in payload)</span>
+<span class="ty">Concepts.OM.LogicalDate</span> logicalDateRes = Instance.getByExtIdByUri(<span class="st">"LogicalDate"</span>, <span class="st">"/Concepts/OM/LogicalDate"</span>);
+<span class="ty">String</span> logicalDateVal = logicalDateRes.LogicalDate;
+
+<span class="cm">// 2. PreExecCheck</span>
+<span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct = Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, ...);
+<span class="kw">String</span> chkRes = <span class="st">"true"</span>;
+<span class="kw">if</span> (String.length(nextAct.PreExecCheck) &gt; <span class="nm">0</span>) {
+    <span class="kw">String</span> sXML = Instance.serializeUsingDefaults(orderRequest.OrderData);
+    chkRes = XPath.execute(<span class="st">"/("+nextAct.PreExecCheck+")"</span>, sXML, <span class="st">"ns0=www.tibco.com/..."</span>);
+}
+
+<span class="kw">if</span> (String.equals(chkRes, <span class="st">"true"</span>)) {
+    <span class="cm">// 3. Resubmit handling</span>
+    <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount&gt;<span class="nm">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">if</span> (isActResub) {
+        IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity);
+    }
+    <span class="cm">// 4. Build and send event</span>
+    reqEvent = Event.createEvent(<span class="st">"xslt://{{CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO}}..."</span>);
+    Event.assertEvent(reqEvent);
+    IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity);
+    <span class="cm">// 5. Audit log</span>
+    Event.Ext.sendEventImmediate(Event.createEvent(<span class="st">"xslt://{{Logger}}..."</span>));
+    <span class="cm">// 6. Finalize activity state</span>
+    IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity);
+    orderCurrentActivity.Status = GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+    RuleFunctions.Helpers.SendDataToDB(orderRequest);
+} <span class="kw">else</span> {
+    RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+}</pre>
+</div>
+</div>
+
+<!-- §8 -->
+<div class="card">
+<div class="card-header">§8 — System &amp; Integration Dependencies</div>
+<div class="card-body">
+<h3>§8.1 Order Type Dependencies</h3>
+<p>Triggered for <strong>CHANGE_PP</strong> order type when billing cycle information must be updated for the customer. Conditional on PreExecCheck gate.</p>
+<h3>§8.2 ESB / JMS Channel Dependencies</h3>
+<table>
+<tr><th>Direction</th><th>Destination</th><th>Purpose</th></tr>
+<tr><td><span class="badge badge-jms">OUTBOUND</span></td><td>CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO queue</td><td>Change billing cycle request</td></tr>
+<tr><td><span class="badge badge-green">INBOUND</span></td><td>Response queue</td><td>Billing cycle change confirmation</td></tr>
+</table>
+<h3>§8.3 Backend API Details</h3>
+<table>
+<tr><th>System</th><th>Operation</th><th>Root Element</th><th>Namespace</th></tr>
+<tr><td>CCBS</td><td>ChangeCustomerBillingCycleInfo</td><td>ns3:ChangeCustomerBillingCycleInfoRequest</td><td>amdocs.csm3g.datatypes.ChangeCustomerBillingCycleInfoRequest.xsd</td></tr>
+</table>
+<h3>§8.4 BE Working Memory</h3>
+<table>
+<tr><th>Concept</th><th>Fields Read</th></tr>
+<tr><td>OrderRequest</td><td>OrderPriority, OrderData.OMXTrackingId, OrderData.OrderID, OrderData.OrderType, OrderData.CES, OrderData.User, OrderData.Password, OrderData.Customer.CustomerId, OrderData.Customer.BillCycleNo, OrderData.Customer.CustomerActivityInfo.*</td></tr>
+<tr><td>Activity</td><td>RequestCount, Status (written)</td></tr>
+</table>
+<h3>§8.5 ExtendedInfo Fields</h3>
+<p>None directly — payload uses structured Customer concept fields only.</p>
+<h3>§8.6 Global Variable Dependencies</h3>
+<table>
+<tr><th>Path</th><th>Purpose</th></tr>
+<tr><td>$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</td><td>Controls UserName/PassWord inclusion in event headers</td></tr>
+<tr><td>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</td><td>COMPONENT_NAME in audit log</td></tr>
+<tr><td>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</td><td>TARGET_SYSTEM in audit log</td></tr>
+<tr><td>$globalVariables/OMX_OM/WritePayload</td><td>Controls payload in audit log</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §9 -->
+<div class="card">
+<div class="card-header">§9 — Detailed Payload Build</div>
+<div class="card-body">
+<h3>§9.1 XSLT Parameter Binding</h3>
+<table>
+<tr><th>XSLT Param</th><th>Bound From</th></tr>
+<tr><td>orderRequest</td><td>orderRequest concept</td></tr>
+<tr><td>globalVariables</td><td>system global variables</td></tr>
+</table>
+<h3>§9.4 Payload Root Element</h3>
+<pre><span class="xt">&lt;ns3:ChangeCustomerBillingCycleInfoRequest&gt;</span>
+  <span class="xt">&lt;ns2:CustomerIdInfo&gt;</span>
+    <span class="xt">&lt;ns2:CustomerNo&gt;</span>...<span class="xt">&lt;/ns2:CustomerNo&gt;</span>  <span class="cm">&lt;!-- conditional --&gt;</span>
+  <span class="xt">&lt;/ns2:CustomerIdInfo&gt;</span>
+  <span class="xt">&lt;ns1:CustomerBillingCycleInfo&gt;</span>
+    <span class="xt">&lt;ns1:BillCycleNo&gt;</span>...<span class="xt">&lt;/ns1:BillCycleNo&gt;</span>  <span class="cm">&lt;!-- conditional --&gt;</span>
+  <span class="xt">&lt;/ns1:CustomerBillingCycleInfo&gt;</span>
+  <span class="xt">&lt;ns:ActivityInfo&gt;</span>
+    <span class="xt">&lt;ns:ActivityReason&gt;</span>CREQ<span class="xt">&lt;/ns:ActivityReason&gt;</span>  <span class="cm">&lt;!-- or actual reason --&gt;</span>
+    <span class="xt">&lt;ns:UserText&gt;</span>...<span class="xt">&lt;/ns:UserText&gt;</span>  <span class="cm">&lt;!-- conditional --&gt;</span>
+  <span class="xt">&lt;/ns:ActivityInfo&gt;</span>
+<span class="xt">&lt;/ns3:ChangeCustomerBillingCycleInfoRequest&gt;</span></pre>
+<h3>§9.7 Complete Generated XML Example</h3>
+<pre><span class="xt">&lt;createEvent&gt;</span>
+  <span class="xt">&lt;event&gt;</span>
+    <span class="xt">&lt;JMSPriority&gt;</span>5<span class="xt">&lt;/JMSPriority&gt;</span>
+    <span class="xt">&lt;JMSCorrelationID&gt;</span>OMX-2026-001234<span class="xt">&lt;/JMSCorrelationID&gt;</span>
+    <span class="xt">&lt;OrderID&gt;</span>ORD-987654<span class="xt">&lt;/OrderID&gt;</span>
+    <span class="xt">&lt;OrderType&gt;</span>CHANGE_PP<span class="xt">&lt;/OrderType&gt;</span>
+    <span class="xt">&lt;CES&gt;</span>CSR001<span class="xt">&lt;/CES&gt;</span>
+    <span class="xt">&lt;payload&gt;</span>
+      <span class="xt">&lt;ns3:ChangeCustomerBillingCycleInfoRequest&gt;</span>
+        <span class="xt">&lt;ns2:CustomerIdInfo&gt;</span>
+          <span class="xt">&lt;ns2:CustomerNo&gt;</span>CUST-12345<span class="xt">&lt;/ns2:CustomerNo&gt;</span>
+        <span class="xt">&lt;/ns2:CustomerIdInfo&gt;</span>
+        <span class="xt">&lt;ns1:CustomerBillingCycleInfo&gt;</span>
+          <span class="xt">&lt;ns1:BillCycleNo&gt;</span>15<span class="xt">&lt;/ns1:BillCycleNo&gt;</span>
+        <span class="xt">&lt;/ns1:CustomerBillingCycleInfo&gt;</span>
+        <span class="xt">&lt;ns:ActivityInfo&gt;</span>
+          <span class="xt">&lt;ns:ActivityReason&gt;</span>CREQ<span class="xt">&lt;/ns:ActivityReason&gt;</span>
+          <span class="xt">&lt;ns:UserText&gt;</span>Change PP request by CSR<span class="xt">&lt;/ns:UserText&gt;</span>
+        <span class="xt">&lt;/ns:ActivityInfo&gt;</span>
+      <span class="xt">&lt;/ns3:ChangeCustomerBillingCycleInfoRequest&gt;</span>
+    <span class="xt">&lt;/payload&gt;</span>
+  <span class="xt">&lt;/event&gt;</span>
+<span class="xt">&lt;/createEvent&gt;</span></pre>
+<h3>§9.8 XSLT Stylesheet Source</h3>
+<pre><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:ns3</span>=<span class="st">"www.tibco.com/plugin/java/xmlSchema/amdocs.csm3g.datatypes.ChangeCustomerBillingCycleInfoRequest.xsd"</span>
+  <span class="xa">xmlns:ns2</span>=<span class="st">"www.tibco.com/plugin/java/xmlSchema/amdocs.csm3g.datatypes.CustomerIdInfo"</span>
+  <span class="xa">xmlns:ns1</span>=<span class="st">"www.tibco.com/plugin/java/xmlSchema/amdocs.csm3g.datatypes.CustomerBillingCycleInfo"</span>
+  <span class="xa">xmlns:ns</span>=<span class="st">"www.tibco.com/plugin/java/xmlSchema/amdocs.csm3g.datatypes.ActivityInfo"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:tib</span>=<span class="st">"http://www.tibco.com/bw/xslt/custom-functions"</span>
+  <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;</span>
+      <span class="xt">&lt;event&gt;</span>
+        <span class="xt">&lt;JMSPriority&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;&lt;/JMSPriority&gt;</span>
+        <span class="xt">&lt;JMSCorrelationID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/JMSCorrelationID&gt;</span>
+        <span class="xt">&lt;OrderID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;&lt;/OrderID&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass='true'"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/User"</span><span class="xt">&gt;</span>
+            <span class="xt">&lt;UserName&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/User"</span><span class="xt">/&gt;&lt;/UserName&gt;</span>
+          <span class="xt">&lt;/xsl:if&gt;</span>
+          <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/Password"</span><span class="xt">&gt;</span>
+            <span class="xt">&lt;PassWord&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/Password"</span><span class="xt">/&gt;&lt;/PassWord&gt;</span>
+          <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/OrderType"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;OrderType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;&lt;/OrderType&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/CES"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;CES&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/CES"</span><span class="xt">/&gt;&lt;/CES&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;payload&gt;</span>
+          <span class="xt">&lt;ns3:ChangeCustomerBillingCycleInfoRequest&gt;</span>
+            <span class="xt">&lt;ns2:CustomerIdInfo&gt;</span>
+              <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/Customer/CustomerId"</span><span class="xt">&gt;</span>
+                <span class="xt">&lt;ns2:CustomerNo&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/Customer/CustomerId"</span><span class="xt">/&gt;&lt;/ns2:CustomerNo&gt;</span>
+              <span class="xt">&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;/ns2:CustomerIdInfo&gt;</span>
+            <span class="xt">&lt;ns1:CustomerBillingCycleInfo&gt;</span>
+              <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/Customer/BillCycleNo"</span><span class="xt">&gt;</span>
+                <span class="xt">&lt;ns1:BillCycleNo&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/Customer/BillCycleNo"</span><span class="xt">/&gt;&lt;/ns1:BillCycleNo&gt;</span>
+              <span class="xt">&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;/ns1:CustomerBillingCycleInfo&gt;</span>
+            <span class="xt">&lt;ns:ActivityInfo&gt;</span>
+              <span class="xt">&lt;ns:ActivityReason&gt;</span>
+                <span class="cm">&lt;!-- if CustomerActivityInfo/ActivityReason length&gt;0 → use it; else "CREQ" --&gt;</span>
+              <span class="xt">&lt;/ns:ActivityReason&gt;</span>
+              <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/Customer/CustomerActivityInfo/UserText"</span><span class="xt">&gt;</span>
+                <span class="xt">&lt;ns:UserText&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/Customer/CustomerActivityInfo/UserText"</span><span class="xt">/&gt;&lt;/ns:UserText&gt;</span>
+              <span class="xt">&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;/ns:ActivityInfo&gt;</span>
+          <span class="xt">&lt;/ns3:ChangeCustomerBillingCycleInfoRequest&gt;</span>
+        <span class="xt">&lt;/payload&gt;</span>
+      <span class="xt">&lt;/event&gt;</span>
+    <span class="xt">&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+</div>
+</div>
+
+<!-- §10 Tree -->
+<div class="card">
+<div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+<div class="card-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="tree-cond">if IsEnableUserPass='true' AND User</span><span class="badge badge-purple">Credential-gated</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="tree-cond">if IsEnableUserPass='true' AND Password</span><span class="badge badge-purple">Credential-gated</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">if OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="tree-cond">if CES</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge badge-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns3:ChangeCustomerBillingCycleInfoRequest</span><span class="badge badge-green">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns2:CustomerIdInfo</span><span class="badge badge-green">Always</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:CustomerNo</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/CustomerId</span><span class="tree-cond">if CustomerId</span><span class="badge badge-orange">Conditional</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:CustomerBillingCycleInfo</span><span class="badge badge-green">Always</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:BillCycleNo</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/BillCycleNo</span><span class="tree-cond">if BillCycleNo</span><span class="badge badge-orange">Conditional</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:ActivityInfo</span><span class="badge badge-green">Always</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ActivityReason</span><span class="tree-arrow">←</span><span class="tree-src">CustomerActivityInfo/ActivityReason (if length&gt;0) else "CREQ"</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:UserText</span><span class="tree-arrow">←</span><span class="tree-src">CustomerActivityInfo/UserText</span><span class="tree-cond">if UserText</span><span class="badge badge-orange">Conditional</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<p style="margin-top:12px;font-size:.8rem;color:#666"><strong>Legend:</strong> <span class="badge badge-green">Always</span> = always emitted &nbsp; <span class="badge badge-orange">Conditional</span> = xsl:if &nbsp; <span class="badge badge-purple">Credential-gated</span> = guarded by IsEnableUserPass='true'</p>
+</div>
+</div>
+
+<!-- §11 -->
+<div class="card">
+<div class="card-header">§11 — Audit Logging</div>
+<div class="card-body">
+<table>
+<tr><th>Field</th><th>Request Value</th><th>Response Value</th></tr>
+<tr><td>OPERATION_NAME</td><td>CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</td><td>CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</td></tr>
+<tr><td>AUDIT_TRACE</td><td>"Request Sent for CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO"</td><td>concat("Response received for RefId ", $eventResponse/RefID)</td></tr>
+<tr><td>PROCESS_ID</td><td>concat($pid, "_REQ")</td><td>concat($sysNanoTimeValue, "_RES")</td></tr>
+<tr><td>payload</td><td>$reqEvent (conditional WritePayload)</td><td>$eventResponse (conditional WritePayload)</td></tr>
+</table>
+<div class="info-box">Response AUDIT_TRACE includes the RefId value dynamically — differs from the typical static string pattern used in other FMs.</div>
+</div>
+</div>
+
+<!-- §12 -->
+<div class="card">
+<div class="card-header">§12 — Activity Status Management</div>
+<div class="card-body">
+<table>
+<tr><th>Action</th><th>Value</th><th>When</th></tr>
+<tr><td>Status = GetActivityStatusString("1", false)</td><td>1 (Processing)</td><td>After send</td></tr>
+<tr><td>SkipActivity("4")</td><td>4 (Skipped)</td><td>PreExecCheck returns false</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §13 -->
+<div class="card">
+<div class="card-header">§13 — Exception / Error Handling</div>
+<div class="card-body">
+<p>Standard try/catch: <code>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></p>
+</div>
+</div>
+
+<!-- §14 -->
+<div class="card">
+<div class="card-header">§14 — Helper Functions Reference</div>
+<div class="card-body">
+<table>
+<tr><th>Function</th><th>Purpose</th></tr>
+<tr><td>Instance.serializeUsingDefaults(orderRequest.OrderData)</td><td>Serialize OrderData to XML string for PreExecCheck</td></tr>
+<tr><td>XPath.execute(expr, xml, ns)</td><td>Evaluate PreExecCheck XPath expression</td></tr>
+<tr><td>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)</td><td>Clear pending requests on resubmit</td></tr>
+<tr><td>IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)</td><td>Register request event in intra-activity sequencing</td></tr>
+<tr><td>IntraActivitySequencing.SendFirstRequestEvent(activity)</td><td>Trigger sending of first queued request event</td></tr>
+<tr><td>RuleFunctions.Helpers.GetActivityStatusString("1", false)</td><td>Get status string for "processing"</td></tr>
+<tr><td>RuleFunctions.Helpers.SendDataToDB(orderRequest)</td><td>Persist activity state to database</td></tr>
+<tr><td>RuleFunctions.Helpers.SkipActivity(orderRequest, activity, "4")</td><td>Mark activity as skipped</td></tr>
+<tr><td>RuleFunctions.Helpers.HandleActivityException(orderRequest, activity, ae, "")</td><td>Handle exceptions</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §15 -->
+<div class="card">
+<div class="card-header">§15 — Function Dependency Tree</div>
+<div class="card-body">
+<pre>Request_CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO (rule)
+├── Instance.serializeUsingDefaults(orderRequest.OrderData)   [PreExecCheck]
+├── XPath.execute(PreExecCheck, sXML, ns)                    [PreExecCheck]
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit [resubmit]
+├── Event.createEvent(xslt://CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO)
+├── Event.assertEvent(reqEvent)
+├── IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+├── Event.Ext.sendEventImmediate(xslt://Logger)
+├── IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(...)                   [skip path]
+└── RuleFunctions.Helpers.HandleActivityException(...)        [catch]
+
+Response_CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO (rulefunction)
+├── Instance.createInstance(xslt://CCBS_ChangeCustomerBillingCycleInfoRes)
+├── Event.Ext.sendEventImmediate(xslt://Logger)
+└── XPath.evalAsInt(count(Response[code "000"]))</pre>
+</div>
+</div>
+
+<!-- §16 -->
+<div class="card">
+<div class="card-header">§16 — Concept Definitions Referenced</div>
+<div class="card-body">
+<table>
+<tr><th>Concept</th><th>Key Fields</th></tr>
+<tr><td>Concepts.FM.Response.CCBS_ChangeCustomerBillingCycleInfoRes</td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId (all always-emitted, no xsl:if)</td></tr>
+<tr><td>Concepts.OM.LogicalDate</td><td>LogicalDate (read but not used in XSLT)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §17 -->
+<div class="card">
+<div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="card-body">
+<p><strong>R1</strong>: Must send ChangeCustomerBillingCycleInfo to CCBS when BillCycleNo changes as part of PP change.<br>
+<strong>R2</strong>: Must respect PreExecCheck gate — activity is conditional.<br>
+<strong>R3</strong>: ActivityReason defaults to "CREQ" if not provided by the order.</p>
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td>logicalDate declared and read but never used in XSLT</td><td><span class="badge badge-blue">LOW</span></td><td>Remove or pass to XSLT if needed</td></tr>
+<tr><td>Response ResponseCode/ResponseMsg mapped without xsl:if guards — will emit empty elements if absent</td><td><span class="badge" style="background:#FFF3E0;color:#e65100">MEDIUM</span></td><td>Add xsl:if guards like other FMs, or verify CCBS always returns these fields</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §18 -->
+<div class="card">
+<div class="card-header">§18 — Full Source Code (Request Rule)</div>
+<div class="card-body">
+<pre><span class="cm">/**
+ * Request_CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO.rule
+ * @author Sakrapee-SCM-PC
+ */</span>
+<span class="kw">rule</span> <span class="fn">Rules.OMConsumers.OMXFM.Request.Request_CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</span> {
+  <span class="kw">attribute</span> { <span class="ty">priority</span> = <span class="nm">5</span>; <span class="ty">forwardChain</span> = <span class="kw">true</span>; }
+  <span class="kw">declare</span> {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="st">"CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="st">"CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO"</span>;
+    orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="kw">try</span> {
+      <span class="ty">Concepts.OM.LogicalDate</span> logicalDateRes = Instance.getByExtIdByUri(<span class="st">"LogicalDate"</span>, <span class="st">"/Concepts/OM/LogicalDate"</span>);
+      <span class="kw">String</span> logicalDateVal = logicalDateRes.LogicalDate; <span class="cm">// read but not used in XSLT</span>
+      <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct =
+        Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+      <span class="kw">String</span> chkRes = <span class="st">"true"</span>;
+      <span class="kw">if</span> (String.length(nextAct.PreExecCheck) &gt; <span class="nm">0</span>) {
+        <span class="kw">String</span> sXML = Instance.serializeUsingDefaults(orderRequest.OrderData);
+        chkRes = XPath.execute(<span class="st">"/("+nextAct.PreExecCheck+")"</span>, sXML, <span class="st">"ns0=www.tibco.com/..."</span>);
+      }
+      <span class="kw">if</span> (String.equals(chkRes, <span class="st">"true"</span>)) {
+        <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nm">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">if</span> (isActResub) {
+          IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity);
+        }
+        <span class="ty">Events.OMConsumers.OMXFM.Request.CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</span> reqEvent =
+          Event.createEvent(<span class="st">"xslt://{{/Events/.../CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO}}"</span>
+            <span class="cm">/* [XSLT builds ChangeCustomerBillingCycleInfoRequest — see §9.8 for payload] */</span>
+          );
+        Event.assertEvent(reqEvent);
+        IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity);
+        Event.Ext.sendEventImmediate(Event.createEvent(<span class="st">"xslt://{{Logger}}..."</span>)); <span class="cm">// audit</span>
+        IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity);
+        orderCurrentActivity.Status = GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+        RuleFunctions.Helpers.SendDataToDB(orderRequest);
+      } <span class="kw">else</span> {
+        RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+      }
+    } <span class="kw">catch</span> (<span class="ty">Exception</span> ae) {
+      RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+    }
+  }
+}</pre>
+</div>
+</div>
+
+<!-- §19 -->
+<div class="card">
+<div class="card-header">§19 — Response Message Rule</div>
+<div class="card-body">
+<h3>§19.1 Overview</h3>
+<p>Parses the CCBS response into <code>CCBS_ChangeCustomerBillingCycleInfoRes</code>, performs fan-in check, and returns "true" if all requests succeeded.</p>
+<h3>§19.2 Scope Variables</h3>
+<table>
+<tr><th>Variable</th><th>Type Path</th><th>Role</th></tr>
+<tr><td>orderRequest</td><td>Concepts.OrderRequest.OrderRequest</td><td>Master order request</td></tr>
+<tr><td>eventResponse</td><td>Events.OMConsumers.OMXFM.Response.CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO</td><td>Raw CCBS response event</td></tr>
+<tr><td>currActivity</td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity</td></tr>
+</table>
+<h3>§19.3 ResponseBase Concept Construction</h3>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">object</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">$sysNanoTimeValue</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-green">Always</span><span class="tree-cond">(no xsl:if — always emitted, may be empty)</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-green">Always</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<h3>§19.4 Response Completion Logic</h3>
+<table>
+<tr><th>Expression</th><th>Result</th></tr>
+<tr><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td><td>Count of successful responses</td></tr>
+<tr><td><code>currActivity.RequestCount == successResponseCount</code></td><td>"true" — ALL requests succeeded; "false" — still waiting</td></tr>
+</table>
+<h3>§19.5 Response Audit Logging</h3>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>OPERATION_NAME</td><td>"CCBS_CHANGE_CUSTOMER_BILLING_CYCLE_INFO"</td></tr>
+<tr><td>AUDIT_TRACE</td><td>concat("Response received for RefId ", $eventResponse/RefID)</td></tr>
+<tr><td>PROCESS_ID</td><td>concat($sysNanoTimeValue, "_RES")</td></tr>
+</table>
+<h3>§19.6 Response XSLT Source</h3>
+<pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span> <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"sysNanoTimeValue"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"eventResponse"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createObject&gt;</span>
+      <span class="xt">&lt;object&gt;</span>
+        <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="st">"extId"</span><span class="xt">&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$sysNanoTimeValue"</span><span class="xt">/&gt;&lt;/xsl:attribute&gt;</span>
+        <span class="xt">&lt;ResponseCode&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/ResponseCode"</span><span class="xt">/&gt;&lt;/ResponseCode&gt;</span>
+        <span class="xt">&lt;ResponseMessage&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/ResponseMsg"</span><span class="xt">/&gt;&lt;/ResponseMessage&gt;</span>
+        <span class="xt">&lt;CompletionStatus&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/CompletionStatus"</span><span class="xt">/&gt;&lt;/CompletionStatus&gt;</span>
+        <span class="xt">&lt;ReferenceId&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/RefID"</span><span class="xt">/&gt;&lt;/ReferenceId&gt;</span>
+      <span class="xt">&lt;/object&gt;</span>
+    <span class="xt">&lt;/createObject&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+</div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

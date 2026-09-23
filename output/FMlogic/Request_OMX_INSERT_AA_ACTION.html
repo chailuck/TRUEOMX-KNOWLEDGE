@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Request_OMX_INSERT_AA_ACTION</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem}
+.meta-row{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.meta-pill{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem}
+.content{max-width:1200px;margin:0 auto;padding:24px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left}
+td{padding:9px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre-wrap}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+footer{text-align:center;padding:20px;font-size:0.8rem;color:#888;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_OMX_INSERT_AA_ACTION</h1>
+  <div class="subtitle">Internal OMX enrichment — pre-populates subscriber ExtendedInfo fields for AA SMS notification before AA provisioning step.</div>
+  <div class="meta-row">
+    <span class="meta-pill">Activity: OMX_INSERT_AA_ACTION</span>
+    <span class="meta-pill">Type: OMX Internal Enrichment</span>
+    <span class="meta-pill">No External Backend</span>
+    <span class="meta-pill">Scope: ChildOU Subscriber (primary)</span>
+    <span class="meta-pill">Generated: 2026-09-23</span>
+  </div>
+</div>
+<div class="content">
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Pre-populates subscriber <code>ExtendedInfo</code> fields needed for AA SMS action notification. No external backend call is made directly by this rule — it enriches working memory so downstream AA steps can access structured data. The activity parameter specifies the action type (e.g., <code>SMS</code>).</p>
+    <p style="margin-top:10px">Key data computed: price plan name, SOC description (language-aware TH/EN), contract offer name, action type, SMS indicator, cycle count, and PP effective/expiration dates.</p>
+    <p style="margin-top:10px;color:var(--warning)"><strong>Note:</strong> The rule file is unusually large (303KB) due to many inline XSLT create-instance calls. The response rulefunction uses <code>IsAllResponseSuccess(currActivity)</code> for completion.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_INSERT_AA_ACTION</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Activity ID</td><td>OMX_INSERT_AA_ACTION</td></tr>
+      <tr><td>Type</td><td>Internal OMX working memory enrichment</td></tr>
+      <tr><td>Activity Parameter</td><td>Action type string (e.g., <code>SMS</code>)</td></tr>
+      <tr><td>Response Concept</td><td>Concepts.FM.Response.OMX_InsertAAActionRes</td></tr>
+      <tr><td>Completion</td><td><code>RuleFunctions.Helpers.IsAllResponseSuccess(currActivity)</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <pre>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName
+orderCurrentActivity.ActivityID == "OMX_INSERT_AA_ACTION"
+orderRequest.ProcessFlow.NextActivityID == "OMX_INSERT_AA_ACTION"
+orderCurrentActivity.Status == "WAITING"</pre>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol style="padding-left:20px;line-height:2">
+      <li>Check PreExecCheck at order level (not per-subscriber)</li>
+      <li>If check passes: iterate ChildOU subscribers</li>
+      <li>Per-subscriber PreExecCheck (optional)</li>
+      <li>For passing subscribers, create and append ExtendedInfo entries:
+        <ul style="margin-left:20px;margin-top:4px">
+          <li><code>PP</code> ← SubscriberOffers[ServiceType=80]/OfferName</li>
+          <li><code>SOC_PROP</code> ← language-aware SOC description (TH: BILL_DESCRIPTION, then thai_offer_description, else description; EN: english_offer_description, else description)</li>
+          <li><code>CONTRACT</code> ← SubscriberOffers[ServiceType=85][SocProperties contains 'TR_CONTRACT_IND=Y']/OfferName, or '-'</li>
+          <li><code>ACTION</code> ← activity parameter (e.g., "SMS")</li>
+          <li><code>SMS_IND</code> ← SubscriberOffers[FE_OR_CCBS='FE' or 'BRMS']/ExtendedInfo[SMS_IND]/Value</li>
+          <li><code>CYCLE_COUNT</code> ← SubscriberOffers[FE_OR_CCBS='BRMS']/ExtendedInfo[CYCLE_COUNT]/Value</li>
+        </ul>
+      </li>
+      <li>Calculate PP duration: <code>GetPPDurationMonth(socProps, propoSocProps)</code></li>
+      <li>Get billing cycle: <code>GetBillCycle(orderRequest)</code></li>
+      <li>Calculate PP effective date: <code>DateTime.format(now, "dd-MMM-yyyy")</code></li>
+      <li>Calculate PP expiration date: <code>GetPPExpirationDate(effDate, format, durationMn, billCycle, -1)</code></li>
+      <li>If language=TH: convert month names to Thai via <code>ConvertMntoThaiMn</code></li>
+      <li>Create and append: <code>EFFECT_DATE</code>, <code>EXPIRE_DATE</code> ExtendedInfo</li>
+      <li>Set activity status and complete</li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§7 — ExtendedInfo Fields Written to Subscriber</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Key</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>PP</code></td><td>SubscriberOffers[ServiceType=80]/OfferName</td><td>Price plan name</td></tr>
+      <tr><td><code>SOC_PROP</code></td><td>Language-dependent SOC description</td><td>TH: BILL_DESCRIPTION → thai_offer_description → description; EN: english_offer_description → description</td></tr>
+      <tr><td><code>CONTRACT</code></td><td>SubscriberOffers[ServiceType=85, TR_CONTRACT_IND=Y]/OfferName</td><td>Falls back to "-" if none</td></tr>
+      <tr><td><code>ACTION</code></td><td>activity Parameter[1]</td><td>E.g., "SMS"</td></tr>
+      <tr><td><code>SMS_IND</code></td><td>SubscriberOffers[FE_OR_CCBS=FE or BRMS]/ExtendedInfo[SMS_IND]</td><td>FE takes priority over BRMS</td></tr>
+      <tr><td><code>CYCLE_COUNT</code></td><td>SubscriberOffers[FE_OR_CCBS=BRMS]/ExtendedInfo[CYCLE_COUNT]</td><td></td></tr>
+      <tr><td><code>EFFECT_DATE</code></td><td>DateTime.now() formatted dd-MMM-yyyy</td><td>Thai months if language=TH</td></tr>
+      <tr><td><code>EXPIRE_DATE</code></td><td>Calculated from PP duration, bill cycle</td><td>Thai months if language=TH</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_OMX_INSERT_AA_ACTION
+├── GetXMLForSubscriber (order-level PreExecCheck)
+├── XPath.execute("/(preExecCheck)", sXML, ...)
+├── Instance.createInstance(PP ExtendedInfo XSLT)
+├── Instance.createInstance(SOC_PROP XSLT)         ← language-aware
+├── Instance.createInstance(CONTRACT XSLT)
+├── Instance.createInstance(ACTION XSLT)
+├── Instance.createInstance(SMS_IND XSLT)
+├── Instance.createInstance(CYCLE_COUNT XSLT)
+├── XPath.evalAsString(socProps)                    ← ServiceType=80 SocProperties
+├── XPath.evalAsString(propoSocProps)               ← RMVX00000000001 SocProperties
+├── GetPPDurationMonth(socProps, propoSocProps)
+├── GetBillCycle(orderRequest)
+├── DateTime.format(DateTime.now(), "dd-MMM-yyyy")
+├── GetPPExpirationDate(effDate, format, durationMn, billCycle, -1)
+├── ConvertMntoThaiMn(date, "-", format)            ← if language=TH
+├── Instance.createInstance(EFFECT_DATE XSLT)
+├── Instance.createInstance(EXPIRE_DATE XSLT)
+└── HandleActivityException(req, activity, ae, "")</pre>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Requirement / Risk</th><th>Severity</th></tr>
+      <tr><td>R1</td><td>Language-aware SOC description: TH requires BILL_DESCRIPTION → thai_offer_description → description fallback chain</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+      <tr><td>R2</td><td>PP expiration date calculation requires PP duration from SocProperties + billing cycle</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+      <tr><td>R3</td><td>CONTRACT falls back to "-" when no TR_CONTRACT_IND=Y offer exists</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R4</td><td>SMS_IND priority: FE source takes precedence over BRMS source</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R5</td><td>EFFECT_DATE/EXPIRE_DATE must convert month names to Thai if subscriber language=TH</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R6</td><td>Uses BRMS offer RMVX00000000001 for promoend SOC properties (PP duration calculation)</td><td><span class="badge badge-blue">[LOW]</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule</div>
+  <div class="card-body">
+    <p>Creates <code>OMX_InsertAAActionRes</code> with standard ResponseCode/ResponseMessage/CompletionStatus/ReferenceId fields. Audit log OPERATION_NAME = <code>"OMX_INSERT_AA_ACTION"</code>. Completion via <code>RuleFunctions.Helpers.IsAllResponseSuccess(currActivity)</code>.</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

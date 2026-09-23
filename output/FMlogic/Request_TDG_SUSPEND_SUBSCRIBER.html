@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Request_TDG_SUSPEND_SUBSCRIBER</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#333;font-size:14px;line-height:1.6}
+.hero{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.hero h1{font-size:1.8rem;font-weight:700;letter-spacing:-0.5px}
+.hero .sub{opacity:.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px}
+.meta-chip{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#FFF9F9}
+code{font-family:'Cascadia Code','Consolas',monospace;background:rgba(139,0,0,0.07);color:var(--true-dark);padding:2px 6px;border-radius:4px;font-size:0.85em}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.83rem;border-left:3px solid var(--true-red);line-height:1.5}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:0.75rem;font-weight:600}
+.b-green{background:#E8F5E9;color:var(--success)}
+.b-orange{background:#FFF3E0;color:var(--warning)}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-blue{background:#E3F0FD;color:var(--info)}
+.section-title{font-size:1.1rem;font-weight:700;color:var(--true-dark);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--true-pale)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>Request_TDG_SUSPEND_SUBSCRIBER</h1>
+  <div class="sub">TIBCO BusinessEvents FM — TRUE Digital (TDG) Suspend Subscriber per-material-info loop</div>
+  <div class="meta-row">
+    <span class="meta-chip">Rule: Rules.OMConsumers.OMXFM.Request.Request_TDG_SUSPEND_SUBSCRIBER</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Author: CHAYATORN P.</span>
+    <span class="meta-chip">Backend: TDG (TRUE Digital)</span>
+    <span class="meta-chip">Generated: 2026-09-16</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header">§1 — Overview &amp; Purpose</div>
+<div class="card-body">
+<p>Fires when <code>ActivityID == "TDG_SUSPEND_SUBSCRIBER"</code>. Unlike most subscriber FMs, this one iterates over <strong>MaterialInfo.Material entries</strong> (IoT/device materials) rather than subscribers directly. For each material, it sends a <code>TDG_SUSPEND_SUBSCRIBER</code> JMS event to the TRUE Digital back-end with the material's serial number and the associated contract offer name.</p>
+<p style="margin-top:8px"><strong>PreExecCheck gate:</strong> Subscriber must have <code>TR_SPECIAL_OFFER_IND=IOTBU</code>, meaning only IoT Business Unit subscribers reach this step.</p>
+<p style="margin-top:8px"><strong>Reason mapping:</strong> Channel=<code>CCBS</code> → reason <code>"C"</code> (Collection); otherwise → reason <code>"R"</code> (Regular).</p>
+<p style="margin-top:8px"><strong>propositioncode:</strong> Fetched from subscriber's <code>SubscriberOffers/RelatedOffersArray</code> where ServiceType=85 AND SocProperties contains <code>TR_CONTRACT_IND=Y</code>, selecting OfferName.</p>
+</div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+<div class="card-header">§2 — Rule Metadata</div>
+<div class="card-body">
+<table>
+<thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_TDG_SUSPEND_SUBSCRIBER</code></td></tr>
+<tr><td>Priority / forwardChain</td><td>5 / true</td></tr>
+<tr><td>Author</td><td>CHAYATORN P.</td></tr>
+<tr><td>Loop strategy</td><td>Per MaterialInfo.Material (not per subscriber)</td></tr>
+<tr><td>RefId</td><td><code>concat(pSubRefId, ":", material.MatCode)</code></td></tr>
+<tr><td>PreExecCheck</td><td><code>TR_SPECIAL_OFFER_IND=IOTBU</code></td></tr>
+<tr><td>Helper</td><td><code>GetXMLForSubscriberMaterialInfo</code></td></tr>
+<tr><td>Fan-in type</td><td>Classic count: <code>count(Response[suffix"000"]) == RequestCount</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="card">
+<div class="card-header">§4 — Rule Conditions (WHEN)</div>
+<div class="card-body">
+<table>
+<thead><tr><th>#</th><th>Condition</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "TDG_SUSPEND_SUBSCRIBER"</code></td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "TDG_SUSPEND_SUBSCRIBER"</code></td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §5 Flow -->
+<div class="card">
+<div class="card-header">§5 — Execution Flow</div>
+<div class="card-body">
+<ol style="padding-left:20px;line-height:2">
+<li>Get subscriber XML via <code>GetXMLForSubscriberMaterialInfo</code></li>
+<li>Apply PreExecCheck: <code>TR_SPECIAL_OFFER_IND=IOTBU</code></li>
+<li>Loop over <code>MaterialInfo.Material[m]</code></li>
+<li>&nbsp;&nbsp;Compute <code>pmatchRefId = pSubRefId + ":" + material.MatCode</code></li>
+<li>&nbsp;&nbsp;Skip if existing completed response for this refId</li>
+<li>&nbsp;&nbsp;Resolve <code>propositioncode</code> from SubscriberOffers/RelatedOffersArray (ServiceType=85 + TR_CONTRACT_IND=Y)</li>
+<li>&nbsp;&nbsp;Determine <code>reason</code>: Channel=CCBS → "C", else "R"</li>
+<li>&nbsp;&nbsp;Fire TDG_SUSPEND_SUBSCRIBER event: serial=MatSerial, id=MSISDN, propositioncode, reason</li>
+<li>&nbsp;&nbsp;<code>ActionRequestEvent</code>; increment RequestCount</li>
+<li>On any dispatch → <code>SendFirstRequestEvent</code>; status "1"; DB persist</li>
+<li>On all skip → <code>SkipActivity("4")</code></li>
+</ol>
+</div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+<div class="card-header">§8 — System &amp; Integration Dependencies</div>
+<div class="card-body">
+<div class="section-title">§8.2 ESB / JMS</div>
+<table>
+<thead><tr><th>Direction</th><th>Event</th><th>Schema</th></tr></thead>
+<tbody>
+<tr><td><span class="badge b-orange">OUTBOUND</span></td><td>TDG_SUSPEND_SUBSCRIBER</td><td>SuspendSubscriberRequest (TDG namespace)</td></tr>
+<tr><td><span class="badge b-blue">LOG</span></td><td>OMXESB/Logger</td><td>AuditLogging/V1_0</td></tr>
+</tbody>
+</table>
+<br/>
+<div class="section-title">§8.4 Fields Used</div>
+<table>
+<thead><tr><th>Field</th><th>Access</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><code>MaterialInfo.Material[m].MatSerial</code></td><td>READ</td><td>serial (device serial number)</td></tr>
+<tr><td><code>MaterialInfo.Material[m].MatCode</code></td><td>READ</td><td>RefId component</td></tr>
+<tr><td><code>Subscriber.MSISDN</code></td><td>READ</td><td>id in SuspendSubscriberRequest</td></tr>
+<tr><td><code>SubscriberOffers.RelatedOffersArray[ServiceType=85, TR_CONTRACT_IND=Y]/OfferName</code></td><td>READ</td><td>propositioncode</td></tr>
+<tr><td><code>OrderData.Channel</code></td><td>READ</td><td>reason "C" or "R" selector</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §9 Payload -->
+<div class="card">
+<div class="card-header">§9 — Payload</div>
+<div class="card-body">
+<pre>&lt;createEvent&gt;
+  &lt;event&gt;
+    &lt;JMSCorrelationID&gt;TRK-20250101-001&lt;/JMSCorrelationID&gt;
+    &lt;RefID&gt;REF-SUB-001:MAT001&lt;/RefID&gt;  &lt;!-- pSubRefId:MatCode --&gt;
+    &lt;payload&gt;
+      &lt;ns:SuspendSubscriberRequest&gt;
+        &lt;ns:serial&gt;SN12345678&lt;/ns:serial&gt;          &lt;!-- MatSerial --&gt;
+        &lt;ns:id&gt;0812345678&lt;/ns:id&gt;                  &lt;!-- MSISDN --&gt;
+        &lt;ns:propositioncode&gt;IOTBU_CONTRACT_01&lt;/ns:propositioncode&gt;  &lt;!-- from RelatedOffersArray --&gt;
+        &lt;ns:reason&gt;R&lt;/ns:reason&gt;                    &lt;!-- "C" if CCBS, else "R" --&gt;
+      &lt;/ns:SuspendSubscriberRequest&gt;
+    &lt;/payload&gt;
+  &lt;/event&gt;
+&lt;/createEvent&gt;</pre>
+</div>
+</div>
+
+<!-- §10 Tree -->
+<div class="card">
+<div class="card-header">§10 — XSLT Field Mapping Tree</div>
+<div class="card-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">SuspendSubscriberRequest</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">ns:serial</span><span class="tree-arrow">←</span><span class="tree-src">MaterialInfo.Material[$m]/MatSerial</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ns:id</span><span class="tree-arrow">←</span><span class="tree-src">Subscriber/MSISDN</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ns:propositioncode</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers/RelatedOffersArray[ServiceType=85 and contains(SocProperties,'TR_CONTRACT_IND=Y')]/OfferName</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ns:reason</span><span class="tree-arrow">←</span><span class="tree-src-static">"C" if Channel=CCBS, else "R"</span><span class="badge b-green">Always</span></div></li>
+    </ul>
+  </li>
+</ul>
+</div>
+</div>
+
+<!-- §15 Tree -->
+<div class="card">
+<div class="card-header">§15 — Function Dependency Tree</div>
+<div class="card-body">
+<pre>Request_TDG_SUSPEND_SUBSCRIBER
+├── RuleFunctions.Helpers.GetXMLForSubscriberMaterialInfo
+├── XPath.execute (PreExecCheck: TR_SPECIAL_OFFER_IND=IOTBU)
+├── XPath.evalAsString (MatSerial, MSISDN, propositioncode, Channel)
+├── Event.createEvent (TDG_SUSPEND_SUBSCRIBER XSLT)
+├── RuleFunctions.Helpers.ActionRequestEvent
+├── Event.Ext.sendEventImmediate (audit)
+├── RuleFunctions.Helpers.SendFirstRequestEvent
+├── RuleFunctions.Helpers.GetActivityStatusString
+├── RuleFunctions.Helpers.SendDataToDB
+├── RuleFunctions.Helpers.SkipActivity
+└── RuleFunctions.Helpers.HandleActivityException</pre>
+</div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+<div class="card-header">§19 — Response Message Rule</div>
+<div class="card-body">
+<p><code>Response_TDG_SUSPEND_SUBSCRIBER</code>: receives <code>TDG_SUSPEND_SUBSCRIBER</code> event, maps into <code>ResponseBase</code> (ResponseCode, ResponseMessage, CompletionStatus, ReferenceId). Classic fan-in count: <code>count(Response[tib:right(tib:trim(ResponseCode),3)="000"]) == RequestCount</code>.</p>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

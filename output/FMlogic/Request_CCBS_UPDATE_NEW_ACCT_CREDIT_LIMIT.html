@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+.callout.critical{border-color:#B71C1C;background:#FFEBEE}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+.badge-high{background:#FFE0E0;color:var(--true-dark)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT</h1>
+  <div class="subtitle">CCBS Credit Limit Update — fire-and-forget with isUpdateCredit gate, ODS/personal/7-11 limit dispatch</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: CCBS</span>
+    <span class="meta-chip">Author: awalia-t420</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: FIRE-AND-FORGET (no IntraActivitySequencing)</span>
+    <span class="meta-chip">Fan-in: IsAllResponseSuccess</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout critical">
+      <strong>CRITICAL — Same fire-and-forget pattern as FM21:</strong> Uses <code>Event.Ext.sendEventImmediate(reqEvent)</code> directly, manual <code>orderCurrentActivity.RequestCount++</code>, and <code>IsAllResponseSuccess(currActivity)</code> for fan-in. No IntraActivitySequencing involvement.
+    </div>
+    <div class="callout">
+      <strong>CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT</strong> updates the personal credit limit on new CCBS accounts. A key gate (<code>isUpdateCredit</code>) means some orders send NO event at all — if no qualifying credit limit source is found, the FM completes as a no-op.
+    </div>
+    <div class="callout info">
+      <strong>isUpdateCredit gate (3 conditions — any is sufficient):</strong> (1) <code>personalCreditLimit &gt; 0</code>; (2) ODS qualifies (<code>ODSCreditLimit</code> present); (3) Channel = "7-11". If none true, the account is skipped.
+    </div>
+    <div class="callout warn">
+      <strong>Credit limit priority:</strong> INDY (Type=73) + ODS qualifies → ODSCreditLimit; PersonalCreditLimit &gt; 0 → use it; Channel="7-11" → hardcoded 215. OrderType=8 carry: postpaid→postpaid → carry source credit limit.
+    </div>
+    <div class="callout success">
+      <strong>ActivityReason precedes credit logic:</strong> Computed BEFORE the credit class resolution: Type=73 → "CREQ"; AccountSubType=TOP/PREMIUM AND Channel ends in "U" → "SUCL"; else → "G142".
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT</code></td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>CCBS</td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> — NO IntraActivitySequencing</td></tr>
+      <tr><td>RequestCount</td><td>Manually incremented: <code>orderCurrentActivity.RequestCount++</code></td></tr>
+      <tr><td>Fan-in</td><td><code>IsAllResponseSuccess(currActivity)</code></td></tr>
+      <tr><td>Iteration target</td><td><code>Customer.Account[]</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBS_UpdateNewAcctCreditLimitRes</code></td></tr>
+      <tr><td>isUseFeCreditLimit</td><td>Always false (OMX-2605 commented out the true path)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic Patterns -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr>
+        <td><strong>isUpdateCredit gate</strong></td>
+        <td>Set true if ANY: personalCreditLimit &gt; 0 OR ODSCreditLimit present OR Channel="7-11". Event only sent if <code>isUpdateCredit == true</code>.</td>
+      </tr>
+      <tr>
+        <td><strong>Credit limit priority</strong></td>
+        <td>1. OrderType=8 + postpaid→postpaid → carry SOURCECreditLimit<br>
+            2. CustomerType=73 + ODS qualifies → ODSCreditLimit<br>
+            3. personalCreditLimit &gt; 0 → personalCreditLimit<br>
+            4. Channel="7-11" → hardcoded 215</td>
+      </tr>
+      <tr>
+        <td><strong>ActivityReason (computed first)</strong></td>
+        <td>CustomerType=73 → "CREQ"<br>
+            AccountSubType in {TOP, PREMIUM} AND Channel ends with "U" → "SUCL"<br>
+            else → "G142"</td>
+      </tr>
+      <tr>
+        <td><strong>L9CreditLimitWaiverInd</strong></td>
+        <td>Dispatch based on credit limit waiver flag in account data; sent as <code>&lt;creditLimitWaiverInd&gt;</code> in request</td>
+      </tr>
+      <tr>
+        <td><strong>isUseFeCreditLimit</strong></td>
+        <td>Always false — the OMX-2605 code path that would set this true is commented out</td>
+      </tr>
+      <tr>
+        <td><strong>Hardcoded 215</strong></td>
+        <td>Credit limit for Channel="7-11" — embedded constant, not configurable</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority / JMSCorrelationID / OrderID / RefID / OrderType</span><span class="tree-arrow">←</span><span class="tree-src">standard order/Account fields</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:UpdateNewAcctCreditLimitRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ban</span><span class="tree-arrow">←</span><span class="tree-src">Account[$i]/AccountID</span><span class="badge badge-orange">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:creditLimit</span><span class="tree-arrow">←</span><span class="tree-src">priority chain: ODSCreditLimit → personalCreditLimit → 215 (7-11) → SOURCECreditLimit (OT=8)</span><span class="badge badge-orange">Priority chain</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src">Type=73 → "CREQ"; TOP/PREMIUM+"U" → "SUCL"; else → "G142"</span><span class="badge badge-orange">3-way dispatch</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:creditLimitWaiverInd</span><span class="tree-arrow">←</span><span class="tree-src">L9CreditLimitWaiverInd dispatch</span><span class="badge badge-orange">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:companyCode</span><span class="tree-arrow">←</span><span class="tree-src">Account[$i]/AccountManagementInfo.CompanyCode</span><span class="badge badge-orange">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:source</span><span class="tree-arrow">←</span><span class="tree-src">3-way: EOC / MNP_INT/EXT / CCBS</span><span class="badge badge-orange">Dispatch</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:userId</span><span class="tree-arrow">←</span><span class="tree-src-static">60001</span><span class="badge badge-orange">Hardcoded</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §15 -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT
+├── [if resubmit] Manual purge (RequestCount > 0 AND IsOrderResubmitted)
+├── Instance.getByExtIdByUri(NextActivityName, Activity) → nextAct
+├── for each Account[i]:
+│   ├── [skip if Response[ReferenceId==refId AND CompletionStatus==2] exists]
+│   ├── Compute ActivityReason (BEFORE credit resolution):
+│   │   ├── CustomerType=73 → "CREQ"
+│   │   ├── AccountSubType in {TOP,PREMIUM} AND Channel ends "U" → "SUCL"
+│   │   └── else → "G142"
+│   ├── Resolve credit limit variables:
+│   │   ├── ODSCreditLimit ← Account[i].ExtInfo[Name='ODS_CREDIT_LIMIT'].Value (from FM20)
+│   │   ├── personalCreditLimit ← Account[i].AccountManagementInfo.PersonalCreditLimit
+│   │   └── SOURCECreditLimit ← AccountExtInfo[CARRY_CREDIT_LIMIT].Value (OT=8 carry)
+│   ├── Evaluate isUpdateCredit:
+│   │   ├── personalCreditLimit > 0 → isUpdateCredit = true
+│   │   ├── ODSCreditLimit present → isUpdateCredit = true
+│   │   └── Channel = "7-11" → isUpdateCredit = true
+│   ├── if PreExecCheck.length > 0: GetXMLForAccount(orderRequest, refId) → XPath
+│   └── if chkRes == "true" AND isUpdateCredit == true:
+│       ├── Resolve L9CreditLimit (priority chain — see §7)
+│       ├── Resolve L9CreditLimitWaiverInd
+│       ├── Event.createEvent(CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT, active XSLT)
+│       ├── Event.Ext.sendEventImmediate(reqEvent)  ← FIRE-AND-FORGET
+│       ├── orderCurrentActivity.RequestCount++      ← MANUAL increment
+│       ├── isSkipped = false
+│       └── sendEventImmediate(Logger REQ)
+├── GetActivityStatusString("1", false)
+└── SendDataToDB(orderRequest)
+
+Response_CCBS_UPDATE_NEW_ACCT_CREDIT_LIMIT
+├── Instance.createInstance(CCBS_UpdateNewAcctCreditLimitRes:
+│   ResponseCode, ResponseMsg, CompletionStatus, ReferenceId)
+│   → currActivity.Response[n]
+├── [no order data write-backs]
+├── sendEventImmediate(Logger RES)
+└── IsAllResponseSuccess(currActivity) → "true"/"false"</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Same fire-and-forget risk as FM21: manual RequestCount increment, no IntraActivitySequencing, fan-in via IsAllResponseSuccess</td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td>Standardise on IntraActivitySequencing in migration or implement explicit idempotent request tracking</td>
+      </tr>
+      <tr>
+        <td>isUpdateCredit gate: if all three conditions are false, the entire FM is a no-op (no CCBS call). The activity still completes "successfully" — downstream steps must not rely on credit limit having been updated</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document the no-op scenario; consider a status flag to indicate whether credit limit was actually written to CCBS</td>
+      </tr>
+      <tr>
+        <td>Hardcoded 215 for Channel="7-11" — business rule embedded as a constant in code</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Externalise to a channel-credit-limit configuration table in migration</td>
+      </tr>
+      <tr>
+        <td>isUseFeCreditLimit always false (OMX-2605 code path commented out) — FE credit limit never used</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Remove dead code in migration; document that FE credit limit path was deferred</td>
+      </tr>
+      <tr>
+        <td>ActivityReason computed BEFORE credit resolution — if credit logic changes the effective account type, ActivityReason may be inconsistent</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Review ActivityReason computation order in migration; consider computing after credit class is resolved</td>
+      </tr>
+      <tr>
+        <td>ODS_CREDIT_LIMIT consumed here depends on FM20 having run and written the ExtInfo — implicit FM20→FM22 dependency</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document FM18→FM20→FM21→FM22 credit processing chain; validate ProcessConfig enforces this order</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <p style="margin-bottom:12px;font-size:0.87rem;">Minimal response — 4 standard fields, no order data write-backs. Fan-in via <code>IsAllResponseSuccess</code>.</p>
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>CCBS_UpdateNewAcctCreditLimitRes (4 std fields)</td><td>Always</td></tr>
+    </table>
+    <div class="callout warn" style="margin-top:12px">
+      <strong>Fan-in:</strong> <code>IsAllResponseSuccess(currActivity)</code> — returns "true" when all sent events have received successful responses. No write-backs to order data model from this response.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

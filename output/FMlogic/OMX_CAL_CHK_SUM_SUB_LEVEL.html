@@ -1,0 +1,490 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>OMX_CAL_CHK_SUM_SUB_LEVEL</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem}
+.meta-row{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.8rem}
+.container{max-width:1400px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:22px;border:1px solid var(--border);overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover{background:#FAFAFA}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem;background:#F0F0F0;padding:1px 5px;border-radius:3px;color:var(--true-dark)}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red);white-space:pre-wrap}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:2px}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+.warn-box{background:#FFF3E0;border-left:4px solid var(--warning);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+.note-box{background:var(--true-pale);border-left:4px solid var(--true-red);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+.success-box{background:#E8F5E9;border-left:4px solid var(--success);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+h3{color:var(--true-dark);margin:18px 0 8px;font-size:1rem}
+ul,ol{padding-left:20px;margin:8px 0}
+li{margin:4px 0}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086;font-style:italic}.nu{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+footer{text-align:center;color:#999;font-size:.8rem;padding:20px;border-top:1px solid var(--border);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>OMX_CAL_CHK_SUM_SUB_LEVEL</h1>
+  <div class="subtitle">TIBCO BusinessEvents OMXOM Internal Rule — ICC_ID Luhn Checksum Computation at Subscriber Level</div>
+  <div class="meta-row">
+    <span class="meta-chip">Author: RS33-BANDIT</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Forward Chain: true</span>
+    <span class="meta-chip">Namespace: OMXOM (internal, not OMXFM)</span>
+    <span class="meta-chip">Pattern: Pure In-Memory Computation — No JMS</span>
+    <span class="meta-chip">Lines: 109</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+<div class="section-header">§1 — Overview &amp; Purpose</div>
+<div class="section-body">
+<p>This rule computes the <strong>Luhn checksum</strong> for each subscriber's ICCID (<code>ICC_ID</code> ExtendedInfo field) and stores the result as a new <code>ICC_ID_CHG_SUM</code> ExtendedInfo entry on the subscriber concept. It is a <strong>pure in-memory computation rule</strong> — it sends no JMS events to any backend system and has no response rulefunction.</p>
+<div class="success-box">
+<strong>Pure Computation — No External Call:</strong> Unlike all FM dispatcher rules, this rule performs all work entirely in BE working memory. It reads ICC_ID from each subscriber, computes Luhn(iccId), creates a new SubscriberExtendedInfo concept with Name="ICC_ID_CHG_SUM" and Value=iccId+checksum, and appends it directly to the subscriber's ExtendedInfo array. Completion is via <code>NextActivity()</code>, not <code>GetActivityStatusString + SendDataToDB</code>.
+</div>
+<div class="info-box">
+<strong>OMXOM namespace (not OMXFM):</strong> This rule lives in <code>Rules.OMConsumers.OMXOM</code> rather than <code>Rules.OMConsumers.OMXFM.Request</code>, reflecting its role as an internal orchestration step rather than an FM dispatcher. The rule file also has no <code>Request_</code> prefix.
+</div>
+<table>
+<tr><th>Item</th><th>Value</th></tr>
+<tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXOM.OMX_CAL_CHK_SUM_SUB_LEVEL</code></td></tr>
+<tr><td>Rule File</td><td><code>Rules/OMConsumers/OMXOM/OMX_CAL_CHK_SUM_SUB_LEVEL.rule</code></td></tr>
+<tr><td>Author</td><td>RS33-BANDIT</td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>Forward Chain</td><td>true</td></tr>
+<tr><td>External System</td><td>None — pure in-memory computation</td></tr>
+<tr><td>JMS Event</td><td>None dispatched</td></tr>
+<tr><td>Response Handler</td><td>None — no response expected</td></tr>
+<tr><td>Algorithm</td><td>Luhn checksum (<code>RuleFunctions.Helpers.Luhn(iccId)</code>)</td></tr>
+<tr><td>Input</td><td><code>subscriber.ExtendedInfo[Name="ICC_ID"]/Value</code></td></tr>
+<tr><td>Output</td><td>New <code>SubscriberExtendedInfo</code> concept: Name="ICC_ID_CHG_SUM", Value=iccId+checksum</td></tr>
+<tr><td>Completion</td><td><code>RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+<div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="section-body">
+<table>
+<tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+<tr><td>priority</td><td>5</td><td>Standard priority</td></tr>
+<tr><td>forwardChain</td><td>true</td><td>Rule may re-fire on working memory change</td></tr>
+<tr><td>Rule type</td><td>Internal computation — no external dispatch</td><td>Mutates BE working memory; no JMS, no response concept</td></tr>
+<tr><td>Namespace</td><td>OMXOM (not OMXFM)</td><td>Internal orchestration rule, not a backend FM dispatcher</td></tr>
+<tr><td>Resubmit handling</td><td><code>PurgePendingRequestsBeforeResubmit()</code></td><td>Called but vestigial — no events are ever queued by this rule</td></tr>
+<tr><td>Completion call</td><td><code>NextActivity()</code></td><td>Directly advances to next step — does NOT call GetActivityStatusString or SendDataToDB</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+<div class="section-header">§3 — Working Memory — Declared Objects</div>
+<div class="section-body">
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order: customer → POU/COU → subscribers with ExtendedInfo arrays</td></tr>
+<tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity node; Status, PreExecCheck</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+<div class="section-header">§4 — Rule Conditions (WHEN)</div>
+<div class="section-body">
+<table>
+<tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Match current process step</td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_CAL_CHK_SUM_SUB_LEVEL"</code></td><td>Activity type guard</td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_CAL_CHK_SUM_SUB_LEVEL"</code></td><td>Process flow confirmation</td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Only fire if not already processed</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+<div class="section-header">§5 — Execution Flow Diagram</div>
+<div class="section-body">
+<ol>
+<li>Detect resubmit: <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code></li>
+<li>If resubmit → <code>PurgePendingRequestsBeforeResubmit()</code> (vestigial — no queued events exist)</li>
+<li>Read <code>PROJ</code> parameter via <code>GetActivityParamValueFromKey(orderCurrentActivity, "PROJ")</code> — read but not used in logic (dead read)</li>
+<li><strong>Loop A — POU Subscribers</strong>: for each ParentOU[i] → Subscriber[iSub]:
+  <ul>
+    <li>Evaluate PreExecCheck via <code>GetXMLForSubscriber(orderRequest, subRefId)</code> if PreExecCheck present</li>
+    <li>If chkRes=="true": read <code>subscriber.ExtendedInfo[Name="ICC_ID"]/Value</code></li>
+    <li>If iccId length &gt; 0:
+      <ul>
+        <li>Compute <code>iccIdCheckSum = RuleFunctions.Helpers.Luhn(iccId)</code></li>
+        <li>Create <code>SubscriberExtendedInfo</code> concept: Name="ICC_ID_CHG_SUM", Value=iccId+iccIdCheckSum</li>
+        <li>Append to <code>subscriber.ExtendedInfo[]</code></li>
+        <li>Send audit log immediately</li>
+        <li>Set <code>isSkipped = false</code></li>
+      </ul>
+    </li>
+  </ul>
+</li>
+<li><strong>Loop B — COU Subscribers</strong>: for each ParentOU[i] → ChildOU[k] → Subscriber[iSub]:
+  <ul>
+    <li>Same logic via <code>GetXMLForSubscriberInChildOU(orderRequest, subRefId, pOuRefId)</code></li>
+  </ul>
+</li>
+<li>Post-loop:
+  <ul>
+    <li>If any subscriber had ICC_ID: <code>NextActivity(orderRequest, orderCurrentActivity)</code></li>
+    <li>If no subscribers had ICC_ID: <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></li>
+  </ul>
+</li>
+<li>catch: <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></li>
+</ol>
+<div class="note-box"><strong>No backend call, no waiting:</strong> The rule completes synchronously within a single BE engine evaluation. After appending ICC_ID_CHG_SUM to all subscribers' ExtendedInfo arrays, it immediately advances to the next activity via <code>NextActivity()</code>. There is no JMS send and no fan-in wait.</div>
+</div>
+</div>
+
+<!-- §6 Luhn Algorithm -->
+<div class="section">
+<div class="section-header">§6 — Luhn Checksum Algorithm</div>
+<div class="section-body">
+<div class="info-box">
+<strong>The Luhn algorithm</strong> (ISO/IEC 7812) is the standard checksum for ICCID (SIM card) numbers. It computes a single check digit that is appended to the ICCID base to form the complete 20-digit ICCID. The formula: double every second digit from right, subtract 9 if &gt; 9, sum all digits, check digit = (10 − (sum mod 10)) mod 10.
+</div>
+<table>
+<tr><th>Field</th><th>Value/Detail</th></tr>
+<tr><td>Input</td><td><code>ICC_ID</code> value from <code>subscriber.ExtendedInfo[Name="ICC_ID"]/Value</code></td></tr>
+<tr><td>Checksum function</td><td><code>RuleFunctions.Helpers.Luhn(iccId)</code> — returns the check digit string</td></tr>
+<tr><td>Output value</td><td><code>iccId + iccIdCheckSum</code> (base ICCID concatenated with check digit)</td></tr>
+<tr><td>Stored as</td><td>ExtendedInfo Name="ICC_ID_CHG_SUM" on the subscriber concept</td></tr>
+<tr><td>Skip condition</td><td><code>String.length(iccId) == 0</code> — subscriber has no ICC_ID → skip, do not compute</td></tr>
+<tr><td>Standard</td><td>ISO/IEC 7812 — used for SIM card (ICCID) validation worldwide</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §7 Working Memory Mutation -->
+<div class="section">
+<div class="section-header">§7 — Working Memory Mutation (ExtendedInfo Write)</div>
+<div class="section-body">
+<p>The rule creates a new <code>SubscriberExtendedInfo</code> concept instance and appends it to the subscriber's ExtendedInfo array. The concept is constructed via XSLT <code>Instance.createInstance()</code>:</p>
+<table>
+<tr><th>Field</th><th>Value/Source</th></tr>
+<tr><td><code>extId</code></td><td><code>concat($iccId, ':ICC_ID_CHG_SUM', $subscriber/@extId)</code> — unique per subscriber</td></tr>
+<tr><td><code>Name</code></td><td><code>"ICC_ID_CHG_SUM"</code> (static)</td></tr>
+<tr><td><code>Value</code></td><td><code>iccId + iccIdCheckSum</code> — set directly in BE code after concept creation (not in XSLT)</td></tr>
+<tr><td>Append target</td><td><code>subscriber.ExtendedInfo[subscriber.ExtendedInfo@length] = iccIdChgSum</code></td></tr>
+<tr><td>Concept type</td><td><code>Concepts.OrderRequest.OrderElements.ExtendedInfos.SubscriberExtendedInfo</code></td></tr>
+</table>
+<div class="warn-box">
+<strong>In-memory only:</strong> This mutation is written to the BE working memory (<code>orderRequest</code> concept graph). It becomes available to subsequent FM rules in the same order flow that read <code>subscriber.ExtendedInfo[Name="ICC_ID_CHG_SUM"]</code>. It is not persisted to a database by this rule.
+</div>
+</div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+<div class="section-header">§8 — System &amp; Integration Dependencies</div>
+<div class="section-body">
+<h3>§8.1 External System Dependencies</h3>
+<div class="success-box"><strong>None.</strong> This rule makes no calls to any external system (NAS, ASRM, CCBS, OMX, etc.). All computation is internal to the BE working memory.</div>
+
+<h3>§8.2 Audit Log (only outbound event)</h3>
+<table>
+<tr><th>Direction</th><th>Event</th><th>Channel</th><th>Purpose</th></tr>
+<tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>ESB Audit Log</td><td>Trace that ICC_ID_CHG_SUM was computed for the subscriber</td></tr>
+</table>
+
+<h3>§8.3 BE Working Memory Dependencies</h3>
+<table>
+<tr><th>Field</th><th>Access</th><th>Notes</th></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].ExtendedInfo[Name="ICC_ID"]</code></td><td>Read</td><td>Source ICCID for checksum computation</td></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].ExtendedInfo[]</code></td><td>Write (append)</td><td>ICC_ID_CHG_SUM concept appended here</td></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[i].ChildOU[k].Subscriber[j].ExtendedInfo[Name="ICC_ID"]</code></td><td>Read</td><td>COU subscriber ICC_ID source</td></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[i].ChildOU[k].Subscriber[j].ExtendedInfo[]</code></td><td>Write (append)</td><td>COU subscriber ICC_ID_CHG_SUM appended here</td></tr>
+<tr><td><code>orderCurrentActivity.Status</code></td><td>Read</td><td>WAITING gate</td></tr>
+</table>
+
+<h3>§8.4 Global Variable Dependencies</h3>
+<table>
+<tr><th>Path</th><th>Purpose</th></tr>
+<tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+<tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+<tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+<tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Gate for payload logging in audit</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §9 PROJ Parameter -->
+<div class="section">
+<div class="section-header">§9 — PROJ Parameter: Dead Read</div>
+<div class="section-body">
+<div class="warn-box">
+<strong>Dead read (unused variable):</strong> The rule reads the <code>PROJ</code> activity parameter via <code>GetActivityParamValueFromKey(orderCurrentActivity, "PROJ")</code> into <code>String paramValue</code>, but <code>paramValue</code> is never referenced anywhere in the rule body. This appears to be a copy-paste artifact from the offer-level variant (<code>OMX_CAL_CHK_SUM</code>) where PROJ="RIO_SWAP" changes the ICC_ID source. At subscriber level, there is no equivalent branching — ICC_ID is always read from <code>subscriber.ExtendedInfo</code> regardless of PROJ.
+</div>
+<table>
+<tr><th>Parameter</th><th>Read?</th><th>Used?</th><th>Effect</th></tr>
+<tr><td>PROJ</td><td>Yes — <code>GetActivityParamValueFromKey(orderCurrentActivity, "PROJ")</code></td><td><strong>No — dead read</strong></td><td>None. Variable <code>paramValue</code> is set but never referenced in the logic.</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §10 Loop Order -->
+<div class="section">
+<div class="section-header">§10 — Loop Order: POU Before COU</div>
+<div class="section-body">
+<table>
+<tr><th>Order</th><th>Context</th><th>PreExecCheck Helper</th></tr>
+<tr><td>1st</td><td>POU Subscribers: ParentOU[i] → Subscriber[iSub]</td><td><code>GetXMLForSubscriber(orderRequest, subRefId)</code></td></tr>
+<tr><td>2nd</td><td>COU Subscribers: ParentOU[i] → ChildOU[k] → Subscriber[iSub]</td><td><code>GetXMLForSubscriberInChildOU(orderRequest, subRefId, pOuRefId)</code></td></tr>
+</table>
+<p>This is the standard POU-first ordering (opposite to NAS_ACTIVATE_SUBS).</p>
+</div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+<div class="section-header">§11 — Audit Logging</div>
+<div class="section-body">
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code> (conditional)</td></tr>
+<tr><td>PROCESS_ID</td><td><code>concat(System.nanoTime(), "_REQ")</code></td></tr>
+<tr><td>COMPONENT_NAME</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+<tr><td>OPERATION_NAME</td><td><code>"OMX_CAL_CHK_SUM_SUB_LEVEL"</code> (static)</td></tr>
+<tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+<tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+<tr><td>AUDIT_TRACE</td><td><code>"Request Sent for OMX_CAL_CHK_SUM_SUB_LEVEL"</code> (static — no RefId)</td></tr>
+<tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+<tr><td>payload</td><td><code>&lt;ns:ServicePayload/&gt;</code> (empty — gated on WritePayload="true")</td></tr>
+<tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate()</code> (synchronous)</td></tr>
+</table>
+<div class="note-box">The audit payload is an empty <code>ns:ServicePayload</code> element — no ICC_ID or checksum values are logged in the payload, since there is no backend request body.</div>
+</div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+<div class="section-header">§12 — Activity Status Management</div>
+<div class="section-body">
+<div class="warn-box"><strong>Unique completion pattern:</strong> Unlike FM dispatcher rules that call <code>GetActivityStatusString("1", false) + SendDataToDB()</code>, this rule calls <code>NextActivity()</code> directly. This bypasses the ACTIVE status entirely and advances the process flow immediately.</div>
+<table>
+<tr><th>State</th><th>Trigger</th><th>Call</th></tr>
+<tr><td><span class="badge badge-green">NEXT</span></td><td>At least one subscriber had ICC_ID (isSkipped=false)</td><td><code>RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)</code></td></tr>
+<tr><td><span class="badge badge-purple">SKIPPED</span></td><td>No subscriber had any ICC_ID (isSkipped=true)</td><td><code>RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+<div class="section-header">§13 — Exception / Error Handling</div>
+<div class="section-body">
+<table>
+<tr><th>Exception</th><th>Handler</th></tr>
+<tr><td><code>Exception ae</code> (catch-all)</td><td><code>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+<div class="section-header">§14 — Helper Functions Reference</div>
+<div class="section-body">
+<table>
+<tr><th>Function</th><th>Return</th><th>Purpose</th></tr>
+<tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code></td><td>void</td><td>Called on resubmit — vestigial; no events queued by this rule</td></tr>
+<tr><td><code>GetActivityParamValueFromKey(orderCurrentActivity, "PROJ")</code></td><td>String</td><td>Reads PROJ parameter — dead read; result unused</td></tr>
+<tr><td><code>GetXMLForSubscriber(orderRequest, subRefId)</code></td><td>String XML</td><td>Serializes POU subscriber for PreExecCheck XPath evaluation</td></tr>
+<tr><td><code>GetXMLForSubscriberInChildOU(orderRequest, subRefId, pOuRefId)</code></td><td>String XML</td><td>Serializes COU subscriber for PreExecCheck XPath evaluation</td></tr>
+<tr><td><code>Luhn(iccId)</code></td><td>String</td><td>Computes Luhn check digit for the given ICCID string</td></tr>
+<tr><td><code>NextActivity(orderRequest, orderCurrentActivity)</code></td><td>void</td><td>Advances order flow to the next step immediately</td></tr>
+<tr><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>void</td><td>Marks activity as SKIPPED with reason 4</td></tr>
+<tr><td><code>HandleActivityException(...)</code></td><td>void</td><td>Centralized exception handler</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+<div class="section-header">§15 — Function Dependency Tree</div>
+<div class="section-body">
+<pre>OMX_CAL_CHK_SUM_SUB_LEVEL (BE rule — OMXOM namespace)
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity)  [if resubmit, vestigial]
+├── GetActivityParamValueFromKey(orderCurrentActivity, "PROJ")                        [dead read]
+│
+├── [Loop A — POU Subscribers]
+│   ├── GetXMLForSubscriber(orderRequest, subRefId)
+│   ├── XPath.execute("/("+chkXPath+")", sXML, ...)                                  [PreExecCheck]
+│   ├── XPath.evalAsString("$subscriber/ExtendedInfo[Name='ICC_ID']/Value")           [read ICC_ID]
+│   ├── RuleFunctions.Helpers.Luhn(iccId)                                             [compute checksum]
+│   ├── Instance.createInstance("xslt://{{/Concepts/.../SubscriberExtendedInfo}}")    [create concept]
+│   │   └── [XSLT: extId=concat(iccId,':ICC_ID_CHG_SUM',subscriber/@extId); Name='ICC_ID_CHG_SUM']
+│   ├── iccIdChgSum.Value = iccId + iccIdCheckSum                                     [set value in BE]
+│   ├── subscriber.ExtendedInfo[...] = iccIdChgSum                                    [append to array]
+│   ├── Event.createEvent("xslt://{{/Events/.../Logger}}...")
+│   └── Event.Ext.sendEventImmediate(auditEvent)
+│
+├── [Loop B — COU Subscribers]
+│   ├── GetXMLForSubscriberInChildOU(orderRequest, subRefId, pOuRefId)
+│   └── [same Luhn + ExtendedInfo append + audit pattern as Loop A]
+│
+├── NextActivity(orderRequest, orderCurrentActivity)                                   [if !isSkipped]
+└── SkipActivity(orderRequest, orderCurrentActivity, "4")                             [if isSkipped]</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+<div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="section-body">
+<h3>Functional Requirements</h3>
+<ul>
+<li><strong>R1</strong> — For each subscriber (POU then COU): read ICC_ID from ExtendedInfo; if present, compute Luhn checksum and store ICC_ID_CHG_SUM</li>
+<li><strong>R2</strong> — ICC_ID_CHG_SUM value = full ICCID string with check digit appended (iccId + Luhn(iccId))</li>
+<li><strong>R3</strong> — Skip subscriber silently if ICC_ID is absent or empty (do not fail)</li>
+<li><strong>R4</strong> — Skip entire activity if no subscriber has any ICC_ID</li>
+<li><strong>R5</strong> — PreExecCheck gate applies per subscriber (normal pattern)</li>
+<li><strong>R6</strong> — PROJ parameter: read but ignored — remove this dead read in migration</li>
+</ul>
+
+<h3>Design Risks</h3>
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td>PROJ parameter dead read — may confuse future maintainers into thinking PROJ affects logic</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Remove <code>GetActivityParamValueFromKey("PROJ")</code> and <code>paramValue</code> variable in migration</td></tr>
+<tr><td><code>PurgePendingRequestsBeforeResubmit()</code> called unnecessarily — no events to purge</td><td><span class="badge badge-blue">LOW</span></td><td>Remove vestigial resubmit purge call; resubmit handling just re-runs the computation</td></tr>
+<tr><td>ICC_ID_CHG_SUM is in-memory only — not persisted by this rule; downstream FM must read it within the same BE session</td><td><span class="badge badge-blue">LOW</span></td><td>Ensure migration architecture guarantees working memory persistence across the order flow</td></tr>
+<tr><td>Luhn check digit computation is non-trivial; incorrect Luhn implementation would silently produce wrong ICCIDs accepted by NAS</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Unit-test <code>Luhn()</code> implementation against known ICCID examples; verify against ISO 7812</td></tr>
+</table>
+
+<h3>Comparison: OMX_CAL_CHK_SUM vs OMX_CAL_CHK_SUM_SUB_LEVEL</h3>
+<table>
+<tr><th>Aspect</th><th>OMX_CAL_CHK_SUM (OMXFM)</th><th>OMX_CAL_CHK_SUM_SUB_LEVEL (OMXOM)</th></tr>
+<tr><td>Namespace</td><td>OMXFM (Request)</td><td>OMXOM (internal)</td></tr>
+<tr><td>Granularity</td><td>Subscriber-Offer (SubscriberOffers[].ExtendedInfo)</td><td>Subscriber (Subscriber.ExtendedInfo)</td></tr>
+<tr><td>PROJ parameter</td><td>Used: "RIO_SWAP" → read ICC_ID from subscriber (not offer)</td><td>Read but ignored (dead)</td></tr>
+<tr><td>FE_OR_CCBS filter</td><td>Applied per offer</td><td>Not applied (subscriber level)</td></tr>
+<tr><td>Output type</td><td>SubscriberExtendedInfo or SubscriberOffersExtendedInfo</td><td>SubscriberExtendedInfo only</td></tr>
+<tr><td>Completion</td><td>NextActivity()</td><td>NextActivity()</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+<div class="section-header">§18 — Full Source Code</div>
+<div class="section-body">
+<pre><span class="cm">/**
+ * @description
+ * @author RS33-BANDIT
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXOM.OMX_CAL_CHK_SUM_SUB_LEVEL</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"OMX_CAL_CHK_SUM_SUB_LEVEL"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"OMX_CAL_CHK_SUM_SUB_LEVEL"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="kw">boolean</span> isActResub=(orderCurrentActivity.RequestCount&gt;<span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">try</span> {
+            <span class="kw">if</span>(isActResub) {
+                RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity);
+                <span class="cm">// vestigial — no events queued by this rule</span>
+            }
+            <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct = Instance.getByExtIdByUri(
+                orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="kw">String</span> projName = <span class="st">"PROJ"</span>;
+            <span class="kw">String</span> paramValue = RuleFunctions.Helpers.GetActivityParamValueFromKey(orderCurrentActivity, projName);
+            <span class="cm">// DEAD READ: paramValue is set here but never used below</span>
+
+            <span class="kw">String</span> custId = orderRequest.OrderData.Customer.CustomerId;
+            <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+            <span class="kw">int</span> pOuLen = orderRequest.OrderData.Customer.ParentOU@length;
+            <span class="kw">String</span> chkXPath = nextAct.PreExecCheck;
+
+            <span class="cm">// Loop A: POU Subscribers</span>
+            <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nu">0</span>; i&lt;pOuLen; i++) {
+                <span class="kw">String</span> pOuRefId = orderRequest.OrderData.Customer.ParentOU[i].RefId;
+                <span class="kw">for</span>(<span class="kw">int</span> iSub=<span class="nu">0</span>; iSub&lt;orderRequest.OrderData.Customer.ParentOU[i].Subscriber@length; iSub++) {
+                    <span class="ty">Concepts.OrderRequest.OrderElements.Subscriber</span> subscriber =
+                        orderRequest.OrderData.Customer.ParentOU[i].Subscriber[iSub];
+                    <span class="kw">String</span> subRefId = subscriber.RefId;
+
+                    <span class="kw">String</span> chkRes = <span class="st">"true"</span>;
+                    <span class="kw">if</span>(String.length(nextAct.PreExecCheck)&gt;<span class="nu">0</span>){
+                        <span class="kw">String</span> sXML = RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, subRefId);
+                        chkRes = XPath.execute(<span class="st">"/("+chkXPath+")"</span>, sXML, <span class="st">"ns0=..."</span>);
+                    }
+                    <span class="kw">if</span>(String.equals(chkRes,<span class="st">"true"</span>)){
+                        <span class="kw">String</span> iccId = XPath.evalAsString(<span class="st">"xpath://$subscriber/ExtendedInfo[Name='ICC_ID']/Value"</span>);
+                        <span class="kw">if</span>(String.length(iccId)&gt;<span class="nu">0</span>) {
+                            <span class="kw">String</span> iccIdCheckSum = RuleFunctions.Helpers.Luhn(iccId);
+                            <span class="ty">SubscriberExtendedInfo</span> iccIdChgSum = Instance.createInstance(
+                                <span class="st">"xslt://{{/Concepts/.../SubscriberExtendedInfo}}"</span>);
+                                <span class="cm">/* XSLT: extId=concat(iccId,':ICC_ID_CHG_SUM',subscriber/@extId); Name='ICC_ID_CHG_SUM' */</span>
+                            iccIdChgSum.Value = iccId + iccIdCheckSum;
+                            subscriber.ExtendedInfo[subscriber.ExtendedInfo@length] = iccIdChgSum;
+                            <span class="kw">long</span> pid = System.nanoTime();
+                            Event.Ext.sendEventImmediate(Event.createEvent(<span class="st">"xslt://{{/Events/.../Logger}}"</span>));
+                            <span class="cm">/* audit: OPERATION_NAME="OMX_CAL_CHK_SUM_SUB_LEVEL",
+                               AUDIT_TRACE="Request Sent for OMX_CAL_CHK_SUM_SUB_LEVEL" */</span>
+                            isSkipped = <span class="kw">false</span>;
+                        }
+                    }
+                }
+                <span class="cm">// Loop B: COU Subscribers — same Luhn pattern via GetXMLForSubscriberInChildOU</span>
+                <span class="kw">int</span> iCOULen = orderRequest.OrderData.Customer.ParentOU[i].ChildOU@length;
+                <span class="kw">for</span>(<span class="kw">int</span> k=<span class="nu">0</span>; k&lt;iCOULen; k++) {
+                    <span class="kw">for</span>(<span class="kw">int</span> iSub=<span class="nu">0</span>; iSub&lt;..ChildOU[k].Subscriber@length; iSub++) {
+                        <span class="cm">// same Luhn compute + ExtendedInfo append</span>
+                    }
+                }
+            }
+            <span class="kw">if</span>(!isSkipped) {
+                RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity);
+            } <span class="kw">else</span> {
+                RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+            }
+        } <span class="kw">catch</span> (Exception ae) {
+            RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</pre>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-07-27</footer>
+</body>
+</html>

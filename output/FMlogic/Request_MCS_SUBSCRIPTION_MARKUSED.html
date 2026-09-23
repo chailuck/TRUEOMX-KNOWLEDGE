@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_MCS_SUBSCRIPTION_MARKUSED — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}.code-block .xa{color:#f9e2af}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.flow-text{flex:1}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.bug{border-color:#e53935;background:#FFEBEE}
+.callout.dead{border-color:#78909c;background:#ECEFF1;color:#455a64}
+details>summary{cursor:pointer;padding:8px 4px;font-weight:600;color:var(--true-dark)}
+details[open]>summary{color:var(--true-red)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+h3{color:var(--true-dark);margin:16px 0 10px;font-size:0.95rem}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_MCS_SUBSCRIPTION_MARKUSED</h1>
+    <div class="subtitle">Per-subscriber MCS mark-used request — reads IMEI_MLDD from prior FM; flow/pack_code waterfall; response handles code 135 (already-used) and 200 (success) with complex write-back to working memory</div>
+    <div class="meta-row">
+      <span class="meta-badge">Target: MCS (Subscription Engine)</span>
+      <span class="meta-badge">Pattern: Per-subscriber parallel fan-out</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Author: Chayatorn Pan.</span>
+      <span class="meta-badge">Generated: 2026-08-04</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This FM marks a subscriber's data pack as "used" in the MCS subscription engine. It fires per-subscriber (POU + COU) in parallel. It reads the <code>FLOW_ID</code> from the subscriber's SubscriberOffers (falling back to the <code>DEFAULT_FLOW_ID</code> activity parameter), resolves the MCS pack code via a 5-level ServiceType waterfall, and reads the device IMEI previously written by <code>MLDD_GET_SUB_DATA</code>. The response handler has three distinct branches: code 135 (already-marked-used), code 200 (success), and CHECK_PACK_ALLOW_FLG='N' write-back.</p>
+    <div class="callout bug">
+      <strong>[BUG — MEDIUM] COU subscribers excluded from isMarkUsed/isSuccess response processing:</strong> The request sends events for both POU and COU subscribers. The response handlers for code 135 and code 200 only iterate POU → Subscriber (no ChildOU loop). COU subscriber responses contribute to fan-in but do not get MCS_IGNORE flag set, BRMS_ADD offer created, or EXP_TYPE/MCS_EXP_DATE_VALUE updated.
+    </div>
+    <div class="callout warning">
+      <strong>[TYPO] XML root element name:</strong> The payload root is <code>ns:SubscriptionMarkuesdRequest</code> — "Markuesd" (letters transposed from "Markused"). This is in the schema and must be preserved exactly when migrating.
+    </div>
+    <div class="callout warning">
+      <strong>[INCONSISTENCY] POU vs COU XSLT extra field order:</strong> POU XSLT emits IMEI extra <em>before</em> CHECK_PACK_ALLOW_FLG; COU XSLT emits them in the opposite order. Content is identical; order may matter to MCS.
+    </div>
+    <div class="callout info">
+      <strong>Data dependency on MLDD_GET_SUB_DATA:</strong> This FM reads <code>subscriber.ExtendedInfo[Name='IMEI_MLDD']/Value</code> which is only populated after MLDD_GET_SUB_DATA has run. The two FMs are sequentially coupled in the ProcessConfig.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_MCS_SUBSCRIPTION_MARKUSED.rule</code></td><td>130 lines</td></tr>
+      <tr><td>Response file</td><td><code>Response_MCS_SUBSCRIPTION_MARKUSED.rulefunction</code></td><td>132 lines</td></tr>
+      <tr><td>Author</td><td>Chayatorn Pan.</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td></td></tr>
+      <tr><td>Request event</td><td><code>Events.OMConsumers.OMXFM.Request.MCS_SUBSCRIPTION_MARKUSED</code></td><td>One per subscriber</td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.MCS_SUBSCRIPTION_MARKUSED</code></td><td></td></tr>
+      <tr><td>Request schema NS (ns)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MCS/SubscriptionMarkused.xsd</code></td><td></td></tr>
+      <tr><td>Response schema NS (xsd2)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MCS/SubscriptionMarkused.xsd</code></td><td>Same schema</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td><td>extId passed as BE parameter (not computed in XSLT)</td></tr>
+      <tr><td>extId on request event</td><td><code>OMXUtils:generateTrackingID()</code> (in XSLT)</td><td>Always</td></tr>
+      <tr><td>extId on ResponseBase</td><td><code>OMXUtils.generateTrackingID()</code> (in BE, passed as $extId param)</td><td>Unique — most FMs call it inside XSLT</td></tr>
+      <tr><td>reqSuccess dedup key</td><td><code>refId</code> (subscriber RefId)</td><td></td></tr>
+      <tr><td>Activity parameter</td><td><code>DEFAULT_FLOW_ID</code> via <code>GetActivityParameterValueFromKey</code></td><td>First FM to use activity parameter</td></tr>
+      <tr><td>Fan-out</td><td>Parallel — <code>Event.Ext.sendEventImmediate</code> per subscriber (POU + COU)</td><td></td></tr>
+      <tr><td>Fan-in</td><td>Standard "000" count == RequestCount</td><td></td></tr>
+      <tr><td>Resubmit handler</td><td>None — isActResub gates RequestCount++ only</td><td></td></tr>
+      <tr><td>Credential gate</td><td>None</td><td></td></tr>
+      <tr><td>Request audit gate</td><td><code>AllowWriteLog(OrderData.OrderType)</code></td><td>Conditional</td></tr>
+      <tr><td>Response audit gate</td><td>Unconditional</td><td>Response sends audit always — no AllowWriteLog</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Subscribers; ExtendedInfo; OMXTrackingId; Channel; ExtendedInfo write-back</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity state; DEFAULT_FLOW_ID parameter; RequestCount++; Response[]</td></tr>
+      <tr><td><code>nextAct</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Looked up live to read PreExecCheck XPath — unusual!</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:10px">
+      <strong>nextAct live lookup:</strong> Unlike most FMs that use <code>orderCurrentActivity</code> directly for PreExecCheck, this rule does <code>Instance.getByExtIdByUri(ProcessFlow.NextActivityName, "/Concepts/OM/ProcessConfig/Activity")</code> to retrieve the Activity concept and reads its PreExecCheck field. This handles the case where the current activity's PreExecCheck may differ from the config.
+    </div>
+  </div>
+</div>
+
+<!-- §4 WHEN -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "MCS_SUBSCRIPTION_MARKUSED"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "MCS_SUBSCRIPTION_MARKUSED"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>Setup:</strong> isActResub flag; nextAct live lookup; DEFAULT_FLOW_ID from activity parameter; isSkipped=true</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-text"><strong>POU Subscribers loop</strong> — for each POU × Subscriber:
+      <ul style="margin:8px 0 0 16px;line-height:2">
+        <li>reqSuccess check: Response[].ReferenceId==refId AND CompletionStatus==2</li>
+        <li>PreExecCheck via <code>GetXMLForSubscriber</code> + <code>nextAct.PreExecCheck</code></li>
+        <li>If passes: extract 6 fields (transaction_id, flow_id, msisdn, pack_code, imei, recurringSoc, mcsCorrelationId)</li>
+        <li>Create and send event immediately; conditional audit; RequestCount++; isSkipped=false</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-text"><strong>COU Subscribers loop</strong> — for each POU × COU × Subscriber:
+      <ul style="margin:8px 0 0 16px;line-height:2">
+        <li>Same reqSuccess, PreExecCheck via <code>GetXMLForSubscriberInChildOU</code></li>
+        <li>Same 6-field extraction; same send/audit/count</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>Status:</strong> if !isSkipped → <code>GetActivityStatusString("1")</code> + <code>SendDataToDB</code>; else → <code>SkipActivity("4")</code></div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>Exception:</strong> catch → <code>HandleActivityException</code></div></div>
+  </div>
+</div>
+
+<!-- §6 Data Extraction -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> Rule Action (THEN) — Per-Subscriber Data Extraction</div>
+  <div class="section-body">
+
+    <h3>§6.1 — Activity Parameter: DEFAULT_FLOW_ID</h3>
+    <div class="code-block"><span class="kw">String</span> defaultFlowId = <span class="fn">RuleFunctions.Helpers.GetActivityParameterValueFromKey</span>(orderCurrentActivity, <span class="str">"DEFAULT_FLOW_ID"</span>);</div>
+    <p style="margin-top:8px;font-size:0.88rem">Reads the <code>DEFAULT_FLOW_ID</code> value from the Activity's Parameter configuration. This is the only FM in this process to use <code>GetActivityParameterValueFromKey</code>.</p>
+
+    <h3>§6.2 — flow_id Resolution (subscriber-level, with fallback)</h3>
+    <div class="code-block"><span class="cm">// XPath (per subscriber):</span>
+<span class="kw">if</span> (exists($subscriber/SubscriberOffers/ExtendedInfo[Name=<span class="str">'FLOW_ID'</span>]/Value))
+    <span class="kw">then</span> $subscriber/SubscriberOffers/ExtendedInfo[Name=<span class="str">'FLOW_ID'</span>]/Value
+<span class="kw">else</span> $defaultFlowId</div>
+    <p style="margin-top:8px;font-size:0.88rem">flow_id is a subscriber-offer-level field. If not present, the activity-level default is used.</p>
+
+    <h3>§6.3 — pack_code Resolution (5-level ServiceType waterfall)</h3>
+    <div class="code-block"><span class="cm">// ServiceType priority order:</span>
+<span class="kw">if</span> (exists(<span class="str">...[FE_OR_CCBS='FE'|'BRMS' and ServiceType='86']/ExtendedInfo[Name='MCS_PACKCODE']/Value</span>))
+    <span class="kw">then</span> that value
+<span class="kw">else if</span> (ServiceType='99' ...)  <span class="kw">then</span> ...
+<span class="kw">else if</span> (ServiceType='69' ...)  <span class="kw">then</span> ...
+<span class="kw">else if</span> (ServiceType='88' ...)  <span class="kw">then</span> ...
+<span class="kw">else</span> $subscriber/SubscriberOffers[FE_OR_CCBS='FE' and ServiceType='69']/OfferName</div>
+    <table style="margin-top:8px">
+      <tr><th>Priority</th><th>ServiceType</th><th>Source Field</th><th>FE_OR_CCBS filter</th></tr>
+      <tr><td>1</td><td>86</td><td>ExtendedInfo[MCS_PACKCODE]/Value</td><td>'FE' or 'BRMS'</td></tr>
+      <tr><td>2</td><td>99</td><td>ExtendedInfo[MCS_PACKCODE]/Value</td><td>'FE' or 'BRMS'</td></tr>
+      <tr><td>3</td><td>69</td><td>ExtendedInfo[MCS_PACKCODE]/Value</td><td>'FE' or 'BRMS'</td></tr>
+      <tr><td>4</td><td>88</td><td>ExtendedInfo[MCS_PACKCODE]/Value</td><td>'FE' or 'BRMS'</td></tr>
+      <tr><td>5 (fallback)</td><td>69</td><td>OfferName</td><td>'FE' only</td></tr>
+    </table>
+
+    <h3>§6.4 — IMEI Read-back from Prior FM</h3>
+    <div class="code-block"><span class="kw">String</span> imei = XPath.evalAsString(<span class="str">"$subscriber/ExtendedInfo[Name='IMEI_MLDD']/Value"</span>);</div>
+    <p style="margin-top:8px;font-size:0.88rem">Reads the <code>IMEI_MLDD</code> ExtendedInfo field that was written by <code>MLDD_GET_SUB_DATA</code> in the previous step. If MLDD_GET_SUB_DATA was skipped or returned no IMEI, this will be blank.</p>
+
+    <h3>§6.5 — recurringSoc Extraction (1-based index XPath)</h3>
+    <div class="code-block"><span class="cm">// POU subscriber — 1-based indexing:</span>
+$orderRequest/OrderData/Customer/ParentOU[number($i)+1]/Subscriber[number($j)+1]
+    /SubscriberOffers/ExtendedInfo[Name=<span class="str">'RECURRING_SOC'</span>]/Value</div>
+
+    <h3>§6.6 — mcsCorrelationId (Order-level)</h3>
+    <div class="code-block">$orderRequest/OrderData/ExtendedInfo[Name=<span class="str">'MCS_CORRELATION_ID'</span>]/Value</div>
+  </div>
+</div>
+
+<!-- §7 System Dependencies -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3>§7.1 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>FM JMS</td><td>MCS_SUBSCRIPTION_MARKUSED queue</td><td>Mark pack as used per subscriber (parallel)</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td>FM JMS</td><td>MCS_SUBSCRIPTION_MARKUSED response</td><td>SubscriptionMarkuesdResponse (response_code 135/200/other)</td></tr>
+      <tr><td><span class="badge badge-log">LOG</span></td><td>OMXESB Logger</td><td>Audit event</td><td>Request: conditional on AllowWriteLog; Response: unconditional</td></tr>
+    </table>
+
+    <h3>§7.2 — Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Backend</td><td>MCS (Mobile Content Subscription engine)</td></tr>
+      <tr><td>Operation</td><td>SubscriptionMarkused</td></tr>
+      <tr><td>Request root element</td><td><code>ns:SubscriptionMarkuesdRequest</code> <span class="badge badge-red">TYPO: "Markuesd" ≠ "Markused"</span></td></tr>
+      <tr><td>Response root element</td><td><code>xsd2:SubscriptionMarkuesdResponse</code></td></tr>
+      <tr><td>Success code</td><td><code>200</code> (isSuccess)</td></tr>
+      <tr><td>Already-marked-used code</td><td><code>135</code> (isMarkUsed)</td></tr>
+      <tr><td>Channel default</td><td><code>'OMX'</code> — unless flow_id = 'FVM003' → use <code>OrderData.Channel</code></td></tr>
+    </table>
+
+    <h3>§7.3 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept</th><th>Field</th><th>Access</th><th>Notes</th></tr>
+      <tr><td>OrderRequest</td><td>OMXTrackingId, OrderPriority, OrderID, OrderType, Channel</td><td>READ</td><td>Standard headers</td></tr>
+      <tr><td>OrderRequest</td><td>OrderData.ExtendedInfo[MCS_CORRELATION_ID]</td><td>READ</td><td>Correlation ID for MCS</td></tr>
+      <tr><td>OrderRequest</td><td>OrderData.ExtendedInfo[CHECK_PACK_ALLOW_FLG]</td><td>READ+WRITTEN</td><td>Read for FVM003 payload; written back if response contains 'N'</td></tr>
+      <tr><td>Subscriber</td><td>ExtendedInfo[IMEI_MLDD]</td><td>READ</td><td>Set by MLDD_GET_SUB_DATA — upstream data dependency</td></tr>
+      <tr><td>Subscriber</td><td>SubscriberOffers[].ExtendedInfo[FLOW_ID]</td><td>READ</td><td>flow_id resolution</td></tr>
+      <tr><td>Subscriber</td><td>SubscriberOffers[].ExtendedInfo[MCS_PACKCODE]</td><td>READ</td><td>pack_code waterfall (ServiceType priority)</td></tr>
+      <tr><td>Subscriber</td><td>SubscriberOffers[].ExtendedInfo[RECURRING_SOC]</td><td>READ</td><td>Optional recurring SOC</td></tr>
+      <tr><td>Subscriber (POU only)</td><td>SubscriberOffers[].ExtendedInfo[FE_OR_CCBS]</td><td>WRITTEN</td><td>Set to 'MCS_IGNORE' on code 135</td></tr>
+      <tr><td>Subscriber (POU only)</td><td>SubscriberOffers[]</td><td>WRITTEN</td><td>New BRMS_ADD offer appended on code 135 + chargeCode</td></tr>
+      <tr><td>Subscriber (POU only)</td><td>SubscriberOffers[].ExtendedInfo[EXP_TYPE]</td><td>WRITTEN</td><td>Updated to 'FUT' on code 200 + date logic</td></tr>
+      <tr><td>Subscriber (POU only)</td><td>SubscriberOffers[].ExtendedInfo[MCS_EXP_DATE_VALUE]</td><td>WRITTEN</td><td>Set to package_expire_date on code 200</td></tr>
+      <tr><td>Activity</td><td>Parameter[DEFAULT_FLOW_ID]</td><td>READ</td><td>Fallback flow_id</td></tr>
+      <tr><td>Activity</td><td>RequestCount / Response[] / Status</td><td>READ+WRITTEN</td><td>Standard</td></tr>
+      <tr><td>LogicalDate</td><td>LogicalDate</td><td>READ</td><td>Used in GetActivityEffectiveType on code 200</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 Payload Build -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3>§8.1 — XSLT Parameters</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th><th>Notes</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest concept</td><td></td></tr>
+      <tr><td><code>$refId</code></td><td>subscriber.RefId</td><td>Correlation key; RefID header</td></tr>
+      <tr><td><code>$subscriber</code></td><td>subscriber concept</td><td>For FVM003 check on channel</td></tr>
+      <tr><td><code>$flow_id</code></td><td>SubscriberOffers FLOW_ID or DEFAULT_FLOW_ID</td><td></td></tr>
+      <tr><td><code>$msisdn</code></td><td>subscriber.MSISDN</td><td>No normalisation applied</td></tr>
+      <tr><td><code>$pack_code</code></td><td>5-level ServiceType waterfall</td><td></td></tr>
+      <tr><td><code>$transaction_id</code></td><td>orderRequest.OrderData.OMXTrackingId</td><td></td></tr>
+      <tr><td><code>$imei</code></td><td>subscriber.ExtendedInfo[IMEI_MLDD]</td><td>Upstream dependency on MLDD_GET_SUB_DATA</td></tr>
+      <tr><td><code>$recurringSoc</code></td><td>SubscriberOffers/ExtendedInfo[RECURRING_SOC]/Value</td><td>Conditional payload field</td></tr>
+      <tr><td><code>$mcsCorrelationId</code></td><td>OrderData.ExtendedInfo[MCS_CORRELATION_ID]/Value</td><td>Conditional payload field</td></tr>
+    </table>
+
+    <h3>§8.2 — ns:channel Logic (FVM003 routing)</h3>
+    <div class="code-block"><span class="cm">// xsl:choose:</span>
+<span class="kw">when</span> exists($subscriber/SubscriberOffers[ExtendedInfo[Name=<span class="str">'FLOW_ID'</span> and Value=<span class="str">'FVM003'</span>]])
+    <span class="kw">then</span> ns:channel ← $orderRequest/OrderData/Channel       <span class="cm">// use actual channel</span>
+<span class="kw">otherwise</span>
+    <span class="kw">then</span> ns:channel ← <span class="str">'OMX'</span>                                 <span class="cm">// hardcoded default</span></div>
+
+    <h3>§8.3 — Conditional Extra Fields</h3>
+    <table>
+      <tr><th>Key</th><th>Condition</th><th>Value Source</th><th>POU Order</th><th>COU Order</th></tr>
+      <tr><td>IMEI</td><td>Always</td><td><code>$imei</code></td><td>1st</td><td>2nd <span class="badge badge-orange">order differs</span></td></tr>
+      <tr><td>CHECK_PACK_ALLOW_FLG</td><td><code>$flow_id = 'FVM003'</code></td><td>OrderData.ExtendedInfo or empty string</td><td>2nd</td><td>1st <span class="badge badge-orange">order differs</span></td></tr>
+      <tr><td>RECURRING_SOC</td><td><code>string-length($recurringSoc) &gt; 0</code></td><td><code>$recurringSoc</code></td><td>3rd</td><td>3rd</td></tr>
+      <tr><td>MCS_CORRELATION_ID</td><td><code>string-length($mcsCorrelationId) &gt; 0</code></td><td><code>$mcsCorrelationId</code></td><td>4th</td><td>4th</td></tr>
+    </table>
+
+    <h3>§8.4 — XSLT Field Mapping Tree (POU Variant)</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">JMSPriority</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge badge-green" style="font-size:0.7rem">Always — no xsl:if</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">RefID</span> <span class="tree-arrow">←</span> <span class="tree-src">$refId</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">SubscriptionMarkuesdRequest</span> <span class="badge badge-red" style="font-size:0.7rem">TYPO in element name</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">channel</span> <span class="tree-arrow">←</span> <span class="tree-src">xsl:choose</span> <span class="tree-cond">FVM003? → $orderRequest/OrderData/Channel : 'OMX'</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">flow_id</span> <span class="tree-arrow">←</span> <span class="tree-src">$flow_id</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">msisdn</span> <span class="tree-arrow">←</span> <span class="tree-src">$msisdn</span> <span class="badge badge-green" style="font-size:0.7rem">Always — no 0→66 normalisation</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">pack_code</span> <span class="tree-arrow">←</span> <span class="tree-src">$pack_code</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">transaction_id</span> <span class="tree-arrow">←</span> <span class="tree-src">$transaction_id</span> (OMXTrackingId) <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">extra</span> <span class="tree-cond">[POU: always | COU: always but 2nd position]</span>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">key</span> <span class="tree-arrow">←</span> <span class="tree-src-static">'IMEI'</span></div></li>
+                            <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">value</span> <span class="tree-arrow">←</span> <span class="tree-src">$imei</span></div></li>
+                          </ul>
+                        </li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">extra</span> <span class="tree-cond">[if $flow_id = 'FVM003']</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">key</span> <span class="tree-arrow">←</span> <span class="tree-src-static">'CHECK_PACK_ALLOW_FLG'</span></div></li>
+                            <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">value</span> <span class="tree-arrow">←</span> <span class="tree-src">OrderData.ExtendedInfo[CHECK_PACK_ALLOW_FLG] or ''</span></div></li>
+                          </ul>
+                        </li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">extra</span> <span class="tree-cond">[if string-length($recurringSoc) &gt; 0]</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">key</span> <span class="tree-arrow">←</span> <span class="tree-src-static">'RECURRING_SOC'</span></div></li>
+                            <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">value</span> <span class="tree-arrow">←</span> <span class="tree-src">$recurringSoc</span></div></li>
+                          </ul>
+                        </li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">extra</span> <span class="tree-cond">[if string-length($mcsCorrelationId) &gt; 0]</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">key</span> <span class="tree-arrow">←</span> <span class="tree-src-static">'MCS_CORRELATION_ID'</span></div></li>
+                            <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">value</span> <span class="tree-arrow">←</span> <span class="tree-src">$mcsCorrelationId</span></div></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <p style="margin-top:10px;font-size:0.82rem"><strong>COU variant difference:</strong> IMEI extra and CHECK_PACK_ALLOW_FLG extra are swapped in order (CHECK_PACK_ALLOW_FLG 1st, IMEI 2nd). Content is identical.</p>
+
+    <h3>§8.5 — Generated XML Example</h3>
+    <div class="code-block"><span class="xt">&lt;event</span> <span class="xa">extId</span>=<span class="str">"TRK-001"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;JMSPriority&gt;</span>5<span class="xt">&lt;/JMSPriority&gt;</span>
+  <span class="xt">&lt;JMSCorrelationID&gt;</span>OMX-TRK-001<span class="xt">&lt;/JMSCorrelationID&gt;</span>
+  <span class="xt">&lt;OrderID&gt;</span>ORD-001<span class="xt">&lt;/OrderID&gt;</span>
+  <span class="xt">&lt;RefID&gt;</span>SUB-REF-001<span class="xt">&lt;/RefID&gt;</span>
+  <span class="xt">&lt;OrderType&gt;</span>3<span class="xt">&lt;/OrderType&gt;</span>
+  <span class="xt">&lt;payload&gt;</span>
+    <span class="xt">&lt;ns:SubscriptionMarkuesdRequest</span> <span class="cm">&lt;!-- TYPO in element name --&gt;</span>
+      <span class="xa">xmlns:ns</span>=<span class="str">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MCS/SubscriptionMarkused.xsd"</span><span class="xt">&gt;</span>
+      <span class="xt">&lt;ns:channel&gt;</span>OMX<span class="xt">&lt;/ns:channel&gt;</span> <span class="cm">&lt;!-- or $orderRequest/Channel when FLOW_ID=FVM003 --&gt;</span>
+      <span class="xt">&lt;ns:flow_id&gt;</span>FVM001<span class="xt">&lt;/ns:flow_id&gt;</span>
+      <span class="xt">&lt;ns:msisdn&gt;</span>0812345678<span class="xt">&lt;/ns:msisdn&gt;</span>
+      <span class="xt">&lt;ns:pack_code&gt;</span>DATAPACK_5GB<span class="xt">&lt;/ns:pack_code&gt;</span>
+      <span class="xt">&lt;ns:transaction_id&gt;</span>OMX-TRK-001<span class="xt">&lt;/ns:transaction_id&gt;</span>
+      <span class="xt">&lt;ns:extra&gt;&lt;ns:key&gt;</span>IMEI<span class="xt">&lt;/ns:key&gt;&lt;ns:value&gt;</span>352345678901234<span class="xt">&lt;/ns:value&gt;&lt;/ns:extra&gt;</span>
+      <span class="xt">&lt;ns:extra&gt;&lt;ns:key&gt;</span>RECURRING_SOC<span class="xt">&lt;/ns:key&gt;&lt;ns:value&gt;</span>SOC_RECURRING_001<span class="xt">&lt;/ns:value&gt;&lt;/ns:extra&gt;</span>
+    <span class="xt">&lt;/ns:SubscriptionMarkuesdRequest&gt;</span>
+  <span class="xt">&lt;/payload&gt;</span>
+<span class="xt">&lt;/event&gt;</span></div>
+  </div>
+</div>
+
+<!-- §9 Audit Logging -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> Audit Logging</div>
+  <div class="section-body">
+    <div class="grid2">
+      <div>
+        <h3>Request Audit <span class="badge badge-orange" style="font-size:0.75rem">Conditional</span></h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>Gate</td><td><code>AllowWriteLog(OrderType)</code></td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"MCS_SUBSCRIPTION_MARKUSED"</code></td></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for MCS_SUBSCRIPTION_MARKUSED"</code></td></tr>
+          <tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td></tr>
+          <tr><td>Payload</td><td><code>$reqEvent</code> (if WritePayload=true)</td></tr>
+        </table>
+      </div>
+      <div>
+        <h3>Response Audit <span class="badge badge-green" style="font-size:0.75rem">Unconditional</span></h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>Gate</td><td>None — always sent</td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"MCS_SUBSCRIPTION_MARKUSED"</code></td></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>concat("Response received for RefId ", $eventResponse/RefID)</code></td></tr>
+          <tr><td>PROCESS_ID</td><td><code>concat($pid, "_RES")</code></td></tr>
+          <tr><td>Payload</td><td><code>$eventResponse</code> (if WritePayload=true)</td></tr>
+        </table>
+      </div>
+    </div>
+    <div class="callout info" style="margin-top:12px">Request and response audit gates differ: request is conditional on <code>AllowWriteLog(OrderType)</code>; response audit is always sent regardless of OrderType.</div>
+  </div>
+</div>
+
+<!-- §10 Activity Status -->
+<div class="section">
+  <div class="section-header"><span class="num">§10</span> Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Call</th><th>Code</th></tr>
+      <tr><td>At least one subscriber sent</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" (RUNNING)</td></tr>
+      <tr><td>No subscribers qualify</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" (SKIPPED)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §11 Exception Handling -->
+<div class="section">
+  <div class="section-header"><span class="num">§11</span> Exception / Error Handling</div>
+  <div class="section-body">
+    <div class="code-block"><span class="kw">catch</span> (Exception ae) {
+    <span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+}</div>
+  </div>
+</div>
+
+<!-- §12 Helper Functions -->
+<div class="section">
+  <div class="section-header"><span class="num">§12</span> Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th><th>New in this FM?</th></tr>
+      <tr><td><code>GetActivityParameterValueFromKey(activity, "DEFAULT_FLOW_ID")</code></td><td>Reads the named parameter from the activity configuration</td><td><span class="badge badge-green">Yes</span></td></tr>
+      <tr><td><code>AllowWriteLog(OrderType)</code></td><td>Controls request audit conditional</td><td>No</td></tr>
+      <tr><td><code>GetXMLForSubscriber / GetXMLForSubscriberInChildOU</code></td><td>PreExecCheck XML builder</td><td>No</td></tr>
+      <tr><td><code>GetActivityEffectiveType(package_expire_date, logicalDate)</code></td><td>Returns 'FUT' or 'NOW' — determines if the expire date is in the future relative to logical date</td><td><span class="badge badge-green">Yes</span></td></tr>
+      <tr><td><code>BRMS.IsBlankOrStringNull(str)</code></td><td>Null/blank string check</td><td><span class="badge badge-green">Yes</span></td></tr>
+      <tr><td><code>GetActivityStatusString / SendDataToDB / SkipActivity / HandleActivityException</code></td><td>Activity lifecycle</td><td>No</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§13</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_MCS_SUBSCRIPTION_MARKUSED (rule)
+├── Instance.getByExtIdByUri(NextActivityName, Activity)  [nextAct live lookup]
+├── GetActivityParameterValueFromKey(activity, "DEFAULT_FLOW_ID")
+├── [per POU × Subscriber]:
+│   ├── Response[].ReferenceId == refId  [reqSuccess]
+│   ├── GetXMLForSubscriber(req, refId) + XPath.execute(PreExecCheck)
+│   ├── XPath.evalAsString → flow_id  (FLOW_ID or defaultFlowId)
+│   ├── XPath.evalAsString → pack_code  (5-level ServiceType waterfall)
+│   ├── XPath.evalAsString → imei  (IMEI_MLDD read-back)
+│   ├── XPath.evalAsString → recurringSoc
+│   ├── XPath.evalAsString → mcsCorrelationId
+│   ├── Event.createEvent("xslt://MCS_SUBSCRIPTION_MARKUSED")
+│   │   └── OMXUtils:generateTrackingID()
+│   ├── Event.Ext.sendEventImmediate(reqEvent)
+│   ├── AllowWriteLog(OrderType)
+│   │   └── Event.Ext.sendEventImmediate(auditEvent)  [conditional]
+│   └── orderCurrentActivity.RequestCount++
+├── [per POU × COU × Subscriber]:
+│   ├── GetXMLForSubscriberInChildOU(req, refId, pouRefId)
+│   └── (same extraction + send pattern)
+├── GetActivityStatusString("1") + SendDataToDB  [or SkipActivity("4")]
+└── HandleActivityException  [catch]
+
+Response_MCS_SUBSCRIPTION_MARKUSED (rulefunction)
+├── OMXUtils.generateTrackingID()  [extId — called in BE, passed as param to XSLT]
+├── Instance.createInstance("xslt://ResponseBase")  [$extId passed as param]
+├── currActivity.Response[length] = activityRes
+├── XPath.evalAsBoolean → isMarkUsed  (response_code = '135')
+├── XPath.evalAsBoolean → isSuccess  (response_code = '200')
+│
+├── [if isMarkUsed]:
+│   ├── POU subscriber loop (RefID match)
+│   │   ├── SubscriberOffers loop (MCS_PACKCODE + FLOW_ID exist check)
+│   │   │   └── ExtendedInfo[FE_OR_CCBS].Value = "MCS_IGNORE"
+│   │   ├── XPath.evalAsString → chargeCode  (extra[key='CHARGE_CODE'])
+│   │   ├── XPath.evalAsString → price  (extra[key='PRICE'])
+│   │   ├── BRMS.IsBlankOrStringNull(chargeCode)
+│   │   └── Instance.createInstance("xslt://SubscriberOffers")  [BRMS_ADD offer]
+│   │       └── OfferName=chargeCode, ServiceType='79', OfferRate=price, FE_OR_CCBS='FE'
+│
+├── [if isSuccess]:
+│   ├── POU subscriber loop (RefID match)
+│   │   ├── XPath.evalAsString → str_package_expire_date
+│   │   ├── DateTime.parseString(str, "yyyy-MM-dd HH:mm:ss")
+│   │   ├── XPath.evalAsString → exp_type  (EXP_TYPE)
+│   │   ├── BRMS.IsBlankOrStringNull checks
+│   │   ├── Instance.getByExtIdByUri("LogicalDate", LogicalDate)
+│   │   └── GetActivityEffectiveType(package_expire_date, logicalDate)
+│   │       └── [if 'FUT']: update EXP_TYPE + append MCS_EXP_DATE_VALUE
+│
+├── XPath.evalAsBoolean → hasCheckPackAllowFlag  (CHECK_PACK_ALLOW_FLG='N')
+├── [if hasCheckPackAllowFlag]:
+│   └── Instance.createInstance("xslt://OrderDataExtendedInfo")
+│       └── Name='CHECK_PACK_ALLOW_FLG', Value='N' → OrderData.ExtendedInfo
+├── Event.Ext.sendEventImmediate(auditEvent)  [unconditional]
+└── XPath.evalAsInt("count(Response[tib:right...='000'])") → fan-in</div>
+  </div>
+</div>
+
+<!-- §14 Concept Definitions -->
+<div class="section">
+  <div class="section-header"><span class="num">§14</span> Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Key Fields</th><th>Role</th></tr>
+      <tr><td><code>Concepts.FM.Base.ResponseBase</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId</td><td>Standard; extId bound via $extId BE param</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>OfferName, ServiceType, OfferRate, ExtendedInfo[]</td><td>Created (BRMS_ADD) on code 135; existing offers updated on 135 (MCS_IGNORE) and 200 (EXP_TYPE)</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.ExtendedInfos.SubscriberOffersExtendedInfo</code></td><td>Name, Value</td><td>Written: FE_OR_CCBS=MCS_IGNORE, EXP_TYPE=FUT, MCS_EXP_DATE_VALUE</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.ExtendedInfos.OrderDataExtendedInfo</code></td><td>Name, Value</td><td>Written: CHECK_PACK_ALLOW_FLG=N</td></tr>
+      <tr><td><code>Concepts.OM.LogicalDate</code></td><td>LogicalDate</td><td>Used to compute effective date type on code 200</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Migration Notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§15</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Read <code>DEFAULT_FLOW_ID</code> from activity parameter config; per-subscriber flow_id fallback to this value.</td></tr>
+      <tr><td>R2</td><td>pack_code: evaluate 5-level ServiceType waterfall (86→99→69→88→OfferName). Must use both FE and BRMS as valid FE_OR_CCBS values.</td></tr>
+      <tr><td>R3</td><td>Read IMEI from <code>subscriber.ExtendedInfo[IMEI_MLDD]</code>; send as extra key='IMEI'. IMEI is always in the XSLT even if blank.</td></tr>
+      <tr><td>R4</td><td>channel: emit 'OMX' unless subscriber has FLOW_ID=FVM003 on any SubscriberOffer, then emit OrderData.Channel.</td></tr>
+      <tr><td>R4a</td><td>CHECK_PACK_ALLOW_FLG extra emitted only when flow_id='FVM003'.</td></tr>
+      <tr><td>R5</td><td>RECURRING_SOC and MCS_CORRELATION_ID extras emitted only when non-blank.</td></tr>
+      <tr><td>R6</td><td>On response code 135 (already-marked-used): find POU subscriber matching RefID; for offers with both MCS_PACKCODE and FLOW_ID, set FE_OR_CCBS='MCS_IGNORE'. If chargeCode in response extras, create new SubscriberOffers with ServiceType='79'.</td></tr>
+      <tr><td>R6a</td><td><strong>[BUG FIX]</strong> Extend code-135 handler to also iterate COU subscribers.</td></tr>
+      <tr><td>R7</td><td>On response code 200 (success): if package_expire_date returned and not blank, and current EXP_TYPE≠'FUT': compute effective type via LogicalDate. If type='FUT', update EXP_TYPE and write MCS_EXP_DATE_VALUE.</td></tr>
+      <tr><td>R7a</td><td><strong>[BUG FIX]</strong> Extend code-200 handler to also iterate COU subscribers.</td></tr>
+      <tr><td>R8</td><td>CHECK_PACK_ALLOW_FLG='N' in response extras → write OrderDataExtendedInfo.</td></tr>
+      <tr><td>R9</td><td>Response audit unconditional; request audit gated by AllowWriteLog(OrderType).</td></tr>
+      <tr><td>R10</td><td>Fan-in: standard "000" count == RequestCount. No IntraActivitySequencing.</td></tr>
+    </table>
+
+    <h3 style="margin-top:18px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td><strong>COU response handlers missing</strong> — code 135 / code 200 only process POU subscribers</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Add ChildOU loops to both isMarkUsed and isSuccess blocks in response rulefunction</td>
+      </tr>
+      <tr>
+        <td><strong>XML element name typo</strong> <code>SubscriptionMarkuesdRequest/Response</code></td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Preserve exact typo if MCS schema validates against it; request schema correction from MCS team</td>
+      </tr>
+      <tr>
+        <td><strong>POU/COU XSLT extra ordering difference</strong> — IMEI vs CHECK_PACK_ALLOW_FLG position swapped</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Verify MCS handles list-order-agnostic extra fields; normalise order in migration</td>
+      </tr>
+      <tr>
+        <td><strong>IMEI dependency on MLDD_GET_SUB_DATA</strong> — blank if prior FM was skipped</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Verify MCS behaviour when IMEI extra is present but blank; add PreExecCheck if IMEI required</td>
+      </tr>
+      <tr>
+        <td><strong>pack_code waterfall searches all POU subscribers</strong> (not the current one) — XPath references parent-level, not subscriber-scoped</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Verify the pack_code XPath is intentionally order-wide. If per-subscriber pack_code needed, scope the XPath</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §16 Full Source Code -->
+<div class="section">
+  <div class="section-header"><span class="num">§16</span> Full Source Code</div>
+  <div class="section-body">
+    <details>
+      <summary>Request_MCS_SUBSCRIPTION_MARKUSED.rule (key structure)</summary>
+      <div class="code-block" style="margin-top:8px"><span class="kw">rule</span> <span class="fn">Rules.OMConsumers.OMXFM.Request.Request_MCS_SUBSCRIPTION_MARKUSED</span> {
+  <span class="kw">attribute</span> { priority=<span class="nu">5</span>; forwardChain=<span class="kw">true</span>; }
+  <span class="kw">declare</span> { <span class="ty">OrderRequest</span> orderRequest; <span class="ty">Activity</span> orderCurrentActivity; }
+  <span class="kw">when</span> { <span class="cm">/* standard 4-condition WHEN */</span> }
+  <span class="kw">then</span> {
+    <span class="kw">boolean</span> isActResub = ...;
+    <span class="kw">try</span> {
+      <span class="ty">Activity</span> nextAct = <span class="fn">Instance.getByExtIdByUri</span>(ProcessFlow.NextActivityName, Activity);
+      <span class="kw">String</span> defaultFlowId = <span class="fn">GetActivityParameterValueFromKey</span>(orderCurrentActivity, <span class="str">"DEFAULT_FLOW_ID"</span>);
+      <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+      <span class="cm">/* POU Subscribers */</span>
+      <span class="kw">for</span>(i ...) { <span class="kw">for</span>(j ...) {
+        <span class="cm">// reqSuccess check / PreExecCheck</span>
+        <span class="kw">String</span> transaction_id = OMXTrackingId;
+        <span class="kw">String</span> flow_id = XPath( FLOW_ID or defaultFlowId );
+        <span class="kw">String</span> msisdn = subscriber.MSISDN;
+        <span class="kw">String</span> pack_code = XPath( 5-level ServiceType waterfall );  <span class="cm">// see §6.3</span>
+        <span class="kw">String</span> imei = XPath( subscriber/ExtendedInfo[Name=<span class="str">'IMEI_MLDD'</span>]/Value );
+        <span class="kw">String</span> recurringSoc = XPath( SubscriberOffers/ExtendedInfo[RECURRING_SOC] );
+        <span class="kw">String</span> mcsCorrelationId = XPath( OrderData/ExtendedInfo[MCS_CORRELATION_ID] );
+        <span class="cm">/* [MCS_SUBSCRIPTION_MARKUSED XSLT — see §8.4] */</span>
+        <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+        <span class="kw">if</span>(<span class="fn">AllowWriteLog</span>(OrderType)) { <span class="fn">sendAudit</span>(); }
+        <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+        isSkipped = <span class="kw">false</span>;
+      }}
+
+      <span class="cm">/* COU Subscribers — identical pattern */</span>
+      ...
+
+      <span class="kw">if</span>(!isSkipped) { <span class="fn">GetActivityStatusString</span>(<span class="str">"1"</span>); <span class="fn">SendDataToDB</span>(); }
+      <span class="kw">else</span> { <span class="fn">SkipActivity</span>(<span class="str">"4"</span>); }
+    } <span class="kw">catch</span>(Exception ae) { <span class="fn">HandleActivityException</span>(...); }
+  }
+}</div>
+    </details>
+  </div>
+</div>
+
+<!-- §17 Response Message Rule -->
+<div class="section">
+  <div class="section-header"><span class="num">§17</span> Response Message Rule</div>
+  <div class="section-body">
+
+    <h3>§17.1 — Overview</h3>
+    <p>The response handler processes three response outcomes from MCS: <strong>code 135</strong> (already-marked-used) sets MCS_IGNORE on matching offers and creates a BRMS_ADD SubscriberOffer; <strong>code 200</strong> (success) handles expire-date logic and EXP_TYPE upgrade; <strong>CHECK_PACK_ALLOW_FLG='N'</strong> in response extras is written back to OrderData. Audit is unconditional. Fan-in: standard "000" count.</p>
+
+    <h3>§17.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>READ + WRITTEN (CHECK_PACK_ALLOW_FLG, SubscriberOffers)</td></tr>
+      <tr><td><code>eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.MCS_SUBSCRIPTION_MARKUSED</td><td>Backend response</td></tr>
+      <tr><td><code>currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Response[] appended; fan-in</td></tr>
+    </table>
+
+    <h3>§17.3 — ResponseBase Concept Construction</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">$extId</span> (OMXUtils.generateTrackingID() called in BE, passed as param)</div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/RefID</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3>§17.4 — Response Code 135 Handler (isMarkUsed)</h3>
+    <div class="code-block"><span class="kw">if</span> (isMarkUsed) {  <span class="cm">// response_code = '135'</span>
+  <span class="cm">// POU loop only — no COU [BUG: COU excluded]</span>
+  <span class="kw">if</span>(RefID matches subscriber.RefId) {
+    <span class="cm">// For each offer with MCS_PACKCODE + FLOW_ID:</span>
+    ExtendedInfo[Name=<span class="str">"FE_OR_CCBS"</span>].Value = <span class="str">"MCS_IGNORE"</span>;  <span class="cm">// flag to skip</span>
+
+    chargeCode = XPath(extra[key=<span class="str">'CHARGE_CODE'</span>]/value);
+    price      = XPath(extra[key=<span class="str">'PRICE'</span>]/value);
+
+    <span class="kw">if</span>(!IsBlankOrStringNull(chargeCode)) {
+      <span class="cm">// Create new SubscriberOffers concept — BRMS_ADD</span>
+      <span class="kw">new</span> SubscriberOffers {
+        extId = generateTrackingID()+<span class="str">":BRMS_ADD"</span>
+        OfferName = chargeCode
+        ServiceType = <span class="str">"79"</span>
+        OfferRate = price
+        ExtendedInfo { Name=<span class="str">"FE_OR_CCBS"</span>, Value=<span class="str">"FE"</span> }
+        ExtendedInfo { Name=<span class="str">"AMOUNT"</span>, Value=price }  <span class="cm">// if count($price)>0</span>
+      }
+      subscriber.SubscriberOffers[] += offerConcept;
+    }
+  }
+}</div>
+
+    <h3>§17.5 — Response Code 200 Handler (isSuccess)</h3>
+    <div class="code-block"><span class="kw">if</span> (isSuccess) {  <span class="cm">// response_code = '200'</span>
+  <span class="cm">// POU loop only — no COU [BUG: COU excluded]</span>
+  <span class="kw">if</span>(RefID matches subscriber.RefId) {
+    str_package_expire_date = XPath(xsd2:package_expire_date);
+    package_expire_date = DateTime.parseString(str, <span class="str">"yyyy-MM-dd HH:mm:ss"</span>);
+    exp_type = XPath(SubscriberOffers[FE_OR_CCBS=<span class="str">'FE'</span>]/ExtendedInfo[EXP_TYPE]/Value);
+
+    <span class="kw">if</span>(package_expire_date != <span class="kw">null</span> && !blank(exp_type) && !<span class="str">"FUT"</span>.equals(exp_type)) {
+      logicalDate = LogicalDate concept (<span class="kw">or</span> DateTime.now());
+      type = <span class="fn">GetActivityEffectiveType</span>(package_expire_date, logicalDate);
+      <span class="kw">if</span>(<span class="str">"FUT"</span>.equals(type)) {
+        <span class="cm">// For each FE offer:</span>
+        <span class="kw">if</span> EXP_TYPE found: update Value=type + append MCS_EXP_DATE_VALUE
+        <span class="kw">else</span>: append EXP_TYPE=type + MCS_EXP_DATE_VALUE=package_expire_date
+      }
+    }
+  }
+}</div>
+
+    <h3>§17.6 — CHECK_PACK_ALLOW_FLG Write-back</h3>
+    <div class="code-block">hasCheckPackAllowFlag = exists(xsd2:extra[xsd2:key=<span class="str">'CHECK_PACK_ALLOW_FLG'</span> and xsd2:value=<span class="str">'N'</span>]);
+<span class="kw">if</span>(hasCheckPackAllowFlag) {
+  orderRequest.OrderData.ExtendedInfo[] += OrderDataExtendedInfo {
+    Name=<span class="str">'CHECK_PACK_ALLOW_FLG'</span>, Value=<span class="str">'N'</span>
+  };
+}</div>
+
+    <h3>§17.7 — Fan-in Completion Logic</h3>
+    <div class="code-block"><span class="kw">int</span> successResponseCount = <span class="fn">XPath.evalAsInt</span>(
+    <span class="str">"count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = '000'])"</span>);
+<span class="kw">if</span>(currActivity.RequestCount == successResponseCount) { <span class="kw">return</span> <span class="str">"true"</span>; }
+<span class="kw">else</span> { <span class="kw">return</span> <span class="str">"false"</span>; }</div>
+    <p style="margin-top:8px;font-size:0.88rem">Standard "000" suffix count fan-in. Note: code 135 maps to ResponseCode "000135"? Or does it? MCS response_code is in payload, not the JMS ResponseCode. This needs verification — if MCS sets ResponseCode="200" for both 135 and 200 payload codes, the fan-in works. If ResponseCode="135", those responses would never count as success.</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

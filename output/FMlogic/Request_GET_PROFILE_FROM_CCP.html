@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_GET_PROFILE_FROM_CCP</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.header h1{font-size:2rem;font-weight:700;letter-spacing:1px;}
+.header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.header .meta{margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;opacity:.9;}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:12px;}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600;}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-purple{background:#F3E5F5;color:var(--skip);}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.callout{padding:12px 16px;border-radius:6px;margin:12px 0;border-left:4px solid;}
+.callout-warning{background:#FFF8E1;border-color:var(--warning);color:#5D4037;}
+.callout-info{background:#E3F2FD;border-color:var(--info);color:#0D47A1;}
+.callout-error{background:#FFEBEE;border-color:var(--true-red);color:var(--true-dark);}
+.callout-success{background:#E8F5E9;border-color:var(--success);color:#1B5E20;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:8px 12px 8px 48px;position:relative;border-left:3px solid var(--border);margin-bottom:6px;}
+.step-list li::before{content:counter(step);position:absolute;left:-16px;top:6px;background:var(--true-red);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+footer{text-align:center;padding:24px;color:#888;font-size:.82rem;}
+h3{font-size:.95rem;font-weight:600;color:var(--true-dark);margin-bottom:6px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Request_GET_PROFILE_FROM_CCP</h1>
+  <div class="subtitle">FM Logic Documentation — CCP User Profile Query &amp; Dynamic SubscriberOffers Enrichment (Data Pipeline for CCP_REMOVE_OFFER)</div>
+  <div class="meta">
+    <span class="meta-item">Rule: Rules.OMConsumers.OMXFM.Request.Request_GET_PROFILE_FROM_CCP</span>
+    <span class="meta-item">Priority: 5</span>
+    <span class="meta-item">Backend: CCP (queryUserProfile → GetPrepaidCreditInfoRequest)</span>
+    <span class="meta-item">Pattern: Parallel per-Subscriber dispatch</span>
+    <span class="meta-item">Generated: 2026-09-11</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>GET_PROFILE_FROM_CCP</strong> queries CCP for each subscriber's current price plan profile, then <em>enriches the order working memory</em> by dynamically appending new <code>SubscriberOffers</code> entries for any active grading-type price plans found. These dynamically-added offers are then consumed by the subsequent <strong>CCP_REMOVE_OFFER</strong> activity — making this FM a <em>data pipeline step</em>, not just a lookup.</p>
+    <p style="margin-top:8px;">The response RF filters CCP's <code>PricePlanDtoList</code> for plans with names starting with <code>IPP_000O0_00_GRADING</code>. For each such plan found, it creates a <code>SubscriberOffers</code> concept (Action=Remove, FE_OR_CCBS=CCP) and appends it to the subscriber — effectively "staging" the grading offers for removal in the next activity.</p>
+    <div class="callout callout-info" style="margin-top:10px;">
+      <strong>Schema / Name mismatch:</strong> Despite the FM name saying <code>GET_PROFILE_FROM_CCP</code>, the request payload schema is <code>ns:GetPrepaidCreditInfoRequest</code> and CCP's response is <code>queryUserProfileResponse</code>. Debug comments in both files reference the old name <code>CCP_GET_PREPAID_CREDIT_INFO</code>. The FM was renamed without updating the payload schema namespaces. Functionally correct.
+    </div>
+    <table style="margin-top:12px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule file</td><td>Request_GET_PROFILE_FROM_CCP.rule</td></tr>
+      <tr><td>Response rulefunction</td><td>Response_GET_PROFILE_FROM_CCP.rulefunction</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>Backend system</td><td>CCP</td></tr>
+      <tr><td>Request event type</td><td><code>Events.OMConsumers.OMXFM.Request.GET_PROFILE_FROM_CCP</code></td></tr>
+      <tr><td>Request payload schema</td><td><code>ns: http://services.omx.truecorp.co.th/FM/GetPrepaidCreditInfoRequest</code></td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.GET_PROFILE_FROM_CCP</code></td></tr>
+      <tr><td>Response payload namespace</td><td><code>xsd2: http://thaitrue.customization.ws.bss.zsmart.ztesoft.com</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code> (standard)</td></tr>
+      <tr><td>Dispatch scope</td><td>Per Subscriber — ParentOU and ChildOU (dual nested loop: OU → Subscriber)</td></tr>
+      <tr><td>Dispatch pattern</td><td>Parallel direct dispatch (<code>sendEventImmediate</code>); fan-in: <code>RequestCount == Response@length</code></td></tr>
+      <tr><td>Idempotency key</td><td><code>sub.RefId</code> (per subscriber)</td></tr>
+      <tr><td>Response extId format</td><td><code>"GPCIR:" + JMSCorrelationID + ":" + RefID</code></td></tr>
+      <tr><td>Request audit</td><td>Conditional: <code>AllowWriteLog(OrderType)</code></td></tr>
+      <tr><td>Response audit</td><td>Conditional: <code>AllowWriteLog(OrderType)</code></td></tr>
+      <tr><td>Side effect</td><td>Appends <code>SubscriberOffers</code> concepts to subscriber working memory (CCP_REMOVE_OFFER pipeline)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>priority</td><td>5</td><td>Standard FM priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Standard</td></tr>
+      <tr><td>Rule type</td><td>Parallel direct dispatch</td><td>sendEventImmediate per subscriber; fan-in: RequestCount == Response@length</td></tr>
+      <tr><td>Resubmit</td><td>Yes (guard)</td><td>isActResub flag gates RequestCount increment; no PurgePendingRequestsBeforeResubmit needed (not IntraActivitySequencing)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order; ParentOU/ChildOU/Subscriber iteration; Channel for payload; OrderType for audit gate</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity — RequestCount, Response[] for idempotency and fan-in; PreExecCheck XML</td></tr>
+      <tr><td><code>nextAct</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Loaded by extId to access PreExecCheck expression</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity extId matches</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "GET_PROFILE_FROM_CCP"</code></td><td>Constrains to this FM</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "GET_PROFILE_FROM_CCP"</code></td><td>Double-check via NextActivityID</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity ready to process</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li><strong>Init</strong>: <code>isActResub = RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted</code>; load <code>nextAct</code> by extId; <code>isSkipped = true</code></li>
+      <li><strong>ParentOU loop</strong> (OU[i] → Subscriber[j]): for each subscriber:<br/>
+        • Idempotency: scan <code>Response[]</code> for <code>ReferenceId == sub.RefId &amp;&amp; CompletionStatus == 2</code><br/>
+        • PreExecCheck (if PreExecCheck field not empty): <code>GetXMLForSubscriber</code> → XPath eval<br/>
+        • If pass: build <code>GET_PROFILE_FROM_CCP</code> event (params: $orderRequest, $i, $j) → <code>sendEventImmediate</code><br/>
+        • Conditional audit: <code>if(AllowWriteLog) sendEventImmediate(Logger)</code><br/>
+        • Increment <code>RequestCount</code> (if not resubmit); <code>isSkipped = false</code>
+      </li>
+      <li><strong>ChildOU loop</strong> (OU[i] → ChildOU[p] → Subscriber[q]) — same pattern with <code>GetXMLForSubscriberInChildOU</code></li>
+      <li>If any dispatched: <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code>; else <code>SkipActivity("4")</code></li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Annotated Logic</div>
+  <div class="section-body">
+    <pre><code><span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+<span class="kw">try</span> {
+    Activity nextAct = Instance.<span class="fn">getByExtIdByUri</span>(orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+    <span class="kw">int</span> iPOULen = orderRequest.OrderData.Customer.ParentOU@length;
+    <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+    <span class="kw">for</span>(<span class="kw">int</span> i = <span class="nu">0</span>; i &lt; iPOULen; i++) {          <span class="cm">// ParentOU loop</span>
+        <span class="kw">for</span>(<span class="kw">int</span> j = <span class="nu">0</span>; j &lt; iSubscriberLen; j++) {   <span class="cm">// Subscriber loop</span>
+            <span class="kw">String</span> refId = ParentOU[i].Subscriber[j].RefId;
+            <span class="kw">boolean</span> reqSuccess = <span class="kw">false</span>;
+            <span class="cm">// Idempotency check on Response[]</span>
+            <span class="kw">if</span>(!reqSuccess) {
+                <span class="kw">String</span> chkRes = <span class="st">"true"</span>;
+                <span class="kw">if</span>(nextAct.PreExecCheck.length &gt; <span class="nu">0</span>) {
+                    <span class="kw">String</span> sXML = GetXMLForSubscriber(orderRequest, refId);
+                    chkRes = XPath.execute(<span class="st">"/("+chkXPath+")"</span>, sXML, <span class="st">"ns0=..."</span>);
+                }
+                <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+                    <span class="cm">/* GET_PROFILE_FROM_CCP event XSLT (params: $orderRequest, $i, $j) — see §9 */</span>
+                    Event.Ext.<span class="fn">sendEventImmediate</span>(reqEvent);
+                    <span class="kw">if</span>(AllowWriteLog(OrderType)) { <span class="cm">/* Logger audit */</span> }
+                    <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                    isSkipped = <span class="kw">false</span>;
+                }
+            }
+        }
+        <span class="cm">// ChildOU loop — same with GetXMLForSubscriberInChildOU</span>
+    }
+
+    <span class="kw">if</span>(!isSkipped) {
+        orderCurrentActivity.Status = GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+        SendDataToDB(orderRequest);
+    } <span class="kw">else</span> { SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>); }
+} <span class="kw">catch</span>(<span class="ty">Exception</span> ae) { HandleActivityException(...); }</code></pre>
+  </div>
+</div>
+
+<!-- §7 -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction &amp; Pre-Processing</div>
+  <div class="section-body">
+    <h3>§7.1 — Idempotency Check (per Subscriber)</h3>
+    <p>Checks <code>Response[iResp].ReferenceId == refId &amp;&amp; CompletionStatus == 2</code>. If found, subscriber is skipped (<code>reqSuccess = true</code>). Key: <code>refId</code> = subscriber's RefId (not an offerRefId — per subscriber, not per offer).</p>
+
+    <h3 style="margin-top:16px;">§7.2 — PreExecCheck (dynamic from Activity)</h3>
+    <p>The PreExecCheck XPath expression is read from <code>nextAct.PreExecCheck</code> (i.e., from the ProcessConfig activity definition), <em>not</em> hardcoded in this rule. The helper <code>GetXMLForSubscriber</code> (ParentOU) or <code>GetXMLForSubscriberInChildOU</code> (ChildOU) builds the XML fragment that is fed to <code>XPath.execute</code>. If the PreExecCheck field is empty, all subscribers pass.</p>
+
+    <h3 style="margin-top:16px;">§7.3 — XSLT Param Design: Index vs. Value</h3>
+    <p>Unlike most other FMs that pass extracted string values (e.g., <code>$msisdn</code>, <code>$refId</code>), this FM passes the subscriber's <strong>array indices</strong> (<code>$i</code>, <code>$j</code>, <code>$p</code>, <code>$q</code>) as XSLT parameters. The XSLT then navigates using <code>ParentOU[$i+1]/Subscriber[$j+1]</code> (1-indexed XPath from 0-indexed BE vars). This avoids extracting values in the BE layer but ties the XSLT tightly to the concept array structure.</p>
+
+    <h3 style="margin-top:16px;">§7.4 — Response: PricePlanDtoList Parsing</h3>
+    <p>The response RF reads <code>$eventResponse/payload/xsd2:queryUserProfileResponse/xsd2:queryUserProfileReturn/xsd2:PricePlanDtoList/xsd2:PricePlanDto</code> (namespace <code>xsd2=http://thaitrue.customization.ws.bss.zsmart.ztesoft.com</code>). For each plan, it reads <code>xsd2:PricePlanName</code> and tests:</p>
+    <pre><code>if (String.<span class="fn">startsWith</span>(pp_name, <span class="st">"IPP_000O0_00_GRADING"</span>))</code></pre>
+    <p>This filters for grading-tier plans specifically. Only these plans result in a new <code>SubscriberOffers</code> concept being added.</p>
+
+    <h3 style="margin-top:16px;">§7.5 — Response: Subscriber Concept Lookup</h3>
+    <p>The response RF resolves the Subscriber concept from working memory by extId:</p>
+    <ol style="margin-left:20px;margin-top:6px;">
+      <li>Try <code>"SUB:" + OMXTrackingId + ":" + RefID</code> (ParentOU subscriber extId format)</li>
+      <li>If null, try <code>"CSUB:" + OMXTrackingId + ":" + RefID</code> (ChildOU subscriber extId format)</li>
+    </ol>
+    <p style="margin-top:6px;">This dual-lookup pattern allows the same response handler to work for both ParentOU and ChildOU subscribers regardless of which sent the request.</p>
+
+    <h3 style="margin-top:16px;">§7.6 — Response: Dynamic SubscriberOffers Creation</h3>
+    <p>For each matched grading plan, a new <code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code> concept is created with:</p>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td><code>@extId</code></td><td><code>OMXUtils:generateTrackingID()</code></td></tr>
+      <tr><td><code>OfferName</code></td><td><code>$pp_name</code> (the PricePlanName from CCP)</td></tr>
+      <tr><td><code>Action</code></td><td><code>"Remove"</code> (static)</td></tr>
+      <tr><td><code>ExtendedInfo/@extId</code></td><td><code>OMXUtils:generateTrackingID()</code></td></tr>
+      <tr><td><code>ExtendedInfo/Name</code></td><td><code>"FE_OR_CCBS"</code> (static)</td></tr>
+      <tr><td><code>ExtendedInfo/Value</code></td><td><code>"CCP"</code> (static)</td></tr>
+    </table>
+    <p style="margin-top:8px;">This concept is appended to <code>subscriber.SubscriberOffers[]</code>. The <code>FE_OR_CCBS=CCP</code> flag will be read by <strong>CCP_REMOVE_OFFER</strong>'s PreExecCheck to identify these as CCP-routed removal targets.</p>
+  </div>
+</div>
+
+<!-- §8 -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.1 — Order Type Dependencies</h3>
+    <p>Triggered for prepaid pack removal orders with subscribers who have active grading-type price plans in CCP. The PreExecCheck expression is loaded dynamically from the ProcessConfig — this rule has no hardcoded order-type gate. The PREPAID_REMOVE_PACKAGE flow uses this to discover which CCP grading offers need removal before calling CCP_REMOVE_OFFER.</p>
+
+    <h3 style="margin-top:16px;">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.GET_PROFILE_FROM_CCP</code></td><td>CCP GetPrepaidCreditInfo query per subscriber (parallel)</td></tr>
+      <tr><td><span class="badge badge-log">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Request audit (conditional: AllowWriteLog)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation (request)</th><th>Operation (response)</th><th>Protocol</th></tr>
+      <tr><td>CCP</td><td><code>GetPrepaidCreditInfoRequest</code> (ns: FM schema)</td><td><code>queryUserProfileResponse / queryUserProfileReturn</code> (xsd2: ZSMART schema)</td><td>JMS via OMXFM channel</td></tr>
+    </table>
+    <div class="callout callout-info">
+      The request schema (<code>GetPrepaidCreditInfoRequest</code>) and response schema (<code>queryUserProfileResponse</code> from ZSMART BSS) use different namespaces. The FM bridges between the OMX-defined request and the vendor's native response format. This is a legacy naming artifact — the FM was originally named <code>CCP_GET_PREPAID_CREDIT_INFO</code>.
+    </div>
+
+    <h3 style="margin-top:16px;">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept path</th><th>Access</th><th>Purpose</th></tr>
+      <tr><td><code>ProcessFlow.NextActivityName</code></td><td>Read</td><td>Load nextAct by extId (for PreExecCheck)</td></tr>
+      <tr><td><code>nextAct.PreExecCheck</code></td><td>Read</td><td>Dynamic PreExecCheck XPath expression</td></tr>
+      <tr><td><code>ParentOU[*].RefId</code></td><td>Read</td><td>pouRefId for ChildOU XML builder</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].RefId</code></td><td>Read</td><td>Idempotency key; XSLT RefID header; response lookup</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].MSISDN</code></td><td>Read (via XSLT index)</td><td>ns:MSISDN in CCP request payload</td></tr>
+      <tr><td><code>OrderData.Channel</code></td><td>Read (via XSLT)</td><td>ns:OrderChannel in CCP request payload</td></tr>
+      <tr><td><code>ChildOU[*].Subscriber[*].RefId/MSISDN</code></td><td>Read</td><td>Same as ParentOU equivalents</td></tr>
+      <tr><td><code>orderCurrentActivity.Response[]</code></td><td>Read/Write</td><td>Idempotency; fan-in counting</td></tr>
+      <tr><td><code>orderCurrentActivity.RequestCount</code></td><td>Read/Write</td><td>Incremented per dispatched request (unless resubmit)</td></tr>
+      <tr><td><code>subscriber.SubscriberOffers[]</code></td><td><strong>Write</strong></td><td>Dynamically appended grading SubscriberOffers for CCP_REMOVE_OFFER pipeline</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+    <h3>§9.1 — XSLT Parameters</h3>
+    <table>
+      <tr><th>Param</th><th>Source (ParentOU)</th><th>Source (ChildOU)</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest concept</td><td>orderRequest concept</td></tr>
+      <tr><td><code>$i</code></td><td>ParentOU index (0-based)</td><td>ParentOU index (0-based)</td></tr>
+      <tr><td><code>$j</code></td><td>Subscriber index within ParentOU (0-based)</td><td>–</td></tr>
+      <tr><td><code>$p</code></td><td>–</td><td>ChildOU index within ParentOU (0-based)</td></tr>
+      <tr><td><code>$q</code></td><td>–</td><td>Subscriber index within ChildOU (0-based)</td></tr>
+    </table>
+    <p style="margin-top:8px;color:#666;font-size:.85rem;">Note: XSLT uses 1-indexed XPath: <code>ParentOU[$i+1]/Subscriber[$j+1]</code>. Unlike most FMs, no pre-extracted string values are passed — indices allow XSLT to navigate the full concept path.</p>
+
+    <h3 style="margin-top:16px;">§9.2 — Event Container</h3>
+    <p>No extId attribute on the event container. Event type: <code>Events.OMConsumers.OMXFM.Request.GET_PROFILE_FROM_CCP</code>.</p>
+
+    <h3 style="margin-top:16px;">§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td><strong>Always (no xsl:if)</strong></td></tr>
+      <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td><strong>Always (no xsl:if)</strong></td></tr>
+      <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td><strong>Always (no xsl:if)</strong></td></tr>
+      <tr><td><code>RefID</code></td><td><code>$orderRequest/OrderData/Customer/ParentOU[$i+1]/Subscriber[$j+1]/RefId</code></td><td><strong>Always</strong></td></tr>
+      <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td><strong>Always (no xsl:if)</strong></td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:8px;">All JMS headers are unconditional (<strong>no xsl:if</strong> anywhere in the header section). This contrasts with SBM_CANCEL_PACK_PREPAID_NEXT where all non-RefID headers were conditional. Here, an empty OrderPriority would emit an empty <code>&lt;JMSPriority&gt;</code> element rather than omitting it.</div>
+
+    <h3 style="margin-top:16px;">§9.4 — Payload Root</h3>
+    <p><code>ns:GetPrepaidCreditInfoRequest</code> (namespace: <code>http://services.omx.truecorp.co.th/FM/GetPrepaidCreditInfoRequest</code>)</p>
+
+    <h3 style="margin-top:16px;">§9.5 — Payload Fields</h3>
+    <table>
+      <tr><th>Element</th><th>Source</th><th>Condition</th><th>Notes</th></tr>
+      <tr><td><code>ns:MSISDN</code></td><td><code>$orderRequest/OrderData/Customer/ParentOU[$i+1]/Subscriber[$j+1]/MSISDN</code></td><td>Always</td><td>Subscriber MSISDN; ChildOU variant uses <code>ChildOU[$p+1]/Subscriber[$q+1]</code></td></tr>
+      <tr><td><code>ns:OrderChannel</code></td><td><code>$orderRequest/OrderData/Channel</code></td><td>Always</td><td>Order channel (e.g., "web", "mobile")</td></tr>
+    </table>
+    <p style="margin-top:8px;">This is a minimal payload — only 2 fields. CCP uses the MSISDN to look up the subscriber profile and returns their current price plan list.</p>
+  </div>
+</div>
+
+<!-- §10 -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <h3>ParentOU Variant (params: $orderRequest, $i, $j)</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span><span class="tree-cond">(no @extId)</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green">Always (no xsl:if)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green">Always (no xsl:if)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green">Always (no xsl:if)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/ParentOU[$i+1]/Subscriber[$j+1]/RefId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-green">Always (no xsl:if)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:GetPrepaidCreditInfoRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:MSISDN</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/ParentOU[$i+1]/Subscriber[$j+1]/MSISDN</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:OrderChannel</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Channel</span><span class="badge badge-green">Always</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:8px;color:#666;font-size:.85rem;">ChildOU variant: params change to ($orderRequest, $i, $p, $q); RefID/MSISDN paths use <code>ChildOU[$p+1]/Subscriber[$q+1]</code>. Payload structure identical.</p>
+  </div>
+</div>
+
+<!-- §11 -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Event</th><th>Gate</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th><th>Bug?</th></tr>
+      <tr><td>Request audit</td><td><code>AllowWriteLog(OrderType)</code></td><td><code>"GET_PROFILE_FROM_CCP"</code> ✓</td><td><code>"Request Sent for GET_PROFILE_FROM_CCP"</code> ✓</td><td>None</td></tr>
+      <tr><td>Response audit</td><td><code>AllowWriteLog(OrderType)</code></td><td><code>"GET_PROFILE_FROM_CCP"</code> ✓</td><td><code>"Response received for GET_PROFILE_FROM_CCP"</code> ✓</td><td>None</td></tr>
+    </table>
+    <p style="margin-top:8px;">Both AUDIT_TRACE values are correct. Audit is gated on <code>AllowWriteLog</code> — not all order types write request/response logs.</p>
+  </div>
+</div>
+
+<!-- §12 -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Action</th><th>Status</th></tr>
+      <tr><td>At least one subscriber dispatched</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" = PROCESSING</td></tr>
+      <tr><td>No subscribers pass checks</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" = SKIPPED</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <p><strong>Request rule:</strong> Standard <code>catch(Exception ae) → HandleActivityException</code>.</p>
+    <p><strong>Response RF:</strong> No try/catch — response processing (subscriber lookup, PricePlanDto iteration, concept creation) runs without exception handling. A ZSMART response parsing failure would propagate uncaught.</p>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      The response RF's PricePlanDto parsing loop and SubscriberOffers creation have no try/catch. If CCP returns a malformed response or the subscriber concept is null, the exception would propagate uncaught to the BE rule engine.
+    </div>
+  </div>
+</div>
+
+<!-- §14 -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriber(orderRequest, refId)</code></td><td>Builds PreExecCheck XML fragment for ParentOU subscriber</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</code></td><td>Builds PreExecCheck XML fragment for ChildOU subscriber</td></tr>
+      <tr><td><code>Helpers.AllowWriteLog(orderType)</code></td><td>Determines whether request/response audit should be written for this order type</td></tr>
+      <tr><td><code>Helpers.GetActivityStatusString(code, flag)</code></td><td>Status code translation</td></tr>
+      <tr><td><code>Helpers.SendDataToDB(orderRequest)</code></td><td>Persist order state</td></tr>
+      <tr><td><code>Helpers.SkipActivity(orderRequest, activity, code)</code></td><td>Mark activity skipped</td></tr>
+      <tr><td><code>Helpers.HandleActivityException(orderRequest, activity, ex, msg)</code></td><td>Error state transition</td></tr>
+      <tr><td><code>OMXUtils.generateTrackingID()</code></td><td>Generate unique extId for new SubscriberOffers and ExtendedInfo concepts in response RF</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><code>Request_GET_PROFILE_FROM_CCP (rule)
+├── Instance.getByExtIdByUri()               [load nextAct for PreExecCheck]
+├── [ParentOU/ChildOU/Subscriber loops]
+│   ├── [idempotency check on Response[]]
+│   ├── Helpers.GetXMLForSubscriber()        [ParentOU PreExecCheck XML]
+│   ├── Helpers.GetXMLForSubscriberInChildOU()  [ChildOU PreExecCheck XML]
+│   ├── XPath.execute()                      [PreExecCheck evaluation]
+│   ├── Event.createEvent()                  [GET_PROFILE_FROM_CCP XSLT — see §9]
+│   ├── Event.Ext.sendEventImmediate()       [dispatch request]
+│   ├── Helpers.AllowWriteLog()              [audit gate]
+│   ├── System.nanoTime()                    [pid for audit]
+│   ├── Event.createEvent()                  [Logger XSLT — conditional audit]
+│   ├── Event.Ext.sendEventImmediate()       [request audit]
+│   └── orderCurrentActivity.RequestCount++ [if not resubmit]
+├── Helpers.GetActivityStatusString()
+├── Helpers.SendDataToDB()
+├── Helpers.SkipActivity()
+└── Helpers.HandleActivityException()
+
+Response_GET_PROFILE_FROM_CCP (rulefunction)
+├── Instance.createInstance()                [ResponseBase XSLT — standard 4 fields]
+├── currActivity.Response[] ← activityRes
+├── Instance.getByExtIdByUri("SUB:...")      [subscriber lookup attempt 1: ParentOU]
+├── Instance.getByExtIdByUri("CSUB:...")     [subscriber lookup attempt 2: ChildOU — if null]
+├── XPath.evalAsInt()                        [count PricePlanDto in response payload]
+├── [PricePlanDto loop]
+│   ├── XPath.evalAsString()                 [read PricePlanName per PricePlanDto]
+│   ├── String.startsWith(pp_name, "IPP_000O0_00_GRADING")  [grading filter]
+│   └── Instance.createInstance()            [SubscriberOffers XSLT — OMXUtils:generateTrackingID×2]
+│       subscriber.SubscriberOffers[] ← subscriberOfferConcept
+├── Helpers.AllowWriteLog()                  [response audit gate]
+├── System.nanoTime()                        [pid for audit]
+├── Event.createEvent()                      [Logger XSLT — conditional response audit]
+├── Event.Ext.sendEventImmediate()           [response audit]
+└── return "true" / "false"                  [fan-in: RequestCount == Response@length]</code></pre>
+  </div>
+</div>
+
+<!-- §16 -->
+<div class="section">
+  <div class="section-header">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Used in</th><th>Key fields</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Both</td><td>OrderData.Channel, ParentOU/ChildOU/Subscriber loops</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Both</td><td>ActivityID, Status, PreExecCheck, RequestCount, Response[] (fan-in)</td></tr>
+      <tr><td><code>Concepts.FM.Base.ResponseBase</code></td><td>Response RF</td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId — all conditional</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>Response RF</td><td>SubscriberOffers[] — written to with dynamically created grading offers</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>Response RF (create)</td><td>OfferName (PricePlanName), Action ("Remove"), ExtendedInfo (FE_OR_CCBS="CCP")</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>For each subscriber (ParentOU + ChildOU), query CCP via GetPrepaidCreditInfoRequest with MSISDN and OrderChannel</td></tr>
+      <tr><td>R2</td><td>Per-subscriber idempotency: skip if Response[].ReferenceId == sub.RefId and CompletionStatus == 2</td></tr>
+      <tr><td>R3</td><td>Dynamic PreExecCheck: read XPath expression from ProcessConfig Activity.PreExecCheck; evaluate against subscriber XML fragment</td></tr>
+      <tr><td>R4</td><td>Parallel dispatch: sendEventImmediate per qualifying subscriber; RequestCount incremented per dispatch (not on resubmit)</td></tr>
+      <tr><td>R5</td><td>Response: parse CCP's queryUserProfileResponse PricePlanDtoList; filter plans with name starting "IPP_000O0_00_GRADING"</td></tr>
+      <tr><td>R6</td><td>For each matched grading plan: create SubscriberOffers concept (OfferName=PricePlanName, Action=Remove, FE_OR_CCBS=CCP) and append to subscriber.SubscriberOffers[]</td></tr>
+      <tr><td>R7</td><td>Fan-in: return "true" when RequestCount == Response@length</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td><strong>No try/catch in response RF:</strong> PricePlanDto parsing, subscriber lookup, and SubscriberOffers creation can all throw. A null subscriber or malformed CCP response would propagate uncaught, potentially corrupting BE state.</td><td><span class="badge badge-red">HIGH</span></td><td>Wrap the PricePlanDto processing loop in try/catch; add null-check logging for subscriber lookup failure</td></tr>
+      <tr><td><strong>Unconditional JMS headers:</strong> All headers (JMSPriority, JMSCorrelationID, OrderID, OrderType) are emitted without xsl:if guards. An empty OrderPriority emits empty <code>&lt;JMSPriority&gt;</code> which may cause downstream JMS issues if the broker requires a valid integer.</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Add conditional guards consistent with other FMs (e.g., SBM_CANCEL_PACK_PREPAID_NEXT pattern)</td></tr>
+      <tr><td><strong>Grading filter is a string prefix check:</strong> <code>String.startsWith("IPP_000O0_00_GRADING")</code> — if CCP introduces new grading plan codes with different prefixes, they won't be discovered. This is a hardcoded business rule buried in the response RF.</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Externalize the grading prefix to a global variable or BRMS rule; document the current prefix</td></tr>
+      <tr><td><strong>Schema/name mismatch:</strong> FM is named GET_PROFILE_FROM_CCP but uses GetPrepaidCreditInfoRequest schema. Debug comments reference old name CCP_GET_PREPAID_CREDIT_INFO. Causes confusion when tracing by FM name.</td><td><span class="badge badge-blue">LOW</span></td><td>Rename for consistency or update comments to reflect the current name</td></tr>
+      <tr><td><strong>XSLT index-based navigation:</strong> Passing array indices ($i, $j, $p, $q) as XSLT params ties the XSLT to concept array ordering. If the concept structure changes (e.g., array becomes a map), the XSLT breaks silently (accesses wrong subscriber).</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Prefer passing extracted values (MSISDN, RefId) as XSLT params rather than array indices</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Condensed)</div>
+  <div class="section-body">
+    <pre><code><span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.<span class="ty">Request_GET_PROFILE_FROM_CCP</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">then</span> {
+        <span class="kw">boolean</span> isActResub = (RequestCount &gt; <span class="nu">0</span> &amp;&amp; IsOrderResubmitted);
+        <span class="kw">try</span> {
+            Activity nextAct = Instance.<span class="fn">getByExtIdByUri</span>(NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="kw">int</span> iPOULen = ParentOU@length;
+            <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="kw">for</span>(<span class="kw">int</span> i = <span class="nu">0</span>; i &lt; iPOULen; i++) {
+                <span class="kw">for</span>(<span class="kw">int</span> j = <span class="nu">0</span>; j &lt; iSubscriberLen; j++) {
+                    <span class="kw">String</span> refId = ParentOU[i].Subscriber[j].RefId;
+                    <span class="cm">// Idempotency check on Response[]</span>
+                    <span class="kw">if</span>(!reqSuccess) {
+                        <span class="kw">String</span> chkRes = <span class="st">"true"</span>;
+                        <span class="kw">if</span>(nextAct.PreExecCheck.length &gt; <span class="nu">0</span>) {
+                            <span class="kw">String</span> sXML = GetXMLForSubscriber(orderRequest, refId);
+                            chkRes = XPath.execute(<span class="st">"/("+chkXPath+")"</span>, sXML, <span class="st">"ns0=..."</span>);
+                        }
+                        <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+                            <span class="cm">/* GET_PROFILE_FROM_CCP XSLT (params: $orderRequest, $i, $j) — see §9 */</span>
+                            Event.Ext.<span class="fn">sendEventImmediate</span>(reqEvent);
+                            <span class="kw">if</span>(AllowWriteLog(OrderType)) { <span class="cm">/* Logger XSLT audit */</span> }
+                            <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                            isSkipped = <span class="kw">false</span>;
+                        }
+                    }
+                }
+                <span class="cm">// ChildOU loop (GetXMLForSubscriberInChildOU, params: $i, $p, $q)</span>
+            }
+
+            <span class="kw">if</span>(!isSkipped) {
+                orderCurrentActivity.Status = GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+                SendDataToDB(orderRequest);
+            } <span class="kw">else</span> { SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>); }
+        } <span class="kw">catch</span>(<span class="ty">Exception</span> ae) { HandleActivityException(...); }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<!-- §19 -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule (Response_GET_PROFILE_FROM_CCP)</div>
+  <div class="section-body">
+    <h3>§19.1 — Overview</h3>
+    <p>The response RF does significantly more than just record the response — it is a <em>data enrichment step</em>. It: (1) records the standard ResponseBase, (2) looks up the Subscriber concept, (3) parses CCP's PricePlanDtoList to find grading plans, and (4) dynamically creates SubscriberOffers concepts for CCP_REMOVE_OFFER to consume.</p>
+    <p style="margin-top:8px;"><strong>Event type consumed:</strong> <code>Events.OMConsumers.OMXFM.Response.GET_PROFILE_FROM_CCP</code>.</p>
+
+    <h3 style="margin-top:16px;">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order context for subscriber lookup and audit</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.GET_PROFILE_FROM_CCP</code></td><td>CCP response event; carries ResponseCode, RefID, JMSCorrelationID, and nested queryUserProfileResponse payload</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity; Response[] written to; RequestCount for fan-in</td></tr>
+      <tr><td><code>subscriber</code></td><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>Resolved from working memory by extId; SubscriberOffers[] appended to</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§19.3 — ResponseBase Construction</h3>
+    <p><strong>extId:</strong> <code>"GPCIR:" + eventResponse.JMSCorrelationID + ":" + eventResponse.RefID</code></p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px;">§19.4 — Dynamic SubscriberOffers Creation (Grading Plans)</h3>
+    <p>For each CCP PricePlanDto where <code>String.startsWith(PricePlanName, "IPP_000O0_00_GRADING")</code>:</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span><span class="tree-cond">(Concepts.OrderRequest.OrderElements.SubscriberOffers)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object/@extId</span><span class="tree-arrow">←</span><span class="tree-src-static">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OfferName</span><span class="tree-arrow">←</span><span class="tree-src">$pp_name (PricePlanName from CCP)</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">Action</span><span class="tree-arrow">←</span><span class="tree-src-static">"Remove"</span><span class="badge badge-green">Always (static)</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ExtendedInfo</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">@extId</span><span class="tree-arrow">←</span><span class="tree-src-static">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Name</span><span class="tree-arrow">←</span><span class="tree-src-static">"FE_OR_CCBS"</span><span class="badge badge-green">Always (static)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Value</span><span class="tree-arrow">←</span><span class="tree-src-static">"CCP"</span><span class="badge badge-green">Always (static)</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:8px;">Appended: <code>subscriber.SubscriberOffers[subscriber.SubscriberOffers@length] = subscriberOfferConcept</code></p>
+
+    <h3 style="margin-top:16px;">§19.5 — Response Completion Logic</h3>
+    <table>
+      <tr><th>Step</th><th>Logic</th></tr>
+      <tr><td>Fan-in condition</td><td><code>if(currActivity.RequestCount == currActivity.Response@length)</code></td></tr>
+      <tr><td>Return "true"</td><td>All parallel requests have received a response — activity complete</td></tr>
+      <tr><td>Return "false"</td><td>Still waiting for responses from other subscribers</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§19.6 — Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td><code>OPERATION_NAME</code></td><td><code>"GET_PROFILE_FROM_CCP"</code> ✓</td></tr>
+      <tr><td><code>AUDIT_TRACE</code></td><td><code>"Response received for GET_PROFILE_FROM_CCP"</code> ✓</td></tr>
+      <tr><td>Gate</td><td><code>AllowWriteLog(OrderType)</code> — conditional</td></tr>
+      <tr><td><code>PROCESS_ID</code></td><td><code>concat($pid, "_RES")</code></td></tr>
+      <tr><td><code>payload</code></td><td>Full <code>$eventResponse</code> copy, gated on <code>WritePayload="true"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_GET_PROFILE_FROM_CCP</footer>
+</body>
+</html>

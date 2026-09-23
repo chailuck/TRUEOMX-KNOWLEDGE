@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_CREATE_TDS_PROFILE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px 24px;}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px;}
+.page-header .subtitle{font-size:0.95rem;opacity:0.85;margin-bottom:14px;}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px;}
+.chip{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:3px 12px;font-size:0.78rem;}
+.container{max-width:1280px;margin:0 auto;padding:24px 32px;}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:22px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:0.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);font-weight:600;padding:9px 12px;text-align:left;border-bottom:2px solid var(--true-red);}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:nth-child(even){background:#FDF5F5;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:0.82rem;border-left:3px solid var(--true-red);line-height:1.5;}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:0.85em;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600;}
+.b-green{background:#E8F5E9;color:var(--success);}
+.b-orange{background:#FFF3E0;color:var(--warning);}
+.b-blue{background:#E3F0FD;color:var(--info);}
+.b-purple{background:#F3E5F5;color:var(--skip);}
+.b-jms{background:#FFE0B2;color:#E65100;}
+.b-log{background:#F1F8E9;color:#558B2F;}
+.b-high{background:#FFE0E0;color:#B71C1C;}
+.b-medium{background:#FFF3E0;color:#E65100;}
+.b-low{background:#E8F5E9;color:#2E7D32;}
+.warn-box{background:#FFF8E1;border-left:4px solid #FFB300;padding:10px 14px;border-radius:4px;margin:10px 0;font-size:0.88rem;}
+.alert-box{background:#FFEBEE;border-left:4px solid #C62828;padding:10px 14px;border-radius:4px;margin:10px 0;font-size:0.88rem;}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);padding:10px 14px;border-radius:4px;margin:10px 0;font-size:0.88rem;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:6px 0 6px 36px;position:relative;border-bottom:1px dashed #f0e0e0;}
+.step-list li::before{content:counter(step);position:absolute;left:0;top:6px;background:var(--true-red);color:#fff;width:22px;height:22px;border-radius:50%;text-align:center;line-height:22px;font-size:0.75rem;font-weight:700;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}.tree-attr{color:#f9e2af;}.tree-arrow{color:#6c7086;margin:0 6px;}.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px;}.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px;}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px;}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.legend{display:flex;flex-wrap:wrap;gap:10px;padding:10px 0;font-size:0.8rem;}
+.legend-item{display:flex;align-items:center;gap:4px;}
+.legend-dot{width:10px;height:10px;border-radius:50%;display:inline-block;}
+footer{text-align:center;padding:24px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:8px;}
+h3{color:var(--true-dark);margin:14px 0 8px;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CREATE_TDS_PROFILE</h1>
+  <div class="subtitle">TIBCO BusinessEvents FM Logic — TDS Trade-in Contract Profile Creation (Two-Phase Offer Filtering)</div>
+  <div class="meta-chips">
+    <span class="chip">Priority: 5</span>
+    <span class="chip">ForwardChain: true</span>
+    <span class="chip">Backend: TDS (Trade-in Device Service)</span>
+    <span class="chip">Dispatch: sendEventImmediate (parallel)</span>
+    <span class="chip">Fan-out: Per-subscriber (2-phase offer filter)</span>
+    <span class="chip">Fan-in: UNCONDITIONAL return "true"</span>
+    <span class="chip">Author: warawich-nb</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This rule creates TDS (Trade-in Device Service) profiles for subscribers that have active trade-in contracts. It applies a <strong>two-phase offer selection algorithm</strong>: first identifying parent offers with valid TR contract data, then expanding to their related offers where <code>TR_CONTRACT_IND=Y</code>. One <code>CREATE_TDS_PROFILE</code> event is dispatched per subscriber (carrying the full array of qualifying offers).</p>
+    <p style="margin-top:10px;">Unlike SBM FMs which process one offer at a time (IntraActivitySequencing), this FM dispatches all subscriber events in parallel via <code>Event.Ext.sendEventImmediate</code> and uses <code>RequestCount++</code> for fan-in tracking — but the response rulefunction always returns <code>"true"</code> unconditionally, breaking the fan-in logic.</p>
+    <div class="alert-box"><strong>Critical [HIGH] — Unconditional Response Fan-in:</strong> The response rulefunction always returns <code>"true"</code> immediately without checking <code>currActivity.RequestCount == successResponseCount</code>. If 3 subscribers trigger 3 dispatches (RequestCount=3), the activity advances to the next step on the FIRST response, ignoring the remaining 2 responses. Fix: Add fan-in check identical to other FMs.</div>
+    <div class="warn-box"><strong>Dead Variable — bussinessLine (typo) [MEDIUM]:</strong> <code>String bussinessLine = "MOBILE";</code> is declared at line 25 but never used. The XSLT uses <code>$ouId</code> (the ParentOU.OUId) as the <code>businessLine</code> event field — not "MOBILE".</div>
+    <div class="warn-box"><strong>Empty COU Loop [MEDIUM]:</strong> Lines 201–208 iterate ChildOU subscribers but the loop body is empty. COU subscribers receive no TDS profile creation.</div>
+    <div class="warn-box"><strong>System.debugOut in Production [LOW]:</strong> Multiple <code>System.debugOut</code> calls remain uncommitted at lines 114, 120, 121, 130, 131 — these will produce console output in production.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CREATE_TDS_PROFILE</code></td></tr>
+      <tr><td>Author</td><td>warawich-nb</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Target backend</td><td>TDS — Trade-in Device Service (TDS Profile API)</td></tr>
+      <tr><td>Request event type</td><td><code>Events.OMConsumers.OMXFM.Request.CREATE_TDS_PROFILE</code></td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.CREATE_TDS_PROFILE</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CreateTDSProfileRes</code> (not ResponseBase or SBM_DoServiceRes)</td></tr>
+      <tr><td>Dispatch method</td><td><code>Event.Ext.sendEventImmediate</code> (parallel)</td></tr>
+      <tr><td>Fan-out granularity</td><td>Per subscriber (one event carrying full qualifying offers array)</td></tr>
+      <tr><td>Fan-in mechanism</td><td>Response rulefunction always returns "true" — unconditional [HIGH BUG]</td></tr>
+      <tr><td>RequestCount tracking</td><td><code>orderCurrentActivity.RequestCount++</code> — only if <code>!isActResub</code></td></tr>
+      <tr><td>Offer selection phase 1</td><td>Parent SubscriberOffers with ORIGINAL_TR_CONTRACT_TERM &gt; 0, valid ORIG_CONTRACT_EXPIRE_DATE, ORIGINAL_TR_CONTRACT_FEE &gt; 0</td></tr>
+      <tr><td>Offer selection phase 2</td><td>RelatedOffersArray where TR_CONTRACT_IND=Y, not duplicate, TR_CONTRACT_TERM &gt; 0, valid TR_ORIG_CONTRACT_EXPIRE_DATE, TR_CONTRACT_FEE &gt; 0</td></tr>
+      <tr><td>Resubmit skip key</td><td><code>subscriber.RefId</code> only (not composite) — may be too broad</td></tr>
+      <tr><td>COU support</td><td>Empty loop — no COU subscriber processing</td></tr>
+      <tr><td>Audit log gate</td><td>Unconditional</td></tr>
+      <tr><td>Skip trigger</td><td>No qualifying subscribers → SkipActivity("4")</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Declared Objects -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order; subscriber and offer data</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current process step; Response[], Status, RequestCount</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Matches activity to order's next step</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CREATE_TDS_PROFILE"</code></td><td>FM identity</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CREATE_TDS_PROFILE"</code></td><td>ProcessFlow routing</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity must be waiting</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li>Compute <code>isActResub</code>; if true → <code>PurgePendingRequestsBeforeResubmit</code>; declare dead variable <code>bussinessLine="MOBILE"</code></li>
+      <li><strong>POU loop</strong>: iterate ParentOU[i]</li>
+      <li>Build <code>ouName</code> (dead variable) from CustomerName.FirstName+LastName; read <code>ouId = ParentOU[i].OUId</code></li>
+      <li><strong>Subscriber loop</strong>: iterate ParentOU[i].Subscriber[j]</li>
+      <li>Read <code>account_refId = subscriber.AccountRefId</code></li>
+      <li><strong>Phase 1 — Offer loop</strong>: iterate SubscriberOffers[o]</li>
+      <li>Read FE_OR_CCBS filter; compute <code>chkTR_CONTRACT_TERM</code>, <code>chkTR_ORIG_CONTRACT_EXPIRE_DATE</code>, <code>TR_CONTRACT_FEE</code>; parse <code>expDateCal</code> from ORIG_CONTRACT_EXPIRE_DATE</li>
+      <li>Resubmit skip: <code>Response[ReferenceId==subscriber.RefId and CompletionStatus==2]</code></li>
+      <li>If <code>!reqSuccess AND chkTR_CONTRACT_TERM AND logicalDate &lt; expDateCal AND TR_CONTRACT_FEE &gt; 0</code>: run PreExecCheck; if true → add offer to <code>addSubOffers</code></li>
+      <li><strong>Phase 2 — Related Offer loop</strong>: for each qualifying parent offer, iterate its RelatedOffersArray</li>
+      <li>Skip if TR_CONTRACT_IND=Y not in SocProperties; skip duplicates via iterator scan of addSubOffers</li>
+      <li>Check <code>relate_chkTR_CONTRACT_TERM</code>, <code>relate_TR_ORIG_CONTRACT_EXPIRE_DATE</code>, <code>relate_TR_CONTRACT_FEE</code> from ParameterInfo</li>
+      <li>If <code>!relate_reqSuccess AND relate_chkTR_CONTRACT_TERM AND relate_logicalDate &lt; relate_expDateCal AND relate_TR_CONTRACT_FEE &gt; 0</code>: map relateOffer to SubscriberOffers concept → add to addSubOffers</li>
+      <li><strong>Dispatch</strong>: if <code>addSubOffersArray.length &gt; 0</code> → create &amp; <code>sendEventImmediate</code> CREATE_TDS_PROFILE event; <code>RequestCount++</code> (if !isActResub)</li>
+      <li>Emit audit log (unconditional)</li>
+      <li><strong>COU loop</strong>: iterate ChildOU subscribers — empty body (stub)</li>
+      <li>Status="1", SendDataToDB; or SkipActivity("4")</li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 Two-Phase Filtering -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Two-Phase Offer Filtering Detail</div>
+  <div class="section-body">
+
+    <h3>Phase 1 — Parent SubscriberOffers Filter</h3>
+    <table>
+      <tr><th>Condition</th><th>Source / XPath</th><th>Purpose</th></tr>
+      <tr><td>!reqSuccess</td><td><code>Response[ReferenceId==subscriber.RefId and CompletionStatus==2]</code></td><td>Resubmit skip (subscriber-level key)</td></tr>
+      <tr><td>chkTR_CONTRACT_TERM</td><td><code>exists($subOff/ExtendedInfo[Name="ORIGINAL_TR_CONTRACT_TERM"]) and value &gt; 0</code></td><td>Has a valid TR contract term</td></tr>
+      <tr><td>logicalDate &lt; expDateCal</td><td><code>ORIGINAL_TR_ORIG_CONTRACT_EXPIRE_DATE</code> parsed as <code>yyyy-MM-dd'T'HH:mm:ss</code></td><td>Contract not yet expired</td></tr>
+      <tr><td>TR_CONTRACT_FEE &gt; 0</td><td><code>$subOff/ExtendedInfo[Name="ORIGINAL_TR_CONTRACT_FEE"]/Value</code></td><td>Has a positive contract fee</td></tr>
+      <tr><td>PreExecCheck</td><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo(..., filter)</code></td><td>FE_OR_CCBS-gated eligibility check</td></tr>
+    </table>
+    <div class="info-box">If <code>ORIGINAL_TR_ORIG_CONTRACT_EXPIRE_DATE</code> is present but its date string cannot be split at positions 0–10 / 11–end, the offer loop hits a <code>continue</code> statement (skips the offer silently).</div>
+
+    <h3 style="margin-top:14px;">Phase 2 — RelatedOffersArray Filter</h3>
+    <table>
+      <tr><th>Condition</th><th>Source</th><th>Purpose</th></tr>
+      <tr><td>TR_CONTRACT_IND=Y in SocProperties</td><td><code>contains($relateOffer/SocProperties, 'TR_CONTRACT_IND=Y')</code></td><td>Related offer is a TR contract offer</td></tr>
+      <tr><td>Not duplicate in addSubOffers</td><td>Iterator scan — <code>itrSubOffer.OfferName == relateOffer.OfferName</code></td><td>Prevents adding same offer twice</td></tr>
+      <tr><td>relate_chkTR_CONTRACT_TERM</td><td><code>exists($relateOffer/ParameterInfo[ParamName="TR_CONTRACT_TERM"]) and ValuesArray &gt; 0</code></td><td>Related offer has TR contract term</td></tr>
+      <tr><td>relate_logicalDate &lt; relate_expDateCal</td><td><code>TR_ORIG_CONTRACT_EXPIRE_DATE ParameterInfo</code> parsed</td><td>Related contract not expired</td></tr>
+      <tr><td>relate_TR_CONTRACT_FEE &gt; 0</td><td><code>TR_CONTRACT_FEE ParameterInfo ValuesArray</code>; fallback: <code>CONTRACT_FEE ParameterInfo</code></td><td>Positive fee — two-key lookup</td></tr>
+      <tr><td>No PreExecCheck (commented out)</td><td>Lines 162–165 in source — disabled</td><td>Related offer PreExecCheck is commented out</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">RelatedOffer → SubscriberOffers Mapping</h3>
+    <p>When a related offer qualifies, it is mapped to a <code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code> concept via <code>Instance.createInstance</code> XSLT. Fields mapped:</p>
+    <table>
+      <tr><th>Target field</th><th>Source</th></tr>
+      <tr><td>OfferName</td><td><code>$relateOffer/OfferName</code></td></tr>
+      <tr><td>Soc</td><td><code>$relateOffer/Soc</code></td></tr>
+      <tr><td>OfferInstanceId</td><td><code>$relateOffer/OfferInstanceId</code></td></tr>
+      <tr><td>ParameterInfo[] (all)</td><td><code>$relateOffer/ParameterInfo</code> — clones each with ParamName, ValuesArray, EffectiveDate, ExpirationDate, OfferInstanceId, ExtendedInfo</td></tr>
+      <tr><td>ExtendedInfo[] (all)</td><td><code>$relateOffer/ExtendedInfo</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Notes</th></tr>
+      <tr><td>bussinessLine (dead)</td><td><code>"MOBILE"</code> (static)</td><td>Declared but NEVER used — typo in var name [MEDIUM]</td></tr>
+      <tr><td>ouName (dead)</td><td><code>CustomerName.FirstName + " " + LastName</code></td><td>Built but NEVER passed to XSLT [LOW]</td></tr>
+      <tr><td>ouId</td><td><code>orderRequest.OrderData.Customer.ParentOU[i].OUId</code></td><td>Passed as $ouId → used as <code>businessLine</code> in event</td></tr>
+      <tr><td>refId</td><td><code>subscriber.RefId</code></td><td>RefID in JMS header; resubmit skip key</td></tr>
+      <tr><td>account_refId</td><td><code>subscriber.AccountRefId</code></td><td>Used to look up Account[RefId=$account_refId]/AccountID in XSLT</td></tr>
+      <tr><td>addSubOffersArray</td><td>ArrayList built from Phase 1 + Phase 2 qualifying offers</td><td>Passed to XSLT as array param; iterated in payload</td></tr>
+      <tr><td>ORIGINAL_TR_CONTRACT_TERM</td><td><code>subOff/ExtendedInfo[Name="ORIGINAL_TR_CONTRACT_TERM"]/Value</code></td><td>Phase 1 gate: must exist and &gt; 0</td></tr>
+      <tr><td>ORIGINAL_TR_ORIG_CONTRACT_EXPIRE_DATE</td><td><code>subOff/ExtendedInfo[Name="ORIGINAL_TR_ORIG_CONTRACT_EXPIRE_DATE"]/Value</code></td><td>Phase 1: parsed to DateTime; must be future</td></tr>
+      <tr><td>ORIGINAL_TR_CONTRACT_FEE</td><td><code>subOff/ExtendedInfo[Name="ORIGINAL_TR_CONTRACT_FEE"]/Value</code></td><td>Phase 1 gate: &gt; 0; also used in XSLT ns:type</td></tr>
+      <tr><td>relate_TR_CONTRACT_TERM</td><td><code>relateOffer/ParameterInfo[ParamName="TR_CONTRACT_TERM"]/ValuesArray</code></td><td>Phase 2 gate: must exist and &gt; 0</td></tr>
+      <tr><td>relate_TR_ORIG_CONTRACT_EXPIRE_DATE</td><td><code>relateOffer/ParameterInfo[ParamName="TR_ORIG_CONTRACT_EXPIRE_DATE"]/ValuesArray</code></td><td>Phase 2: parsed to DateTime; must be future</td></tr>
+      <tr><td>relate_TR_CONTRACT_FEE</td><td><code>relateOffer/ParameterInfo[ParamName="TR_CONTRACT_FEE"]/ValuesArray</code> or <code>CONTRACT_FEE</code></td><td>Phase 2 gate: &gt; 0; two-key lookup</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3>§8.1 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Dispatch</th></tr>
+      <tr><td><span class="badge b-jms">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.CREATE_TDS_PROFILE</code></td><td><code>Event.Ext.sendEventImmediate</code> (parallel)</td></tr>
+      <tr><td><span class="badge b-log">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td><code>Event.Ext.sendEventImmediate</code> — unconditional</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§8.2 — Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>API</th><th>Schema NS</th></tr>
+      <tr><td>TDS (Trade-in Device Service)</td><td>getContractDetail / searchList</td><td><code>http://services.omx.truecorp.co.th/OSBGetOfferReferenceRequest</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§8.3 — ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Name</th><th>Level</th><th>Required/Optional</th><th>Where Used</th></tr>
+      <tr><td>FE_OR_CCBS</td><td>Offer</td><td>Optional</td><td>Phase 1 filter → passed to PreExecCheck helper</td></tr>
+      <tr><td>ORIGINAL_TR_CONTRACT_TERM</td><td>Offer</td><td>Required for phase 1</td><td>Phase 1 gate: must exist and value &gt; 0</td></tr>
+      <tr><td>ORIGINAL_TR_ORIG_CONTRACT_EXPIRE_DATE</td><td>Offer</td><td>Required for phase 1</td><td>Phase 1 gate: expiry date future check</td></tr>
+      <tr><td>ORIGINAL_TR_CONTRACT_FEE</td><td>Offer</td><td>Required for phase 1</td><td>Phase 1 gate: &gt; 0; also used in XSLT ns:type field</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§8.4 — ParameterInfo Fields (Related Offers)</h3>
+    <table>
+      <tr><th>ParamName</th><th>Required/Optional</th><th>Where Used</th></tr>
+      <tr><td>TR_CONTRACT_TERM</td><td>Required for phase 2</td><td>Phase 2 gate: &gt; 0</td></tr>
+      <tr><td>TR_ORIG_CONTRACT_EXPIRE_DATE</td><td>Required for phase 2</td><td>Phase 2 gate: expiry date future check</td></tr>
+      <tr><td>TR_CONTRACT_FEE</td><td>Required for phase 2 (or CONTRACT_FEE fallback)</td><td>Phase 2 gate: &gt; 0</td></tr>
+      <tr><td>CONTRACT_FEE</td><td>Fallback for TR_CONTRACT_FEE</td><td>Phase 2 gate when TR_CONTRACT_FEE absent</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3>§9.1 — XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>XSLT Param</th><th>Bound From</th><th>Notes</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest concept</td><td>Root order</td></tr>
+      <tr><td><code>$refId</code></td><td>subscriber.RefId</td><td>RefID in JMS header</td></tr>
+      <tr><td><code>$subscriber</code></td><td>Subscriber concept</td><td>MSISDN, ResourceInfo[IMSI/SIM/MSISDN], AccountRefId</td></tr>
+      <tr><td><code>$ouId</code></td><td>ParentOU[i].OUId</td><td>Used as <code>businessLine</code> event field</td></tr>
+      <tr><td><code>$account_refId</code></td><td>subscriber.AccountRefId</td><td>Used to look up accountId in XSLT</td></tr>
+      <tr><td><code>$addSubOffersArray</code></td><td>Array of qualifying SubscriberOffers (Phase 1 + 2)</td><td>Iterated in ns:searchList</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§9.2 — Event Header Fields (Extended — Unique to CREATE_TDS_PROFILE)</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>JMSPriority</td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional</td></tr>
+      <tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional</td></tr>
+      <tr><td>OrderID</td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional</td></tr>
+      <tr><td><strong>RefID</strong></td><td><code>$refId</code> (subscriber.RefId)</td><td><strong>Always</strong></td></tr>
+      <tr><td>OrderType</td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional</td></tr>
+      <tr><td><strong>CES</strong></td><td><code>$orderRequest/OrderData/CES</code></td><td>Conditional — unique to TDS events</td></tr>
+      <tr><td><strong>primResourceValue</strong></td><td><code>$subscriber/MSISDN</code></td><td>Conditional</td></tr>
+      <tr><td><strong>businessLine</strong></td><td><code>$ouId</code> (ParentOU.OUId — NOT "MOBILE")</td><td><strong>Always</strong></td></tr>
+      <tr><td><strong>IMSI</strong></td><td><code>$subscriber/ResourceInfo[ResourceName='IMSI']/ValuesArray</code></td><td>Conditional</td></tr>
+      <tr><td><strong>SIM</strong></td><td><code>$subscriber/ResourceInfo[ResourceName='SIM']/ValuesArray</code></td><td>Conditional</td></tr>
+      <tr><td><strong>MSISDN</strong></td><td><code>$subscriber/ResourceInfo[ResourceName='MSISDN']/ValuesArray</code></td><td>Conditional</td></tr>
+      <tr><td><strong>OperatorId</strong></td><td><code>$orderRequest/OrderData/OperatorId</code></td><td>Conditional</td></tr>
+      <tr><td><strong>dealerCode</strong></td><td><code>$orderRequest/OrderData/DealerCode</code></td><td>Conditional</td></tr>
+      <tr><td><strong>ActvCode</strong></td><td><code>$subscriber/SubscriberActivityInfo/ActivityReason</code></td><td>Conditional</td></tr>
+      <tr><td><strong>channel</strong></td><td><code>$orderRequest/OrderData/Channel</code></td><td>Conditional</td></tr>
+      <tr><td><strong>subscriberNumber</strong></td><td><code>$subscriber/SubscriberId</code></td><td>Conditional</td></tr>
+      <tr><td><strong>customerType</strong></td><td><code>$orderRequest/OrderData/Customer/CustomerTypeInfo/Type</code></td><td>Conditional</td></tr>
+      <tr><td><strong>accountId</strong></td><td><code>$orderRequest/OrderData/Customer/Account[$account_refId=RefId]/AccountID</code></td><td><strong>Always</strong></td></tr>
+      <tr><td><strong>language</strong></td><td><code>$subscriber/SubscriberGeneralInfo/Language</code></td><td>Conditional</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§9.3 — Payload: ns:getContractDetail/ns:searchList</h3>
+    <p>Iterates <code>$addSubOffersArray/elements</code>. For each offer element:</p>
+    <table>
+      <tr><th>Field</th><th>Logic</th></tr>
+      <tr><td><code>ns:type</code></td><td>If <code>subscriber/SubscriberOffers[OfferName=current()/OfferName]/ExtendedInfo[ORIGINAL_TR_CONTRACT_FEE]/Value</code> has length &gt; 0 → <code>concat(OfferName, ',', that_fee)</code>; else → <code>concat(OfferName, ',', RelatedOffersArray[OfferName=current()]/ParameterInfo[TR_CONTRACT_FEE]/ValuesArray)</code></td></tr>
+      <tr><td><code>ns:value</code></td><td><code>Soc</code> (conditional: if present)</td></tr>
+      <tr><td><code>ns:offerInstanceId</code></td><td><code>OfferInstanceId</code> (conditional: if present)</td></tr>
+    </table>
+    <div class="info-box">The <code>ns:type</code> field is a composite string: <code>"OfferName,ContractFee"</code>. It first tries ORIGINAL_TR_CONTRACT_FEE (from parent offer's ExtendedInfo); if empty, falls back to RelatedOffersArray TR_CONTRACT_FEE (for Phase 2 related offers).</div>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;overflow-x:auto;">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId</span> (subscriber.RefId) <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">primResourceValue</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/MSISDN</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">businessLine</span><span class="tree-arrow">←</span><span class="tree-src">$ouId</span> (ParentOU.OUId) <span class="badge b-green">Always</span> <span class="tree-cond">NOT the "MOBILE" variable!</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">IMSI</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/ResourceInfo[IMSI]/ValuesArray</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">SIM</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/ResourceInfo[SIM]/ValuesArray</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">MSISDN</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/ResourceInfo[MSISDN]/ValuesArray</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OperatorId</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OperatorId</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">dealerCode</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/DealerCode</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ActvCode</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberActivityInfo/ActivityReason</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">channel</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Channel</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">subscriberNumber</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberId</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">customerType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/CustomerTypeInfo/Type</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">accountId</span><span class="tree-arrow">←</span><span class="tree-src">Customer/Account[$account_refId=RefId]/AccountID</span> <span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">language</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberGeneralInfo/Language</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-tag">ns:getContractDetail</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-tag">ns:searchList</span></div>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-tag">ns:searchInfoArray</span> <span class="tree-cond">xsl:for-each $addSubOffersArray/elements</span></div>
+                              <ul>
+                                <li><div class="tree-row"><span class="tree-tag">ns:type</span><span class="tree-arrow">←</span><span class="tree-src">concat(OfferName, ',', ORIGINAL_TR_CONTRACT_FEE or RelatedOffer TR_CONTRACT_FEE)</span> <span class="badge b-green">Always</span></div></li>
+                                <li><div class="tree-row"><span class="tree-tag">ns:value</span><span class="tree-arrow">←</span><span class="tree-src">Soc</span> <span class="badge b-orange">Conditional</span></div></li>
+                                <li><div class="tree-row"><span class="tree-tag">ns:offerInstanceId</span><span class="tree-arrow">←</span><span class="tree-src">OfferInstanceId</span> <span class="badge b-orange">Conditional</span></div></li>
+                              </ul>
+                            </li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="legend">
+      <div class="legend-item"><span class="legend-dot" style="background:#a6e3a1;"></span>XPath source</div>
+      <div class="legend-item"><span class="legend-dot" style="background:#fab387;"></span>Static literal</div>
+      <div class="legend-item"><span class="badge b-green">Always</span>Unconditional</div>
+      <div class="legend-item"><span class="badge b-orange">Conditional</span>xsl:if</div>
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Phase</th><th>Field</th><th>Value</th></tr>
+      <tr><td>Request</td><td>OPERATION_NAME</td><td>"CREATE_TDS_PROFILE"</td></tr>
+      <tr><td>Request</td><td>AUDIT_TRACE</td><td>"Request Sent for CREATE_TDS_PROFILE"</td></tr>
+      <tr><td>Request</td><td>payload</td><td>Conditional: WritePayload="true"</td></tr>
+      <tr><td>Response</td><td>AUDIT_TRACE</td><td>"Response received for CREATE_TDS_PROFILE"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Transition</th><th>Code</th><th>Trigger</th></tr>
+      <tr><td>Running</td><td>"1"</td><td>At least one subscriber event dispatched</td></tr>
+      <tr><td>Skip</td><td>"4"</td><td>No qualifying subscribers (isSkipped=true)</td></tr>
+      <tr><td>Error</td><td>HandleActivityException</td><td>Any uncaught exception</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <p><code>try { ... } catch (Exception ae) { HandleActivityException(...); }</code></p>
+  </div>
+</div>
+
+<!-- §14 Helpers -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)</code></td><td>Clears pending events on resubmission (called even though IntraActivitySequencing is NOT used for dispatch)</td></tr>
+      <tr><td><code>BRMS.IsBlank(str)</code></td><td>Null/blank check for CustomerName</td></tr>
+      <tr><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, refId, soc, filter)</code></td><td>Builds Phase 1 PreExecCheck XML</td></tr>
+      <tr><td><code>Collections.List.createArrayList()</code></td><td>Creates ArrayList for collecting qualifying offers</td></tr>
+      <tr><td><code>Collections.add(list, item)</code></td><td>Appends offer to ArrayList</td></tr>
+      <tr><td><code>Collections.toArray(list)</code></td><td>Converts ArrayList to array</td></tr>
+      <tr><td><code>Collections.size(list)</code></td><td>Gets ArrayList size for duplicate check</td></tr>
+      <tr><td><code>Collections.iterator(list)</code></td><td>Creates iterator for duplicate scan</td></tr>
+      <tr><td><code>Collections.Iterator.hasNext(iter)</code></td><td>Iterator advancement for duplicate check</td></tr>
+      <tr><td><code>Collections.Iterator.next(iter)</code></td><td>Gets next offer from iterator</td></tr>
+      <tr><td><code>DateTime.now()</code></td><td>Gets current date for expiry comparison</td></tr>
+      <tr><td><code>DateTime.before(d1, d2)</code></td><td>Checks d1 &lt; d2 (logicalDate before expDateCal)</td></tr>
+      <tr><td><code>DateTime.parseString(str, pattern)</code></td><td>Parses ISO date string to DateTime</td></tr>
+      <tr><td><code>String.substring(str, start, end)</code></td><td>Splits date+time from ORIG_CONTRACT_EXPIRE_DATE string</td></tr>
+      <tr><td><code>Instance.createInstance(xslt)</code></td><td>Maps RelatedOffer to SubscriberOffers concept</td></tr>
+      <tr><td><code>GetActivityStatusString("1", false)</code></td><td>Returns "Running" status</td></tr>
+      <tr><td><code>SendDataToDB(orderRequest)</code></td><td>Persists state</td></tr>
+      <tr><td><code>SkipActivity(..., "4")</code></td><td>Skip handler</td></tr>
+      <tr><td><code>HandleActivityException(...)</code></td><td>Central exception handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><span class="st">Request_CREATE_TDS_PROFILE.rule</span>
+├── isActResub check
+│   └── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity) [if isActResub]
+├── bussinessLine = "MOBILE"  [DEAD VARIABLE — never used]
+│
+├── [POU loop: ParentOU[i]]
+│   ├── ouName = FirstName + " " + LastName  [DEAD VARIABLE — never used]
+│   ├── ouId = ParentOU[i].OUId
+│   ├── [Subscriber loop: Subscriber[j]]
+│   │   ├── account_refId = subscriber.AccountRefId
+│   │   ├── addSubOffers = Collections.List.createArrayList()
+│   │   │
+│   │   ├── [Phase 1 — Offer loop: SubscriberOffers[o]]
+│   │   │   ├── filter = XPath(ExtendedInfo[FE_OR_CCBS]/Value)
+│   │   │   ├── chkTR_CONTRACT_TERM = XPath(exists + value > 0)
+│   │   │   ├── chkTR_ORIG_CONTRACT_EXPIRE_DATE = XPath(count > 0)
+│   │   │   ├── TR_ORIG_CONTRACT_EXPIRE_DATE = XPath(ExtendedInfo value)
+│   │   │   ├── TR_CONTRACT_FEE = XPath(ExtendedInfo value)
+│   │   │   ├── expDateCal = DateTime.parseString(ORIG_CONTRACT_EXPIRE_DATE, "yyyy-MM-dd'T'HH:mm:ss")
+│   │   │   ├── reqSuccess check: Response[ReferenceId==subscriber.RefId and CompletionStatus==2]
+│   │   │   ├── [if !reqSuccess AND chkTR_CONTRACT_TERM AND logicalDate < expDateCal AND TR_CONTRACT_FEE > 0]
+│   │   │   │   ├── GetXMLForSubscriberOfferFilterWithExtendedInfo(...)
+│   │   │   │   └── Collections.add(addSubOffers, subOff)  [if chkRes=="true"]
+│   │   │   │
+│   │   │   └── [Phase 2 — RelatedOffersArray loop: per qualifying parent offer → relateOffer[k]]
+│   │   │       ├── if NOT contains(SocProperties, "TR_CONTRACT_IND=Y") → continue
+│   │   │       ├── duplicatePropo check via Collections.iterator scan (O(n²))
+│   │   │       ├── relate_chkTR_CONTRACT_TERM = XPath(ParameterInfo[TR_CONTRACT_TERM] > 0)
+│   │   │       ├── relate_TR_ORIG_CONTRACT_EXPIRE_DATE = XPath(ParameterInfo[TR_ORIG_CONTRACT_EXPIRE_DATE])
+│   │   │       ├── relate_TR_CONTRACT_FEE = XPath(ParameterInfo[TR_CONTRACT_FEE] or CONTRACT_FEE)
+│   │   │       ├── relate_expDateCal = DateTime.parseString(...)
+│   │   │       ├── relate_reqSuccess check: Response[ReferenceId==subscriber.RefId and CompletionStatus==2]
+│   │   │       ├── [if !relate_reqSuccess AND all conditions met]
+│   │   │       │   ├── Instance.createInstance(relateOffer → SubscriberOffers XSLT mapping)
+│   │   │       │   └── Collections.add(addSubOffers, subOff4RelateOff)
+│   │   │
+│   │   ├── addSubOffersArray = Collections.toArray(addSubOffers)
+│   │   ├── [if addSubOffersArray.length > 0]
+│   │   │   ├── Event.createEvent(CREATE_TDS_PROFILE XSLT — see §9)
+│   │   │   ├── Event.Ext.sendEventImmediate(reqEvent)
+│   │   │   ├── if(!isActResub): orderCurrentActivity.RequestCount++
+│   │   │   └── Event.Ext.sendEventImmediate(audit Logger)
+│   │
+│   └── [COU loop — EMPTY STUB]
+│
+├── GetActivityStatusString("1", false)
+├── SendDataToDB(orderRequest)
+├── SkipActivity(...)
+└── HandleActivityException(...)</pre>
+  </div>
+</div>
+
+<!-- §16 Concepts -->
+<div class="section">
+  <div class="section-header">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Key Properties Used</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>OrderData.OMXTrackingId, OrderData.OrderID, OrderData.OrderType, OrderData.CES, OrderData.OperatorId, OrderData.DealerCode, OrderData.Channel, OrderData.Customer (CustomerName, CustomerTypeInfo, Account, ParentOU)</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>RefId, AccountRefId, SubscriberId, MSISDN, ResourceInfo[IMSI, SIM, MSISDN], SubscriberActivityInfo.ActivityReason, SubscriberGeneralInfo.Language, SubscriberOffers[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>Soc, OfferName, OfferInstanceId, ExtendedInfo[FE_OR_CCBS, ORIGINAL_TR_CONTRACT_TERM, ORIGINAL_TR_ORIG_CONTRACT_EXPIRE_DATE, ORIGINAL_TR_CONTRACT_FEE], RelatedOffersArray[]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.RelatedOffersArray</code></td><td>OfferName, Soc, OfferInstanceId, SocProperties (TR_CONTRACT_IND=Y check), ParameterInfo[TR_CONTRACT_TERM, TR_ORIG_CONTRACT_EXPIRE_DATE, TR_CONTRACT_FEE, CONTRACT_FEE]</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>ActivityID, Status, RequestCount, Response[], PreExecCheck</td></tr>
+      <tr><td><code>Concepts.FM.Response.CreateTDSProfileRes</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId (uses @Id not @extId!)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>#</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Create TDS profiles for POU subscribers that have trade-in contracts with future expiry and positive fee</td></tr>
+      <tr><td>R2</td><td>Phase 1: filter SubscriberOffers by ORIGINAL_TR_CONTRACT_TERM, ORIGINAL_TR_ORIG_CONTRACT_EXPIRE_DATE (future), ORIGINAL_TR_CONTRACT_FEE &gt; 0</td></tr>
+      <tr><td>R3</td><td>Phase 2: expand to RelatedOffersArray where TR_CONTRACT_IND=Y, not duplicate, TR_CONTRACT_TERM ParameterInfo &gt; 0, expiry future, TR_CONTRACT_FEE (or CONTRACT_FEE) &gt; 0</td></tr>
+      <tr><td>R4</td><td>Map qualifying related offers to SubscriberOffers concept for inclusion in event payload</td></tr>
+      <tr><td>R5</td><td>Dispatch one event per subscriber (carrying all qualifying offers) via parallel sendEventImmediate</td></tr>
+      <tr><td>R6</td><td>ns:type = concat(OfferName, ',', TR_CONTRACT_FEE); ns:value = Soc; ns:offerInstanceId = OfferInstanceId</td></tr>
+    </table>
+    <h3 style="margin-top:14px;">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Response fan-in unconditionally returns "true" — activity advances on first subscriber response regardless of RequestCount</td><td><span class="badge b-high">[HIGH]</span></td><td>Add RequestCount/successResponseCount fan-in logic identical to MCS_CANCEL_SUBSCRIPTION or SBM FMs</td></tr>
+      <tr><td>Empty COU subscriber loop — no TDS profile created for COU subscribers</td><td><span class="badge b-medium">[MEDIUM]</span></td><td>Implement COU loop with same two-phase filtering; verify with business if COU TDS is in scope</td></tr>
+      <tr><td><code>bussinessLine</code> dead variable (typo: "bussiness") — businessLine in XSLT actually uses $ouId</td><td><span class="badge b-medium">[MEDIUM]</span></td><td>Remove dead variable; if "MOBILE" should ever be sent, fix XSLT param binding</td></tr>
+      <tr><td>Resubmit skip keyed by subscriber.RefId only — if one offer succeeds, ALL offers for that subscriber are skipped</td><td><span class="badge b-medium">[MEDIUM]</span></td><td>Use a more specific composite key if per-offer retry granularity is needed</td></tr>
+      <tr><td>CreateTDSProfileRes uses <code>@Id</code> attribute instead of standard <code>@extId</code></td><td><span class="badge b-medium">[MEDIUM]</span></td><td>Verify if <code>CreateTDSProfileRes</code> concept definition maps <code>Id</code> as its extId; fix to <code>@extId</code> if not intentional</td></tr>
+      <tr><td>Multiple <code>System.debugOut</code> left in production code (lines 114, 120, 121, 130, 131)</td><td><span class="badge b-low">[LOW]</span></td><td>Remove all System.debugOut calls before production deployment</td></tr>
+      <tr><td>Commented-out related offer PreExecCheck (lines 162–165)</td><td><span class="badge b-low">[LOW]</span></td><td>Clarify if this was intentionally disabled; remove dead code</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Request Rule — abbreviated)</div>
+  <div class="section-body">
+    <pre><span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_CREATE_TDS_PROFILE</span> {
+  <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+  <span class="kw">declare</span> {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="st">"CREATE_TDS_PROFILE"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="st">"CREATE_TDS_PROFILE"</span>;
+    orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="ty">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">try</span> {
+      <span class="ty">String</span> bussinessLine = <span class="st">"MOBILE"</span>;  <span class="cm">// DEAD VARIABLE — typo, never used</span>
+      <span class="kw">if</span>(isActResub) { IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity); }
+      <span class="kw">for</span> (POU loop) {
+        ouName = FirstName + <span class="st">" "</span> + LastName;  <span class="cm">// DEAD VARIABLE — never used</span>
+        ouId = ParentOU[i].OUId;
+        <span class="kw">for</span> (Subscriber loop) {
+          addSubOffers = Collections.List.createArrayList();
+          <span class="cm">// Phase 1: filter parent offers by TR contract data</span>
+          <span class="kw">for</span> (SubscriberOffers[o]) {
+            <span class="cm">/* check chkTR_CONTRACT_TERM, expDateCal, TR_CONTRACT_FEE > 0, PreExecCheck */</span>
+            <span class="kw">if</span>(!reqSuccess &amp;&amp; chkTR_CONTRACT_TERM &amp;&amp; logicalDate &lt; expDateCal &amp;&amp; TR_CONTRACT_FEE &gt; <span class="nu">0</span>) {
+              <span class="kw">if</span>(chkRes==<span class="st">"true"</span>) Collections.add(addSubOffers, subOff);
+            }
+          }
+          <span class="cm">// Phase 2: expand to related offers with TR_CONTRACT_IND=Y</span>
+          <span class="kw">for</span> (qualifying parent offers → RelatedOffersArray[k]) {
+            <span class="kw">if</span> (!TR_CONTRACT_IND=Y || duplicate) <span class="kw">continue</span>;
+            <span class="kw">if</span>(relate conditions met) {
+              subOff4RelateOff = Instance.createInstance(<span class="cm">/* relateOffer→SubscriberOffers XSLT */</span>);
+              Collections.add(addSubOffers, subOff4RelateOff);
+            }
+          }
+          addSubOffersArray = Collections.toArray(addSubOffers);
+          <span class="kw">if</span>(addSubOffersArray@length &gt; <span class="nu">0</span>) {
+            reqEvent = Event.createEvent(<span class="cm">/* CREATE_TDS_PROFILE XSLT — see §9 */</span>);
+            Event.Ext.sendEventImmediate(reqEvent);
+            <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+            audit log;
+          }
+        }
+        <span class="cm">// COU loop — empty body [MEDIUM BUG]</span>
+      }
+      Status=<span class="st">"1"</span>; SendDataToDB; <span class="cm">// or SkipActivity("4")</span>
+    } <span class="kw">catch</span>(<span class="ty">Exception</span> ae) { HandleActivityException(...); }
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h3>§19.1 — Overview</h3>
+    <p>Creates <code>CreateTDSProfileRes</code> concept (NOT ResponseBase or SBM_DoServiceRes), appends to <code>currActivity.Response[]</code>, logs audit, then <strong>unconditionally returns <code>"true"</code></strong>. There is no fan-in RequestCount check. This means the activity advances immediately on the first subscriber response.</p>
+    <div class="alert-box"><strong>[HIGH] Missing Fan-in:</strong> The response rulefunction does not check <code>currActivity.RequestCount == successResponseCount</code>. The first response received causes the activity to advance, leaving remaining subscriber responses unprocessed.</div>
+
+    <h3 style="margin-top:14px;">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Audit log</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CREATE_TDS_PROFILE</code></td><td>TDS response event</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Response[] appended</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§19.3 — CreateTDSProfileRes Concept Construction</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;overflow-x:auto;margin-top:10px;">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@Id</span><span class="tree-arrow">←</span><span class="tree-src">$extId</span> (Java: OMXUtils.generateTrackingID()) <span class="tree-cond">NOTE: uses @Id not @extId!</span> <span class="badge b-green">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span> <span class="badge b-orange">Conditional</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3 style="margin-top:14px;">§19.4 — Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Behavior</th><th>Return</th></tr>
+      <tr><td>Always — no RequestCount check</td><td><code>"true"</code> unconditionally [HIGH BUG — should check RequestCount == successResponseCount]</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &middot; Generated 2026-08-13</footer>
+</body>
+</html>

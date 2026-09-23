@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_CCBS_CREATE_ACCT</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700}
+.page-header .subtitle{opacity:0.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:0.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-always{background:#E8F5E9;color:#2e7d32}
+.badge-cond{background:#FFF3E0;color:#e65100}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.warning-box{background:#FFF8E1;border-left:4px solid #FFC107;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+.info-box{background:#E3F2FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+.success-box{background:#E8F5E9;border-left:4px solid #2e7d32;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#999;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CCBS_CREATE_ACCT</h1>
+  <div class="subtitle">CCBS — Create New Account with Billing Arrangement, Charge Distribution, and Payment Channel</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: CCBS</span>
+    <span class="meta-badge">Pattern: assertEvent + IntraActivitySequencing (per Account)</span>
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">Author: awalia-t420</span>
+    <span class="meta-badge">Generated: 2026-09-21</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p><strong>CCBS_CREATE_ACCT</strong> creates one CCBS Account per <code>Customer.Account[]</code> entry. It is the most comprehensive Account-level creation call in the ACTIVATION flow, building a full <code>CreateNewAccountRequest</code> payload that includes AccountNameInfo (CORP/INDY/other), AccountAddressInfo, AccountingManagementInfo, BillingArrangementInfo, PayChannel details, and ActivityInfo.</p>
+    <div class="info-box"><strong>Iteration scope:</strong> Loops <code>Customer.Account[]</code> (not POU/ChildOU). Each Account corresponds to a billing cycle. The XSLT resolves the linked Agreement ID from POU or ChildOU agreements via the Account's <code>AgreementRefId</code>.</div>
+    <div class="info-box"><strong>AccountNameInfo dispatch:</strong> 3-way branch on <code>Account.AccountNames.NameType</code>: CORP (nameType 66, 69, optional 67), INDY (nameType 73, 69, optional 67), or default (nameType 69 only + optional 67).</div>
+    <div class="success-box"><strong>Response writes:</strong> AccountID, PayChannelId, BillingArrangementId written back per Account. After success, appends <code>omxCreatedAccountInd="Y"</code> to <code>orderRequest.OrderData.ExtendedInfo[]</code>.</div>
+    <div class="warning-box"><strong>OrderType=31 special logic:</strong> On success, writes <code>ParentOU[0].Subscriber[0].PayChannelIdSecondary = Account[0].AccountID</code>.</div>
+    <div class="warning-box"><strong>Old fan-in commented out:</strong> Original logic counted pending accounts with empty AccountID; replaced with <code>IntraActivitySequencing.ActionResponseEvent</code>.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_CREATE_ACCT</code></td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>CCBS</td></tr>
+      <tr><td>Event type</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_CREATE_ACCT</code></td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_CREATE_ACCT</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.assertEvent</code> + <code>IntraActivitySequencing</code> per Account</td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Iteration target</td><td><code>Customer.Account[]</code> (one event per Account)</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBSCreateAcctRes</code></td></tr>
+      <tr><td>Payload operation</td><td><code>ns:CreateNewAccountRequest</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="card">
+  <div class="card-header">§7 — Key Data Extractions &amp; Priority Chains</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Priority Chain</th><th>Notes</th></tr>
+      <tr><td><code>L9AccSubType</code></td><td>CUST_SUB_TYPE ExtInfo → AccountSubType</td><td>ExtInfo checked via <code>count(ExtendedInfo[Name='CUST_SUB_TYPE'])&gt;0</code></td></tr>
+      <tr><td><code>L9AccountPriority</code></td><td>OrderType=8/9: AccountPriority → PRIORITY ExtInfo</td><td>OrderType 8 or 9 use field directly; otherwise from ExtInfo</td></tr>
+      <tr><td><code>L9AgreementId</code></td><td>POU.Agreement[RefId=$AgreementRefId].AgreementId → ChildOU.Agreement[RefId=$AgreementRefId].AgreementId</td><td>AgreementRefId comes from Account[i].AgreementRefId</td></tr>
+      <tr><td><code>L9CompanyCode</code></td><td>COMPANY_CODE ExtInfo → AccountManagementInfo.CompanyCode</td><td>ExtInfo takes precedence</td></tr>
+      <tr><td><code>L9CreditClass</code></td><td>AccountManagementInfo.CreditClass</td><td><strong>Suppressed for OrderType=48</strong></td></tr>
+      <tr><td><code>L9CreditLimitWaiverInd</code></td><td>"U" if (AccountSubType starts "HY" OR Grading=TOP/PREMIUM) → CreditLimitWaiverInd</td><td>HY prefix or top-tier grading forces waiver "U"</td></tr>
+      <tr><td><code>L9CustBranchNo / L9CustTaxId</code></td><td>BranchNumber / TaxId — suppressed if CustomerTypeInfo.Type=73 AND concat(TaxId,BranchNumber)="000000000000000000"</td><td>18-zero sentinel pattern suppresses dummy corporate tax data</td></tr>
+      <tr><td><code>activityReason</code></td><td>Account.AccountActivityInfo.ActivityReason → "CREQ"</td><td>Standard default</td></tr>
+      <tr><td><code>l3BillFormat</code></td><td>BillingArrangementBillInfo.BillFormat → "P"</td><td>Default = "P" (paper)</td></tr>
+      <tr><td><code>l9BillLang</code></td><td>BillingArrangementBillInfo.BillLanguage → "TH"</td><td>Default = Thai</td></tr>
+      <tr><td><code>paymentCategory</code></td><td>Account.PayChannelCategory → "POST"</td><td>Default = "POST" (postpaid)</td></tr>
+      <tr><td><code>description</code></td><td>Account.PayChannelDescription → "POSTPAID"</td><td>Default = "POSTPAID"</td></tr>
+      <tr><td><code>paymentMethod</code></td><td>PayChannelPaymentMethodInfo.PaymentMethod → "CA"</td><td>Default = "CA" (cash)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent → event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority / JMSCorrelationID / OrderID</span><span class="tree-arrow">←</span><span class="tree-src">standard order fields</span><span class="badge badge-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">Account[i].RefId</span><span class="badge badge-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.User / Password</span><span class="badge badge-purple">IsEnableUserPass='true'</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType / CES</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.OrderType / CES</span><span class="badge badge-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload → ns:CreateNewAccountRequest</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:CustomerIdInfo → ns:customerNo</span><span class="tree-arrow">←</span><span class="tree-src">Customer.CustomerId</span><span class="badge badge-always">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:AccountExternalIdInfo → ns:externalId</span><span class="tree-arrow">←</span><span class="tree-src">Account[i].ExtendedInfo[Name="EXTERNAL_ID"]/Value</span><span class="badge badge-cond">Conditional: exists</span></div></li>
+
+              <!-- AccountNameInfo -->
+              <li><div class="tree-row"><span class="tree-tag">ns:AccountNameInfo (×1-3, based on NameType)</span><span class="tree-cond">xsl:choose on Account.AccountNames.NameType</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">CORP branch: nameType=66 (corporate)</span><span class="badge badge-cond">when NameType="CORP"</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">nameElement1-8</span><span class="tree-arrow">←</span><span class="tree-src">OrgName, BranchCode, BranchName, StoreId, FaxNumber, Email, IdentificationType, Identification</span><span class="badge badge-cond">Conditional each</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">65</span><span class="badge badge-always">Always</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">CORP branch: nameType=69 (contact)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">nameElement1-10</span><span class="tree-arrow">←</span><span class="tree-src">Language, PrefContactNumber, HomePhone, BizPhone, privatePhone, AuthFirstName, AuthLastName, AuthPersonalId, POAName, POAPersonalId</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">70</span><span class="badge badge-always">Always</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">INDY branch: nameType=73 (individual)</span><span class="badge badge-cond">when NameType="INDY"</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">nameElement1-10</span><span class="tree-arrow">←</span><span class="tree-src">Title, FirstName, MiddleName, LastName, MaritalStatus, FaxNumber, Email, Gender, IdentificationType, Identification</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">65</span><span class="badge badge-always">Always</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">INDY branch: nameType=69 (contact)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">nameElement2 (PrefContactNumber)</span><span class="tree-arrow">←</span><span class="tree-src">AccountNames.PrefContactNumber</span><span class="badge badge-always">Always (no xsl:if guard in INDY)</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">70</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">Otherwise: nameType=69 only</span><span class="badge badge-cond">xsl:otherwise</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">nameElement2</span><span class="tree-arrow">←</span><span class="tree-src">AccountNames.PrefContactNumber</span><span class="badge badge-always">Always (no guard)</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">70</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-tag">All branches: optional nameType=67 (PayChannelFeeInfo)</span><span class="badge badge-cond">Conditional: exists(PayChannelFeeInfo)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">nameElement1-7</span><span class="tree-arrow">←</span><span class="tree-src">CreditCardType, CreditCardNo, CreditCardName, CreditCardExpirationDate, BankCode, BankBranchNo, BankAccountNo</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">84</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+
+              <!-- AccountAddressInfo -->
+              <li><div class="tree-row"><span class="tree-tag">ns:AccountAddressInfo</span><span class="badge badge-cond">Conditional: exists(Account.AccountAddress)</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">addressType</span><span class="tree-arrow">←</span><span class="tree-src-static">66</span><span class="badge badge-always">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">addressElement1-15</span><span class="tree-arrow">←</span><span class="tree-src">Account[i].AccountAddress.HouseNo/Moo/RoomNo/Floor/BuildingName/Soi/StreetName/Tumbon/Amphur/City/Zip/Country/TimeAtAddress/TypeOfAccomodation/subSoi</span><span class="tree-cond">(fallback to Customer.CustomerAddress if Account address absent)</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">65</span></div></li>
+                </ul>
+              </li>
+
+              <!-- AccountingManagementInfo -->
+              <li><div class="tree-row"><span class="tree-tag">ns1:AccountingManagementInfo</span><span class="badge badge-cond">foreach Account.AccountManagementInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">L9AccSubType</span><span class="tree-arrow">←</span><span class="tree-src">CUST_SUB_TYPE ExtInfo → AccountSubType</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9AccountPriority</span><span class="tree-arrow">←</span><span class="tree-src">OrderType 8/9: AccountPriority; else PRIORITY ExtInfo</span><span class="badge badge-cond">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9AgreementId</span><span class="tree-arrow">←</span><span class="tree-src">POU.Agreement[RefId=AgreementRefId].AgreementId or ChildOU.Agreement[...].AgreementId</span><span class="badge badge-cond">Conditional: $AgreementID non-empty</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9CompanyCode</span><span class="tree-arrow">←</span><span class="tree-src">COMPANY_CODE ExtInfo → CompanyCode</span><span class="badge badge-cond">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9CreditClass</span><span class="tree-arrow">←</span><span class="tree-src">CreditClass</span><span class="tree-cond">SUPPRESSED for OrderType=48</span><span class="badge badge-cond">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9CreditLimitWaiverInd</span><span class="tree-arrow">←</span><span class="tree-src-static">"U"</span><span class="tree-cond">if AccSubType starts "HY" OR Grading=TOP/PREMIUM; else CreditLimitWaiverInd</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9CustBranchNo / L9CustTaxId</span><span class="tree-arrow">←</span><span class="tree-src">BranchNumber / TaxId</span><span class="tree-cond">SUPPRESSED if CustomerTypeInfo.Type=73 AND concat(TaxId,BranchNumber)="000000000000000000"</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9InitiationReason</span><span class="tree-arrow">←</span><span class="tree-src">INIT_REASON ExtInfo</span><span class="badge badge-cond">Conditional: exists and count&gt;0</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9LegacyBan</span><span class="tree-arrow">←</span><span class="tree-src">LEGACY_BAN ExtInfo</span><span class="badge badge-cond">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9PrsnlCreditLimit</span><span class="tree-arrow">←</span><span class="tree-src-static">0.0</span><span class="badge badge-always">Always hardcoded</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9SpecialInstructions</span><span class="tree-arrow">←</span><span class="tree-src">SPECIAL_INSTRUCTION ExtInfo</span><span class="badge badge-cond">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">L9WHTCertiNo / L9WHTInd / L9WhtTaxUpDate</span><span class="tree-arrow">←</span><span class="tree-src">WHTCertiNo / whtInd (!=0) / whtTaxUpDate</span><span class="badge badge-cond">Conditional each</span></div></li>
+                </ul>
+              </li>
+
+              <!-- BillingArrangementBillInfo -->
+              <li><div class="tree-row"><span class="tree-tag">ns:BillingArrangementBillInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">l3BillFormat</span><span class="tree-arrow">←</span><span class="tree-src">BillFormat (if non-empty) → </span><span class="tree-src-static">"P"</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">l9BillLang</span><span class="tree-arrow">←</span><span class="tree-src">BillLanguage (if non-empty) → </span><span class="tree-src-static">"TH"</span></div></li>
+                </ul>
+              </li>
+
+              <!-- BillingArrangementNameInfo -->
+              <li><div class="tree-row"><span class="tree-tag">ns:BillingArrangementNameInfo (×1-2, based on NameType)</span><span class="tree-cond">xsl:choose on BillingArrangementName.NameType</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">CORP: nameType 66 (linkType 66) + nameType 69 (linkType 71)</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">INDY: nameType 73 (linkType 66) + nameType 69 (linkType 71)</span></div></li>
+                </ul>
+              </li>
+
+              <!-- BillingArrangementAddressInfo -->
+              <li><div class="tree-row"><span class="tree-tag">ns:BillingArrangementAddressInfo</span><span class="badge badge-cond">Conditional: foreach BillingArrangementAddress</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">addressType</span><span class="tree-arrow">←</span><span class="tree-src-static">66 (CORP) or 73 (INDY/other)</span><span class="tree-cond">derived from BillingArrangementName.NameType</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">addressElement1-15</span><span class="tree-arrow">←</span><span class="tree-src">HouseNo/Moo/.../subSoi</span><span class="badge badge-cond">Conditional each except 1-2</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">linkType</span><span class="tree-arrow">←</span><span class="tree-src-static">66</span></div></li>
+                </ul>
+              </li>
+
+              <!-- PayChannel -->
+              <li><div class="tree-row"><span class="tree-tag">ns:PayChannelPaymentCategoryInfo → paymentCategory</span><span class="tree-arrow">←</span><span class="tree-src">PayChannelCategory → </span><span class="tree-src-static">"POST"</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:PayChannelDescriptionInfo → description</span><span class="tree-arrow">←</span><span class="tree-src">PayChannelDescription → </span><span class="tree-src-static">"POSTPAID"</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:PayChannelPaymentMethodInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">paymentMethod</span><span class="tree-arrow">←</span><span class="tree-src">PaymentMethod → </span><span class="tree-src-static">"CA"</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">issueDate, bankCode, bankAccountNo, bankAccountType</span><span class="badge badge-cond">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">creditCardType, creditCardNo, creditCardExpirationDate</span><span class="badge badge-cond">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">paymentMeansOwnerDetails ← PaymentName; l9BankName, l9DDApprovalDate, l9BankBranchName</span><span class="badge badge-cond">Conditional</span></div></li>
+                </ul>
+              </li>
+
+              <!-- ActivityInfo -->
+              <li><div class="tree-row"><span class="tree-tag">ns:ActivityInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">activityReason</span><span class="tree-arrow">←</span><span class="tree-src">AccountActivityInfo.ActivityReason → </span><span class="tree-src-static">"CREQ"</span><span class="badge badge-always">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">userText</span><span class="tree-arrow">←</span><span class="tree-src">AccountActivityInfo.UserText</span><span class="badge badge-cond">Conditional</span></div></li>
+                </ul>
+              </li>
+
+              <!-- ActivityDateInfo -->
+              <li><div class="tree-row"><span class="tree-tag">ns:ActivityDateInfo → activityDate</span><span class="tree-arrow">←</span><span class="tree-src">EffectiveDate</span><span class="tree-cond">Conditional: string-length(tib:trim(EffectiveDate))&gt;0</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <div class="code-block">Request_CCBS_CREATE_ACCT
+├── [if resubmit] IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── Instance.getByExtIdByUri("LogicalDate", ...) [read but logicalDateVal unused in XSLT]
+├── for each Account[i]:
+│   ├── [skip if Response[ReferenceId==Account[i].RefId AND CompletionStatus==2] exists]
+│   ├── AccountSubType = XPath.evalAsString(Account[i].AccountManagementInfo.AccountSubType)
+│   ├── GetXMLForAccount(orderRequest, Account[i].RefId)
+│   ├── XPath.execute(PreExecCheck, sXML)  [if PreExecCheck length > 0]
+│   ├── Event.createEvent(CCBS_CREATE_ACCT, full XSLT: CustomerIdInfo + AccountNameInfo(3-way)
+│   │   + AccountAddressInfo + AccountingManagementInfo + BillingArrangement + PayChannel + ActivityInfo)
+│   ├── Event.assertEvent(reqEvent)
+│   ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+│   └── sendEventImmediate(Logger REQ — OPERATION_NAME=orderCurrentActivity/ActivityID)
+├── IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── GetActivityStatusString("1", false)
+└── SendDataToDB(orderRequest)
+
+Response_CCBS_CREATE_ACCT
+├── for each Account[i]: if Account[i].RefId == eventResponse.RefID:
+│   ├── Account[i].AccountID ← AccountBaPcnIdsInfo/AccountIdsInfo/AccountId/AccountNo
+│   ├── Account[i].PayChannelId ← AccountBaPcnIdsInfo/PayChannelIdsInfo/PayChannelId/PayChannelId
+│   ├── Account[i].BillingArrangementId ← AccountBaPcnIdsInfo/BillingArrangementIdsInfo/.../BillingArrangementId
+│   └── Account[i].ResponseCode, ResponseMsg ← eventResponse
+├── [if OrderType=31] ParentOU[0].Subscriber[0].PayChannelIdSecondary = Account[0].AccountID
+├── Instance.createInstance(OrderDataExtendedInfo: Name="omxCreatedAccountInd", Value="Y")
+│   → append to orderRequest.OrderData.ExtendedInfo[]
+├── Instance.createInstance(CCBSCreateAcctRes: ResponseCode, ResponseMessage, CompletionStatus, ReferenceId)
+│   → currActivity.Response[n] = activityRes
+├── sendEventImmediate(Logger RES — OPERATION_NAME="CCBS_CREATE_ACCT")
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → "true"/"false"
+[OLD fan-in commented out: count accounts with empty AccountID==0 → "true"]</div>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>OrderType=31 special logic: PayChannelIdSecondary set from Account[0] — tightly coupled to array index 0</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Document as hardcoded assumption; verify whether multiple accounts are possible on OrderType=31</td></tr>
+      <tr><td>L9PrsnlCreditLimit hardcoded to 0.0 — always sent as zero regardless of data</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Confirm with CCBS whether a real value is ever expected; field may be vestigial</td></tr>
+      <tr><td>18-zero TaxId+BranchNumber sentinel suppresses L9CustBranchNo and L9CustTaxId</td><td><span class="badge badge-blue">[LOW]</span></td><td>Preserve sentinel detection in migration; document expected dummy-data pattern</td></tr>
+      <tr><td>OrderType=48 suppresses L9CreditClass — silently drops the field</td><td><span class="badge badge-blue">[LOW]</span></td><td>Document OrderType=48 exception; test with CreditClass-carrying orders</td></tr>
+      <tr><td>omxCreatedAccountInd="Y" appended to OrderData.ExtendedInfo on every Account response — may append multiple times if multiple accounts</td><td><span class="badge badge-blue">[LOW]</span></td><td>Verify whether downstream uses first-or-last occurrence; deduplicate in migration if needed</td></tr>
+      <tr><td>Old "count pending accounts" fan-in logic is commented out — IntraActivitySequencing is the only active path</td><td><span class="badge badge-blue">[LOW]</span></td><td>Remove dead code in migration target</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule</div>
+  <div class="card-body">
+    <p>Matches by <code>Account[i].RefId == eventResponse.RefID</code>. Writes back three CCBS-assigned IDs from <code>AccountBaPcnIdsInfo</code>. Also unconditionally appends <code>omxCreatedAccountInd="Y"</code> to order-level ExtendedInfo.</p>
+    <table>
+      <tr><th>Write Target</th><th>Source XPath</th><th>Condition</th></tr>
+      <tr><td><code>Account[i].AccountID</code></td><td><code>AccountBaPcnIdsInfo/AccountIdsInfo/AccountId/AccountNo</code></td><td>Account[i].RefId == eventResponse.RefID</td></tr>
+      <tr><td><code>Account[i].PayChannelId</code></td><td><code>AccountBaPcnIdsInfo/PayChannelIdsInfo/PayChannelId/PayChannelId</code></td><td>same match</td></tr>
+      <tr><td><code>Account[i].BillingArrangementId</code></td><td><code>AccountBaPcnIdsInfo/BillingArrangementIdsInfo/BillingArrangementId/BillingArrangementId</code></td><td>same match</td></tr>
+      <tr><td><code>ParentOU[0].Subscriber[0].PayChannelIdSecondary</code></td><td><code>Account[0].AccountID</code></td><td>OrderType="31" only</td></tr>
+      <tr><td><code>orderRequest.OrderData.ExtendedInfo[]</code></td><td><code>Name="omxCreatedAccountInd", Value="Y"</code></td><td>Always (every account response)</td></tr>
+    </table>
+    <div class="info-box" style="margin-top:12px">Fan-in: <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> — returns "true" when all outstanding account requests have been answered. Old logic (count accounts with empty AccountID) is commented out.</div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

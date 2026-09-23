@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>OMX_ADD_FUT_OFFERS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.header h1{font-size:2rem;font-weight:700;letter-spacing:1px;}
+.header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.header .meta{margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;opacity:.9;}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:12px;}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600;}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-purple{background:#F3E5F5;color:var(--skip);}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.callout{padding:12px 16px;border-radius:6px;margin:12px 0;border-left:4px solid;}
+.callout-warning{background:#FFF8E1;border-color:var(--warning);color:#5D4037;}
+.callout-info{background:#E3F2FD;border-color:var(--info);color:#0D47A1;}
+.callout-error{background:#FFEBEE;border-color:var(--true-red);color:var(--true-dark);}
+.callout-success{background:#E8F5E9;border-color:var(--success);color:#1B5E20;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:8px 12px 8px 48px;position:relative;border-left:3px solid var(--border);margin-bottom:6px;}
+.step-list li::before{content:counter(step);position:absolute;left:-16px;top:6px;background:var(--true-red);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}.tree-attr{color:#f9e2af;}.tree-arrow{color:#6c7086;margin:0 6px;}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+footer{text-align:center;padding:24px;color:#888;font-size:.82rem;}
+h3{font-size:.95rem;font-weight:600;color:var(--true-dark);margin-bottom:8px;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>OMX_ADD_FUT_OFFERS</h1>
+  <div class="subtitle">FM Logic Documentation — Future SOC/PP Registration (External OMXFM Call, Per-Offer Dispatch to OMX FM, 4 Scopes: PP@POU / Sub@POU / PP@COU / Sub@COU, Fan-In on Success Count)</div>
+  <div class="meta">
+    <span class="meta-item">Rule: Rules.OMConsumers.OMXFM.Request.Request_OMX_ADD_FUT_OFFERS</span>
+    <span class="meta-item">ActivityID: OMX_ADD_FUT_OFFERS</span>
+    <span class="meta-item">Priority: 5</span>
+    <span class="meta-item">Pattern: Per-Offer Parallel Dispatch → OMX FM</span>
+    <span class="meta-item">Used in steps: 12 (OMX_ADD_FUT_OFFERS), 13 (OMX_ADD_FUT_OFFERS_PRICEPLAN), 21 (OMX_ADD_FUT_OFFERS_REMOVE)</span>
+    <span class="meta-item">Generated: 2026-09-11</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>OMX_ADD_FUT_OFFERS</strong> registers future SOC/price plan orders into the OMX FM future orders system. For each qualifying offer in all 4 scopes (PP@POU, Sub@POU, PP@COU, Sub@COU), it dispatches a separate <code>OMX_ADD_FUTURE</code> JMS event. Each offer that passes its individual PreExecCheck AND does not already have a successful response gets its own dispatch. Fan-in completes when <code>RequestCount == count(success responses)</code>.</p>
+    <div class="callout callout-info" style="margin-top:10px;">
+      <strong>Key design notes:</strong>
+      <ul style="margin-left:20px;margin-top:4px;">
+        <li><strong>Per-offer dispatch</strong> (not per-OU): each AgreementOffer or SubscriberOffer that passes PreExecCheck sends its own JMS event. RequestCount incremented once per event sent.</li>
+        <li><strong>futureType:</strong> Default "FUTSOC". Changes to "FUTPP" when ServiceType=="80" (price plan). When FUTPP → remark includes offer name transition (CCBS offer name → FE offer name).</li>
+        <li><strong>orderType override via activity parameter:</strong> <code>Parameter[1]</code> from the activity overrides <code>orderRequest.OrderData.OrderType</code> if present.</li>
+        <li><strong>isActResub gate:</strong> If <code>RequestCount&gt;0 AND IsOrderResubmitted</code> → do not increment RequestCount (idempotent resubmit mode).</li>
+        <li><strong>reqSuccess check:</strong> If a Response already exists with matching ReferenceId AND CompletionStatus==2 → skip that offer (resubmit idempotency).</li>
+        <li><strong>EFF_ORD_DT override:</strong> Sub@POU and Sub@COU check <code>offer.ExtendedInfo[EFF_ORD_DT]</code> — if present → use that as <code>ns:effectiveDate</code> instead of derived futureOrderEffectiveDate. Agreement scopes do NOT have this override.</li>
+        <li><strong>FUTPP companion futureSoc:</strong> When futureType="FUTPP", additionally emits futureSoc entries for ServiceType=85 FE-tagged offers that have ParameterInfo[TR_CONTRACT_NUMBER] — using OfferOriginalEffectiveDate.</li>
+        <li><strong>futureResourceRange:</strong> Sub@POU and Sub@COU include ResourceRangeInfo[Action='PP'] entries when the subscriber has ServiceType='80' offers.</li>
+        <li><strong>isSkipped flag:</strong> Starts true; becomes false when first event sent. At end: if still skipped → SkipActivity("4"); else Status="1" + SendDataToDB.</li>
+        <li><strong>PP@COU missing Logger audit:</strong> PP@COU scope does not send a Logger event after dispatch (unlike the other three scopes). Appears to be an omission in the code.</li>
+        <li><strong>AUDIT_TRACE inconsistency:</strong> PP@POU = "Request Sent for OMX_ADD_FUTPP"; Sub@POU = "Request Sent for OMX_ADD_FUT_PP"; Sub@COU = "Request Sent for OMX_ADD_FUT_OFFERS"; PP@COU = (no audit). None match the rule name exactly.</li>
+      </ul>
+    </div>
+    <table style="margin-top:12px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Backend system</td><td>OMX FM (Future Orders) via <code>Events.OMConsumers.OMXFM.Request.OMX_ADD_FUTURE</code></td></tr>
+      <tr><td>Dispatch pattern</td><td>Per-offer parallel dispatch — one event per qualifying offer per scope</td></tr>
+      <tr><td>RequestCount gate</td><td>isActResub = RequestCount&gt;0 AND IsOrderResubmitted — skip increment if resubmitting</td></tr>
+      <tr><td>Fan-in</td><td><code>RequestCount == count(Response[tib:right(tib:trim(ResponseCode),3)="000"])</code></td></tr>
+      <tr><td>Completion</td><td>Status="1" + <code>SendDataToDB</code> (if sent) or <code>SkipActivity("4")</code> (if all skipped)</td></tr>
+      <tr><td>Steps in BN_CHANGE_PACKAGE</td><td>12, 13, 21 (same ActivityID, different extId/params)</td></tr>
+      <tr><td>Response rulefunction</td><td><code>Response_OMX_ADD_FUT_OFFERS.rulefunction</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>priority</td><td>5</td><td>Standard</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Standard</td></tr>
+      <tr><td>Rule type</td><td>OMXFM Request Rule</td><td>External dispatch to OMX FM</td></tr>
+      <tr><td>PurgePendingRequestsBeforeResubmit</td><td>N/A</td><td>Not used; resubmit handled via reqSuccess check + isActResub</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Source of all offer data, customer/OU structure, ExtendedInfo</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>PreExecCheck source; Parameter[1] for orderType; RequestCount; Response array</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity extId match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_ADD_FUT_OFFERS"</code></td><td>Constrains to this rule (covers all 3 step instances)</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_ADD_FUT_OFFERS"</code></td><td>Double-check</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Ready to process</td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:10px;">
+      <strong>isActResub check (line 21):</strong> Evaluated before the try block — <code>(RequestCount&gt;0 &amp;&amp; IsOrderResubmitted)</code>. This is NOT a WHEN condition; it is a guard inside THEN. When true → RequestCount is not incremented but events are still dispatched (for previously-failed offers that don't have CompletionStatus==2).
+    </div>
+  </div>
+</div>
+
+<!-- §5 -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li><strong>isActResub:</strong> Read <code>RequestCount&gt;0 &amp;&amp; IsOrderResubmitted</code>.</li>
+      <li><strong>LogicalDate resolution:</strong> Read <code>Concepts.OM.LogicalDate</code>; default to <code>DateTime.now()</code>.</li>
+      <li><strong>Shared context:</strong> Read accountSubType from Account[1].AccountManagementInfo.AccountSubType; requestBy from OrderData.Channel; orderType from OrderData.OrderType (overridden by Parameter[1] if present); nextAct.PreExecCheck.</li>
+      <li><strong>PP@POU loop:</strong> For each ParentOU, for each Agreement Offer → per-offer PreExecCheck + reqSuccess check → if not skipped: compute futureType/futureOrderEffectiveDate → dispatch OMX_ADD_FUTURE event (POU Agreement variant) → RequestCount++ → Logger audit "Request Sent for OMX_ADD_FUTPP".</li>
+      <li><strong>Sub@POU loop:</strong> For each ParentOU Subscriber, for each SubscriberOffer → per-offer PreExecCheck (FE_OR_CCBS filter applied) + reqSuccess check → dispatch OMX_ADD_FUTURE event (POU Subscriber variant, EFF_ORD_DT override, futureResourceRange) → RequestCount++ → Logger audit "Request Sent for OMX_ADD_FUT_PP".</li>
+      <li><strong>PP@COU loop:</strong> For each ChildOU, for each Agreement Offer → per-offer PreExecCheck (GetXMLForAgreementOfferInChildOU) + reqSuccess check → dispatch OMX_ADD_FUTURE event (COU Agreement variant) → RequestCount++ → NO Logger audit.</li>
+      <li><strong>Sub@COU loop:</strong> For each ChildOU Subscriber (using toArrayConcept), for each SubscriberOffer → per-offer PreExecCheck + reqSuccess check → dispatch OMX_ADD_FUTURE event (COU Subscriber variant, EFF_ORD_DT override, futureResourceRange) → RequestCount++ → Logger audit "Request Sent for OMX_ADD_FUT_OFFERS".</li>
+      <li><strong>isSkipped resolution:</strong> If any event was dispatched → Status="1" + SendDataToDB. Else → SkipActivity("4").</li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 -->
+<div class="section">
+  <div class="section-header">§6 — futureType &amp; futureOrderEffectiveDate Selection Logic</div>
+  <div class="section-body">
+    <h3>§6.1 — futureType</h3>
+    <table>
+      <tr><th>Condition</th><th>futureType value</th><th>remark value</th></tr>
+      <tr><td><code>offer.ServiceType != "80"</code></td><td><code>"FUTSOC"</code></td><td><code>""</code> (empty)</td></tr>
+      <tr><td><code>offer.ServiceType == "80"</code></td><td><code>"FUTPP"</code></td><td><code>concat(CCBS OfferName, '-&gt;', FE OfferName)</code> from siblings with same scope</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§6.2 — futureOrderEffectiveDate Selection</h3>
+    <table>
+      <tr><th>Priority</th><th>Condition</th><th>futureOrderEffectiveDate</th></tr>
+      <tr><td>1</td><td><code>exists(ExpirationDate) AND NOT(exists(EffectiveDate))</code></td><td><code>offer.ExpirationDate</code></td></tr>
+      <tr><td>2</td><td><code>(GetEffType(EffectiveDate)=="BD" OR "IM") AND GetEffType(ExpirationDate)=="FUT"</code></td><td><code>offer.ExpirationDate</code></td></tr>
+      <tr><td>3</td><td><code>GetEffType(EffectiveDate)=="FUT" AND GetEffType(ExpirationDate)=="FUT"</code></td><td><code>offer.EffectiveDate</code></td></tr>
+      <tr><td>4 (default)</td><td>All other cases</td><td><code>offer.EffectiveDate</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§6.3 — isFutEffective &amp; ns2:effectiveDate</h3>
+    <p><code>isFutEffective = GetActivityEffectiveType(offer.EffectiveDate, logicalDate) == "FUT"</code>. When <code>isFutEffective==true</code> AND <code>offer.EffectiveDate</code> exists → <code>ns2:effectiveDate</code> is included in the main futureSoc. When <code>isFutEffective==false</code> → <code>ns2:effectiveDate</code> is omitted (the effective date comes from futureOrderEffectiveDate in futureOrder.effectiveDate instead).</p>
+
+    <h3 style="margin-top:16px;">§6.4 — EFF_ORD_DT Override (Sub@POU and Sub@COU only)</h3>
+    <p>The subscriber variants use an <code>xsl:choose</code> for <code>ns:effectiveDate</code> in <code>ns:futureOrder</code>:<br/>
+    If <code>offer.ExtendedInfo[Name='EFF_ORD_DT']</code> exists → <code>ns:effectiveDate = offer.ExtendedInfo[EFF_ORD_DT].Value</code>.<br/>
+    Otherwise → <code>ns:effectiveDate = $futureOrderEffectiveDate</code>.<br/>
+    Agreement variants (PP@POU, PP@COU) do NOT have this override.</p>
+
+    <h3 style="margin-top:16px;">§6.5 — FUTPP Companion futureSoc</h3>
+    <p>When <code>futureType=="FUTPP"</code>, the XSLT iterates over the scope's offers and adds additional <code>ns2:futureSoc</code> entries for offers where: <code>ServiceType=85</code> AND <code>ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']</code> AND <code>boolean(ParameterInfo[ParamName='TR_CONTRACT_NUMBER'])</code>. These companion entries use <code>ns2:effectiveDate = $OfferOriginalEffectiveDate</code> (from <code>offer.ExtendedInfo[OfferOriginalEffectiveDate].Value</code>).</p>
+  </div>
+</div>
+
+<!-- §7 -->
+<div class="section">
+  <div class="section-header">§7 — PreExecCheck XML Helpers per Scope</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Scope</th><th>Helper function</th><th>Input arguments</th></tr>
+      <tr><td>PP@POU</td><td><code>GetXMLForAgreementOffer(orderRequest, agreeRefId, refId)</code></td><td>agreeRefId=POU.Agreement.RefId, refId=offer.Soc</td></tr>
+      <tr><td>Sub@POU</td><td><code>GetXMLForSubscriberOfferActionFilterWithExtendedInfo(orderRequest, subRefId, refId, filter, action)</code></td><td>subRefId=Subscriber.RefId, refId=offer.Soc, filter=offer.ExtendedInfo[FE_OR_CCBS].Value, action=offer.Action</td></tr>
+      <tr><td>PP@COU</td><td><code>GetXMLForAgreementOfferInChildOU(orderRequest, agreeRefId, refId, pOu.RefId)</code></td><td>agreeRefId=ChildOU.Agreement.RefId, refId=offer.Soc, pOu.RefId=parent OU RefId</td></tr>
+      <tr><td>Sub@COU</td><td><code>GetXMLForSubscriberOfferInChildOU(orderRequest, subRefId, refId, pOu.RefId)</code></td><td>subRefId=COU.Subscriber.RefId, refId=offer.Soc, pOu.RefId=parent OU RefId</td></tr>
+    </table>
+    <p style="margin-top:8px;color:#555;font-size:.88rem;">Note: Sub@POU includes <code>filter</code> (FE_OR_CCBS value) AND <code>action</code> (offer.Action) in the XML helper arguments — Sub@COU does NOT include these; it uses the simpler <code>GetXMLForSubscriberOfferInChildOU</code>.</p>
+  </div>
+</div>
+
+<!-- §8 -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3>§8.1 — Order Type Dependencies</h3>
+    <p>Used in BN_CHANGE_PACKAGE at steps 12, 13, and 21. The three step instances share the same ActivityID but differ in their extId (step instance name) and likely in their Parameters and PreExecCheck values — the ProcessConfig determines which offers each step sends. The <code>Parameter[1]</code> activity parameter overrides orderType; the step's PreExecCheck filters which offers qualify.</p>
+
+    <h3 style="margin-top:16px;">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Gate</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUT</span></td><td><code>Events.OMConsumers.OMXFM.Request.OMX_ADD_FUTURE</code></td><td>Per offer: PreExecCheck passes AND !reqSuccess</td><td>Register future SOC/PP in OMX FM</td></tr>
+      <tr><td><span class="badge badge-teal">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Always after each outbound event (PP@COU scope missing)</td><td>Request audit trail</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>System</td><td>OMX FM (Future Orders management subsystem)</td></tr>
+      <tr><td>Operation</td><td>Add Future SOC/PP order (addFutureOrder)</td></tr>
+      <tr><td>Schema</td><td><code>ns3:futureOrderWithSoc</code> containing <code>ns:futureOrder</code> + <code>ns2:futureSocs</code> + optional <code>ns4:futureResourceRange</code></td></tr>
+      <tr><td>Schema namespaces</td><td>ns=FutureOrder.xsd, ns2=FutureSoc.xsd, ns3=FutureOrderWithSoc.xsd, ns4=FutureResourceRange.xsd</td></tr>
+      <tr><td>Correlation</td><td>JMSCorrelationID = OMXTrackingId; fan-in on RequestCount == successResponseCount</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.4 — BE Working Memory Dependencies (Read)</h3>
+    <table>
+      <tr><th>Concept path</th><th>Purpose</th></tr>
+      <tr><td><code>Concepts.OM.LogicalDate.LogicalDate</code></td><td>Date classification for isFutEffective and futureOrderEffectiveDate</td></tr>
+      <tr><td><code>orderCurrentActivity.Parameter[1]</code></td><td>orderType override (via XPath evalAsString on activity param)</td></tr>
+      <tr><td><code>OrderData.Customer.CustomerId</code></td><td>custId → CUS_ID extendedInfo in payload</td></tr>
+      <tr><td><code>OrderData.Customer.Account[1].AccountManagementInfo.AccountSubType</code></td><td>accountSubType → ns:accountSubtype in payload</td></tr>
+      <tr><td><code>OrderData.Channel</code></td><td>requestBy → ns:requestedBy in payload and userText</td></tr>
+      <tr><td><code>OrderData.OrderType</code></td><td>Default orderType (may be overridden by Parameter[1])</td></tr>
+      <tr><td><code>ParentOU[*].Agreement.Offers[*]</code></td><td>PP@POU: Soc, ServiceType, EffectiveDate, ExpirationDate, OfferName, ParameterInfo, RelatedOffersArray, ExtendedInfo</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*]</code></td><td>Sub@POU: same fields + Action, ResourceRangeInfo</td></tr>
+      <tr><td><code>ParentOU[*].ChildOU[*].Agreement.Offers[*]</code></td><td>PP@COU: same as PP@POU</td></tr>
+      <tr><td><code>ParentOU[*].ChildOU[*].Subscriber[*].SubscriberOffers[*]</code></td><td>Sub@COU: same as Sub@POU</td></tr>
+      <tr><td><code>orderCurrentActivity.Response[*].ReferenceId / CompletionStatus</code></td><td>reqSuccess check for each offer</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.5 — ExtendedInfo Fields Required (Read)</h3>
+    <table>
+      <tr><th>Key</th><th>Scope</th><th>Purpose</th></tr>
+      <tr><td><code>OfferOriginalEffectiveDate</code></td><td>All offers</td><td>Used as effectiveDate for FUTPP companion futureSoc entries</td></tr>
+      <tr><td><code>FE_OR_CCBS</code></td><td>Sub@POU, all Agreement offers (FUTPP remark)</td><td>Filter for PreExecCheck XML helper; FUTPP remark calculation</td></tr>
+      <tr><td><code>EFF_ORD_DT</code></td><td>Sub@POU, Sub@COU only</td><td>Override for ns:effectiveDate in futureOrder (if present)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§8.6 — nodeLevel &amp; nodeId per Scope</h3>
+    <table>
+      <tr><th>Scope</th><th>nodeLevel</th><th>nodeId</th><th>RefID header</th></tr>
+      <tr><td>PP@POU</td><td>3 (OU)</td><td>pOu.OUId</td><td>pOu.RefId</td></tr>
+      <tr><td>Sub@POU</td><td>5 (Sub)</td><td>subscriberPou.SubscriberId</td><td>subscriberPou.RefId</td></tr>
+      <tr><td>PP@COU</td><td>3 (OU)</td><td>cOu.OUId</td><td>cOu.RefId</td></tr>
+      <tr><td>Sub@COU</td><td>5 (Sub)</td><td>subscriberCou.SubscriberId</td><td>subscriberCou.RefId</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 -->
+<div class="section">
+  <div class="section-header">§9 — Payload Build — OMX_ADD_FUTURE Event (4 Variants)</div>
+  <div class="section-body">
+    <h3>§9.1 — JMS / Event Header Fields (shared across all 4 variants)</h3>
+    <table>
+      <tr><th>Header</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>JMSPriority</td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional: if exists</td></tr>
+      <tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Always</td></tr>
+      <tr><td>OrderID</td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional: if exists</td></tr>
+      <tr><td>RefID</td><td><code>$scope/RefId</code> (POU/Subscriber/ChildOU)</td><td>Conditional: if exists</td></tr>
+      <tr><td>UserName</td><td><code>$orderRequest/OrderData/User</code></td><td>Conditional: if exists</td></tr>
+      <tr><td>PassWord</td><td><code>$orderRequest/OrderData/Password</code></td><td>Conditional: if exists</td></tr>
+      <tr><td>OrderType</td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional: if exists</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§9.2 — ns:futureOrder Fields</h3>
+    <table>
+      <tr><th>Element</th><th>Source</th><th>PP@POU</th><th>Sub@POU</th><th>PP@COU</th><th>Sub@COU</th></tr>
+      <tr><td><code>ns:effectiveDate</code></td><td>$futureOrderEffectiveDate (or EFF_ORD_DT override)</td><td>Always (direct)</td><td>xsl:choose: EFF_ORD_DT if exists, else futureOrderEffectiveDate</td><td>Always (direct)</td><td>xsl:choose: EFF_ORD_DT if exists, else futureOrderEffectiveDate</td></tr>
+      <tr><td><code>ns:orderType</code></td><td>$orderType</td><td>Always</td><td>Always</td><td>Always</td><td>Always</td></tr>
+      <tr><td><code>ns:nodeLevel</code></td><td>3 or 5</td><td>3 (OU)</td><td>5 (Sub)</td><td>3 (OU)</td><td>5 (Sub)</td></tr>
+      <tr><td><code>ns:nodeId</code></td><td>OUId or SubscriberId</td><td>pOu.OUId</td><td>subId</td><td>cOu.OUId</td><td>subId</td></tr>
+      <tr><td><code>ns:requestedDate</code></td><td>current-dateTime()</td><td>Always</td><td>Always</td><td>Always</td><td>Always</td></tr>
+      <tr><td><code>ns:requestedBy</code></td><td>$requestBy (OrderData.Channel)</td><td>Always</td><td>Always</td><td>Always</td><td>Always</td></tr>
+      <tr><td><code>ns:activityReason</code></td><td>$scope/OUActivityInfo/ActivityReason or SubscriberActivityInfo/ActivityReason</td><td>Cond</td><td>Cond</td><td>Cond</td><td>Cond</td></tr>
+      <tr><td><code>ns:extendedInfo[POU_ID]</code></td><td>$pOuId</td><td>Cond: not blank</td><td>Cond: not blank</td><td>Cond: not blank</td><td>Cond: not blank</td></tr>
+      <tr><td><code>ns:extendedInfo[CUS_ID]</code></td><td>$custId</td><td>Cond: not blank</td><td>Cond: not blank</td><td>Cond: not blank</td><td>Cond: not blank</td></tr>
+      <tr><td><code>ns:extendedInfo[PAGR_ID]</code></td><td>$pAgreeId</td><td>Cond: not blank</td><td>Cond: not blank</td><td>Cond: not blank</td><td>Cond: not blank</td></tr>
+      <tr><td><code>ns:extendedInfo[SUB_ID]</code></td><td>$subId</td><td>—</td><td>Cond: not blank</td><td>—</td><td>Cond: not blank</td></tr>
+      <tr><td><code>ns:extendedInfo[MOBILE_NO]</code></td><td>$msisdn</td><td>—</td><td>Cond: not blank</td><td>—</td><td>Cond: not blank</td></tr>
+      <tr><td><code>ns:extendedInfo[OU_ID]</code></td><td>$cOu/OUId</td><td>—</td><td>—</td><td><strong>Always</strong></td><td><strong>Always</strong></td></tr>
+      <tr><td><code>ns:extendedInfo[CLM_CampaignID]</code></td><td>$orderRequest/OrderData/ExtendedInfo[CLM_CampaignID]/Value</td><td>—</td><td>Cond: exists</td><td>—</td><td>Cond: exists</td></tr>
+      <tr><td><code>ns:extendedInfo[CLM_CampTransID]</code></td><td>CLM_CampTransID ExtendedInfo</td><td>—</td><td>Cond</td><td>—</td><td>Cond</td></tr>
+      <tr><td><code>ns:extendedInfo[CLM_Current_CampaignID]</code></td><td>CLM_Current_CampaignID ExtendedInfo</td><td>—</td><td>Cond</td><td>—</td><td>Cond</td></tr>
+      <tr><td><code>ns:extendedInfo[CLM_Source]</code></td><td>CLM_Source ExtendedInfo</td><td>—</td><td>Cond</td><td>—</td><td>Cond</td></tr>
+      <tr><td><code>ns:fromOrderId</code></td><td>$orderRequest/OrderData/OrderID</td><td>Cond</td><td>Cond</td><td>Cond</td><td>Cond</td></tr>
+      <tr><td><code>ns:userText</code></td><td>See §9.3 below</td><td>Always</td><td>Always</td><td>Always</td><td>Always</td></tr>
+      <tr><td><code>ns:remark</code></td><td>$remark (FUTPP: CCBS→FE offer name)</td><td>Cond: not blank</td><td>Cond</td><td>Cond</td><td>Cond</td></tr>
+      <tr><td><code>ns:accountSubtype</code></td><td>$accountSubType</td><td>Always</td><td>Always</td><td>Always</td><td>Always</td></tr>
+      <tr><td><code>ns:futureType</code></td><td>"FUTSOC" or "FUTPP"</td><td>Always</td><td>Always</td><td>Always</td><td>Always</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§9.3 — userText Construction</h3>
+    <table>
+      <tr><th>Scope</th><th>Pattern</th><th>Difference</th></tr>
+      <tr><td>PP@POU</td><td><code>"{inputUserText};FUTSOC request by {channel} on {dateTimeNow};"</code></td><td>Contains "FUTSOC" keyword</td></tr>
+      <tr><td>Sub@POU, PP@COU, Sub@COU</td><td><code>"{inputUserText};request by {channel} on {dateTimeNow};"</code></td><td>No "FUTSOC" keyword</td></tr>
+    </table>
+    <p style="margin-top:4px;color:#555;font-size:.88rem;">inputUserText comes from <code>tib:if-absent(scope/ActivityInfo/UserText, "")</code> for each scope.</p>
+
+    <h3 style="margin-top:16px;">§9.4 — ns2:futureSocs — Main futureSoc</h3>
+    <table>
+      <tr><th>Element</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>ns2:code</code></td><td>$code (offer.Soc)</td><td>Always</td></tr>
+      <tr><td><code>ns2:effectiveDate</code></td><td>$offer/EffectiveDate</td><td>Conditional: isFutEffective=='true' AND offer.EffectiveDate exists</td></tr>
+      <tr><td><code>ns2:expireDate</code></td><td>$offer/ExpirationDate</td><td>Conditional: if exists</td></tr>
+      <tr><td><code>ns2:instanceId</code></td><td>$offer/OfferInstanceId</td><td>Conditional: if exists</td></tr>
+      <tr><td><code>ns2:parentInstanceId</code></td><td>$offer/ParentOfferInstanceId</td><td>Conditional: if exists</td></tr>
+      <tr><td><code>ns2:parameter[*]</code></td><td>for-each $offer/ParameterInfo → paramName/paramValue</td><td>Each ParameterInfo entry</td></tr>
+      <tr><td><code>ns2:childSoc[*]</code></td><td>for-each $offer/RelatedOffersArray → code/parameters/type/socName</td><td>Each RelatedOffersArray entry</td></tr>
+      <tr><td><code>ns2:type</code></td><td>$offer/ServiceType</td><td>Conditional: if exists</td></tr>
+      <tr><td><code>ns2:subType</code></td><td>$futureType</td><td>Always</td></tr>
+      <tr><td><code>ns2:socName</code></td><td>$offer/OfferName</td><td>Conditional: if exists</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§9.5 — ns4:futureResourceRange (Sub@POU and Sub@COU only)</h3>
+    <p>Included when <code>exists(subscriber/SubscriberOffers[ServiceType='80'])</code>. Iterates <code>subscriber/ResourceRangeInfo[Action='PP']</code>:</p>
+    <table>
+      <tr><th>Element</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>ns4:action</code></td><td>ResourceRangeInfo.Action</td><td>Always</td></tr>
+      <tr><td><code>ns4:name</code></td><td>ResourceRangeInfo.ResourceName</td><td>Always</td></tr>
+      <tr><td><code>ns4:value</code></td><td>ResourceRangeInfo.ValuesArray</td><td>Always</td></tr>
+      <tr><td><code>ns4:effectiveDate</code></td><td>ResourceRangeInfo.effectiveDate</td><td>Conditional: if exists</td></tr>
+      <tr><td><code>ns4:expirationDate</code></td><td>ResourceRangeInfo.expirationDate</td><td>Conditional: if exists</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §11 -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Scope</th><th>PROCESS_ID suffix</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th><th>WritePayload gate</th></tr>
+      <tr><td>PP@POU</td><td>_REQ</td><td>"OMX_ADD_FUT_OFFERS"</td><td>"Request Sent for OMX_ADD_FUTPP"</td><td>Yes</td></tr>
+      <tr><td>Sub@POU</td><td>_REQ</td><td>"OMX_ADD_FUT_OFFERS"</td><td>"Request Sent for OMX_ADD_FUT_PP"</td><td>Yes</td></tr>
+      <tr><td>PP@COU</td><td>—</td><td>—</td><td><strong>NO AUDIT LOG</strong></td><td>—</td></tr>
+      <tr><td>Sub@COU</td><td>_REQ</td><td>"OMX_ADD_FUT_OFFERS"</td><td>"Request Sent for OMX_ADD_FUT_OFFERS"</td><td>Yes</td></tr>
+    </table>
+    <div class="callout callout-error" style="margin-top:8px;">
+      PP@COU scope is missing its Logger audit event. The code at lines 268–279 dispatches the event and increments RequestCount but sends no Logger event. This is an oversight that would make PP@COU requests invisible in audit logs.
+    </div>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      AUDIT_TRACE values are inconsistent: PP@POU says "FUTPP" (not FUTSOC or FUT_OFFERS), Sub@POU says "FUT_PP", only Sub@COU says "FUT_OFFERS" — none exactly match "OMX_ADD_FUT_OFFERS". These appear to be copy-paste artifacts from different development stages.
+    </div>
+  </div>
+</div>
+
+<!-- §12 -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Action</th></tr>
+      <tr><td>Any event dispatched (isSkipped==false)</td><td>Status = GetActivityStatusString("1", false); <code>SendDataToDB(orderRequest)</code></td></tr>
+      <tr><td>No events dispatched (isSkipped==true)</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+      <tr><td>Exception</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+    </table>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      Status "1" is set inline after each event send at PP@POU (line 124) and PP@COU (line 277). Then it is set again at end (line 359) for ALL cases where isSkipped==false. These intermediate status sets are redundant — the final one dominates since no other rule fires in between.
+    </div>
+  </div>
+</div>
+
+<!-- §13 -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Exception</th><th>Handler</th></tr>
+      <tr><td>Any exception in try block</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §14 -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Helpers.GetActivityEffectiveType(date, logicalDate)</code></td><td>Classify date as IM/BD/FUT relative to logicalDate</td></tr>
+      <tr><td><code>Helpers.GetXMLForAgreementOffer(orderRequest, agreeRefId, refId)</code></td><td>Build PreExecCheck XML for PP@POU</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberOfferActionFilterWithExtendedInfo(orderRequest, subRefId, refId, filter, action)</code></td><td>Build PreExecCheck XML for Sub@POU (with FE_OR_CCBS and Action)</td></tr>
+      <tr><td><code>Helpers.GetXMLForAgreementOfferInChildOU(orderRequest, agreeRefId, refId, pOuRefId)</code></td><td>Build PreExecCheck XML for PP@COU</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberOfferInChildOU(orderRequest, subRefId, refId, pOuRefId)</code></td><td>Build PreExecCheck XML for Sub@COU</td></tr>
+      <tr><td><code>Helpers.GetActivityStatusString("1", false)</code></td><td>Return status string for "IN PROGRESS" state</td></tr>
+      <tr><td><code>Helpers.SendDataToDB(orderRequest)</code></td><td>Persist order state after dispatch</td></tr>
+      <tr><td><code>Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>Skip all offers (none qualified)</td></tr>
+      <tr><td><code>Helpers.HandleActivityException(orderRequest, activity, ex, msg)</code></td><td>Error state transition</td></tr>
+      <tr><td><code>Instance.PropertyArray.toArrayConcept(ChildOU.Subscriber)</code></td><td>Convert Sub@COU property array to concept array for iteration</td></tr>
+      <tr><td><code>XPath.evalAsString("...Parameter[1]...")</code></td><td>Read activity Parameter[1] for orderType override</td></tr>
+      <tr><td><code>XPath.evalAsString("...Account[1]/AccountManagementInfo/AccountSubType...")</code></td><td>Read accountSubType</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><code>Request_OMX_ADD_FUT_OFFERS (rule)
+├── isActResub = (RequestCount>0 && IsOrderResubmitted)
+└── try {
+    ├── Instance.getByExtIdByUri("LogicalDate", ...) → logicalDate
+    ├── XPath.evalAsString(Account[1].AccountSubType)    → accountSubType
+    ├── XPath.evalAsString(Parameter[1])                 → orderType override
+    ├── [PP@POU: ParentOU.Agreement.Offers loop]
+    │   ├── GetXMLForAgreementOffer()
+    │   ├── XPath.execute(PreExecCheck)                  → chkRes
+    │   ├── [if chkRes=="true" && !reqSuccess]
+    │   │   ├── XPath evalAsString(offer.ExtendedInfo[OfferOriginalEffectiveDate])
+    │   │   ├── Helpers.GetActivityEffectiveType() x3    → isFutEffective, futureOrderEffectiveDate
+    │   │   ├── Event.createEvent(xslt://OMX_ADD_FUTURE [PP@POU])
+    │   │   ├── Event.Ext.sendEventImmediate(reqEvent)
+    │   │   ├── RequestCount++ (if !isActResub)
+    │   │   ├── Status = GetActivityStatusString("1", false)
+    │   │   └── Event.Ext.sendEventImmediate(Logger audit "...FUTPP")
+    ├── [Sub@POU: Subscriber.SubscriberOffers loop]
+    │   ├── XPath.evalAsString(offer.ExtendedInfo[FE_OR_CCBS])
+    │   ├── GetXMLForSubscriberOfferActionFilterWithExtendedInfo()
+    │   ├── XPath.execute(PreExecCheck)                  → chkRes
+    │   ├── [if chkRes=="true" && !reqSuccess]
+    │   │   ├── Helpers.GetActivityEffectiveType() x3    → isFutEffective, futureOrderEffectiveDate
+    │   │   ├── Event.createEvent(xslt://OMX_ADD_FUTURE [Sub@POU + EFF_ORD_DT override + futureResourceRange])
+    │   │   ├── Event.Ext.sendEventImmediate(reqEvent)
+    │   │   ├── RequestCount++ (if !isActResub)
+    │   │   └── Event.Ext.sendEventImmediate(Logger audit "...FUT_PP")
+    ├── [PP@COU: ChildOU.Agreement.Offers loop]
+    │   ├── GetXMLForAgreementOfferInChildOU()
+    │   ├── XPath.execute(PreExecCheck)
+    │   ├── [if chkRes=="true" && !reqSuccess]
+    │   │   ├── Helpers.GetActivityEffectiveType() x3
+    │   │   ├── Event.createEvent(xslt://OMX_ADD_FUTURE [PP@COU])
+    │   │   ├── Event.Ext.sendEventImmediate(reqEvent)
+    │   │   ├── RequestCount++ (if !isActResub)
+    │   │   └── Status = GetActivityStatusString("1", false)  [NO Logger audit for PP@COU!]
+    ├── [Sub@COU: ChildOU.Subscriber.SubscriberOffers loop]
+    │   ├── Instance.PropertyArray.toArrayConcept(ChildOU.Subscriber)
+    │   ├── GetXMLForSubscriberOfferInChildOU()
+    │   ├── XPath.execute(PreExecCheck)
+    │   ├── [if chkRes=="true" && !reqSuccess]
+    │   │   ├── Helpers.GetActivityEffectiveType() x3
+    │   │   ├── Event.createEvent(xslt://OMX_ADD_FUTURE [Sub@COU + EFF_ORD_DT + futureResourceRange])
+    │   │   ├── Event.Ext.sendEventImmediate(reqEvent)
+    │   │   ├── RequestCount++ (if !isActResub)
+    │   │   └── Event.Ext.sendEventImmediate(Logger audit "...FUT_OFFERS")
+    ├── [if !isSkipped]
+    │   ├── Status = GetActivityStatusString("1", false)
+    │   └── Helpers.SendDataToDB(orderRequest)
+    └── [else] Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")
+} catch → Helpers.HandleActivityException()</code></pre>
+  </div>
+</div>
+
+<!-- §17 -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Per-offer PreExecCheck (separate XML helper per scope). Check reqSuccess to skip already-succeeded offers on resubmit.</td></tr>
+      <tr><td>R2</td><td>isActResub detection: skip RequestCount increment during resubmit of previously-dispatched requests.</td></tr>
+      <tr><td>R3</td><td>futureType defaults "FUTSOC"; changes to "FUTPP" when ServiceType=="80". remark set when FUTPP.</td></tr>
+      <tr><td>R4</td><td>futureOrderEffectiveDate uses 4-priority selection algorithm (§6.2).</td></tr>
+      <tr><td>R5</td><td>EFF_ORD_DT ExtendedInfo overrides ns:effectiveDate in futureOrder — subscriber scopes only.</td></tr>
+      <tr><td>R6</td><td>FUTPP companion futureSoc: ServiceType=85, FE-tagged, TR_CONTRACT_NUMBER → effectiveDate from OfferOriginalEffectiveDate.</td></tr>
+      <tr><td>R7</td><td>futureResourceRange: emit when ServiceType='80' offer exists in subscriber; source from ResourceRangeInfo[Action='PP'].</td></tr>
+      <tr><td>R8</td><td>COU scopes: add OU_ID extendedInfo unconditionally (not conditional on blank like other IDs).</td></tr>
+      <tr><td>R9</td><td>Sub@POU: add CLM_* ExtendedInfo from OrderData.ExtendedInfo. Sub@COU: same CLM_* plus OU_ID.</td></tr>
+      <tr><td>R10</td><td>Fan-in: count(Response[ResponseCode ends "000"]) == RequestCount.</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">Design Notes</h3>
+    <table>
+      <tr><th>Note</th><th>Severity</th><th>Detail</th></tr>
+      <tr><td>PP@COU missing Logger audit event</td><td><span class="badge badge-red">HIGH</span></td><td>PP@COU dispatches events but sends no Logger audit. Makes PP@COU requests invisible in audit trail. Likely omission during code development.</td></tr>
+      <tr><td>AUDIT_TRACE inconsistency across scopes</td><td><span class="badge badge-orange">MEDIUM</span></td><td>"FUTPP", "FUT_PP", "FUT_OFFERS" across 3 scopes — none exactly match the rule name. Copy-paste artifacts.</td></tr>
+      <tr><td>Redundant Status="1" set inside PP@POU and PP@COU loops</td><td><span class="badge badge-blue">LOW</span></td><td>Status is set both inline (per event) and at the end. The final one dominates. Harmless but confusing.</td></tr>
+      <tr><td>Sub@COU uses toArrayConcept; Sub@POU uses direct index iteration</td><td><span class="badge badge-blue">INFO</span></td><td>Inconsistency in how COU vs POU subscribers are iterated. Both work but different patterns.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Condensed)</div>
+  <div class="section-body">
+    <pre><code><span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.<span class="ty">Request_OMX_ADD_FUT_OFFERS</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> { <span class="ty">OrderRequest</span> orderRequest; <span class="ty">Activity</span> orderCurrentActivity; }
+    <span class="kw">when</span> { <span class="cm">/* extId / ActivityID=="OMX_ADD_FUT_OFFERS" / NextActivityID / Status=="WAITING" */</span> }
+    <span class="kw">then</span> {
+        isActResub = (RequestCount&gt;<span class="nu">0</span> &amp;&amp; IsOrderResubmitted);
+        <span class="kw">try</span> {
+            logicalDate = resolve <span class="kw">from</span> LogicalDate concept OR DateTime.<span class="fn">now</span>();
+            accountSubType = XPath.evalAsString(Account[<span class="nu">1</span>].AccountSubType);
+            orderType = OrderData.OrderType; <span class="kw">if</span>(Parameter[<span class="nu">1</span>]!="") orderType = Parameter[<span class="nu">1</span>];
+
+            <span class="kw">for</span>(iPOU...) {
+                <span class="cm">// PP@POU: Agreement Offers</span>
+                <span class="kw">for</span>(iPouOffer...) {
+                    chkRes = GetXMLForAgreementOffer + XPath.execute(PreExecCheck);
+                    <span class="kw">if</span>(chkRes==<span class="st">"true"</span> &amp;&amp; !reqSuccess) {
+                        futureType = offer.ServiceType==<span class="st">"80"</span> ? <span class="st">"FUTPP"</span> : <span class="st">"FUTSOC"</span>;
+                        futureOrderEffectiveDate = select(see §6.2);
+                        isFutEffective = GetEffType(EffDate)==<span class="st">"FUT"</span>;
+                        reqEvent = Event.createEvent(<span class="st">"xslt://OMX_ADD_FUTURE [PP@POU]"</span>); <span class="cm">/* see §9.1-§9.4 */</span>
+                        Event.Ext.sendEventImmediate(reqEvent);
+                        RequestCount++; Status=<span class="st">"1"</span>; Logger("...FUTPP");
+                    }
+                }
+                <span class="cm">// Sub@POU: Subscriber Offers</span>
+                <span class="kw">for</span>(iPouSub...; iPouSubOffer...) {
+                    chkRes = GetXMLForSubscriberOfferActionFilterWithExtendedInfo + XPath.execute(PreExecCheck);
+                    <span class="kw">if</span>(chkRes==<span class="st">"true"</span> &amp;&amp; !reqSuccess) {
+                        reqEvent = Event.createEvent(<span class="st">"xslt://OMX_ADD_FUTURE [Sub@POU+EFF_ORD_DT+ResourceRange]"</span>);
+                        Event.Ext.sendEventImmediate(reqEvent); RequestCount++; Logger("...FUT_PP");
+                    }
+                }
+                <span class="cm">// PP@COU: ChildOU Agreement Offers</span>
+                <span class="kw">for</span>(iCOU...; iCouOffer...) {
+                    chkRes = GetXMLForAgreementOfferInChildOU + XPath.execute(PreExecCheck);
+                    <span class="kw">if</span>(chkRes==<span class="st">"true"</span> &amp;&amp; !reqSuccess) {
+                        reqEvent = Event.createEvent(<span class="st">"xslt://OMX_ADD_FUTURE [PP@COU]"</span>);
+                        Event.Ext.sendEventImmediate(reqEvent); RequestCount++; Status=<span class="st">"1"</span>;
+                        <span class="cm">// No Logger event for PP@COU (omission)</span>
+                    }
+                }
+                <span class="cm">// Sub@COU: ChildOU Subscriber Offers (toArrayConcept)</span>
+                <span class="kw">for</span>(iCouSub...; iCouSubOffer...) {
+                    chkRes = GetXMLForSubscriberOfferInChildOU + XPath.execute(PreExecCheck);
+                    <span class="kw">if</span>(chkRes==<span class="st">"true"</span> &amp;&amp; !reqSuccess) {
+                        reqEvent = Event.createEvent(<span class="st">"xslt://OMX_ADD_FUTURE [Sub@COU+EFF_ORD_DT+ResourceRange]"</span>);
+                        Event.Ext.sendEventImmediate(reqEvent); RequestCount++; Logger("...FUT_OFFERS");
+                    }
+                }
+            }
+            <span class="kw">if</span>(!isSkipped) { Status=<span class="st">"1"</span>; SendDataToDB(orderRequest); }
+            <span class="kw">else</span> { SkipActivity(<span class="st">"4"</span>); }
+        } <span class="kw">catch</span>(ae) { HandleActivityException; }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<!-- §19 -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule (Response_OMX_ADD_FUT_OFFERS)</div>
+  <div class="section-body">
+    <h3>§19.1 — Overview</h3>
+    <p>Handles incoming responses from the OMX FM Future Orders system. Creates a <code>OMX_AddFutureRes</code> concept from the response, appends it to <code>currActivity.Response</code>, sends a Logger audit event, and checks fan-in completion. Returns "true" when all expected successes have been received.</p>
+
+    <h3 style="margin-top:16px;">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Audit correlation (OMXTrackingId)</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.OMX_ADD_FUTURE</code></td><td>Incoming FM response event</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Response array target; RequestCount source for fan-in</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§19.3 — ResponseBase Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span> <span class="tree-cond">(Concepts.FM.Response.OMX_AddFutureRes)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span> <span class="badge badge-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange">Conditional: if exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge badge-orange">Conditional: if exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange">Conditional: if exists</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      Note: <code>ReferenceId</code> is NOT mapped in the response concept (unlike some other FMs). The reqSuccess check in the request rule uses ReferenceId for idempotency — but the response rule does not populate it. This means ReferenceId will always be null/empty in Response entries, so the reqSuccess check <code>String.equals(Response[i].ReferenceId, refId)</code> will never match on resubmit unless ReferenceId comes from elsewhere.
+    </div>
+
+    <h3 style="margin-top:16px;">§19.4 — Response Completion Logic (Fan-In)</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+      <tr><td>Return "true"</td><td>All dispatched requests have returned a "000" success code</td></tr>
+      <tr><td>Return "false"</td><td>Still waiting for more "000" responses</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">§19.5 — Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>PROCESS_ID suffix</td><td>_RES</td></tr>
+      <tr><td>OPERATION_NAME</td><td>"OMX_ADD_FUT_OFFERS"</td></tr>
+      <tr><td>TARGET_SYSTEM</td><td>OMX_FM</td></tr>
+      <tr><td>AUDIT_TRACE</td><td>"Response received for OMX_ADD_FUT_OFFERS"</td></tr>
+      <tr><td>payload</td><td>$eventResponse (conditional: WritePayload=="true")</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · OMX_ADD_FUT_OFFERS</footer>
+</body>
+</html>

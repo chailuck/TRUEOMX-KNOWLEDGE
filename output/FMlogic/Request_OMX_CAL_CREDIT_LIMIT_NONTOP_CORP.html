@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>OMX_CAL_CREDIT_LIMIT_NONTOP_CORP</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>OMX_CAL_CREDIT_LIMIT_NONTOP_CORP</h1>
+  <div class="subtitle">Internal credit limit calculation — no backend call, computes PersonalCreditLimit from RC ExtInfo written by FM23</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: NONE (internal OMX rule)</span>
+    <span class="meta-chip">Author: warawich-nb</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: Internal calculation → NextActivity</span>
+    <span class="meta-chip">Location: Rules.OMConsumers.OMXOM</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>OMX_CAL_CREDIT_LIMIT_NONTOP_CORP</strong> is a pure internal calculation rule (OMXOM, not OMXFM). It derives a personal credit limit for non-TOP/PREMIUM corporate accounts from the RC (recurring charge) ExtInfo written by FM23 (OMX_GET_RECURRING_CHARGE). No external backend call is made.
+    </div>
+    <div class="callout warn">
+      <strong>No response handler:</strong> This rule completes synchronously and calls <code>NextActivity</code> directly. There is no corresponding Response rulefunction — the activity proceeds immediately after the calculation.
+    </div>
+    <div class="callout info">
+      <strong>Credit limit calculation priority (per agreement type):</strong>
+      1. POU.Agreement.Offers ServiceType=80 + ServiceLevel=71/G → individual RC, RoundUp(RC, 100)
+      2. POU.Agreement.Offers ServiceType=80 + ServiceLevel=67/C → RC × numberOfSub, RoundUp to 100
+      3. POU.Subscriber.SubscriberOffers ServiceType=80 (FE only) → sum all RC + currentCreditLimit, RoundUp to 100
+      Same logic applies to ChildOU.Agreement.Offers and ChildOU.Subscriber.SubscriberOffers.
+    </div>
+    <div class="callout success">
+      <strong>Write-backs (3):</strong> (1) <code>account.AccountManagementInfo.PersonalCreditLimit</code> ← calculateCreditLimit (if > 0). (2) AccountExtInfo Name="CALCULATECREDITLIMIT". (3) AccountExtInfo Name="CURRENTCREDITLIMIT".
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXOM.OMX_CAL_CREDIT_LIMIT_NONTOP_CORP</code></td></tr>
+      <tr><td>Author</td><td>warawich-nb</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>None — internal calculation</td></tr>
+      <tr><td>Fan-in</td><td>No response handler — calls <code>NextActivity</code> directly</td></tr>
+      <tr><td>Iteration target</td><td><code>Customer.Account[]</code></td></tr>
+      <tr><td>Key input</td><td>RC ExtInfo (Name="RC") on SubscriberOffers/AgreementOffers — written by FM23</td></tr>
+      <tr><td>Key input 2</td><td>OLD_PERSONAL_CREDITLIMIT ExtInfo — from CCBS GetAccountHeader (earlier step)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic Patterns -->
+<div class="section">
+  <div class="section-header">§7 — Credit Limit Calculation Logic</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Priority</th><th>Condition</th><th>Formula</th></tr>
+      <tr><td>1 — Agreement individual</td><td>POU/ChildOU.Agreement.Offers: ServiceType=80, ServiceLevel=71 or G, FE_OR_CCBS=FE</td><td><code>RoundUp(RC, 100)</code></td></tr>
+      <tr><td>2 — Agreement corporate</td><td>POU/ChildOU.Agreement.Offers: ServiceType=80, ServiceLevel=67 or C, FE_OR_CCBS=FE</td><td><code>RoundUp(RC × numberOfSub, 100)</code> (min numberOfSub=1)</td></tr>
+      <tr><td>3 — Subscriber offers</td><td>POU/ChildOU.Subscriber.SubscriberOffers: ServiceType=80, FE_OR_CCBS=FE; Agreement offers exhausted</td><td><code>RoundUp(sumRC + currentCreditLimit, 100)</code></td></tr>
+    </table>
+    <div style="margin-top:12px">
+      <strong>currentCreditLimit:</strong> = <code>account.AccountManagementInfo.PersonalCreditLimit</code> IF it differs from OLD_PERSONAL_CREDITLIMIT (i.e., was already updated). Else 0.
+    </div>
+    <div style="margin-top:8px">
+      <strong>OLD_PERSONAL_CREDITLIMIT:</strong> Read from Account.ExtendedInfo[Name="OLD_PERSONAL_CREDITLIMIT"].Value — written by an earlier CCBS GetAccountHeader step.
+    </div>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>OMX_CAL_CREDIT_LIMIT_NONTOP_CORP (internal rule, no FM pattern)
+├── for each Account[iAcc]:
+│   ├── if PreExecCheck: GetXMLForAccount(orderRequest, account.RefId) → XPath → chkRes
+│   ├── if chkRes != "true": continue (skip this account)
+│   ├── chkOldCreditLimit = XPath.evalAsDouble(ExtInfo[OLD_PERSONAL_CREDITLIMIT].Value ?? 0)
+│   ├── currentCreditLimit = PersonalCreditLimit if != chkOldCreditLimit; else 0
+│   ├── if account.AgreementRefId non-empty:
+│   │   for each POU[iPou]:
+│   │   ├── if pou.Agreement.RefId == account.AgreementRefId:
+│   │   │   ├── for each pou.Agreement.Offers[iPouOffer]:
+│   │   │   │   ├── skip if FE_OR_CCBS != FE
+│   │   │   │   ├── ServiceType=80 + ServiceLevel=71/G → calculateCreditLimit = RoundUp(RC, 100); break
+│   │   │   │   └── ServiceType=80 + ServiceLevel=67/C → calculateCreditLimit = RoundUp(RC×numberOfSub, 100); break
+│   │   │   └── if calculateCreditLimit==0: sumRC over pou.Subscriber[].SubscriberOffers[ServiceType=80, FE]
+│   │   │       → if sumRc>0: calculateCreditLimit = RoundUp(sumRc + currentCreditLimit, 100)
+│   │   └── for each ChildOU[iCou]:
+│   │       └── same logic for cou.Agreement and cou.Subscriber.SubscriberOffers
+│   ├── if calculateCreditLimit > 0:
+│   │   └── account.AccountManagementInfo.PersonalCreditLimit = calculateCreditLimit
+│   ├── always: account.ExtendedInfo[] += AccountExtendedInfo(Name="CALCULATECREDITLIMIT", Value=calculateCreditLimit)
+│   └── always: account.ExtendedInfo[] += AccountExtendedInfo(Name="CURRENTCREDITLIMIT", Value=currentCreditLimit)
+├── if isSkipped: SkipActivity("4")
+└── else:
+    ├── sendEvent(Logger — "OMX_CAL_CREDIT_LIMIT_NONTOP_CORP Completed")
+    └── NextActivity(orderRequest, orderCurrentActivity)  ← DIRECT, no async response</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Depends on RC ExtInfo written by FM23 (OMX_GET_RECURRING_CHARGE) — implicit FM23→FM24 ordering dependency</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document FM23→FM24 dependency chain; validate ProcessConfig sequence</td>
+      </tr>
+      <tr>
+        <td>OLD_PERSONAL_CREDITLIMIT must be written by an earlier CCBS GetAccountHeader step — undocumented cross-activity ExtInfo dependency</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document full ExtInfo write-chain; ensure GetAccountHeader runs before FM24</td>
+      </tr>
+      <tr>
+        <td>RoundUp(x, 100) — custom helper function; round-up logic must be preserved exactly in migration</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Unit-test RoundUp with edge cases (zero, negative, already-rounded values)</td>
+      </tr>
+      <tr>
+        <td>FE_OR_CCBS filter — only FE offers are used in the calculation. CCBS offers are silently excluded</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document FE/CCBS offer distinction; confirm this is intentional for non-TOP CORP accounts</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

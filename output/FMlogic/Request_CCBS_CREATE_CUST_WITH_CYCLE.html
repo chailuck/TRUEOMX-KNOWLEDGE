@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_CCBS_CREATE_CUST_WITH_CYCLE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700}
+.page-header .subtitle{opacity:0.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:0.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-always{background:#E8F5E9;color:#2e7d32}
+.badge-cond{background:#FFF3E0;color:#e65100}
+.warning-box{background:#FFF8E1;border-left:4px solid #FFC107;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+.info-box{background:#E3F2FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:4px;margin:12px 0;font-size:0.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#999;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CCBS_CREATE_CUST_WITH_CYCLE</h1>
+  <div class="subtitle">CCBS — Create New Customer Record with Billing Cycle</div>
+  <div class="meta-row">
+    <span class="meta-badge">Backend: CCBS</span>
+    <span class="meta-badge">Pattern: sendEventImmediate (single)</span>
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">Author: RS33-BANDIT</span>
+    <span class="meta-badge">Generated: 2026-09-21</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p><strong>CCBS_CREATE_CUST_WITH_CYCLE</strong> creates a new customer record in CCBS, including identity, name (CORP or INDY), address, billing cycle, and general customer info. The response writes the new CCBS-assigned <code>CustomerNo</code> back to <code>Customer.CustomerId</code> and also populates BirthDate, Identification, CustomerTypeInfo, and (for qualifying order types) full name and address from the CCBS record.</p>
+    <div class="info-box"><strong>LogicalDate concept:</strong> The activity date falls back through 4 levels — OPEN_DATE ExtendedInfo → EffectiveDate → LogicalDate concept → current date.</div>
+    <div class="warning-box"><strong>Audit log mismatch:</strong> Response audit log uses OPERATION_NAME = <code>"CCBS_CREATE_CUSTOMER_WITH_CYCLE"</code> (with underscores before CYCLE), while the ActivityID is <code>"CCBS_CREATE_CUST_WITH_CYCLE"</code>. Migration must align these names.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_CREATE_CUST_WITH_CYCLE</code></td></tr>
+      <tr><td>Author</td><td>RS33-BANDIT</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>CCBS</td></tr>
+      <tr><td>Send pattern</td><td><code>sendEventImmediate</code> — single request</td></tr>
+      <tr><td>LogicalDate</td><td>Read from <code>Instance.getByExtIdByUri("LogicalDate", "/Concepts/OM/LogicalDate")</code></td></tr>
+      <tr><td>Fan-in</td><td>Unconditional <code>return "true"</code></td></tr>
+      <tr><td>Response namespace</td><td><code>www.tibco.com/plugin/java/xmlSchema/amdocs.csm3g.datatypes.CustomerHeader</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBS_CreateCustomerWithCycleRes</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Business Logic -->
+<div class="card">
+  <div class="card-header">§7 — ActivityDateInfo Priority Chain</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Priority</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>1</td><td><code>Customer.ExtendedInfo[Name='OPEN_DATE']/Value</code></td><td>OPEN_DATE ExtendedInfo present and non-empty</td></tr>
+      <tr><td>2</td><td><code>OrderData.EffectiveDate</code></td><td>EffectiveDate non-empty after trim</td></tr>
+      <tr><td>3</td><td><code>LogicalDate</code> concept → <code>tib:parse-dateTime(yyyy-MM-dd HH:mm:ss, concat(left(logicalDate,10), ' 00:00:00'))</code></td><td>LogicalDate non-empty after trim</td></tr>
+      <tr><td>4</td><td><code>current-date()</code> → <code>tib:parse-dateTime(yyyy-MM-dd HH:mm:ss, concat(left(current-date(),10), ' 00:00:00'))</code></td><td>Default</td></tr>
+    </table>
+    <h4 style="color:var(--true-dark);margin:16px 0 8px">CustomerType Priority</h4>
+    <table>
+      <tr><th>Priority</th><th>Source</th></tr>
+      <tr><td>1</td><td><code>Customer.ExtendedInfo[Name='CUST_TYPE']/Value</code></td></tr>
+      <tr><td>2</td><td><code>Customer.CustomerTypeInfo.Type</code> (if non-empty)</td></tr>
+      <tr><td>3</td><td><code>73</code> (default)</td></tr>
+    </table>
+    <h4 style="color:var(--true-dark);margin:16px 0 8px">CustomerSubtype Priority</h4>
+    <table>
+      <tr><th>Priority</th><th>Source</th></tr>
+      <tr><td>1</td><td><code>Customer.ExtendedInfo[Name='CUST_SUB_TYPE']/Value</code></td></tr>
+      <tr><td>2</td><td><code>Customer.CustomerTypeInfo.Subtype</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Mapping -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — CreateNewCustomerRequest</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent → event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority, JMSCorrelationID, OrderID</span><span class="tree-arrow">←</span><span class="tree-src">standard order fields</span><span class="badge badge-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">Customer.RefId</span><span class="badge badge-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.User / Password</span><span class="badge badge-purple">Credential-gated: IsEnableUserPass='true'</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType, CES</span><span class="tree-arrow">←</span><span class="tree-src">standard order fields</span><span class="badge badge-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload → ns:CreateNewCustomerRequest</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:CustomerTypeInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:customerType</span><span class="tree-arrow">←</span><span class="tree-src">CUST_TYPE Ext > CustomerTypeInfo.Type > 73</span><span class="badge badge-always">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:customerSubtype</span><span class="tree-arrow">←</span><span class="tree-src">CUST_SUB_TYPE Ext > CustomerTypeInfo.Subtype</span><span class="badge badge-cond">Conditional</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ns:NameInfo (CORP: nameType=66+69) OR (INDY: nameType=73+69)</span><span class="tree-arrow">←</span><span class="tree-src">CustomerName fields (OrgName/BranchCode or Title/FirstName/LastName etc.)</span><span class="badge badge-cond">Conditional: NameType=CORP or INDY</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:AddressInfo</span><span class="tree-arrow">←</span><span class="tree-src">CustomerAddress (HouseNo→elem1, Moo→2, RoomNo→3, Floor→4, BuildingName→5, Soi→6, StreetName→7, Tumbon→8, Amphur→9, City→10, Zip→11, Country→12, TimeAtAddress→13, TypeOfAccomodation→14, subSoi→15)</span><span class="badge badge-cond">Conditional per field</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:customerBillingCycleInfo</span><span class="tree-arrow">←</span><span class="tree-src">Customer.BillCycleNo</span><span class="badge badge-cond">Conditional: BillCycleNo present</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns1:CustomerGeneralInfo</span><span class="tree-arrow">←</span><span class="tree-src">DealerCode, BirthDate, contactLang, Grading, Identification, IdentificationExpDate (order or globalVar fallback), IdentificationType, InitTimeInAddress, Nationality, Occupation, Salary, TimeInBusiness, trueId</span><span class="badge badge-cond">Conditional per field</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:ActivityInfo</span><span class="tree-arrow">←</span><span class="tree-src">activityReason (ActivityReason if present, else "CREQ"), userText</span><span class="badge badge-always">activityReason always present</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:ActivityDateInfo</span><span class="tree-arrow">←</span><span class="tree-src">4-way priority (OPEN_DATE > EffectiveDate > LogicalDate > current-date)</span><span class="badge badge-always">Always</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <div class="code-block">Request_CCBS_CREATE_CUST_WITH_CYCLE
+├── Instance.getByExtIdByUri("LogicalDate", "/Concepts/OM/LogicalDate") → logicalDateVal
+├── XPath.execute(PreExecCheck, serialize(orderRequest))
+├── Event.createEvent("xslt://.../CCBS_CREATE_CUST_WITH_CYCLE", orderRequest, logicalDateVal)
+│   [CORP/INDY NameInfo, AddressInfo (15 elements), CustomerGeneralInfo, ActivityInfo, ActivityDateInfo]
+├── Event.Ext.sendEventImmediate(reqEvent)
+├── RequestCount++
+├── sendEventImmediate(Logger REQ — OPERATION_NAME=CCBS_CREATE_CUST_WITH_CYCLE)
+├── GetActivityStatusString("1", false)
+├── SendDataToDB(orderRequest)
+└── HandleActivityException(...)
+
+Response_CCBS_CREATE_CUST_WITH_CYCLE
+├── Instance.createInstance(CCBS_CreateCustomerWithCycleRes) — ResponseCode,Message,Status,RefId
+├── customer.CustomerId ← CustomerHeader/CustomerIdInfo/CustomerNo
+├── param = tib:trim(currActivity.Parameter[1]); orderTypeChk = (param=="SOURCE")
+├── [if SOURCE] CustomerExtendedInfo{SOURCE_BILL_CYCLE=BillCycleNo} → customer.ExtendedInfo
+├── [else] if(BillCycleNo null/empty) customer.BillCycleNo ← CustomerHeader/CustomerBillingCycleInfo/BillCycleNo
+├── [if CustomerGeneralInfo null] create from CustomerHeader (Identification, LargeCustomerIndicator)
+├── [if BirthDate null] customer.CustomerGeneralInfo.BirthDate ← CustomerHeader/CustomerGeneralInfo/L9BirthDate
+├── [if IdentificationExpDate null] ← L9IdentificationExpDate
+├── [if IdentificationType null] ← L9IdentificationType
+├── [if Grading null] ← L9Grading
+├── [if CustomerTypeInfo null AND SOURCE] CustomerExtendedInfo{SOURCE_CUSTOMER_TYPE=CustomerType}
+├── [if CustomerTypeInfo null AND not SOURCE AND not OrderType=54] create CustomerTypeInfo from response
+├── [if SOURCE] CustomerExtendedInfo{SOURCE_IDENTIFICATION=L9Identification}
+├── [else if Identification null] ← L9Identification
+├── [if GetNameAddress globalVar contains OrderType] read all name+address fields back (ClearField pattern)
+├── sendEventImmediate(Logger RES — OPERATION_NAME=CCBS_CREATE_CUSTOMER_WITH_CYCLE)
+└── return "true"  (unconditional)</div>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <h4 style="color:var(--true-dark);margin-bottom:8px">Design Risks</h4>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Audit log OPERATION_NAME mismatch (CCBS_CREATE_CUSTOMER_WITH_CYCLE vs CCBS_CREATE_CUST_WITH_CYCLE)</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Standardize to ActivityID value; update existing audit reports if they filter by OPERATION_NAME</td></tr>
+      <tr><td>ClearField globalVar pattern — field = ClearField value → set null</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Migration must preserve ClearField behavior; empty string ≠ ClearField in target</td></tr>
+      <tr><td>LogicalDate concept read at runtime — missing concept causes null date</td><td><span class="badge badge-blue">[LOW]</span></td><td>Ensure LogicalDate concept is always populated in BE working memory</td></tr>
+      <tr><td>SOURCE path writes 3 ExtendedInfo keys (SOURCE_BILL_CYCLE, SOURCE_CUSTOMER_TYPE, SOURCE_IDENTIFICATION) instead of setting fields directly</td><td><span class="badge badge-blue">[LOW]</span></td><td>Document that SOURCE path is for specific order types (ChangeTelNo/BN); do not change behavior</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule</div>
+  <div class="card-body">
+    <h4 style="color:var(--true-dark);margin-bottom:8px">§19.1 Overview</h4>
+    <p>The response is the most write-heavy in ACTIVATION — it populates <code>Customer.CustomerId</code> and optionally updates BirthDate, Identification, CustomerTypeInfo, and (for GetNameAddress order types) full name and address back from CCBS.</p>
+    <h4 style="color:var(--true-dark);margin:16px 0 8px">§19.3 Key Response Writes</h4>
+    <table>
+      <tr><th>Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>Customer.CustomerId</code></td><td><code>CustomerHeader/CustomerIdInfo/CustomerNo</code></td><td>Always</td></tr>
+      <tr><td><code>Customer.BillCycleNo</code></td><td><code>CustomerHeader/CustomerBillingCycleInfo/BillCycleNo</code></td><td>param≠SOURCE AND BillCycleNo null/empty</td></tr>
+      <tr><td><code>CustomerExtendedInfo[SOURCE_BILL_CYCLE]</code></td><td><code>CustomerHeader/CustomerBillingCycleInfo/BillCycleNo</code></td><td>param=SOURCE</td></tr>
+      <tr><td><code>Customer.CustomerGeneralInfo.BirthDate</code></td><td><code>L9BirthDate</code></td><td>BirthDate null</td></tr>
+      <tr><td><code>Customer.CustomerGeneralInfo.Identification</code></td><td><code>L9Identification</code></td><td>param≠SOURCE AND Identification null</td></tr>
+      <tr><td><code>Customer.CustomerTypeInfo</code></td><td><code>CustomerTypeInfo.CustomerType/Subtype</code></td><td>CustomerTypeInfo null AND param≠SOURCE AND OrderType≠54</td></tr>
+      <tr><td>Full name+address fields (15+)</td><td>NameInfo/AddressInfo from CustomerHeader</td><td>GetNameAddress globalVar contains OrderType</td></tr>
+    </table>
+    <p style="margin-top:10px"><strong>Fan-in:</strong> Unconditional <code>return "true"</code>.</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

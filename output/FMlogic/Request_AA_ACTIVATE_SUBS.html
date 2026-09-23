@@ -1,0 +1,200 @@
+<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/><title>Request_AA_ACTIVATE_SUBS</title><style>:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}*{box-sizing:border-box;margin:0;padding:0}body{font-family:"Segoe UI",system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}header h1{font-size:1.7rem;font-weight:700}header p{opacity:.85;margin-top:6px;font-size:.95rem}.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}.meta-pill{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.8rem}main{max-width:1200px;margin:0 auto;padding:28px 24px}.section{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:22px;overflow:hidden}.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}.section-body{padding:20px}table{width:100%;border-collapse:collapse;font-size:.88rem}th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}tr:last-child td{border-bottom:none}tr:hover td{background:#fafafa}pre,code{font-family:"Cascadia Code","Consolas",monospace}pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);line-height:1.5}code{background:#f0e8e8;color:var(--true-dark);padding:2px 6px;border-radius:4px;font-size:.84rem}.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}.badge-jms{background:#FFE0B2;color:#E65100}.badge-log{background:#F1F8E9;color:#558B2F}.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.9rem}.callout-info{border-left-color:var(--info);background:#EEF4FF}.callout-warn{border-left-color:var(--warning);background:#FFF8EF}.flow-step{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px dashed var(--border)}.flow-step:last-child{border-bottom:none}.step-num{background:var(--true-red);color:#fff;width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700;flex-shrink:0;margin-top:2px}footer{text-align:center;padding:20px;font-size:.8rem;color:#888;border-top:1px solid var(--border);margin-top:10px}h3{color:var(--true-dark);font-size:.95rem;margin-bottom:10px}ul.plain{padding-left:20px}ul.plain li{margin-bottom:4px;font-size:.9rem}</style></head>
+<body><header><h1>Request_AA_ACTIVATE_SUBS</h1><p>AA Activate Subscriber &mdash; Per-Subscriber Fan-Out with Rich Provisioning Payload</p><div class="meta-row"><span class="meta-pill">Priority: 5</span><span class="meta-pill">forwardChain: true</span><span class="meta-pill">Author: awalia-t420</span><span class="meta-pill">Pattern: IntraActivitySequencing</span><span class="meta-pill">Backend: AA (ActivateSubscriberRequest)</span><span class="meta-pill">Generated: 2026-07-27</span></div></header><main>
+
+<div class="section"><div class="section-header">§1 &mdash; Overview &amp; Purpose</div><div class="section-body"><p>This is the core AA subscriber provisioning rule. It iterates every subscriber (ParentOU and ChildOU) and sends one <code>AA_ACTIVATE_SUBS</code> JMS event per subscriber to the AA backend. The event carries a rich <code>ActivateSubscriberRequest</code> payload including identity, network command type, SIM/IMSI, billing, operator, subscriber status, call-forwarding numbers, SharePlan AATags, and IoT flags. The response handler uses standard fan-in counting.</p><div class="callout"><strong>IntraActivitySequencing pattern:</strong> One request per subscriber. <code>RequestCount++</code> per eligible subscriber. Fan-in completes when <code>RequestCount == count(Response[ResponseCode ends with "000"])</code>.</div><div class="callout-info callout"><strong>AA_CHECK_CONFIRMATION pre-wiring:</strong> After all subscriber requests are sent, the rule scans <code>ProcessFlow.Activities[]</code> for any <code>AA_CHECK_CONFIRMATION</code> activity with the same <code>Parameter[0]</code> and pre-seeds its <code>RequestCount</code> &mdash; same pattern as <code>OMX_GET_SRV_TRX_NO</code>.</div><div class="callout-warn callout"><strong>ProcessSwitchFeatures pre-step:</strong> Before dispatching each event, <code>ProcessSwitchFeatures()</code> is called to apply switch feature data from AA_GET_SWITCH_FEATURE_OFFER to subscriber offerings before each dispatch.</div></div></div>
+
+<div class="section"><div class="section-header">§2 &mdash; Rule Metadata &amp; Attributes</div><div class="section-body"><table><tr><th>Attribute</th><th>Value</th></tr><tr><td>Rule Name</td><td><code>Request_AA_ACTIVATE_SUBS</code></td></tr><tr><td>Priority</td><td>5</td></tr><tr><td>forwardChain</td><td>true</td></tr><tr><td>Author</td><td>awalia-t420</td></tr><tr><td>Backend</td><td>AA &mdash; ActivateSubscriberRequest / ActivateSubscriberOnAARequest</td></tr><tr><td>Request schema</td><td><code>http://services.omx.truecorp.co.th/FMServices/activateSubscriberRequest</code></td></tr><tr><td>Dispatch pattern</td><td>IntraActivitySequencing &mdash; one event per subscriber (ParentOU + ChildOU)</td></tr><tr><td>Parameter[0] BE / Parameter[1] XPath</td><td>Network command type (SRV_TRX_TP_CD): NAC, INAC, DSD, IDSD, RCL, IRCL &hellip;</td></tr><tr><td>Parameter[1] BE / Parameter[2] XPath</td><td>SOURCE_OR_TARGET filter &mdash; governs bill cycle source selection</td></tr><tr><td>Named: ALT_CES</td><td>If "Y" &rarr; use OrderData.ExtendedInfo[ALT_CES] as CES endpoint</td></tr><tr><td>Named: OPERATORID</td><td>Activity-level operator ID override (tier 5 of 6)</td></tr><tr><td>Audit gate</td><td>UNCONDITIONAL &mdash; no AllowWriteLog check; LOG_LEVEL=ERROR for request (unusual)</td></tr><tr><td>finally block</td><td><code>Instance.deleteInstance(swfRes)</code> + <code>Instance.deleteInstance(fListRes)</code></td></tr></table></div></div>
+
+<div class="section"><div class="section-header">§4 &mdash; Rule Conditions (WHEN)</div><div class="section-body"><table><tr><th>#</th><th>Condition</th><th>Purpose</th></tr><tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Correlates activity instance</td></tr><tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "AA_ACTIVATE_SUBS"</code></td><td>Targets this FM only</td></tr><tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "AA_ACTIVATE_SUBS"</code></td><td>Order-level double-check</td></tr><tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Fresh activity only</td></tr></table></div></div>
+
+<div class="section"><div class="section-header">§5 &mdash; Execution Flow</div><div class="section-body"><div class="flow-step"><div class="step-num">1</div><div>Init: <code>isActResub</code>; guard <code>Parameter@length == 0</code> &rarr; throw DATA_ISSUE; read <code>param</code> (Parameter[2] XPath = SOURCE_OR_TARGET), <code>altParam</code> (ALT_CES named param), <code>paramOperatorIdValue</code> (OPERATORID named param)</div></div><div class="flow-step"><div class="step-num">2</div><div>For each <strong>ParentOU[i].Subscriber[j]</strong>: check <code>reqSuccess</code> (skip if CompletionStatus=2 for refId); evaluate PreExecCheck via <code>GetXMLForSubscriber</code>; derive <code>isCustomerHybrid</code> (AccountSubType starts-with "HY" or equals "PHI"), <code>isNetworkIOT</code>, <code>isSubscriberIOT</code>; resolve <code>pp</code> and <code>prev_pp</code>; call <code>ProcessSwitchFeatures()</code>; resolve BAN, billCycleNo; build and send <code>AA_ACTIVATE_SUBS</code> event (ParentOU+AATags variant); send Logger audit (unconditional, LOG_LEVEL=ERROR); if not isActResub &rarr; RequestCount++</div></div><div class="flow-step"><div class="step-num">3</div><div>For each <strong>ParentOU[i].ChildOU[m].Subscriber[n]</strong>: same flow using ChildOU XSLT variant (no SharePlan MNUM blocks; adds PBX OPERATOR_ID "170033")</div></div><div class="flow-step"><div class="step-num">4</div><div><strong>AA_CHECK_CONFIRMATION pre-wiring (lines 190-196):</strong> scan Activities[] &mdash; for any entry where ActivityID="AA_CHECK_CONFIRMATION" AND Parameter[0]=currentActivity.Parameter[0] AND RequestCount&gt;0 &rarr; set RequestCount = orderCurrentActivity.RequestCount to pre-seed fan-in counter</div></div><div class="flow-step"><div class="step-num">5</div><div>If any subscriber processed &rarr; status IN_PROGRESS + <code>SendDataToDB</code>; else &rarr; <code>SkipActivity("4")</code></div></div><div class="flow-step"><div class="step-num">6</div><div><code>finally</code>: <code>Instance.deleteInstance(swfRes)</code> + <code>Instance.deleteInstance(fListRes)</code></div></div><div class="flow-step"><div class="step-num">7</div><div>Exception &rarr; <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></div></div></div></div>
+
+<div class="section"><div class="section-header">§8 &mdash; System &amp; Integration Dependencies</div><div class="section-body"><h3>§8.1 &mdash; JMS / ESB Channel Dependencies</h3><table><tr><th>Direction</th><th>Event</th><th>Method</th><th>Note</th></tr><tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.AA_ACTIVATE_SUBS</code></td><td><code>sendEventImmediate</code></td><td>One per subscriber; both ParentOU and ChildOU use same event type</td></tr><tr><td><span class="badge badge-log">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td><code>sendEventImmediate</code></td><td>UNCONDITIONAL, per-subscriber; LOG_LEVEL=ERROR (unusual &mdash; most FMs use INFO)</td></tr></table><h3 style="margin-top:18px">§8.2 &mdash; Activity Parameter Dependencies</h3><table><tr><th>Parameter</th><th>Index</th><th>Role</th></tr><tr><td>Network command type</td><td>Parameter[0] BE / Parameter[1] XPath</td><td>SRV_TRX_TP_CD in payload; drives SRV_TRX_NM_CD mapping, SUB_STATUS, ProcessSwitchFeatures call, and AA_CHECK_CONFIRMATION match key</td></tr><tr><td>SOURCE_OR_TARGET filter</td><td>Parameter[1] BE / Parameter[2] XPath</td><td>Governs bill cycle source (SOURCE_BILL_CYCLE vs BillCycleNo) and customerNo source selection</td></tr><tr><td>ALT_CES</td><td>Named (GetActivityParameterValueFromKey)</td><td>"Y" &rarr; use OrderData.ExtendedInfo[ALT_CES] as CES endpoint instead of OrderData.CES</td></tr><tr><td>OPERATORID</td><td>Named (GetActivityParamValueFromKey)</td><td>Activity-level override for OPERATOR_ID field (tier 5 of 6-tier hierarchy)</td></tr></table><h3 style="margin-top:18px">§8.3 &mdash; Helper Function Dependencies</h3><table><tr><th>Function</th><th>Purpose</th></tr><tr><td><code>ProcessSwitchFeatures(orderReq, subscriber, agreement, isHybrid, pp, prev_pp, cmdType)</code></td><td>Applies switch feature data from AA_GET_SWITCH_FEATURE_OFFER to subscriber offers; called per-subscriber before dispatch</td></tr><tr><td><code>BRMS.ValidateIsIOT(subsType, isNetwork)</code></td><td>Returns true if subscriber type indicates IoT (true=network level, false=subscriber level)</td></tr><tr><td><code>ConvertBillCycleDate(tmpBCN)</code></td><td>Converts raw bill cycle number to AA-expected date format</td></tr><tr><td><code>GetXMLForSubscriber</code> / <code>GetXMLForSubscriberInChildOU</code></td><td>Serialises subscriber context XML for per-subscriber PreExecCheck XPath evaluation</td></tr></table><h3 style="margin-top:18px">§8.4 &mdash; Global Variable Dependencies</h3><table><tr><th>Global Variable Path</th><th>Used For</th></tr><tr><td><code>OMX_OM/Rules/OMConsumers/OMXFM/Request/ActivateIndy_OperatorIdtoAA</code></td><td>OPERATOR_ID for OrderType=1 + CustomerType=73 (Individual activation, tier 4)</td></tr><tr><td><code>OMX_OM/WritePayload</code></td><td>Controls whether audit payload body is included in Logger event</td></tr></table></div></div>
+
+<div class="section"><div class="section-header">§9 &mdash; Request Payload &mdash; ActivateSubscriberRequest</div><div class="section-body"><div class="callout-info callout">ParentOU and ChildOU variants are structurally identical except: (1) ChildOU omits SharePlan MNUM AATags blocks; (2) ChildOU adds PBX OPERATOR_ID "170033" as a tier; (3) ChildOU CUST_HYBRID uses inline XPath rather than the <code>isCustomerHybrid</code> pre-computed variable.</div><pre>createEvent
++-- JMSPriority         &lt;- OrderPriority                                        [Conditional]
++-- JMSCorrelationID    &lt;- OrderData/OMXTrackingId                              [Conditional]
++-- OrderID             &lt;- OrderData/OrderID                                    [Conditional]
++-- RefID               &lt;- subscriber RefId                                     [Always]
++-- OrderType           &lt;- OrderData/OrderType                                  [Conditional]
++-- CES                 &lt;- ALT_CES logic or OrderData/CES                       [Conditional]
++-- payload
+    +-- ns:ActivateSubscriberRequest
+        +-- ns:ActivateSubscriberOnAARequest
+            +-- ns:subscriptioninfo
+                +-- ns:customerNo          &lt;- CustomerId (SOURCE_CUSTOMER_ID if param=SOURCE) [Always]
+                +-- ns:subscriberId        &lt;- Subscriber/SubscriberId                        [Conditional]
+                +-- ns:payChannelId        &lt;- Account.PayChannelId OR Sub.PayChannelIdPrimary [Conditional]
+                +-- ns:CFU_NUM             &lt;- ResourceInfo[CFU_NO_PARAM]/ValuesArray         [Conditional]
+                +-- ns:CFNRC_NUM           &lt;- ResourceInfo[CFNRC_NO_PARAM]/ValuesArray       [Conditional]
+                +-- ns:CFB_NUM             &lt;- ResourceInfo[CFW_NO_PARAM]/ValuesArray         [Conditional]
+                +-- ns:CFNRY_NUM           &lt;- ResourceInfo[CFNRY_NO_PARAM]/ValuesArray       [Conditional]
+                +-- ns:SearchPayChannelPaginationInfo  pageSize=1000, pageNumber=0, rows=1000 [Always static]
+                +-- ns:MSISDN              &lt;- Subscriber/MSISDN                              [Always]
+                +-- ns:BAN                 &lt;- BAN selection logic (see §10.2)                [Always]
+                +-- ns:IMSI                &lt;- NEW_IMSI preferred over IMSI                   [Conditional]
+                +-- ns:SRV_TRX_TP_CD      &lt;- Parameter[1] XPath = Parameter[0] BE          [Always]
+                +-- ns:SRV_TRX_S_NO       &lt;- SrvTrxNoInfo[SrvTrxTp=cmd]/SrvTrxNo          [Conditional]
+                +-- ns:SRV_TRX_NM_CD      &lt;- command-to-name mapping 15 entries (§10.1)     [Always]
+                +-- ns:PP                  &lt;- pp (current price plan offer name)             [Always]
+                +-- ns:PROVISIONING_DATE  &lt;- current-dateTime() dd/MM/yyyy HH:mm:ss        [Always static-format]
+                +-- ns:OPERATOR_ID        &lt;- 6-tier hierarchy (§10.3)                       [Always]
+                +-- ns:ACCOUNT_CATEGORY   &lt;- CustomerType to I/B/C mapping (§10.4)         [Conditional block]
+                +-- ns:FIRST_NAME          &lt;- SubscriberName/FirstName                      [Conditional]
+                +-- ns:LAST_NAME           &lt;- SubscriberName/LastName                       [Conditional]
+                +-- ns:CERTIFICATE_NUMBER &lt;- Identification concat DealerCode               [Always]
+                +-- ns:CERTIFICATE_TYPE   &lt;- CustomerGeneralInfo/IdentificationType         [Conditional]
+                +-- ns:ACCOUNT_TYPE       &lt;- AccountManagementInfo/AccountSubType           [Always]
+                +-- ns:BIRTH_DATE         &lt;- CustomerGeneralInfo/BirthDate                  [Conditional]
+                +-- ns:BILLING_LANGUAGE   &lt;- Language: EN=&gt;E, TH=&gt;T, else empty           [Always]
+                +-- ns:GENDER             &lt;- SubscriberName/Gender                          [Conditional]
+                +-- ns:HOME_TELNO         &lt;- SubscriberName/HomePhone                       [Conditional]
+                +-- ns:SIM_NO             &lt;- tib:trim(ResourceInfo[SIM]/ValuesArray)        [Always]
+                +-- ns:COMPANY_CODE       &lt;- IoT: Account.CompanyCode; else: SubscriberType [Always]
+                +-- ns:BILL_CYCLE         &lt;- billCycleNo (converted via ConvertBillCycleDate) [Always]
+                +-- ns:SUB_STATUS         &lt;- "S" if suspend-type, else "A" (§10.5)         [Always]
+                +-- ns:SUB_STATUS_RSN_CODE &lt;- "CREQ" if Indy activation, else empty        [Always]
+                +-- ns:PREV_SUBSCRIBER_NO &lt;- ResourceInfo[OLD_MSISDN]/ValuesArray           [Conditional]
+                +-- ns:PREV_BAN           &lt;- conditional on OLD_MSISDN presence             [Conditional]
+                +-- ns:PREV_IMSI          &lt;- OLD_MSISDN: IMSI; else OLD_IMSI               [Conditional]
+                +-- ns:PREV_PP            &lt;- prev_pp (previous price plan CCBS)             [Always]
+                +-- ns:SOURCE_ID          &lt;- "AMDOCS"                                       [Always static]
+                +-- ns:CUST_HYBRID        &lt;- isCustomerHybrid                               [Always]
+                +-- ns:ZONE               &lt;- ResourceInfo[MSISDN_ZONE]/ValuesArray          [Conditional]
+                +-- ns:IOT                &lt;- SubscriberType stripped of leading "I"         [Conditional: isNetworkIOT]
+                +-- ns:AATags             &lt;- SharePlan AAXML blocks + AA_XML_Array          [Conditional]</pre></div></div>
+
+<div class="section"><div class="section-header">§10 &mdash; Key Business Logic Details</div><div class="section-body">
+<h3>§10.1 &mdash; SRV_TRX_NM_CD Mapping (Parameter[0] to AA Operation Name)</h3>
+<table><tr><th>Command(s)</th><th>ns:SRV_TRX_NM_CD</th></tr>
+<tr><td>NAC / INAC</td><td>Activate</td></tr>
+<tr><td>RCL / IRCL</td><td>Resume</td></tr>
+<tr><td>DSD / IDSD</td><td>Deactivate</td></tr>
+<tr><td>CCN / ICCN</td><td>SwapMSISDN</td></tr>
+<tr><td>SSP / ISSP</td><td>SwapSIM [first 8 chars of IMSI]</td></tr>
+<tr><td>CCD / ICCD</td><td>GeneralUpdate</td></tr>
+<tr><td>SSU / ISSU</td><td>SoftSuspend</td></tr>
+<tr><td>SRS / ISRS</td><td>SoftRestore</td></tr>
+<tr><td>SUS / ISUS</td><td>Suspend</td></tr>
+<tr><td>RSP / IRSP</td><td>Restore</td></tr>
+<tr><td>FTS / IFTS</td><td>FullToSoft</td></tr>
+<tr><td>CCI / ICCI</td><td>InformationUpdate</td></tr>
+<tr><td>RM2RFCRPF</td><td>Create dummy RF profile</td></tr>
+<tr><td>RM2RFMGRT</td><td>Migrate RM to RF by OTA</td></tr>
+<tr><td>SSPMGRT</td><td>Migrate RM to RF by SwapSIM</td></tr>
+<tr><td>(other)</td><td>(empty string)</td></tr></table>
+
+<h3 style="margin-top:18px">§10.2 &mdash; BAN Selection Logic</h3>
+<pre>if (OrderType IN {1, 11026}) AND CustomerType = 73  then  "999999999"   // Indy activation
+else if OrderType = 11001                            then  banParent      // SharePlan add
+else                                                       Account[RefId=AccountRefId]/AccountID</pre>
+
+<h3 style="margin-top:18px">§10.3 &mdash; OPERATOR_ID Selection Hierarchy (6 Tiers)</h3>
+<table><tr><th>Tier</th><th>Condition</th><th>Value</th></tr>
+<tr><td>1</td><td>tib:trim(OrderData/OperatorId) is non-empty</td><td>OrderData/OperatorId</td></tr>
+<tr><td>2</td><td>SubscriberType=RM AND OrderType IN {7,8}</td><td>98391</td></tr>
+<tr><td>3</td><td>SubscriberType=RF AND OrderType IN {7,8}</td><td>98392</td></tr>
+<tr><td>4</td><td>OrderType=1 AND CustomerType=73</td><td>Global var: ActivateIndy_OperatorIdtoAA</td></tr>
+<tr><td>4b (ChildOU only)</td><td>Media=PBX</td><td>170033</td></tr>
+<tr><td>5</td><td>string-length(paramOperatorIdValue) &gt; 0</td><td>OPERATORID named param value</td></tr>
+<tr><td>6 (default)</td><td>otherwise</td><td>60001</td></tr></table>
+
+<h3 style="margin-top:18px">§10.4 &mdash; ACCOUNT_CATEGORY Mapping</h3>
+<table><tr><th>CustomerTypeInfo/Type</th><th>AccountSubType</th><th>ACCOUNT_CATEGORY</th></tr>
+<tr><td>73</td><td>any</td><td>I (Individual)</td></tr>
+<tr><td>66</td><td>any</td><td>B (Business)</td></tr>
+<tr><td>67</td><td>any</td><td>C (Corporate)</td></tr>
+<tr><td>70</td><td>PHI</td><td>I</td></tr>
+<tr><td>70</td><td>other</td><td>C</td></tr></table>
+
+<h3 style="margin-top:18px">§10.5 &mdash; SUB_STATUS Logic</h3>
+<pre>SUB_STATUS = "S"  when SRV_TRX_TP_CD in {TRX, SUS, SSU, FTS, ISUS, ISSU, IFTS}
+           = "A"  otherwise</pre>
+
+<h3 style="margin-top:18px">§10.6 &mdash; PP (Price Plan) Resolution</h3>
+<pre>pp      = first OfferName where ServiceType=80 AND FE_OR_CCBS=FE  (check Subscriber then Agreement offers)
+          OR first OfferName where ServiceType=80 AND FE_OR_CCBS=CCBS
+          OR empty string
+
+prev_pp = first OfferName where ServiceType=80 AND FE_OR_CCBS=CCBS only</pre>
+
+<h3 style="margin-top:18px">§10.7 &mdash; CES Routing</h3>
+<pre>if altParam = "Y" AND OrderData.ExtendedInfo[ALT_CES]/Value is non-empty:
+    event.CES = ExtendedInfo[ALT_CES]/Value
+else:
+    event.CES = OrderData.CES</pre>
+
+<h3 style="margin-top:18px">§10.8 &mdash; SharePlan AATags (ParentOU only)</h3>
+<div class="callout-info callout">When <code>chkChildCancelShareplan=true</code> (OT 11002 + SHAREPLAN_ACTION=CANCEL) or <code>chkParentAddShareplan</code> is non-empty (OT 11001 or 21), emits AAXML feature group blocks with MNUM=Y, MAIN=mainNumber, CHILD=subscriberMSISDN. Additionally iterates <code>subscriberInstance.AA_XML_Array/AA_XML</code> and emits AAXML for each entry with non-empty NEW_OR_PREV. ChildOU variant has no SharePlan AATags.</div>
+
+<h3 style="margin-top:18px">§10.9 &mdash; isCustomerHybrid Logic</h3>
+<pre>isCustomerHybrid = (AccountSubType starts-with "HY") OR (AccountSubType = "PHI")
+Note: OMX-2748 added PHI as a hybrid account subtype alongside the HY prefix.</pre>
+</div></div>
+
+<div class="section"><div class="section-header">§12 &mdash; Activity Status Management</div><div class="section-body"><table><tr><th>Trigger</th><th>Code</th><th>Status</th></tr><tr><td>Rule fires initially</td><td>0</td><td>WAITING</td></tr><tr><td>No eligible subscribers</td><td>4</td><td><span class="badge badge-purple">SKIPPED</span></td></tr><tr><td>First request sent</td><td>1</td><td><span class="badge badge-blue">IN_PROGRESS</span></td></tr><tr><td>Exception thrown</td><td>3</td><td><span class="badge badge-red">ERROR</span></td></tr><tr><td>Fan-in complete (response)</td><td>2</td><td><span class="badge badge-green">COMPLETED</span></td></tr></table></div></div>
+
+<div class="section"><div class="section-header">§15 &mdash; Function Dependency Tree</div><div class="section-body"><pre>Request_AA_ACTIVATE_SUBS (rule)
++-- Guard: Parameter@length == 0 =&gt; throw DATA_ISSUE
++-- GetActivityParamValueFromKey(currAct, "OPERATORID")
++-- GetActivityParameterValueFromKey(currAct, "ALT_CES")
++-- XPath.evalAsString(Parameter[2])                          [param = SOURCE_OR_TARGET]
++-- Per subscriber (ParentOU + ChildOU):
+|   +-- reqSuccess check: Response[ReferenceId=refId, CompletionStatus=2]
+|   +-- [PreExecCheck] GetXMLForSubscriber / GetXMLForSubscriberInChildOU
+|   +--     XPath.execute("/("+chkXPath+")", sXML, ...)
+|   +-- XPath.evalAsBoolean(isCustomerHybrid)                [starts-with HY or =PHI]
+|   +-- BRMS.ValidateIsIOT(subsType, true)                   [isNetworkIOT]
+|   +-- BRMS.ValidateIsIOT(subsType, false)                  [isSubscriberIOT]
+|   +-- XPath.evalAsString(pp XPath)                         [ServiceType=80 FE offer]
+|   +-- XPath.evalAsString(prev_pp XPath)                    [ServiceType=80 CCBS offer]
+|   +-- ProcessSwitchFeatures(orderRequest, subscriber, agreement,
+|   |     isCustomerHybrid, pp, prev_pp, Parameter[0])
+|   +-- [chkParentAddShareplan] XPath banParent resolution
+|   +-- XPath.evalAsString(billCycleNo source)
+|   +-- ConvertBillCycleDate(tmpBCN)
+|   +-- Event.createEvent(xslt://AA_ACTIVATE_SUBS)
+|   +-- Event.Ext.sendEventImmediate(reqEvent)
+|   +-- System.nanoTime()
+|   +-- Event.Ext.sendEventImmediate(Logger)                 [unconditional, LOG_LEVEL=ERROR]
+|   +-- [!isActResub] RequestCount++
++-- AA_CHECK_CONFIRMATION pre-wiring:
+|   +-- Activities[i].RequestCount = RequestCount
+|       (where ActivityID="AA_CHECK_CONFIRMATION"
+|       AND Parameter[0] == currActivity.Parameter[0]
+|       AND Activities[i].RequestCount &gt; 0)
++-- GetActivityStatusString("1", false)
++-- SendDataToDB(orderRequest)
++-- SkipActivity(orderRequest, orderCurrentActivity, "4")    [if isSkipped]
++-- HandleActivityException(orderRequest, orderCurrentActivity, ae, "")
++-- [finally] Instance.deleteInstance(swfRes) + Instance.deleteInstance(fListRes)
+
+Response_AA_ACTIVATE_SUBS (rulefunction)
++-- Instance.createInstance(xslt://AA_ActivateSubscriberRes)
+|   +-- extId           = payload/response/srv_trx_s_no    [unique: uses actual SRV TRX S NO]
+|   +-- ResponseCode    = eventResponse/ResponseCode
+|   +-- ResponseMessage = eventResponse/ResponseMsg
+|   +-- CompletionStatus= eventResponse/CompletionStatus
+|   +-- ReferenceId     = eventResponse/RefID
+|   +-- ret_description = payload/response/ret_description [Conditional]
+|   +-- subscriber_no   = payload/response/subscriber_no   [Conditional]
+|   +-- srv_trx_tp_cd   = payload/response/srv_trx_tp_cd   [Conditional]
+|   +-- srv_trx_s_no    = payload/response/srv_trx_s_no    [Conditional]
+|   +-- ret_code        = payload/response/ret_code        [Conditional]
+|   +-- OMXTrackingId   = orderRequest/OrderData/OMXTrackingId [Always]
++-- currActivity.Response[n] = activityRes
++-- System.nanoTime()
++-- Event.Ext.sendEventImmediate(Logger)                    [unconditional, LOG_LEVEL=INFO]
++-- XPath.evalAsInt(count(Response[tib:right(tib:trim(ResponseCode),3)="000"]))
++-- if RequestCount == successResponseCount =&gt; return "true"
++-- else =&gt; return "false"</pre></div></div>
+
+<div class="section"><div class="section-header">§17 &mdash; Migration Notes &amp; Recommendations</div><div class="section-body"><h3>Functional Requirements</h3><ul class="plain"><li><strong>R1</strong> &mdash; One request per subscriber (ParentOU + ChildOU). Fan-in completes when all subscribers respond with ResponseCode ending "000".</li><li><strong>R2</strong> &mdash; <code>ProcessSwitchFeatures()</code> must be called before each subscriber request &mdash; it mutates in-memory offer data populated by AA_GET_SWITCH_FEATURE_OFFER.</li><li><strong>R3</strong> &mdash; AA_CHECK_CONFIRMATION pre-wiring: after all subscriber requests sent, set AA_CHECK_CONFIRMATION.RequestCount = total subscriber count for the same command type.</li><li><strong>R4</strong> &mdash; SRV_TRX_S_NO must be looked up from SrvTrxNoInfo[SrvTrxTp=Parameter[0]] &mdash; pre-allocated by OMX_GET_SRV_TRX_NO. Must execute after OMX_GET_SRV_TRX_NO.</li><li><strong>R5</strong> &mdash; Parameter[0] may be IoT-prefixed (e.g., NAC=&gt;INAC) by OMX_TRANSFORM_NETWORK_CMD_TO_IOT before this rule fires. All 15 SRV_TRX_NM_CD mappings handle both plain and IoT-prefixed forms.</li><li><strong>R6</strong> &mdash; OPERATOR_ID 6-tier hierarchy must be preserved exactly, including the Indy global variable lookup and PBX special case (ChildOU only).</li><li><strong>R7</strong> &mdash; Bill cycle source: if param=SOURCE and SOURCE_BILL_CYCLE ExtendedInfo present, use that value instead of Customer.BillCycleNo.</li><li><strong>R8</strong> &mdash; BAN for Indy (OrderType 1 or 11026, CustomerType 73) must always be "999999999".</li><li><strong>R9</strong> &mdash; SharePlan AATags (MNUM/MAIN/CHILD AAXML blocks) apply to ParentOU subscribers only; must be excluded for ChildOU subscribers.</li><li><strong>R10</strong> &mdash; Request audit logging uses LOG_LEVEL=ERROR unconditionally &mdash; not INFO and not AllowWriteLog-gated. Preserve this level in migration monitoring.</li></ul><h3 style="margin-top:16px">Design Risks</h3><table><tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr><tr><td>15-entry SRV_TRX_NM_CD map is hardcoded in XSLT; new command types silently produce empty string</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Externalise to configuration table; alert on empty SRV_TRX_NM_CD at runtime</td></tr><tr><td>Parameter index off-by-one: BE Parameter[0] = XPath Parameter[1]. Easy misread in migration.</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Use named constants; document and unit-test index mapping explicitly</td></tr><tr><td>ProcessSwitchFeatures mutates in-memory before dispatch &mdash; not rolled back on failure</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Ensure ProcessSwitchFeatures is idempotent; test resub (isActResub=true) scenarios</td></tr><tr><td>AA_CHECK_CONFIRMATION pre-wiring matches by Parameter[0] equality &mdash; two AA_ACTIVATE_SUBS activities with same command type would both write same AA_CHECK_CONFIRMATION</td><td><span class="badge badge-blue">LOW</span></td><td>Verify process config has at most one AA_ACTIVATE_SUBS per command type</td></tr><tr><td>ChildOU CUST_HYBRID uses inline XPath rather than isCustomerHybrid variable &mdash; dual maintenance risk</td><td><span class="badge badge-blue">LOW</span></td><td>Consolidate to a shared helper in migration; single source of truth for hybrid detection</td></tr></table></div></div>
+
+<div class="section"><div class="section-header">§19 &mdash; Response Message Rule (Response_AA_ACTIVATE_SUBS)</div><div class="section-body"><h3>§19.1 &mdash; Overview</h3><p>Creates one <code>AA_ActivateSubscriberRes</code> concept per subscriber response and appends to <code>currActivity.Response[]</code>. The concept carries extended fields from the AA response body (ret_description, subscriber_no, srv_trx_tp_cd, srv_trx_s_no, ret_code). Fan-in completes when <code>RequestCount == count(Response[ResponseCode ends "000"])</code>.</p><div class="callout"><strong>Notable:</strong> <code>AA_ActivateSubscriberRes.extId</code> is set from <code>payload/response/srv_trx_s_no</code> (the actual service transaction sequence number), NOT from <code>OMXUtils.generateTrackingID()</code> as used by all other response concepts seen in this process. This is unique to AA_ACTIVATE_SUBS.</div><h3 style="margin-top:14px">§19.2 &mdash; AA_ActivateSubscriberRes Fields</h3><table><tr><th>Field</th><th>Source XPath</th><th>Note</th></tr><tr><td><code>extId</code></td><td><code>payload/response/srv_trx_s_no</code></td><td>Uses actual SRV TRX sequence number (not generateTrackingID)</td></tr><tr><td><code>ResponseCode</code></td><td><code>eventResponse/ResponseCode</code></td><td>Conditional</td></tr><tr><td><code>ResponseMessage</code></td><td><code>eventResponse/ResponseMsg</code></td><td>Conditional</td></tr><tr><td><code>CompletionStatus</code></td><td><code>eventResponse/CompletionStatus</code></td><td>Conditional</td></tr><tr><td><code>ReferenceId</code></td><td><code>eventResponse/RefID</code></td><td>Conditional</td></tr><tr><td><code>ret_description</code></td><td><code>payload/response/ret_description</code></td><td>Conditional</td></tr><tr><td><code>subscriber_no</code></td><td><code>payload/response/subscriber_no</code></td><td>Conditional</td></tr><tr><td><code>srv_trx_tp_cd</code></td><td><code>payload/response/srv_trx_tp_cd</code></td><td>Conditional</td></tr><tr><td><code>srv_trx_s_no</code></td><td><code>payload/response/srv_trx_s_no</code></td><td>Conditional</td></tr><tr><td><code>ret_code</code></td><td><code>payload/response/ret_code</code></td><td>Conditional</td></tr><tr><td><code>OMXTrackingId</code></td><td><code>orderRequest/OrderData/OMXTrackingId</code></td><td>Always</td></tr></table><h3 style="margin-top:14px">§19.3 &mdash; Fan-in Completion Logic</h3><pre>successResponseCount = count(currActivity.Response[
+    tib:right(tib:trim(ResponseCode), 3) = "000"
+])
+if currActivity.RequestCount == successResponseCount  =&gt;  return "true"   // all subscribers done
+else                                                   =&gt;  return "false"  // still awaiting</pre><div class="callout-warn callout">Fan-in counts only <strong>successful</strong> responses (ResponseCode suffix "000"). A failed subscriber response does not increment toward completion. Verify whether the orchestrator retries or escalates to order-level failure in this scenario.</div><h3 style="margin-top:14px">§19.4 &mdash; Response Audit Logging</h3><table><tr><th>Field</th><th>Value</th></tr><tr><td>PROCESS_ID</td><td>concat(pid, "_RES")</td></tr><tr><td>OPERATION_NAME</td><td>AA_ACTIVATE_SUBS</td></tr><tr><td>LOG_LEVEL</td><td>INFO (response uses INFO; request uses ERROR)</td></tr><tr><td>payload</td><td>Conditional on WritePayload global variable</td></tr></table></div></div>
+
+</main><footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation</footer></body></html>

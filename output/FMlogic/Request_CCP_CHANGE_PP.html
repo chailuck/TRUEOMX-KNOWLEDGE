@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_CCP_CHANGE_PP</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.header h1{font-size:2rem;font-weight:700;letter-spacing:1px;}
+.header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.header .meta{margin-top:16px;display:flex;gap:24px;flex-wrap:wrap;font-size:.85rem;opacity:.9;}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:12px;}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px;}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600;}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FAFAFA;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-purple{background:#F3E5F5;color:var(--skip);}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.callout{padding:12px 16px;border-radius:6px;margin:12px 0;border-left:4px solid;}
+.callout-warning{background:#FFF8E1;border-color:var(--warning);color:#5D4037;}
+.callout-info{background:#E3F2FD;border-color:var(--info);color:#0D47A1;}
+.callout-error{background:#FFEBEE;border-color:var(--true-red);color:var(--true-dark);}
+.callout-success{background:#E8F5E9;border-color:var(--success);color:#1B5E20;}
+.step-list{list-style:none;counter-reset:step;}
+.step-list li{counter-increment:step;padding:8px 12px 8px 48px;position:relative;border-left:3px solid var(--border);margin-bottom:6px;}
+.step-list li::before{content:counter(step);position:absolute;left:-16px;top:6px;background:var(--true-red);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+footer{text-align:center;padding:24px;color:#888;font-size:.82rem;}
+</style>
+</head>
+<body>
+<div class="header">
+  <h1>Request_CCP_CHANGE_PP</h1>
+  <div class="subtitle">FM Logic Documentation — CCP Default Price Plan Change (IntraActivitySequencing, per-offer)</div>
+  <div class="meta">
+    <span class="meta-item">Rule: Rules.OMConsumers.OMXFM.Request.Request_CCP_CHANGE_PP</span>
+    <span class="meta-item">Priority: 5</span>
+    <span class="meta-item">Backend: CCP (ChangeDefaultPricePlan)</span>
+    <span class="meta-item">Pattern: IntraActivitySequencing per-offer</span>
+    <span class="meta-item">Generated: 2026-09-09</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>CCP_CHANGE_PP</strong> changes the default price plan for each subscriber offer via the CCP <code>ChangeDefaultPricePlan</code> API. It follows the same IntraActivitySequencing per-offer sequential dispatch pattern as CCP_ADD_OFFER, with per-offer idempotency check and PreExecCheck filtering. However it sends a simpler payload — only <code>MSISDN</code>, <code>ChargeFlag</code>, and <code>PricePlanCode</code> — with no effType/effDate/ExpDate or ExtParams. Credential gating uses a global variable (<code>IsEnableUserPass</code>) rather than per-offer <code>FE_OR_CCBS</code> value.</p>
+    <div class="callout callout-success" style="margin-top:10px;">
+      <strong>Correctly wired IntraActivitySequencing:</strong> Properly calls <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> in the response RF — sequential per-offer dispatch works correctly.
+    </div>
+    <table style="margin-top:12px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule file</td><td>Request_CCP_CHANGE_PP.rule</td></tr>
+      <tr><td>Response rulefunction</td><td>Response_CCP_CHANGE_PP.rulefunction</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>Backend system</td><td>CCP via ESB (<code>ChangeDefaultPricePlan</code>)</td></tr>
+      <tr><td>Request event type</td><td><code>Events.OMConsumers.OMXFM.Request.CCP_CHANGE_PP</code></td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.CCP_CHANGE_PP</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCP_CHANGE_PP</code></td></tr>
+      <tr><td>Payload schema</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/CCP/ChangeDefaultPricePlanRequest.xsd</code></td></tr>
+      <tr><td>Dispatch scope</td><td>Per SubscriberOffer — both ParentOU and ChildOU subscribers</td></tr>
+      <tr><td>XSLT variants</td><td>Two: ParentOU (<code>$psub</code>) and ChildOU (<code>$csub</code>)</td></tr>
+      <tr><td>refId key</td><td><code>subOff.OfferName</code> (offer name used for idempotency — unlike CCP_ADD_OFFER which used subOff.Soc)</td></tr>
+      <tr><td>Credential gating</td><td>Global variable <code>IsEnableUserPass="true"</code> → includes <code>UserName</code>/<code>PassWord</code> from <code>OrderData.User</code>/<code>OrderData.Password</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>priority</td><td>5</td><td>Standard FM priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Enables forward chaining</td></tr>
+      <tr><td>Rule type</td><td>IntraActivitySequencing</td><td>Per-offer sequential dispatch via <code>assertEvent</code> + <code>ActionRequestEvent</code> + <code>SendFirstRequestEvent</code></td></tr>
+      <tr><td>Resubmit</td><td>Yes</td><td><code>PurgePendingRequestsBeforeResubmit</code> + partial idempotency skip</td></tr>
+      <tr><td>Skip mechanism</td><td>Yes</td><td>Skips if no offers pass checks; individual offers skipped if already successful (CompletionStatus=2)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order — ParentOU/ChildOU, subscribers, offers, ExtendedInfo</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity — IntraActivitySequencing queue, Response[] for idempotency</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity extId matches</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCP_CHANGE_PP"</code></td><td>Constrains to CCP_CHANGE_PP</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCP_CHANGE_PP"</code></td><td>Double-check via NextActivityID</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity ready</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li><strong>Resubmit purge</strong> — if <code>isActResub</code>: <code>PurgePendingRequestsBeforeResubmit</code></li>
+      <li><strong>Load activity config</strong> — read <code>nextAct.PreExecCheck</code></li>
+      <li><strong>ParentOU subscriber offer loop</strong> — for each ParentOU → Subscriber → SubscriberOffer:
+        <ul style="margin-top:6px;margin-left:20px;">
+          <li>Extract <code>refId = subOff.OfferName</code> and <code>filter = FE_OR_CCBS ExtendedInfo value</code></li>
+          <li><strong>Idempotency check</strong>: scan <code>currActivity.Response[]</code> for <code>ReferenceId == refId &amp;&amp; CompletionStatus == 2</code> → skip if found</li>
+          <li>Per-offer <strong>PreExecCheck</strong> via <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code></li>
+          <li>Build ParentOU XSLT event → <code>assertEvent</code> → <code>ActionRequestEvent</code></li>
+          <li>Audit log (gated on <code>AllowWriteLog</code>); AUDIT_TRACE includes <code>refId</code> (OfferName)</li>
+        </ul>
+      </li>
+      <li><strong>ChildOU subscriber offer loop</strong> — same pattern via <code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code> and ChildOU XSLT variant</li>
+      <li><strong>Dispatch first</strong> — <code>IntraActivitySequencing.SendFirstRequestEvent</code></li>
+      <li><strong>Status</strong> — <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code>; or <code>SkipActivity("4")</code></li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Annotated Logic</div>
+  <div class="section-body">
+    <pre><code><span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+<span class="kw">if</span>(isActResub)
+    IntraActivitySequencing.<span class="fn">PurgePendingRequestsBeforeResubmit</span>(orderCurrentActivity);
+
+<span class="kw">try</span> {
+    <span class="kw">String</span> chkXPath = nextAct.PreExecCheck;
+    <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+    <span class="cm">// ===== ParentOU Subscriber Offer loop =====</span>
+    <span class="kw">for</span>(<span class="kw">int</span> p = <span class="nu">0</span>; p &lt; pOuLen; p++) {
+        <span class="kw">for</span>(<span class="kw">int</span> s = <span class="nu">0</span>; s &lt; pSubLen; s++) {
+            <span class="kw">for</span>(<span class="kw">int</span> o = <span class="nu">0</span>; o &lt; pOfferLen; o++) {
+                <span class="kw">String</span> refId = subOff.OfferName; <span class="cm">// OfferName (not Soc!) — idempotency key</span>
+                <span class="kw">String</span> filter = <span class="cm">/* FE_OR_CCBS ExtendedInfo value */</span>;
+
+                <span class="cm">// Idempotency check: skip if ReferenceId == refId && CompletionStatus == 2</span>
+                <span class="kw">boolean</span> reqSuccess = <span class="kw">false</span>;
+                <span class="kw">for</span>(<span class="kw">int</span> iResp = <span class="nu">0</span>; iResp &lt; Response@length; iResp++) {
+                    <span class="kw">if</span>(String.equals(Response[iResp].ReferenceId, refId) &amp;&amp; Response[iResp].CompletionStatus == <span class="nu">2</span>)
+                        reqSuccess = <span class="kw">true</span>;
+                }
+
+                <span class="kw">if</span>(!reqSuccess) {
+                    <span class="cm">// Per-offer PreExecCheck</span>
+                    <span class="kw">if</span>(String.equals(chkRes, <span class="st">"true"</span>)) {
+                        <span class="cm">// [ParentOU XSLT: ChangeDefaultPricePlan — see §9.7]</span>
+                        Event.assertEvent(reqEvent);
+                        IntraActivitySequencing.<span class="fn">ActionRequestEvent</span>(reqEvent, orderCurrentActivity);
+                        isSkipped = <span class="kw">false</span>;
+                        <span class="kw">if</span>(AllowWriteLog(...)) { <span class="cm">/* audit: AUDIT_TRACE includes refId (OfferName) */</span> }
+                    }
+                }
+            }
+        }
+
+        <span class="cm">// ===== ChildOU Subscriber Offer loop =====</span>
+        <span class="kw">for</span>(<span class="kw">int</span> c = <span class="nu">0</span>; c &lt; cOuLen; c++) {
+            <span class="cm">// BUG: cou = ParentOU[p].ChildOU[p] ← uses p instead of c</span>
+            <span class="cm">// cOuRefId is assigned but never used — no functional impact</span>
+            <span class="kw">for</span>(<span class="kw">int</span> s = <span class="nu">0</span>; s &lt; cSubLen; s++) {
+                <span class="kw">for</span>(<span class="kw">int</span> o = <span class="nu">0</span>; o &lt; cOfferLen; o++) {
+                    <span class="cm">// Same idempotency + PreExecCheck + ChildOU XSLT variant</span>
+                }
+            }
+        }
+    }
+
+    <span class="kw">if</span>(!isSkipped) {
+        IntraActivitySequencing.<span class="fn">SendFirstRequestEvent</span>(orderCurrentActivity);
+        orderCurrentActivity.Status = GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+        SendDataToDB(orderRequest);
+    } <span class="kw">else</span> {
+        SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+    }
+} <span class="kw">catch</span>(<span class="ty">Exception</span> ae) {
+    HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</code></pre>
+  </div>
+</div>
+
+<!-- §7 -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:8px;">§7.1 — Idempotency Key: refId = subOff.OfferName</h3>
+    <div class="callout callout-info">
+      <strong>Different from CCP_ADD_OFFER:</strong> CCP_ADD_OFFER uses <code>subOff.Soc</code> as the refId/idempotency key. CCP_CHANGE_PP uses <code>subOff.OfferName</code>. This means the JMS <code>RefID</code> header and the idempotency check both key on the offer name, not the SOC code.
+    </div>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§7.2 — ChargeFlag Logic</h3>
+    <table>
+      <tr><th>Condition</th><th>ChargeFlag value</th></tr>
+      <tr><td><code>ExtendedInfo[CHARGE_FLAG]/Value</code> exists</td><td>Value from ExtendedInfo</td></tr>
+      <tr><td>Otherwise (default)</td><td><code>0</code> (xsl:otherwise)</td></tr>
+    </table>
+    <p style="margin-top:8px;">Note: CCP_ADD_OFFER had a static <code>chargeFlag=1</code>. CCP_CHANGE_PP defaults to <code>0</code> unless explicitly set.</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§7.3 — Credential Gating: IsEnableUserPass Global Variable</h3>
+    <p>Unlike CCP_ADD_OFFER (which used per-offer <code>FE_OR_CCBS</code> ExtendedInfo), CCP_CHANGE_PP gates credentials via a global variable:</p>
+    <pre><code><span class="cm">// Includes UserName/PassWord only if global var is "true":</span>
+$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass = <span class="st">"true"</span>
+<span class="cm">// Sources:</span>
+UserName ← $orderRequest/OrderData/User
+PassWord ← $orderRequest/OrderData/Password</code></pre>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      <strong>Password in JMS payload:</strong> When <code>IsEnableUserPass="true"</code>, <code>OrderData.Password</code> is included as plaintext in the JMS message. No masking or encryption is applied in the XSLT.
+    </div>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§7.4 — FE_OR_CCBS Filter (PreExecCheck only)</h3>
+    <p>The <code>FE_OR_CCBS</code> ExtendedInfo value is still read and passed to <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code> / <code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code> as a PreExecCheck filter, but it does NOT control credential gating here (that's the global variable's job).</p>
+  </div>
+</div>
+
+<!-- §8 -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:8px;">§8.1 — Order Type Dependencies</h3>
+    <p>No OrderType-specific branching in the payload (unlike CCP_ADD_OFFER's OrderType='45001' special case). The <code>AllowWriteLog(OrderType)</code> gate still applies to the request audit log.</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.CCP_CHANGE_PP</code></td><td>ChangeDefaultPricePlan per offer (sequential)</td></tr>
+      <tr><td><span class="badge badge-log">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Request audit (AllowWriteLog-gated); AUDIT_TRACE includes OfferName as refId</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Protocol</th><th>Schema</th></tr>
+      <tr><td>CCP</td><td>ChangeDefaultPricePlan</td><td>JMS async (IntraActivitySequencing)</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/CCP/ChangeDefaultPricePlanRequest.xsd</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept path</th><th>Access</th><th>Purpose</th></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].OfferName</code></td><td>Read</td><td>refId (idempotency key) + PricePlanCode payload field</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].ExtendedInfo[FE_OR_CCBS]</code></td><td>Read</td><td>PreExecCheck filter (not credential gating here)</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].SubscriberOffers[*].ExtendedInfo[CHARGE_FLAG]</code></td><td>Read</td><td>ChargeFlag value; default 0 if absent</td></tr>
+      <tr><td><code>ParentOU[*].Subscriber[*].MSISDN</code></td><td>Read</td><td>ns:MSISDN in payload</td></tr>
+      <tr><td><code>ParentOU[*].ChildOU[*].Subscriber[*].SubscriberOffers[*].*</code></td><td>Read</td><td>Same as above for ChildOU</td></tr>
+      <tr><td><code>orderRequest.OrderData.User</code></td><td>Read</td><td>UserName (if IsEnableUserPass="true")</td></tr>
+      <tr><td><code>orderRequest.OrderData.Password</code></td><td>Read</td><td>PassWord (if IsEnableUserPass="true")</td></tr>
+      <tr><td><code>orderRequest.OrderData.OrderType</code></td><td>Read</td><td>AllowWriteLog audit gate</td></tr>
+      <tr><td><code>orderCurrentActivity.Response[]</code></td><td>Read</td><td>Idempotency check per offer</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.5 — ExtendedInfo Fields Used</h3>
+    <table>
+      <tr><th>Key</th><th>Source</th><th>Required?</th><th>Purpose</th></tr>
+      <tr><td><code>FE_OR_CCBS</code></td><td>SubscriberOffers.ExtendedInfo</td><td>Optional</td><td>PreExecCheck filter (passed to helper function)</td></tr>
+      <tr><td><code>CHARGE_FLAG</code></td><td>SubscriberOffers.ExtendedInfo</td><td>Optional</td><td>ChargeFlag value; defaults to 0</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Variable path</th><th>Used in</th></tr>
+      <tr><td><code>$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>Credential gating — gates UserName/PassWord fields in JMS payload</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+      <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Response audit payload gating</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:8px;">§9.1 — XSLT Parameter Binding (Two Variants)</h3>
+    <table>
+      <tr><th>Param</th><th>ParentOU variant</th><th>ChildOU variant</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest</td><td>orderRequest</td></tr>
+      <tr><td><code>$refId</code></td><td>subOff.OfferName</td><td>subOff.OfferName</td></tr>
+      <tr><td><code>$globalVariables</code></td><td>globalVariables</td><td>globalVariables</td></tr>
+      <tr><td><code>$psub</code> / <code>$csub</code></td><td>ParentOU Subscriber</td><td>ChildOU Subscriber</td></tr>
+      <tr><td><code>$subOff</code></td><td>ParentOU subscriber offer</td><td>ChildOU subscriber offer</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.2 — Event Container</h3>
+    <p>Event type: <code>Events.OMConsumers.OMXFM.Request.CCP_CHANGE_PP</code>. Created once per offer, asserted into working memory, enqueued via <code>ActionRequestEvent</code>.</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional (xsl:if)</td></tr>
+      <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional</td></tr>
+      <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional</td></tr>
+      <tr><td><code>RefID</code></td><td><code>$refId</code> (subOff.OfferName)</td><td>Always</td></tr>
+      <tr><td><code>UserName</code></td><td><code>$orderRequest/OrderData/User</code></td><td>If <code>IsEnableUserPass="true"</code> AND User present</td></tr>
+      <tr><td><code>PassWord</code></td><td><code>$orderRequest/OrderData/Password</code></td><td>If <code>IsEnableUserPass="true"</code> AND Password present</td></tr>
+      <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.4 — Payload Root Element</h3>
+    <p>Both variants: <code>&lt;ns:ChangeDefaultPricePlanReqDto&gt;</code> (same namespace <code>ns</code> in both ParentOU and ChildOU variants)</p>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.5 — Core Payload Fields</h3>
+    <table>
+      <tr><th>XML element</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>ns:MSISDN</code></td><td><code>$psub/MSISDN</code> or <code>$csub/MSISDN</code></td><td>Always (no xsl:if)</td></tr>
+      <tr><td><code>ns:ChargeFlag</code></td><td><code>ExtendedInfo[CHARGE_FLAG]/Value</code> if exists; else <code>0</code></td><td>Always (xsl:choose)</td></tr>
+      <tr><td><code>ns:PricePlanCode</code></td><td><code>$subOff/OfferName</code></td><td>Always</td></tr>
+    </table>
+    <div class="callout callout-info" style="margin-top:8px;">
+      <strong>Simpler than CCP_ADD_OFFER:</strong> No <code>effType</code>, <code>effDate</code>, <code>expDate</code>, <code>chargeFlag</code> (always 1), <code>smsSendFlag</code>, or <code>ExtParam1–5</code>. Just three fields in the payload body. No <code>cpTransactionId</code> either.
+    </div>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.6 — Complete Generated XML Example</h3>
+    <pre><code><span class="xt">&lt;ns:ChangeDefaultPricePlanReqDto</span>
+  <span class="xa">xmlns:ns</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/CCP/ChangeDefaultPricePlanRequest.xsd"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;ns:MSISDN&gt;</span>0812345678<span class="xt">&lt;/ns:MSISDN&gt;</span>
+  <span class="xt">&lt;ns:ChargeFlag&gt;</span>0<span class="xt">&lt;/ns:ChargeFlag&gt;</span>  <span class="cm">&lt;!-- or explicit value from ExtendedInfo[CHARGE_FLAG] --&gt;</span>
+  <span class="xt">&lt;ns:PricePlanCode&gt;</span>PREPAID_OFFER_NAME<span class="xt">&lt;/ns:PricePlanCode&gt;</span>
+<span class="xt">&lt;/ns:ChangeDefaultPricePlanReqDto&gt;</span>
+
+<span class="cm">&lt;!-- JMS headers (with IsEnableUserPass="true") --&gt;</span>
+<span class="xt">&lt;UserName&gt;</span>system_user<span class="xt">&lt;/UserName&gt;</span>
+<span class="xt">&lt;PassWord&gt;</span>plaintext_password<span class="xt">&lt;/PassWord&gt;</span>
+<span class="xt">&lt;RefID&gt;</span>PREPAID_OFFER_NAME<span class="xt">&lt;/RefID&gt;</span>  <span class="cm">&lt;!-- OfferName, not SOC --&gt;</span></code></pre>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§9.7 — XSLT Stylesheet Variants</h3>
+    <p><strong>Variant ① — ParentOU:</strong> <code>$psub</code> for subscriber MSISDN.<br/>
+    <strong>Variant ② — ChildOU:</strong> <code>$csub</code> for subscriber MSISDN. Structurally identical — same namespace prefix <code>ns</code> in both variants (unlike CCP_ADD_OFFER's ns2/ns1 difference).</p>
+  </div>
+</div>
+
+<!-- §10 -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId (subOff.OfferName)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-purple">Credential-gated</span><span class="tree-cond">if IsEnableUserPass="true" AND User present</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-purple">Credential-gated</span><span class="badge badge-red" style="margin-left:4px;">SENSITIVE</span><span class="tree-cond">if IsEnableUserPass="true" AND Password present</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:ChangeDefaultPricePlanReqDto</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:MSISDN</span><span class="tree-arrow">←</span><span class="tree-src">$psub/MSISDN (ParentOU) or $csub/MSISDN (ChildOU)</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ChargeFlag</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[CHARGE_FLAG]/Value if exists</span><span class="tree-src-static">else 0</span><span class="badge badge-orange">xsl:choose</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:PricePlanCode</span><span class="tree-arrow">←</span><span class="tree-src">$subOff/OfferName</span><span class="badge badge-green">Always</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §11 -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Event</th><th>Gate</th><th>Key fields</th></tr>
+      <tr><td>Request audit (per offer)</td><td><code>AllowWriteLog(OrderType)</code></td><td><code>OPERATION_NAME="CCP_CHANGE_PP"</code>, <code>AUDIT_TRACE=concat("Request Sent for CCP_CHANGE_PP for ", refId)</code> — OfferName in trace</td></tr>
+      <tr><td>Response audit</td><td><strong>Unconditional</strong> (no AllowWriteLog check)</td><td><code>OPERATION_NAME="CCP_CHANGE_PP"</code>, <code>AUDIT_TRACE="Response received for CCP_CHANGE_PP"</code></td></tr>
+    </table>
+    <div class="callout callout-warning" style="margin-top:8px;">
+      <strong>Response audit unconditional:</strong> Same asymmetry as CCP_ADD_OFFER — response RF sends audit unconditionally while request is gated by AllowWriteLog.
+    </div>
+  </div>
+</div>
+
+<!-- §12 -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Action</th><th>Status</th></tr>
+      <tr><td>At least one offer queued</td><td><code>SendFirstRequestEvent</code> + <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" = PROCESSING</td></tr>
+      <tr><td>No offers pass checks</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" = SKIPPED</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <p><strong>Request rule:</strong> Standard <code>catch(Exception ae) → HandleActivityException</code>.</p>
+    <p><strong>Response RF:</strong> No try/catch and no try/finally — bare body. Any exception propagates directly to the BE rule engine.</p>
+    <div class="callout callout-warning">
+      <strong>No exception handling in response RF:</strong> Exceptions during response processing are completely unhandled — the activity may be left stuck in PROCESSING state.
+    </div>
+  </div>
+</div>
+
+<!-- §14 -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit()</code></td><td>Clears queue for clean resubmit</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionRequestEvent(event, activity)</code></td><td>Enqueues offer event for sequential dispatch</td></tr>
+      <tr><td><code>IntraActivitySequencing.SendFirstRequestEvent(activity)</code></td><td>Dispatches first queued offer</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td><td>Dispatches next queued offer; returns true when queue exhausted</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberOfferFilterWithExtendedInfo()</code></td><td>Builds PreExecCheck XML for ParentOU subscriber offer</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo()</code></td><td>Builds PreExecCheck XML for ChildOU subscriber offer</td></tr>
+      <tr><td><code>Helpers.AllowWriteLog(orderType)</code></td><td>Request audit gate</td></tr>
+      <tr><td><code>Helpers.GetActivityStatusString(code, flag)</code></td><td>Status code translation</td></tr>
+      <tr><td><code>Helpers.SendDataToDB(orderRequest)</code></td><td>Persist order state</td></tr>
+      <tr><td><code>Helpers.SkipActivity(orderRequest, activity, code)</code></td><td>Mark activity skipped</td></tr>
+      <tr><td><code>Helpers.HandleActivityException(orderRequest, activity, ex, msg)</code></td><td>Error state transition</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre><code>Request_CCP_CHANGE_PP (rule)
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit()  [on resubmit]
+├── Instance.getByExtIdByUri()
+├── XPath.evalAsString()                                          [FE_OR_CCBS filter extraction]
+├── Helpers.GetXMLForSubscriberOfferFilterWithExtendedInfo()      [ParentOU PreExecCheck XML]
+├── Helpers.GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo() [ChildOU PreExecCheck XML]
+├── XPath.execute()                                               [PreExecCheck per offer]
+├── Event.createEvent()                                           [XSLT — ParentOU and ChildOU variants]
+├── Event.assertEvent()
+├── IntraActivitySequencing.ActionRequestEvent()
+├── Helpers.AllowWriteLog()
+├── System.nanoTime()
+├── Event.Ext.sendEventImmediate()                               [request audit log]
+├── IntraActivitySequencing.SendFirstRequestEvent()
+├── Helpers.GetActivityStatusString()
+├── Helpers.SendDataToDB()
+├── Helpers.SkipActivity()
+└── Helpers.HandleActivityException()
+
+Response_CCP_CHANGE_PP (rulefunction)
+├── Log.getLogger("...Response_CCP_ADD_OFFER")  ← BUG: wrong logger name
+├── Log.log()
+├── Instance.createInstance()                   [CCP_CHANGE_PP response concept XSLT]
+├── System.nanoTime()
+├── Event.createEvent()                         [Logger XSLT — unconditional]
+├── Event.Ext.sendEventImmediate()
+└── IntraActivitySequencing.ActionResponseEvent(currActivity)
+    → returns "true" when queue exhausted, "false" while more pending</code></pre>
+  </div>
+</div>
+
+<!-- §16 -->
+<div class="section">
+  <div class="section-header">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Used in</th><th>Key fields</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Both</td><td>OrderData.User, Password, OrderType, ExtendedInfo[], Customer.ParentOU/ChildOU</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Both</td><td>ActivityID, Status, RequestCount, Response[], PreExecCheck</td></tr>
+      <tr><td><code>Concepts.FM.Response.CCP_CHANGE_PP</code></td><td>Response RF</td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId (OfferName for idempotency)</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>Request rule</td><td>OfferName (refId + PricePlanCode), ExtendedInfo[FE_OR_CCBS, CHARGE_FLAG]</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>Request rule</td><td>RefId, MSISDN, SubscriberOffers[]</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:8px;">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Process each SubscriberOffer across all ParentOU/ChildOU subscribers sequentially via CCP ChangeDefaultPricePlan</td></tr>
+      <tr><td>R2</td><td>Per-offer idempotency: skip offers with existing successful response (CompletionStatus=2, ReferenceId=OfferName)</td></tr>
+      <tr><td>R3</td><td>Per-offer PreExecCheck with FE_OR_CCBS filter</td></tr>
+      <tr><td>R4</td><td>Conditional credential inclusion: only when global var IsEnableUserPass="true"; uses OrderData.User/Password</td></tr>
+      <tr><td>R5</td><td>ChargeFlag: use CHARGE_FLAG ExtendedInfo if present; default to 0</td></tr>
+      <tr><td>R6</td><td>PricePlanCode: always from subOff.OfferName (no OrderType special case)</td></tr>
+      <tr><td>R7</td><td>AUDIT_TRACE includes OfferName refId for per-offer traceability</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td><strong>Bug: Response RF wrong logger name</strong> — Line 14 of response RF uses <code>Log.getLogger("RuleFunctions.OrderResponse.Response_CCP_ADD_OFFER")</code> instead of <code>Response_CCP_CHANGE_PP</code>. Debug logs from this RF appear under the CCP_ADD_OFFER logger name, causing confusion in log analysis.</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Change logger name to <code>"RuleFunctions.OrderResponse.Response_CCP_CHANGE_PP"</code></td>
+      </tr>
+      <tr>
+        <td><strong>Bug: ChildOU loop variable index</strong> — Line 86: <code>cou = ParentOU[p].ChildOU[p]</code> should be <code>ChildOU[c]</code>. The <code>cOuRefId</code> extracted from this is never used, so there is no functional impact — but the local variable is wrong and misleads readers.</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Change <code>.ChildOU[p]</code> to <code>.ChildOU[c]</code> for correctness and readability</td>
+      </tr>
+      <tr>
+        <td><strong>Password plaintext in JMS message</strong> — When <code>IsEnableUserPass="true"</code>, <code>OrderData.Password</code> is embedded in the JMS payload without masking.</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Mask or encrypt credentials before inclusion; or move to a dedicated credential store</td>
+      </tr>
+      <tr>
+        <td><strong>No exception handling in response RF</strong> — No try/catch or try/finally. Exceptions propagate unhandled.</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Add try-catch calling <code>HandleActivityException</code></td>
+      </tr>
+      <tr>
+        <td><strong>Response audit unconditional</strong> — No AllowWriteLog gate in response RF.</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Wrap response audit in <code>AllowWriteLog</code> check for consistency</td>
+      </tr>
+      <tr>
+        <td><strong>refId = OfferName vs Soc inconsistency</strong> — CCP_ADD_OFFER uses Soc as refId; CCP_CHANGE_PP uses OfferName. If an order contains multiple offers with the same OfferName on different SOCs, idempotency may incorrectly skip a second offer.</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Verify that OfferName is unique per subscriber in PREPAID_REGISTRATION scenarios; document the assumption</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Condensed)</div>
+  <div class="section-body">
+    <pre><code><span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.<span class="ty">Request_CCP_CHANGE_PP</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="cm">// ... declare / when as standard ...</span>
+    <span class="kw">then</span> {
+        <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">if</span>(isActResub) IntraActivitySequencing.<span class="fn">PurgePendingRequestsBeforeResubmit</span>(orderCurrentActivity);
+        <span class="kw">try</span> {
+            <span class="kw">String</span> chkXPath = nextAct.PreExecCheck;
+            <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="cm">// ParentOU subscriber offer loop</span>
+            <span class="kw">for</span>(<span class="kw">int</span> p..; s..; o..) {
+                <span class="kw">String</span> refId = subOff.OfferName;  <span class="cm">// OfferName (not Soc)</span>
+                <span class="cm">// Idempotency + PreExecCheck + GetXMLForSubscriberOfferFilterWithExtendedInfo</span>
+                <span class="cm">// [ParentOU XSLT: ChangeDefaultPricePlanReqDto — see §9.5]</span>
+                IntraActivitySequencing.<span class="fn">ActionRequestEvent</span>(reqEvent, orderCurrentActivity);
+                isSkipped = <span class="kw">false</span>;
+                <span class="kw">if</span>(AllowWriteLog(...)) { <span class="cm">/* audit: AUDIT_TRACE includes refId (OfferName) */</span> }
+            }
+
+            <span class="cm">// ChildOU subscriber offer loop</span>
+            <span class="cm">// Line 86 BUG: cou = ParentOU[p].ChildOU[p] (should be ChildOU[c]) — cOuRefId unused, no impact</span>
+            <span class="kw">for</span>(<span class="kw">int</span> c..; s..; o..) {
+                <span class="cm">// Same pattern with GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</span>
+            }
+
+            <span class="kw">if</span>(!isSkipped) {
+                IntraActivitySequencing.<span class="fn">SendFirstRequestEvent</span>(orderCurrentActivity);
+                orderCurrentActivity.Status = GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+                SendDataToDB(orderRequest);
+            } <span class="kw">else</span> {
+                SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+            }
+        } <span class="kw">catch</span>(<span class="ty">Exception</span> ae) { HandleActivityException(...); }
+    }
+}</code></pre>
+  </div>
+</div>
+
+<!-- §19 -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule (Response_CCP_CHANGE_PP)</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:8px;">§19.1 — Overview</h3>
+    <p>Creates a <code>CCP_CHANGE_PP</code> response concept, logs it (unconditionally), then calls <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> to dispatch the next queued offer and determine fan-in completion. Returns <code>"true"</code> when the queue is exhausted, <code>"false"</code> while more offers remain. No try/catch or try/finally — bare body.</p>
+    <div class="callout callout-error" style="margin-top:8px;">
+      <strong>Bug: Wrong logger name</strong> — <code>Log.getLogger("RuleFunctions.OrderResponse.Response_CCP_ADD_OFFER")</code> — copy-paste from CCP_ADD_OFFER RF. Debug logs appear under the ADD_OFFER logger name.
+    </div>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order context</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCP_CHANGE_PP</code></td><td>CCP response event</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity; Response[] accumulates for idempotency</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.3 — CCP_CHANGE_PP Response Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">2 = success; drives idempotency check on resubmit</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span><span class="tree-cond">should match subOff.OfferName for idempotency to work</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.4 — Response Completion Logic</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Fan-in mechanism</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Return "true"</td><td>Queue exhausted — all offers processed</td></tr>
+      <tr><td>Return "false"</td><td>More offers queued — dispatches next one</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;margin-bottom:8px;">§19.5 — Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td><code>OPERATION_NAME</code></td><td><code>"CCP_CHANGE_PP"</code></td></tr>
+      <tr><td><code>AUDIT_TRACE</code></td><td><code>"Response received for CCP_CHANGE_PP"</code></td></tr>
+      <tr><td>Gate</td><td><strong>Unconditional</strong> (no AllowWriteLog check)</td></tr>
+      <tr><td><code>payload</code></td><td>Full <code>$eventResponse</code> copy, gated on <code>WritePayload="true"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCP_CHANGE_PP</footer>
+</body>
+</html>

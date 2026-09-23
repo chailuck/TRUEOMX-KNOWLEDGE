@@ -1,0 +1,680 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_BL_CREATE_CHARGE — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:0.5px}
+.page-header .subtitle{opacity:0.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:0.82rem;opacity:0.8}
+.meta-row span{background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:20px}
+.container{max-width:1400px;margin:0 auto;padding:28px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);padding:10px 12px;text-align:left;border-bottom:2px solid var(--true-red);font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas','Courier New',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.55;border-left:3px solid var(--true-red)}
+code{background:#f5f0f0;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:0.85em}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.b-red{background:#FFE0E0;color:var(--true-dark)}.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}.b-teal{background:#E0F2F1;color:#00695c}
+.b-jms{background:#FFE0B2;color:#E65100}.b-db{background:#E8EAF6;color:#3949AB}
+.b-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px dashed var(--border)}
+.flow-step:last-child{border-bottom:none}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;margin-top:2px}
+.step-desc{flex:1}
+.step-label{font-weight:600;color:var(--true-dark);margin-bottom:3px}
+.highlight-uc{background:#E8F5E9;border-left:4px solid #2e7d32;padding:10px 14px;border-radius:4px;margin:6px 0}
+.highlight-std{background:#FFF3E0;border-left:4px solid #e65100;padding:10px 14px;border-radius:4px;margin:6px 0}
+.highlight-warn{background:#FFF8E1;border-left:4px solid #F9A825;padding:10px 14px;border-radius:4px;margin:8px 0}
+.highlight-info{background:#E3F2FD;border-left:4px solid #1565c0;padding:10px 14px;border-radius:4px;margin:8px 0}
+.section-num{color:var(--true-red);font-weight:700;margin-right:6px}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nm{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+footer{text-align:center;padding:20px;font-size:0.78rem;color:#999;border-top:1px solid var(--border);margin-top:16px}
+h3{color:var(--true-dark);margin-bottom:10px;font-size:1rem}
+.diff-row-a{background:#E8F5E9}.diff-row-b{background:#FFF3E0}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:0.8rem;opacity:0.7;margin-bottom:4px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_BL_CREATE_CHARGE</h1>
+  <div class="subtitle">Billing system charge creation — iterates all subscriber offers carrying a charge amount and dispatches Amdocs BL3G CreateCharge requests via throttled sequential fan-out</div>
+  <div class="meta-row">
+    <span>Author: RS33-BANDIT</span>
+    <span>Namespace: Rules.OMConsumers.OMXFM.Request</span>
+    <span>Priority: 5</span>
+    <span>ForwardChain: true</span>
+    <span>Target: OMX_FM (Amdocs BL3G)</span>
+    <span>Generated: 2026-08-03</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§1</span> Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p><strong>BL_CREATE_CHARGE</strong> is the billing-charge dispatch step in the ACTIVATION_CREATE_SUBSCRIBER flow. Its primary job is to iterate over all <code>SubscriberOffers</code> that carry an <code>AMOUNT</code> ExtendedInfo value and send a <code>CreateCharge</code> request to the Amdocs BL3G billing system for each one.</p>
+    <div class="highlight-info" style="margin-top:12px">
+      <strong>Upstream dependency:</strong> The SubscriberOffers with <code>ServiceType="79"</code> and AMOUNT ExtendedInfo that trigger this FM are dynamically injected into working memory by the <strong>SBM_BUY_DATA_PACK response handler</strong> when its <code>featureCode</code> field is non-blank. BL_CREATE_CHARGE is therefore a downstream billing confirmation for data pack purchases — it does not independently query for offers.
+    </div>
+    <div style="margin-top:14px">
+      <strong>Two dispatch variants</strong> are selected based on the offer's <code>REVENUE_CODE</code> ExtendedInfo:
+      <ul style="margin:8px 0 0 20px;line-height:2">
+        <li><span class="badge b-green">REVENUE_CODE = "UC"</span> → Full charge record: includes <code>ChargeOrigin="ML"</code>, <code>ChargeType</code> (DBT/CRD), and attribute <em>"Carry over status" = "N"</em></li>
+        <li><span class="badge b-orange">All other / no REVENUE_CODE</span> → Simplified charge: attribute <em>"Activity code" = "45"</em>; dispatched only when <code>amount &gt; 0</code></li>
+      </ul>
+    </div>
+    <div style="margin-top:12px">
+      Fan-out uses <strong>IntraActivitySequencing</strong> (throttled sequential dispatch), identical to SBM_BUY_DATA_PACK. Each charge request fires one at a time; the response handler's <code>ActionResponseEvent</code> advances the queue.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name (full)</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_BL_CREATE_CHARGE</code></td></tr>
+      <tr><td>File</td><td><code>Rules/OMConsumers/OMXFM/Request/Request_BL_CREATE_CHARGE.rule</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Author</td><td>RS33-BANDIT</td></tr>
+      <tr><td>Namespace</td><td>OMXFM (external FM via JMS)</td></tr>
+      <tr><td>Response handler</td><td><code>RuleFunctions.OrderResponse.Response_BL_CREATE_CHARGE</code></td></tr>
+      <tr><td>Target system</td><td>Amdocs BL3G (OMX_FM billing layer)</td></tr>
+      <tr><td>Dispatch pattern</td><td>IntraActivitySequencing — throttled sequential fan-out</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory — Declared Objects -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§3</span> Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order graph — provides Customer hierarchy, ExtendedInfo, OrderData</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current process step — provides RequestCount, Response[], PreExecCheck, Status</td></tr>
+    </table>
+    <div class="highlight-info" style="margin-top:12px">
+      <strong>LogicalDate concept</strong> is loaded in the rule body (<code>Instance.getByExtIdByUri("LogicalDate", "/Concepts/OM/LogicalDate")</code>) but the value is not actually used in the charge event payload — this is vestigial code from a copy-paste template.
+    </div>
+  </div>
+</div>
+
+<!-- §4 WHEN Conditions -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Binds the current activity concept to the order's active step</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "BL_CREATE_CHARGE"</code></td><td>Guards this rule to the BL_CREATE_CHARGE step only</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "BL_CREATE_CHARGE"</code></td><td>Double-check: order process pointer also points to BL_CREATE_CHARGE</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Fires only when the activity is in WAITING state (not already in-flight)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow Diagram -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§5</span> Execution Flow Diagram</div>
+  <div class="card-body">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-desc"><div class="step-label">Resubmit guard</div>If <code>RequestCount &gt; 0</code> AND <code>IsOrderResubmitted</code> → call <code>PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code> to clean up leftover requests from prior attempt.</div></div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-desc"><div class="step-label">LogicalDate load (vestigial)</div>Load <code>LogicalDate</code> concept from working memory. Value is not used downstream — retained from template.</div></div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-desc"><div class="step-label">POU iteration</div>Loop over <code>Customer.ParentOU[i].Subscriber[p].SubscriberOffers[q]</code>. For each offer, compute <code>refId = sub.RefId + ":" + subOff.OfferName</code>. Check <code>Response[]</code> for prior success. If not yet successful and PreExecCheck passes → extract amount/description/revenueCode and branch on revenueCode.</div></div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-desc"><div class="step-label">POU branch: REVENUE_CODE == "UC"</div><span class="badge b-green">UC path</span> — Build BL_CREATE_CHARGE event with full billing attributes (ChargeOrigin="ML", ChargeType=DBT/CRD, Carry over status="N"). Dispatch regardless of amount sign. <code>isSkipped = false</code>.</div></div>
+    <div class="flow-step"><div class="step-num">5</div><div class="step-desc"><div class="step-label">POU branch: other REVENUE_CODE (amount &gt; 0 guard)</div><span class="badge b-orange">Standard path</span> — Build BL_CREATE_CHARGE event with Activity code="45". Only dispatches when <code>amount &gt; 0</code>; zero-amount offers are silently skipped. <code>isSkipped = false</code>.</div></div>
+    <div class="flow-step"><div class="step-num">6</div><div class="step-desc"><div class="step-label">COU iteration</div>Loop over <code>Customer.ParentOU[i].ChildOU[u].Subscriber[v].SubscriberOffers[w]</code>. Skips offers with <code>ServiceType == "80"</code>. Amount lookup order is <em>reversed</em> vs POU (sub first, then subOff). Only standard path (amount &gt; 0) — no REVENUE_CODE check for COU. <code>isSkipped = false</code>.</div></div>
+    <div class="flow-step"><div class="step-num">7</div><div class="step-desc"><div class="step-label">Fan-out fire</div>If at least one event was dispatched (<code>!isSkipped</code>): <code>SendFirstRequestEvent(orderCurrentActivity)</code> fires the first queued event → sets Status = GetActivityStatusString("1") → <code>SendDataToDB(orderRequest)</code>.</div></div>
+    <div class="flow-step"><div class="step-num">8</div><div class="step-desc"><div class="step-label">Skip branch</div>If no dispatchable offers found (<code>isSkipped</code> still true): <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code>.</div></div>
+    <div class="flow-step"><div class="step-num">9</div><div class="step-desc"><div class="step-label">Exception</div>Catch block calls <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code>.</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action (THEN) -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§6</span> Rule Action (THEN) — Key Logic Detail</div>
+  <div class="card-body">
+    <h3>RefID Construction</h3>
+    <pre><span class="st">// Same for both POU and COU</span>
+String refId = sub.RefId + <span class="st">":"</span> + subOff.OfferName;</pre>
+    <div class="highlight-warn"><strong>Simpler than SBM:</strong> BL_CREATE_CHARGE uses a 2-segment RefID (<code>subRefId:OfferName</code>), whereas SBM_BUY_DATA_PACK uses a 4-segment pattern (<code>pOuRefId::subRefId:soc</code>). These are not interchangeable.</div>
+
+    <h3 style="margin-top:16px">FE_OR_CCBS Filter</h3>
+    <pre>String filter = XPath.evalAsString(<span class="st">"$subOff/ExtendedInfo[Name=\"FE_OR_CCBS\"]/Value"</span>);</pre>
+    <p style="margin-top:6px">The filter value is passed to <code>GetXMLForSubscriberOfferFilterWithExtendedInfo()</code> when building the PreExecCheck XML context. This ensures the PreExecCheck XPath evaluates against the same filtered offer view that was set up by upstream steps (SBM response injected <code>FE_OR_CCBS</code> ExtendedInfo on ServiceType="79" offers).</p>
+
+    <h3 style="margin-top:16px">Amount / Description Resolution — POU vs COU</h3>
+    <table>
+      <tr><th>Field</th><th>POU lookup order</th><th>COU lookup order</th></tr>
+      <tr><td><code>amount</code></td><td>subOff/ExtendedInfo[AMOUNT] → sub/ExtendedInfo[AMOUNT] → "0"</td><td>sub/ExtendedInfo[AMOUNT] → subOff/ExtendedInfo[AMOUNT]</td></tr>
+      <tr><td><code>description</code></td><td>subOff/ExtendedInfo[DESCRIPTION] → sub/ExtendedInfo[DESCRIPTION] → ""</td><td>sub/ExtendedInfo[DESCRIPTION] only</td></tr>
+      <tr><td><code>revenueCode</code></td><td>subOff/ExtendedInfo[REVENUE_CODE] → ""</td><td>Not evaluated (no UC branch for COU)</td></tr>
+    </table>
+    <div class="highlight-warn" style="margin-top:10px"><strong>Design inconsistency:</strong> Amount lookup order is reversed between POU and COU. This may cause different charge amounts for the same subscriber appearing under POU vs COU when both sub and offer have AMOUNT ExtendedInfo.</div>
+
+    <h3 style="margin-top:16px">REVENUE_CODE == "UC" Branch (POU Only)</h3>
+    <div class="highlight-uc">
+      Triggered when <code>subOff/ExtendedInfo[Name='REVENUE_CODE']/Value == "UC"</code>. Sends BL_CREATE_CHARGE with full billing classification — <code>ChargeType</code> is computed as <code>if(amount &gt; 0) then "DBT" else "CRD"</code>. This branch dispatches <strong>even when amount ≤ 0</strong> (credit entries are valid). COU subscribers never follow this branch.
+    </div>
+
+    <h3 style="margin-top:16px">Standard Branch (amount &gt; 0 guard)</h3>
+    <div class="highlight-std">
+      Used when REVENUE_CODE ≠ "UC" (POU) or always (COU). Dispatches only when <code>amount &gt; 0</code>. Uses <code>AttributeName="Activity code" / Value="45"</code>. No ChargeOrigin or ChargeType fields emitted.
+    </div>
+
+    <h3 style="margin-top:16px">COU ServiceType="80" Exclusion</h3>
+    <pre><span class="kw">if</span>(!String.equals(subOff.ServiceType, <span class="st">"80"</span>)) { ... }</pre>
+    <p style="margin-top:6px">ServiceType "80" offers under COU are excluded from charge dispatch. This guards against double-billing of certain base-plan offer types that are handled by a different FM.</p>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§8</span> System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3>§8.1 Order Type Dependencies</h3>
+    <p>Triggered by any order type that results in data pack purchases through SBM_BUY_DATA_PACK where the SBM response returns a non-blank <code>featureCode</code>. The charge FM itself imposes no OrderType filter — it processes all BL_CREATE_CHARGE SubscriberOffers regardless of order type.</p>
+
+    <h3 style="margin-top:16px">§8.2 ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Channel / Destination</th><th>Protocol</th><th>Purpose</th></tr>
+      <tr><td><span class="badge b-jms">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.BL_CREATE_CHARGE</code></td><td>OMX FM JMS queue</td><td>JMS/XSLT</td><td>Send CreateCharge request to Amdocs BL3G</td></tr>
+      <tr><td><span class="badge b-log">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>ESB Audit Logger</td><td>JMS (immediate)</td><td>Request audit trail</td></tr>
+      <tr><td><span class="badge b-jms">INBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Response.BL_CREATE_CHARGE</code></td><td>OMX FM response queue</td><td>JMS</td><td>CreateCharge result (ChargeId, ResponseCode)</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Schema</th><th>Protocol</th><th>Correlation</th></tr>
+      <tr><td>Amdocs BL3G</td><td>CreateCharge</td><td><code>ns:CreateChargeRequest</code> / <code>amdocs.bl3g.datatypes</code></td><td>JMS via ESB FM adapter</td><td>RefID = <code>sub.RefId:subOff.OfferName</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§8.4 BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Field</th><th>Read / Write</th><th>Source</th></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[].Subscriber[].SubscriberOffers[]</code></td><td>READ</td><td>Iterates all POU subscriber offers</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[].ChildOU[].Subscriber[].SubscriberOffers[]</code></td><td>READ</td><td>Iterates all COU subscriber offers (excl ServiceType=80)</td></tr>
+      <tr><td><code>subOff.ExtendedInfo[AMOUNT]/Value</code></td><td>READ</td><td>Charge amount (injected by SBM response)</td></tr>
+      <tr><td><code>subOff.ExtendedInfo[DESCRIPTION]/Value</code></td><td>READ</td><td>Charge description</td></tr>
+      <tr><td><code>subOff.ExtendedInfo[REVENUE_CODE]/Value</code></td><td>READ</td><td>Routing key: "UC" → full charge path (POU only)</td></tr>
+      <tr><td><code>subOff.ExtendedInfo[FE_OR_CCBS]/Value</code></td><td>READ</td><td>PreExecCheck filter context</td></tr>
+      <tr><td><code>subOff.EffectiveDate</code></td><td>READ</td><td>Charge effective date in payload</td></tr>
+      <tr><td><code>orderCurrentActivity.Response[]</code></td><td>READ/WRITE</td><td>Fan-in tracking; written by response rulefunction</td></tr>
+      <tr><td><code>orderCurrentActivity.Status</code></td><td>WRITE</td><td>Set to "1" (in-flight) after first dispatch</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§8.5 ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Key</th><th>Required/Optional</th><th>Source</th><th>Used for</th></tr>
+      <tr><td>AMOUNT</td><td>Required (charge skipped if 0)</td><td>Injected by SBM_BUY_DATA_PACK response</td><td>Charge amount; also gates dispatch in standard path</td></tr>
+      <tr><td>DESCRIPTION</td><td>Optional</td><td>Injected by SBM_BUY_DATA_PACK response</td><td>ns1:Description in payload</td></tr>
+      <tr><td>REVENUE_CODE</td><td>Optional</td><td>Offer configuration</td><td>Routes to UC vs standard charge path (POU only)</td></tr>
+      <tr><td>FE_OR_CCBS</td><td>Optional</td><td>SBM response (set to "SBM" or "FE" on injected offers)</td><td>PreExecCheck XPath filter context</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§8.6 Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Used for</th></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>LOG_LEVEL in audit log</td></tr>
+      <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Gates payload inclusion in audit log</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Detailed Payload Build -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§9</span> Detailed Payload Build — Two XSLT Variants</div>
+  <div class="card-body">
+    <div class="highlight-info">Three distinct BL_CREATE_CHARGE event XSLT variants exist in the rule, differentiated by dispatch path. The payload structure of the two standard-path variants (POU-UC and non-UC/COU) is compared below. POU-UC has the most fields.</div>
+
+    <h3 style="margin-top:16px">§9.1 XSLT Parameters (all variants)</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound from</th><th>In UC path</th><th>In Std path</th><th>In COU path</th></tr>
+      <tr><td><code>$orderRequest</code></td><td><code>orderRequest</code> concept</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td><code>$subsId</code></td><td><code>sub.RefId</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td><code>$amount</code></td><td>XPath eval on AMOUNT ExtendedInfo</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td><code>$accountId</code></td><td>XSL variable: <code>Customer.Account[1].AccountID</code></td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td><code>$subOff</code></td><td><code>SubscriberOffers[q]</code> concept</td><td>✓</td><td>✓</td><td>✓</td></tr>
+      <tr><td><code>$description</code></td><td>XPath eval on DESCRIPTION ExtendedInfo</td><td>✓</td><td>✓</td><td>— (not passed)</td></tr>
+      <tr><td><code>$sub</code></td><td><code>Subscriber[p]</code> concept</td><td>✓</td><td>✓</td><td>✓</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§9.2 Event Container and JMS Headers</h3>
+    <table>
+      <tr><th>Field</th><th>Source XPath / Value</th><th>Condition</th></tr>
+      <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td>if present</td></tr>
+      <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>if present</td></tr>
+      <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td>if present</td></tr>
+      <tr><td><code>RefID</code></td><td><code>$subsId</code> (= sub.RefId)</td><td>always</td></tr>
+      <tr><td><code>UserName</code></td><td><code>$orderRequest/OrderData/User</code></td><td>if present</td></tr>
+      <tr><td><code>PassWord</code></td><td><code>$orderRequest/OrderData/Password</code></td><td>if present</td></tr>
+      <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>if present</td></tr>
+      <tr><td><code>CES</code></td><td><code>$orderRequest/OrderData/CES</code></td><td>if present</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§9.3 Variant Comparison — ChargeInfo Payload Fields</h3>
+    <table>
+      <tr><th>Field (ns1:)</th><th>UC Path (POU)</th><th>Standard Path (POU)</th><th>Standard Path (COU)</th></tr>
+      <tr><td><code>Amount</code></td><td><code>$amount</code></td><td><code>$amount</code></td><td><code>$amount</code></td></tr>
+      <tr><td><code>AmountCurrency</code></td><td>"THB" (static)</td><td>"THB" (static)</td><td>"THB" (static)</td></tr>
+      <tr><td><code>AttributesList/AttributeName</code></td><td class="diff-row-a">"Carry over status"</td><td class="diff-row-b">"Activity code"</td><td class="diff-row-b">"Activity code"</td></tr>
+      <tr><td><code>AttributesList/Value</code></td><td class="diff-row-a">"N"</td><td class="diff-row-b">"45"</td><td class="diff-row-b">"45"</td></tr>
+      <tr><td><code>BaId</code></td><td>$accountId (if present)</td><td>$accountId (if present)</td><td>$accountId (if present)</td></tr>
+      <tr><td><code>BusinessEntity</code></td><td>"0" (static)</td><td>"0" (static)</td><td>"0" (static)</td></tr>
+      <tr><td><code>ChargeCode</code></td><td>$subOff/OfferName (if present)</td><td>$subOff/OfferName (if present)</td><td>$subOff/OfferName (if present)</td></tr>
+      <tr><td><code>ChargeOrigin</code></td><td class="diff-row-a">"ML" (static)</td><td class="diff-row-b">— absent</td><td class="diff-row-b">— absent</td></tr>
+      <tr><td><code>ChargeType</code></td><td class="diff-row-a">if($amount&gt;0)"DBT" else "CRD"</td><td class="diff-row-b">— absent</td><td class="diff-row-b">— absent</td></tr>
+      <tr><td><code>Description</code></td><td>$description</td><td>$description</td><td>— absent</td></tr>
+      <tr><td><code>EffectiveDate</code></td><td>$subOff/EffectiveDate (if present)</td><td>$subOff/EffectiveDate (if present)</td><td>$subOff/EffectiveDate (if present)</td></tr>
+      <tr><td><code>Pcn</code></td><td>$accountId (if present)</td><td>$accountId (if present)</td><td>$accountId (if present)</td></tr>
+      <tr><td><code>ReciverCustomerId</code></td><td>$orderRequest/.../CustomerId (if present)</td><td>$orderRequest/.../CustomerId (if present)</td><td>$orderRequest/.../CustomerId (if present)</td></tr>
+      <tr><td><code>ServiceReciverId</code></td><td>$sub/SubscriberId (if present)</td><td>$sub/SubscriberId (if present)</td><td>$sub/SubscriberId (if present)</td></tr>
+      <tr><td><code>ServiceReciverType</code></td><td>"83" (static)</td><td>"83" (static)</td><td>"83" (static)</td></tr>
+    </table>
+    <div class="highlight-warn" style="margin-top:10px">
+      <strong>Note:</strong> <code>ns1:</code> maps to <code>amdocs.bl3g.datatypes.ChargeInfo</code> namespace; <code>ns2:</code> to <code>amdocs.bl3g.datatypes.ChargeAttributeInfo</code>. The outer wrapper is <code>ns:CreateChargeRequest/ns:ChargeInfo</code> from <code>OMX-COMMON/_SharedResources/Schemas/FM/CreateChargeRequest.xsd</code>.
+    </div>
+
+    <h3 style="margin-top:16px">§9.4 Complete Generated XML Example (UC path, all fields)</h3>
+    <pre><span class="xt">&lt;ns:CreateChargeRequest&gt;</span>
+  <span class="xt">&lt;ns:ChargeInfo&gt;</span>
+    <span class="xt">&lt;ns1:Amount&gt;</span>150.00<span class="xt">&lt;/ns1:Amount&gt;</span>
+    <span class="xt">&lt;ns1:AmountCurrency&gt;</span>THB<span class="xt">&lt;/ns1:AmountCurrency&gt;</span>
+    <span class="xt">&lt;ns1:AttributesList&gt;</span>
+      <span class="xt">&lt;ns2:AttributeName&gt;</span>Carry over status<span class="xt">&lt;/ns2:AttributeName&gt;</span>
+      <span class="xt">&lt;ns2:Value&gt;</span>N<span class="xt">&lt;/ns2:Value&gt;</span>
+    <span class="xt">&lt;/ns1:AttributesList&gt;</span>
+    <span class="xt">&lt;ns1:BaId&gt;</span>100012345<span class="xt">&lt;/ns1:BaId&gt;</span>
+    <span class="xt">&lt;ns1:BusinessEntity&gt;</span>0<span class="xt">&lt;/ns1:BusinessEntity&gt;</span>
+    <span class="xt">&lt;ns1:ChargeCode&gt;</span>DATA_PACK_SOC<span class="xt">&lt;/ns1:ChargeCode&gt;</span>
+    <span class="xt">&lt;ns1:ChargeOrigin&gt;</span>ML<span class="xt">&lt;/ns1:ChargeOrigin&gt;</span>
+    <span class="xt">&lt;ns1:ChargeType&gt;</span>DBT<span class="xt">&lt;/ns1:ChargeType&gt;</span>
+    <span class="xt">&lt;ns1:Description&gt;</span>Data Pack Monthly Fee<span class="xt">&lt;/ns1:Description&gt;</span>
+    <span class="xt">&lt;ns1:EffectiveDate&gt;</span>2026-08-03T00:00:00<span class="xt">&lt;/ns1:EffectiveDate&gt;</span>
+    <span class="xt">&lt;ns1:Pcn&gt;</span>100012345<span class="xt">&lt;/ns1:Pcn&gt;</span>
+    <span class="xt">&lt;ns1:ReciverCustomerId&gt;</span>CUST-99887766<span class="xt">&lt;/ns1:ReciverCustomerId&gt;</span>
+    <span class="xt">&lt;ns1:ServiceReciverId&gt;</span>0812345678<span class="xt">&lt;/ns1:ServiceReciverId&gt;</span>
+    <span class="xt">&lt;ns1:ServiceReciverType&gt;</span>83<span class="xt">&lt;/ns1:ServiceReciverType&gt;</span>
+  <span class="xt">&lt;/ns:ChargeInfo&gt;</span>
+<span class="xt">&lt;/ns:CreateChargeRequest&gt;</span></pre>
+
+    <h3 style="margin-top:16px">§9.5 Output XML Tree Hierarchy</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:8px;overflow-x:auto;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree" style="background:var(--code-bg)">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">if $orderRequest/OrderPriority</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">if OMXTrackingId</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">if OrderID</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$subsId</span><span class="badge b-green" style="font-size:0.72rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="tree-cond">if User</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="tree-cond">if Password</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">if OrderType</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="tree-cond">if CES</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-tag">ns:CreateChargeRequest</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-tag">ns:ChargeInfo</span></div>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:Amount</span><span class="tree-arrow">←</span><span class="tree-src">$amount</span><span class="badge b-green" style="font-size:0.72rem">Always</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:AmountCurrency</span><span class="tree-arrow">←</span><span class="tree-src-static">"THB"</span><span class="badge b-green" style="font-size:0.72rem">Always</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:AttributesList</span></div>
+                              <ul>
+                                <li><div class="tree-row"><span class="tree-tag">ns2:AttributeName</span><span class="tree-arrow">←</span><span class="tree-src-static">"Carry over status" (UC) / "Activity code" (std)</span><span class="badge b-green" style="font-size:0.72rem">Always</span></div></li>
+                                <li><div class="tree-row"><span class="tree-tag">ns2:Value</span><span class="tree-arrow">←</span><span class="tree-src-static">"N" (UC) / "45" (std)</span><span class="badge b-green" style="font-size:0.72rem">Always</span></div></li>
+                              </ul>
+                            </li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:BaId</span><span class="tree-arrow">←</span><span class="tree-src">$accountId = Customer.Account[1].AccountID</span><span class="tree-cond">if accountId</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:BusinessEntity</span><span class="tree-arrow">←</span><span class="tree-src-static">"0"</span><span class="badge b-green" style="font-size:0.72rem">Always</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:ChargeCode</span><span class="tree-arrow">←</span><span class="tree-src">$subOff/OfferName</span><span class="tree-cond">if OfferName</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:ChargeOrigin</span><span class="tree-arrow">←</span><span class="tree-src-static">"ML"</span><span class="badge b-purple" style="font-size:0.72rem">UC path only</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:ChargeType</span><span class="tree-arrow">←</span><span class="tree-src">if($amount&gt;0) "DBT" else "CRD"</span><span class="badge b-purple" style="font-size:0.72rem">UC path only</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:Description</span><span class="tree-arrow">←</span><span class="tree-src">$description</span><span class="tree-cond">POU only; COU omits this field</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:EffectiveDate</span><span class="tree-arrow">←</span><span class="tree-src">$subOff/EffectiveDate</span><span class="tree-cond">if EffectiveDate</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:Pcn</span><span class="tree-arrow">←</span><span class="tree-src">$accountId</span><span class="tree-cond">if accountId</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:ReciverCustomerId</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/CustomerId</span><span class="tree-cond">if CustomerId</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:ServiceReciverId</span><span class="tree-arrow">←</span><span class="tree-src">$sub/SubscriberId</span><span class="tree-cond">if SubscriberId</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns1:ServiceReciverType</span><span class="tree-arrow">←</span><span class="tree-src-static">"83"</span><span class="badge b-green" style="font-size:0.72rem">Always</span></div></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div style="margin-top:8px;font-size:0.8rem;color:#555">
+      <span style="color:#a6e3a1">■</span> Green = XPath source &nbsp;
+      <span style="color:#fab387">■</span> Orange = Static literal &nbsp;
+      <span style="color:#cba6f7">■</span> Purple = conditional label &nbsp;
+      <span class="badge b-purple" style="font-size:0.72rem">UC path only</span> = emitted only in revenueCode=="UC" branch
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§11</span> Audit Logging</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat(pid, "_REQ")</code> — nanoTime-based</td></tr>
+      <tr><td>COMPONENT_NAME</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"BL_CREATE_CHARGE"</code></td></tr>
+      <tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+      <tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for BL_CREATE_CHARGE"</code></td></tr>
+      <tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+      <tr><td>payload</td><td>Gated: <code>$globalVariables/OMX_OM/WritePayload == "true"</code></td></tr>
+    </table>
+    <div class="highlight-info" style="margin-top:10px"><strong>Note:</strong> The audit event is dispatched via <code>Event.Ext.sendEventImmediate</code> once per BL_CREATE_CHARGE dispatch — one audit log entry per offer being charged.</div>
+  </div>
+</div>
+
+<!-- §12 Activity Status Management -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§12</span> Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Condition</th><th>Status Call</th><th>Result</th></tr>
+      <tr><td>At least one charge dispatched</td><td><code>GetActivityStatusString("1", false)</code></td><td>Activity marked "in flight" (waiting for responses)</td></tr>
+      <tr><td>No dispatchable offers found</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>Activity skipped; process advances to next step</td></tr>
+      <tr><td>Exception thrown</td><td><code>HandleActivityException(..., "")</code></td><td>Error state recorded; depends on HandleActivityException policy</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§13</span> Exception / Error Handling</div>
+  <div class="card-body">
+    <pre><span class="kw">catch</span> (Exception ae) {
+    RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</pre>
+    <p style="margin-top:8px">The entire THEN body is wrapped in a single try/catch. No additional error categorization is applied — all exceptions route to <code>HandleActivityException</code> with an empty context string.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§14</span> Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)</code></td><td>Clears leftover request queue entries before re-dispatching on resubmit</td></tr>
+      <tr><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, subsId, offerName, filter)</code></td><td>POU: builds XML snapshot of subscriber offer for PreExecCheck XPath evaluation with filter context</td></tr>
+      <tr><td><code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, subsId, offerName, pOuRefId, filter)</code></td><td>COU: same as above, parameterized for ChildOU subscriber</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionRequestEvent(event, activity)</code></td><td>Enqueues the charge event for throttled sequential dispatch</td></tr>
+      <tr><td><code>IntraActivitySequencing.SendFirstRequestEvent(activity)</code></td><td>Fires the first queued event after all offers have been enqueued</td></tr>
+      <tr><td><code>GetActivityStatusString("1", false)</code></td><td>Returns the string representation of in-flight status</td></tr>
+      <tr><td><code>SendDataToDB(orderRequest)</code></td><td>Persists order state to database after fan-out is started</td></tr>
+      <tr><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>Advances process when no charges need to be dispatched</td></tr>
+      <tr><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td><td>Standard error handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§15</span> Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_BL_CREATE_CHARGE
+├── [resubmit guard]
+│   └── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit()
+├── [POU loop - per offer]
+│   ├── GetXMLForSubscriberOfferFilterWithExtendedInfo()
+│   ├── XPath.execute()  ← PreExecCheck
+│   ├── XPath.evalAsDouble()  ← AMOUNT
+│   ├── XPath.evalAsString()  ← DESCRIPTION
+│   ├── XPath.evalAsString()  ← REVENUE_CODE
+│   ├── Event.createEvent()  ← BL_CREATE_CHARGE XSLT (UC or std variant)
+│   ├── Event.assertEvent()
+│   ├── IntraActivitySequencing.ActionRequestEvent()
+│   └── Event.Ext.sendEventImmediate()  ← Logger
+├── [COU loop - per offer, excl ServiceType=80]
+│   ├── GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo()
+│   ├── XPath.execute()  ← PreExecCheck
+│   ├── XPath.evalAsDouble()  ← AMOUNT
+│   ├── XPath.evalAsString()  ← DESCRIPTION (sub only)
+│   ├── Event.createEvent()  ← BL_CREATE_CHARGE XSLT (COU std variant)
+│   ├── Event.assertEvent()
+│   ├── IntraActivitySequencing.ActionRequestEvent()
+│   └── Event.Ext.sendEventImmediate()  ← Logger
+├── [after loop - dispatched]
+│   ├── IntraActivitySequencing.SendFirstRequestEvent()
+│   ├── GetActivityStatusString("1", false)
+│   └── SendDataToDB()
+├── [after loop - nothing dispatched]
+│   └── SkipActivity("4")
+└── [catch]
+    └── HandleActivityException()</pre>
+  </div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§19</span> Response Message Rule — Response_BL_CREATE_CHARGE</div>
+  <div class="card-body">
+    <h3>§19.1 Overview</h3>
+    <p>A lean response rulefunction. Its sole job is to: (1) construct a <code>BL_CreateChargeRes</code> concept from the incoming FM response event, (2) append it to <code>currActivity.Response[]</code>, (3) emit a response audit log entry, and (4) call <code>ActionResponseEvent</code> to advance the IntraActivitySequencing queue.</p>
+    <div class="highlight-info" style="margin-top:8px">Unlike SBM_BUY_DATA_PACK, this response handler has <strong>no fan-in success counting</strong> — it relies entirely on <code>IntraActivitySequencing.ActionResponseEvent()</code> to determine when all charges are complete and the next sequential event should fire.</div>
+
+    <h3 style="margin-top:16px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order — needed for audit logging (OMXTrackingId)</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.BL_CREATE_CHARGE</code></td><td>Inbound FM response event carrying ResponseCode, RefID, ChargeId</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity — Response[] array is appended to</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§19.3 ResponseBase Concept Construction — BL_CreateChargeRes</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:8px;overflow-x:auto;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree" style="background:var(--code-bg)">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span><span class="tree-attr"> extId=</span><span class="tree-src">OMXUtils.generateTrackingID()</span><span class="badge b-green" style="font-size:0.72rem">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">if ResponseCode</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">if ResponseMsg</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">if CompletionStatus</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">if RefID</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ChargeId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns1:CreateChargeResponse/ns1:ChargeIdInfo/ns:ChargeId</span><span class="tree-cond">if ChargeId path exists</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <p style="margin-top:8px">The <code>ChargeId</code> returned from Amdocs BL3G is captured in the response concept. It is appended to <code>currActivity.Response[]</code> but not currently written back to the OrderRequest concept — it could be useful for reconciliation in future designs.</p>
+
+    <h3 style="margin-top:16px">§19.4 Response Completion Logic</h3>
+    <p>No explicit fan-in count or ResponseCode success check. <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> returns <code>true</code> when all enqueued charge requests have received responses — at that point this rulefunction returns <code>"true"</code> and the caller (the response event router) advances the activity.</p>
+    <table style="margin-top:10px">
+      <tr><th>Return value</th><th>Meaning</th></tr>
+      <tr><td><code>"true"</code></td><td>All charges complete — activity done; next process step will be triggered</td></tr>
+      <tr><td><code>"false"</code></td><td>More charges pending — wait for further responses</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§19.5 Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat(pid, "_RES")</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"BL_CREATE_CHARGE"</code></td></tr>
+      <tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Response received for BL_CREATE_CHARGE"</code></td></tr>
+      <tr><td>payload</td><td>Gated on <code>WritePayload == "true"</code>; contains full <code>$eventResponse</code> copy</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§17</span> Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Iterate POU and COU subscriber offers; dispatch CreateCharge for each offer with a non-zero AMOUNT</td></tr>
+      <tr><td>R2</td><td>Route to UC billing path (ChargeOrigin="ML", ChargeType=DBT/CRD) when REVENUE_CODE="UC" (POU only)</td></tr>
+      <tr><td>R3</td><td>Route to standard billing path (Activity code=45) when REVENUE_CODE ≠ "UC" and amount > 0</td></tr>
+      <tr><td>R4</td><td>Exclude COU offers with ServiceType="80" from charge dispatch</td></tr>
+      <tr><td>R5</td><td>Use sub.RefId + ":" + offer.OfferName as the correlation RefID</td></tr>
+      <tr><td>R6</td><td>Throttle sequential dispatch via IntraActivitySequencing (not parallel fan-out)</td></tr>
+      <tr><td>R7</td><td>Skip the entire activity (SkipActivity "4") when no dispatchable offers are found</td></tr>
+      <tr><td>R8</td><td>Support resubmit by purging old pending requests before re-dispatching</td></tr>
+      <tr><td>R9</td><td>Capture ChargeId from BL3G response in currActivity.Response[]</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Amount lookup order differs POU vs COU — same subscriber with AMOUNT on both sub and subOff levels would get different amounts</td><td><span class="badge b-orange">MEDIUM</span></td><td>Standardize to offer-level priority; test with both level assignments</td></tr>
+      <tr><td>UC branch dispatches even when amount = 0 (or negative); standard branch skips amount = 0 — asymmetric credit handling</td><td><span class="badge b-blue">LOW</span></td><td>Document intentional: UC path explicitly creates CRD (credit) entries; confirm with billing team</td></tr>
+      <tr><td>ChargeId returned from BL3G is stored in Response[] concept but not written to OrderRequest — lost for downstream tracing</td><td><span class="badge b-blue">LOW</span></td><td>In migration, persist ChargeId as ExtendedInfo on the offer or order for audit trail</td></tr>
+      <tr><td>REVENUE_CODE="UC" branch unavailable for COU subscribers — hard-coded structural gap</td><td><span class="badge b-orange">MEDIUM</span></td><td>Verify business rule: is "UC" revenue code only possible on POU subscribers? Document the constraint.</td></tr>
+      <tr><td>No ResponseCode success check in response handler — any response (success or failure) advances the queue</td><td><span class="badge b-red">HIGH</span></td><td>Migration should add explicit ResponseCode validation and route failures to error handling</td></tr>
+      <tr><td>LogicalDate loaded but not used — vestigial dead code</td><td><span class="badge b-blue">LOW</span></td><td>Remove in migration; reduces confusion and eliminates unnecessary working memory lookup</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§18</span> Full Source Code</div>
+  <div class="card-body">
+    <pre><span class="cm">/**
+ * @description
+ * @author RS33-BANDIT
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request</span>.Request_BL_CREATE_CHARGE {
+  <span class="kw">attribute</span> {
+    priority = <span class="nm">5</span>;
+    forwardChain = <span class="kw">true</span>;
+  }
+  <span class="kw">declare</span> {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="st">"BL_CREATE_CHARGE"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="st">"BL_CREATE_CHARGE"</span>;
+    orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="ty">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nm">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">try</span> {
+      <span class="cm">// LogicalDate loaded but not used in payload (vestigial)</span>
+      <span class="ty">Concepts.OM.LogicalDate</span> logicalDateRes = Instance.getByExtIdByUri(<span class="st">"LogicalDate"</span>, <span class="st">"/Concepts/OM/LogicalDate"</span>);
+      <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct = Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+
+      <span class="kw">if</span>(isActResub) {
+        RuleFunctions.Helpers.IntraActivitySequencing.<span class="fn">PurgePendingRequestsBeforeResubmit</span>(orderCurrentActivity);
+      }
+
+      <span class="ty">boolean</span> isSkipped = <span class="kw">true</span>;
+      <span class="cm">/* ── POU Subscriber loop ── */</span>
+      <span class="kw">for</span>(<span class="ty">int</span> i = <span class="nm">0</span>; i &lt; orderRequest.OrderData.Customer.ParentOU@length; i++) {
+        <span class="kw">for</span>(<span class="ty">int</span> p = <span class="nm">0</span>; p &lt; orderRequest.OrderData.Customer.ParentOU[i].Subscriber@length; p++) {
+          <span class="ty">Concepts.OrderRequest.OrderElements.Subscriber</span> sub = ...ParentOU[i].Subscriber[p];
+          <span class="kw">for</span>(<span class="ty">int</span> q = <span class="nm">0</span>; q &lt; sub.SubscriberOffers@length; q++) {
+            <span class="ty">Concepts.OrderRequest.OrderElements.SubscriberOffers</span> subOff = ...Subscriber[p].SubscriberOffers[q];
+            <span class="ty">String</span> refId = sub.RefId + <span class="st">":"</span> + subOff.OfferName;
+            <span class="ty">String</span> filter = XPath.evalAsString(<span class="st">"$subOff/ExtendedInfo[Name=\"FE_OR_CCBS\"]/Value"</span>);
+            <span class="cm">/* reqSuccess check against Response[] ... */</span>
+            <span class="kw">if</span>(!reqSuccess) {
+              <span class="cm">/* PreExecCheck gate ... */</span>
+              <span class="ty">double</span> amount = XPath.evalAsDouble(<span class="st">"subOff/ExtendedInfo[AMOUNT] → sub/ExtendedInfo[AMOUNT] → 0"</span>);
+              <span class="ty">String</span> description = XPath.evalAsString(<span class="st">"subOff/ExtendedInfo[DESCRIPTION] → sub → ''"</span>);
+              <span class="ty">String</span> revenueCode = XPath.evalAsString(<span class="st">"subOff/ExtendedInfo[REVENUE_CODE] → ''"</span>);
+
+              <span class="kw">if</span>(revenueCode == <span class="st">"UC"</span>) {
+                <span class="cm">/* UC path: ChargeOrigin="ML", ChargeType=DBT/CRD, AttributeName="Carry over status"/N
+                   → See §9 for full XSLT (BL_CREATE_CHARGE UC variant) */</span>
+                Events.OMConsumers.OMXFM.Request.BL_CREATE_CHARGE createChargeEvent = Event.createEvent(<span class="st">/* UC XSLT */</span>);
+                Event.assertEvent(createChargeEvent);
+                RuleFunctions.Helpers.IntraActivitySequencing.<span class="fn">ActionRequestEvent</span>(createChargeEvent, orderCurrentActivity);
+                Event.Ext.sendEventImmediate(<span class="st">/* Logger audit */</span>);
+                isSkipped = <span class="kw">false</span>;
+              } <span class="kw">else</span> <span class="kw">if</span>(amount &gt; <span class="nm">0</span>) {
+                <span class="cm">/* Standard path: AttributeName="Activity code"/45
+                   → See §9 for full XSLT (BL_CREATE_CHARGE standard POU variant) */</span>
+                Events.OMConsumers.OMXFM.Request.BL_CREATE_CHARGE createChargeEvent = Event.createEvent(<span class="st">/* Std XSLT */</span>);
+                Event.assertEvent(createChargeEvent);
+                RuleFunctions.Helpers.IntraActivitySequencing.<span class="fn">ActionRequestEvent</span>(createChargeEvent, orderCurrentActivity);
+                Event.Ext.sendEventImmediate(<span class="st">/* Logger audit */</span>);
+                isSkipped = <span class="kw">false</span>;
+              }
+            }
+          }
+        }
+        <span class="cm">/* ── COU Subscriber loop (excludes ServiceType="80") ── */</span>
+        <span class="kw">for</span>(<span class="ty">int</span> u = <span class="nm">0</span>; u &lt; orderRequest.OrderData.Customer.ParentOU[i].ChildOU@length; u++) {
+          <span class="cm">/* amount: sub first → subOff; no revenueCode check; amount > 0 guard only
+             → See §9 for full XSLT (BL_CREATE_CHARGE COU variant) */</span>
+          <span class="kw">if</span>(amount &gt; <span class="nm">0</span>) {
+            <span class="cm">/* dispatch COU charge */</span>
+            isSkipped = <span class="kw">false</span>;
+          }
+        }
+      }
+
+      <span class="kw">if</span>(!isSkipped) {
+        RuleFunctions.Helpers.IntraActivitySequencing.<span class="fn">SendFirstRequestEvent</span>(orderCurrentActivity);
+        orderCurrentActivity.Status = RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+        RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+      } <span class="kw">else</span> {
+        RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+      }
+    } <span class="kw">catch</span> (Exception ae) {
+      RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+    }
+  }
+}</pre>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_BL_CREATE_CHARGE</footer>
+</body>
+</html>

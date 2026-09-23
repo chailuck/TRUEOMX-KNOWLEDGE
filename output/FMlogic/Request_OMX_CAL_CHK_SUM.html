@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_CAL_CHK_SUM</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.8rem;font-weight:700;letter-spacing:.5px}
+header p{opacity:.85;margin-top:6px;font-size:.95rem}
+.meta-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px}
+.meta-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.8rem;font-weight:600}
+main{max-width:1280px;margin:32px auto;padding:0 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover{background:#fafafa}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:.82rem;line-height:1.55;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:.85rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nu{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+details>summary{cursor:pointer;padding:10px 14px;background:#FFF5F5;border-radius:6px;font-weight:600;color:var(--true-dark)}
+details[open]>summary{border-bottom:1px solid var(--border)}
+details .detail-body{padding:14px}
+footer{text-align:center;padding:32px;color:#777;font-size:.82rem;border-top:1px solid var(--border);margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX &rsaquo; FM Logic Documentation</div>
+  <h1>Request_OMX_CAL_CHK_SUM</h1>
+  <p>Computes Luhn checksum for ICC_ID and writes ICC_ID_CHG_SUM ExtendedInfo on Subscriber/Offer</p>
+  <div class="meta-row">
+    <span class="meta-pill">Activity: OMX_CAL_CHK_SUM</span>
+    <span class="meta-pill">Backend: OMX Internal</span>
+    <span class="meta-pill">No Outbound Call</span>
+    <span class="meta-pill">Generated: 2026-09-23</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>A local computation rule with <strong>no outbound ESB/JMS call</strong>. It iterates every Subscriber and their SubscriberOffers, locates ICC_ID (SIM card ICCID), computes a Luhn checksum digit(s) using <code>RuleFunctions.Helpers.Luhn(iccId)</code>, then writes a new <code>ICC_ID_CHG_SUM</code> ExtendedInfo on the subscriber or offer for downstream eSIM provisioning (SMDP+).</p>
+    <p style="margin-top:10px">Two ICC_ID source paths:</p>
+    <ul style="margin-top:8px;padding-left:20px">
+      <li><strong>RIO_SWAP path</strong> (PROJ=RIO_SWAP or <code>subscriber.ExtendedInfo[ICC_ID]</code> present): reads ICC_ID from <em>subscriber-level</em> ExtendedInfo → writes <code>SubscriberExtendedInfo</code> ICC_ID_CHG_SUM on the subscriber.</li>
+      <li><strong>Standard path</strong>: reads ICC_ID from <em>offer-level</em> (<code>psof/csof.ExtendedInfo[ICC_ID]</code>) → writes <code>SubscriberOffersExtendedInfo</code> ICC_ID_CHG_SUM on the offer.</li>
+    </ul>
+    <p style="margin-top:10px">The resulting <code>ICC_ID_CHG_SUM</code> value is then tested by the <strong>SMDP_PLUS</strong> activity's PreExecCheck (<code>ICC_ID_CHG_SUM present and not SMDP_COMFIRMED=Y</code>).</p>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_CAL_CHK_SUM</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Activity ID</td><td>OMX_CAL_CHK_SUM</td></tr>
+      <tr><td>Backend</td><td><span class="badge badge-blue">OMX Internal — no outbound call</span></td></tr>
+      <tr><td>Pattern</td><td>Local Computation (no IntraActivitySequencing)</td></tr>
+      <tr><td>Author</td><td>RS33-BANDIT</td></tr>
+      <tr><td>Response Rulefunction</td><td><span class="badge badge-orange">None — rule calls NextActivity/SkipActivity directly</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+  <div class="card-header">§3 — Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order context — customer, subscribers, offers</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity state (status, response tracking)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <pre><code><span class="kw">orderCurrentActivity</span>@extId == <span class="kw">orderRequest</span>.ProcessFlow.NextActivityName
+<span class="kw">orderCurrentActivity</span>.ActivityID == <span class="st">"OMX_CAL_CHK_SUM"</span>
+<span class="kw">orderRequest</span>.ProcessFlow.NextActivityID == <span class="st">"OMX_CAL_CHK_SUM"</span>
+<span class="kw">orderCurrentActivity</span>.Status == <span class="st">"WAITING"</span></code></pre>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol style="padding-left:20px;line-height:2">
+      <li>If resubmit (<code>RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted</code>): call <code>PurgePendingRequestsBeforeResubmit</code></li>
+      <li>Read next activity to get its <code>PreExecCheck</code> expression</li>
+      <li>Get PROJ parameter from current activity (<code>GetActivityParamValueFromKey</code>)</li>
+      <li>Loop <strong>ParentOU[p].Subscriber[s].SubscriberOffers[o]</strong>:
+        <ol style="padding-left:20px">
+          <li>Skip if offer already has CompletionStatus=2 in Response array</li>
+          <li>Evaluate next-activity PreExecCheck via <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code></li>
+          <li>If PreExecCheck passes: check <code>iccidInSub</code> = subscriber has <code>ExtendedInfo[ICC_ID]</code></li>
+          <li><strong>If RIO_SWAP or iccidInSub</strong>: get <code>ICC_ID</code> from <em>subscriber ExtendedInfo</em>, compute Luhn, write <code>SubscriberExtendedInfo(ICC_ID_CHG_SUM)</code> onto subscriber, fire audit log, set <code>isSkipped=false</code>, break</li>
+          <li><strong>Else</strong>: get <code>ICC_ID</code> from <em>offer ExtendedInfo</em>, compute Luhn, write <code>SubscriberOffersExtendedInfo(ICC_ID_CHG_SUM)</code> onto offer, fire audit log, set <code>isSkipped=false</code></li>
+        </ol>
+      </li>
+      <li>Loop <strong>ParentOU[p].ChildOU[cou].Subscriber[cs].SubscriberOffers[o]</strong>: same logic with ChildOU variant of helper functions</li>
+      <li>If not isSkipped: call <code>NextActivity</code>; else: call <code>SkipActivity("4")</code></li>
+    </ol>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <div class="card-header" style="background:#F5E6E6;color:var(--true-dark);border-left:3px solid var(--true-red);border-radius:4px;margin-bottom:12px;font-size:.85rem">§8.1 — No Outbound Backend Call</div>
+    <p>This rule performs purely in-memory operations. It does <em>not</em> emit a JMS/ESB event to any external system. The audit Logger event is the only outbound event.</p>
+
+    <div class="card-header" style="background:#F5E6E6;color:var(--true-dark);border-left:3px solid var(--true-red);border-radius:4px;margin-top:16px;margin-bottom:12px;font-size:.85rem">§8.5 — ExtendedInfo Fields</div>
+    <table>
+      <tr><th>Key</th><th>Level</th><th>Direction</th><th>Purpose</th></tr>
+      <tr><td>ICC_ID</td><td>Subscriber or Offer</td><td>Input (read)</td><td>Source ICCID for checksum computation</td></tr>
+      <tr><td>ICC_ID_CHG_SUM</td><td>Subscriber or Offer</td><td>Output (written)</td><td>ICC_ID + Luhn checksum digits; gates SMDP+ eSIM download</td></tr>
+      <tr><td>FE_OR_CCBS</td><td>Offer</td><td>Input (filter)</td><td>Used to filter offers during XML generation</td></tr>
+    </table>
+
+    <div class="card-header" style="background:#F5E6E6;color:var(--true-dark);border-left:3px solid var(--true-red);border-radius:4px;margin-top:16px;margin-bottom:12px;font-size:.85rem">§8.6 — Global Variables</div>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Log level value</td></tr>
+      <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Gate audit payload inclusion</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Computation Logic -->
+<div class="card">
+  <div class="card-header">§9 — Computation Logic — ICC_ID_CHG_SUM Generation</div>
+  <div class="card-body">
+    <div style="margin-bottom:16px">
+      <p><strong>Luhn checksum computation:</strong></p>
+      <pre><code>String iccIdCheckSum = <span class="fn">RuleFunctions.Helpers.Luhn</span>(iccId);
+iccIdChgSum.Value = iccId + iccIdCheckSum;  <span class="cm">// e.g. "8988...12" + "3"</span></code></pre>
+    </div>
+
+    <p><strong>ICC_ID_CHG_SUM extId pattern:</strong></p>
+    <pre><code><span class="cm">// Subscriber variant (SubscriberExtendedInfo):</span>
+extId = concat($iccId, <span class="st">':ICC_ID_CHG_SUM'</span>, $psof/@extId)
+
+<span class="cm">// Offer variant (SubscriberOffersExtendedInfo):</span>
+extId = concat($iccId, <span class="st">':ICC_ID_CHG_SUM'</span>, $psof/@extId)   <span class="cm">// ParentOU</span>
+extId = concat($iccId, <span class="st">':ICC_ID_CHG_SUM'</span>, $csof/@extId)   <span class="cm">// ChildOU</span></code></pre>
+
+    <div style="margin-top:16px">
+      <p><strong>Source-path decision logic:</strong></p>
+      <table>
+        <tr><th>Condition</th><th>ICC_ID Source</th><th>Write Target</th></tr>
+        <tr><td><code>PROJ=RIO_SWAP</code> OR <code>subscriber.ExtendedInfo[ICC_ID]</code> exists</td><td>Subscriber ExtendedInfo[ICC_ID]</td><td><code>SubscriberExtendedInfo</code> on subscriber</td></tr>
+        <tr><td>Otherwise</td><td>Offer ExtendedInfo[ICC_ID]</td><td><code>SubscriberOffersExtendedInfo</code> on offer</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree (SubscriberExtendedInfo) -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — ICC_ID_CHG_SUM Object Construction</div>
+  <div class="card-body">
+    <p style="margin-bottom:12px"><em>Two <code>Instance.createInstance</code> XSLT variants (functionally identical except param names). ParentOU ChildOU subscriber variant shown:</em></p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">concat($iccId, ':ICC_ID_CHG_SUM', $psof/@extId)</span><span class="badge badge-orange">Conditional: ICC_ID present</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Name</span><span class="tree-arrow">←</span><span class="tree-src-static">'ICC_ID_CHG_SUM'</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Value</span><span class="tree-arrow">←</span><span class="tree-src">iccId + iccIdCheckSum</span><span class="badge badge-orange">Set after createInstance</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:12px;font-size:.8rem;color:#555">
+      <strong>Legend:</strong>
+      <span class="tree-src">green</span> = XPath source &nbsp;
+      <span class="tree-src-static">orange</span> = static/literal value &nbsp;
+      <span class="tree-cond">purple italic</span> = xsl:if condition &nbsp;
+      <span class="badge badge-green">Always</span> = always emitted &nbsp;
+      <span class="badge badge-orange">Conditional</span> = inside xsl:if
+    </p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+  <div class="card-header">§11 — Audit Logging</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code> <span class="badge badge-orange">Conditional</span></td></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td></tr>
+      <tr><td>COMPONENT_NAME</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td>"OMX_CAL_CHK_SUM"</td></tr>
+      <tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+      <tr><td>LOG_LEVEL</td><td>INFO (from global variable)</td></tr>
+      <tr><td>AUDIT_TRACE</td><td>"Request Sent for OMX_CAL_CHK_SUM"</td></tr>
+      <tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+      <tr><td>payload/ns:ServicePayload</td><td><em>empty element</em> <span class="badge badge-purple">Conditional: WritePayload=true</span></td></tr>
+    </table>
+    <p style="margin-top:10px">Audit event fired via <code>Event.Ext.sendEventImmediate</code> on the Logger channel. Fired once <em>per ICC_ID found</em> (not per subscriber).</p>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="card">
+  <div class="card-header">§12 — Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Outcome</th><th>Call</th><th>Status Code</th></tr>
+      <tr><td>ICC_ID found and checksum written</td><td><code>RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)</code></td><td>Advance to next activity</td></tr>
+      <tr><td>No ICC_ID found on any subscriber/offer</td><td><code>RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" = Skipped</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="card">
+  <div class="card-header">§13 — Exception / Error Handling</div>
+  <div class="card-body">
+    <pre><code><span class="kw">catch</span> (Exception ae) {
+    <span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</code></pre>
+    <p style="margin-top:8px">Standard OMX exception handler — logs error, sets activity status to ERROR, and stops the flow.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card">
+  <div class="card-header">§14 — Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>RuleFunctions.Helpers.Luhn(iccId)</code></td><td>Computes Luhn checksum string for the given ICC_ID</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetActivityParamValueFromKey(activity, "PROJ")</code></td><td>Returns parameter value for key "PROJ" from current activity config</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetXMLForSubscriberOfferFilterWithExtendedInfo(req, subRefId, soc, filter)</code></td><td>Serialises subscriber+offer context to XML for XPath PreExecCheck evaluation (ParentOU)</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(req, subRefId, soc, pOuRefId, filter)</code></td><td>Same for ChildOU subscriber</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.NextActivity(req, activity)</code></td><td>Advances process flow to next step</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.SkipActivity(req, activity, "4")</code></td><td>Marks activity as skipped (no ICC_ID found)</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.PurgePendingRequestsBeforeResubmit(activity)</code></td><td>Cleans pending request state on resubmit</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")</code></td><td>Standard exception handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre><code>Request_OMX_CAL_CHK_SUM
+├── PurgePendingRequestsBeforeResubmit(activity)          [if resubmit]
+├── GetActivityParamValueFromKey(activity, "PROJ")
+├── GetXMLForSubscriberOfferFilterWithExtendedInfo(...)    [ParentOU]
+├── GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(...)  [ChildOU]
+├── XPath.evalAsBoolean(iccidInSub check)
+├── XPath.evalAsString(ICC_ID extraction)
+├── Helpers.Luhn(iccId)
+├── Instance.createInstance(SubscriberExtendedInfo XSLT)
+├── Instance.createInstance(SubscriberOffersExtendedInfo XSLT)
+├── Event.Ext.sendEventImmediate(Logger)
+├── NextActivity(req, activity)
+├── SkipActivity(req, activity, "4")
+└── HandleActivityException(req, activity, ae, "")</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Requirement / Risk</th><th>Severity</th></tr>
+      <tr><td>R1</td><td>Luhn algorithm implementation must match <code>RuleFunctions.Helpers.Luhn</code> exactly — any deviation invalidates the ICC_ID_CHG_SUM and causes SMDP+ to reject the eSIM download</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+      <tr><td>R2</td><td>RIO_SWAP path (PROJ=RIO_SWAP) reads ICC_ID from subscriber-level; standard path reads from offer-level — both must be preserved in the migration</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+      <tr><td>R3</td><td>ICC_ID_CHG_SUM is written in-memory before SMDP_PLUS runs; the downstream eSIM flow depends on this value existing on the correct object (subscriber vs offer)</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R4</td><td>SMDP_PLUS PreExecCheck tests for ICC_ID_CHG_SUM presence — if this rule skips (no ICC_ID), SMDP+ is also skipped; migration must preserve this gate</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R5</td><td>The rule evaluates the <em>next</em> activity's PreExecCheck to decide whether to process each offer — this cross-activity dependency must be modelled explicitly in the migration</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R6</td><td>SkipActivity code "4" is significant; ensure downstream orchestration handles it correctly</td><td><span class="badge badge-green">[LOW]</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source -->
+<div class="card">
+  <div class="card-header">§18 — Full Source Code</div>
+  <div class="card-body">
+    <pre><code><span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_OMX_CAL_CHK_SUM</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"OMX_CAL_CHK_SUM"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"OMX_CAL_CHK_SUM"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">try</span> {
+            <span class="kw">if</span>(isActResub) { <span class="cm">/* PurgePendingRequestsBeforeResubmit */</span> }
+
+            Activity nextAct = Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, ...);
+            String projName = <span class="st">"PROJ"</span>;
+            String paramValue = <span class="fn">GetActivityParamValueFromKey</span>(orderCurrentActivity, projName);
+
+            <span class="kw">for</span> (int p; p &lt; pOuLen; p++) {
+                <span class="kw">for</span> (int s; s &lt; pSubLen; s++) {
+                    <span class="kw">for</span> (int o; o &lt; pSubOfferLen; o++) {
+                        <span class="cm">/* skip if already completed */</span>
+                        <span class="cm">/* evaluate next-activity PreExecCheck */</span>
+                        <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+                            <span class="kw">boolean</span> iccidInSub = XPath.evalAsBoolean(<span class="st">"count($subscriber/ExtendedInfo[Name='ICC_ID'])&gt;0"</span>);
+                            <span class="kw">if</span>(String.equals(<span class="st">"RIO_SWAP"</span>, paramValue) || iccidInSub) {
+                                String iccId = <span class="cm">/* ICC_ID from subscriber ExtendedInfo */</span>;
+                                <span class="kw">if</span>(String.length(iccId) &gt; <span class="nu">0</span>) {
+                                    String iccIdCheckSum = <span class="fn">Luhn</span>(iccId);
+                                    <span class="cm">/* Instance.createInstance(SubscriberExtendedInfo XSLT — see §10) */</span>
+                                    iccIdChgSum.Value = iccId + iccIdCheckSum;
+                                    subscriber.ExtendedInfo[...] = iccIdChgSum;
+                                    <span class="cm">/* fire Logger audit event — see §11 */</span>
+                                    isSkipped = <span class="kw">false</span>; <span class="kw">break</span>;
+                                }
+                            } <span class="kw">else</span> {
+                                String iccId = <span class="cm">/* ICC_ID from offer ExtendedInfo */</span>;
+                                <span class="kw">if</span>(String.length(iccId) &gt; <span class="nu">0</span>) {
+                                    String iccIdCheckSum = <span class="fn">Luhn</span>(iccId);
+                                    <span class="cm">/* Instance.createInstance(SubscriberOffersExtendedInfo XSLT — see §10) */</span>
+                                    iccIdChgSum.Value = iccId + iccIdCheckSum;
+                                    psof.ExtendedInfo[...] = iccIdChgSum;
+                                    <span class="cm">/* fire Logger audit event — see §11 */</span>
+                                }
+                            }
+                            isSkipped = <span class="kw">false</span>;
+                        }
+                    }
+                }
+                <span class="cm">/* ChildOU loop: same pattern with GetXMLForSubscriberOfferInChildOU... */</span>
+            }
+
+            <span class="kw">if</span>(!isSkipped) { <span class="fn">NextActivity</span>(orderRequest, orderCurrentActivity); }
+            <span class="kw">else</span>           { <span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>); }
+
+        } <span class="kw">catch</span> (Exception ae) {
+            <span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_CVSS_UPDATE_SUBSCRIBER_COUNT — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}.code-block .xa{color:#f9e2af}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}.badge-teal{background:#E0F2F1;color:#00695c}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+.callout.purple{border-color:var(--skip);background:#F3E5F5}
+h3{color:var(--true-dark);margin:16px 0 10px;font-size:0.95rem}
+.diff-table{border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:10px 0;font-size:0.83rem}
+.diff-table th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:7px 10px;font-weight:700}
+.diff-table td{padding:6px 10px;border-bottom:1px solid var(--border)}
+.diff-old{background:#FFF3E0;color:#7f3200}.diff-new{background:#E8F5E9;color:#1b5e20}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_CVSS_UPDATE_SUBSCRIBER_COUNT</h1>
+    <div class="subtitle">CVSS credit evaluation per Account — sequential IntraActivitySequencing fan-out with multi-approveCode inner loop; sends full EvaluateCreditClassRequest with ~40 customer profile fields</div>
+    <div class="meta-row">
+      <span class="meta-badge">Target: CVSS (EvaluateCreditRequest)</span>
+      <span class="meta-badge">Pattern: Sequential IntraActivitySequencing</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Author: awalia-t420</span>
+      <span class="meta-badge">Used in step: 37</span>
+      <span class="meta-badge">Generated: 2026-08-06</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>Sends an <code>EvaluateCreditClassRequest</code> to CVSS for each Account in the order. The request carries a comprehensive customer profile (identity, addresses, credit class, approveCode, number-of-subscribers, IDD/IR counts, payment info). Uses <code>IntraActivitySequencing</code> for sequential dispatch — events are queued per account × approveCode, then sent one at a time.</p>
+    <div class="callout info"><strong>Sequential fan-out:</strong> Uses <code>ActionRequestEvent</code> + <code>SendFirstRequestEvent</code> / <code>ActionResponseEvent</code> — events are dispatched serially, NOT in parallel.</div>
+    <div class="callout warning"><strong>Multi-approveCode inner loop:</strong> When <code>maxAllowApproveCodeList</code> is populated, one event is sent per account × approveCode entry. Default iteration count is 1 if list is empty.</div>
+    <div class="callout purple"><strong>Active XSLT vs OMX-2748 commented variant:</strong> The prior XSLT (OMX-2748) is commented out. The active variant adds a <code>&lt;CES&gt;</code> header field and changes <code>customerLevel</code>/<code>lastname</code> conditions from Type=66/67 to Type!=73.</div>
+    <div class="callout"><strong>Fan-in:</strong> <code>IntraActivitySequencing.ActionResponseEvent</code> (standard "000" count fan-in is commented out).</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_CVSS_UPDATE_SUBSCRIBER_COUNT.rule</code></td><td>127 lines</td></tr>
+      <tr><td>Response file</td><td><code>Response_CVSS_UPDATE_SUBSCRIBER_COUNT.rulefunction</code></td><td>35 lines</td></tr>
+      <tr><td>Author</td><td>awalia-t420</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td></td></tr>
+      <tr><td>Target system</td><td>CVSS</td><td>Credit Valuation / Subscriber Count</td></tr>
+      <tr><td>Request schema NS</td><td><code>http://services.omx.truecorp.co.th/FMServices/evaluateCreditRequest</code></td><td></td></tr>
+      <tr><td>Request event type</td><td><code>Events.OMConsumers.OMXFM.Request.CVSS_UPDATE_SUBSCRIBER_COUNT</code></td><td>Active variant (CES-enabled)</td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.CVSS_UPDATE_SUBSCRIBER_COUNT</code></td><td></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CVSS_UpdateSubscriberCountRes</code></td><td>Custom; ResponseCode + ResponseMessage only (no CompletionStatus)</td></tr>
+      <tr><td>extId generation</td><td><code>OMXUtils.generateTrackingID()</code> in BE, passed to XSLT as param</td><td></td></tr>
+      <tr><td>Fan-out type</td><td>Sequential (<code>IntraActivitySequencing</code>)</td><td>Per Account × approveCode</td></tr>
+      <tr><td>dedup key</td><td><code>Account[i].RefId</code></td><td>Per account</td></tr>
+      <tr><td>PurgePendingRequestsBeforeResubmit</td><td><span class="badge badge-orange">Conditional</span></td><td>Only when <code>isActResub=true</code></td></tr>
+      <tr><td>Credential gate</td><td>None</td><td></td></tr>
+      <tr><td>Audit gate</td><td><span class="badge badge-green">UNCONDITIONAL</span></td><td>No AllowWriteLog</td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td><td>Standard "000" count is commented out</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Customer profile; Account[]; maxAllowApproveCodeList; Channel; OrderType; ExtendedInfo</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Parameter[NO_OF_SUB]; RequestCount; Response[]; Status</td></tr>
+      <tr><td><code>nextAct</code></td><td>Concepts.OM.ProcessConfig.Activity (local)</td><td>Live lookup — PreExecCheck</td></tr>
+    </table>
+    <h3>Key local variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Value derivation</th></tr>
+      <tr><td><code>noOfSub</code></td><td><code>GetActivityParamValueFromKey(orderCurrentActivity, "NO_OF_SUB")</code></td></tr>
+      <tr><td><code>orderShareplan</code></td><td><code>OrderType == "11001"</code></td></tr>
+      <tr><td><code>orderMNPShareplan</code></td><td><code>OrderType == "36"</code></td></tr>
+      <tr><td><code>iMaxAllowApproveCode</code></td><td><code>count(maxAllowApproveCodeList)</code>; 0 → clamped to 1; >0 → <code>chkMaxAllowApproveCodeData=true</code></td></tr>
+      <tr><td><code>approveCode</code></td><td>See §5 — 3-tier logic</td></tr>
+      <tr><td><code>numberOfRequest</code></td><td>See §5 — 3-tier logic</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CVSS_UPDATE_SUBSCRIBER_COUNT"</code></td><td>FM type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CVSS_UPDATE_SUBSCRIBER_COUNT"</code></td><td>Process flow alignment</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>WAITING state guard</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 approveCode 3-tier logic -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> approveCode 3-Tier Logic</div>
+  <div class="section-body">
+    <div class="callout info">Resolved inside the <code>iMaxAllow</code> inner loop — one approveCode per iteration.</div>
+    <table>
+      <tr><th>Priority</th><th>Condition</th><th>approveCode source</th><th>numberOfRequest source</th></tr>
+      <tr><td>1</td><td><code>chkMaxAllowApproveCodeData = true</code> (maxAllowApproveCodeList.count > 0)</td><td><code>maxAllowApproveCodeList[iMaxAllow].approveCode</code></td><td><code>maxAllowApproveCodeList[iMaxAllow].numberOfRequest</code></td></tr>
+      <tr><td>2</td><td><code>orderShareplan</code> (OrderType=11001) OR <code>orderMNPShareplan</code> (OrderType=36)</td><td><code>ParentOU[RefId=$AgreeRefId]/ExtendedInfo[Name='APPROVE_CODE']/Value</code></td><td><code>count(ParentOU[RefId=$AgreeRefId]/Subscriber/ExtendedInfo[Name='SHAREPLAN_MAIN_NUMBER'])</code></td></tr>
+      <tr><td>3 (default)</td><td>(other order types)</td><td><code>orderRequest.OrderData.maxAllowApproveCode</code></td><td>Not set (0)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §6 Loop structure -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> Loop Structure — Account × approveCode</div>
+  <div class="section-body">
+    <div class="code-block"><span class="kw">for</span>(<span class="ty">int</span> i=<span class="nu">0</span>; i &lt; iAcctLen; i++) {          <span class="cm">// Outer: per Account</span>
+    refId = Account[i].RefId;
+    AgreeRefId = Account[i].AgreementRefId;
+    reqSuccess = checkByRefId(Response, refId);
+
+    <span class="kw">if</span>(!reqSuccess) {
+        chkRes = <span class="str">"true"</span>;
+        <span class="kw">if</span>(nextAct.PreExecCheck) {
+            sXML = <span class="fn">GetXMLForAccount</span>(orderRequest, refId);
+            chkRes = XPath.execute(<span class="str">"/("+chkXPath+")"</span>, sXML, ...);
+        }
+
+        <span class="kw">if</span>(chkRes == <span class="str">"true"</span>) {
+            <span class="kw">for</span>(<span class="ty">int</span> iMaxAllow=<span class="nu">0</span>; iMaxAllow &lt; iMaxAllowApproveCode; iMaxAllow++) {   <span class="cm">// Inner: per approveCode</span>
+                <span class="cm">// resolve approveCode + numberOfRequest (3-tier)</span>
+                reqEvent = Event.createEvent(<span class="str">"xslt://CVSS_UPDATE_SUBSCRIBER_COUNT"</span>);
+                Event.assertEvent(reqEvent);
+                <span class="fn">ActionRequestEvent</span>(reqEvent, orderCurrentActivity);
+                sendAuditLogger();
+                isSkipped = <span class="kw">false</span>;
+            }
+        }
+    }
+}
+<span class="kw">if</span>(!isSkipped)
+    <span class="fn">SendFirstRequestEvent</span>(orderCurrentActivity);  <span class="cm">// dispatches first queued event</span></div>
+    <div class="callout info">
+      <strong>IntraActivitySequencing:</strong> Events are queued via <code>ActionRequestEvent</code> during the loop, then the first is dispatched by <code>SendFirstRequestEvent</code> after the loop. Each <code>ActionResponseEvent</code> dispatches the next queued event.
+    </div>
+  </div>
+</div>
+
+<!-- §7 Payload -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> Payload Structure — EvaluateCreditClassRequest</div>
+  <div class="section-body">
+    <h3>§7.1 — Event header</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">event</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">JMSPriority</span> <span class="tree-arrow">←</span> <span class="tree-src">orderRequest/OrderPriority</span></div></li>
+            <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span> <span class="tree-arrow">←</span> <span class="tree-src">OrderData/OMXTrackingId</span></div></li>
+            <li><div class="tree-row"><span class="tree-tag">OrderID</span> <span class="tree-arrow">←</span> <span class="tree-src">OrderData/OrderID</span></div></li>
+            <li><div class="tree-row"><span class="tree-tag">RefID</span> <span class="tree-arrow">←</span> <span class="tree-src">Account[$var]/RefId</span> <span class="tree-cond">(var = i+1)</span></div></li>
+            <li><div class="tree-row"><span class="tree-tag">OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">OrderData/OrderType</span> <span class="tree-cond">[xsl:if]</span></div></li>
+            <li><div class="tree-row"><span class="tree-tag">CES</span> <span class="tree-arrow">←</span> <span class="tree-src">OrderData/CES</span> <span class="tree-cond">[xsl:if — ACTIVE variant only; absent in OMX-2748]</span></div></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3>§7.2 — ns:Prerequisiteinfo block</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">ns:EvaluateCreditRequest</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">ns:EvaluateCreditClassRequest</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ns:Prerequisiteinfo</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-tag">ns:accountId</span> <span class="tree-arrow">←</span> <span class="tree-src">Account[$var]/AccountID</span> <span class="tree-cond">[xsl:if string-length > 0]</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:custNo</span> <span class="tree-arrow">←</span> <span class="tree-src">Customer/CustomerId</span> <span class="tree-cond">[xsl:if string-length > 0]</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:payChannelId</span> <span class="tree-arrow">←</span> <span class="tree-src">Account[$var]/PayChannelId</span> <span class="tree-cond">[xsl:if string-length > 0]</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:billingArrangementId</span> <span class="tree-arrow">←</span> <span class="tree-src">Account[$var]/BillingArrangementId</span> <span class="tree-cond">[xsl:if string-length > 0]</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:INDYIndicator</span> <span class="tree-arrow">←</span> <span class="tree-src-static">"true" if CustomerTypeInfo/Type=73; else "false"</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:PaginationInfo</span> <span class="tree-arrow">←</span> <span class="tree-src-static">pageSize=1000 / pageNumber=0 / numberOfRows=1000</span> (hardcoded)</div></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3>§7.3 — ns:info block (~40 fields)</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>ns:accommodation</code></td><td>CustomerAddress/TypeOfAccomodation</td><td></td></tr>
+      <tr><td><code>ns:acctype</code></td><td>Account[$var]/AccountManagementInfo/AccountSubType</td><td></td></tr>
+      <tr><td><code>ns:approveForIDD</code></td><td><code>""</code> (empty, hardcoded)</td><td></td></tr>
+      <tr><td><code>ns:approveForIR</code></td><td>OrderData/irApproveCode</td><td></td></tr>
+      <tr><td><code>ns:approveForSimBundle</code></td><td>OrderData/creditLimitApproveCode</td><td></td></tr>
+      <tr><td><code>ns:approveForSub</code></td><td><code>$approveCode</code> — 3-tier logic (see §5)</td><td></td></tr>
+      <tr><td><code>ns:ban</code></td><td>Account[$var]/AccountID</td><td></td></tr>
+      <tr><td><code>ns:billXxx</code> (7 fields)</td><td>Account[$var]/BillingArrangementAddress/*</td><td>billcountry="THA" hardcoded</td></tr>
+      <tr><td><code>ns:category</code></td><td>CustomerTypeInfo/Type</td><td></td></tr>
+      <tr><td><code>ns:ccheld</code></td><td><code>""</code> (empty)</td><td></td></tr>
+      <tr><td><code>ns:companyCode</code></td><td>Account[$var]/AccountManagementInfo/CompanyCode</td><td></td></tr>
+      <tr><td><code>ns:compregcode</code></td><td>CustomerGeneralInfo/Identification</td><td></td></tr>
+      <tr><td><code>ns:contactlanguage</code></td><td>CustomerGeneralInfo/contactLang</td><td></td></tr>
+      <tr><td><code>ns:creditClass</code></td><td>Account[$var]/AccountManagementInfo/CreditClass</td><td></td></tr>
+      <tr><td><code>ns:customerLevel</code></td><td>if(Type!=73) → CustomerGeneralInfo/Grading; else ""</td><td>Active variant; old variant: only if Type=66 or 67</td></tr>
+      <tr><td><code>ns:dateofact</code></td><td><code>tib:format-dateTime('yyyyMMdd', current-dateTime())</code></td><td></td></tr>
+      <tr><td><code>ns:dealercode</code></td><td>OrderData/DealerCode</td><td></td></tr>
+      <tr><td><code>ns:debitstatus</code></td><td><code>""</code> (empty)</td><td></td></tr>
+      <tr><td><code>ns:dob</code></td><td>BirthDate formatted yyyyMMdd (TZ +07:00); <code>xsi:nil="true"</code> if blank</td><td></td></tr>
+      <tr><td><code>ns:education</code></td><td><code>"ED5"</code> (hardcoded)</td><td></td></tr>
+      <tr><td><code>ns:empstatus</code></td><td><code>""</code> (empty)</td><td></td></tr>
+      <tr><td><code>ns:firstname</code></td><td>CustomerName/FirstName</td><td></td></tr>
+      <tr><td><code>ns:gender</code></td><td>if(Type=73) → CustomerName/Gender; else ""</td><td></td></tr>
+      <tr><td><code>ns:homephone</code></td><td>CustomerName/HomePhone</td><td></td></tr>
+      <tr><td><code>ns:idexpdate</code></td><td>if(Type=73) → IdentificationExpDate formatted yyyyMMdd; else ""</td><td></td></tr>
+      <tr><td><code>ns:idnumber</code></td><td>CustomerGeneralInfo/Identification</td><td></td></tr>
+      <tr><td><code>ns:idtype</code></td><td>CustomerGeneralInfo/IdentificationType</td><td></td></tr>
+      <tr><td><code>ns:industrytype</code></td><td><code>""</code> (empty)</td><td></td></tr>
+      <tr><td><code>ns:lastname</code></td><td>if(Type!=73) → OrgName; else if(Type=73) → LastName; else ""</td><td>Active variant; old: only if Type=66/67 → OrgName</td></tr>
+      <tr><td><code>ns:maritalstatus</code></td><td>if(Type=73) → CustomerName/MaritalStatus; else ""</td><td></td></tr>
+      <tr><td><code>ns:nationality</code></td><td>CustomerGeneralInfo/Nationality</td><td></td></tr>
+      <tr><td><code>ns:nosofchildren</code></td><td><code>0</code> (hardcoded)</td><td></td></tr>
+      <tr><td><code>ns:nosofemp</code></td><td><code>0</code> (hardcoded)</td><td></td></tr>
+      <tr><td><code>ns:numberOfIDD</code></td><td>4-branch POU/COU resolve (see §8)</td><td></td></tr>
+      <tr><td><code>ns:numberOfIR</code></td><td>4-branch POU/COU resolve (same pattern as numberOfIDD)</td><td></td></tr>
+      <tr><td><code>ns:numberOfSub</code></td><td>4-tier: EVAL_CREDIT_FLG=Y→0 / noOfSub param / numberOfRequest / count subscribers (see §9)</td><td></td></tr>
+      <tr><td><code>ns:officephone</code></td><td><code>""</code> (empty)</td><td></td></tr>
+      <tr><td><code>ns:paymethod</code></td><td>Account[$var]/PayChannelPaymentMethodInfo/PaymentMethod</td><td></td></tr>
+      <tr><td><code>ns:poafname</code></td><td>CustomerName/POAName</td><td></td></tr>
+      <tr><td><code>ns:poaid</code></td><td>CustomerName/POAPersonalId</td><td></td></tr>
+      <tr><td><code>ns:poalname</code></td><td><code>""</code> (empty)</td><td></td></tr>
+      <tr><td><code>ns:profession</code></td><td><code>""</code> (empty)</td><td></td></tr>
+      <tr><td><code>ns:proofdoc</code></td><td>POU or COU Subscriber.SubscriberGeneralInfo/ProofDoc (AgreementRefId-keyed)</td><td></td></tr>
+      <tr><td><code>ns:regXxx</code> (7 fields)</td><td>CustomerAddress/*; regsubdistrict="" hardcoded; regcountry="THA" hardcoded</td><td></td></tr>
+      <tr><td><code>ns:roleid</code></td><td><code>1</code> (hardcoded)</td><td></td></tr>
+      <tr><td><code>ns:salrange</code></td><td>CustomerGeneralInfo/Salary</td><td></td></tr>
+      <tr><td><code>ns:sequencenum</code></td><td><code>0</code> (hardcoded)</td><td></td></tr>
+      <tr><td><code>ns:source</code></td><td>5-branch choose (see §10)</td><td></td></tr>
+      <tr><td><code>ns:timeatcurraddr</code></td><td>CustomerAddress/TimeAtAddress</td><td></td></tr>
+      <tr><td><code>ns:timeinbusiness</code></td><td>CustomerGeneralInfo/TimeInBusiness</td><td></td></tr>
+      <tr><td><code>ns:timeinemp</code></td><td>CustomerGeneralInfo/TimeInBusiness (same as timeinbusiness)</td><td></td></tr>
+      <tr><td><code>ns:title</code></td><td>CustomerName/Title</td><td></td></tr>
+      <tr><td><code>ns:typeofcc</code></td><td><code>""</code> (empty)</td><td></td></tr>
+      <tr><td><code>ns:typeofemp</code></td><td>if(Type=73) → CustomerGeneralInfo/Occupation; else ""</td><td></td></tr>
+      <tr><td><code>ns:userid</code></td><td><code>60001</code> (hardcoded)</td><td></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 numberOfIDD/IR -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> numberOfIDD / numberOfIR — 4-Branch POU/COU Resolution</div>
+  <div class="section-body">
+    <p>Both <code>ns:numberOfIDD</code> and <code>ns:numberOfIR</code> use the same 4-branch <code>xsl:choose</code>:</p>
+    <table>
+      <tr><th>Branch</th><th>Condition</th><th>Source</th></tr>
+      <tr><td>1</td><td><code>exists(ParentOU[Agreement/RefId = Account[$var]/AgreementRefId])</code></td><td>POU by AgreementRefId → <code>NumberOfIDD/IR</code></td></tr>
+      <tr><td>2</td><td><code>exists(ParentOU/ChildOU[Agreement/RefId = Account[$var]/AgreementRefId])</code></td><td>COU by AgreementRefId → <code>NumberOfIDD/IR</code></td></tr>
+      <tr><td>3</td><td><code>exists(ParentOU[Account[$var]/RefId = Subscriber/AccountRefId])</code></td><td>POU by AccountRefId → <code>NumberOfIDD/IR</code></td></tr>
+      <tr><td>4 (else)</td><td>(fallback)</td><td>COU by AccountRefId → <code>NumberOfIDD/IR</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 numberOfSub -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> numberOfSub — 4-Tier Logic</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Priority</th><th>Condition</th><th>numberOfSub value</th></tr>
+      <tr><td>1</td><td><code>ExtendedInfo[Name='EVAL_CREDIT_FLG']/Value = 'Y'</code></td><td><code>0</code></td></tr>
+      <tr><td>2</td><td><code>string-length($noOfSub) > 0</code></td><td><code>$noOfSub</code> (from NO_OF_SUB activity parameter)</td></tr>
+      <tr><td>3</td><td><code>$numberOfRequest > 0</code></td><td><code>$numberOfRequest</code> (from approveCode list or SharePlan count)</td></tr>
+      <tr><td>4 (default)</td><td>else</td><td><code>count(ParentOU[Agreement/RefId=$agreeRefId]/Subscriber)</code> or <code>count(COU[Agreement/RefId=$agreeRefId]/Subscriber)</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 source -->
+<div class="section">
+  <div class="section-header"><span class="num">§10</span> ns:source — 5-Branch Logic</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Priority</th><th>Condition</th><th>Value</th></tr>
+      <tr><td>1</td><td><code>exists(ExtendedInfo[Name='EVAL_CREDIT_SOURCE'])</code></td><td><code>ExtendedInfo[Name='EVAL_CREDIT_SOURCE']/Value</code></td></tr>
+      <tr><td>2</td><td><code>Channel = "EOC"</code></td><td><code>"EOC"</code></td></tr>
+      <tr><td>3</td><td><code>Channel = "MNP"</code></td><td><code>"MNP_INT"</code> if DonorOperator=02/06/10; else <code>"MNP_EXT"</code></td></tr>
+      <tr><td>4</td><td><code>OrderType = "11001" or "11002"</code></td><td><code>"OMX"</code></td></tr>
+      <tr><td>5 (default)</td><td>else</td><td><code>"CCBS"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §11 XSLT Variant diff -->
+<div class="section">
+  <div class="section-header"><span class="num">§11</span> Active vs Commented (OMX-2748) XSLT Variant Differences</div>
+  <div class="section-body">
+    <div class="callout warning">The original OMX-2748 XSLT is fully commented out. The active variant contains the following differences:</div>
+    <table class="diff-table">
+      <tr><th>Field</th><th class="diff-old">Commented (OMX-2748)</th><th class="diff-new">Active (Current)</th></tr>
+      <tr><td><code>&lt;CES&gt;</code> header</td><td class="diff-old">Absent</td><td class="diff-new">Present: <code>$orderRequest/OrderData/CES</code> <code>[xsl:if]</code></td></tr>
+      <tr><td><code>ns:customerLevel</code></td><td class="diff-old">if Type=66 or 67 → Grading; else ""</td><td class="diff-new">if Type <strong>!=73</strong> → Grading; else ""</td></tr>
+      <tr><td><code>ns:lastname</code></td><td class="diff-old">if Type=66 or 67 → OrgName; if Type=73 → LastName; else ""</td><td class="diff-new">if Type <strong>!=73</strong> → OrgName; else if Type=73 → LastName; else ""</td></tr>
+    </table>
+    <div class="callout info">The active variant broadens <code>customerLevel</code> and <code>lastname</code> to cover ALL non-individual customer types (not just B2B codes 66/67), and adds CES channel routing support.</div>
+  </div>
+</div>
+
+<!-- §12 Response -->
+<div class="section">
+  <div class="section-header"><span class="num">§12</span> Response — CVSS_UpdateSubscriberCountRes &amp; Fan-in</div>
+  <div class="section-body">
+    <h3>§12.1 — Response concept mapping</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span> (Concepts.FM.Response.CVSS_UpdateSubscriberCountRes)</div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">OMXUtils.generateTrackingID()</span> (BE, not XSLT)</div></li>
+            <li><div class="tree-row"><span class="tree-tag">ResponseCode</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseCode</span> <span class="tree-cond">[xsl:if]</span></div></li>
+            <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseMsg</span> <span class="tree-cond">[xsl:if]</span></div></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="callout warning" style="margin-top:10px"><strong>No CompletionStatus field</strong> — <code>CVSS_UpdateSubscriberCountRes</code> maps only ResponseCode and ResponseMessage. There is no CompletionStatus or ReferenceId.</div>
+
+    <h3>§12.2 — Fan-in via IntraActivitySequencing</h3>
+    <div class="code-block"><span class="cm">/* Standard "000" count COMMENTED OUT:
+   int successResponseCount = count(Response[tib:right(tib:trim(ResponseCode), 3) = "000"]);
+   if(currActivity.RequestCount == successResponseCount) return "true"; */</span>
+
+<span class="cm">// ACTIVE fan-in:</span>
+<span class="kw">if</span> ( <span class="fn">RuleFunctions.Helpers.IntraActivitySequencing.ActionResponseEvent</span>(currActivity) )
+    <span class="kw">return</span> <span class="str">"true"</span>;
+<span class="kw">else</span>
+    <span class="kw">return</span> <span class="str">"false"</span>;</div>
+    <div class="callout info"><code>ActionResponseEvent</code> dispatches the next queued event and returns <code>true</code> when all events in the sequence have been processed.</div>
+  </div>
+</div>
+
+<!-- §13 Audit -->
+<div class="section">
+  <div class="section-header"><span class="num">§13</span> Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Phase</th><th>Gate</th><th>AUDIT_TRACE</th></tr>
+      <tr><td>Request (per account × approveCode)</td><td><span class="badge badge-green">UNCONDITIONAL</span></td><td><code>"Request Sent for CVSS_UPDATE_SUBSCRIBER_COUNT"</code></td></tr>
+      <tr><td>Response</td><td><span class="badge badge-green">UNCONDITIONAL</span></td><td><code>"Response received for CVSS_UPDATE_SUBSCRIBER_COUNT"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §14 Status -->
+<div class="section">
+  <div class="section-header"><span class="num">§14</span> Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Call</th><th>Code</th></tr>
+      <tr><td>At least one event queued</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>"1" (RUNNING)</td></tr>
+      <tr><td>No accounts qualify (isSkipped=true)</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>"4" (SKIPPED)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§15</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_CVSS_UPDATE_SUBSCRIBER_COUNT (rule)
+├── Instance.getByExtIdByUri(NextActivityName, Activity)  [nextAct / PreExecCheck]
+├── [isActResub] IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── GetActivityParamValueFromKey(activity, "NO_OF_SUB")
+├── XPath.evalAsInt(count maxAllowApproveCodeList)
+├── [Account loop i]:
+│   ├── reqSuccess check by Response[ReferenceId==refId AND CompletionStatus==2]
+│   ├── GetXMLForAccount(orderRequest, refId) → PreExecCheck sXML
+│   ├── XPath.execute("/("+chkXPath+")", sXML)
+│   └── [iMaxAllow loop]:
+│       ├── resolve approveCode + numberOfRequest (3-tier)
+│       │   ├── Tier1: maxAllowApproveCodeList[iMaxAllow] (if chkMaxAllowApproveCodeData)
+│       │   ├── Tier2: XPath APPROVE_CODE / SHAREPLAN_MAIN_NUMBER count (if orderShareplan/MNP)
+│       │   └── Tier3: orderRequest.OrderData.maxAllowApproveCode (default)
+│       ├── Event.createEvent("xslt://CVSS_UPDATE_SUBSCRIBER_COUNT") → reqEvent
+│       ├── Event.assertEvent(reqEvent)
+│       ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+│       └── Event.Ext.sendEventImmediate(Logger: "Request Sent...")
+├── IntraActivitySequencing.SendFirstRequestEvent(activity)
+├── GetActivityStatusString("1") + SendDataToDB  [or SkipActivity("4")]
+└── HandleActivityException  [catch]
+
+Response_CVSS_UPDATE_SUBSCRIBER_COUNT (rulefunction)
+├── OMXUtils.generateTrackingID()  [extId — in BE code]
+├── Instance.createInstance("xslt://CVSS_UpdateSubscriberCountRes")
+│   ├── @extId = $extId
+│   ├── ResponseCode ← $eventResponse/ResponseCode  [xsl:if]
+│   └── ResponseMessage ← $eventResponse/ResponseMsg  [xsl:if]
+├── currActivity.Response[length] = activityRes
+├── Event.Ext.sendEventImmediate(Logger: "Response received...")
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → "true"/"false"</div>
+  </div>
+</div>
+
+<!-- §16 Migration Notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§16</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Sequential IntraActivitySequencing — events must be dispatched serially per account × approveCode (not parallel).</td></tr>
+      <tr><td>R2</td><td>Inner approveCode loop iterates up to <code>count(maxAllowApproveCodeList)</code> times; if list empty, exactly one event per account.</td></tr>
+      <tr><td>R3</td><td>Fan-in via <code>ActionResponseEvent</code> — standard "000" count fan-in is commented out and must NOT be restored.</td></tr>
+      <tr><td>R4</td><td><code>numberOfSub</code> has 4-tier priority: EVAL_CREDIT_FLG=Y→0 / NO_OF_SUB param / numberOfRequest / count subscribers.</td></tr>
+      <tr><td>R5</td><td><code>source</code> has 5-branch priority: EVAL_CREDIT_SOURCE ExtendedInfo / EOC / MNP (INT/EXT) / OMX (OrderType 11001/11002) / CCBS.</td></tr>
+      <tr><td>R6</td><td><code>customerLevel</code> and <code>lastname</code> use Type!=73 logic (active variant) — NOT the old Type=66/67 logic.</td></tr>
+      <tr><td>R7</td><td><code>&lt;CES&gt;</code> header field must be included when <code>OrderData/CES</code> is populated.</td></tr>
+      <tr><td>R8</td><td><code>dob</code> must emit <code>xsi:nil="true"</code> when BirthDate is blank (not empty string).</td></tr>
+      <tr><td>R9</td><td>Several static field values are hardcoded: <code>education="ED5"</code>, <code>roleid=1</code>, <code>sequencenum=0</code>, <code>userid=60001</code>, <code>billcountry="THA"</code>, <code>regcountry="THA"</code>.</td></tr>
+      <tr><td>R10</td><td>Audit unconditional — no AllowWriteLog gate.</td></tr>
+    </table>
+
+    <h3 style="margin-top:18px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Sequential dispatch via IntraActivitySequencing may cause latency when many accounts × approveCodes are present</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Profile account × approveCode cardinality in load testing; consider parallelising if CVSS supports concurrent requests per order</td>
+      </tr>
+      <tr>
+        <td><code>timeinbusiness</code> and <code>timeinemp</code> map to the same source field <code>TimeInBusiness</code> — may not correctly represent employment time</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Confirm with CVSS API spec whether <code>timeinemp</code> should map to a different field</td>
+      </tr>
+      <tr>
+        <td>Hardcoded <code>userid=60001</code> — system user identity baked into every request</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Move to global variable or activity parameter in modernized implementation</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

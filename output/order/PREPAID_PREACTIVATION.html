@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PREPAID_PREACTIVATION — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+.page-header .desc{opacity:.85;margin-top:8px;font-size:1rem}
+.meta-row{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 14px;border-radius:20px;font-size:.82rem}
+.container{max-width:1400px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:8px;box-shadow:0 1px 4px rgba(0,0,0,.08);margin-bottom:28px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.section-body{padding:20px;overflow-x:auto}
+table.flow{width:100%;border-collapse:collapse;font-size:.83rem}
+table.flow th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 10px;text-align:left;font-weight:600;white-space:nowrap}
+table.flow td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+table.flow tr:hover td{background:#FAFAFA}
+table.flow tr.has-precheck td{border-left:3px solid #FFC107}
+table.flow tr.has-precheck{background:linear-gradient(90deg,#FFFFF0,#fff)}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:24px;height:24px;display:inline-flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem}
+code{background:#F5E6E6;color:var(--true-dark);padding:1px 5px;border-radius:3px}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.73rem;font-weight:600}
+.badge-gen{background:#E8F5E9;color:#2e7d32}
+.badge-notfound{background:#FFF3E0;color:#e65100}
+.badge-cond{background:#FFF9C4;color:#795548}
+.badge-param{background:#E8EAF6;color:#3949AB;font-size:.72rem;padding:1px 7px;border-radius:8px;margin:1px 0;display:inline-block}
+details{margin:4px 0}
+summary{cursor:pointer;color:var(--true-dark);font-weight:600;padding:6px 0}
+summary:hover{color:var(--true-red)}
+.precheck-code{background:var(--code-bg);color:#f9e2af;padding:10px 14px;border-radius:5px;margin-top:6px;font-size:.8rem;border-left:3px solid #FFC107;overflow-x:auto}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.fm-card{border:1px solid var(--border);border-radius:8px;padding:16px;background:#FAFAFA;transition:box-shadow .2s}
+.fm-card:hover{box-shadow:0 2px 8px rgba(0,0,0,.12)}
+.fm-card h4{color:var(--true-dark);font-size:.9rem;margin-bottom:6px}
+.fm-card .steps-badge{font-size:.75rem;color:#666;margin-bottom:8px}
+.fm-card a{color:var(--true-red);text-decoration:none;font-weight:600;font-size:.85rem}
+.fm-card a:hover{text-decoration:underline}
+.seq-container{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)}
+footer{text-align:center;color:#888;font-size:.8rem;padding:24px;border-top:1px solid var(--border)}
+a{color:var(--true-red)}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+</head>
+<body>
+<div class="page-header">
+  <div class="subtitle" style="opacity:.75;font-size:.85rem;letter-spacing:1px;text-transform:uppercase">Order Journey Documentation</div>
+  <h1>PREPAID_PREACTIVATION</h1>
+  <div class="desc">Process Configuration for PREPAID PRE-ACTIVATION.</div>
+  <div class="meta-row">
+    <span class="meta-item">Total steps: 18</span>
+    <span class="meta-item">Unique FMs: 18</span>
+    <span class="meta-item">Entry point: BDH_GET_DEALER_POOLS_BY_DEALER_CODE</span>
+    <span class="meta-item">Generated: 2026-09-14</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §2 Flow Table -->
+<div class="section">
+  <div class="section-header">§2 — Order Flow Table</div>
+  <div class="section-body">
+    <table class="flow">
+      <tr>
+        <th>#</th>
+        <th>Step ID</th>
+        <th>FM (ActivityID)</th>
+        <th>Parameter(s)</th>
+        <th>PreExecCheck</th>
+        <th>Previous</th>
+        <th>Next</th>
+        <th>FM Doc</th>
+      </tr>
+      <tr class="has-precheck">
+        <td><span class="step-num">1</span></td>
+        <td><code>BDH_GET_DEALER_POOLS_BY_DEALER_CODE</code></td>
+        <td><a href="../FMlogic/Request_BDH_GET_DEALER_POOLS_BY_DEALER_CODE.html">BDH_GET_DEALER_POOLS_BY_DEALER_CODE</a></td>
+        <td>—</td>
+        <td><code>string-length(/ns0:OrderRequest/OrderData/DealerCode/text())!=0</code></td>
+        <td>START</td>
+        <td>ASRM_GET_UR_DETAILS_MSISDN</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">2</span></td>
+        <td><code>ASRM_GET_UR_DETAILS_MSISDN</code></td>
+        <td><a href="../FMlogic/Request_ASRM_GET_UR_DETAILS_MSISDN.html">ASRM_GET_UR_DETAILS_MSISDN</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>BDH_GET_DEALER_POOLS_BY_DEALER_CODE</td>
+        <td>INTX_GET_SIM_INFO_BY_MSISDN</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">3</span></td>
+        <td><code>INTX_GET_SIM_INFO_BY_MSISDN</code></td>
+        <td><a href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_MSISDN.html">INTX_GET_SIM_INFO_BY_MSISDN</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>ASRM_GET_UR_DETAILS_MSISDN</td>
+        <td>INTX_GET_SIM_INFO_BY_SIM</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">4</span></td>
+        <td><code>INTX_GET_SIM_INFO_BY_SIM</code></td>
+        <td><a href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_SIM.html">INTX_GET_SIM_INFO_BY_SIM</a></td>
+        <td><span class="badge-param">PROJ=BULKESIM</span></td>
+        <td>—</td>
+        <td>INTX_GET_SIM_INFO_BY_MSISDN</td>
+        <td>CDB_GET_PROFILE</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">5</span></td>
+        <td><code>CDB_GET_PROFILE</code></td>
+        <td><a href="../FMlogic/Request_CDB_GET_PROFILE.html">CDB_GET_PROFILE</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>INTX_GET_SIM_INFO_BY_SIM</td>
+        <td>OMX_BIZ_VAL</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">6</span></td>
+        <td><code>OMX_BIZ_VAL</code></td>
+        <td><a href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>CDB_GET_PROFILE</td>
+        <td>OMX_BRMS_DB</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">7</span></td>
+        <td><code>OMX_BRMS_DB</code></td>
+        <td><a href="../FMlogic/Request_OMX_BRMS_DB.html">OMX_BRMS_DB</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>OMX_BIZ_VAL</td>
+        <td>CAT_GOD</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr class="has-precheck">
+        <td><span class="step-num">8</span></td>
+        <td><code>CAT_GOD</code></td>
+        <td><a href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td>
+        <td>—</td>
+        <td><code>not(exists(//Soc)) or string-length(//Soc/text())=0</code></td>
+        <td>OMX_BRMS_DB</td>
+        <td>OMX_GET_SRV_TRX_NO</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">9</span></td>
+        <td><code>OMX_GET_SRV_TRX_NO</code></td>
+        <td><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></td>
+        <td><span class="badge-param">NAC</span></td>
+        <td>—</td>
+        <td>CAT_GOD</td>
+        <td>AA_PREPAID_PROVISIONING</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">10</span></td>
+        <td><code>AA_PREPAID_PROVISIONING</code></td>
+        <td><a href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">AA_PREPAID_PROVISIONING</a></td>
+        <td><span class="badge-param">NAC</span></td>
+        <td>—</td>
+        <td>OMX_GET_SRV_TRX_NO</td>
+        <td>OMX_CAL_CHK_SUM_SUB_LEVEL</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr class="has-precheck">
+        <td><span class="step-num">11</span></td>
+        <td><code>OMX_CAL_CHK_SUM_SUB_LEVEL</code></td>
+        <td><a href="../FMlogic/Request_OMX_CAL_CHK_SUM_SUB_LEVEL.html">OMX_CAL_CHK_SUM_SUB_LEVEL</a></td>
+        <td>—</td>
+        <td><code>count(//Subscriber/ResourceInfo[ResourceName='SIM_TYPE' and ValuesArray="B"]) &gt; 0</code></td>
+        <td>AA_PREPAID_PROVISIONING</td>
+        <td>SMDP_PLUS_DOWNLOAD_PUSH</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr class="has-precheck">
+        <td><span class="step-num">12</span></td>
+        <td><code>SMDP_PLUS_DOWNLOAD_PUSH</code></td>
+        <td><a href="../FMlogic/Request_SMDP_PLUS_DOWNLOAD_PUSH.html">SMDP_PLUS_DOWNLOAD_PUSH</a></td>
+        <td>—</td>
+        <td><code>count(//Subscriber/ResourceInfo[ResourceName='SIM_TYPE' and ValuesArray="B"]) &gt; 0</code></td>
+        <td>OMX_CAL_CHK_SUM_SUB_LEVEL</td>
+        <td>SMDP_PLUS_CONFIRM_PUSH</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr class="has-precheck">
+        <td><span class="step-num">13</span></td>
+        <td><code>SMDP_PLUS_CONFIRM_PUSH</code></td>
+        <td><a href="../FMlogic/Request_SMDP_PLUS_CONFIRM_PUSH.html">SMDP_PLUS_CONFIRM_PUSH</a></td>
+        <td><span class="badge-param">PROJ=BULKESIM</span></td>
+        <td><code>count(//Subscriber/ResourceInfo[ResourceName='SIM_TYPE' and ValuesArray="B"]) &gt; 0</code></td>
+        <td>SMDP_PLUS_DOWNLOAD_PUSH</td>
+        <td>ASRM_UPDATE_ATTRIBUTE_SIM</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr class="has-precheck">
+        <td><span class="step-num">14</span></td>
+        <td><code>ASRM_UPDATE_ATTRIBUTE_SIM</code></td>
+        <td><a href="../FMlogic/Request_ASRM_UPDATE_ATTRIBUTE_SIM.html">ASRM_UPDATE_ATTRIBUTE_SIM</a></td>
+        <td><span class="badge-param">PROJ=BULKESIM</span></td>
+        <td><code>count(//Subscriber/ResourceInfo[ResourceName='SIM_TYPE' and ValuesArray="B"]) &gt; 0</code></td>
+        <td>SMDP_PLUS_CONFIRM_PUSH</td>
+        <td>CRM_UPSERT_CUSTOMER_ACCOUNT</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">15</span></td>
+        <td><code>CRM_UPSERT_CUSTOMER_ACCOUNT</code></td>
+        <td><a href="../FMlogic/Request_CRM_UPSERT_CUSTOMER_ACCOUNT.html">CRM_UPSERT_CUSTOMER_ACCOUNT</a></td>
+        <td><span class="badge-param">mode=OR</span> <span class="badge-param">upsertAccountStatus=Prospect</span></td>
+        <td>—</td>
+        <td>ASRM_UPDATE_ATTRIBUTE_SIM</td>
+        <td>CRM_CREATE_ORDER_PREPAID</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">16</span></td>
+        <td><code>CRM_CREATE_ORDER_PREPAID</code></td>
+        <td><a href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">CRM_CREATE_ORDER_PREPAID</a></td>
+        <td><span class="badge-param">command=Preactivate</span> <span class="badge-param">orderType=N</span> <span class="badge-param">listOfRootLineItemAction=Add</span> <span class="badge-param">listOfRootLineItemStatus=Preactive</span> <span class="badge-param">listOfLineItemAction=Add</span> <span class="badge-param">listOfLineItemStatus=Active</span> <span class="badge-param">USE_ROWID_CRM=N</span> <span class="badge-param">PROJ=BULKESIM</span></td>
+        <td>—</td>
+        <td>CRM_UPSERT_CUSTOMER_ACCOUNT</td>
+        <td>ASRM_INVOKE_SIM_ACTIVATE</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">17</span></td>
+        <td><code>ASRM_INVOKE_SIM_ACTIVATE</code></td>
+        <td><a href="../FMlogic/Request_ASRM_INVOKE_SIM.html">ASRM_INVOKE_SIM</a></td>
+        <td><span class="badge-param">ACTIVITY=ACTIVATE</span></td>
+        <td>—</td>
+        <td>CRM_CREATE_ORDER_PREPAID</td>
+        <td>STATUS_UPDATE_CREATING_PROFILE</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+      <tr>
+        <td><span class="step-num">18</span></td>
+        <td><code>STATUS_UPDATE_CREATING_PROFILE</code></td>
+        <td><a href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>ASRM_INVOKE_SIM_ACTIVATE</td>
+        <td>END</td>
+        <td><span class="badge badge-gen">✓ Generated</span></td>
+      </tr>
+    </table>
+    <p style="margin-top:10px;font-size:.8rem;color:#888"><span style="display:inline-block;width:12px;height:12px;background:#FFC107;border-radius:2px;vertical-align:middle;margin-right:4px;"></span> Rows with yellow left border have a PreExecCheck condition.</p>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="section">
+  <div class="section-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="section-body">
+    <details open>
+      <summary>Step 1 — BDH_GET_DEALER_POOLS_BY_DEALER_CODE</summary>
+      <div class="precheck-code">string-length(/ns0:OrderRequest/OrderData/DealerCode/text())!=0</div>
+      <p style="margin-top:6px;font-size:.85rem;color:#666">FM: <a href="../FMlogic/Request_BDH_GET_DEALER_POOLS_BY_DEALER_CODE.html">BDH_GET_DEALER_POOLS_BY_DEALER_CODE</a> — Skips if no DealerCode present on the order.</p>
+    </details>
+    <details style="margin-top:8px">
+      <summary>Step 8 — CAT_GOD</summary>
+      <div class="precheck-code">not(exists(//Soc)) or string-length(//Soc/text())=0</div>
+      <p style="margin-top:6px;font-size:.85rem;color:#666">FM: <a href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a> — Only calls GetOfferDetail if no SOC (Service Order Code) is already populated.</p>
+    </details>
+    <details style="margin-top:8px">
+      <summary>Steps 11–14 — eSIM Subscriber Gate (SIM_TYPE="B")</summary>
+      <div class="precheck-code">count(//Subscriber/ResourceInfo[ResourceName='SIM_TYPE' and ValuesArray="B"]) &gt; 0</div>
+      <p style="margin-top:6px;font-size:.85rem;color:#666">Applies to: <strong>OMX_CAL_CHK_SUM_SUB_LEVEL (11)</strong>, <strong>SMDP_PLUS_DOWNLOAD_PUSH (12)</strong>, <strong>SMDP_PLUS_CONFIRM_PUSH (13)</strong>, <strong>ASRM_UPDATE_ATTRIBUTE_SIM (14)</strong> — entire eSIM provisioning chain skipped if no eSIM subscribers present.</p>
+    </details>
+  </div>
+</div>
+
+<!-- §4 FM Index -->
+<div class="section">
+  <div class="section-header">§4 — FM Documentation Index</div>
+  <div class="section-body">
+    <div class="fm-grid">
+      <div class="fm-card">
+        <h4>BDH_GET_DEALER_POOLS_BY_DEALER_CODE</h4>
+        <div class="steps-badge">Steps: 1</div>
+        <a href="../FMlogic/Request_BDH_GET_DEALER_POOLS_BY_DEALER_CODE.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>ASRM_GET_UR_DETAILS_MSISDN</h4>
+        <div class="steps-badge">Steps: 2</div>
+        <a href="../FMlogic/Request_ASRM_GET_UR_DETAILS_MSISDN.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>INTX_GET_SIM_INFO_BY_MSISDN</h4>
+        <div class="steps-badge">Steps: 3</div>
+        <a href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_MSISDN.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>INTX_GET_SIM_INFO_BY_SIM</h4>
+        <div class="steps-badge">Steps: 4</div>
+        <a href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_SIM.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>CDB_GET_PROFILE</h4>
+        <div class="steps-badge">Steps: 5</div>
+        <a href="../FMlogic/Request_CDB_GET_PROFILE.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>OMX_BIZ_VAL</h4>
+        <div class="steps-badge">Steps: 6</div>
+        <a href="../FMlogic/Request_OMX_BIZ_VAL.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>OMX_BRMS_DB</h4>
+        <div class="steps-badge">Steps: 7</div>
+        <a href="../FMlogic/Request_OMX_BRMS_DB.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>CAT_GOD</h4>
+        <div class="steps-badge">Steps: 8</div>
+        <a href="../FMlogic/Request_CAT_GOD.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>OMX_GET_SRV_TRX_NO</h4>
+        <div class="steps-badge">Steps: 9</div>
+        <a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>AA_PREPAID_PROVISIONING</h4>
+        <div class="steps-badge">Steps: 10</div>
+        <a href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>OMX_CAL_CHK_SUM_SUB_LEVEL</h4>
+        <div class="steps-badge">Steps: 11</div>
+        <a href="../FMlogic/Request_OMX_CAL_CHK_SUM_SUB_LEVEL.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>SMDP_PLUS_DOWNLOAD_PUSH</h4>
+        <div class="steps-badge">Steps: 12</div>
+        <a href="../FMlogic/Request_SMDP_PLUS_DOWNLOAD_PUSH.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>SMDP_PLUS_CONFIRM_PUSH</h4>
+        <div class="steps-badge">Steps: 13</div>
+        <a href="../FMlogic/Request_SMDP_PLUS_CONFIRM_PUSH.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>ASRM_UPDATE_ATTRIBUTE_SIM</h4>
+        <div class="steps-badge">Steps: 14</div>
+        <a href="../FMlogic/Request_ASRM_UPDATE_ATTRIBUTE_SIM.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>CRM_UPSERT_CUSTOMER_ACCOUNT</h4>
+        <div class="steps-badge">Steps: 15</div>
+        <a href="../FMlogic/Request_CRM_UPSERT_CUSTOMER_ACCOUNT.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>CRM_CREATE_ORDER_PREPAID</h4>
+        <div class="steps-badge">Steps: 16</div>
+        <a href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>ASRM_INVOKE_SIM (ACTIVATE)</h4>
+        <div class="steps-badge">Steps: 17 (extId: ASRM_INVOKE_SIM_ACTIVATE)</div>
+        <a href="../FMlogic/Request_ASRM_INVOKE_SIM.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h4>STATUS_UPDATE_CREATING_PROFILE</h4>
+        <div class="steps-badge">Steps: 18</div>
+        <a href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">View FM Doc</a>
+        <span class="badge badge-gen" style="margin-left:6px">✓ Generated</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="section">
+  <div class="section-header">§5 — Sequence Diagram</div>
+  <div class="section-body">
+    <div class="seq-container">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant BDH as BDH
+    participant ASRM as ASRM
+    participant INTX as INTX
+    participant CDB as CDB
+    participant OMX as OMX
+    participant CAT as CAT
+    participant AA as AA
+    participant SMDP as SMDP
+    participant CRM as CRM
+    participant STATUS as STATUS_UPDATE
+
+    opt DealerCode non-empty
+        O->>BDH: BDH_GET_DEALER_POOLS_BY_DEALER_CODE
+        BDH-->>O: response
+        Note over O,BDH: FM: BDH_GET_DEALER_POOLS_BY_DEALER_CODE
+    end
+    O->>ASRM: ASRM_GET_UR_DETAILS_MSISDN
+    ASRM-->>O: response
+    Note over O,ASRM: FM: ASRM_GET_UR_DETAILS_MSISDN
+    O->>INTX: INTX_GET_SIM_INFO_BY_MSISDN
+    INTX-->>O: response
+    Note over O,INTX: FM: INTX_GET_SIM_INFO_BY_MSISDN
+    O->>INTX: INTX_GET_SIM_INFO_BY_SIM [PROJ=BULKESIM]
+    INTX-->>O: response
+    Note over O,INTX: FM: INTX_GET_SIM_INFO_BY_SIM
+    O->>CDB: CDB_GET_PROFILE
+    CDB-->>O: response
+    Note over O,CDB: FM: CDB_GET_PROFILE
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL
+    O->>OMX: OMX_BRMS_DB
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BRMS_DB
+    opt not(exists(Soc)) or Soc empty
+        O->>CAT: CAT_GOD
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+    O->>OMX: OMX_GET_SRV_TRX_NO [NAC]
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+    O->>AA: AA_PREPAID_PROVISIONING [NAC]
+    AA-->>O: response
+    Note over O,AA: FM: AA_PREPAID_PROVISIONING
+    opt SIM_TYPE=B subscribers exist
+        O->>OMX: OMX_CAL_CHK_SUM_SUB_LEVEL (internal)
+        Note over O,OMX: FM: OMX_CAL_CHK_SUM_SUB_LEVEL (Luhn checksum)
+    end
+    opt SIM_TYPE=B subscribers exist
+        O->>SMDP: SMDP_PLUS_DOWNLOAD_PUSH (per-subscriber)
+        SMDP-->>O: response
+        Note over O,SMDP: FM: SMDP_PLUS_DOWNLOAD_PUSH
+    end
+    opt SIM_TYPE=B subscribers exist
+        O->>SMDP: SMDP_PLUS_CONFIRM_PUSH [PROJ=BULKESIM] (per-subscriber)
+        SMDP-->>O: response
+        Note over O,SMDP: FM: SMDP_PLUS_CONFIRM_PUSH
+    end
+    opt SIM_TYPE=B subscribers exist
+        O->>ASRM: ASRM_UPDATE_ATTRIBUTE_SIM [PROJ=BULKESIM]
+        ASRM-->>O: response
+        Note over O,ASRM: FM: ASRM_UPDATE_ATTRIBUTE_SIM
+    end
+    O->>CRM: CRM_UPSERT_CUSTOMER_ACCOUNT [mode=OR | upsertAccountStatus=Prospect]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_UPSERT_CUSTOMER_ACCOUNT
+    O->>CRM: CRM_CREATE_ORDER_PREPAID [command=Preactivate | PROJ=BULKESIM]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_CREATE_ORDER_PREPAID
+    O->>ASRM: ASRM_INVOKE_SIM_ACTIVATE [ACTIVITY=ACTIVATE]
+    ASRM-->>O: response
+    Note over O,ASRM: FM: ASRM_INVOKE_SIM
+    O->>STATUS: STATUS_UPDATE_CREATING_PROFILE
+    STATUS-->>O: response
+    Note over O,STATUS: FM: STATUS_UPDATE_CREATING_PROFILE
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="section">
+  <div class="section-header">§6 — Flow Diagram</div>
+  <div class="section-body">
+    <div class="seq-container">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1{BDH_GET_DEALER_POOLS\nFM: BDH_GET_DEALER_POOLS_BY_DEALER_CODE\nCond: DealerCode non-empty}
+    S1 --> S2[ASRM_GET_UR_DETAILS_MSISDN\nFM: ASRM_GET_UR_DETAILS_MSISDN]
+    S2 --> S3[INTX_GET_SIM_INFO_BY_MSISDN\nFM: INTX_GET_SIM_INFO_BY_MSISDN]
+    S3 --> S4[INTX_GET_SIM_INFO_BY_SIM\nFM: INTX_GET_SIM_INFO_BY_SIM\nParam: PROJ=BULKESIM]
+    S4 --> S5[CDB_GET_PROFILE\nFM: CDB_GET_PROFILE]
+    S5 --> S6[OMX_BIZ_VAL\nFM: OMX_BIZ_VAL]
+    S6 --> S7[OMX_BRMS_DB\nFM: OMX_BRMS_DB]
+    S7 --> S8{CAT_GOD\nFM: CAT_GOD\nCond: no SOC}
+    S8 --> S9[OMX_GET_SRV_TRX_NO\nFM: OMX_GET_SRV_TRX_NO\nParam: NAC]
+    S9 --> S10[AA_PREPAID_PROVISIONING\nFM: AA_PREPAID_PROVISIONING\nParam: NAC]
+    S10 --> S11{OMX_CAL_CHK_SUM_SUB_LEVEL\nFM: OMX_CAL_CHK_SUM_SUB_LEVEL\nCond: SIM_TYPE=B}
+    S11 --> S12{SMDP_PLUS_DOWNLOAD_PUSH\nFM: SMDP_PLUS_DOWNLOAD_PUSH\nCond: SIM_TYPE=B}
+    S12 --> S13{SMDP_PLUS_CONFIRM_PUSH\nFM: SMDP_PLUS_CONFIRM_PUSH\nCond: SIM_TYPE=B / PROJ=BULKESIM}
+    S13 --> S14{ASRM_UPDATE_ATTRIBUTE_SIM\nFM: ASRM_UPDATE_ATTRIBUTE_SIM\nCond: SIM_TYPE=B / PROJ=BULKESIM}
+    S14 --> S15[CRM_UPSERT_CUSTOMER_ACCOUNT\nFM: CRM_UPSERT_CUSTOMER_ACCOUNT\nParams: mode=OR]
+    S15 --> S16[CRM_CREATE_ORDER_PREPAID\nFM: CRM_CREATE_ORDER_PREPAID\nParam: command=Preactivate]
+    S16 --> S17[ASRM_INVOKE_SIM_ACTIVATE\nFM: ASRM_INVOKE_SIM\nParam: ACTIVITY=ACTIVATE]
+    S17 --> S18[STATUS_UPDATE_CREATING_PROFILE\nFM: STATUS_UPDATE_CREATING_PROFILE]
+    S18 --> END([END])
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · Order Journey Documentation · PREPAID_PREACTIVATION</footer>
+</body>
+</html>

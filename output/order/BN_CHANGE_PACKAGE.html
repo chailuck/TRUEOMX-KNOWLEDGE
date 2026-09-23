@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>BN_CHANGE_PACKAGE — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;font-size:13px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:2rem;font-weight:700}
+.page-header .subtitle{opacity:.85;margin-top:6px;font-size:.95rem}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:.78rem}
+.container{max-width:1400px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:28px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+.cond-row td{border-left:4px solid #FFA000}
+pre,code{font-family:'Cascadia Code','Consolas','Courier New',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 18px;border-radius:6px;overflow-x:auto;font-size:.77rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{background:#F3E5E5;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.8rem}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.7rem;font-weight:600;white-space:nowrap}
+.b-gen{background:#E8F5E9;color:#2e7d32}.b-nf{background:#FFF3E0;color:#e65100}
+.b-ccbs{background:#E3F0FD;color:#1565c0}.b-omx{background:#F3E5F5;color:#6a1b9a}
+.b-bl{background:#FFF8E1;color:#F57F17}.b-get{background:#E8EAF6;color:#3949AB}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:.7rem;font-weight:700;flex-shrink:0}
+.fm-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px 16px;display:flex;flex-direction:column;gap:6px}
+.fm-card h4{font-size:.85rem;color:var(--true-dark);font-weight:600}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+details{margin:8px 0}
+summary{cursor:pointer;padding:8px 12px;background:#FFF3E0;border-radius:4px;font-weight:600;font-size:.82rem;color:#e65100;border-left:3px solid #e65100}
+summary:hover{background:#FFE0B2}
+details[open] summary{border-radius:4px 4px 0 0}
+.details-body{padding:12px 16px;background:#FFFDE7;border:1px solid #FFF3E0;border-top:none;border-radius:0 0 4px 4px;font-size:.82rem}
+.mermaid-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)}
+h2{font-size:1rem;color:var(--true-dark);margin:0 0 12px;padding-bottom:4px;border-bottom:1px solid #F5E6E6}
+h3{font-size:.9rem;color:#424242;margin:12px 0 8px}
+a{color:var(--true-red);text-decoration:none}
+a:hover{text-decoration:underline}
+footer{text-align:center;padding:24px;color:#9e9e9e;font-size:.78rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:.75rem;opacity:.7;margin-bottom:4px">TRUE Corporation OMX · Order Journey Documentation</div>
+  <h1>BN_CHANGE_PACKAGE</h1>
+  <div class="subtitle">Process Configuration for BN_CHANGE_PACKAGE — B/N package change orchestration across CCBS, OMX internal functions, and BL</div>
+  <div class="meta-row">
+    <span class="meta-chip">Total Steps: 29</span>
+    <span class="meta-chip">Unique FMs: 27</span>
+    <span class="meta-chip">Entry: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</span>
+    <span class="meta-chip">Backends: CCBS · OMX · BL</span>
+    <span class="meta-chip">Generated: 2026-09-14</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §2 Order Flow Table -->
+<div class="card">
+<div class="card-header">§2 — Order Flow</div>
+<div class="card-body">
+<div style="overflow-x:auto">
+<table>
+<thead>
+<tr>
+  <th>#</th>
+  <th>Step ID</th>
+  <th>FM (ActivityID)</th>
+  <th>Parameters</th>
+  <th>PreExecCheck (truncated)</th>
+  <th>Previous</th>
+  <th>Next</th>
+  <th>Doc</th>
+</tr>
+</thead>
+<tbody>
+<tr class="cond-row"><td><span class="step-num">1</span></td><td>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</td><td><a href="../FMlogic/Request_CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE.html">CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</a></td><td>—</td><td><code>string-length(//Subscriber/MSISDN)&gt;0 and not(exists(//Subscriber/SubscriberId))</code></td><td>START</td><td>CCBS_GET_ACCOUNT_HEADER</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">2</span></td><td>CCBS_GET_ACCOUNT_HEADER</td><td><a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></td><td>—</td><td><code>string-length(//Account/AccountID)&gt;0</code></td><td>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</td><td>CCBS_GET_AGREEMENT_HEADER</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">3</span></td><td>CCBS_GET_AGREEMENT_HEADER</td><td><a href="../FMlogic/Request_CCBS_GET_AGREEMENT_HEADER.html">CCBS_GET_AGREEMENT_HEADER</a></td><td>—</td><td><code>exists(//ParentOU/Agreement/AgreementId)</code></td><td>CCBS_GET_ACCOUNT_HEADER</td><td>CCBS_GET_SUBS_INFO</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">4</span></td><td>CCBS_GET_SUBS_INFO</td><td><a href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">CCBS_GET_SUBS_INFO</a></td><td>—</td><td><code>boolean(//Subscriber/MSISDN and //Subscriber/SubscriberOffers) or boolean(//Subscriber/ResourceRangeInfo)</code></td><td>CCBS_GET_AGREEMENT_HEADER</td><td>CCBS_GET_AGREEMENT_INFO</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">5</span></td><td>CCBS_GET_AGREEMENT_INFO</td><td><a href="../FMlogic/Request_CCBS_GET_AGREEMENT_INFO.html">CCBS_GET_AGREEMENT_INFO</a></td><td>—</td><td><code>exists(//ParentOU/Agreement) and (//Offers/Action='CHG_PARAM' or //Offers/Action='ADD')</code></td><td>CCBS_GET_SUBS_INFO</td><td>CCBS_RESOLVE_SOC_CODE</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">6</span></td><td>CCBS_RESOLVE_SOC_CODE</td><td><a href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></td><td>—</td><td><code>(string-length(//Agreement/Offers/OfferName)&gt;0 and //Agreement/Offers/ServiceType!='79') or (string-length(//SubscriberOffers/OfferName)&gt;0 and //SubscriberOffers/ServiceType!='79')</code></td><td>CCBS_GET_AGREEMENT_INFO</td><td>CCBS_GOD</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">7</span></td><td>CCBS_GOD</td><td><a href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></td><td>—</td><td><code>count(//Offers)&gt;0 or count(//SubscriberOffers)&gt;0 and (//SubscriberOffers/Action!='CHG_PARAM' and //ServiceType!='79')</code></td><td>CCBS_RESOLVE_SOC_CODE</td><td>OMX_CAL_OFFERS_EFF_DATE</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">8</span></td><td>OMX_CAL_OFFERS_EFF_DATE</td><td><a href="../FMlogic/Request_OMX_CAL_OFFERS_EFF_DATE.html">OMX_CAL_OFFERS_EFF_DATE</a></td><td>—</td><td><code>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]])</code></td><td>CCBS_GOD</td><td>OMX_OFFER_INCLUSION</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">9</span></td><td>OMX_OFFER_INCLUSION</td><td><a href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">OMX_OFFER_INCLUSION</a></td><td>—</td><td><code>count(//Offers)&gt;0 or count(//SubscriberOffers)&gt;0 and (//SubscriberOffers/Action!='CHG_PARAM' and //Offers/Action!='CHG_PARAM')</code></td><td>OMX_CAL_OFFERS_EFF_DATE</td><td>GET_SPECIAL_OFFER_INDICATOR</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr><td><span class="step-num">10</span></td><td>GET_SPECIAL_OFFER_INDICATOR</td><td><a href="../FMlogic/Request_GET_SPECIAL_OFFER_INDICATOR.html">GET_SPECIAL_OFFER_INDICATOR</a></td><td>—</td><td>—</td><td>OMX_OFFER_INCLUSION</td><td>OMX_BIZ_VAL</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr><td><span class="step-num">11</span></td><td>OMX_BIZ_VAL</td><td><a href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></td><td>—</td><td>—</td><td>GET_SPECIAL_OFFER_INDICATOR</td><td>OMX_ADD_FUT_OFFERS</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">12</span></td><td>OMX_ADD_FUT_OFFERS</td><td><a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS.html">OMX_ADD_FUT_OFFERS</a></td><td>—</td><td><code>boolean(//SubscriberOffers[Action='ADD'] and //SubscriberOffers[ExtendedInfo[Name='OfferActivityDate' and Value='FUT']][...FE...] and ServiceType!='80' and !='79')</code></td><td>OMX_BIZ_VAL</td><td>OMX_ADD_FUT_OFFERS_PRICEPLAN</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">13</span></td><td>OMX_ADD_FUT_OFFERS_PRICEPLAN</td><td><a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS.html">OMX_ADD_FUT_OFFERS</a></td><td>—</td><td><code>boolean(//SubscriberOffers[ExtendedInfo[OfferActivityDate=FUT]][FE] and count(ADD)&gt;0 and ServiceType='80')</code></td><td>OMX_ADD_FUT_OFFERS</td><td>OMX_ADD_FUT_OFFERS_PARAM</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">14</span></td><td>OMX_ADD_FUT_OFFERS_PARAM</td><td><a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS_PARAM.html">OMX_ADD_FUT_OFFERS_PARAM</a></td><td>—</td><td><code>boolean(//SubscriberOffers[FE] and //SubscriberOffers[Action='CHG_PARAM'] and //ParameterInfo[OfferParamActivityDate=FUT])</code></td><td>OMX_ADD_FUT_OFFERS_PRICEPLAN</td><td>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">15</span></td><td>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</td><td><a href="../FMlogic/Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO.html">CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</a></td><td>—</td><td><code>string-length(//Account/ExtendedInfo[Name='LEGACY_BAN'|'INIT_REASON'|'PRIORITY']/Value)!=0</code></td><td>OMX_ADD_FUT_OFFERS_PARAM</td><td>CCBS_ADD_PP_OU</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">16</span></td><td>CCBS_ADD_PP_OU</td><td><a href="../FMlogic/Request_CCBS_ADD_PP_OU.html">CCBS_ADD_PP_OU</a></td><td>—</td><td><code>exists(//ParentOU/Agreement) and //Offers/ServiceType='80' and FE_OR_CCBS='FE' and Action='ADD'</code></td><td>CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</td><td>CCBS_CHANGE_PP_OU</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">17</span></td><td>CCBS_CHANGE_PP_OU</td><td><a href="../FMlogic/Request_CCBS_CHANGE_PP_OU.html">CCBS_CHANGE_PP_OU</a></td><td>—</td><td><code>exists(//ParentOU/Agreement) and //Offers/ServiceType='80' and FE_OR_CCBS='FE' and Action='CHG_PP'</code></td><td>CCBS_ADD_PP_OU</td><td>CCBS_REMOVE_AGREEMENT_PRICE_PLAN</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">18</span></td><td>CCBS_REMOVE_AGREEMENT_PRICE_PLAN</td><td><a href="../FMlogic/Request_CCBS_REMOVE_AGREEMENT_PRICE_PLAN.html">CCBS_REMOVE_AGREEMENT_PRICE_PLAN</a></td><td>—</td><td><code>exists(//ParentOU/Agreement) and //Offers/ServiceType='80' and FE_OR_CCBS='FE' and Action='REMOVE'</code></td><td>CCBS_CHANGE_PP_OU</td><td>CCBS_UPDATE_AGREEMENT_ON_UNIT</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">19</span></td><td>CCBS_UPDATE_AGREEMENT_ON_UNIT</td><td><a href="../FMlogic/Request_CCBS_UPDATE_AGREEMENT_ON_UNIT.html">CCBS_UPDATE_AGREEMENT_ON_UNIT</a></td><td>—</td><td><code>exists(//ParentOU/Agreement) and ServiceType!='80' and FE_OR_CCBS='FE' and (OfferActivityDate='IM' or ='BD')</code></td><td>CCBS_REMOVE_AGREEMENT_PRICE_PLAN</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">20</span></td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td><td>—</td><td><code>exists(//ParentOU/Subscriber) and //SubscriberOffers/Soc and FE_OR_CCBS='FE' and ServiceType!='79' and (IM or BD) or CHG_CHARGE</code></td><td>CCBS_UPDATE_AGREEMENT_ON_UNIT</td><td>OMX_ADD_FUT_OFFERS_REMOVE</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">21</span></td><td>OMX_ADD_FUT_OFFERS_REMOVE</td><td><a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS.html">OMX_ADD_FUT_OFFERS</a></td><td>—</td><td><code>boolean(//SubscriberOffers[FE] and ExpirationDate and ((OfferActivityDate!=FUT and OfferExpActivityDate=FUT and Action=ADD) or (OfferActivityDate=FUT and Action=REMOVE)))</code></td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td>BL_CREATE_CHARGE</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">22</span></td><td>BL_CREATE_CHARGE</td><td><a href="../FMlogic/Request_BL_CREATE_CHARGE.html">BL_CREATE_CHARGE</a></td><td>—</td><td><code>exists(//ParentOU/Subscriber) and FE_OR_CCBS='FE' and ServiceType='79'</code></td><td>OMX_ADD_FUT_OFFERS_REMOVE</td><td>CCBS_ADD_RESOURCE_RANGES</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">23</span></td><td>CCBS_ADD_RESOURCE_RANGES</td><td><a href="../FMlogic/Request_CCBS_ADD_RESOURCE_RANGES.html">CCBS_ADD_RESOURCE_RANGES</a></td><td>—</td><td><code>count(//ResourceRangeInfo[Action='ADD'])&gt;0</code></td><td>BL_CREATE_CHARGE</td><td>CCBS_REMOVE_RESOURCE_RANGES</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">24</span></td><td>CCBS_REMOVE_RESOURCE_RANGES</td><td><a href="../FMlogic/Request_CCBS_REMOVE_RESOURCE_RANGES.html">CCBS_REMOVE_RESOURCE_RANGES</a></td><td>—</td><td><code>count(//ResourceRangeInfo[Action='REMOVE'])&gt;0</code></td><td>CCBS_ADD_RESOURCE_RANGES</td><td>CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">25</span></td><td>CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</td><td><a href="../FMlogic/Request_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO.html">CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</a></td><td>—</td><td><code>//Subscriber/ExtendedInfo[Name='OLD_BAN'|'OLD_BAN_DATE'|'PROJECT_CODE'|'MARKET_CODE'|'SALE_CHANNEL'|'PHASE_CODE']/Value!=''</code></td><td>CCBS_REMOVE_RESOURCE_RANGES</td><td>OMX_UPDATE_FUT_OFFER_COP_DATE</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">26</span></td><td>OMX_UPDATE_FUT_OFFER_COP_DATE</td><td><a href="../FMlogic/Request_OMX_UPDATE_FUT_OFFER_COP_DATE.html">OMX_UPDATE_FUT_OFFER_COP_DATE</a></td><td>—</td><td><code>boolean(//SubscriberOffers/ExtendedInfo[Name='FUT_ORDER_ID' or 'FUT_SOC_ID'] and FE and Action='FUT_CHG_DATE')</code></td><td>CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</td><td>OMX_REMOVE_FUT_OFFER_COP</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">27</span></td><td>OMX_REMOVE_FUT_OFFER_COP</td><td><a href="../FMlogic/Request_OMX_REMOVE_FUT_OFFER_COP.html">OMX_REMOVE_FUT_OFFER_COP</a></td><td>—</td><td><code>boolean(//SubscriberOffers/ExtendedInfo[Name='FUT_ORDER_ID' or 'FUT_SOC_ID'] and FE and Action='FUT_REMOVE')</code></td><td>OMX_UPDATE_FUT_OFFER_COP_DATE</td><td>OMX_SEARCH_FUT_ALL</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr><td><span class="step-num">28</span></td><td>OMX_SEARCH_FUT_ALL</td><td><a href="../FMlogic/Request_OMX_SEARCH_FUT_ALL.html">OMX_SEARCH_FUT_ALL</a></td><td><code>STATUS=1</code><br><code>ORDER_TYPE=128</code></td><td>—</td><td>OMX_REMOVE_FUT_OFFER_COP</td><td>OMX_EXP_FUT_REMOVE</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+<tr class="cond-row"><td><span class="step-num">29</span></td><td>OMX_EXP_FUT_REMOVE</td><td><a href="../FMlogic/Request_OMX_EXP_FUT_REMOVE.html">OMX_EXP_FUT_REMOVE</a></td><td>—</td><td><code>exists(//ParentOU/Subscriber) and //SubscriberOffers/Soc and FE_OR_CCBS='FE' and Action='REMOVE' and ServiceType!='79'</code></td><td>OMX_SEARCH_FUT_ALL</td><td>END</td><td><span class="badge b-gen">✓ Generated</span></td></tr>
+</tbody>
+</table>
+</div>
+<p style="margin-top:8px;font-size:.78rem;color:#757575">Rows with left amber border have a PreExecCheck condition (conditional execution).</p>
+</div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="card">
+<div class="card-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+<div class="card-body">
+<details><summary>Step 1 — CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</summary><div class="details-body"><code>string-length(//Subscriber/MSISDN/text()) &gt; 0 and not(exists(//Subscriber/SubscriberId))</code><br><em>Only run if MSISDN is present but SubscriberId is not yet populated.</em></div></details>
+<details><summary>Step 2 — CCBS_GET_ACCOUNT_HEADER</summary><div class="details-body"><code>string-length(//Account/AccountID/text()) &gt; 0</code></div></details>
+<details><summary>Step 3 — CCBS_GET_AGREEMENT_HEADER</summary><div class="details-body"><code>exists(//ParentOU/Agreement/AgreementId)</code></div></details>
+<details><summary>Step 4 — CCBS_GET_SUBS_INFO</summary><div class="details-body"><code>boolean(//Subscriber/MSISDN[./text()] and //Subscriber/SubscriberOffers) or boolean(//Subscriber/ResourceRangeInfo)</code></div></details>
+<details><summary>Step 5 — CCBS_GET_AGREEMENT_INFO</summary><div class="details-body"><code>exists(//ParentOU/Agreement) and (//Offers/Action/text() = 'CHG_PARAM' or //Offers/Action/text() = 'ADD')</code></div></details>
+<details><summary>Step 6 — CCBS_RESOLVE_SOC_CODE</summary><div class="details-body"><pre>(string-length(//Agreement/Offers/OfferName/text())&gt;0 and //Agreement/Offers/ServiceType/text() != '79')
+or (string-length(//SubscriberOffers/OfferName/text())&gt;0 and //SubscriberOffers/ServiceType/text() != '79')</pre></div></details>
+<details><summary>Step 7 — CCBS_GOD</summary><div class="details-body"><pre>count(//Offers) &gt; 0
+or count(//SubscriberOffers) &gt; 0
+and (//SubscriberOffers/Action/text() != 'CHG_PARAM' and //ServiceType/text() != '79')</pre></div></details>
+<details><summary>Step 8 — OMX_CAL_OFFERS_EFF_DATE</summary><div class="details-body"><code>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]])</code></div></details>
+<details><summary>Step 9 — OMX_OFFER_INCLUSION</summary><div class="details-body"><code>count(//Offers) &gt; 0 or count(//SubscriberOffers) &gt; 0 and (//SubscriberOffers/Action/text() != 'CHG_PARAM' and //Offers/Action/text() != 'CHG_PARAM')</code></div></details>
+<details><summary>Step 12 — OMX_ADD_FUT_OFFERS</summary><div class="details-body"><pre>boolean(
+  //Subscriber/SubscriberOffers[Action[.='ADD']] and
+  //Subscriber/SubscriberOffers[ExtendedInfo[Name='OfferActivityDate' and Value='FUT']][ExtendedInfo[Name='FE_OR_CCBS' and Value='FE']]
+  and //SubscriberOffers/ServiceType/text() != '80'
+  and //SubscriberOffers/ServiceType/text() != '79'
+) or boolean(
+  //Agreement/Offers[Action='ADD'] and [...FUT][FE] and ServiceType!='80' and !='79'
+)</pre></div></details>
+<details><summary>Step 13 — OMX_ADD_FUT_OFFERS_PRICEPLAN</summary><div class="details-body"><pre>boolean(
+  //Subscriber/SubscriberOffers[OfferActivityDate=FUT][FE] and count(ADD)&gt;0 and ServiceType='80'
+)</pre></div></details>
+<details><summary>Step 14 — OMX_ADD_FUT_OFFERS_PARAM</summary><div class="details-body"><pre>boolean(//SubscriberOffers[FE] and //SubscriberOffers[Action='CHG_PARAM'] and //ParameterInfo[OfferParamActivityDate=FUT])
+or boolean(//Agreement/Offers[FE] and [CHG_PARAM] and //ParameterInfo[OfferParamActivityDate=FUT])</pre></div></details>
+<details><summary>Step 15 — CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</summary><div class="details-body"><code>string-length(//Account/ExtendedInfo[Name='LEGACY_BAN']/Value/text())!=0 or string-length(//Account/ExtendedInfo[Name='INIT_REASON']/Value/text())!=0 or string-length(//Account/ExtendedInfo[Name='PRIORITY']/Value/text())!=0</code></div></details>
+<details><summary>Step 16 — CCBS_ADD_PP_OU</summary><div class="details-body"><code>exists(//ParentOU/Agreement) and //Offers/ServiceType/text() = '80' and //Offers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='FE' and //Offers/Action/text() = 'ADD'</code></div></details>
+<details><summary>Step 17 — CCBS_CHANGE_PP_OU</summary><div class="details-body"><code>exists(//ParentOU/Agreement) and //Offers/ServiceType/text() = '80' and FE_OR_CCBS='FE' and Action='CHG_PP'</code></div></details>
+<details><summary>Step 18 — CCBS_REMOVE_AGREEMENT_PRICE_PLAN</summary><div class="details-body"><code>exists(//ParentOU/Agreement) and //Offers/ServiceType/text() = '80' and FE_OR_CCBS='FE' and Action='REMOVE'</code></div></details>
+<details><summary>Step 19 — CCBS_UPDATE_AGREEMENT_ON_UNIT</summary><div class="details-body"><pre>exists(//ParentOU/Agreement) and //Offers/ServiceType/text() != '80' and FE_OR_CCBS='FE'
+and (boolean(//Agreement/Offers/ExtendedInfo[Name='OfferActivityDate' and Value='IM'])
+     or boolean(//Agreement/Offers/ExtendedInfo[Name='OfferActivityDate' and Value='BD']))</pre></div></details>
+<details><summary>Step 20 — CCBS_CHANGE_PACKAGE_SUBSCRIBER</summary><div class="details-body"><pre>exists(//ParentOU/Subscriber) and string-length(//SubscriberOffers/Soc)&gt;0 and FE_OR_CCBS='FE' and ServiceType!='79'
+and (OfferActivityDate='IM' or ='BD') or ParameterInfo[IM or BD] or Action='CHG_CHARGE'</pre></div></details>
+<details><summary>Step 21 — OMX_ADD_FUT_OFFERS_REMOVE</summary><div class="details-body"><pre>boolean(//SubscriberOffers[FE] and ExpirationDate and
+  ((OfferActivityDate!=FUT and OfferExpActivityDate=FUT and Action=ADD) or (OfferActivityDate=FUT and Action=REMOVE)))
+or same for //Agreement/Offers</pre></div></details>
+<details><summary>Step 22 — BL_CREATE_CHARGE</summary><div class="details-body"><code>exists(//ParentOU/Subscriber) and FE_OR_CCBS='FE' and ServiceType='79'</code></div></details>
+<details><summary>Step 23 — CCBS_ADD_RESOURCE_RANGES</summary><div class="details-body"><code>count(//ResourceRangeInfo[Action='ADD']) &gt; 0</code></div></details>
+<details><summary>Step 24 — CCBS_REMOVE_RESOURCE_RANGES</summary><div class="details-body"><code>count(//ResourceRangeInfo[Action='REMOVE']) &gt; 0</code></div></details>
+<details><summary>Step 25 — CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</summary><div class="details-body"><code>//Subscriber/ExtendedInfo[Name='OLD_BAN'|'OLD_BAN_DATE'|'PROJECT_CODE'|'MARKET_CODE'|'SALE_CHANNEL'|'PHASE_CODE']/Value/text()!=''</code></div></details>
+<details><summary>Step 26 — OMX_UPDATE_FUT_OFFER_COP_DATE</summary><div class="details-body"><pre>boolean(//SubscriberOffers/ExtendedInfo[Name='FUT_ORDER_ID' or 'FUT_SOC_ID'] and FE and Action='FUT_CHG_DATE')
+or boolean(//Agreement/Offers same)</pre></div></details>
+<details><summary>Step 27 — OMX_REMOVE_FUT_OFFER_COP</summary><div class="details-body"><pre>boolean(//SubscriberOffers/ExtendedInfo[Name='FUT_ORDER_ID' or 'FUT_SOC_ID'] and FE and Action='FUT_REMOVE')
+or boolean(//Agreement/Offers same)</pre></div></details>
+<details><summary>Step 29 — OMX_EXP_FUT_REMOVE</summary><div class="details-body"><code>exists(//ParentOU/Subscriber) and string-length(//SubscriberOffers/Soc)&gt;0 and FE_OR_CCBS='FE' and Action='REMOVE' and ServiceType!='79'</code></div></details>
+</div>
+</div>
+
+<!-- §4 FM Documentation Index -->
+<div class="card">
+<div class="card-header">§4 — FM Documentation Index</div>
+<div class="card-body">
+<div class="fm-grid">
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</h4><div>Steps: 1 · <a href="../FMlogic/Request_CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_GET_ACCOUNT_HEADER</h4><div>Steps: 2 · <a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_GET_AGREEMENT_HEADER</h4><div>Steps: 3 · <a href="../FMlogic/Request_CCBS_GET_AGREEMENT_HEADER.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_GET_SUBS_INFO</h4><div>Steps: 4 · <a href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_GET_AGREEMENT_INFO</h4><div>Steps: 5 · <a href="../FMlogic/Request_CCBS_GET_AGREEMENT_INFO.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_RESOLVE_SOC_CODE</h4><div>Steps: 6 · <a href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_GOD</h4><div>Steps: 7 · <a href="../FMlogic/Request_CCBS_GOD.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-omx">OMX</span> OMX_CAL_OFFERS_EFF_DATE</h4><div>Steps: 8 · <a href="../FMlogic/Request_OMX_CAL_OFFERS_EFF_DATE.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-omx">OMX</span> OMX_OFFER_INCLUSION</h4><div>Steps: 9 · <a href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-get">GET</span> GET_SPECIAL_OFFER_INDICATOR</h4><div>Steps: 10 · <a href="../FMlogic/Request_GET_SPECIAL_OFFER_INDICATOR.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-omx">OMX</span> OMX_BIZ_VAL</h4><div>Steps: 11 · <a href="../FMlogic/Request_OMX_BIZ_VAL.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-omx">OMX</span> OMX_ADD_FUT_OFFERS</h4><div>Steps: 12, 13, 21 · <a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-omx">OMX</span> OMX_ADD_FUT_OFFERS_PARAM</h4><div>Steps: 14 · <a href="../FMlogic/Request_OMX_ADD_FUT_OFFERS_PARAM.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO</h4><div>Steps: 15 · <a href="../FMlogic/Request_CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_ADD_PP_OU</h4><div>Steps: 16 · <a href="../FMlogic/Request_CCBS_ADD_PP_OU.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_CHANGE_PP_OU</h4><div>Steps: 17 · <a href="../FMlogic/Request_CCBS_CHANGE_PP_OU.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_REMOVE_AGREEMENT_PRICE_PLAN</h4><div>Steps: 18 · <a href="../FMlogic/Request_CCBS_REMOVE_AGREEMENT_PRICE_PLAN.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_UPDATE_AGREEMENT_ON_UNIT</h4><div>Steps: 19 · <a href="../FMlogic/Request_CCBS_UPDATE_AGREEMENT_ON_UNIT.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_CHANGE_PACKAGE_SUBSCRIBER</h4><div>Steps: 20 · <a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-bl">BL</span> BL_CREATE_CHARGE</h4><div>Steps: 22 · <a href="../FMlogic/Request_BL_CREATE_CHARGE.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_ADD_RESOURCE_RANGES</h4><div>Steps: 23 · <a href="../FMlogic/Request_CCBS_ADD_RESOURCE_RANGES.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_REMOVE_RESOURCE_RANGES</h4><div>Steps: 24 · <a href="../FMlogic/Request_CCBS_REMOVE_RESOURCE_RANGES.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-ccbs">CCBS</span> CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO</h4><div>Steps: 25 · <a href="../FMlogic/Request_CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-omx">OMX</span> OMX_UPDATE_FUT_OFFER_COP_DATE</h4><div>Steps: 26 · <a href="../FMlogic/Request_OMX_UPDATE_FUT_OFFER_COP_DATE.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-omx">OMX</span> OMX_REMOVE_FUT_OFFER_COP</h4><div>Steps: 27 · <a href="../FMlogic/Request_OMX_REMOVE_FUT_OFFER_COP.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-omx">OMX</span> OMX_SEARCH_FUT_ALL</h4><div>Steps: 28 · <a href="../FMlogic/Request_OMX_SEARCH_FUT_ALL.html">View Doc</a></div></div>
+<div class="fm-card"><h4><span class="badge b-omx">OMX</span> OMX_EXP_FUT_REMOVE</h4><div>Steps: 29 · <a href="../FMlogic/Request_OMX_EXP_FUT_REMOVE.html">View Doc</a></div></div>
+</div>
+</div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="card">
+<div class="card-header">§5 — Sequence Diagram</div>
+<div class="card-body">
+<div class="mermaid-wrap">
+<div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+    participant OMX as OMX
+    participant BL as BL
+
+    opt MSISDN present but no SubscriberId
+        O->>CCBS: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE
+    end
+    opt AccountID exists
+        O->>CCBS: CCBS_GET_ACCOUNT_HEADER
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_ACCOUNT_HEADER
+    end
+    opt AgreementId exists
+        O->>CCBS: CCBS_GET_AGREEMENT_HEADER
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_AGREEMENT_HEADER
+    end
+    opt Subscriber/MSISDN+Offers or ResourceRangeInfo
+        O->>CCBS: CCBS_GET_SUBS_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_SUBS_INFO
+    end
+    opt Agreement exists and Action=CHG_PARAM or ADD
+        O->>CCBS: CCBS_GET_AGREEMENT_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_AGREEMENT_INFO
+    end
+    opt OfferName length>0 and ServiceType!=79
+        O->>CCBS: CCBS_RESOLVE_SOC_CODE
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_RESOLVE_SOC_CODE
+    end
+    opt count(Offers)>0 or SubscriberOffers (not CHG_PARAM, not 79)
+        O->>CCBS: CCBS_GOD
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GOD
+    end
+    opt SubscriberOffers[1] and FE_OR_CCBS=FE or BRMS
+        O->>OMX: OMX_CAL_OFFERS_EFF_DATE
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_CAL_OFFERS_EFF_DATE
+    end
+    opt count(Offers or SubscriberOffers)>0 not CHG_PARAM
+        O->>OMX: OMX_OFFER_INCLUSION
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_OFFER_INCLUSION
+    end
+    O->>OMX: GET_SPECIAL_OFFER_INDICATOR
+    OMX-->>O: response
+    Note over O,OMX: FM: GET_SPECIAL_OFFER_INDICATOR
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL
+    opt ADD offers with OfferActivityDate=FUT, FE, !80, !79
+        O->>OMX: OMX_ADD_FUT_OFFERS [step 12]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFERS
+    end
+    opt ADD offers FUT FE ServiceType=80
+        O->>OMX: OMX_ADD_FUT_OFFERS [step 13 — PricePlan]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFERS
+    end
+    opt CHG_PARAM offers FUT FE
+        O->>OMX: OMX_ADD_FUT_OFFERS_PARAM
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFERS_PARAM
+    end
+    opt Account LEGACY_BAN/INIT_REASON/PRIORITY present
+        O->>CCBS: CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_ACCOUNTING_MANAGEMENT_INFO
+    end
+    opt Agreement ServiceType=80, FE, Action=ADD
+        O->>CCBS: CCBS_ADD_PP_OU
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_ADD_PP_OU
+    end
+    opt Agreement ServiceType=80, FE, Action=CHG_PP
+        O->>CCBS: CCBS_CHANGE_PP_OU
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PP_OU
+    end
+    opt Agreement ServiceType=80, FE, Action=REMOVE
+        O->>CCBS: CCBS_REMOVE_AGREEMENT_PRICE_PLAN
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_REMOVE_AGREEMENT_PRICE_PLAN
+    end
+    opt Agreement FE, !80, IM or BD
+        O->>CCBS: CCBS_UPDATE_AGREEMENT_ON_UNIT
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_UPDATE_AGREEMENT_ON_UNIT
+    end
+    opt Subscriber FE, !79, IM or BD or CHG_CHARGE
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER
+    end
+    opt FE offers with ExpirationDate FUT REMOVE
+        O->>OMX: OMX_ADD_FUT_OFFERS [step 21 — Remove]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_ADD_FUT_OFFERS
+    end
+    opt Subscriber FE ServiceType=79
+        O->>BL: BL_CREATE_CHARGE
+        BL-->>O: response
+        Note over O,BL: FM: BL_CREATE_CHARGE
+    end
+    opt ResourceRangeInfo[Action=ADD] count>0
+        O->>CCBS: CCBS_ADD_RESOURCE_RANGES
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_ADD_RESOURCE_RANGES
+    end
+    opt ResourceRangeInfo[Action=REMOVE] count>0
+        O->>CCBS: CCBS_REMOVE_RESOURCE_RANGES
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_REMOVE_RESOURCE_RANGES
+    end
+    opt Subscriber ExtendedInfo OLD_BAN/PROJECT_CODE/... present
+        O->>CCBS: CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_SUBSCRIBER_GENERAL_INFO
+    end
+    opt FUT_ORDER_ID/FUT_SOC_ID FE Action=FUT_CHG_DATE
+        O->>OMX: OMX_UPDATE_FUT_OFFER_COP_DATE
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_UPDATE_FUT_OFFER_COP_DATE
+    end
+    opt FUT_ORDER_ID/FUT_SOC_ID FE Action=FUT_REMOVE
+        O->>OMX: OMX_REMOVE_FUT_OFFER_COP
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_REMOVE_FUT_OFFER_COP
+    end
+    O->>OMX: OMX_SEARCH_FUT_ALL [STATUS=1, ORDER_TYPE=128]
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_SEARCH_FUT_ALL
+    opt Subscriber FE REMOVE !79
+        O->>OMX: OMX_EXP_FUT_REMOVE
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_EXP_FUT_REMOVE
+    end
+</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · Order Journey Documentation · BN_CHANGE_PACKAGE · 2026-09-14</footer>
+</body>
+</html>

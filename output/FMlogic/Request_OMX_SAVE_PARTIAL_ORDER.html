@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_SAVE_PARTIAL_ORDER</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-high{background:#FFE0E0;color:var(--true-dark)}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_OMX_SAVE_PARTIAL_ORDER</h1>
+  <div class="subtitle">Partial Order Save/Update — persists subscriber order data to OMX partial order store; dual SAVE/UPDATE action; richest payload in ACTIVATION flow</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: OMX Partial Order Service</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: FIRE-AND-FORGET per Subscriber</span>
+    <span class="meta-chip">Author: Chayatorn P.</span>
+    <span class="meta-chip">Action: SAVE | UPDATE</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>OMX_SAVE_PARTIAL_ORDER</strong> persists the full subscriber order snapshot to the OMX partial order store. It is the richest payload in the ACTIVATION flow — serialising customer info, subscriber offers, resources, and all ExtendedInfo collections from five different order scopes (order, customer, account, agreement, subscriber).
+    </div>
+    <div class="callout warn">
+      <strong>Mandatory parameter guard:</strong> <code>Parameter@length == 0</code> throws <code>DATA_ISSUE</code>. The ProcessConfig Activity must supply at least <code>ACTION</code> and optionally <code>STATUS</code> parameters.
+    </div>
+    <div class="callout info">
+      <strong>Dual operation:</strong> <code>ACTION="SAVE"</code> creates a new partial order; other values (e.g. <code>"UPDATE"</code>) update an existing one. The OPERATION_NAME in audit log switches accordingly.
+    </div>
+    <div class="callout success">
+      <strong>Fire-and-forget per Subscriber:</strong> <code>Event.Ext.sendEventImmediate</code> + manual <code>RequestCount++</code>. Iterates both POU and ChildOU Subscribers. Fan-in: <code>count("000") == RequestCount</code>.
+    </div>
+    <div class="callout">
+      <strong>Agreement ExtInfo scope:</strong> POU path uses <code>ParentOU[i+1]/Agreement/ExtendedInfo</code>; ChildOU path uses <code>ParentOU[i+1]/ChildOU[k+1]/Agreement/ExtendedInfo</code>. Note 1-indexed XSLT offset from 0-indexed BE loop variables.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_SAVE_PARTIAL_ORDER</code></td></tr>
+      <tr><td>Author</td><td>Chayatorn P.</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>OMX Partial Order Service</td></tr>
+      <tr><td>Event type (Request)</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_SAVE_PARTIAL_ORDER</code></td></tr>
+      <tr><td>Event type (Response)</td><td><code>Events.OMConsumers.OMXFM.Response.OMX_SAVE_PARTIAL_ORDER</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> — FIRE-AND-FORGET per Subscriber</td></tr>
+      <tr><td>RequestCount</td><td>Manually: <code>if(!isActResub) RequestCount++</code></td></tr>
+      <tr><td>Fan-in</td><td><code>count(Response[ResponseCode suffix "000"]) == RequestCount</code></td></tr>
+      <tr><td>Parameters</td><td>ACTION (SAVE | UPDATE), STATUS (optional)</td></tr>
+      <tr><td>Mandatory guard</td><td><code>Parameter@length == 0</code> → throw DATA_ISSUE</td></tr>
+      <tr><td>Iteration</td><td>POU[].Subscriber[] AND ChildOU[].Subscriber[] — with CompletionStatus==2 resubmit skip</td></tr>
+      <tr><td>Key inputs</td><td><code>ExtInfo[PARTIAL_ORDER_ID].Value</code>; subscriber.MSISDN; all 5 ExtInfo scopes</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>SAVE vs UPDATE action</td><td>Both use same XSLT; OPERATION_NAME in Logger switches based on actionParam</td></tr>
+      <tr><td>status conditional</td><td><code>ns:status</code> emitted only if <code>statusParam != ""</code></td></tr>
+      <tr><td>Five ExtInfo scopes</td><td>orderExtendedInfo, customerExtendedInfo, accountExtendedInfo (subscriber.AccountRefId), agreementExtendedInfo (POU or ChildOU agreement), subscriberExtendedInfo</td></tr>
+      <tr><td>Account ExtInfo filter</td><td><code>Account[RefId=$subscriber/AccountRefId]/ExtendedInfo</code> — subscriber's account only</td></tr>
+      <tr><td>Agreement index offset</td><td>XSLT uses 1-indexed XPath: <code>ParentOU[number($i) + 1]</code> to match 0-indexed BE loop variable</td></tr>
+      <tr><td>SubscriberOffer deep serialization</td><td>Includes RelatedOffersArray (with Soc, ParameterInfo, MatSerialRefId), ParameterInfo, and ExtendedInfo per offer</td></tr>
+      <tr><td>IdentificationExpDate commented out</td><td>Two <code>identification_expiryDate</code> formatting blocks are commented out — field IS included in payload from raw CustomerGeneralInfo value without formatting</td></tr>
+      <tr><td>PreExecCheck scoped</td><td>POU: <code>GetXMLForSubscriber</code>; ChildOU: <code>GetXMLForSubscriberInChildOU</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping (summary — richest payload)</div>
+  <div class="section-body">
+<pre><code>createEvent → event
+├── extId/JMSPriority/JMSCorrelationID/OrderID/RefID/OrderType ← standard
+└── payload → ns:SubmitOrderRequest
+    ├── ns:partialOrderId   ← ExtInfo[PARTIAL_ORDER_ID].Value         [Always]
+    ├── ns:status           ← $statusParam                            [Conditional: if statusParam != ""]
+    ├── ns:orderId          ← OrderData.OrderID                       [Conditional]
+    ├── ns:channel          ← OrderData.Channel                       [Always]
+    ├── ns:serviceId        ← subscriber.MSISDN                       [Always]
+    ├── ns:identification   ← Customer.CustomerName.Identification     [Conditional]
+    ├── ns:identificationType ← Customer.CustomerName.IdentificationType [Conditional]
+    ├── ns:dealerCode       ← OrderData.DealerCode                    [Conditional]
+    ├── ns:saleId           ← subscriber.SubscriberGeneralInfo.saleId [Conditional]
+    ├── ns:language         ← subscriber.SubscriberGeneralInfo.Language [Conditional]
+    ├── ns:customerInfo
+    │   ├── email/title/firstname/lastname/customerType/birthdate/identificationExpDate
+    │   ├── prefContactNumber/gender/subscriberType
+    │   (all conditional on field presence)
+    ├── ns:subscriberOffer [for-each subscriber.SubscriberOffers]
+    │   ├── offerName/serviceType
+    │   ├── relatedOffersArray [for-each RelatedOffersArray]
+    │   │   ├── offerName/serviceType/soc/matSerialRefId
+    │   │   └── parameterInfo [for-each ParameterInfo]: paramName + valuesArray
+    │   └── offerParameterInfo [for-each ParameterInfo]: paramName + valuesArray
+    │   └── extendedInfo [for-each ExtendedInfo]: name + value
+    ├── ns:subscriberResource [for-each ResourceInfo]: resourceName + valuesArray
+    ├── ns:orderExtendedInfo [for-each OrderData.ExtendedInfo]: name + value
+    ├── ns:customerExtendedInfo [for-each Customer.ExtendedInfo]: name + value
+    ├── ns:accountExtendedInfo [Account[RefId=subscriber.AccountRefId].ExtendedInfo]: name + value
+    ├── ns:agreementExtendedInfo [POU Agreement or ChildOU Agreement ExtendedInfo]: name + value
+    ├── ns:subscriberExtendedInfo [subscriber.ExtendedInfo]: name + value
+    └── ns:action           ← $actionParam (SAVE | UPDATE)            [Always]</code></pre>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_OMX_SAVE_PARTIAL_ORDER
+├── if Parameter@length == 0: throw DATA_ISSUE
+├── actionParam = GetActivityParameterValueFromKey("ACTION")
+├── statusParam = GetActivityParameterValueFromKey("STATUS")
+├── for each POU[i].Subscriber[j]:
+│   ├── [PreExecCheck] GetXMLForSubscriber → chkRes
+│   └── if chkRes=="true":
+│       ├── check Response[refId AND CompletionStatus==2] → reqSuccess
+│       └── if !reqSuccess:
+│           ├── createEvent(OMX_SAVE_PARTIAL_ORDER, POU XSLT) + sendEventImmediate
+│           ├── isSkipped = false
+│           ├── if(!isActResub): RequestCount++
+│           └── Logger REQ (SAVE or UPDATE)
+├── for each POU[i].ChildOU[k].Subscriber[j]:
+│   ├── [PreExecCheck] GetXMLForSubscriberInChildOU → chkRes
+│   └── [same send pattern as POU with ChildOU agreement ExtInfo]
+├── if !isSkipped: GetActivityStatusString("1") + SendDataToDB
+└── else: SkipActivity("4")
+
+Response_OMX_SAVE_PARTIAL_ORDER
+├── createInstance(ResponseBase std 4) → currActivity.Response[n]
+├── currActivity.ResponseCode/ResponseMessage = eventResponse.*
+├── actionParam = GetActivityParameterValueFromKey(currActivity, "ACTION")
+├── Logger RES (OPERATION_NAME: SAVE→OMX_SAVE_PARTIAL_ORDER; else→OMX_UPDATE_PARTIAL_ORDER)
+└── count("000") == RequestCount → "true"/"false"</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>All five ExtInfo collections serialized per subscriber — large payloads for complex orders</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Consider filtering ExtInfo by relevance; evaluate OMX partial order service payload size limits</td>
+      </tr>
+      <tr>
+        <td>identificationExpDate included as raw BE DateTime — format may differ from OMX service expectation</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Restore formatting logic (currently commented out); confirm OMX service date format</td>
+      </tr>
+      <tr>
+        <td>Agreement ExtInfo index uses <code>number($i)+1</code> XSLT offset — mismatch risk if loop bounds change</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document 0-to-1 index conversion; add integration test for multi-POU orders</td>
+      </tr>
+      <tr>
+        <td>OMX_SAVE_PARTIAL_ORDER is the last FM in ACTIVATION flow — missing subscriber coverage will not be detected until downstream</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Add post-completion validation for partial order coverage across all subscribers</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>ResponseBase (std 4 fields)</td><td>Always</td></tr>
+      <tr><td><code>currActivity.ResponseCode</code></td><td><code>eventResponse.ResponseCode</code></td><td>Always</td></tr>
+      <tr><td><code>currActivity.ResponseMessage</code></td><td><code>eventResponse.ResponseMsg</code></td><td>Always</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:12px">
+      No write-back to order data. Fan-in: <code>count(Response[ResponseCode suffix "000"]) == RequestCount</code>.
+    </div>
+    <div class="callout success" style="margin-top:8px">
+      Response logger OPERATION_NAME is context-sensitive: <code>actionParam=="SAVE"</code> → <code>"OMX_SAVE_PARTIAL_ORDER"</code>; else → <code>"OMX_UPDATE_PARTIAL_ORDER"</code>. Same rule handles both save and update operations.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

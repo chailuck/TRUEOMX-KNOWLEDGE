@@ -1,0 +1,732 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CRM_CREATE_ORDER_PREPAID</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.8rem;font-weight:700;letter-spacing:0.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:0.85;font-size:0.95rem;margin-bottom:14px}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:3px 12px;font-size:0.78rem}
+.container{max-width:1300px;margin:0 auto;padding:24px}
+.section{background:var(--card);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);margin-bottom:22px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;border-left:5px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header h2{font-size:1rem;font-weight:600}
+.section-num{background:rgba(255,255,255,0.22);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0}
+.section-body{padding:20px}
+.sub-section{margin-bottom:18px}
+.sub-section h3{font-size:0.88rem;font-weight:700;color:var(--true-dark);border-bottom:1px solid #f0d0d0;padding-bottom:4px;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600}
+td{padding:7px 10px;border-bottom:1px solid #F0E0E0;vertical-align:top}
+tr:hover td{background:#FDF5F5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:0.8rem;border-left:3px solid var(--true-red)}
+code.inline{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:0.8rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:0.72rem;font-weight:600}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}
+.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}
+.b-jms{background:#FFE0B2;color:#E65100}
+.flow-step{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;margin-top:1px}
+.flow-body{flex:1}
+.flow-body strong{color:var(--true-dark)}
+.warn-box{background:#FFF3E0;border-left:4px solid var(--warning);border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.82rem}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);border-radius:6px;padding:12px 16px;margin-bottom:12px;font-size:0.82rem}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nm{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-arrow{color:#6c7086;margin:0 6px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.param-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.param-card{background:#FFF5F5;border:1px solid #F0D0D0;border-radius:6px;padding:10px 12px}
+.param-card .param-name{font-weight:700;color:var(--true-dark);font-size:0.82rem;margin-bottom:3px;font-family:'Cascadia Code','Consolas',monospace}
+.param-card .param-desc{font-size:0.78rem;color:#555}
+.footer{text-align:center;color:#999;font-size:0.75rem;padding:20px;border-top:1px solid var(--border);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1300px;margin:0 auto">
+    <div class="subtitle">TIBCO BusinessEvents · FM Logic Documentation</div>
+    <h1>Request_CRM_CREATE_ORDER_PREPAID</h1>
+    <div class="meta-chips">
+      <span class="chip">Priority: 5</span>
+      <span class="chip">forwardChain: true</span>
+      <span class="chip">Type: External OMXFM — JMS → CRM</span>
+      <span class="chip">Pattern: Dual subscriber loop (ParentOU + ChildOU)</span>
+      <span class="chip">Author: CHAYATORN-PC</span>
+      <span class="chip">File: Request_CRM_CREATE_ORDER_PREPAID.rule</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><div class="section-num">1</div><h2>§1 — Overview &amp; Purpose</h2></div>
+  <div class="section-body">
+    <div class="info-box">
+      <strong>External OMXFM Rule — JMS to CRM backend via OMXFMConnectionRequest channel</strong><br/>
+      Creates a CRM order for each subscriber in the order hierarchy by sending a <code class="inline">CRMCreateOrderRequest</code> JMS message to the <code class="inline">CRM_CREATE_ORDER_PREPAID</code> destination. The rule iterates over both ParentOU subscribers and ChildOU subscribers, sending one request per subscriber. Results (CRM order row ID, asset row ID) are written back to each subscriber concept by the response rulefunction.
+    </div>
+    <table style="margin-top:14px;width:auto">
+      <tr><th>Item</th><th>Value</th></tr>
+      <tr><td>Rule class</td><td><code class="inline">Rules.OMConsumers.OMXFM.Request.Request_CRM_CREATE_ORDER_PREPAID</code></td></tr>
+      <tr><td>ActivityID</td><td><code class="inline">CRM_CREATE_ORDER_PREPAID</code></td></tr>
+      <tr><td>Author</td><td>CHAYATORN-PC</td></tr>
+      <tr><td>Backend</td><td>CRM (Siebel/CRM system)</td></tr>
+      <tr><td>Channel</td><td><code class="inline">/Channels/OMXFMConnectionRequest</code></td></tr>
+      <tr><td>Destination</td><td><code class="inline">CRM_CREATE_ORDER_PREPAID</code></td></tr>
+      <tr><td>Event type</td><td><code class="inline">Events.OMConsumers.OMXFM.Request.CRM_CREATE_ORDER</code></td></tr>
+      <tr><td>Schema</td><td><code class="inline">CRMCreateOrderRequest</code> (CRMCreateOrder.xsd)</td></tr>
+      <tr><td>Loop scope</td><td>ParentOU/Subscriber + ChildOU/Subscriber (two nested loops)</td></tr>
+      <tr><td>Response rulefunction</td><td><code class="inline">Response_CRM_CREATE_ORDER_PREPAID</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header"><div class="section-num">2</div><h2>§2 — Rule Metadata &amp; Attributes</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule type</td><td><code class="inline">rule</code></td><td>RETE stateful rule</td></tr>
+      <tr><td>priority</td><td>5</td><td>Standard priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Re-evaluates if working memory changes</td></tr>
+      <tr><td>Namespace</td><td>OMXFM</td><td>External — JMS to CRM backend</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><div class="section-num">3</div><h2>§3 — Working Memory — Declared Objects</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code class="inline">orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Root order; provides subscriber hierarchy, dates, MNP info, customer type</td></tr>
+      <tr><td><code class="inline">orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity; parameters read; RequestCount incremented; Response[] array checked for re-sends</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">4</div><h2>§4 — Rule Conditions (WHEN)</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Meaning</th></tr>
+      <tr><td>1</td><td><code class="inline">orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity matches current process step</td></tr>
+      <tr><td>2</td><td><code class="inline">orderCurrentActivity.ActivityID == "CRM_CREATE_ORDER_PREPAID"</code></td><td>This rule fires for the CRM create order step</td></tr>
+      <tr><td>3</td><td><code class="inline">orderRequest.ProcessFlow.NextActivityID == "CRM_CREATE_ORDER_PREPAID"</code></td><td>Process flow confirms this step is next</td></tr>
+      <tr><td>4</td><td><code class="inline">orderCurrentActivity.Status == "WAITING"</code></td><td>Activity has not yet been processed</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header"><div class="section-num">5</div><h2>§5 — Execution Flow Diagram</h2></div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><strong>Resubmit flag:</strong> <code class="inline">isActResub = (RequestCount > 0 &amp;&amp; IsOrderResubmitted)</code>. <code class="inline">isSkipped = true</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><strong>Fetch nextAct for PreExecCheck:</strong> <code class="inline">Instance.getByExtIdByUri(NextActivityName, ...)</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><strong>ParentOU/Subscriber loop:</strong> For each ParentOU → each Subscriber:<br/>
+      &nbsp;&nbsp;a) Skip if <code class="inline">Response[].ReferenceId == pSubRefId &amp;&amp; CompletionStatus == 2</code> (already responded).<br/>
+      &nbsp;&nbsp;b) PreExecCheck via <code class="inline">GetXMLForSubscriber</code> + <code class="inline">XPath.execute</code>.<br/>
+      &nbsp;&nbsp;c) Extract parameters (see §6.2). Date-format submissionDate, l9TmvActDate, proofDate, sysDate to Bangkok TZ.<br/>
+      &nbsp;&nbsp;d) Guard: <code class="inline">CustomerTypeInfo.Type != null &amp;&amp; != 0</code> — else throw DATA_ISSUE.<br/>
+      &nbsp;&nbsp;e) Determine MNP port type.<br/>
+      &nbsp;&nbsp;f) Build and send <code class="inline">CRMCreateOrderRequest</code> JMS event. <code class="inline">Event.assertEvent(reqEvent)</code> + <code class="inline">ActionRequestEvent</code> + <code class="inline">SendFirstRequestEvent</code>.<br/>
+      &nbsp;&nbsp;g) <code class="inline">isSkipped = false</code>. If not resubmit: <code class="inline">RequestCount++</code>.<br/>
+      &nbsp;&nbsp;h) Audit log (AllowWriteLog-gated, PROCESS_ID <code class="inline">_REQ</code>).
+    </div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><strong>ChildOU/Subscriber loop:</strong> Identical to step 3 but uses <code class="inline">GetXMLForSubscriberInChildOU(orderRequest, cSubRefId, cOuRefId)</code> and checks <code class="inline">Response[].ReferenceId == cSubRefId</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-body"><strong>Post-loop:</strong> If <code class="inline">!isSkipped</code>: activity Status = "1" (IN_PROGRESS) + <code class="inline">SendDataToDB</code>. Else: <code class="inline">SkipActivity("4")</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-body"><strong>Exception:</strong> <code class="inline">HandleActivityException</code> in catch block.</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header"><div class="section-num">6</div><h2>§6 — Rule Action (THEN) — Step-by-Step Logic</h2></div>
+  <div class="section-body">
+    <div class="sub-section">
+      <h3>§6.1 Resubmit and Skip-Tracking Pattern</h3>
+      <table>
+        <tr><th>Variable</th><th>Value</th><th>Effect</th></tr>
+        <tr><td><code class="inline">isActResub</code></td><td><code class="inline">RequestCount > 0 &amp;&amp; IsOrderResubmitted</code></td><td>If true, RequestCount is NOT incremented (fan-in counter preserved)</td></tr>
+        <tr><td><code class="inline">isSkipped</code></td><td>Starts <code class="inline">true</code>; set <code class="inline">false</code> when any request is sent</td><td>Determines whether to set Status=1 or SkipActivity after loops</td></tr>
+        <tr><td><code class="inline">reqSuccess</code></td><td>Per-subscriber: <code class="inline">Response[].ReferenceId == subRefId &amp;&amp; CompletionStatus==2</code></td><td>Skips subscribers already responded — prevents duplicate sends</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§6.2 Activity Parameters Read via <code class="inline">GetActivityParameterValueFromKey</code></h3>
+      <div class="param-grid">
+        <div class="param-card"><div class="param-name">command</div><div class="param-desc">CRM operation command (e.g., "Activate", "Preactivate", "Cancel")</div></div>
+        <div class="param-card"><div class="param-name">orderType</div><div class="param-desc">CRM order type override</div></div>
+        <div class="param-card"><div class="param-name">listOfRootLineItemAction</div><div class="param-desc">Action for root line items in the CRM order</div></div>
+        <div class="param-card"><div class="param-name">listOfRootLineItemStatus</div><div class="param-desc">Status for root line items</div></div>
+        <div class="param-card"><div class="param-name">listOfLineItemAction</div><div class="param-desc">Action for child line items</div></div>
+        <div class="param-card"><div class="param-name">listOfLineItemStatus</div><div class="param-desc">Status for child line items</div></div>
+        <div class="param-card"><div class="param-name">mappingValueFrom</div><div class="param-desc">Controls which source is used for value mapping</div></div>
+        <div class="param-card"><div class="param-name">ignoreBRMS</div><div class="param-desc">Bypasses BRMS-derived fields when "true"</div></div>
+        <div class="param-card"><div class="param-name">ignoreResourceInfo</div><div class="param-desc">Excludes ResourceInfo block when "true"</div></div>
+        <div class="param-card"><div class="param-name">ignoreLanguage</div><div class="param-desc">Excludes Language field when "true"</div></div>
+        <div class="param-card"><div class="param-name">ignoreAssetRowId</div><div class="param-desc">Excludes AssetRowId from CRM payload when "true"</div></div>
+        <div class="param-card"><div class="param-name">PROJ</div><div class="param-desc">Project/campaign identifier injected into CRM order</div></div>
+        <div class="param-card"><div class="param-name">mnpPortType</div><div class="param-desc">MNP porting direction ("In"/"Out") — fallback: orderType 57→"In", 60→"Out"</div></div>
+        <div class="param-card"><div class="param-name">USE_ROWID_CRM</div><div class="param-desc">Controls which subscriber ID field is used via <code class="inline">MapSubscriberIdFromCRM</code></div></div>
+      </div>
+      <div class="warn-box" style="margin-top:12px">
+        <strong>[LOW]</strong> <code class="inline">ignoreListOfLineItem</code> parameter extraction is commented out — partial cleanup; dead-code parameter may still exist in ProcessConfig XML.
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3>§6.3 Date Formatting (Bangkok Timezone)</h3>
+      <table>
+        <tr><th>Field</th><th>Source</th><th>TZ Conversion</th><th>Format</th></tr>
+        <tr><td><code class="inline">submissionDateFormat</code></td><td><code class="inline">orderRequest.SubmissionDate</code></td><td>Yes — Asia/Bangkok</td><td><code class="inline">yyyy-MM-dd'T'HH:mm:ss.SSSZ</code></td></tr>
+        <tr><td><code class="inline">l9TmvActDateFormat</code></td><td><code class="inline">sub.SubscriberGeneralInfo.l9TmvActDate</code></td><td>Yes — Asia/Bangkok</td><td><code class="inline">yyyy-MM-dd'T'HH:mm:ss.SSSZ</code></td></tr>
+        <tr><td><code class="inline">ProofDateFormat</code></td><td><code class="inline">sub.SubscriberGeneralInfo.ProofDate</code></td><td><strong>No</strong> (code commented out)</td><td><code class="inline">yyyy-MM-dd'T'HH:mm:ss.SSSZ</code></td></tr>
+        <tr><td><code class="inline">sysDateFormat</code></td><td><code class="inline">DateTime.now()</code></td><td>Yes — Asia/Bangkok</td><td><code class="inline">yyyy-MM-dd'T'HH:mm:ss.SSSZ</code></td></tr>
+      </table>
+      <div class="warn-box" style="margin-top:8px"><strong>[MEDIUM]</strong> ProofDate is formatted <em>without</em> Bangkok timezone conversion (the conversion code is commented out). If ProofDate is stored in UTC, CRM will receive an incorrect timestamp — typically 7 hours early for Bangkok.</div>
+    </div>
+
+    <div class="sub-section">
+      <h3>§6.4 CustomerTypeInfo Guard</h3>
+      <pre><span class="kw">if</span> (orderRequest.OrderData.Customer.CustomerTypeInfo == <span class="kw">null</span> ||
+    orderRequest.OrderData.Customer.CustomerTypeInfo.Type == <span class="nm">0</span>)
+    <span class="kw">throw</span> Exception.newException(<span class="st">"DATA_ISSUE"</span>,<span class="st">"CustomerTypeInfo.type not found"</span>, <span class="kw">null</span>);</pre>
+    </div>
+
+    <div class="sub-section">
+      <h3>§6.5 MNP Port Type Logic</h3>
+      <p>The <code class="inline">mnpPortType</code> is determined when:</p>
+      <ul style="margin-left:20px;margin-top:6px;margin-bottom:6px;font-size:0.82rem">
+        <li>Order-level MNP fields (DonorOperator, DonorZoneCode, RCPOperator, RCPZoneCode) are present, <strong>OR</strong></li>
+        <li>Command is "Activate"/"Preactivate" <strong>AND</strong> subscriber ExtendedInfo DONOR_OPERATOR, DONOR_ZONE, REC_OPERATOR, or REC_ZONE contains a non-"64" country code</li>
+      </ul>
+      <p>Fallback when <code class="inline">mnpPortType</code> parameter is blank: orderType "57" → "In"; orderType "60" → "Out".</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>§6.6 CRM Subscriber ID Mapping</h3>
+      <pre><span class="ty">String</span> subIdCrm = RuleFunctions.Helpers.MapSubscriberIdFromCRM(sub, useRowIdCrmParam);</pre>
+      <p>Selects which CRM ID field to use as the subscriber identifier in the CRM request, controlled by the <code class="inline">USE_ROWID_CRM</code> parameter.</p>
+    </div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header"><div class="section-num">7</div><h2>§7 — Data Extraction</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field extracted</th><th>Method</th><th>Purpose</th></tr>
+      <tr><td><code class="inline">title</code></td><td><code class="inline">RuleFunctions.Transformers.TitleTransformer2(sub.SubscriberName.Title)</code></td><td>Normalises salutation codes to CRM-accepted values</td></tr>
+      <tr><td>MNP donor/recipient ExtendedInfo</td><td><code class="inline">XPath.evalAsBoolean(sub/ExtendedInfo[Name="DONOR_OPERATOR"]...)</code></td><td>Detects cross-border MNP scenarios</td></tr>
+      <tr><td><code class="inline">subIdCrm</code></td><td><code class="inline">MapSubscriberIdFromCRM(sub, useRowIdCrmParam)</code></td><td>Selects correct CRM subscriber ID field</td></tr>
+      <tr><td>Per-subscriber XML</td><td><code class="inline">GetXMLForSubscriber / GetXMLForSubscriberInChildOU</code></td><td>Provides XML context for PreExecCheck evaluation</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="section">
+  <div class="section-header"><div class="section-num">8</div><h2>§8 — System &amp; Integration Dependencies</h2></div>
+  <div class="section-body">
+    <div class="sub-section">
+      <h3>§8.1 Order Type Dependencies</h3>
+      <table>
+        <tr><th>Scenario</th><th>Effect</th></tr>
+        <tr><td>OrderType "57" (MNP-In) — parameter fallback</td><td>mnpPortType defaults to "In"</td></tr>
+        <tr><td>OrderType "60" (MNP-Out) — parameter fallback</td><td>mnpPortType defaults to "Out"</td></tr>
+        <tr><td><code class="inline">IsOrderResubmitted = true</code></td><td>RequestCount not incremented — fan-in preserved</td></tr>
+      </table>
+    </div>
+    <div class="sub-section">
+      <h3>§8.2 ESB / JMS Channel Dependencies</h3>
+      <table>
+        <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Protocol</th><th>Purpose</th></tr>
+        <tr><td><span class="badge b-jms">OUTBOUND</span></td><td><code class="inline">/Channels/OMXFMConnectionRequest</code></td><td><code class="inline">CRM_CREATE_ORDER_PREPAID</code></td><td>JMS</td><td>Send CRM order creation request per subscriber</td></tr>
+        <tr><td><span class="badge b-jms">INBOUND</span></td><td><code class="inline">/Channels/OMXFMConnectionResponse</code></td><td>CRM_CREATE_ORDER response queue</td><td>JMS</td><td>Receive CRM order row ID + asset row ID</td></tr>
+      </table>
+    </div>
+    <div class="sub-section">
+      <h3>§8.3 Backend API Details</h3>
+      <table>
+        <tr><th>Item</th><th>Value</th></tr>
+        <tr><td>Backend system</td><td>CRM (Customer Relationship Management)</td></tr>
+        <tr><td>Request schema</td><td><code class="inline">CRMCreateOrderRequest</code> — CRMCreateOrder.xsd</td></tr>
+        <tr><td>Response schema</td><td><code class="inline">CRMCreateOrderResponse</code> — CRMCreateOrder.xsd</td></tr>
+        <tr><td>Key response fields</td><td><code class="inline">CRMCreateOrderResponse/orderRowId</code> → <code class="inline">sub.SubscriberCrmId</code>; <code class="inline">CRMCreateOrderResponse/assetRowId</code> → <code class="inline">sub.AssetCrmId</code></td></tr>
+      </table>
+    </div>
+    <div class="sub-section">
+      <h3>§8.4 ExtendedInfo Fields Read</h3>
+      <table>
+        <tr><th>ExtendedInfo Name</th><th>Scope</th><th>Purpose</th></tr>
+        <tr><td><code class="inline">DONOR_OPERATOR</code></td><td>Subscriber</td><td>MNP donor network detection (non-"64" = cross-border)</td></tr>
+        <tr><td><code class="inline">DONOR_ZONE</code></td><td>Subscriber</td><td>MNP donor zone detection</td></tr>
+        <tr><td><code class="inline">REC_OPERATOR</code></td><td>Subscriber</td><td>MNP recipient network detection</td></tr>
+        <tr><td><code class="inline">REC_ZONE</code></td><td>Subscriber</td><td>MNP recipient zone detection</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header"><div class="section-num">9</div><h2>§9 — Detailed Payload Build</h2></div>
+  <div class="section-body">
+    <div class="info-box">
+      The request payload is built inline via a large XSLT embedded in the <code class="inline">Event.createEvent("xslt://{{...}}")</code> call. The XSLT constructs a <code class="inline">CRMCreateOrderRequest</code> XML document using the parameters extracted in §6.2 and subscriber data. Two variants exist (ParentOU and ChildOU) differing only in the subscriber XML context variable name. Because the XSLT strings are single-line embedded strings exceeding the file-read token limit, the full XSLT is documented structurally below.
+    </div>
+    <div class="sub-section" style="margin-top:12px">
+      <h3>§9.1 XSLT Parameters Bound</h3>
+      <table>
+        <tr><th>Parameter</th><th>Source</th></tr>
+        <tr><td><code class="inline">$orderRequest</code></td><td>Full order concept</td></tr>
+        <tr><td><code class="inline">$sub</code></td><td>Current subscriber concept</td></tr>
+        <tr><td><code class="inline">$command</code></td><td>Activity parameter "command"</td></tr>
+        <tr><td><code class="inline">$orderType</code></td><td>Activity parameter "orderType"</td></tr>
+        <tr><td><code class="inline">$listOfRootLineItemAction</code></td><td>Activity parameter</td></tr>
+        <tr><td><code class="inline">$listOfRootLineItemStatus</code></td><td>Activity parameter</td></tr>
+        <tr><td><code class="inline">$listOfLineItemAction</code></td><td>Activity parameter</td></tr>
+        <tr><td><code class="inline">$listOfLineItemStatus</code></td><td>Activity parameter</td></tr>
+        <tr><td><code class="inline">$submissionDateFormat</code></td><td>Formatted SubmissionDate (Bangkok TZ)</td></tr>
+        <tr><td><code class="inline">$l9TmvActDateFormat</code></td><td>Formatted l9TmvActDate (Bangkok TZ)</td></tr>
+        <tr><td><code class="inline">$ProofDateFormat</code></td><td>Formatted ProofDate (NO TZ conversion — bug)</td></tr>
+        <tr><td><code class="inline">$sysDateFormat</code></td><td>Current system datetime (Bangkok TZ)</td></tr>
+        <tr><td><code class="inline">$mnpPortType</code></td><td>MNP port direction ("In"/"Out"/"")</td></tr>
+        <tr><td><code class="inline">$subIdCrm</code></td><td>Mapped CRM subscriber ID</td></tr>
+        <tr><td><code class="inline">$runningOrderNumber</code></td><td>Sequence counter (starts at 1 per subscriber)</td></tr>
+        <tr><td><code class="inline">$mappingValueFrom</code>, <code class="inline">$ignoreBRMS</code>, <code class="inline">$ignoreResourceInfo</code>, <code class="inline">$ignoreLanguage</code>, <code class="inline">$ignoreAssetRowId</code>, <code class="inline">$projValue</code></td><td>Activity parameters (behaviour flags)</td></tr>
+        <tr><td><code class="inline">$globalVariables</code></td><td>Global variable store (JMS headers, CRM credentials)</td></tr>
+      </table>
+    </div>
+    <div class="sub-section">
+      <h3>§9.2 Event Container</h3>
+      <table>
+        <tr><th>Field</th><th>Value</th></tr>
+        <tr><td>Event type</td><td><code class="inline">Events.OMConsumers.OMXFM.Request.CRM_CREATE_ORDER</code></td></tr>
+        <tr><td>Event extId</td><td><code class="inline">OMXUtils.generateTrackingID()</code></td></tr>
+        <tr><td>Channel</td><td><code class="inline">/Channels/OMXFMConnectionRequest</code></td></tr>
+        <tr><td>Destination</td><td><code class="inline">CRM_CREATE_ORDER_PREPAID</code></td></tr>
+      </table>
+    </div>
+    <div class="sub-section">
+      <h3>§9.3 JMS / Event Header Fields</h3>
+      <table>
+        <tr><th>Header</th><th>Value</th></tr>
+        <tr><td>JMSPriority</td><td>From global variable JMSPriority</td></tr>
+        <tr><td>JMSCorrelationID</td><td><code class="inline">orderRequest.OrderData.OMXTrackingId</code></td></tr>
+        <tr><td>OrderID</td><td><code class="inline">orderRequest.OrderData.OrderID</code></td></tr>
+        <tr><td>RefID</td><td><code class="inline">subRefId</code> (per-subscriber reference)</td></tr>
+        <tr><td>OrderType</td><td><code class="inline">orderRequest.OrderData.OrderType</code></td></tr>
+        <tr><td>UserName / Password</td><td>From global variables (gated by IsEnableUserPass = "true")</td></tr>
+      </table>
+    </div>
+    <div class="sub-section">
+      <h3>§9.4 CRMCreateOrderRequest — Key Payload Fields</h3>
+      <table>
+        <tr><th>XML Field</th><th>Source / Logic</th></tr>
+        <tr><td>command</td><td>Activity parameter <code class="inline">command</code></td></tr>
+        <tr><td>orderType</td><td>Activity parameter <code class="inline">orderType</code></td></tr>
+        <tr><td>submissionDate</td><td><code class="inline">$submissionDateFormat</code> (Bangkok TZ formatted)</td></tr>
+        <tr><td>contactId / accountId</td><td>From subscriber CRM IDs / order customer account</td></tr>
+        <tr><td>listOfRootLineItem[action]</td><td><code class="inline">$listOfRootLineItemAction</code></td></tr>
+        <tr><td>listOfRootLineItem[status]</td><td><code class="inline">$listOfRootLineItemStatus</code></td></tr>
+        <tr><td>listOfLineItem[action]</td><td><code class="inline">$listOfLineItemAction</code></td></tr>
+        <tr><td>listOfLineItem[status]</td><td><code class="inline">$listOfLineItemStatus</code></td></tr>
+        <tr><td>mnpPortType</td><td>Computed MNP port direction</td></tr>
+        <tr><td>title</td><td><code class="inline">RuleFunctions.Transformers.TitleTransformer2(sub.SubscriberName.Title)</code></td></tr>
+        <tr><td>PROJ</td><td>Activity parameter <code class="inline">PROJ</code></td></tr>
+        <tr><td>l9TmvActDate</td><td><code class="inline">$l9TmvActDateFormat</code> (Bangkok TZ)</td></tr>
+        <tr><td>proofDate</td><td><code class="inline">$ProofDateFormat</code> (UTC — timezone bug)</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header"><div class="section-num">10</div><h2>§10 — XSLT Field Mapping — Request Event Tree</h2></div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span><span class="tree-cond">[JMS headers block]</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/.../JMSPriority</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$subRefId</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/UserName</span><span class="badge b-purple">Credential-gated: IsEnableUserPass="true"</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Password</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/Password</span><span class="badge b-purple">Credential-gated: IsEnableUserPass="true"</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">CRMCreateOrderRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">command</span><span class="tree-arrow">←</span><span class="tree-src-static">$command</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">orderType</span><span class="tree-arrow">←</span><span class="tree-src-static">$orderType</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">submissionDate</span><span class="tree-arrow">←</span><span class="tree-src">$submissionDateFormat</span><span class="badge b-orange">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">subscriberId</span><span class="tree-arrow">←</span><span class="tree-src">$subIdCrm</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">mnpPortType</span><span class="tree-arrow">←</span><span class="tree-src-static">$mnpPortType</span><span class="badge b-orange">Conditional: MNP detected</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">title</span><span class="tree-arrow">←</span><span class="tree-src">TitleTransformer2(sub.SubscriberName.Title)</span><span class="badge b-orange">Conditional: SubscriberName != null</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">l9TmvActDate</span><span class="tree-arrow">←</span><span class="tree-src">$l9TmvActDateFormat</span><span class="badge b-orange">Conditional: non-null</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">proofDate</span><span class="tree-arrow">←</span><span class="tree-src">$ProofDateFormat</span><span class="tree-cond">[BUG: no Bangkok TZ conversion]</span><span class="badge b-orange">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">PROJ</span><span class="tree-arrow">←</span><span class="tree-src-static">$projValue</span><span class="badge b-orange">Conditional: non-empty</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">listOfRootLineItem</span><span class="badge b-orange">Conditional: param non-empty</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">action</span><span class="tree-arrow">←</span><span class="tree-src-static">$listOfRootLineItemAction</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">status</span><span class="tree-arrow">←</span><span class="tree-src-static">$listOfRootLineItemStatus</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">listOfLineItem</span><span class="badge b-orange">Conditional: param non-empty</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">action</span><span class="tree-arrow">←</span><span class="tree-src-static">$listOfLineItemAction</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">status</span><span class="tree-arrow">←</span><span class="tree-src-static">$listOfLineItemStatus</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:10px;font-size:0.8rem;color:#666"><strong>Legend:</strong> <span style="color:#a6e3a1">Green</span> = dynamic XPath | <span style="color:#fab387">Orange</span> = param/static value | <span class="badge b-green">Always</span> | <span class="badge b-orange">Conditional</span> | <span class="badge b-purple">Credential-gated</span></p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header"><div class="section-num">11</div><h2>§11 — Audit Logging</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>When</th><th>PROCESS_ID</th><th>AUDIT_TRACE</th><th>Gated?</th><th>Payload</th></tr>
+      <tr><td>Per-subscriber request sent</td><td><code class="inline">pid + "_REQ"</code></td><td>"Request Sent for CRM_CREATE_ORDER_PREPAID"</td><td>AllowWriteLog</td><td>reqEvent (WritePayload-gated)</td></tr>
+      <tr><td>Per-subscriber response received</td><td><code class="inline">pid + "_RES"</code></td><td>"Response received for CRM_CREATE_ORDER_PREPAID"</td><td>None</td><td>eventResponse (WritePayload-gated)</td></tr>
+    </table>
+    <p style="margin-top:8px;font-size:0.82rem">REQUEST log is AllowWriteLog-gated (by order type). RESPONSE log is NOT AllowWriteLog-gated — always fires when WritePayload=true.</p>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header"><div class="section-num">12</div><h2>§12 — Activity Status Management</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Outcome</th><th>Mechanism</th><th>Effect</th></tr>
+      <tr><td>At least one request sent</td><td><code class="inline">GetActivityStatusString("1", false)</code> + <code class="inline">SendDataToDB</code></td><td>Status = IN_PROGRESS; DB flushed</td></tr>
+      <tr><td>No requests sent (all subscribers skipped)</td><td><code class="inline">SkipActivity("4")</code></td><td>Activity SKIPPED</td></tr>
+      <tr><td>Resubmit mode</td><td><code class="inline">isActResub = true</code> → RequestCount not incremented</td><td>Fan-in counter preserved from previous run</td></tr>
+      <tr><td>DATA_ISSUE exception</td><td><code class="inline">HandleActivityException</code></td><td>Activity FAILED</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header"><div class="section-num">13</div><h2>§13 — Exception / Error Handling</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Type</th><th>Code</th><th>Trigger</th></tr>
+      <tr><td>DATA_ISSUE</td><td><code class="inline">Exception.newException("DATA_ISSUE", "CustomerTypeInfo.type not found", null)</code></td><td>CustomerTypeInfo is null or Type == 0</td></tr>
+      <tr><td>Generic</td><td><code class="inline">HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td><td>Any other uncaught exception</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">14</div><h2>§14 — Helper Functions Reference</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Return</th><th>Purpose</th></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.GetActivityParameterValueFromKey(act, key)</code></td><td>String</td><td>Reads named Parameter from ProcessConfig activity</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.GetXMLForSubscriber(req, refId)</code></td><td>String (XML)</td><td>Serialises order scoped to a ParentOU subscriber for PreExecCheck</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(req, cSubRefId, cOuRefId)</code></td><td>String (XML)</td><td>Serialises order scoped to a ChildOU subscriber for PreExecCheck</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.MapSubscriberIdFromCRM(sub, useRowIdCrmParam)</code></td><td>String</td><td>Selects appropriate CRM subscriber ID based on parameter flag</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Transformers.TitleTransformer2(title)</code></td><td>String</td><td>Maps subscriber title code to CRM-accepted salutation</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(s)</code></td><td>boolean</td><td>Null/blank guard for string fields</td></tr>
+      <tr><td><code class="inline">IntraActivitySequencing.ActionRequestEvent(act, refId)</code></td><td>void</td><td>Registers outbound request for fan-in tracking</td></tr>
+      <tr><td><code class="inline">IntraActivitySequencing.SendFirstRequestEvent(act, "")</code></td><td>void</td><td>Signals first request sent in this activity</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.AllowWriteLog(orderType)</code></td><td>boolean</td><td>Gates request audit log by order type</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.GetActivityStatusString("1", false)</code></td><td>String</td><td>Returns IN_PROGRESS status string</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.SendDataToDB(req)</code></td><td>void</td><td>Persists order state to DB</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.SkipActivity(req, act, "4")</code></td><td>void</td><td>Marks activity as skipped</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.HandleActivityException(req, act, ae, "")</code></td><td>void</td><td>Generic exception handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header"><div class="section-num">15</div><h2>§15 — Function Dependency Tree</h2></div>
+  <div class="section-body">
+    <pre>Request_CRM_CREATE_ORDER_PREPAID (rule)
+├── Instance.getByExtIdByUri(NextActivityName, ...)                            [BE built-in]
+├── [FOR each ParentOU/Subscriber]
+│   ├── Response[].CompletionStatus == 2 check                                [skip guard]
+│   ├── RuleFunctions.Helpers.GetXMLForSubscriber(req, pSubRefId)             [helper]
+│   ├── XPath.execute(PreExecCheck, sXML, ns)                                 [BE built-in]
+│   ├── RuleFunctions.Helpers.GetActivityParameterValueFromKey(act, key) ×14  [helper]
+│   ├── DateTime.translateTime(date, "Asia/Bangkok") + DateTime.format(...)   [BE built-in]
+│   ├── RuleFunctions.Helpers.MapSubscriberIdFromCRM(sub, param)              [helper]
+│   ├── RuleFunctions.Transformers.TitleTransformer2(title)                   [transformer]
+│   ├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(mnpPortType)           [helper]
+│   ├── XPath.evalAsBoolean(MNP ExtendedInfo checks) ×4                       [BE built-in]
+│   ├── Exception.newException("DATA_ISSUE", ...) [if CustomerTypeInfo null]  [BE built-in]
+│   ├── Event.createEvent("xslt://{{CRM_CREATE_ORDER}}...")                   [BE built-in]
+│   ├── Event.assertEvent(reqEvent)                                            [BE built-in]
+│   ├── IntraActivitySequencing.ActionRequestEvent(act, refId)                [helper]
+│   ├── IntraActivitySequencing.SendFirstRequestEvent(act, "")                [helper]
+│   ├── Event.Ext.sendEventImmediate(reqEvent)                                [BE built-in]
+│   └── [if AllowWriteLog] Event.Ext.sendEventImmediate(Logger _REQ)         [BE built-in]
+├── [FOR each ChildOU/Subscriber] — same as above with GetXMLForSubscriberInChildOU
+├── [IF !isSkipped]
+│   ├── RuleFunctions.Helpers.GetActivityStatusString("1", false)             [helper]
+│   └── RuleFunctions.Helpers.SendDataToDB(req)                               [helper]
+├── [ELSE]
+│   └── RuleFunctions.Helpers.SkipActivity(req, act, "4")                    [helper]
+└── [CATCH]
+    └── RuleFunctions.Helpers.HandleActivityException(req, act, ae, "")       [helper]</pre>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">16</div><h2>§16 — Concept Definitions Referenced</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Written / Read</th></tr>
+      <tr><td><code class="inline">orderCurrentActivity.RequestCount</code></td><td>int</td><td>Read (resubmit check); incremented per subscriber (if !isActResub)</td></tr>
+      <tr><td><code class="inline">orderCurrentActivity.Status</code></td><td>String</td><td>Written: "1" (IN_PROGRESS) or "4" (SKIPPED)</td></tr>
+      <tr><td><code class="inline">orderCurrentActivity.Response[]</code></td><td>Array of ResponseBase</td><td>Read (reqSuccess check) in request; written in response rulefunction</td></tr>
+      <tr><td><code class="inline">sub.SubscriberCrmId</code></td><td>String</td><td>Written in response: CRMCreateOrderResponse/orderRowId</td></tr>
+      <tr><td><code class="inline">sub.AssetCrmId</code></td><td>String</td><td>Written in response (if blank): CRMCreateOrderResponse/assetRowId</td></tr>
+      <tr><td><code class="inline">currActivity.ResponseCode</code></td><td>String</td><td>Written in response: eventResponse.ResponseCode</td></tr>
+      <tr><td><code class="inline">currActivity.ResponseMessage</code></td><td>String</td><td>Written in response: eventResponse.ResponseMsg</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header"><div class="section-num">17</div><h2>§17 — Migration Notes &amp; Recommendations</h2></div>
+  <div class="section-body">
+    <div class="sub-section">
+      <h3>Functional Requirements</h3>
+      <table>
+        <tr><th>ID</th><th>Requirement</th></tr>
+        <tr><td>R1</td><td>For each subscriber (ParentOU and ChildOU), send a CRM create order request over JMS</td></tr>
+        <tr><td>R2</td><td>Skip subscribers that already have a successful response (CompletionStatus == 2) — idempotency</td></tr>
+        <tr><td>R3</td><td>Extract 14 activity parameters from ProcessConfig to control CRM payload behaviour</td></tr>
+        <tr><td>R4</td><td>Format dates to Bangkok timezone ISO-8601 before including in payload</td></tr>
+        <tr><td>R5</td><td>Detect MNP scenarios from order-level fields or subscriber ExtendedInfo and include mnpPortType in request</td></tr>
+        <tr><td>R6</td><td>Guard on CustomerTypeInfo.Type — abort with DATA_ISSUE if missing</td></tr>
+        <tr><td>R7</td><td>On response: write orderRowId to SubscriberCrmId; write assetRowId to AssetCrmId (if blank)</td></tr>
+        <tr><td>R8</td><td>Fan-in: return "true" only when count of responses with ResponseCode suffix "000" equals RequestCount</td></tr>
+      </table>
+    </div>
+    <div class="sub-section" style="margin-top:16px">
+      <h3>Design Risks</h3>
+      <table>
+        <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+        <tr><td>ProofDate sent without Bangkok TZ conversion — CRM receives UTC time (~7 hours off)</td><td><span class="badge b-orange">MEDIUM</span></td><td>Uncomment <code class="inline">proofDate = DateTime.translateTime(proofDate, "Asia/Bangkok")</code> after confirming stored timezone</td></tr>
+        <tr><td>reqSuccess uses <code class="inline">CompletionStatus == 2</code> only — may not match all success variants</td><td><span class="badge b-orange">MEDIUM</span></td><td>Align with fan-in success check (ResponseCode suffix "000") for consistency</td></tr>
+        <tr><td>Large file (286KB) with embedded XSLT — extremely hard to maintain, review, or diff</td><td><span class="badge b-orange">MEDIUM</span></td><td>Externalise XSLT to separate template file; load at runtime</td></tr>
+        <tr><td>Two nearly identical loops (ParentOU + ChildOU) — changes must be applied twice</td><td><span class="badge b-orange">MEDIUM</span></td><td>Extract common subscriber-request logic into a shared rulefunction</td></tr>
+        <tr><td>Commented-out <code class="inline">ignoreListOfLineItem</code> parameter — dead code</td><td><span class="badge b-red">LOW</span></td><td>Remove or document</td></tr>
+        <tr><td>Old commented-out ResponseBase variant in response rulefunction (uses <code class="inline">$eventResponse/@extId</code>)</td><td><span class="badge b-red">LOW</span></td><td>Remove stale code</td></tr>
+        <tr><td><code class="inline">TitleTransformer2</code> called only when <code class="inline">SubscriberName != null</code> — if SubscriberName exists but Title is null, transformer may throw</td><td><span class="badge b-red">LOW</span></td><td>Add null guard on Title field before calling transformer</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="section">
+  <div class="section-header"><div class="section-num">18</div><h2>§18 — Full Source Code (Structural Summary)</h2></div>
+  <div class="section-body">
+    <div class="info-box">The rule file is 286KB due to large inline XSLT strings embedded in <code class="inline">Event.createEvent("xslt://{{...}}")</code> calls. The XSLT content is documented in §9. Below is the rule skeleton with XSLT payloads replaced by structural comments referencing §9.</div>
+    <pre><span class="cm">/**
+ * @description
+ * @author CHAYATORN-PC
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_CRM_CREATE_ORDER_PREPAID</span> {
+    <span class="kw">attribute</span> { priority = <span class="nm">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"CRM_CREATE_ORDER_PREPAID"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"CRM_CREATE_ORDER_PREPAID"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount > <span class="nm">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">try</span> {
+            <span class="ty">Activity</span> nextAct = Instance.getByExtIdByUri(NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="cm">/*** Begin ParentOU ***/</span>
+            <span class="kw">for</span> (<span class="kw">int</span> p = <span class="nm">0</span>; p &lt; pOuLen; p++) {
+                <span class="cm">/*** Begin ParentOU Subscriber ***/</span>
+                <span class="kw">for</span> (<span class="kw">int</span> ps = <span class="nm">0</span>; ps &lt; pSubLen; ps++) {
+                    <span class="cm">// reqSuccess check: skip if already responded (CompletionStatus==2)</span>
+                    <span class="kw">if</span>(!reqSuccess) {
+                        <span class="cm">// Extract 14 parameters, format dates, determine mnpPortType, check CustomerTypeInfo</span>
+                        <span class="ty">Events.OMConsumers.OMXFM.Request.CRM_CREATE_ORDER</span> reqEvent =
+                            Event.createEvent(<span class="cm">/* §9: CRMCreateOrderRequest XSLT — ParentOU variant */</span>);
+                        Event.assertEvent(reqEvent);
+                        IntraActivitySequencing.ActionRequestEvent(orderCurrentActivity, pSubRefId);
+                        IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity, <span class="st">""</span>);
+                        Event.Ext.sendEventImmediate(reqEvent);
+                        runningOrderNumber++;
+                        isSkipped = <span class="kw">false</span>;
+                        <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                        <span class="kw">if</span>(AllowWriteLog(OrderType)) {
+                            Event.Ext.sendEventImmediate(Event.createEvent(<span class="cm">/* §11: Logger _REQ */</span>));
+                        }
+                    }
+                }
+                <span class="cm">/*** End ParentOU Subscriber ***/</span>
+
+                <span class="cm">/*** Begin ChildOU (nested loop — same logic with GetXMLForSubscriberInChildOU) ***/</span>
+                <span class="kw">for</span> (<span class="kw">int</span> c = <span class="nm">0</span>; c &lt; cOuLen; c++) {
+                    <span class="kw">for</span> (<span class="kw">int</span> cs = <span class="nm">0</span>; cs &lt; cSubLen; cs++) {
+                        <span class="cm">// Same pattern: reqSuccess check → extract params → build event → send</span>
+                        <span class="ty">Events.OMConsumers.OMXFM.Request.CRM_CREATE_ORDER</span> reqEvent =
+                            Event.createEvent(<span class="cm">/* §9: CRMCreateOrderRequest XSLT — ChildOU variant */</span>);
+                        Event.assertEvent(reqEvent);
+                        IntraActivitySequencing.ActionRequestEvent(orderCurrentActivity, cSubRefId);
+                        IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity, <span class="st">""</span>);
+                        Event.Ext.sendEventImmediate(reqEvent);
+                        isSkipped = <span class="kw">false</span>;
+                        <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                    }
+                }
+                <span class="cm">/*** End ChildOU ***/</span>
+            }
+            <span class="cm">/*** End ParentOU ***/</span>
+
+            <span class="kw">if</span> (!isSkipped) {
+                orderCurrentActivity.Status = GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+                RuleFunctions.Helpers.SendDataToDB(orderRequest);
+            } <span class="kw">else</span> {
+                RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+            }
+        } <span class="kw">catch</span> (Exception ae) {
+            RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="section">
+  <div class="section-header"><div class="section-num">19</div><h2>§19 — Response Message Rule</h2></div>
+  <div class="section-body">
+    <div class="sub-section">
+      <h3>§19.1 Overview</h3>
+      <p>Parses the CRM create order response, creates a <code class="inline">ResponseBase</code> concept, writes CRM row IDs back to subscriber concepts, emits a response audit log, and drives fan-in completion. Returns "true" if all subscriber requests succeeded.</p>
+    </div>
+    <div class="sub-section">
+      <h3>§19.2 Scope Variables</h3>
+      <table>
+        <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+        <tr><td><code class="inline">orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Root order — subscriber hierarchy iterated to match RefID</td></tr>
+        <tr><td><code class="inline">eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.CRM_CREATE_ORDER</td><td>CRM response event — ResponseCode, ResponseMsg, CompletionStatus, RefID, payload</td></tr>
+        <tr><td><code class="inline">currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity — Response[] appended; RequestCount read for fan-in</td></tr>
+      </table>
+    </div>
+    <div class="sub-section">
+      <h3>§19.3 ResponseBase Concept Construction</h3>
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span><span class="tree-cond">[/Concepts/FM/Base/ResponseBase]</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">extId</span><span class="tree-arrow">←</span><span class="tree-src">ns:generateTrackingID()</span><span class="badge b-green">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[source field: ResponseMsg ≠ ResponseMessage]</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge b-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">[source field: RefID ≠ ReferenceId]</span><span class="badge b-orange">Conditional</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="sub-section">
+      <h3>§19.4 CRM Row ID Write-Back</h3>
+      <p>After appending ResponseBase, the response iterates all ParentOU/Subscriber and ChildOU/Subscriber concepts to find the matching <code class="inline">RefId == eventResponse.RefID</code>. On match:</p>
+      <table>
+        <tr><th>Field written</th><th>Source XPath</th><th>Condition</th></tr>
+        <tr><td><code class="inline">sub.SubscriberCrmId</code></td><td><code class="inline">$eventResponse/payload/CRMCreateOrderResponse/orderRowId</code></td><td>Always (on match)</td></tr>
+        <tr><td><code class="inline">sub.AssetCrmId</code></td><td><code class="inline">$eventResponse/payload/CRMCreateOrderResponse/assetRowId</code></td><td>Only if <code class="inline">sub.AssetCrmId</code> is blank/null</td></tr>
+      </table>
+      <div class="warn-box" style="margin-top:8px"><strong>[LOW]</strong> A commented-out ResponseBase variant uses <code class="inline">$eventResponse/@extId</code> as the ResponseBase extId instead of <code class="inline">generateTrackingID()</code>. The active version always generates a new ID — stale variant should be removed.</div>
+    </div>
+    <div class="sub-section">
+      <h3>§19.5 Response Completion Logic (Fan-in)</h3>
+      <table>
+        <tr><th>Step</th><th>Expression</th><th>Purpose</th></tr>
+        <tr><td>Success count</td><td><code class="inline">count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td><td>Counts responses with code suffix "000" (success)</td></tr>
+        <tr><td>Fan-in check</td><td><code class="inline">currActivity.RequestCount == successResponseCount</code></td><td>All parallel subscriber requests succeeded</td></tr>
+        <tr><td>Return "true"</td><td>All matched</td><td>Activity fan-in complete — process flow advances</td></tr>
+        <tr><td>Return "false"</td><td>Not yet matched</td><td>Still waiting for more responses</td></tr>
+      </table>
+    </div>
+    <div class="sub-section">
+      <h3>§19.6 Response Audit Log</h3>
+      <table>
+        <tr><th>Field</th><th>Value</th></tr>
+        <tr><td>ESBUUID</td><td><code class="inline">$orderRequest/OrderData/OMXTrackingId</code> (conditional)</td></tr>
+        <tr><td>PROCESS_ID</td><td><code class="inline">concat($pid, "_RES")</code></td></tr>
+        <tr><td>OPERATION_NAME</td><td><code class="inline">"CRM_CREATE_ORDER_PREPAID"</code></td></tr>
+        <tr><td>TARGET_SYSTEM</td><td><code class="inline">$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+        <tr><td>AUDIT_TRACE</td><td><code class="inline">"Response received for CRM_CREATE_ORDER_PREPAID"</code></td></tr>
+        <tr><td>AUDIT_TS</td><td><code class="inline">tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+        <tr><td>payload</td><td><code class="inline">eventResponse</code> (WritePayload-gated)</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="footer">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</div>
+</body>
+</html>

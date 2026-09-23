@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_UPD_CREDIT_LIMIT</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+.badge-high{background:#FFE0E0;color:var(--true-dark)}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CCBS_UPD_CREDIT_LIMIT</h1>
+  <div class="subtitle">CCBS Credit Limit Update — compound 3-sub-request payload with calCRFlag-aware activityReason</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: CCBS</span>
+    <span class="meta-chip">Author: awalia-t420</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: IntraActivitySequencing</span>
+    <span class="meta-chip">Iteration: Account[]</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>CCBS_UPD_CREDIT_LIMIT</strong> updates the credit limit on existing CCBS accounts. Sends a compound <code>UpdateCreditLimitRequest</code> containing three sub-operations to CCBS in a single message.
+    </div>
+    <div class="callout info">
+      <strong>Standard IntraActivitySequencing pattern</strong> — unlike FM21/FM22/FM23/FM26, this FM uses <code>Event.assertEvent + IntraActivitySequencing.ActionRequestEvent</code>. Fan-in uses <code>IntraActivitySequencing.ActionResponseEvent</code>.
+    </div>
+    <div class="callout warn">
+      <strong>calCRFlag gate:</strong> Checks order ExtInfo for <code>CAL_CR_FLG=Y</code> via XPath boolean. If true AND CustomerType=73 → activityReason="G158" (unique to FM25). Normal Type=73 → "CREQ"; else → "G142".
+    </div>
+    <div class="callout success">
+      <strong>Two XSLT variants (OMX-2748):</strong> Old XSLT (commented out) lacked CES field and had L9CreditLimitWaiverInd condition for Type=66/67. Active XSLT adds CES and changed condition to Type!=73 (for non-individual).
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_UPD_CREDIT_LIMIT</code></td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>CCBS</td></tr>
+      <tr><td>Send pattern</td><td><code>Event.assertEvent</code> + <code>IntraActivitySequencing.ActionRequestEvent</code> per Account</td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Iteration target</td><td><code>Customer.Account[]</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBS_UpdateCreditLimitRes</code></td></tr>
+      <tr><td>Payload operation</td><td><code>ns:UpdateCreditLimitRequest</code> (3 sub-requests)</td></tr>
+      <tr><td>calCRFlag</td><td>XPath check: order ExtInfo[Name='CAL_CR_FLG' and Value='Y']</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic Patterns -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td><strong>calCRFlag</strong></td><td>XPath.evalAsBoolean on order ExtInfo[Name='CAL_CR_FLG' and Value='Y']. Changes activityReason for Type=73: false → "CREQ", true → "G158".</td></tr>
+      <tr><td><strong>L9CreditLimitWaiverInd logic (OMX-2748 change)</strong></td><td>Active XSLT: if CreditLimitWaiverInd non-empty → use it; else if Type!=73 AND (TOP OR PREMIUM) → "U". Old XSLT used Type=66 or 67 instead of Type!=73.</td></tr>
+      <tr><td><strong>Compound payload</strong></td><td>Single CCBS call contains 3 sub-requests: GetAccountHeaderRequest + I9GetAccountCreditHistoryRequest + ChangeAccountingManagementInfoRequest.</td></tr>
+      <tr><td><strong>L9PrsnlCreditLimit</strong></td><td>Only included if PersonalCreditLimit non-empty (string-length check). Not all accounts have a personal credit limit.</td></tr>
+      <tr><td><strong>activityReason 3-way</strong></td><td>Type=73 + calCRFlag=true → "G158"; Type=73 + calCRFlag=false → "CREQ"; else → "G142".</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+<pre><code>createEvent → event
+├── JMSPriority / JMSCorrelationID / OrderID  ← standard fields
+├── RefID                                      ← Account[$var]/RefId
+├── UserName / PassWord                        ← Conditional: IsEnableUserPass=true
+├── OrderType                                  ← OrderData.OrderType
+├── CES                                        ← OrderData.CES                [Conditional: exists, active XSLT only]
+└── payload → ns:UpdateCreditLimitRequest
+    ├── ns4:GetAccountHeaderRequest
+    │   └── ns4:AccountIdInfo
+    │       └── ns4:accountNo               ← Account[$var]/AccountID        [Always]
+    ├── ns1:I9GetAccountCreditHistoryRequest
+    │   ├── ns1:AccountIdInfo
+    │   │   └── ns1:accountNo               ← Account[$var]/AccountID        [Always]
+    │   └── ns1:PaginationInfo
+    │       ├── ns1:pageSize                ← 1000                           [Hardcoded]
+    │       ├── ns1:pageNumber              ← 0                              [Hardcoded]
+    │       └── ns1:numberOfRows            ← 1000                           [Hardcoded]
+    └── ns3:ChangeAccountingManagementInfoRequest
+        ├── ns3:AccountIdInfo
+        │   └── ns3:accountNo               ← Account[$var]/AccountID        [Always]
+        └── [for-each AccountManagementInfo]
+            └── ns5:AccountingManagementInfo
+                ├── ns5:L9AgreementId       ← Account[$var]/AgreementId      [Conditional: non-empty]
+                ├── ns5:L9CreditLimitRsnCode← AccountManagementInfo.CreditLimitReasonCode [Conditional: exists]
+                ├── ns5:L9CreditLimitWaiverInd ← CreditLimitWaiverInd if non-empty;
+                │                               else if Type!=73 AND (TOP/PREMIUM) → "U" [Conditional dispatch]
+                └── ns5:L9PrsnlCreditLimit  ← AccountManagementInfo.PersonalCreditLimit  [Conditional: non-empty]
+            └── ns3:ActivityInfo
+                ├── ns3:activityReason ← Type=73 + !calCRFlag → "CREQ";
+                │                       Type=73 + calCRFlag → "G158";
+                │                       else → "G142"                        [3-way dispatch]
+                └── ns3:userText        ← Account[$var]/AccountActivityInfo/UserText [Always]</code></pre>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_CCBS_UPD_CREDIT_LIMIT
+├── [if resubmit] IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)
+├── Instance.getByExtIdByUri(NextActivityName, Activity) → nextAct
+├── for each Account[i]:
+│   ├── [skip if CompletionStatus==2 response exists for RefId]
+│   ├── if PreExecCheck.length > 0: GetXMLForAccount(orderRequest, refId) → XPath
+│   └── if chkRes == "true":
+│       ├── calCRFlag = XPath.evalAsBoolean(order ExtInfo[CAL_CR_FLG='Y'])
+│       ├── Event.createEvent(CCBS_UPD_CREDIT_LIMIT, active XSLT with params: i, calCRFlag)
+│       ├── Event.assertEvent(reqEvent)
+│       ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)
+│       ├── sendEventImmediate(Logger REQ)
+│       └── isSkipped = false
+├── if !isSkipped:
+│   ├── IntraActivitySequencing.SendFirstRequestEvent(activity)
+│   ├── GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+└── else: SkipActivity("4")
+
+Response_CCBS_UPD_CREDIT_LIMIT
+├── OMXUtils.generateTrackingID() → extId
+├── Instance.createInstance(CCBS_UpdateCreditLimitRes: ResponseCode, ResponseMsg, CompletionStatus, ReferenceId)
+│   → currActivity.Response[n]
+├── [no order data write-backs]
+├── sendEventImmediate(Logger RES)
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → "true"/"false"
+    [OLD fan-in commented out: count "000" == RequestCount]</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Compound 3-sub-request payload — if CCBS upgrades its API, all three sub-request schemas must be kept in sync</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Consider splitting into separate FM calls in migration; reduces payload coupling</td>
+      </tr>
+      <tr>
+        <td>L9CreditLimitWaiverInd condition changed from Type=66/67 to Type!=73 in OMX-2748 — broader change affects CORP accounts differently</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Regression-test CORP account credit limit waiver scenarios with both old and new logic</td>
+      </tr>
+      <tr>
+        <td>calCRFlag=true → "G158" ActivityReason is unique to FM25; document this code separately from other activityReason values</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document ActivityReason code registry; "G158" means calculated credit request</td>
+      </tr>
+      <tr>
+        <td>Pagination hardcoded to pageSize/numberOfRows=1000 — may miss results if an account has >1000 credit history records</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Review CCBS credit history volume; implement pagination if needed</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <p style="margin-bottom:12px;font-size:0.87rem;">Minimal response — 4 standard fields, no order data write-backs. Fan-in via <code>IntraActivitySequencing.ActionResponseEvent</code>.</p>
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>CCBS_UpdateCreditLimitRes (4 std fields)</td><td>Always</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:12px">
+      <strong>Fan-in:</strong> <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code>. Old fan-in (count "000" responses == RequestCount) is commented out.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

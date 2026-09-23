@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_ATS_REGISTER_CAMPAIGN</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_ATS_REGISTER_CAMPAIGN</h1>
+  <div class="subtitle">ATS Campaign Registration — subscriber list aggregation with OrderType=12002 branching</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: ATS</span>
+    <span class="meta-chip">Author: DESKTOP-995HR2V</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: FIRE-AND-FORGET</span>
+    <span class="meta-chip">Response: TRUELIFE_ID write-back</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>ATS_REGISTER_CAMPAIGN</strong> registers the order's campaign in the ATS (Award and Targeting System) by sending a <code>submitCampaignReq</code> with <code>requestName="RegisterCampaign"</code>. It aggregates ALL subscribers across all POU and ChildOU into a single subscriber list and sends them as <code>productList</code> entries.
+    </div>
+    <div class="callout info">
+      <strong>Fire-and-forget:</strong> Uses <code>Event.Ext.sendEventImmediate(reqEvent)</code> + manual <code>RequestCount++</code>. Fan-in: <code>count("000" responses) == RequestCount</code>.
+    </div>
+    <div class="callout warn">
+      <strong>OrderType=12002 branching:</strong> OT=12002 uses subscriber-level name/identification fields instead of customer-level. OT=12002 sets <code>convergenceType</code> from ExtInfo, <code>state="Installing"</code>, <code>paymentType="Prepaid"</code>, <code>familyType="MAIN"</code>. Non-12002 uses customer-level name, <code>convergenceType="SpecialBundle"</code>, <code>state="Active"</code>, <code>paymentType="Postpaid"</code>.
+    </div>
+    <div class="callout success">
+      <strong>Response write-back:</strong> <code>OrderData.ExtendedInfo[Name="TRUELIFE_ID"]</code> ← <code>submitCampaignRes.truelifeId</code>. Consumed by FM29 (CCBS_CREATE_GROUP) as groupName and FM30 (ATS_COMPLETED_CAMPAIGN).
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_ATS_REGISTER_CAMPAIGN</code></td></tr>
+      <tr><td>Author</td><td>DESKTOP-995HR2V</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>ATS (Award and Targeting System)</td></tr>
+      <tr><td>Event type</td><td><code>Events.OMConsumers.OMXFM.Request.ATS_SUBMIT_CAMPAIGN</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> — FIRE-AND-FORGET</td></tr>
+      <tr><td>RequestCount</td><td>Manually: <code>if(!isActResub) RequestCount++</code></td></tr>
+      <tr><td>Fan-in</td><td><code>count(Response[ResponseCode suffix "000"]) == RequestCount</code></td></tr>
+      <tr><td>Iteration</td><td>All subscribers collected into ArrayList (POU + ChildOU); sent as one request</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code> + <code>OrderDataExtendedInfo</code></td></tr>
+      <tr><td>Payload operation</td><td><code>ns2:submitCampaignReq</code> with <code>requestName="RegisterCampaign"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>Subscriber aggregation</td><td>ArrayList collects all Subscribers from ParentOU[].Subscriber[] + ParentOU[].ChildOU[].Subscriber[]. Converted to typed <code>Subscriber[]</code> array. Single request covers all subscribers.</td></tr>
+      <tr><td>OrderType=12002 dispatch</td><td>OT=12002 is a Prepaid/Convergence flow; all customer name/identification fields fall back to <code>$subscribers/elements[1]</code> (first subscriber). Non-12002 is standard Postpaid.</td></tr>
+      <tr><td>convergenceType</td><td>OT=12002 → ExtInfo[CONVERGENCE_TYPE].Value; else → hardcoded "SpecialBundle"</td></tr>
+      <tr><td>companyCode per subscriber</td><td>OT=12002 → SubscriberType; else → Account[AccountRefId].AccountManagementInfo.CompanyCode || fallback "RM"</td></tr>
+      <tr><td>TOL_FAMILY_PLUS extra entry</td><td>If ExtInfo[TOL_FAMILY_PLUS] non-empty → extra productList: productType="TOL", paymentType="Internet", companyCode="TI"</td></tr>
+      <tr><td>GROUP extra entry</td><td>If ExtInfo[GROUP] non-empty → extra productList: PRODUCT_ID extracted via <code>substring-before(substring-after(GROUP, "PRODUCT_ID="), "|")</code>; COMPANY_CODE and FAMILY_TYPE similarly extracted from pipe-delimited GROUP value</td></tr>
+      <tr><td>productSeq</td><td><code>position()</code> in XSLT for-each — sequential subscriber position. TOL/GROUP entries use <code>count($subscribers) + 1</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping</div>
+  <div class="section-body">
+<pre><code>createEvent → event
+├── JMSPriority         ← $orderRequest/OrderPriority               [Conditional]
+├── JMSCorrelationID    ← $orderRequest/OrderData/OMXTrackingId      [Conditional]
+├── OrderID             ← $orderRequest/OrderData/OrderID            [Conditional]
+├── RefID               ← $orderRequest/OrderData/Customer/RefId     [Conditional]
+├── UserName / PassWord ← IsEnableUserPass=true                     [Credential-gated]
+├── OrderType           ← $orderRequest/OrderData/OrderType          [Conditional]
+└── payload → ns2:submitCampaignReq
+    ├── ns2:channel         ← "OMX"                                  [Hardcoded]
+    ├── ns2:requestName     ← "RegisterCampaign"                     [Hardcoded]
+    ├── ns2:applyChannel    ← OrderData.Channel                      [Conditional]
+    ├── ns2:dealerId        ← OrderData.DealerCode                   [Conditional]
+    └── ns2:campaignInfo
+        ├── ns2:campaignCode← ExtInfo[CAMPAIGN_CODE].Value           [Always]
+        ├── ns2:convergenceType
+        │   ├── OT=12002: ExtInfo[CONVERGENCE_TYPE].Value
+        │   └── else: "SpecialBundle"
+        ├── ns2:title
+        │   ├── OT=12002: subscribers[1].SubscriberName.Title
+        │   └── else: Customer.CustomerName.Title
+        ├── ns2:state
+        │   ├── OT=12002: "Installing"
+        │   └── else: "Active"
+        ├── ns2:firstName / ns2:lastName / ns2:identification  [OT=12002 vs customer]
+        ├── ns2:productList  [for-each $subscribers/elements]
+        │   ├── ns2:productId   ← MSISDN                            [Conditional]
+        │   ├── ns2:productType ← "TMV"                             [Hardcoded]
+        │   ├── ns2:paymentType ← OT=12002→"Prepaid"; else→"Postpaid"
+        │   ├── ns2:companyCode ← OT=12002→SubscriberType; else→Account.CompanyCode||"RM"
+        │   ├── ns2:productState← "Active"                         [Hardcoded]
+        │   ├── ns2:productStateDate ← current-dateTime()
+        │   ├── ns2:familyType  ← "MAIN"  [Only if OT=12002]
+        │   └── ns2:productSeq  ← position()
+        ├── ns2:productList  [if TOL_FAMILY_PLUS exists]
+        │   ├── ns2:productId ← ExtInfo[TOL_FAMILY_PLUS].Value
+        │   ├── ns2:productType ← "TOL"                            [Hardcoded]
+        │   ├── ns2:paymentType ← "Internet"                       [Hardcoded]
+        │   ├── ns2:companyCode ← "TI"                             [Hardcoded]
+        │   ├── ns2:productState← "Active"
+        │   └── ns2:productSeq  ← count(subscribers)+1
+        └── ns2:productList  [if GROUP ExtInfo exists]
+            ├── ns2:productId ← PRODUCT_ID from GROUP pipe-string
+            ├── ns2:productType ← "TMV"                            [Hardcoded]
+            ├── ns2:paymentType ← "Prepaid"                        [Hardcoded]
+            ├── ns2:companyCode ← COMPANY_CODE from GROUP pipe-string
+            ├── ns2:familyType  ← FAMILY_TYPE from GROUP pipe-string
+            └── ns2:productSeq  ← count(subscribers)+1</code></pre>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_ATS_REGISTER_CAMPAIGN
+├── Object subscriberList = Collections.List.createArrayList()
+├── for each ParentOU[p]:
+│   ├── for each ParentOU[p].Subscriber[ps]: Collections.add(subscriberList, psub)
+│   └── for each ChildOU[c].Subscriber[cs]: Collections.add(subscriberList, csub)
+├── subscriberArray = Collections.toArray(subscriberList)
+├── Subscriber[] subscribers = [typed copy of subscriberArray]
+├── Event.createEvent(ATS_SUBMIT_CAMPAIGN, XSLT with subscribers, OT dispatch)
+├── Event.Ext.sendEventImmediate(reqEvent)  ← FIRE-AND-FORGET
+├── if(!isActResub): RequestCount++
+├── sendEventImmediate(Logger REQ)
+├── isSkipped = false
+├── if !isSkipped:
+│   ├── GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+└── else: SkipActivity("4")
+
+Response_ATS_REGISTER_CAMPAIGN
+├── Instance.createInstance(ResponseBase: std 4 fields) → currActivity.Response[n]
+├── Instance.createInstance(OrderDataExtendedInfo:
+│   Name="TRUELIFE_ID", Value=submitCampaignRes.truelifeId)
+│   → orderRequest.OrderData.ExtendedInfo[n]
+├── sendEventImmediate(Logger RES)
+└── count("000" responses) == RequestCount → "true"/"false"</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>GROUP ExtInfo parsing uses nested <code>substring-before/after</code> — brittle if the pipe-delimited GROUP format changes</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Replace GROUP ExtInfo with a structured object; document GROUP format</td>
+      </tr>
+      <tr>
+        <td>TRUELIFE_ID written back to ExtInfo — consumed by FM29 and FM30; implicit dependency order</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Validate ProcessConfig sequence; ensure FM28 is always before FM29/FM30</td>
+      </tr>
+      <tr>
+        <td>subscribers[1] used for OT=12002 name fields — assumes at least one subscriber exists</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Add guard: skip OT=12002 name fields if subscriber list is empty</td>
+      </tr>
+      <tr>
+        <td>companyCode fallback "RM" hardcoded — may be incorrect for non-standard account types</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document "RM" meaning; externalise to global variable</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>ResponseBase (std 4 fields)</td><td>Always</td></tr>
+      <tr><td><code>OrderData.ExtendedInfo[Name="TRUELIFE_ID"].Value</code></td><td><code>submitCampaignRes.truelifeId</code></td><td>Conditional — if field present in response</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:12px">
+      Fan-in: <code>count(Response[ResponseCode suffix "000"]) == RequestCount</code>. Single request per activity.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

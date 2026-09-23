@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PREPAID_CANCEL — Order Journey</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default',sequence:{mirrorActors:false,width:160,height:50},flowchart:{htmlLabels:true}});</script>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:2rem;font-weight:700;letter-spacing:0.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:0.85;font-size:0.95rem;margin-bottom:14px}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:3px 12px;font-size:0.78rem}
+.container{max-width:1400px;margin:0 auto;padding:24px}
+.section{background:var(--card);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);margin-bottom:22px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;border-left:5px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header h2{font-size:1rem;font-weight:600}
+.section-num{background:rgba(255,255,255,0.22);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid #F0E0E0;vertical-align:top}
+tr:hover td{background:#FDF5F5}
+tr.has-preexec td{border-left:3px solid var(--warning)}
+tr.has-preexec{background:#FFFBF0}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+code.inline{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:0.8rem}
+code.xpath{background:#1e1e2e;color:#a6e3a1;padding:3px 8px;border-radius:5px;font-size:0.78rem;display:block;margin-top:4px;white-space:pre-wrap;word-break:break-word}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:0.72rem;font-weight:600}
+.b-generated{background:#E8F5E9;color:#2e7d32}
+.b-skipped{background:#F3E5F5;color:#6a1b9a}
+.b-notfound{background:#FFF3E0;color:#e65100}
+.b-cond{background:#FFF8E1;color:#F57F17}
+.step-badge{background:var(--true-red);color:#fff;border-radius:50%;width:22px;height:22px;display:inline-flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;flex-shrink:0}
+.fm-link{color:var(--true-dark);font-weight:600;text-decoration:none;border-bottom:1px dashed var(--true-red)}
+.fm-link:hover{color:var(--true-red);border-bottom-style:solid}
+.fm-nofound{color:#888;font-style:italic}
+.param-tag{display:inline-block;background:#F5E6E6;color:var(--true-dark);border:1px solid #E0B0B0;border-radius:4px;padding:1px 6px;font-size:0.75rem;margin:1px;font-family:monospace}
+details{margin-bottom:10px}
+summary{cursor:pointer;padding:10px 14px;background:#FFF5F5;border:1px solid #E0C0C0;border-radius:6px;font-weight:600;color:var(--true-dark);list-style:none;display:flex;align-items:center;gap:10px}
+summary::before{content:'▶';font-size:0.7rem;transition:transform 0.2s}
+details[open] summary::before{transform:rotate(90deg)}
+.details-body{padding:14px 14px 4px;border:1px solid #E0C0C0;border-top:none;border-radius:0 0 6px 6px;background:#FFFCFC}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px}
+.fm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;transition:box-shadow 0.2s}
+.fm-card:hover{box-shadow:0 4px 12px rgba(204,0,0,0.12)}
+.fm-card h3{font-size:0.87rem;color:var(--true-dark);margin-bottom:6px;font-weight:700}
+.fm-card .steps-used{font-size:0.75rem;color:#666;margin-bottom:8px}
+.fm-card a{color:var(--true-dark);text-decoration:none;font-size:0.8rem;border-bottom:1px dashed var(--true-red)}
+.fm-card a:hover{color:var(--true-red)}
+.diagram-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);border-radius:6px;padding:12px 16px;margin-bottom:12px;font-size:0.82rem}
+.footer{text-align:center;color:#999;font-size:0.75rem;padding:20px;border-top:1px solid var(--border);margin-top:10px}
+.sys-badge{display:inline-block;padding:2px 7px;border-radius:4px;font-size:0.72rem;font-weight:600;margin-right:4px}
+.sys-crm{background:#E3F2FD;color:#0D47A1}
+.sys-asrm{background:#FFF3E0;color:#E65100}
+.sys-intx{background:#F3E5F5;color:#6A1B9A}
+.sys-cdb{background:#E8F5E9;color:#1B5E20}
+.sys-ccp{background:#FCE4EC;color:#880E4F}
+.sys-omx{background:#F5F5F5;color:#424242}
+.sys-sbm{background:#FFF9C4;color:#F57F17}
+.sys-aa{background:#FFE0B2;color:#E65100}
+.sys-mcs{background:#E0F2F1;color:#00695C}
+.sys-apigw{background:#EDE7F6;color:#4527A0}
+.sys-cat{background:#E8EAF6;color:#3949AB}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1400px;margin:0 auto">
+    <div class="subtitle">TIBCO BusinessEvents · Order Journey Documentation</div>
+    <h1>PREPAID_CANCEL</h1>
+    <div class="subtitle">Process Configuration for PREPAID CANCEL.</div>
+    <div class="meta-chips">
+      <span class="chip">Total Steps: 28</span>
+      <span class="chip">Unique FMs: 23 (14 documented)</span>
+      <span class="chip">Entry Point: CRM_GET_LAST_ASSET_ROOT</span>
+      <span class="chip">Generated: 2026-09-07</span>
+    </div>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Summary -->
+<div class="section">
+  <div class="section-header"><div class="section-num">1</div><h2>§1 — Process Overview</h2></div>
+  <div class="section-body">
+    <div class="info-box">
+      <strong>Process:</strong> PREPAID_CANCEL — prepaid subscriber cancellation.<br/>
+      The flow gathers subscriber/account data (CRM, ASRM, INTX, CDB, CCP), computes refund offers, validates business rules, creates the CRM disconnect order, then conditionally provisions AA with a GeneralUpdate (CCD) for BRMS-flagged subscriptions and a Deactivate (DSD) for the main cancellation. Finally, releases MSISDN/SIM resources and confirms with AA.
+    </div>
+    <table style="width:auto">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Process extId</td><td><code class="inline">PREPAID_CANCEL</code></td></tr>
+      <tr><td>Description</td><td>Process Configuration for PREPAID CANCEL.</td></tr>
+      <tr><td>Entry point</td><td><code class="inline">CRM_GET_LAST_ASSET_ROOT</code></td></tr>
+      <tr><td>Total activities</td><td>28</td></tr>
+      <tr><td>Unique ActivityIDs</td><td>23</td></tr>
+      <tr><td>FM docs generated</td><td>14</td></tr>
+      <tr><td>FM docs not found (internal OMX)</td><td>9</td></tr>
+      <tr><td>Activities with PreExecCheck</td><td>14</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Activity Table -->
+<div class="section">
+  <div class="section-header"><div class="section-num">2</div><h2>§2 — Order Flow Table</h2></div>
+  <div class="section-body">
+    <p style="margin-bottom:12px;font-size:0.82rem;color:#666"><span style="background:#FFF3E0;border-left:3px solid var(--warning);padding:3px 8px;border-radius:3px">Rows with left amber border have a PreExecCheck (conditional execution)</span></p>
+    <div style="overflow-x:auto">
+    <table>
+      <tr>
+        <th>Step</th>
+        <th>Step ID</th>
+        <th>System</th>
+        <th>FM (ActivityID)</th>
+        <th>Parameter(s)</th>
+        <th>PreExecCheck</th>
+        <th>Previous</th>
+        <th>Next</th>
+        <th>FM Doc</th>
+      </tr>
+      <!-- Step 1 -->
+      <tr>
+        <td><span class="step-badge">1</span></td>
+        <td><code class="inline">CRM_GET_LAST_ASSET_ROOT</code></td>
+        <td><span class="sys-badge sys-crm">CRM</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">CRM_GET_LAST_ASSET_ROOT</a></td>
+        <td><span class="param-tag">customerAddressFlag=Y</span></td>
+        <td>—</td>
+        <td>START</td>
+        <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 2 -->
+      <tr>
+        <td><span class="step-badge">2</span></td>
+        <td><code class="inline">CRM_GET_ASSET_COMPONENT_LIST</code></td>
+        <td><span class="sys-badge sys-crm">CRM</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">CRM_GET_ASSET_COMPONENT_LIST</a></td>
+        <td><span class="param-tag">STATUS=Active</span></td>
+        <td>—</td>
+        <td>CRM_GET_LAST_ASSET_ROOT</td>
+        <td>CAT_GOD</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 3 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">3</span></td>
+        <td><code class="inline">CAT_GOD</code></td>
+        <td><span class="sys-badge sys-cat">CAT</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></td>
+        <td>—</td>
+        <td><code class="xpath">count(//Offers) &gt; 0 or count(//SubscriberOffers) &gt; 0</code></td>
+        <td>CRM_GET_ASSET_COMPONENT_LIST</td>
+        <td>ASRM_GET_UR_DETAILS_MSISDN</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 4 -->
+      <tr>
+        <td><span class="step-badge">4</span></td>
+        <td><code class="inline">ASRM_GET_UR_DETAILS_MSISDN</code></td>
+        <td><span class="sys-badge sys-asrm">ASRM</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_ASRM_GET_UR_DETAILS_MSISDN.html">ASRM_GET_UR_DETAILS_MSISDN</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>CAT_GOD</td>
+        <td>INTX_GET_SIM_INFO_BY_MSISDN</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 5 -->
+      <tr>
+        <td><span class="step-badge">5</span></td>
+        <td><code class="inline">INTX_GET_SIM_INFO_BY_MSISDN</code></td>
+        <td><span class="sys-badge sys-intx">INTX</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_MSISDN.html">INTX_GET_SIM_INFO_BY_MSISDN</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>ASRM_GET_UR_DETAILS_MSISDN</td>
+        <td>INTX_GET_SIM_INFO_BY_SIM</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 6 -->
+      <tr>
+        <td><span class="step-badge">6</span></td>
+        <td><code class="inline">INTX_GET_SIM_INFO_BY_SIM</code></td>
+        <td><span class="sys-badge sys-intx">INTX</span></td>
+        <td><span class="fm-nofound">INTX_GET_SIM_INFO_BY_SIM</span></td>
+        <td>—</td>
+        <td>—</td>
+        <td>INTX_GET_SIM_INFO_BY_MSISDN</td>
+        <td>CDB_GET_PROFILE</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 7 -->
+      <tr>
+        <td><span class="step-badge">7</span></td>
+        <td><code class="inline">CDB_GET_PROFILE</code></td>
+        <td><span class="sys-badge sys-cdb">CDB</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_CDB_GET_PROFILE.html">CDB_GET_PROFILE</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>INTX_GET_SIM_INFO_BY_SIM</td>
+        <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 8 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">8</span></td>
+        <td><code class="inline">CCP_GET_PREPAID_CREDIT_INFO</code></td>
+        <td><span class="sys-badge sys-ccp">CCP</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">CCP_GET_PREPAID_CREDIT_INFO</a></td>
+        <td>—</td>
+        <td><code class="xpath">/ns0:OrderRequest/OrderData/Channel/text()!="CCP"</code></td>
+        <td>CDB_GET_PROFILE</td>
+        <td>OMX_CREATE_SUB_OFFER_PREPAID_REFUND</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 9 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">9</span></td>
+        <td><code class="inline">OMX_CREATE_SUB_OFFER_PREPAID_REFUND</code></td>
+        <td><span class="sys-badge sys-omx">OMX</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_OMX_CREATE_SUB_OFFER_PREPAID_REFUND.html">OMX_CREATE_SUB_OFFER_PREPAID_REFUND</a></td>
+        <td>—</td>
+        <td><code class="xpath">/ns0:OrderRequest/OrderData/Channel/text()!="CCP"</code></td>
+        <td>CCP_GET_PREPAID_CREDIT_INFO</td>
+        <td>OMX_BRMS_DB</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 10 -->
+      <tr>
+        <td><span class="step-badge">10</span></td>
+        <td><code class="inline">OMX_BRMS_DB</code></td>
+        <td><span class="sys-badge sys-omx">OMX</span></td>
+        <td><span class="fm-nofound">OMX_BRMS_DB</span></td>
+        <td>—</td>
+        <td>—</td>
+        <td>OMX_CREATE_SUB_OFFER_PREPAID_REFUND</td>
+        <td>CAT_GOD_B</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 11 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">11</span></td>
+        <td><code class="inline">CAT_GOD_B</code></td>
+        <td><span class="sys-badge sys-cat">CAT</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a> <span style="font-size:0.72rem;color:#888">(2nd call)</span></td>
+        <td>—</td>
+        <td><code class="xpath">(count(//Offers) &gt; 0 or count(//SubscriberOffers) &gt; 0) and //SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and (Value='CCP' or Value='BRMS_REMOVE')]</code></td>
+        <td>OMX_BRMS_DB</td>
+        <td>OMX_BIZ_VAL</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 12 -->
+      <tr>
+        <td><span class="step-badge">12</span></td>
+        <td><code class="inline">OMX_BIZ_VAL</code></td>
+        <td><span class="sys-badge sys-omx">OMX</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>CAT_GOD_B</td>
+        <td>OMX_CALC_ACTIVITY_REASON</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 13 -->
+      <tr>
+        <td><span class="step-badge">13</span></td>
+        <td><code class="inline">OMX_CALC_ACTIVITY_REASON</code></td>
+        <td><span class="sys-badge sys-omx">OMX</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_OMX_CALC_ACTIVITY_REASON.html">OMX_CALC_ACTIVITY_REASON</a></td>
+        <td><span class="param-tag">CANCEL</span></td>
+        <td>—</td>
+        <td>OMX_BIZ_VAL</td>
+        <td>SBM_CANCEL_PREMIUM_NON_VOICE</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 14 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">14</span></td>
+        <td><code class="inline">SBM_CANCEL_PREMIUM_NON_VOICE</code></td>
+        <td><span class="sys-badge sys-sbm">SBM</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_SBM_CANCEL_PREMIUM_NON_VOICE.html">SBM_CANCEL_PREMIUM_NON_VOICE</a></td>
+        <td>—</td>
+        <td><code class="xpath">boolean(//OrderData/ExtendedInfo[Name='PROJECT_NAME' and Value='PREMIUM_NUMBER'])</code></td>
+        <td>OMX_CALC_ACTIVITY_REASON</td>
+        <td>STATUS_UPDATE_CREATING_PROFILE</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 15 -->
+      <tr>
+        <td><span class="step-badge">15</span></td>
+        <td><code class="inline">STATUS_UPDATE_CREATING_PROFILE</code></td>
+        <td><span class="sys-badge sys-omx">OMX</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></td>
+        <td>—</td>
+        <td>—</td>
+        <td>SBM_CANCEL_PREMIUM_NON_VOICE</td>
+        <td>CRM_CREATE_ORDER_PREPAID</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 16 -->
+      <tr>
+        <td><span class="step-badge">16</span></td>
+        <td><code class="inline">CRM_CREATE_ORDER_PREPAID</code></td>
+        <td><span class="sys-badge sys-crm">CRM</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">CRM_CREATE_ORDER_PREPAID</a></td>
+        <td><span class="param-tag">command=Disconnect</span> <span class="param-tag">orderType=D</span> <span class="param-tag">listOfRootLineItemAction=Delete</span> <span class="param-tag">listOfRootLineItemStatus=Inactive</span> <span class="param-tag">USE_ROWID_CRM=N</span></td>
+        <td>—</td>
+        <td>STATUS_UPDATE_CREATING_PROFILE</td>
+        <td>OMX_GET_SRV_TRX_NO_CCD</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 17 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">17</span></td>
+        <td><code class="inline">OMX_GET_SRV_TRX_NO_CCD</code></td>
+        <td><span class="sys-badge sys-omx">OMX</span></td>
+        <td><span class="fm-nofound">OMX_GET_SRV_TRX_NO</span></td>
+        <td><span class="param-tag">CCD</span></td>
+        <td><code class="xpath">boolean(//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS_REMOVE'])</code></td>
+        <td>CRM_CREATE_ORDER_PREPAID</td>
+        <td>AA_PREPAID_PROVISIONING_CCD</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 18 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">18</span></td>
+        <td><code class="inline">AA_PREPAID_PROVISIONING_CCD</code></td>
+        <td><span class="sys-badge sys-aa">AA</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">AA_PREPAID_PROVISIONING</a></td>
+        <td><span class="param-tag">CCD</span></td>
+        <td><code class="xpath">boolean(//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS_REMOVE'])</code></td>
+        <td>OMX_GET_SRV_TRX_NO_CCD</td>
+        <td>AA_CHECK_CONFIRMATION_CCD</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 19 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">19</span></td>
+        <td><code class="inline">AA_CHECK_CONFIRMATION_CCD</code></td>
+        <td><span class="sys-badge sys-aa">AA</span></td>
+        <td><span class="fm-nofound">AA_CHECK_CONFIRMATION</span></td>
+        <td><span class="param-tag">CCD</span> <span class="param-tag">UPDATE_NETWORK_STATUS</span></td>
+        <td><code class="xpath">boolean(//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS_REMOVE'])</code></td>
+        <td>AA_PREPAID_PROVISIONING_CCD</td>
+        <td>OMX_GET_SRV_TRX_NO</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 20 -->
+      <tr>
+        <td><span class="step-badge">20</span></td>
+        <td><code class="inline">OMX_GET_SRV_TRX_NO</code></td>
+        <td><span class="sys-badge sys-omx">OMX</span></td>
+        <td><span class="fm-nofound">OMX_GET_SRV_TRX_NO</span></td>
+        <td><span class="param-tag">DSD</span></td>
+        <td>—</td>
+        <td>AA_CHECK_CONFIRMATION_CCD</td>
+        <td>AA_PREPAID_PROVISIONING</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 21 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">21</span></td>
+        <td><code class="inline">AA_PREPAID_PROVISIONING</code></td>
+        <td><span class="sys-badge sys-aa">AA</span></td>
+        <td><a class="fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">AA_PREPAID_PROVISIONING</a></td>
+        <td><span class="param-tag">DSD</span></td>
+        <td><code class="xpath">count(//Subscriber/CdbProfile)&gt;0 and count(//Subscriber/CdbProfile/IMSI)&gt;0 and //Subscriber/CdbProfile/IMSI/text()!=""</code></td>
+        <td>OMX_GET_SRV_TRX_NO</td>
+        <td>ASRM_INVOKE_MSISDN_RELEASE</td>
+        <td><span class="badge b-generated">✓ Generated</span></td>
+      </tr>
+      <!-- Step 22 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">22</span></td>
+        <td><code class="inline">ASRM_INVOKE_MSISDN_RELEASE</code></td>
+        <td><span class="sys-badge sys-asrm">ASRM</span></td>
+        <td><span class="fm-nofound">ASRM_INVOKE_MSISDN</span></td>
+        <td><span class="param-tag">ACTIVITY=RELEASE</span></td>
+        <td><code class="xpath">(//SubscriberActivityInfo/ActivityReason/text()!="MNPHR" and //SubscriberActivityInfo/ActivityReason/text()!="RFREOT")</code></td>
+        <td>AA_PREPAID_PROVISIONING</td>
+        <td>ASRM_INVOKE_MSISDN_PORT_IN_REVERSE</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 23 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">23</span></td>
+        <td><code class="inline">ASRM_INVOKE_MSISDN_PORT_IN_REVERSE</code></td>
+        <td><span class="sys-badge sys-asrm">ASRM</span></td>
+        <td><span class="fm-nofound">ASRM_INVOKE_MSISDN</span></td>
+        <td><span class="param-tag">ACTIVITY=PORT IN REVERSE</span></td>
+        <td><code class="xpath">(//SubscriberActivityInfo/ActivityReason/text()="MNPHR" or //SubscriberActivityInfo/ActivityReason/text()="RFREOT")</code></td>
+        <td>ASRM_INVOKE_MSISDN_RELEASE</td>
+        <td>ASRM_INVOKE_SIM_RELEASE</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 24 -->
+      <tr>
+        <td><span class="step-badge">24</span></td>
+        <td><code class="inline">ASRM_INVOKE_SIM_RELEASE</code></td>
+        <td><span class="sys-badge sys-asrm">ASRM</span></td>
+        <td><span class="fm-nofound">ASRM_INVOKE_SIM</span></td>
+        <td><span class="param-tag">ACTIVITY=RELEASE</span></td>
+        <td>—</td>
+        <td>ASRM_INVOKE_MSISDN_PORT_IN_REVERSE</td>
+        <td>AA_CHECK_CONFIRMATION</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 25 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">25</span></td>
+        <td><code class="inline">AA_CHECK_CONFIRMATION</code></td>
+        <td><span class="sys-badge sys-aa">AA</span></td>
+        <td><span class="fm-nofound">AA_CHECK_CONFIRMATION</span></td>
+        <td><span class="param-tag">DSD</span> <span class="param-tag">UPDATE_NETWORK_STATUS</span></td>
+        <td><code class="xpath">not(/ns0:OrderRequest/OrderData/Channel/text() ="CCP" or /ns0:OrderRequest/OrderData/Channel/text() ="RM" or /ns0:OrderRequest/OrderData/Channel/text() ="ASRM") and count(//Subscriber/CdbProfile)&gt;0 and count(//Subscriber/CdbProfile/IMSI)&gt;0 and //Subscriber/CdbProfile/IMSI/text()!=""</code></td>
+        <td>ASRM_INVOKE_SIM_RELEASE</td>
+        <td>MCS_GET_PACKCODE</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 26 -->
+      <tr>
+        <td><span class="step-badge">26</span></td>
+        <td><code class="inline">MCS_GET_PACKCODE</code></td>
+        <td><span class="sys-badge sys-mcs">MCS</span></td>
+        <td><span class="fm-nofound">MCS_GET_PACKCODE</span></td>
+        <td>—</td>
+        <td>—</td>
+        <td>AA_CHECK_CONFIRMATION</td>
+        <td>MCS_CANCEL_AFTER_SALE</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 27 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">27</span></td>
+        <td><code class="inline">MCS_CANCEL_AFTER_SALE</code></td>
+        <td><span class="sys-badge sys-mcs">MCS</span></td>
+        <td><span class="fm-nofound">MCS_CANCEL_AFTER_SALE</span></td>
+        <td><span class="param-tag">USE_ROWID_CRM=Y</span></td>
+        <td><code class="xpath">boolean(//Subscriber[ExtendedInfo[Name='MCS_CANCEL_AFS' and Value='Y']])</code></td>
+        <td>MCS_GET_PACKCODE</td>
+        <td>APIGW_OPT_IN_OUT</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+      <!-- Step 28 -->
+      <tr class="has-preexec">
+        <td><span class="step-badge">28</span></td>
+        <td><code class="inline">APIGW_OPT_IN_OUT</code></td>
+        <td><span class="sys-badge sys-apigw">APIGW</span></td>
+        <td><span class="fm-nofound">APIGW_OPT_IN_OUT</span></td>
+        <td><span class="param-tag">ACTION=0</span></td>
+        <td><code class="xpath">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CRM'] and contains(SocProperties,'TR_OFFER_GROUP=CBSC')])</code></td>
+        <td>MCS_CANCEL_AFTER_SALE</td>
+        <td>END</td>
+        <td><span class="badge b-skipped">⚠ Not Found</span></td>
+      </tr>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="section">
+  <div class="section-header"><div class="section-num">3</div><h2>§3 — Conditional Execution Rules (PreExecCheck)</h2></div>
+  <div class="section-body">
+    <details>
+      <summary><span class="step-badge">3</span> <strong>CAT_GOD</strong> — execute only when offers exist</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> <a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a></p>
+        <code class="xpath">count(//Offers) > 0 or count(//SubscriberOffers) > 0</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Calls CAT (Catalogue) to resolve GOD-tier offer details. Skipped if subscriber has no active offers.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">8</span> <strong>CCP_GET_PREPAID_CREDIT_INFO</strong> — skip for CCP channel</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> <a class="fm-link" href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">CCP_GET_PREPAID_CREDIT_INFO</a></p>
+        <code class="xpath">/ns0:OrderRequest/OrderData/Channel/text()!="CCP"</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">CCP channel already has credit info — skip the CCP lookup call.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">9</span> <strong>OMX_CREATE_SUB_OFFER_PREPAID_REFUND</strong> — skip for CCP channel</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> <a class="fm-link" href="../FMlogic/Request_OMX_CREATE_SUB_OFFER_PREPAID_REFUND.html">OMX_CREATE_SUB_OFFER_PREPAID_REFUND</a></p>
+        <code class="xpath">/ns0:OrderRequest/OrderData/Channel/text()!="CCP"</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Refund offer computation skipped when channel is CCP (no refund applicable).</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">11</span> <strong>CAT_GOD_B</strong> — execute only when CCP/BRMS_REMOVE offers exist</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> <a class="fm-link" href="../FMlogic/Request_CAT_GOD.html">CAT_GOD</a> (2nd call)</p>
+        <code class="xpath">(count(//Offers) > 0 or count(//SubscriberOffers) > 0) and //SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and (Value='CCP' or Value='BRMS_REMOVE')]</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Second CAT_GOD call for BRMS-flagged or CCP subscriptions that require an updated offer catalogue view after BRMS processing.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">14</span> <strong>SBM_CANCEL_PREMIUM_NON_VOICE</strong> — only for Premium Number orders</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> <a class="fm-link" href="../FMlogic/Request_SBM_CANCEL_PREMIUM_NON_VOICE.html">SBM_CANCEL_PREMIUM_NON_VOICE</a></p>
+        <code class="xpath">boolean(//OrderData/ExtendedInfo[Name='PROJECT_NAME' and Value='PREMIUM_NUMBER'])</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Cancels SBM premium non-voice services only when the order is for a Premium Number project.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">17</span> <strong>OMX_GET_SRV_TRX_NO_CCD</strong> — BRMS_REMOVE subscriptions only</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> OMX_GET_SRV_TRX_NO (not found)</p>
+        <code class="xpath">boolean(//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS_REMOVE'])</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Gets a service transaction number for the CCD (GeneralUpdate) AA provisioning call. Only needed for BRMS_REMOVE offer type.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">18</span> <strong>AA_PREPAID_PROVISIONING_CCD</strong> — GeneralUpdate for BRMS_REMOVE (param: CCD)</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> <a class="fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">AA_PREPAID_PROVISIONING</a></p>
+        <code class="xpath">boolean(//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS_REMOVE'])</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Sends GeneralUpdate (CCD) to AA provisioning before the full deactivation. Only triggered for BRMS_REMOVE subscriptions.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">19</span> <strong>AA_CHECK_CONFIRMATION_CCD</strong> — BRMS_REMOVE subscriptions only (param: CCD)</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> AA_CHECK_CONFIRMATION (not found)</p>
+        <code class="xpath">boolean(//SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS' and Value='BRMS_REMOVE'])</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Waits for AA to confirm the CCD provisioning. Same gate as steps 17 and 18.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">21</span> <strong>AA_PREPAID_PROVISIONING</strong> — Deactivate (DSD) when IMSI present</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> <a class="fm-link" href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">AA_PREPAID_PROVISIONING</a></p>
+        <code class="xpath">count(//Subscriber/CdbProfile)>0 and count(//Subscriber/CdbProfile/IMSI)>0 and //Subscriber/CdbProfile/IMSI/text()!=""</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Main AA deactivation. Requires an active CDB profile with a non-empty IMSI — confirms subscriber has a physical SIM registered in CDB.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">22</span> <strong>ASRM_INVOKE_MSISDN_RELEASE</strong> — Normal cancel (not MNP reversal)</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> ASRM_INVOKE_MSISDN (not found)</p>
+        <code class="xpath">(//SubscriberActivityInfo/ActivityReason/text()!="MNPHR" and //SubscriberActivityInfo/ActivityReason/text()!="RFREOT")</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Releases the MSISDN back to the pool for regular cancellations. Skipped for MNP handoff reversals.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">23</span> <strong>ASRM_INVOKE_MSISDN_PORT_IN_REVERSE</strong> — MNP handoff reversal only</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> ASRM_INVOKE_MSISDN (not found)</p>
+        <code class="xpath">(//SubscriberActivityInfo/ActivityReason/text()="MNPHR" or //SubscriberActivityInfo/ActivityReason/text()="RFREOT")</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Reverses the MNP port-in. Mutually exclusive with step 22 (exactly one fires depending on ActivityReason).</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">25</span> <strong>AA_CHECK_CONFIRMATION</strong> — not CCP/RM/ASRM channel + IMSI present</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> AA_CHECK_CONFIRMATION (not found)</p>
+        <code class="xpath">not(/ns0:OrderRequest/OrderData/Channel/text() ="CCP" or /ns0:OrderRequest/OrderData/Channel/text() ="RM" or /ns0:OrderRequest/OrderData/Channel/text() ="ASRM") and count(//Subscriber/CdbProfile)>0 and count(//Subscriber/CdbProfile/IMSI)>0 and //Subscriber/CdbProfile/IMSI/text()!=""</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Waits for AA to confirm the DSD deactivation. Excluded for CCP, RM, and ASRM channels. Mirrors step 21's IMSI check.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">27</span> <strong>MCS_CANCEL_AFTER_SALE</strong> — only when MCS_CANCEL_AFS=Y</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> MCS_CANCEL_AFTER_SALE (not found)</p>
+        <code class="xpath">boolean(//Subscriber[ExtendedInfo[Name='MCS_CANCEL_AFS' and Value='Y']])</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Cancels the MCS after-sale package. Only triggered when subscriber carries the MCS_CANCEL_AFS='Y' extended info flag.</p>
+      </div>
+    </details>
+    <details>
+      <summary><span class="step-badge">28</span> <strong>APIGW_OPT_IN_OUT</strong> — opt-out for CRM CBSC offers</summary>
+      <div class="details-body">
+        <p><strong>FM:</strong> APIGW_OPT_IN_OUT (not found)</p>
+        <code class="xpath">boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CRM'] and contains(SocProperties,'TR_OFFER_GROUP=CBSC')])</code>
+        <p style="margin-top:8px;font-size:0.82rem;color:#666">Opts out via API Gateway for subscribers with a CRM-managed CBSC offer group. ACTION=0 = opt-out.</p>
+      </div>
+    </details>
+  </div>
+</div>
+
+<!-- §4 FM Index -->
+<div class="section">
+  <div class="section-header"><div class="section-num">4</div><h2>§4 — FM Documentation Index</h2></div>
+  <div class="section-body">
+    <p style="margin-bottom:16px;font-size:0.82rem;color:#666">14 unique ActivityIDs have generated FM documentation. 9 internal OMX / not-found rules are listed without links.</p>
+    <div class="fm-grid">
+      <div class="fm-card">
+        <h3>CRM_GET_LAST_ASSET_ROOT</h3>
+        <div class="steps-used">Steps: 1</div>
+        <a href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">Request_CRM_GET_LAST_ASSET_ROOT.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>CRM_GET_ASSET_COMPONENT_LIST</h3>
+        <div class="steps-used">Steps: 2</div>
+        <a href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">Request_CRM_GET_ASSET_COMPONENT_LIST.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>CAT_GOD</h3>
+        <div class="steps-used">Steps: 3, 11</div>
+        <a href="../FMlogic/Request_CAT_GOD.html">Request_CAT_GOD.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>ASRM_GET_UR_DETAILS_MSISDN</h3>
+        <div class="steps-used">Steps: 4</div>
+        <a href="../FMlogic/Request_ASRM_GET_UR_DETAILS_MSISDN.html">Request_ASRM_GET_UR_DETAILS_MSISDN.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>INTX_GET_SIM_INFO_BY_MSISDN</h3>
+        <div class="steps-used">Steps: 5</div>
+        <a href="../FMlogic/Request_INTX_GET_SIM_INFO_BY_MSISDN.html">Request_INTX_GET_SIM_INFO_BY_MSISDN.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>INTX_GET_SIM_INFO_BY_SIM</h3>
+        <div class="steps-used">Steps: 6</div>
+        <span class="fm-nofound">Rule file not found</span><br/>
+        <span class="badge b-skipped" style="margin-top:6px;display:inline-block">⚠ Not Found</span>
+      </div>
+      <div class="fm-card">
+        <h3>CDB_GET_PROFILE</h3>
+        <div class="steps-used">Steps: 7</div>
+        <a href="../FMlogic/Request_CDB_GET_PROFILE.html">Request_CDB_GET_PROFILE.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>CCP_GET_PREPAID_CREDIT_INFO</h3>
+        <div class="steps-used">Steps: 8</div>
+        <a href="../FMlogic/Request_CCP_GET_PREPAID_CREDIT_INFO.html">Request_CCP_GET_PREPAID_CREDIT_INFO.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>OMX_CREATE_SUB_OFFER_PREPAID_REFUND</h3>
+        <div class="steps-used">Steps: 9</div>
+        <a href="../FMlogic/Request_OMX_CREATE_SUB_OFFER_PREPAID_REFUND.html">Request_OMX_CREATE_SUB_OFFER_PREPAID_REFUND.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>OMX_BRMS_DB</h3>
+        <div class="steps-used">Steps: 10</div>
+        <span class="fm-nofound">Rule file not found</span><br/>
+        <span class="badge b-skipped" style="margin-top:6px;display:inline-block">⚠ Not Found</span>
+      </div>
+      <div class="fm-card">
+        <h3>OMX_BIZ_VAL</h3>
+        <div class="steps-used">Steps: 12</div>
+        <a href="../FMlogic/Request_OMX_BIZ_VAL.html">Request_OMX_BIZ_VAL.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>OMX_CALC_ACTIVITY_REASON</h3>
+        <div class="steps-used">Steps: 13</div>
+        <a href="../FMlogic/Request_OMX_CALC_ACTIVITY_REASON.html">Request_OMX_CALC_ACTIVITY_REASON.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>SBM_CANCEL_PREMIUM_NON_VOICE</h3>
+        <div class="steps-used">Steps: 14</div>
+        <a href="../FMlogic/Request_SBM_CANCEL_PREMIUM_NON_VOICE.html">Request_SBM_CANCEL_PREMIUM_NON_VOICE.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>STATUS_UPDATE_CREATING_PROFILE</h3>
+        <div class="steps-used">Steps: 15</div>
+        <a href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">Request_STATUS_UPDATE_CREATING_PROFILE.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>CRM_CREATE_ORDER_PREPAID</h3>
+        <div class="steps-used">Steps: 16</div>
+        <a href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">Request_CRM_CREATE_ORDER_PREPAID.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>OMX_GET_SRV_TRX_NO</h3>
+        <div class="steps-used">Steps: 17, 20</div>
+        <span class="fm-nofound">Rule file not found</span><br/>
+        <span class="badge b-skipped" style="margin-top:6px;display:inline-block">⚠ Not Found</span>
+      </div>
+      <div class="fm-card">
+        <h3>AA_PREPAID_PROVISIONING</h3>
+        <div class="steps-used">Steps: 18 (CCD), 21 (DSD)</div>
+        <a href="../FMlogic/Request_AA_PREPAID_PROVISIONING.html">Request_AA_PREPAID_PROVISIONING.html ↗</a><br/>
+        <span class="badge b-generated" style="margin-top:6px;display:inline-block">✓ Generated</span>
+      </div>
+      <div class="fm-card">
+        <h3>AA_CHECK_CONFIRMATION</h3>
+        <div class="steps-used">Steps: 19, 25</div>
+        <span class="fm-nofound">Rule file not found</span><br/>
+        <span class="badge b-skipped" style="margin-top:6px;display:inline-block">⚠ Not Found</span>
+      </div>
+      <div class="fm-card">
+        <h3>ASRM_INVOKE_MSISDN</h3>
+        <div class="steps-used">Steps: 22, 23</div>
+        <span class="fm-nofound">Rule file not found</span><br/>
+        <span class="badge b-skipped" style="margin-top:6px;display:inline-block">⚠ Not Found</span>
+      </div>
+      <div class="fm-card">
+        <h3>ASRM_INVOKE_SIM</h3>
+        <div class="steps-used">Steps: 24</div>
+        <span class="fm-nofound">Rule file not found</span><br/>
+        <span class="badge b-skipped" style="margin-top:6px;display:inline-block">⚠ Not Found</span>
+      </div>
+      <div class="fm-card">
+        <h3>MCS_GET_PACKCODE</h3>
+        <div class="steps-used">Steps: 26</div>
+        <span class="fm-nofound">Rule file not found</span><br/>
+        <span class="badge b-skipped" style="margin-top:6px;display:inline-block">⚠ Not Found</span>
+      </div>
+      <div class="fm-card">
+        <h3>MCS_CANCEL_AFTER_SALE</h3>
+        <div class="steps-used">Steps: 27</div>
+        <span class="fm-nofound">Rule file not found</span><br/>
+        <span class="badge b-skipped" style="margin-top:6px;display:inline-block">⚠ Not Found</span>
+      </div>
+      <div class="fm-card">
+        <h3>APIGW_OPT_IN_OUT</h3>
+        <div class="steps-used">Steps: 28</div>
+        <span class="fm-nofound">Rule file not found</span><br/>
+        <span class="badge b-skipped" style="margin-top:6px;display:inline-block">⚠ Not Found</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="section">
+  <div class="section-header"><div class="section-num">5</div><h2>§5 — Sequence Diagram</h2></div>
+  <div class="section-body">
+    <p style="margin-bottom:12px;font-size:0.82rem;color:#666">Conditional steps (with PreExecCheck) are wrapped in <code class="inline">opt</code> blocks.</p>
+    <div class="diagram-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CRM as CRM
+    participant CAT as CAT
+    participant ASRM as ASRM
+    participant INTX as INTX
+    participant CDB as CDB
+    participant CCP as CCP
+    participant OMX as OMX
+    participant SBM as SBM
+    participant AA as AA
+    participant MCS as MCS
+    participant APIGW as APIGW
+
+    O->>CRM: CRM_GET_LAST_ASSET_ROOT [customerAddressFlag=Y]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_GET_LAST_ASSET_ROOT
+    O->>CRM: CRM_GET_ASSET_COMPONENT_LIST [STATUS=Active]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_GET_ASSET_COMPONENT_LIST
+    opt count Offers > 0
+        O->>CAT: CAT_GOD
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD
+    end
+    O->>ASRM: ASRM_GET_UR_DETAILS_MSISDN
+    ASRM-->>O: response
+    Note over O,ASRM: FM: ASRM_GET_UR_DETAILS_MSISDN
+    O->>INTX: INTX_GET_SIM_INFO_BY_MSISDN
+    INTX-->>O: response
+    Note over O,INTX: FM: INTX_GET_SIM_INFO_BY_MSISDN
+    O->>INTX: INTX_GET_SIM_INFO_BY_SIM
+    INTX-->>O: response
+    Note over O,INTX: FM: INTX_GET_SIM_INFO_BY_SIM
+    O->>CDB: CDB_GET_PROFILE
+    CDB-->>O: response
+    Note over O,CDB: FM: CDB_GET_PROFILE
+    opt Channel != CCP
+        O->>CCP: CCP_GET_PREPAID_CREDIT_INFO
+        CCP-->>O: response
+        Note over O,CCP: FM: CCP_GET_PREPAID_CREDIT_INFO
+    end
+    opt Channel != CCP
+        O->>OMX: OMX_CREATE_SUB_OFFER_PREPAID_REFUND
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_CREATE_SUB_OFFER_PREPAID_REFUND
+    end
+    O->>OMX: OMX_BRMS_DB
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BRMS_DB
+    opt Offers exist AND FE_OR_CCBS=CCP or BRMS_REMOVE
+        O->>CAT: CAT_GOD_B
+        CAT-->>O: response
+        Note over O,CAT: FM: CAT_GOD (2nd call)
+    end
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL
+    O->>OMX: OMX_CALC_ACTIVITY_REASON [CANCEL]
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_CALC_ACTIVITY_REASON
+    opt PROJECT_NAME = PREMIUM_NUMBER
+        O->>SBM: SBM_CANCEL_PREMIUM_NON_VOICE
+        SBM-->>O: response
+        Note over O,SBM: FM: SBM_CANCEL_PREMIUM_NON_VOICE
+    end
+    O->>OMX: STATUS_UPDATE_CREATING_PROFILE
+    OMX-->>O: response
+    Note over O,OMX: FM: STATUS_UPDATE_CREATING_PROFILE
+    O->>CRM: CRM_CREATE_ORDER_PREPAID [command=Disconnect, orderType=D]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_CREATE_ORDER_PREPAID
+    opt FE_OR_CCBS = BRMS_REMOVE
+        O->>OMX: OMX_GET_SRV_TRX_NO_CCD [CCD]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+    end
+    opt FE_OR_CCBS = BRMS_REMOVE
+        O->>AA: AA_PREPAID_PROVISIONING_CCD [CCD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_PREPAID_PROVISIONING
+    end
+    opt FE_OR_CCBS = BRMS_REMOVE
+        O->>AA: AA_CHECK_CONFIRMATION_CCD [CCD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_CHECK_CONFIRMATION
+    end
+    O->>OMX: OMX_GET_SRV_TRX_NO [DSD]
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+    opt CdbProfile IMSI present
+        O->>AA: AA_PREPAID_PROVISIONING [DSD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_PREPAID_PROVISIONING
+    end
+    opt ActivityReason != MNPHR and RFREOT
+        O->>ASRM: ASRM_INVOKE_MSISDN_RELEASE [ACTIVITY=RELEASE]
+        ASRM-->>O: response
+        Note over O,ASRM: FM: ASRM_INVOKE_MSISDN
+    end
+    opt ActivityReason = MNPHR or RFREOT
+        O->>ASRM: ASRM_INVOKE_MSISDN_PORT_IN_REVERSE [PORT IN REVERSE]
+        ASRM-->>O: response
+        Note over O,ASRM: FM: ASRM_INVOKE_MSISDN
+    end
+    O->>ASRM: ASRM_INVOKE_SIM_RELEASE [ACTIVITY=RELEASE]
+    ASRM-->>O: response
+    Note over O,ASRM: FM: ASRM_INVOKE_SIM
+    opt Not CCP/RM/ASRM AND IMSI present
+        O->>AA: AA_CHECK_CONFIRMATION [DSD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_CHECK_CONFIRMATION
+    end
+    O->>MCS: MCS_GET_PACKCODE
+    MCS-->>O: response
+    Note over O,MCS: FM: MCS_GET_PACKCODE
+    opt MCS_CANCEL_AFS = Y
+        O->>MCS: MCS_CANCEL_AFTER_SALE [USE_ROWID_CRM=Y]
+        MCS-->>O: response
+        Note over O,MCS: FM: MCS_CANCEL_AFTER_SALE
+    end
+    opt FE_OR_CCBS=CRM AND TR_OFFER_GROUP=CBSC
+        O->>APIGW: APIGW_OPT_IN_OUT [ACTION=0]
+        APIGW-->>O: response
+        Note over O,APIGW: FM: APIGW_OPT_IN_OUT
+    end
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Flowchart -->
+<div class="section">
+  <div class="section-header"><div class="section-num">6</div><h2>§6 — Process Flow Diagram</h2></div>
+  <div class="section-body">
+    <div class="diagram-wrap">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1[S1: CRM_GET_LAST_ASSET_ROOT\ncustomerAddressFlag=Y]
+    S1 --> S2[S2: CRM_GET_ASSET_COMPONENT_LIST\nSTATUS=Active]
+    S2 --> S3{S3: CAT_GOD\nOffers exist?}
+    S3 --> S4[S4: ASRM_GET_UR_DETAILS_MSISDN]
+    S4 --> S5[S5: INTX_GET_SIM_INFO_BY_MSISDN]
+    S5 --> S6[S6: INTX_GET_SIM_INFO_BY_SIM]
+    S6 --> S7[S7: CDB_GET_PROFILE]
+    S7 --> S8{S8: CCP_GET_PREPAID_CREDIT_INFO\nChannel != CCP?}
+    S8 --> S9{S9: OMX_CREATE_SUB_OFFER_PREPAID_REFUND\nChannel != CCP?}
+    S9 --> S10[S10: OMX_BRMS_DB]
+    S10 --> S11{S11: CAT_GOD_B\nOffers + BRMS_REMOVE/CCP?}
+    S11 --> S12[S12: OMX_BIZ_VAL]
+    S12 --> S13[S13: OMX_CALC_ACTIVITY_REASON\nCANCEL]
+    S13 --> S14{S14: SBM_CANCEL_PREMIUM_NON_VOICE\nPREMIUM_NUMBER?}
+    S14 --> S15[S15: STATUS_UPDATE_CREATING_PROFILE]
+    S15 --> S16[S16: CRM_CREATE_ORDER_PREPAID\ncommand=Disconnect]
+    S16 --> S17{S17: OMX_GET_SRV_TRX_NO CCD\nBRMS_REMOVE?}
+    S17 --> S18{S18: AA_PREPAID_PROVISIONING CCD\nBRMS_REMOVE?}
+    S18 --> S19{S19: AA_CHECK_CONFIRMATION CCD\nBRMS_REMOVE?}
+    S19 --> S20[S20: OMX_GET_SRV_TRX_NO DSD]
+    S20 --> S21{S21: AA_PREPAID_PROVISIONING DSD\nIMSI present?}
+    S21 --> S22{S22: ASRM_INVOKE_MSISDN_RELEASE\nNormal cancel?}
+    S22 --> S23{S23: ASRM_INVOKE_MSISDN_PORT_IN_REVERSE\nMNPHR/RFREOT?}
+    S23 --> S24[S24: ASRM_INVOKE_SIM_RELEASE]
+    S24 --> S25{S25: AA_CHECK_CONFIRMATION DSD\nNot CCP/RM/ASRM + IMSI?}
+    S25 --> S26[S26: MCS_GET_PACKCODE]
+    S26 --> S27{S27: MCS_CANCEL_AFTER_SALE\nMCS_CANCEL_AFS=Y?}
+    S27 --> S28{S28: APIGW_OPT_IN_OUT\nFE_OR_CCBS=CRM + CBSC?}
+    S28 --> END([END])
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<div class="footer">TRUE Corporation OMX · TIBCO BusinessEvents · Order Journey Documentation — PREPAID_CANCEL</div>
+</body>
+</html>

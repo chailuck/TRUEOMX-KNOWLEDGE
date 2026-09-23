@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_MCS_UPDATE_SUBSCRIPTION</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:28px 32px;}
+.page-header h1{font-size:1.6rem;font-weight:700;letter-spacing:.5px;}
+.page-header .sub{opacity:.85;font-size:.92rem;margin-top:6px;}
+.meta-row{display:flex;gap:18px;flex-wrap:wrap;margin-top:12px;font-size:.82rem;opacity:.9;}
+.meta-row span{background:rgba(255,255,255,.15);padding:3px 10px;border-radius:12px;}
+.container{max-width:1400px;margin:0 auto;padding:24px 28px;}
+.section{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:22px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 18px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light);}
+.section-body{padding:18px;}
+table{width:100%;border-collapse:collapse;font-size:.86rem;}
+th{background:#F5E6E6;color:var(--true-dark);font-weight:600;padding:9px 12px;text-align:left;border-bottom:2px solid var(--true-red);}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#FFF5F5;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);line-height:1.5;}
+code{background:#f0e8e8;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:.85em;}
+.badge{display:inline-block;padding:2px 9px;border-radius:10px;font-size:.76rem;font-weight:600;}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-medium{background:#FFF3E0;color:#E65100;font-weight:700;}
+.badge-low{background:#E8F5E9;color:#2e7d32;font-weight:700;}
+.kw{color:#cba6f7;}
+.ty{color:#89b4fa;}
+.st{color:#a6e3a1;}
+.cm{color:#6c7086;font-style:italic;}
+.nu{color:#fab387;}
+.fn{color:#f38ba8;}
+.xt{color:#89dceb;}
+.xa{color:#f9e2af;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.warn-box{background:#FFF8E1;border-left:4px solid #F9A825;border-radius:4px;padding:12px 14px;margin:10px 0;font-size:.88rem;}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);border-radius:4px;padding:12px 14px;margin:10px 0;font-size:.88rem;}
+.scope-header{background:#F5E6E6;border-left:4px solid var(--true-red);padding:7px 12px;border-radius:4px;font-weight:600;font-size:.88rem;margin:14px 0 8px;}
+.flow-step{display:flex;gap:12px;align-items:flex-start;padding:8px 0;border-bottom:1px solid var(--border);}
+.flow-step:last-child{border-bottom:none;}
+.step-num{background:var(--true-red);color:#fff;min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.8rem;flex-shrink:0;}
+.step-body{flex:1;}
+.diff-table th{background:#E8EAF6;color:#1a237e;}
+.footer{text-align:center;color:#9E9E9E;font-size:.78rem;padding:18px;margin-top:8px;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_MCS_UPDATE_SUBSCRIPTION</h1>
+  <div class="sub">Notify MCS to update mobile subscription on device change — per-Material parallel fan-out across POU and COU Subscriber scopes</div>
+  <div class="meta-row">
+    <span>Author: (not specified)</span>
+    <span>Priority: 5</span>
+    <span>forwardChain: true</span>
+    <span>Type: OMXFM Request</span>
+    <span>Backend: MCS (Mobile Content Service)</span>
+    <span>Schema: UpdateSubscriptionRequest.xsd (ns8)</span>
+    <span>Pattern: sendEventImmediate parallel fan-out</span>
+    <span>Generated: 2026-08-20</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This rule calls MCS (Mobile Content Service) to update a mobile subscription record when a subscriber's physical device (handset Material) changes — typically as part of a device trade-in or parameter update. One <code>MCS_UPDATE_SUBSCRIPTION</code> event is dispatched per qualifying subscriber Material (identified by <code>MatCode</code>) across two scopes: POU Subscriber and COU Subscriber. Dispatch is via <code>sendEventImmediate</code> (parallel fan-out). Subscribers without a <code>MaterialInfo</code> record are skipped entirely.</p>
+    <div class="info-box">Used in POSTPAID_UPDATE_PARAMETER step 30 — MCS subscription update follows PSA device activities (KNOX save, notify Kafka, PSA_UPDATE_DEVICE) in the device trade-in flow.</div>
+    <table style="margin-top:12px;">
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_MCS_UPDATE_SUBSCRIPTION</code></td></tr>
+      <tr><td>Outbound event</td><td><code>Events.OMConsumers.OMXFM.Request.MCS_UPDATE_SUBSCRIPTION</code></td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.MCS_UPDATE_SUBSCRIPTION</code></td></tr>
+      <tr><td>Payload root</td><td><code>ns8:updateSubscriptionReq</code> (UpdateSubscriptionRequest.xsd)</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td></tr>
+      <tr><td>Dispatch pattern</td><td><span class="badge badge-orange">sendEventImmediate — parallel fan-out per Material</span></td></tr>
+      <tr><td>resubmit refId key</td><td><code>SubRefId + ":" + material.MatCode</code></td></tr>
+      <tr><td>Entry gate</td><td><code>psub/csub.MaterialInfo != null</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Note</th></tr>
+      <tr><td>priority</td><td>5</td><td>Standard FM request priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Allows further rule evaluation after execution</td></tr>
+      <tr><td>Author</td><td>(none)</td><td>Empty @description block — no @author tag</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Declared Objects -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order — entity hierarchy, subscriber Materials, extended info</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity — Status, RequestCount, Response[], PreExecCheck</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity position match</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "MCS_UPDATE_SUBSCRIPTION"</code></td><td>Activity type guard</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "MCS_UPDATE_SUBSCRIPTION"</code></td><td>Redundant dual binding</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Fires only when awaiting execution</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-body"><strong>Resubmit detection</strong> — <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code></div></div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-body"><strong>Load PreExecCheck XPath</strong> — load <code>nextAct</code> Activity concept; read <code>nextAct.PreExecCheck</code> into <code>chkXPath</code></div></div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-body"><strong>Scope A — POU Subscriber → Material</strong> — loop POU[p] → Subscriber[ps] → (if MaterialInfo != null) → Material[pmat]; per-Material PreExecCheck; resubmit guard; build + send POU XSLT variant</div></div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-body"><strong>Scope B — COU Subscriber → Material</strong> — loop POU[p] → ChildOU[c] → Subscriber[cs] → (if MaterialInfo != null) → Material[cmat]; per-Material PreExecCheck; resubmit guard; build + send COU XSLT variant</div></div>
+    <div class="flow-step"><div class="step-num">5</div><div class="step-body"><strong>Dispatch or skip</strong> — if any events sent: INPROGRESS → <code>SendDataToDB()</code>; else <code>SkipActivity("4")</code></div></div>
+    <div class="flow-step"><div class="step-num">6</div><div class="step-body"><strong>Exception handling</strong> — catch all → <code>HandleActivityException()</code></div></div>
+  </div>
+</div>
+
+<!-- §6 Detailed Logic -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Detailed Logic</div>
+  <div class="section-body">
+
+    <div class="scope-header">Scope A — POU Subscriber → Material</div>
+    <table>
+      <tr><th>Dimension</th><th>Detail</th></tr>
+      <tr><td>Loop</td><td><code>ParentOU[p] → Subscriber[ps] → (if MaterialInfo!=null) → Material[pmat]</code></td></tr>
+      <tr><td>refId (resubmit key)</td><td><code>pMatRefId = pSubRefId + ":" + material.MatCode</code></td></tr>
+      <tr><td>Resubmit guard</td><td><code>Response[iResp].ReferenceId == pMatRefId &amp;&amp; CompletionStatus == 2</code></td></tr>
+      <tr><td>PreExecCheck XML builder</td><td>if MatCode not blank → <code>GetXMLForSubscriberMaterialInfo(orderRequest, pSubRefId, material.MatCode)</code><br>else → <code>GetXMLForSubscriberMaterialInfo(orderRequest, pSubRefId, material.MatSerial)</code></td></tr>
+      <tr><td>XSLT params</td><td><code>orderRequest, pMatRefId, globalVariables, material, psub</code></td></tr>
+      <tr><td>Loaded but unused</td><td><code>pOuId</code> — POU OUId loaded but never used in payload or logic</td></tr>
+      <tr><td>pOuRefId</td><td>Loaded but NOT used in POU scope (used in COU PreExecCheck helper)</td></tr>
+    </table>
+
+    <div class="scope-header">Scope B — COU Subscriber → Material</div>
+    <table>
+      <tr><th>Dimension</th><th>Detail</th></tr>
+      <tr><td>Loop</td><td><code>ParentOU[p] → ChildOU[c] → Subscriber[cs] → (if MaterialInfo!=null) → Material[cmat]</code></td></tr>
+      <tr><td>refId (resubmit key)</td><td><code>cMatRefId = cSubRefId + ":" + material.MatCode</code></td></tr>
+      <tr><td>Resubmit guard</td><td><code>Response[iResp].ReferenceId == cMatRefId &amp;&amp; CompletionStatus == 2</code></td></tr>
+      <tr><td>PreExecCheck XML builder</td><td>if MatCode not blank → <code>GetXMLForSubscriberMaterialInChildOU(orderRequest, cSubRefId, pOuRefId, material.MatCode)</code><br>else → <code>GetXMLForSubscriberMaterialInChildOU(orderRequest, cSubRefId, pOuRefId, material.MatSerial)</code></td></tr>
+      <tr><td>XSLT params</td><td><code>orderRequest, cMatRefId, globalVariables, material, csub</code></td></tr>
+      <tr><td>Loaded but unused</td><td><code>cOuId</code>, <code>cOuRefId</code> — COU OUId and RefId loaded but never used; <code>pOuRefId</code> IS used in helper call</td></tr>
+    </table>
+
+    <div class="warn-box"><strong>[LOW] MatCode vs MatSerial fallback in PreExecCheck builder:</strong> If <code>material.MatCode</code> is blank, the helper is called with <code>material.MatSerial</code> instead. This allows the PreExecCheck XML to be built from the serial number when no product code is present — a device-registration scenario where only the IMEI/serial is known. The same selection does NOT apply to the XSLT <code>ns8:handset</code> field — that is always from MatCode.</div>
+    <div class="warn-box"><strong>[MEDIUM] Unused variables:</strong> <code>pOuId</code> (line 30), <code>cOuId</code> (line 91), <code>cOuRefId</code> (line 92) are declared and assigned but never referenced in XSLT params or logic. Dead code — harmless but adds noise.</div>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:8px;">§8.1 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.MCS_UPDATE_SUBSCRIPTION</code></td><td>Per-Material MCS subscription update request (parallel fan-out)</td></tr>
+      <tr><td><span class="badge badge-green">INBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Response.MCS_UPDATE_SUBSCRIPTION</code></td><td>MCS subscription update confirmation</td></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Audit log per dispatched event</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 8px;">§8.2 — Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Schema</th><th>Protocol</th></tr>
+      <tr><td>MCS</td><td>MCS_UPDATE_SUBSCRIPTION</td><td><code>ns8:updateSubscriptionReq</code> (UpdateSubscriptionRequest.xsd)</td><td>JMS / TIBCO EMS</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 8px;">§8.3 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept</th><th>Access</th><th>Fields Used</th></tr>
+      <tr><td><code>OrderRequest</code></td><td>Read</td><td>OrderData.{OMXTrackingId, OrderID, OrderType, OrderPriority, Channel, SubmissionDate, User, Password, ExtendedInfo[FE_LOGIN_USER, TPC_REFNO]}, Customer.{ParentOU[].Subscriber[].{RefId, MSISDN, MaterialInfo.Material[].{MatCode, MatSerial}, ExtendedInfo[NEW_MAT_SERIAL, PARTNER, SR_TYPE]}, ParentOU[].ChildOU[].Subscriber[].{same fields}}</td></tr>
+      <tr><td><code>Activity</code></td><td>Read/Write</td><td>Status, RequestCount, Response[], PreExecCheck</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 8px;">§8.4 — ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Key</th><th>Location</th><th>Required</th><th>Purpose in Payload</th></tr>
+      <tr><td><code>FE_LOGIN_USER</code></td><td>OrderData.ExtendedInfo</td><td>Optional</td><td><code>ns8:requestor_id</code> — the front-end operator who initiated the order</td></tr>
+      <tr><td><code>TPC_REFNO</code></td><td>OrderData.ExtendedInfo</td><td>Optional</td><td><code>ns8:ref_id</code> — TPC reference number for this service request</td></tr>
+      <tr><td><code>NEW_MAT_SERIAL</code></td><td>Subscriber.ExtendedInfo</td><td>Optional</td><td><code>ns8:imei</code> — the new device IMEI being registered</td></tr>
+      <tr><td><code>PARTNER</code></td><td>Subscriber.ExtendedInfo</td><td>Optional</td><td><code>ns8:channel_code</code> — partner/dealer code</td></tr>
+      <tr><td><code>SR_TYPE</code></td><td>Subscriber.ExtendedInfo</td><td>Optional</td><td><code>ns8:sr_type</code> — service request type classification</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 8px;">§8.5 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Used For</th></tr>
+      <tr><td><code>$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>Guards UserName/PassWord fields in JMS event</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Gates payload copy in audit log</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <div class="info-box">Two XSLT variants — POU Subscriber (params: pMatRefId, material, psub) and COU Subscriber (params: cMatRefId, material, csub). The payload schema is identical; only the RefID element source and subscriber data variable name differ.</div>
+
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Conditional: $orderRequest/OrderPriority]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$pMatRefId</span><span class="tree-cond">[Always — POU: SubRefId:MatCode | COU: cMatRefId]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="tree-cond">[Conditional: IsEnableUserPass='true' AND User exists]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="tree-cond">[Conditional: IsEnableUserPass='true' AND Password exists]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge badge-green" style="font-size:.7rem;">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns8:updateSubscriptionReq</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:transaction_id</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Conditional]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:requestor_id</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[Name='FE_LOGIN_USER']/Value</span><span class="tree-cond">[Conditional]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:ref_id</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[Name='TPC_REFNO']/Value</span><span class="tree-cond">[Conditional]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:registered_imei</span><span class="tree-arrow">←</span><span class="tree-src">$material/MatSerial</span><span class="tree-cond">[Conditional — existing/old IMEI]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:imei</span><span class="tree-arrow">←</span><span class="tree-src">$psub/$csub/ExtendedInfo[Name='NEW_MAT_SERIAL']/Value</span><span class="tree-cond">[Conditional — new IMEI being registered]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:handset</span><span class="tree-arrow">←</span><span class="tree-src">$material/MatCode</span><span class="tree-cond">[Conditional — handset product code]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:msisdn</span><span class="tree-arrow">←</span><span class="tree-src">$psub/$csub/MSISDN</span><span class="tree-cond">[Conditional]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:channel</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Channel</span><span class="tree-cond">[Conditional]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:channel_code</span><span class="tree-arrow">←</span><span class="tree-src">$psub/$csub/ExtendedInfo[Name='PARTNER']/Value</span><span class="tree-cond">[Conditional]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:sr_type</span><span class="tree-arrow">←</span><span class="tree-src">$psub/$csub/ExtendedInfo[Name='SR_TYPE']/Value</span><span class="tree-cond">[Conditional]</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns8:sr_creation_date</span><span class="tree-arrow">←</span><span class="tree-src-static">tib:format-dateTime("yyyy-MM-dd'T'HH:mm:ssXXX", $orderRequest/SubmissionDate)</span><span class="badge badge-green" style="font-size:.7rem;">Always</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <div style="margin-top:14px;">
+      <table class="diff-table">
+        <tr><th>Field</th><th>POU Variant</th><th>COU Variant</th></tr>
+        <tr><td>Event RefID</td><td><code>$pMatRefId</code> = <code>pSubRefId:MatCode</code></td><td><code>$cMatRefId</code> = <code>cSubRefId:MatCode</code></td></tr>
+        <tr><td>Subscriber param name</td><td><code>$psub</code></td><td><code>$csub</code></td></tr>
+        <tr><td>ns8:imei source</td><td><code>$psub/ExtendedInfo[Name='NEW_MAT_SERIAL']/Value</code></td><td><code>$csub/ExtendedInfo[Name='NEW_MAT_SERIAL']/Value</code></td></tr>
+        <tr><td>ns8:msisdn source</td><td><code>$psub/MSISDN</code></td><td><code>$csub/MSISDN</code></td></tr>
+        <tr><td>ns8:channel_code source</td><td><code>$psub/ExtendedInfo[Name='PARTNER']/Value</code></td><td><code>$csub/ExtendedInfo[Name='PARTNER']/Value</code></td></tr>
+        <tr><td>ns8:sr_type source</td><td><code>$psub/ExtendedInfo[Name='SR_TYPE']/Value</code></td><td><code>$csub/ExtendedInfo[Name='SR_TYPE']/Value</code></td></tr>
+        <tr><td>All other payload fields</td><td colspan="2">Identical (both use $orderRequest and $material)</td></tr>
+      </table>
+    </div>
+    <div style="margin-top:10px;font-size:.8rem;color:#666;">
+      <strong>Legend:</strong> <span class="tree-src" style="font-size:.8rem;">green = XPath source</span> &nbsp;
+      <span class="tree-src-static" style="font-size:.8rem;">orange = computed/static</span> &nbsp;
+      <span class="tree-cond" style="font-size:.8rem;">purple = condition</span>
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Scope</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th><th>Note</th></tr>
+      <tr><td>POU &amp; COU Request</td><td>MCS_UPDATE_SUBSCRIPTION</td><td>"Request Sent for MCS_UPDATE_SUBSCRIPTION"</td><td><span class="badge badge-green">Correct — static trace, no RefId embedded</span></td></tr>
+      <tr><td>Response</td><td>MCS_UPDATE_SUBSCRIPTION</td><td>"Response received for MCS_UPDATE_SUBSCRIPTION"</td><td><span class="badge badge-green">Consistent with request</span></td></tr>
+    </table>
+    <div class="info-box" style="margin-top:10px;">Audit logging is unconditional — no <code>AllowWriteLog</code> gate. Every dispatched event generates an audit log entry, regardless of order type.</div>
+  </div>
+</div>
+
+<!-- §12 Status Management -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Status</th><th>Call</th></tr>
+      <tr><td>At least one event dispatched</td><td>INPROGRESS</td><td><code>GetActivityStatusString("1", false)</code> → <code>SendDataToDB()</code></td></tr>
+      <tr><td>No Materials found across all scopes (or all skipped)</td><td>SKIPPED</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+      <tr><td>Exception caught</td><td>ERROR</td><td><code>HandleActivityException()</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre>Request_MCS_UPDATE_SUBSCRIPTION.rule
+├── Instance.getByExtIdByUri(NextActivityName, "/Concepts/OM/ProcessConfig/Activity")  [load nextAct]
+├── [Scope A] POU[p] → Subscriber[ps] → (MaterialInfo!=null) → Material[pmat]
+│   ├── pMatRefId = pSubRefId + ":" + material.MatCode
+│   ├── [Resubmit guard] Response[].ReferenceId==pMatRefId && CompletionStatus==2
+│   ├── (if PreExecCheck.length > 0)
+│   │   ├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(material.MatCode)
+│   │   ├── RuleFunctions.Helpers.GetXMLForSubscriberMaterialInfo(orderRequest, pSubRefId, MatCode|MatSerial)
+│   │   └── XPath.execute("/(" + chkXPath + ")", sXML, ...)
+│   ├── Event.createEvent("xslt://MCS_UPDATE_SUBSCRIPTION")            [POU Subscriber XSLT]
+│   ├── Event.Ext.sendEventImmediate() → MCS_UPDATE_SUBSCRIPTION
+│   └── Event.Ext.sendEventImmediate() → Logger
+├── [Scope B] POU[p] → ChildOU[c] → Subscriber[cs] → (MaterialInfo!=null) → Material[cmat]
+│   ├── cMatRefId = cSubRefId + ":" + material.MatCode
+│   ├── [Resubmit guard] Response[].ReferenceId==cMatRefId && CompletionStatus==2
+│   ├── (if PreExecCheck.length > 0)
+│   │   ├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(material.MatCode)
+│   │   ├── RuleFunctions.Helpers.GetXMLForSubscriberMaterialInChildOU(orderRequest, cSubRefId, pOuRefId, MatCode|MatSerial)
+│   │   └── XPath.execute("/(" + chkXPath + ")", sXML, ...)
+│   ├── Event.createEvent("xslt://MCS_UPDATE_SUBSCRIPTION")            [COU Subscriber XSLT]
+│   ├── Event.Ext.sendEventImmediate() → MCS_UPDATE_SUBSCRIPTION
+│   └── Event.Ext.sendEventImmediate() → Logger
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB()
+├── RuleFunctions.Helpers.SkipActivity()
+└── RuleFunctions.Helpers.HandleActivityException()
+
+Response_MCS_UPDATE_SUBSCRIPTION.rulefunction
+├── OMXUtils.generateTrackingID()
+├── Instance.createInstance("xslt://ResponseBase")
+│   ├── ResponseCode        ← $eventResponse/ResponseCode
+│   ├── ResponseMessage     ← $eventResponse/ResponseMsg
+│   ├── CompletionStatus    ← $eventResponse/CompletionStatus
+│   └── ReferenceId         ← $eventResponse/RefID              [correctly mapped]
+├── currActivity.Response[Response@length] = activityRes
+├── Event.Ext.sendEventImmediate() → Logger
+├── XPath.evalAsInt(count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3)="000"]))
+└── if(RequestCount == successResponseCount) → "true" else → "false"</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:10px;">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Call MCS to update subscription for each POU Subscriber's Material — one event per Material</td></tr>
+      <tr><td>R2</td><td>Call MCS to update subscription for each COU Subscriber's Material — one event per Material</td></tr>
+      <tr><td>R3</td><td>Skip subscribers with no MaterialInfo record entirely</td></tr>
+      <tr><td>R4</td><td>If MatCode is blank, use MatSerial as the PreExecCheck XML key</td></tr>
+      <tr><td>R5</td><td>resubmit refId = SubRefId:MatCode — per-Material idempotency</td></tr>
+      <tr><td>R6</td><td>Carry old IMEI (MatSerial → registered_imei) and new IMEI (NEW_MAT_SERIAL ExtendedInfo → imei)</td></tr>
+      <tr><td>R7</td><td>sr_creation_date is always emitted — formatted from SubmissionDate with timezone offset</td></tr>
+      <tr><td>R8</td><td>Fan-in: all-success (RequestCount == count of responses with ResponseCode suffix "000")</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:16px 0 10px;">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Detail</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Unused variables</td>
+        <td><span class="badge-low badge">LOW</span></td>
+        <td><code>pOuId</code> (line 30), <code>cOuId</code> (line 91), <code>cOuRefId</code> (line 92) are loaded but never used in XSLT params or logic</td>
+        <td>Remove dead assignments in migration</td>
+      </tr>
+      <tr>
+        <td>MatCode as resubmit key but MatSerial used in PreExecCheck</td>
+        <td><span class="badge-medium badge">MEDIUM</span></td>
+        <td>resubmit refId is always <code>SubRefId:MatCode</code>, but when MatCode is blank the PreExecCheck XML uses MatSerial. If a second dispatch happens after a blank-MatCode first dispatch, the resubmit guard (checking MatCode) may not correctly detect the prior attempt.</td>
+        <td>Use consistent key (MatCode OR MatSerial) for both resubmit guard and PreExecCheck</td>
+      </tr>
+      <tr>
+        <td>No author attribution</td>
+        <td><span class="badge-low badge">LOW</span></td>
+        <td>Empty @description block — no @author tag for change tracing</td>
+        <td>Add author tag in migration</td>
+      </tr>
+      <tr>
+        <td>sr_creation_date always emitted</td>
+        <td><span class="badge-low badge">LOW</span></td>
+        <td>If SubmissionDate is null/empty, <code>tib:format-dateTime</code> may emit an empty or invalid ISO string inside the always-present element. MCS may reject the call.</td>
+        <td>Add xsl:if guard on SubmissionDate</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code</div>
+  <div class="section-body">
+    <pre><span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_MCS_UPDATE_SUBSCRIPTION</span> {
+    <span class="kw">attribute</span> { <span class="fn">priority</span> = <span class="nu">5</span>; <span class="fn">forwardChain</span> = <span class="kw">true</span>; }
+    <span class="kw">declare</span> { <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest; <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity; }
+    <span class="kw">when</span> { <span class="cm">/* activityId + status WAITING guards */</span> }
+    <span class="kw">then</span> {
+        <span class="ty">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">try</span> {
+            <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct = <span class="fn">Instance.getByExtIdByUri</span>(...);
+            <span class="ty">String</span> chkXPath = nextAct.PreExecCheck;
+            <span class="ty">boolean</span> isSkipped = <span class="kw">true</span>;
+
+            <span class="kw">for</span> (<span class="ty">int</span> p = <span class="nu">0</span>; p &lt; pOuLen; p++) {
+                <span class="ty">String</span> pOuId = ...;    <span class="cm">// [LOW: unused]</span>
+                <span class="ty">String</span> pOuRefId = ...;  <span class="cm">// used in COU PreExecCheck helper only</span>
+
+                <span class="cm">// ── Scope A: POU Subscriber → Material ─────────────────────────</span>
+                <span class="kw">for</span> (<span class="ty">int</span> ps = <span class="nu">0</span>; ps &lt; pSubLen; ps++) {
+                    <span class="ty">Subscriber</span> psub = ...;
+                    <span class="kw">if</span> (psub.MaterialInfo != <span class="kw">null</span>) {
+                        <span class="kw">for</span> (<span class="ty">int</span> pmat = <span class="nu">0</span>; pmat &lt; pMatLen; pmat++) {
+                            <span class="ty">String</span> pMatRefId = pSubRefId + <span class="st">":"</span> + material.MatCode;
+                            <span class="cm">// [Resubmit guard]</span>
+                            <span class="kw">if</span>(!reqSuccess) {
+                                <span class="cm">// [PreExecCheck: MatCode not blank → GetXMLForSubscriberMaterialInfo(MatCode) else MatSerial]</span>
+                                <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+                                    <span class="cm">// Event built with POU Subscriber XSLT (see §10)</span>
+                                    <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+                                    isSkipped = <span class="kw">false</span>;
+                                    <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                                    <span class="fn">Event.Ext.sendEventImmediate</span>(<span class="cm">/* Logger: OPERATION_NAME="MCS_UPDATE_SUBSCRIPTION" */</span>);
+                                }
+                            }
+                        }
+                    }
+                }
+
+                <span class="cm">// ── Scope B: COU Subscriber → Material ─────────────────────────</span>
+                <span class="kw">for</span> (<span class="ty">int</span> c = <span class="nu">0</span>; c &lt; cOuLen; c++) {
+                    <span class="ty">String</span> cOuId = ...;    <span class="cm">// [LOW: unused]</span>
+                    <span class="ty">String</span> cOuRefId = ...;  <span class="cm">// [LOW: unused]</span>
+                    <span class="kw">for</span> (<span class="ty">int</span> cs = <span class="nu">0</span>; cs &lt; cSubLen; cs++) {
+                        <span class="ty">Subscriber</span> csub = ...;
+                        <span class="kw">if</span> (csub.MaterialInfo != <span class="kw">null</span>) {
+                            <span class="kw">for</span> (<span class="ty">int</span> cmat = <span class="nu">0</span>; cmat &lt; cMatLen; cmat++) {
+                                <span class="ty">String</span> cMatRefId = cSubRefId + <span class="st">":"</span> + material.MatCode;
+                                <span class="cm">// [Resubmit guard]</span>
+                                <span class="kw">if</span>(!reqSuccess) {
+                                    <span class="cm">// [PreExecCheck: GetXMLForSubscriberMaterialInChildOU(cSubRefId, pOuRefId, MatCode|MatSerial)]</span>
+                                    <span class="kw">if</span>(chkRes == <span class="st">"true"</span>) {
+                                        <span class="cm">// Event built with COU Subscriber XSLT (see §10)</span>
+                                        <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+                                        isSkipped = <span class="kw">false</span>;
+                                        <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                                        <span class="fn">Event.Ext.sendEventImmediate</span>(<span class="cm">/* Logger */</span>);
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            <span class="kw">if</span> (!isSkipped) {
+                <span class="fn">GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+                <span class="fn">SendDataToDB</span>(orderRequest);
+            } <span class="kw">else</span> { <span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>); }
+        } <span class="kw">catch</span> (<span class="ty">Exception</span> ae) { <span class="fn">HandleActivityException</span>(...); }
+    }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response RF -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin-bottom:8px;">§19.1 — Overview</h3>
+    <p style="font-size:.88rem;margin-bottom:10px;"><code>Response_MCS_UPDATE_SUBSCRIPTION.rulefunction</code> — receives MCS subscription update confirmation, creates a <code>ResponseBase</code> concept, appends to Response[], sends audit log, then evaluates all-success fan-in.</p>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:12px 0 8px;">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order for audit log</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.MCS_UPDATE_SUBSCRIPTION</code></td><td>Inbound MCS confirmation</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Response[] array target</td></tr>
+    </table>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:12px 0 8px;">§19.3 — ResponseBase Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green" style="font-size:.7rem;">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">[Conditional]</span><span class="badge badge-green" style="font-size:.7rem;">Correctly mapped</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="font-size:.9rem;color:var(--true-dark);margin:12px 0 8px;">§19.4 — Fan-in Completion Logic</h3>
+    <pre><span class="ty">int</span> successResponseCount = <span class="fn">XPath.evalAsInt</span>(
+    <span class="st">"count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = '000'])"</span>);
+<span class="kw">if</span>(currActivity.RequestCount == successResponseCount)
+    <span class="kw">return</span> <span class="st">"true"</span>;   <span class="cm">// all dispatched requests succeeded</span>
+<span class="kw">else</span>
+    <span class="kw">return</span> <span class="st">"false"</span>;  <span class="cm">// waiting for more success responses</span></pre>
+    <div class="info-box">Standard all-success fan-in — returns "true" only when every dispatched Material update request has received a response with ResponseCode ending in "000".</div>
+  </div>
+</div>
+
+<div class="footer">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</div>
+</div>
+</body>
+</html>

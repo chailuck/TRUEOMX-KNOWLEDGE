@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_GET_RECURRING_CHARGE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+.callout.critical{border-color:#B71C1C;background:#FFEBEE}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+.badge-high{background:#FFE0E0;color:var(--true-dark)}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_OMX_GET_RECURRING_CHARGE</h1>
+  <div class="subtitle">Recurring Charge Lookup — unique SOC deduplication with GoldenDB-aware dual-variant dispatch</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: OMX FM (GoldenDB variant: CES)</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: FIRE-AND-FORGET</span>
+    <span class="meta-chip">Iteration: SubscriberOffers/AgreementOffers (deduplicated by SOC)</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>OMX_GET_RECURRING_CHARGE</strong> retrieves the recurring charge (RC) for each unique product (SOC code) in the order. It scans all SubscriberOffers and AgreementOffers across all POU/ChildOU, deduplicates by SOC, and sends one request with the full list of unique SOC codes.
+    </div>
+    <div class="callout warn">
+      <strong>Unique iteration pattern:</strong> Unlike other FMs that iterate Accounts or Subscribers, this FM builds a deduplicated <code>ArrayList</code> of unique SOC codes across four paths: ChildOU.Subscriber.SubscriberOffers, ChildOU.Agreement.Offers, POU.Subscriber.SubscriberOffers, and POU.Agreement.Offers. Only SOCs passing the PreExecCheck are added. If the list is empty, the activity is skipped.
+    </div>
+    <div class="callout info">
+      <strong>GoldenDB dispatch:</strong> If <code>OrderData.GoldenDB = "Y"</code> → sends to <code>CES_GET_RECURRING_CHARGE</code>; otherwise → <code>OMX_GET_RECURRING_CHARGE</code>. Both have the same payload structure but different routing/event type.
+    </div>
+    <div class="callout success">
+      <strong>Response write-backs:</strong> For each SOC in the response's <code>SocRecurringCharges[]</code>, writes an ExtendedInfo entry (Name="RC", Value=RecurringCharges) to every matching SubscriberOffer and AgreementOffer across all POU/ChildOU.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_GET_RECURRING_CHARGE</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>OMX FM / CES (GoldenDB dispatch)</td></tr>
+      <tr><td>Event type (request)</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_GET_RECURRING_CHARGE</code> OR <code>CES_GET_RECURRING_CHARGE</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> — FIRE-AND-FORGET</td></tr>
+      <tr><td>RequestCount</td><td>Manually incremented: <code>if(!isActResub) orderCurrentActivity.RequestCount++</code></td></tr>
+      <tr><td>Fan-in</td><td>Response returns "true" unconditionally (single request per activity)</td></tr>
+      <tr><td>Iteration target</td><td>Deduplicated SOC list across SubscriberOffers + AgreementOffers</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.OMX_GetRecurringChargeRes</code></td></tr>
+      <tr><td>Payload operation</td><td><code>ns:GetRecurringChargesRequest</code> (list of <code>&lt;soc_cd&gt;</code>)</td></tr>
+      <tr><td>Skip condition</td><td>offerList.size == 0 → SkipActivity("4")</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic Patterns -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>SOC deduplication</td><td>ArrayList offerList; <code>Collections.add(offerList, soc)</code> only if <code>!Collections.contains(offerList, soc)</code>. Ensures one <code>&lt;soc_cd&gt;</code> per unique product regardless of how many subscribers use it.</td></tr>
+      <tr><td>PreExecCheck per offer</td><td>Four helper variants: <code>GetXMLForSubscriberOfferInChildOU</code>, <code>GetXMLForAgreementOfferInChildOU</code>, <code>GetXMLForSubscriberOffer</code>, <code>GetXMLForAgreementOffer</code>. Only offers passing the check are added to the SOC list.</td></tr>
+      <tr><td>GoldenDB dispatch</td><td>If OrderData.GoldenDB = "Y" → CES_GET_RECURRING_CHARGE event type; else → OMX_GET_RECURRING_CHARGE. Payload structure identical.</td></tr>
+      <tr><td>Resubmit guard</td><td><code>if(!isActResub) RequestCount++</code> — does NOT skip sending on resubmit, only skips the RequestCount increment.</td></tr>
+      <tr><td>Response write-back scope</td><td>Searches all 4 paths (ChildOU.Subscriber.SubscriberOffers, ChildOU.Agreement.Offers, POU.Subscriber.SubscriberOffers, POU.Agreement.Offers) for SOC match; writes RC to matching offer ExtendedInfo.</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+<pre><code>createEvent → event
+├── JMSPriority     ← $orderRequest/OrderPriority                  [Conditional]
+├── JMSCorrelationID← $orderRequest/@extId                         [Conditional]
+├── OrderID         ← $orderRequest/OrderData/OrderID              [Conditional]
+├── UserName        ← $orderRequest/OrderData/User                 [Conditional]
+├── PassWord        ← $orderRequest/OrderData/Password             [Conditional]
+├── OrderType       ← $orderRequest/OrderData/OrderType            [Conditional]
+└── payload → ns:GetRecurringChargesRequest
+    └── [for each $socIDs/elements]
+        └── soc_cd  ← each element value from deduplicated offerList [Always, one per unique SOC]
+
+NOTE: CES_GET_RECURRING_CHARGE variant additionally adds:
+    extId ← OMXUtils:generateTrackingID()  [in the event element, CES only]</code></pre>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_OMX_GET_RECURRING_CHARGE
+├── Object offerList = Collections.List.createArrayList()
+├── ── SOC ACCUMULATION PASS (4 paths) ──
+│   for each POU[i]:
+│   ├── ChildOU[k].Subscriber[j].SubscriberOffers[l]:
+│   │   ├── if PreExecCheck: GetXMLForSubscriberOfferInChildOU(orderRequest, cOuSub.RefId, soc, pOu.RefId)
+│   │   └── if chkRes=="true" AND !contains(offerList, soc): Collections.add(offerList, soc)
+│   ├── ChildOU[k].Agreement.Offers[l]:
+│   │   ├── if PreExecCheck: GetXMLForAgreementOfferInChildOU(orderRequest, cOu.Agreement.RefId, soc, pOu.RefId)
+│   │   └── if chkRes=="true" AND !contains(offerList, soc): Collections.add(offerList, soc)
+│   ├── POU[i].Subscriber[j].SubscriberOffers[l]:
+│   │   ├── if PreExecCheck: GetXMLForSubscriberOffer(orderRequest, pOuSub.RefId, soc)
+│   │   └── if chkRes=="true" AND !contains(offerList, soc): Collections.add(offerList, soc)
+│   └── POU[i].Agreement.Offers[l]:
+│       ├── if PreExecCheck: GetXMLForAgreementOffer(orderRequest, pOu.Agreement.RefId, soc)
+│       └── if chkRes=="true" AND !contains(offerList, soc): Collections.add(offerList, soc)
+├── Object[] socIDs = Collections.toArray(offerList)
+├── if socIDs != null AND offerList.size > 0:
+│   ├── if GoldenDB="Y":
+│   │   ├── Event.createEvent(CES_GET_RECURRING_CHARGE, XSLT with socIDs param)
+│   │   └── Event.Ext.sendEventImmediate(reqEvent)  ← FIRE-AND-FORGET
+│   └── else:
+│       ├── Event.createEvent(OMX_GET_RECURRING_CHARGE, XSLT with socIDs param)
+│       └── Event.Ext.sendEventImmediate(reqEvent)  ← FIRE-AND-FORGET
+│   ├── if(!isActResub): RequestCount++
+│   ├── sendEventImmediate(Logger REQ)
+│   ├── GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+└── else: SkipActivity(orderRequest, orderCurrentActivity, "4")
+
+Response_OMX_GET_RECURRING_CHARGE
+├── Instance.createInstance(OMX_GetRecurringChargeRes:
+│   ResponseCode, ResponseMsg, CompletionStatus, ReferenceId,
+│   SocRecurringCharges[]: {extId, soc_cd, RecurringCharges})
+│   → currActivity.Response[n]
+├── for each activityRes.SocRecurringCharges[i]:
+│   ├── soc_cd = .soc_cd; soc_rc = .RecurringCharges
+│   └── for each POU[i] (all 4 paths):
+│       └── if offer.Soc == soc_cd:
+│           → offer.ExtendedInfo[] += {Name="RC", Value=soc_rc,
+│               extId=concat(trackID, ":", soc, ":RC:", soc_rc)}
+├── sendEvent(Logger RES)
+└── return "true"  ← ALWAYS (no fan-in counting)</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Response always returns "true" — no success count validation. If the OMX FM returns errors for some SOCs, the activity still completes successfully</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Add response code validation per SocRecurringCharges entry in migration</td>
+      </tr>
+      <tr>
+        <td>GoldenDB dispatch: if GoldenDB value changes or is absent, the wrong event type is sent silently</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document GoldenDB values and routing table; validate at order submission time</td>
+      </tr>
+      <tr>
+        <td>SOC deduplication via ArrayList is memory-resident — not persistent. On resubmit the list is rebuilt from scratch, potentially re-sending already-processed SOCs</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Implement idempotent RC lookup; cache RC values in order ExtInfo to survive resubmits</td>
+      </tr>
+      <tr>
+        <td>Response write-back iterates all 4 paths for every SOC — O(N×M) where N=SOCs, M=all offers. Large orders may be slow</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Consider indexing offers by SOC at order load time</td>
+      </tr>
+      <tr>
+        <td>Only one RC request sent for entire order (all SOCs in one payload) — if OMX FM has a per-SOC limit, large orders may fail</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Verify OMX FM batch size limit; implement pagination if needed</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>OMX_GetRecurringChargeRes (4 std fields + SocRecurringCharges[] array)</td><td>Always</td></tr>
+      <tr><td>All matching SubscriberOffer.ExtendedInfo[]<br>Name="RC", extId contains SOC+RC</td><td><code>SocRecurringCharges[i].RecurringCharges</code></td><td>offer.Soc == soc_cd</td></tr>
+      <tr><td>All matching AgreementOffer.ExtendedInfo[]<br>Name="RC", extId contains SOC+RC</td><td><code>SocRecurringCharges[i].RecurringCharges</code></td><td>offer.Soc == soc_cd</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:12px">
+      <strong>Fan-in:</strong> Returns "true" unconditionally — single request per activity. No count-based fan-in needed.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

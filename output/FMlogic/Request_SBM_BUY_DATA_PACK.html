@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_SBM_BUY_DATA_PACK</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem}
+.meta-row{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.8rem}
+.container{max-width:1400px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:22px;border:1px solid var(--border);overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover{background:#FAFAFA}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem;background:#F0F0F0;padding:1px 5px;border-radius:3px;color:var(--true-dark)}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red);white-space:pre-wrap}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:2px}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+.warn-box{background:#FFF3E0;border-left:4px solid var(--warning);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+.note-box{background:var(--true-pale);border-left:4px solid var(--true-red);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+h3{color:var(--true-dark);margin:18px 0 8px;font-size:1rem}
+ul,ol{padding-left:20px;margin:8px 0}
+li{margin:4px 0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;color:#999;font-size:.8rem;padding:20px;border-top:1px solid var(--border);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_SBM_BUY_DATA_PACK</h1>
+  <div class="subtitle">TIBCO BusinessEvents — SBM Data Pack Purchase (IntraActivitySequencing / Dual Payload / Dynamic Offer Injection)</div>
+  <div class="meta-row">
+    <span class="meta-chip">Author: Puttaporn-PC</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">JMS Event: SBM_DO_SERVICE</span>
+    <span class="meta-chip">Pattern: IntraActivitySequencing throttled dispatch</span>
+    <span class="meta-chip">Lines: 191 (request) + 440 (response)</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+<div class="section-header">§1 — Overview &amp; Purpose</div>
+<div class="section-body">
+<div class="info-box"><strong>Unique dispatch pattern — IntraActivitySequencing:</strong> Unlike most OMXFM rules that use <code>Event.Ext.sendEventImmediate()</code> to fan out all requests simultaneously, SBM_BUY_DATA_PACK uses <code>IntraActivitySequencing.ActionRequestEvent()</code> to queue events for throttled, sequential dispatch — <code>SendFirstRequestEvent()</code> fires only the first queued event. Subsequent events are released as each response arrives via <code>ActionResponseEvent()</code>. This serializes SBM calls to avoid flooding the SBM backend.</div>
+<p>This FM invokes the SBM <code>doServiceArrayRequest</code> API to purchase a data pack for each qualifying subscriber offer. The payload is a composite: an optional <code>CheckPackAllowRequest</code> (validates pack eligibility) followed by a required <code>DoServiceRequest</code> (triggers the purchase). The response includes per-offer data info (charge amount, speed, dates) extracted from an HTML-entity-encoded extra_xml string, plus optional instructions to cancel or expire related packs and inject new BL_CREATE_CHARGE sub-offers into working memory.</p>
+<table>
+<tr><th>Item</th><th>Value</th></tr>
+<tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_SBM_BUY_DATA_PACK</code></td></tr>
+<tr><td>Author</td><td>Puttaporn-PC</td></tr>
+<tr><td>JMS Event Dispatched</td><td><code>Events.OMConsumers.OMXFM.Request.SBM_DO_SERVICE</code></td></tr>
+<tr><td>Payload Schema</td><td><code>ns1:doServiceArrayRequest</code> (SBMDoserviceArrayRequest namespace)</td></tr>
+<tr><td>Response Concept</td><td><code>Concepts.FM.Response.SBM_DoServiceRes</code> (not standard ResponseBase)</td></tr>
+<tr><td>Response Event</td><td><code>Events.OMConsumers.OMXFM.Response.SBM_DO_SERVICE</code></td></tr>
+<tr><td>Target System</td><td>SBM (doService API)</td></tr>
+<tr><td>Dispatch Mode</td><td>IntraActivitySequencing (throttled, sequential)</td></tr>
+<tr><td>Fan-out scope</td><td>POU and COU Subscriber SubscriberOffers (not Agreement-level, not RelatedOffers)</td></tr>
+<tr><td>RefId format (POU)</td><td><code>pOuRefId + ":" + ":" + sub.RefId + ":" + offer.Soc</code> (double colon — blank cOu segment)</td></tr>
+<tr><td>RefId format (COU)</td><td><code>pOuRefId + ":" + cOuRefId + ":" + sub.RefId + ":" + offer.Soc</code></td></tr>
+<tr><td>Credential source</td><td>BATCH: <code>SBM_DO_SERVICE/BATCH/app_user</code>; ONLINE: <code>SBM_DO_SERVICE/ONLINE/app_user</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §2 Conditions -->
+<div class="section">
+<div class="section-header">§2 — Rule Conditions (WHEN)</div>
+<div class="section-body">
+<table>
+<tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Current process step match</td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "SBM_BUY_DATA_PACK"</code></td><td>Activity type guard</td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "SBM_BUY_DATA_PACK"</code></td><td>Process flow confirmation</td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Only fire once</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 Initialization -->
+<div class="section">
+<div class="section-header">§3 — Initialization &amp; Pre-Processing</div>
+<div class="section-body">
+<h3>§3.1 Resubmit Detection</h3>
+<pre>boolean isActResub = (orderCurrentActivity.RequestCount > 0 && orderRequest.IsOrderResubmitted)
+if (isActResub):
+    IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity)
+    // Clears previously queued but unresolved requests before re-queuing</pre>
+
+<h3>§3.2 IntegrationMethod → Credential Selection</h3>
+<table>
+<tr><th>IntegrationMethod</th><th>Credential Source</th></tr>
+<tr><td><code>== "BATCH"</code></td><td><code>$globalVariables/OMX_OM/Services/SBM_DO_SERVICE/BATCH/app_user</code> and <code>../app_password</code></td></tr>
+<tr><td>Else (ONLINE or unset)</td><td><code>$globalVariables/OMX_OM/Services/SBM_DO_SERVICE/ONLINE/app_user</code> and <code>../app_password</code></td></tr>
+</table>
+<div class="warn-box"><strong>Credentials in JMS payload</strong> — app_user and app_password are embedded in the SBM_DO_SERVICE event. Secure channel must be enforced.</div>
+
+<h3>§3.3 checkPackAllowFlg</h3>
+<p>Read from <code>orderRequest.OrderData.ExtendedInfo[Name="CHECK_PACK_ALLOW_FLG"]/Value</code>. Default <code>"Y"</code> if null or empty. When "Y", the <code>CheckPackAllowRequest</code> block is included in the payload. When "N", it is omitted (eligibility check skipped).</p>
+</div>
+</div>
+
+<!-- §4 Fan-out Logic -->
+<div class="section">
+<div class="section-header">§4 — Fan-Out Logic (Per Subscriber Offer)</div>
+<div class="section-body">
+<h3>§4.1 Loop Structure</h3>
+<pre>for POU[i] → Subscriber[j] → SubscriberOffers[k]:
+    offerRefId = pOuRefId + ":" + ":" + sub.RefId + ":" + offer.Soc   ← NOTE: double colon
+    reqSuccess = check Response[].ReferenceId==offerRefId AND CompletionStatus==2
+    if !reqSuccess:
+        chkRes = evaluate PreExecCheck XPath (if set)
+        if chkRes=="true":
+            channel = GetSBMServiceChannel(orderRequest, offer)
+            billCycleNo = ConvertBillCycleDate(BillCycleNo)
+            event = createEvent(SBM_DO_SERVICE, XSLT...)
+            Event.assertEvent(event)
+            IntraActivitySequencing.ActionRequestEvent(event, orderCurrentActivity)
+            isSkipped = false
+            [audit LOG]
+
+for POU[i] → ChildOU[x] → Subscriber[y] → SubscriberOffers[z]:
+    offerRefId = pOuRefId + ":" + cOuRefId + ":" + sub.RefId + ":" + offer.Soc
+    [same logic as above]
+
+if !isSkipped:
+    IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)
+    orderCurrentActivity.Status = GetActivityStatusString("1", false)
+    SendDataToDB(orderRequest)
+else:
+    SkipActivity(orderRequest, orderCurrentActivity, "4")</pre>
+
+<h3>§4.2 IntraActivitySequencing Key Difference</h3>
+<div class="info-box">
+<ul>
+<li><strong>Standard OMXFM pattern:</strong> <code>Event.Ext.sendEventImmediate(reqEvent)</code> + <code>RequestCount++</code> = all events dispatched immediately in parallel (fan-out)</li>
+<li><strong>SBM_BUY_DATA_PACK pattern:</strong> <code>Event.assertEvent(reqEvent)</code> + <code>IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)</code> — events are queued; only the FIRST is sent by <code>SendFirstRequestEvent()</code>; each response triggers the next via <code>ActionResponseEvent()</code></li>
+<li>The <code>RequestCount</code> is maintained internally by IntraActivitySequencing</li>
+</ul>
+</div>
+
+<h3>§4.3 POU vs COU RefId Double-Colon</h3>
+<div class="note-box">POU RefId: <code>pOuRefId + ":" + ":" + refId + ":" + offer.Soc</code> — produces e.g. <code>"POU123::SUB456:SOC789"</code>.<br/>COU RefId: <code>pOuRefId + ":" + cOuRefId + ":" + sub.RefId + ":" + offer.Soc</code> — produces e.g. <code>"POU123:COU456:SUB789:SOC012"</code>.<br/>The double colon in POU is intentional (cOuRefId = blank) — the response splits on ":" and maps positions [0]=POU, [1]=COU (blank for POU), [2]=Sub, [3]=SOC.</div>
+</div>
+</div>
+
+<!-- §5 Payload -->
+<div class="section">
+<div class="section-header">§5 — Payload Build (doServiceArrayRequest)</div>
+<div class="section-body">
+<h3>§5.1 Event Container</h3>
+<div style="background:var(--code-bg);border-radius:8px;padding:16px;overflow-x:auto;margin:12px 0">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent → event</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Conditional]</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Conditional]</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Conditional]</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$offerRefId</span><span class="tree-cond">[Always]</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Conditional]</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">payload → ns1:doServiceArrayRequest</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns1:CheckPackAllowRequest</span><span class="tree-cond">[if checkPackAllowFlg='Y' OR isActResub="true"]</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:app_password</span><span class="tree-arrow">←</span><span class="tree-src">$app_password</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:app_user</span><span class="tree-arrow">←</span><span class="tree-src">$app_user</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:channel</span><span class="tree-arrow">←</span><span class="tree-src">$channel</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:function_id</span><span class="tree-arrow">←</span><span class="tree-src-static">"100200024"</span><span class="tree-cond">[Static]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:parameters</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">package_code</span><span class="tree-arrow">←</span><span class="tree-src">$offer/OfferName</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">get_error_flag</span><span class="tree-arrow">←</span><span class="tree-src-static">"Y"</span><span class="tree-cond">[Static]</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">country1</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[DESTINATION_COUNTRY]/Value</span><span class="tree-cond">[if DESTINATION_COUNTRY present]</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">effective_date</span><span class="tree-arrow">←</span><span class="tree-src">EffectiveDate formatted dd/MM/yyyy HH:mm:ss +07:00</span><span class="tree-cond">[if DESTINATION_COUNTRY AND EffectiveDate]</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ns:service_no</span><span class="tree-arrow">←</span><span class="tree-src">$msisdn</span></div></li>
+            </ul>
+          </li>
+          <li><div class="tree-row"><span class="tree-tag">ns1:DoServiceRequest</span><span class="tree-cond">[Always]</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:function_id</span><span class="tree-arrow">←</span><span class="tree-src-static">"100200012"</span><span class="tree-cond">[Static]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ccr_login</span><span class="tree-arrow">←</span><span class="tree-src">concat($sub/SubscriberGeneralInfo/saleId, ";", DealerCode)</span><span class="tree-cond">[POU XSLT: before add_package_code]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">add_package_code</span><span class="tree-arrow">←</span><span class="tree-src">$offer/OfferName</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">billcycle</span><span class="tree-arrow">←</span><span class="tree-src">$billCycleNo</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">billcycledate</span><span class="tree-arrow">←</span><span class="tree-src">$billCycleNo</span><span class="tree-cond">[Same value as billcycle]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">imsi</span><span class="tree-arrow">←</span><span class="tree-src">$sub/ResourceInfo[ResourceName="IMSI"]/ValuesArray</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">add_start_date</span><span class="tree-arrow">←</span><span class="tree-src">EffectiveDate(+07:00) OR current-dateTime()</span><span class="tree-cond">[xsl:choose]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">omx_tracking_id</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">country</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[DESTINATION_COUNTRY]/Value</span><span class="tree-cond">[if present]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">price_in_vat / price_ex_vat</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[PRICE_IN_VAT or PRICE_EX_VAT]/lower-case</span><span class="tree-cond">[if OrderType=3 or 11018]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">channel_tx_id</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[if OrderType=3 or 11018]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">parent_trx_id</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[PARENT_TRX_ID]/Value</span><span class="tree-cond">[if OrderType=3 or 4 AND present]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:service_no</span><span class="tree-arrow">←</span><span class="tree-src">$msisdn</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+<div class="note-box"><strong>POU vs COU XSLT field order difference:</strong> POU XSLT emits <code>ccr_login</code> before <code>add_package_code</code>. COU XSLT emits <code>add_package_code</code> first (then billcycle, imsi, add_start_date, omx_tracking_id, ccr_login last). Different parameter ordering — functionally equivalent if SBM is key-based, but order may matter for strict XML parsers.</div>
+</div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+<div class="section-header">§19 — Response Message Rulefunction (Response_SBM_BUY_DATA_PACK)</div>
+<div class="section-body">
+
+<h3>§19.1 Overview</h3>
+<p>The response rulefunction is significantly more complex than a standard fan-in handler. It parses an HTML-entity-encoded <code>extra_xml</code> field from SBM, populates offer <code>DataInfo</code>, dynamically injects new <code>pack_cancel</code> and <code>pack_expire</code> sub-offers into the subscriber's SubscriberOffers, and optionally creates a <code>BL_CREATE_CHARGE</code> sub-offer (ServiceType="79") for downstream billing.</p>
+
+<h3>§19.2 Scope Variables</h3>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order state and working memory</td></tr>
+<tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.SBM_DO_SERVICE</code></td><td>SBM response event</td></tr>
+<tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity state; fan-in sequencing</td></tr>
+</table>
+
+<h3>§19.3 RefId Parsing</h3>
+<pre>String[] refIDs = String.split(eventResponse.RefID, ":");
+pOuRefID = refIDs[0]    // Parent OU RefId
+cOuRefID = refIDs[1]    // Child OU RefId (blank "" for POU offers)
+subRefID = refIDs[2]    // Subscriber RefId
+soc      = refIDs[3]    // Offer SOC code</pre>
+<p>Lookup path: match POU RefId → POU Subscriber RefId → Offer SOC. If cOuRefID is blank → POU path. If non-blank → COU path.</p>
+
+<h3>§19.4 SBM_DoServiceRes Concept Construction</h3>
+<p>This FM uses a <strong>rich response concept</strong> (<code>SBM_DoServiceRes</code>) rather than the standard <code>ResponseBase</code>. It captures both the envelope fields AND the SBM-specific payload:</p>
+<table>
+<tr><th>Field</th><th>Source</th></tr>
+<tr><td>ResponseCode</td><td><code>$eventResponse/ResponseCode</code></td></tr>
+<tr><td>ResponseMessage</td><td><code>$eventResponse/ResponseMsg</code></td></tr>
+<tr><td>CompletionStatus</td><td><code>$eventResponse/CompletionStatus</code></td></tr>
+<tr><td>ReferenceId</td><td><code>$eventResponse/RefID</code></td></tr>
+<tr><td>DoServiceResponse[] (CheckPackAllow)</td><td>From <code>ns:doServiceArrayResponse/ns:CheckPackAllowReturn</code>: extra_xml, req_transaction_id, response_message, result_code, result_desc, result_namespace, transaction_id</td></tr>
+<tr><td>DoServiceResponse[] (DoService)</td><td>From <code>ns:doServiceArrayResponse/ns:DoServiceReturn</code>: same 7 fields</td></tr>
+</table>
+
+<h3>§19.5 extra_xml Parsing (from DoServiceReturn)</h3>
+<div class="warn-box">The <code>extra_xml</code> field contains HTML-entity-encoded XML (<code>&amp;lt;</code>/<code>&amp;gt;</code>). The rule un-escapes it via <code>String.replaceAll()</code> then extracts fields with <code>substringBefore(substringAfter())</code> patterns — fragile string parsing, not XML parsing.</div>
+<table>
+<tr><th>Field Extracted</th><th>XML Tag</th><th>Used For</th></tr>
+<tr><td>chargeAmt</td><td><code>&lt;charge_amount&gt;</code></td><td>DataInfo.ChargeAmount; BL sub-offer AMOUNT</td></tr>
+<tr><td>featureCode</td><td><code>&lt;feature_code&gt;</code></td><td>DataInfo.FeatureCode; BL sub-offer OfferName</td></tr>
+<tr><td>packageCode</td><td><code>&lt;package&gt;</code></td><td>DataInfo.Package</td></tr>
+<tr><td>effDate</td><td><code>&lt;effdate&gt;</code></td><td>DataInfo.EffDate</td></tr>
+<tr><td>expDate</td><td><code>&lt;expdate&gt;</code></td><td>DataInfo.ExpDate; ExpirationDate processing (Wattanachai)</td></tr>
+<tr><td>speed</td><td><code>&lt;speed&gt;</code></td><td>DataInfo.Speed</td></tr>
+<tr><td>chargeType</td><td><code>&lt;charge_type&gt;</code></td><td>DataInfo (commented out in update path)</td></tr>
+<tr><td>packType</td><td><code>&lt;pack_type&gt;</code></td><td>DataInfo.PackType</td></tr>
+<tr><td>packCode</td><td><code>&lt;pack_code&gt;</code></td><td>DataInfo.PackCode</td></tr>
+<tr><td>pack_expire</td><td><code>&lt;pack_expire&gt;</code></td><td>→ inject FUT-expiry sub-offer (see §19.7)</td></tr>
+<tr><td>pack_cancel</td><td><code>&lt;pack_cancel&gt;</code></td><td>→ inject IM-cancel sub-offer(s) (see §19.6)</td></tr>
+<tr><td>dmc_transaction_id</td><td><code>&lt;dmc_transaction_id&gt;</code></td><td>DMC_TRX_ID ExtendedInfo on offer</td></tr>
+<tr><td>transaction_id</td><td><code>&lt;transaction_id&gt;</code></td><td>SBM_TRX_ID ExtendedInfo (OMX-2970, FE only)</td></tr>
+</table>
+
+<h3>§19.6 pack_cancel → Immediate Cancel Sub-Offer Injection</h3>
+<p>If <code>pack_cancel</code> is non-blank (comma-separated list of SOC codes):</p>
+<ol>
+<li>Tokenize by ","</li>
+<li>For each code: create <code>SubscriberOffers</code> concept: OfferName=code, ServiceType="86", Action="REMOVE"</li>
+<li>Add ExtendedInfo: FE_OR_CCBS="SBM", EXP_TYPE="IM"</li>
+<li>If in POU: Soc from existing CCBS offer matching the cancel code</li>
+<li>Append to <code>subscriber.SubscriberOffers[]</code></li>
+<li>Set <code>areadyAddPackCancel=true</code> (typo: "aready") to prevent duplicate injection across SOC matches</li>
+</ol>
+
+<h3>§19.7 pack_expire → Future Expiry Sub-Offer Injection</h3>
+<p>If <code>pack_expire</code> is non-blank:</p>
+<ol>
+<li>Load LogicalDate → compute <code>nextBillDate = GetNextBillDate(logicalDate, BillCycleNo)</code></li>
+<li>Create <code>SubscriberOffers</code>: ExpirationDate=nextBillDate, OfferName=pack_expire, ServiceType="86", Action="REMOVE", Soc from original offer</li>
+<li>Add ExtendedInfo: FE_OR_CCBS="SBM", EXP_TYPE="FUT", EXP_DATE_VALUE=nextBillDate</li>
+<li>Append to <code>subscriber.SubscriberOffers[]</code></li>
+</ol>
+
+<h3>§19.8 BL_CREATE_CHARGE Sub-Offer Injection</h3>
+<p>If <code>featureCode</code> from extra_xml is non-blank:</p>
+<ol>
+<li>Create <code>SubscriberOffers</code>: OfferName=featureCode, ServiceType="79" (BL charge type), Soc="-1"</li>
+<li>Add ExtendedInfo: AMOUNT=chargeAmt, FE_OR_CCBS=source (propagates FE/CCBS from original offer)</li>
+<li>Append to <code>subscriber.SubscriberOffers[]</code></li>
+</ol>
+<div class="note-box">A commented-out line exists in both POU and COU paths showing the original intent to add via the full indexed path: <code>// orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].SubscriberOffers[...] = subOffer;</code>. The active line uses the local <code>subscriber</code> variable directly — equivalent but more concise.</div>
+
+<h3>§19.9 expDate / omxFut Handling (Wattanachai / OMX-1720)</h3>
+<table>
+<tr><th>Case</th><th>Condition</th><th>Action</th></tr>
+<tr><td>IM + standard</td><td>expDate from SBM non-blank AND <code>omxFut==false</code></td><td>Parse expDateCal; if ServiceType 86/87 AND ExpDate length==19 (full datetime): re-classify EXP_TYPE via GetActivityEffectiveType; add SBM_NO_PROVISIONING="Y" + EXP_DATE_VALUE=expDateCal + DMC_TRX_ID; set <code>offer.ExpirationDate = expDateCal</code></td></tr>
+<tr><td>FUT + omxFut</td><td>expDate non-blank AND <code>omxFut==true</code></td><td>If ServiceType 86/87 AND expFromFe (EXP_DATE_VALUE) non-null AND SBM expDate ≤ expFromFe: add SBM_NO_PROVISIONING="Y"; add DMC_TRX_ID; do NOT set offer.ExpirationDate</td></tr>
+</table>
+<p><code>omxFut</code> in response = <code>exists($offer/ExtendedInfo[Name='EXP_TYPE' and Value='FUT'])</code> — reads the EXP_TYPE set by OMX_CAL_OFFER_FUT_DATE (step 29).</p>
+
+<h3>§19.10 Fan-In Completion</h3>
+<p>Uses <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code>. Returns <code>"true"</code> when all queued events have received responses (triggers NextActivity); <code>"false"</code> while still waiting. This also fires the NEXT queued request event if any remain (sequential throttling).</p>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+<div class="section-header">§15 — Function Dependency Tree</div>
+<div class="section-body">
+<pre>Request_SBM_BUY_DATA_PACK (BE rule)
+├── [if isActResub] IntraActivitySequencing.PurgePendingRequestsBeforeResubmit()
+├── XPath.evalAsBoolean(IntegrationMethod="BATCH")
+├── XPath.evalAsString(CHECK_PACK_ALLOW_FLG)
+├── [BATCH] XPath.evalAsString(SBM_DO_SERVICE/BATCH/app_user + app_password)
+├── [ONLINE] XPath.evalAsString(SBM_DO_SERVICE/ONLINE/app_user + app_password)
+│
+├── [Loop POU → Subscriber → SubscriberOffers]
+│   ├── reqSuccess check: Response[].ReferenceId+CompletionStatus
+│   ├── [PreExecCheck] GetXMLForSubscriberOfferFilterWithExtendedInfo() → XPath.execute()
+│   ├── GetSBMServiceChannel(orderRequest, offer)
+│   ├── ConvertBillCycleDate(BillCycleNo)
+│   ├── Event.createEvent(SBM_DO_SERVICE, POU XSLT)
+│   │   └── doServiceArrayRequest[CheckPackAllow? + DoService]
+│   ├── Event.assertEvent(reqEvent)
+│   ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+│   └── Event.Ext.sendEventImmediate(audit Logger)
+│
+├── [Loop POU → COU → Subscriber → SubscriberOffers]
+│   └── [same as above but COU XSLT — different field order]
+│
+├── [if !isSkipped]
+│   ├── IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)
+│   ├── GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+├── [if isSkipped] SkipActivity("4")
+└── HandleActivityException(...)
+
+Response_SBM_BUY_DATA_PACK (rulefunction)
+├── Instance.createInstance(SBM_DoServiceRes XSLT)
+│   └── DoServiceResponse[]×2 (CheckPackAllowReturn + DoServiceReturn)
+├── String.split(eventResponse.RefID, ":") → [pOuRefID, cOuRefID, subRefID, soc]
+├── [Find matching POU subscriber + offer]
+│   ├── String.replaceAll(extra_xml entity decode) + substring extraction
+│   ├── [if transaction_id non-blank + source=="FE"] write SBM_TRX_ID ExtendedInfo (OMX-2970)
+│   ├── [if pack_cancel non-blank] inject cancel SubscriberOffers (EXP_TYPE="IM", Action=REMOVE)
+│   ├── [if pack_expire non-blank]
+│   │   ├── GetNextBillDate(logicalDate, BillCycleNo)
+│   │   └── inject expire SubscriberOffers (EXP_TYPE="FUT", Action=REMOVE)
+│   ├── offer.DataInfo create or update from extra_xml fields
+│   ├── [if expDate non-blank + !omxFut] re-classify EXP_TYPE; SBM_NO_PROVISIONING; EXP_DATE_VALUE; DMC_TRX_ID; offer.ExpirationDate
+│   ├── [if expDate non-blank + omxFut] SBM_NO_PROVISIONING if SBM expDate ≤ expFromFe; DMC_TRX_ID
+│   └── [if featureCode non-blank] inject BL sub-offer (ServiceType="79", Soc="-1", AMOUNT, FE_OR_CCBS)
+├── [Find matching COU subscriber + offer] → same logic
+├── Event.Ext.sendEventImmediate(audit Logger)
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → "true"/"false"</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+<div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="section-body">
+<h3>Functional Requirements</h3>
+<ul>
+<li><strong>R1</strong> — Throttled sequential dispatch via IntraActivitySequencing; not parallel fan-out</li>
+<li><strong>R2</strong> — On resubmit: purge pending requests before re-queuing</li>
+<li><strong>R3</strong> — Credentials vary by IntegrationMethod: BATCH vs ONLINE endpoints</li>
+<li><strong>R4</strong> — checkPackAllowFlg: if "Y" (default) include CheckPackAllowRequest block; "N" omits it; isActResub forces it regardless</li>
+<li><strong>R5</strong> — RefId encoding: POU = <code>pOu::sub:soc</code> (double colon); COU = <code>pOu:cOu:sub:soc</code></li>
+<li><strong>R6</strong> — Response parses HTML-entity-encoded extra_xml via string manipulation (not XML parser)</li>
+<li><strong>R7</strong> — pack_cancel → inject immediate-cancel sub-offers (ServiceType="86", Action="REMOVE", EXP_TYPE="IM")</li>
+<li><strong>R8</strong> — pack_expire → inject future-expiry sub-offer with nextBillDate as ExpirationDate</li>
+<li><strong>R9</strong> — BL_CREATE_CHARGE injection: if featureCode from SBM → create ServiceType="79" sub-offer with AMOUNT ExtendedInfo</li>
+<li><strong>R10</strong> — expDate handling depends on omxFut (EXP_TYPE from OMX_CAL_OFFER_FUT_DATE): IM path sets offer.ExpirationDate; FUT path only adds SBM_NO_PROVISIONING (no date mutation)</li>
+<li><strong>R11</strong> — OMX-2970: SBM_TRX_ID ExtendedInfo written when transaction_id present AND source=="FE"</li>
+<li><strong>R12</strong> — Fan-in sequencing: ActionResponseEvent() returns "true" only when all queued requests have responses</li>
+</ul>
+<h3>Design Risks</h3>
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td>extra_xml parsed via string manipulation (substringBefore/After) — brittle; fails if XML format changes or tags are nested</td><td><span class="badge badge-red">HIGH</span></td><td>Replace with proper XML parser in migration; add schema validation</td></tr>
+<tr><td>Credentials (app_user/app_password) embedded in JMS event payload</td><td><span class="badge badge-red">HIGH</span></td><td>Migrate to secrets manager; remove from payload</td></tr>
+<tr><td>POU XSLT and COU XSLT have different parameter ordering — if SBM is order-sensitive this can cause subtle bugs on COU orders</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Normalize to a single XSLT template; add test coverage for COU orders</td></tr>
+<tr><td>billcycle and billcycledate both set to the same billCycleNo value — may be intentional or a copy-paste error</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Confirm with SBM documentation; may have different semantics</td></tr>
+<tr><td>areadyAddPackCancel / areadyAddPackExpire typo — if multiple SOC matches exist in the same subscriber, only the first pack_cancel/expire runs (by design), but the flag name suggests oversight</td><td><span class="badge badge-blue">LOW</span></td><td>Rename to alreadyAdd* for clarity</td></tr>
+<tr><td>ChargeType commented out in DataInfo update path but emitted in create path — DataInfo.ChargeType only populated when creating new DataInfo, not on update</td><td><span class="badge badge-blue">LOW</span></td><td>Restore or explicitly document that ChargeType is intentionally excluded from updates</td></tr>
+</table>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-07-27</footer>
+</body>
+</html>

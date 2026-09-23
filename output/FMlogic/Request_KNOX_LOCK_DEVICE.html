@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
+<title>Request_KNOX_LOCK_DEVICE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#333;font-size:14px;line-height:1.6}
+.hero{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.hero h1{font-size:1.8rem;font-weight:700;letter-spacing:-0.5px}
+.hero .sub{opacity:.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:16px;margin-top:16px}
+.meta-chip{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06)}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#FFF9F9}
+code{font-family:'Cascadia Code','Consolas',monospace;background:rgba(139,0,0,0.07);color:var(--true-dark);padding:2px 6px;border-radius:4px;font-size:0.85em}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.83rem;border-left:3px solid var(--true-red);line-height:1.5}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:0.75rem;font-weight:600}
+.b-green{background:#E8F5E9;color:var(--success)}
+.b-orange{background:#FFF3E0;color:var(--warning)}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-blue{background:#E3F0FD;color:var(--info)}
+.b-purple{background:#F3E5F5;color:var(--skip)}
+.section-title{font-size:1.1rem;font-weight:700;color:var(--true-dark);margin-bottom:16px;padding-bottom:8px;border-bottom:2px solid var(--true-pale)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="hero">
+  <h1>Request_KNOX_LOCK_DEVICE</h1>
+  <div class="sub">TIBCO BusinessEvents FM — Samsung Knox Device Lock (per-offer iteration, 3-level loop)</div>
+  <div class="meta-row">
+    <span class="meta-chip">Rule: Rules.OMConsumers.OMXFM.Request.Request_KNOX_LOCK_DEVICE</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Author: DESKTOP-995HR2V</span>
+    <span class="meta-chip">Backend: Samsung Knox Proxy Service</span>
+    <span class="meta-chip">Generated: 2026-09-16</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header">§1 — Overview &amp; Purpose</div>
+<div class="card-body">
+<p>Fires when <code>ActivityID == "KNOX_LOCK_DEVICE"</code>. This FM is unique: it iterates <strong>per offer</strong> rather than per subscriber. For each qualifying subscriber offer (SubscriberOffers), it sends a <code>KNOX_PROXY_SERVICE</code> lockDevice request to Samsung Knox. This allows locking devices associated with individual offers on a subscriber's account during full suspension.</p>
+<p style="margin-top:8px"><strong>3-Level nesting:</strong> ParentOU → Subscriber → SubscriberOffers. RefId is <code>subRefId:offer.Soc:filter</code> where <code>filter</code> is the FE_OR_CCBS ExtendedInfo value on that offer.</p>
+<p style="margin-top:8px"><strong>TEL required:</strong> Parameter <code>TEL</code> must be present in activity parameters. If missing → throws DATA_ISSUE exception.</p>
+<p style="margin-top:8px"><strong>Notification message:</strong> Resolved via <code>DecisionTables.KnoxNotifyMsgVRF(orderType, "LOCK", activityReason, lang, msg)</code> decision table lookup.</p>
+</div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+<div class="card-header">§2 — Rule Metadata</div>
+<div class="card-body">
+<table>
+<thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_KNOX_LOCK_DEVICE</code></td></tr>
+<tr><td>Priority / forwardChain</td><td>5 / true</td></tr>
+<tr><td>Author</td><td>DESKTOP-995HR2V</td></tr>
+<tr><td>Loop strategy</td><td>3-level: ParentOU[i] → Subscriber[j] → SubscriberOffers[k]</td></tr>
+<tr><td>RefId granularity</td><td>Per offer: <code>concat(subRefId, ":", offer.Soc, ":", filter)</code></td></tr>
+<tr><td>Required parameter</td><td>TEL (from GetActivityParameterValueFromKey("TEL"))</td></tr>
+<tr><td>Fan-in type</td><td>Classic count: <code>count(Response[suffix"000"]) == RequestCount</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+<div class="card-header">§3 — Working Memory</div>
+<div class="card-body">
+<table>
+<thead><tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr></thead>
+<tbody>
+<tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Order context including subscriber + offer tree</td></tr>
+<tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity, parameters, response accumulator</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="card">
+<div class="card-header">§4 — Rule Conditions (WHEN)</div>
+<div class="card-body">
+<table>
+<thead><tr><th>#</th><th>Condition</th></tr></thead>
+<tbody>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "KNOX_LOCK_DEVICE"</code></td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "KNOX_LOCK_DEVICE"</code></td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §5 Flow -->
+<div class="card">
+<div class="card-header">§5 — Execution Flow</div>
+<div class="card-body">
+<ol style="padding-left:20px;line-height:2">
+<li>Load TEL from <code>GetActivityParameterValueFromKey("TEL", params)</code> — throws DATA_ISSUE if null</li>
+<li>Outer loop: ParentOU[i]</li>
+<li>&nbsp;&nbsp;Middle loop: Subscriber[j] in POU</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;Compute <code>subRefId = Subscriber[j].RefId</code></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;Apply subscriber-level PreExecCheck</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;Inner loop: SubscriberOffers[k]</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Compute <code>filter = FE_OR_CCBS ExtendedInfo value</code></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Compute <code>refId = subRefId + ":" + offer.Soc + ":" + filter</code></li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Skip if existing completed response found</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Lookup notification message via KnoxNotifyMsgVRF decision table</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Fire KNOX_PROXY_SERVICE event: lockDevice with IMEI_KNOX, tel, message</li>
+<li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Increment RequestCount; <code>ActionRequestEvent</code></li>
+<li>On any dispatch: <code>SendFirstRequestEvent</code>; status "1"; DB persist</li>
+<li>On all skip: <code>SkipActivity("4")</code></li>
+</ol>
+</div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+<div class="card-header">§8 — System &amp; Integration Dependencies</div>
+<div class="card-body">
+<div class="section-title">§8.2 ESB / JMS</div>
+<table>
+<thead><tr><th>Direction</th><th>Event</th><th>Schema</th></tr></thead>
+<tbody>
+<tr><td><span class="badge b-orange">OUTBOUND</span></td><td>KNOX_PROXY_SERVICE</td><td>knoxProxyReq (Samsung Knox lockDevice)</td></tr>
+<tr><td><span class="badge b-blue">LOG</span></td><td>OMXESB/Logger</td><td>AuditLogging/V1_0</td></tr>
+</tbody>
+</table>
+<br/>
+<div class="section-title">§8.5 ExtendedInfo Fields Required</div>
+<table>
+<thead><tr><th>Key</th><th>Required</th><th>Purpose</th></tr></thead>
+<tbody>
+<tr><td>IMEI_KNOX</td><td><span class="badge b-red">Required</span></td><td>Device UID and transactionId prefix</td></tr>
+<tr><td>FE_OR_CCBS (on SubscriberOffers)</td><td><span class="badge b-orange">Conditional</span></td><td>filter component of RefId</td></tr>
+<tr><td>BRAND_NAME</td><td><span class="badge b-red">Required</span></td><td>Device brand sent to Knox</td></tr>
+</tbody>
+</table>
+<br/>
+<div class="section-title">§8.4 Activity Parameters</div>
+<table>
+<thead><tr><th>Parameter key</th><th>Required</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td>TEL</td><td><span class="badge b-red">Required</span></td><td>Throws DATA_ISSUE if missing (Parameter value e.g. "1242")</td></tr>
+</tbody>
+</table>
+</div>
+</div>
+
+<!-- §9 Payload -->
+<div class="card">
+<div class="card-header">§9 — Payload</div>
+<div class="card-body">
+<pre>&lt;createEvent&gt;
+  &lt;event&gt;
+    &lt;JMSCorrelationID&gt;TRK-20250101-001&lt;/JMSCorrelationID&gt;
+    &lt;OrderID&gt;ORD-12345&lt;/OrderID&gt;
+    &lt;RefID&gt;REF-SUB-001:50412:CCBS&lt;/RefID&gt;   &lt;!-- subRefId:offer.Soc:filter --&gt;
+    &lt;payload&gt;
+      &lt;ns:knoxProxyReq&gt;
+        &lt;ns:transactionId&gt;IMEI123tib:timestamp()&lt;/ns:transactionId&gt;  &lt;!-- concat(IMEI_KNOX, tib:timestamp()) --&gt;
+        &lt;ns:deviceUid&gt;IMEI123&lt;/ns:deviceUid&gt;                         &lt;!-- IMEI_KNOX --&gt;
+        &lt;ns:tel&gt;1242&lt;/ns:tel&gt;                                         &lt;!-- TEL parameter --&gt;
+        &lt;ns:message&gt;Your device will be locked&lt;/ns:message&gt;          &lt;!-- from KnoxNotifyMsgVRF --&gt;
+        &lt;ns:brand&gt;SAMSUNG&lt;/ns:brand&gt;                                  &lt;!-- BRAND_NAME --&gt;
+        &lt;ns:method&gt;lockDevice&lt;/ns:method&gt;
+      &lt;/ns:knoxProxyReq&gt;
+    &lt;/payload&gt;
+  &lt;/event&gt;
+&lt;/createEvent&gt;</pre>
+</div>
+</div>
+
+<!-- §10 Tree -->
+<div class="card">
+<div class="card-header">§10 — XSLT Field Mapping Tree</div>
+<div class="card-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent → event</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">OMXTrackingId</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId</span><span class="tree-cond">= subRefId:offer.Soc:filter</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">payload → ns:knoxProxyReq</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ns:transactionId</span><span class="tree-arrow">←</span><span class="tree-src">concat(IMEI_KNOX, tib:timestamp())</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:deviceUid</span><span class="tree-arrow">←</span><span class="tree-src">IMEI_KNOX (ExtendedInfo)</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:tel</span><span class="tree-arrow">←</span><span class="tree-src">$tel (TEL parameter)</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:message</span><span class="tree-arrow">←</span><span class="tree-src">msg/Value (KnoxNotifyMsgVRF result)</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:brand</span><span class="tree-arrow">←</span><span class="tree-src">BRAND_NAME (ExtendedInfo)</span><span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ns:method</span><span class="tree-arrow">←</span><span class="tree-src-static">"lockDevice"</span><span class="badge b-green">Always</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+</div>
+
+<!-- §15 Tree -->
+<div class="card">
+<div class="card-header">§15 — Function Dependency Tree</div>
+<div class="card-body">
+<pre>Request_KNOX_LOCK_DEVICE
+├── RuleFunctions.Helpers.GetActivityParameterValueFromKey("TEL")
+├── RuleFunctions.Helpers.GetXMLForSubscriber (per-subscriber PreExecCheck)
+├── XPath.execute (PreExecCheck)
+├── XPath.evalAsString (IMEI_KNOX, FE_OR_CCBS, BRAND_NAME from ExtendedInfo)
+├── DecisionTables.KnoxNotifyMsgVRF(orderType, "LOCK", activityReason, lang, msg)
+├── Event.createEvent (KNOX_PROXY_SERVICE XSLT)
+├── RuleFunctions.Helpers.ActionRequestEvent
+├── Event.Ext.sendEventImmediate (audit)
+├── RuleFunctions.Helpers.SendFirstRequestEvent
+├── RuleFunctions.Helpers.GetActivityStatusString
+├── RuleFunctions.Helpers.SendDataToDB
+├── RuleFunctions.Helpers.SkipActivity
+└── RuleFunctions.Helpers.HandleActivityException</pre>
+</div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+<div class="card-header">§19 — Response Message Rule</div>
+<div class="card-body">
+<div class="section-title">§19.1 Overview</div>
+<p><code>Response_KNOX_LOCK_DEVICE</code>: receives <code>KNOX_PROXY_SERVICE</code> response, maps into <code>ResponseBase</code> concept, appends to <code>currActivity.Response[]</code>, sends audit, applies classic fan-in count.</p>
+<br/>
+<div class="section-title">§19.3 ResponseBase Construction</div>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">ResponseBase</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">extId</span><span class="tree-arrow">←</span><span class="tree-src-static">OMXUtils.generateTrackingID()</span><span class="badge b-green">Always</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge b-orange">Conditional</span></div></li>
+      <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge b-orange">Conditional</span></div></li>
+    </ul>
+  </li>
+</ul>
+<br/>
+<div class="section-title">§19.4 Fan-in Completion</div>
+<p>Classic count: <code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"]) == currActivity.RequestCount</code> → returns <code>"true"</code> when all offers' lock requests succeed (end-suffix "000").</p>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

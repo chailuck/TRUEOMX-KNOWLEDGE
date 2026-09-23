@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_CREATE_MEMO</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#333;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+.page-header .sub{opacity:.85;margin-top:6px;font-size:.95rem}
+.breadcrumb{font-size:.78rem;opacity:.7;margin-bottom:8px}
+.content{max-width:1400px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);line-height:1.5}
+code{background:#f0e8e8;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85em}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.badge-db{background:#E8EAF6;color:#3949AB}
+.badge-log{background:#F1F8E9;color:#558B2F}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nm{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic}
+.tree-ns{color:#6c7086;font-size:.78rem}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+details summary{cursor:pointer;padding:8px 12px;background:#fdf0f0;border-radius:6px;font-weight:600;color:var(--true-dark)}
+details[open] summary{background:#f5e0e0}
+.step-box{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:14px 18px;margin:8px 0;font-size:.85rem;border-left:3px solid var(--true-red)}
+.section-num{color:var(--true-red);font-weight:700;margin-right:6px}
+.variant-label{display:inline-block;background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:3px 12px;border-radius:4px;font-size:.78rem;margin-bottom:8px}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb">TRUE Corporation OMX &rsaquo; TIBCO BusinessEvents &rsaquo; FM Logic</div>
+  <h1>Request_CCBS_CREATE_MEMO</h1>
+  <div class="sub">Creates a memo record in CCBS for Account, ParentOU Subscriber, or ChildOU Subscriber entities — triggered per order line with valid UserText</div>
+</div>
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§1</span> Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>This rule fires when the next activity in the order's ProcessFlow is <code>CCBS_CREATE_MEMO</code>. It iterates over three entity types in the order request — <strong>Accounts</strong>, <strong>ParentOU Subscribers</strong>, and <strong>ChildOU Subscribers</strong> — and for each entity where the PreExecCheck passes and a <code>UserText</code> note is present (and not already successfully responded), it sends a JMS request to the CCBS FM to create a memo record.</p>
+    <p style="margin-top:10px">The memo captures the <code>UserText</code> from the order, appends the <code>SOC</code> of any active SBM DataPack offer (ServiceType=86 FE/BRMS), and tags the entry with the order channel. Entity type and entity ID selection differ between Account, ParentOU Subscriber, and ChildOU Subscriber variants.</p>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_CREATE_MEMO</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Author</td><td>sakarin-radchapunya</td></tr>
+      <tr><td>Backend system</td><td><span class="badge badge-red">CCBS</span></td></tr>
+      <tr><td>Event type</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_CREATE_MEMO</code></td></tr>
+      <tr><td>Channel</td><td><code>/Channels/OMXFMConnectionRequest</code></td></tr>
+      <tr><td>Destination</td><td><code>CCBS_CREATE_MEMO</code></td></tr>
+      <tr><td>Response rulefunction</td><td><code>RuleFunctions.OrderResponse.Response_CCBS_CREATE_MEMO</code></td></tr>
+      <tr><td>XSLT variants</td><td>3 (Account, ParentOU Subscriber, ChildOU Subscriber)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§3</span> Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order request context (customer data, activities, channel)</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current ProcessConfig activity node (status, RequestCount, Response array)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Matches the specific activity instance for this order</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_CREATE_MEMO"</code></td><td>Ensures this rule handles only the CREATE_MEMO step</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_CREATE_MEMO"</code></td><td>Double-check alignment of order flow pointer with activity ID</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Only fire when the activity is waiting to be executed (not already running or done)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§5</span> Execution Flow Diagram</div>
+  <div class="card-body">
+    <div class="step-box">
+1. PreExecCheck gate — load <code>nextAct.PreExecCheck</code> XPath string<br>
+2. <strong>Account loop</strong> — for each Account[a]:<br>
+&nbsp;&nbsp;2a. Evaluate PreExecCheck against Account XML via <code>GetXMLForAccount</code><br>
+&nbsp;&nbsp;2b. Skip if already successfully responded (CompletionStatus=2 + matching RefId)<br>
+&nbsp;&nbsp;2c. Skip if AccountActivityInfo.UserText is null<br>
+&nbsp;&nbsp;2d. Build &amp; send <strong>Account Variant</strong> XSLT event to CCBS<br>
+&nbsp;&nbsp;2e. Send audit log event via Logger<br>
+&nbsp;&nbsp;2f. Increment RequestCount (if not resubmit)<br>
+3. <strong>ParentOU Subscriber loop</strong> — for each ParentOU[i].Subscriber[j]:<br>
+&nbsp;&nbsp;3a. Evaluate PreExecCheck via <code>GetXMLForSubscriber</code><br>
+&nbsp;&nbsp;3b. Skip if already responded / UserText null<br>
+&nbsp;&nbsp;3c. Extract SOC from ServiceType=86 FE/BRMS offer<br>
+&nbsp;&nbsp;3d. Build &amp; send <strong>ParentOU Subscriber Variant</strong> XSLT event<br>
+&nbsp;&nbsp;3e. Audit log + increment RequestCount<br>
+4. <strong>ChildOU Subscriber loop</strong> — for each ParentOU[i].ChildOU[k].Subscriber[j]:<br>
+&nbsp;&nbsp;4a-4e. Same pattern as ParentOU loop, using <code>GetXMLForSubscriberInChildOU</code><br>
+5. If at least one entity was processed → <code>Status = "1"</code> + SendDataToDB<br>
+&nbsp;&nbsp;Else → <code>SkipActivity(..., "4")</code><br>
+6. On exception → <code>HandleActivityException</code>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Rule Action (THEN) -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§6</span> Rule Action (THEN) — Step-by-Step Logic</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Step</th><th>Action</th><th>Detail</th></tr>
+      <tr><td>1</td><td>Resubmit flag</td><td><code>isActResub = (RequestCount&gt;0 &amp;&amp; IsOrderResubmitted)</code></td></tr>
+      <tr><td>2</td><td>Load PreExecCheck</td><td>Reads <code>nextAct.PreExecCheck</code> from the Activity concept</td></tr>
+      <tr><td>3</td><td>Account loop</td><td>Loops <code>iAccountLen</code> times; calls <code>GetXMLForAccount</code> then <code>XPath.execute</code> for gate</td></tr>
+      <tr><td>4</td><td>Guard: no dup response</td><td>Checks <code>Response[iResp].ReferenceId == refAccId &amp;&amp; CompletionStatus==2</code></td></tr>
+      <tr><td>5</td><td>Guard: UserText present</td><td><code>AccountActivityInfo != null &amp;&amp; UserText != null</code></td></tr>
+      <tr><td>6</td><td>Send Account event</td><td>Creates Account Variant event; sends via <code>Event.Ext.sendEventImmediate</code></td></tr>
+      <tr><td>7</td><td>Audit log (Account)</td><td>Logger event with <code>AUDIT_TRACE = "Request Sent for RefId: " + refAccId</code></td></tr>
+      <tr><td>8</td><td>ParentOU Subscriber loop</td><td>Nested loops: ParentOU → Subscriber; uses <code>GetXMLForSubscriber</code></td></tr>
+      <tr><td>9</td><td>Send Subscriber event</td><td>ParentOU Subscriber Variant; SOC extracted from ServiceType=86 FE/BRMS offer</td></tr>
+      <tr><td>10</td><td>ChildOU Subscriber loop</td><td>Nested loops: ParentOU → ChildOU → Subscriber; uses <code>GetXMLForSubscriberInChildOU</code></td></tr>
+      <tr><td>11</td><td>Send ChildOU event</td><td>ChildOU Subscriber Variant; same SOC logic</td></tr>
+      <tr><td>12</td><td>Activity status</td><td>If any sent: <code>Status="1"</code>; else <code>SkipActivity(...,"4")</code></td></tr>
+      <tr><td>13</td><td>Exception</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§7</span> Data Extraction</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>entityId</code> (Account)</td><td><code>AccountID</code> if ENTITY_TYPE_ID=2, else <code>BillingArrangementId</code></td><td>xsl:choose on ENTITY_TYPE_ID=2</td></tr>
+      <tr><td><code>entityTypeId</code> (Account)</td><td>ExtendedInfo[ENTITY_TYPE_ID]/Value if present, else "3"</td><td>"3" = Billing Arrangement default</td></tr>
+      <tr><td><code>entityId</code> (Subscriber)</td><td><code>SubscriberId</code></td><td>Always used for subscriber entities</td></tr>
+      <tr><td><code>entityTypeId</code> (Subscriber)</td><td>Static "6"</td><td>Subscriber entity type in CCBS</td></tr>
+      <tr><td><code>soc</code></td><td><code>SubscriberOffers[ServiceType=86 and FE_OR_CCBS=BRMS|FE]/OfferName</code></td><td>SBM DataPack offer appended to memo text</td></tr>
+      <tr><td><code>memoText</code></td><td><code>concat(UserText, [" soc= ", soc,] " channel:[ ", Channel, " ]")</code></td><td>SOC appended only when soc != ''</td></tr>
+      <tr><td><code>memoTypeId</code></td><td>ExtendedInfo[Name="MEMO_TYPE_ID"]/Value</td><td>Required on Account/Subscriber</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§8</span> System &amp; Integration Dependencies</div>
+  <div class="card-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§8.1 — Order Type Dependencies</h3>
+    <p>This FM is invoked from any order type that includes the <code>CREATE_MEMO</code> process step. It is a utility step typically appended to orders requiring audit notes or user comments to be stored against CCBS entities (accounts or subscribers). Common order types: <strong>CREATE_MEMO</strong> standalone, and as a sub-step in complex orders (SBM data pack, billing cycle changes, etc.).</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Event type</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>/Channels/OMXFMConnectionRequest</code></td><td><code>CCBS_CREATE_MEMO</code></td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_CREATE_MEMO</code></td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td><code>/Channels/OMXFMConnectionResponse</code></td><td><code>CCBS_CREATE_MEMO</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_CREATE_MEMO</code></td></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>Logger channel</td><td>Logger event</td><td><code>Events.OMConsumers.OMXESB.Logger</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Schema</th><th>Correlation</th></tr>
+      <tr><td><span class="badge badge-red">CCBS</span></td><td>createMemo</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/ESB/CreateMemo.xsd</code><br><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/FM/CreateMemo.xsd</code></td><td>JMSCorrelationID = OMXTrackingId; RefID echoed in response</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Field</th><th>Read/Write</th><th>Purpose</th></tr>
+      <tr><td><code>orderCurrentActivity.Status</code></td><td>Write</td><td>Set to "1" (in-progress) or skip with "4"</td></tr>
+      <tr><td><code>orderCurrentActivity.RequestCount</code></td><td>Read/Write</td><td>Incremented per successful send; compared to successResponseCount in response handler</td></tr>
+      <tr><td><code>orderCurrentActivity.Response[]</code></td><td>Read</td><td>Checked for duplicate success responses (CompletionStatus=2 + RefId match)</td></tr>
+      <tr><td><code>orderCurrentActivity.PreExecCheck</code></td><td>Read</td><td>XPath gate evaluated per entity</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.Account[].AccountActivityInfo.UserText</code></td><td>Read</td><td>Memo text source for Account entities</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[].Subscriber[].SubscriberActivityInfo.UserText</code></td><td>Read</td><td>Memo text source for Subscriber entities</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ResponseCode</code></td><td>Write (response)</td><td>Updated in response handler</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.5 — ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Name</th><th>Required?</th><th>Where used</th></tr>
+      <tr><td><code>ENTITY_TYPE_ID</code></td><td><span class="badge badge-orange">Conditional</span></td><td>Account Variant: if =2 use AccountID; else BillingArrangementId; also sets entityTypeId</td></tr>
+      <tr><td><code>MEMO_TYPE_ID</code></td><td><span class="badge badge-red">Required</span></td><td>All variants: maps to ns2:memoTypeId in createMemo payload</td></tr>
+      <tr><td><code>FE_OR_CCBS</code></td><td><span class="badge badge-orange">Conditional</span></td><td>Subscriber variants: used to identify BRMS/FE ServiceType=86 offer SOC</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><code>$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>If 'true' include UserName/PassWord headers in request event</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>LOG_LEVEL for audit entries</td></tr>
+      <tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>If "true" include full payload in audit log ServicePayload</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Detailed Payload Build -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§9</span> Detailed Payload Build</div>
+  <div class="card-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§9.1 — XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>Parameter</th><th>Variant(s)</th><th>Source</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>All</td><td>Full OrderRequest concept</td></tr>
+      <tr><td><code>$refAccId</code></td><td>Account</td><td><code>orderRequest.OrderData.Customer.Account[a].RefId</code></td></tr>
+      <tr><td><code>$a</code></td><td>Account</td><td>Loop index (0-based); used to compute <code>$iAccount = number($a)+1</code></td></tr>
+      <tr><td><code>$refId</code></td><td>POU Sub, COU Sub</td><td>Subscriber RefId from respective array</td></tr>
+      <tr><td><code>$i</code>, <code>$j</code></td><td>POU Sub</td><td>Loop indices for ParentOU and Subscriber (0-based)</td></tr>
+      <tr><td><code>$i</code>, <code>$k</code>, <code>$j</code></td><td>COU Sub</td><td>Loop indices for ParentOU, ChildOU, Subscriber (0-based)</td></tr>
+      <tr><td><code>$globalVariables</code></td><td>All</td><td>Global configuration variables</td></tr>
+      <tr><td><code>$soc</code></td><td>POU Sub, COU Sub</td><td>Pre-extracted OfferName from ServiceType=86 FE/BRMS offer</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.2 — Event Container Construction</h3>
+    <p>All three variants create an <code>Events.OMConsumers.OMXFM.Request.CCBS_CREATE_MEMO</code> event via <code>Event.createEvent("xslt://{{/Events/OMConsumers/OMXFM/Request/CCBS_CREATE_MEMO}}...")</code>.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional — if present</td></tr>
+      <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional — if present</td></tr>
+      <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional — if present</td></tr>
+      <tr><td><code>RefID</code></td><td><code>$refAccId</code> or <code>$refId</code></td><td>Always — entity correlation key</td></tr>
+      <tr><td><code>UserName</code></td><td><code>$orderRequest/OrderData/User</code></td><td>Only if IsEnableUserPass='true'</td></tr>
+      <tr><td><code>PassWord</code></td><td><code>$orderRequest/OrderData/Password</code></td><td>Only if IsEnableUserPass='true'</td></tr>
+      <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional — if present</td></tr>
+      <tr><td><code>CES</code></td><td><code>$orderRequest/OrderData/CES</code></td><td>Conditional — if present</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.4 — Payload Root Element</h3>
+    <p>The payload wraps a <code>ns1:createMemoRequest</code> containing a single <code>ns2:createMemo</code> element with the four fields described in §9.6.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.5 — Conditional Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Condition</th><th>Variants</th></tr>
+      <tr><td>Account: <code>entityId = AccountID</code></td><td><code>ENTITY_TYPE_ID='2'</code></td><td>Account only</td></tr>
+      <tr><td>Account: <code>entityId = BillingArrangementId</code></td><td><code>otherwise</code> (ENTITY_TYPE_ID absent or ≠ 2)</td><td>Account only</td></tr>
+      <tr><td>Account: <code>entityTypeId</code> from ExtendedInfo</td><td><code>ENTITY_TYPE_ID</code> string-length &gt; 0</td><td>Account only</td></tr>
+      <tr><td>Account: <code>entityTypeId = "3"</code></td><td><code>otherwise</code></td><td>Account only</td></tr>
+      <tr><td>Subscriber: <code>memoText with soc</code></td><td><code>$soc != ''</code></td><td>POU Sub, COU Sub</td></tr>
+      <tr><td>Subscriber: <code>memoText without soc</code></td><td><code>otherwise</code></td><td>POU Sub, COU Sub</td></tr>
+      <tr><td><code>UserName/PassWord</code></td><td><code>IsEnableUserPass='true'</code></td><td>All</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.6 — Core Payload Block</h3>
+    <table>
+      <tr><th>XML Element</th><th>Account Variant</th><th>Subscriber Variants</th></tr>
+      <tr><td><code>ns2:entityId</code></td><td>AccountID (if ENTITY_TYPE_ID=2) else BillingArrangementId</td><td>SubscriberId (always)</td></tr>
+      <tr><td><code>ns2:entityTypeId</code></td><td>ExtendedInfo[ENTITY_TYPE_ID]/Value else "3"</td><td>"6" (static)</td></tr>
+      <tr><td><code>ns2:memoText</code></td><td>concat(UserText, "channel:[ ", Channel, " ]")</td><td>concat(UserText, [" soc= ", soc,] "channel:[ ", Channel, " ]")</td></tr>
+      <tr><td><code>ns2:memoTypeId</code></td><td>ExtendedInfo[MEMO_TYPE_ID]/Value</td><td>ExtendedInfo[MEMO_TYPE_ID]/Value</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.7 — Complete Generated XML Example (Account Variant, ENTITY_TYPE_ID=2)</h3>
+    <pre><span class="xt">&lt;createEvent&gt;
+  &lt;event&gt;
+    &lt;JMSPriority&gt;</span><span class="nm">5</span><span class="xt">&lt;/JMSPriority&gt;
+    &lt;JMSCorrelationID&gt;</span><span class="st">OMX-TRK-20241001-001</span><span class="xt">&lt;/JMSCorrelationID&gt;
+    &lt;OrderID&gt;</span><span class="st">ORD-98765</span><span class="xt">&lt;/OrderID&gt;
+    &lt;RefID&gt;</span><span class="st">ACC-123</span><span class="xt">&lt;/RefID&gt;
+    &lt;OrderType&gt;</span><span class="nm">23</span><span class="xt">&lt;/OrderType&gt;
+    &lt;CES&gt;</span><span class="st">PORTAL</span><span class="xt">&lt;/CES&gt;
+    &lt;payload&gt;
+      &lt;ns1:createMemoRequest&gt;
+        &lt;ns2:createMemo&gt;
+          &lt;ns2:entityId&gt;</span><span class="st">10001234</span><span class="xt">&lt;/ns2:entityId&gt;
+          &lt;ns2:entityTypeId&gt;</span><span class="nm">2</span><span class="xt">&lt;/ns2:entityTypeId&gt;
+          &lt;ns2:memoText&gt;</span><span class="st">Customer requested plan change channel:[ PORTAL ]</span><span class="xt">&lt;/ns2:memoText&gt;
+          &lt;ns2:memoTypeId&gt;</span><span class="nm">90051</span><span class="xt">&lt;/ns2:memoTypeId&gt;
+        &lt;/ns2:createMemo&gt;
+      &lt;/ns1:createMemoRequest&gt;
+    &lt;/payload&gt;
+  &lt;/event&gt;
+&lt;/createEvent&gt;</span></pre>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.8 — XSLT Stylesheet Source</h3>
+
+    <div class="variant-label">Account Variant ①</div>
+    <pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:ns2="http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/ESB/CreateMemo.xsd"</span>
+  <span class="xa">xmlns:ns1="http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/FM/CreateMemo.xsd"</span>
+  <span class="xa">xmlns:xsl="http://www.w3.org/1999/XSL/Transform"</span> <span class="xa">version="1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="orderRequest"</span><span class="xt">/&gt;</span>   <span class="cm">&lt;!-- full OrderRequest concept --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="refAccId"</span><span class="xt">/&gt;</span>      <span class="cm">&lt;!-- Account[a].RefId --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="a"</span><span class="xt">/&gt;</span>            <span class="cm">&lt;!-- 0-based Account loop index --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="iAccount"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match="/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="cm">&lt;!-- JMS headers --&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test="$orderRequest/OrderPriority"</span><span class="xt">&gt;&lt;JMSPriority&gt;</span>...<span class="xt">&lt;/JMSPriority&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test="$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">&gt;&lt;JMSCorrelationID&gt;</span>...<span class="xt">&lt;/JMSCorrelationID&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test="$orderRequest/OrderData/OrderID"</span><span class="xt">&gt;&lt;OrderID&gt;</span>...<span class="xt">&lt;/OrderID&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;RefID&gt;</span><span class="xa">$refAccId</span><span class="xt">&lt;/RefID&gt;</span>
+      <span class="xt">&lt;xsl:variable</span> <span class="xa">name="iAccount"</span> <span class="xa">select="(number($a)+1)"</span><span class="xt">/&gt;</span>  <span class="cm">&lt;!-- 1-based index --&gt;</span>
+      <span class="cm">&lt;!-- optional auth --&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test="$globalVariables/.../IsEnableUserPass='true'"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;UserName&gt;</span>...<span class="xt">&lt;/UserName&gt;&lt;PassWord&gt;</span>...<span class="xt">&lt;/PassWord&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test="$orderRequest/OrderData/OrderType"</span><span class="xt">&gt;&lt;OrderType&gt;</span>...<span class="xt">&lt;/OrderType&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test="$orderRequest/OrderData/CES"</span><span class="xt">&gt;&lt;CES&gt;</span>...<span class="xt">&lt;/CES&gt;&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns1:createMemoRequest&gt;&lt;ns2:createMemo&gt;</span>
+          <span class="cm">&lt;!-- entityId: AccountID if ENTITY_TYPE_ID=2, else BillingArrangementId --&gt;</span>
+          <span class="xt">&lt;xsl:choose&gt;</span>
+            <span class="xt">&lt;xsl:when</span> <span class="xa">test="string-length(Account/ExtendedInfo[Name='ENTITY_TYPE_ID']/Value)&gt;0 and ...='2'"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns2:entityId&gt;</span>Account[$iAccount]/AccountID<span class="xt">&lt;/ns2:entityId&gt;</span>
+            <span class="xt">&lt;/xsl:when&gt;</span>
+            <span class="xt">&lt;xsl:otherwise&gt;&lt;ns2:entityId&gt;</span>Account[$iAccount]/BillingArrangementId<span class="xt">&lt;/ns2:entityId&gt;&lt;/xsl:otherwise&gt;</span>
+          <span class="xt">&lt;/xsl:choose&gt;</span>
+          <span class="cm">&lt;!-- entityTypeId: from ExtendedInfo or "3" --&gt;</span>
+          <span class="xt">&lt;xsl:choose&gt;</span>
+            <span class="xt">&lt;xsl:when</span> <span class="xa">test="string-length(ENTITY_TYPE_ID)&gt;0"</span><span class="xt">&gt;&lt;ns2:entityTypeId&gt;</span>ENTITY_TYPE_ID/Value<span class="xt">&lt;/ns2:entityTypeId&gt;&lt;/xsl:when&gt;</span>
+            <span class="xt">&lt;xsl:otherwise&gt;&lt;ns2:entityTypeId&gt;</span>3<span class="xt">&lt;/ns2:entityTypeId&gt;&lt;/xsl:otherwise&gt;</span>
+          <span class="xt">&lt;/xsl:choose&gt;</span>
+          <span class="xt">&lt;ns2:memoText&gt;</span>concat(AccountActivityInfo/UserText, "channel:[ ", Channel, " ]")<span class="xt">&lt;/ns2:memoText&gt;</span>
+          <span class="xt">&lt;ns2:memoTypeId&gt;</span>ExtendedInfo[MEMO_TYPE_ID]/Value<span class="xt">&lt;/ns2:memoTypeId&gt;</span>
+        <span class="xt">&lt;/ns2:createMemo&gt;&lt;/ns1:createMemoRequest&gt;</span>
+      <span class="xt">&lt;/payload&gt;&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;&lt;/xsl:stylesheet&gt;</span></pre>
+
+    <div class="variant-label">ParentOU Subscriber Variant ②</div>
+    <pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">...same namespaces...</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="refId"</span><span class="xt">/&gt;</span>          <span class="cm">&lt;!-- ParentOU[i].Subscriber[j].RefId --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="i"</span><span class="xt">/&gt;</span> <span class="xt">&lt;xsl:param</span> <span class="xa">name="j"</span><span class="xt">/&gt;</span>  <span class="cm">&lt;!-- 0-based loops --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="soc"</span><span class="xt">/&gt;</span>           <span class="cm">&lt;!-- SubscriberOffers[ServiceType=86, FE/BRMS]/OfferName --&gt;</span>
+  <span class="xt">&lt;xsl:variable</span> <span class="xa">name="iPOU"</span> <span class="xa">select="(number($i)+1)"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:variable</span> <span class="xa">name="iPSUB"</span> <span class="xa">select="(number($j)+1)"</span><span class="xt">/&gt;</span>
+  <span class="cm">&lt;!-- Headers same as Account variant; RefID = $refId --&gt;</span>
+  <span class="xt">&lt;ns2:entityId&gt;</span>ParentOU[$iPOU]/Subscriber[$iPSUB]/SubscriberId<span class="xt">&lt;/ns2:entityId&gt;</span>
+  <span class="xt">&lt;ns2:entityTypeId&gt;</span><span class="nm">6</span><span class="xt">&lt;/ns2:entityTypeId&gt;</span>   <span class="cm">&lt;!-- always 6 = Subscriber --&gt;</span>
+  <span class="cm">&lt;!-- memoText: with SOC if found --&gt;</span>
+  <span class="xt">&lt;xsl:choose&gt;</span>
+    <span class="xt">&lt;xsl:when</span> <span class="xa">test="$soc!=''"</span><span class="xt">&gt;</span>
+      <span class="xt">&lt;ns2:memoText&gt;</span>concat(UserText, " soc= ", soc, " channel:[ ", Channel, " ]")<span class="xt">&lt;/ns2:memoText&gt;</span>
+    <span class="xt">&lt;/xsl:when&gt;</span>
+    <span class="xt">&lt;xsl:otherwise&gt;</span>
+      <span class="xt">&lt;ns2:memoText&gt;</span>concat(UserText, " channel:[ ", Channel, " ]")<span class="xt">&lt;/ns2:memoText&gt;</span>
+    <span class="xt">&lt;/xsl:otherwise&gt;</span>
+  <span class="xt">&lt;/xsl:choose&gt;</span>
+  <span class="xt">&lt;ns2:memoTypeId&gt;</span>Subscriber[$iPSUB]/ExtendedInfo[MEMO_TYPE_ID]/Value<span class="xt">&lt;/ns2:memoTypeId&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+
+    <div class="variant-label">ChildOU Subscriber Variant ③</div>
+    <pre><span class="cm">&lt;!-- Same structure as Variant ② with additional ChildOU dimension --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="k"</span><span class="xt">/&gt;</span>            <span class="cm">&lt;!-- 0-based ChildOU loop index --&gt;</span>
+  <span class="xt">&lt;xsl:variable</span> <span class="xa">name="kCOU"</span> <span class="xa">select="(number($k)+1)"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:variable</span> <span class="xa">name="kCSUB"</span> <span class="xa">select="(number($j)+1)"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;ns2:entityId&gt;</span>ParentOU[$iPOU]/ChildOU[$kCOU]/Subscriber[$kCSUB]/SubscriberId<span class="xt">&lt;/ns2:entityId&gt;</span>
+  <span class="xt">&lt;ns2:entityTypeId&gt;</span><span class="nm">6</span><span class="xt">&lt;/ns2:entityTypeId&gt;</span>
+  <span class="cm">&lt;!-- memoText and memoTypeId same as Variant ② but from ChildOU path --&gt;</span></pre>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§10</span> XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p style="margin-bottom:12px"><strong>Account Variant ①</strong></p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">if $orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">if OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">if OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refAccId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="tree-cond">IsEnableUserPass='true' AND User present</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="tree-cond">IsEnableUserPass='true' AND Password present</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">if OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="tree-cond">if CES</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge badge-green">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:createMemoRequest</span><span class="badge badge-green">Always</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:createMemo</span><span class="badge badge-green">Always</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:entityId</span><span class="tree-arrow">←</span><span class="tree-src">Account[$iAccount]/AccountID</span><span class="tree-cond">when ENTITY_TYPE_ID='2'</span><span class="badge badge-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:entityId</span><span class="tree-arrow">←</span><span class="tree-src">Account[$iAccount]/BillingArrangementId</span><span class="tree-cond">otherwise</span><span class="badge badge-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:entityTypeId</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[ENTITY_TYPE_ID]/Value</span><span class="tree-cond">when ENTITY_TYPE_ID present</span><span class="badge badge-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:entityTypeId</span><span class="tree-arrow">←</span><span class="tree-src-static">"3"</span><span class="tree-cond">otherwise</span><span class="badge badge-orange">Conditional</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:memoText</span><span class="tree-arrow">←</span><span class="tree-src">concat(UserText, "channel:[ ", Channel, " ]")</span><span class="badge badge-green">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns2:memoTypeId</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[MEMO_TYPE_ID]/Value</span><span class="badge badge-green">Always</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <p style="margin:16px 0 8px"><strong>Subscriber Variants ②③ — Differences from Account Variant</strong></p>
+    <table>
+      <tr><th>Element</th><th>Account ①</th><th>POU Sub ②</th><th>COU Sub ③</th></tr>
+      <tr><td><code>RefID</code></td><td><code>$refAccId</code></td><td><code>$refId</code> (ParentOU Sub)</td><td><code>$refId</code> (ChildOU Sub)</td></tr>
+      <tr><td><code>ns2:entityId</code></td><td>AccountID or BillingArrangementId</td><td>SubscriberId</td><td>SubscriberId</td></tr>
+      <tr><td><code>ns2:entityTypeId</code></td><td>"3" (default) or from ExtendedInfo</td><td>"6" (static)</td><td>"6" (static)</td></tr>
+      <tr><td><code>ns2:memoText</code></td><td>UserText + channel</td><td>UserText [+ soc] + channel</td><td>UserText [+ soc] + channel</td></tr>
+      <tr><td>Path depth</td><td>Customer/Account[$iAccount]</td><td>ParentOU[$iPOU]/Subscriber[$iPSUB]</td><td>ParentOU[$iPOU]/ChildOU[$kCOU]/Subscriber[$kCSUB]</td></tr>
+    </table>
+
+    <p style="margin-top:12px;font-size:.82rem;color:#555">Legend: <span class="badge badge-green">Always</span> = unconditional &nbsp; <span class="badge badge-orange">Conditional</span> = inside xsl:if or xsl:choose &nbsp; <span class="badge badge-purple">Credential-gated</span> = gated by IsEnableUserPass global variable &nbsp; <span style="color:#a6e3a1">green</span> = XPath source &nbsp; <span style="color:#fab387">orange</span> = static literal</p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§11</span> Audit Logging</div>
+  <div class="card-body">
+    <p>All three variants emit a Logger event immediately after sending the main request event (gated by <code>RuleFunctions.Helpers.AllowWriteLog(orderType)</code>).</p>
+    <table>
+      <tr><th>Audit Field</th><th>Value</th></tr>
+      <tr><td><code>ESBUUID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code> (conditional)</td></tr>
+      <tr><td><code>PROCESS_ID</code></td><td><code>concat($pid, "_REQ")</code> — nanosecond timestamp suffix</td></tr>
+      <tr><td><code>COMPONENT_NAME</code></td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+      <tr><td><code>OPERATION_NAME</code></td><td><code>"CCBS_CREATE_MEMO"</code> (static)</td></tr>
+      <tr><td><code>TARGET_SYSTEM</code></td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+      <tr><td><code>LOG_LEVEL</code></td><td>INFO (from global variables)</td></tr>
+      <tr><td><code>AUDIT_TRACE</code></td><td><code>concat("Request Sent for RefId: ", $refAccId/$refId)</code></td></tr>
+      <tr><td><code>AUDIT_TS</code></td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+      <tr><td><code>payload/ns:ServicePayload</code></td><td>Copy of <code>$reqEvent</code> — conditional on <code>WritePayload="true"</code></td></tr>
+    </table>
+    <p style="margin-top:8px">The response handler emits a corresponding Logger event with <code>PROCESS_ID = concat($pid, "_RES")</code> and <code>AUDIT_TRACE = "Response received for CCBS_CREATE_MEMO"</code>.</p>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§12</span> Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Condition</th><th>Status set</th><th>Function</th></tr>
+      <tr><td>At least one entity sent successfully</td><td><code>"1"</code> (In-Progress)</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td></tr>
+      <tr><td>No entity matched (all skipped)</td><td>Skipped (<code>"4"</code>)</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+      <tr><td>Response: all requests succeeded</td><td>Completed</td><td><code>return "true"</code> from response rulefunction</td></tr>
+      <tr><td>Response: some failed</td><td>Pending</td><td><code>return "false"</code> from response rulefunction</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§13</span> Exception / Error Handling</div>
+  <div class="card-body">
+    <p>The entire THEN block is wrapped in <code>try { ... } catch(Exception ae)</code>. On exception:</p>
+    <pre><span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(<span class="ty">orderRequest</span>, <span class="ty">orderCurrentActivity</span>, <span class="ty">ae</span>, <span class="st">""</span>);</pre>
+    <p style="margin-top:8px">This standard helper logs the exception details and marks the activity as failed, allowing the order orchestration to handle the error according to the configured error flow.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§14</span> Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Signature</th><th>Purpose</th></tr>
+      <tr><td><code>GetXMLForAccount</code></td><td><code>String(orderRequest, refAccId)</code></td><td>Serializes Account context to XML for XPath evaluation of PreExecCheck</td></tr>
+      <tr><td><code>GetXMLForSubscriber</code></td><td><code>String(orderRequest, refId)</code></td><td>Serializes ParentOU Subscriber context to XML</td></tr>
+      <tr><td><code>GetXMLForSubscriberInChildOU</code></td><td><code>String(orderRequest, refId, pouRefId)</code></td><td>Serializes ChildOU Subscriber context to XML; needs Parent OU reference for scoping</td></tr>
+      <tr><td><code>AllowWriteLog</code></td><td><code>boolean(orderType)</code></td><td>Gate for audit logging based on order type config</td></tr>
+      <tr><td><code>GetActivityStatusString</code></td><td><code>String(statusCode, isError)</code></td><td>Returns status string from code ("1"=in-progress, "4"=skip)</td></tr>
+      <tr><td><code>SendDataToDB</code></td><td><code>void(orderRequest)</code></td><td>Persists order state to database</td></tr>
+      <tr><td><code>SkipActivity</code></td><td><code>void(orderRequest, activity, code)</code></td><td>Marks activity as skipped and advances flow</td></tr>
+      <tr><td><code>HandleActivityException</code></td><td><code>void(orderRequest, activity, exception, msg)</code></td><td>Standard exception handler — logs and fails the activity</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§15</span> Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_CCBS_CREATE_MEMO
+├── RuleFunctions.Helpers.GetXMLForAccount(orderRequest, refAccId)
+├── RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId)
+├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)
+├── XPath.execute(chkXPath, sXML, ...)          [PreExecCheck evaluation]
+├── Event.createEvent("xslt://CCBS_CREATE_MEMO")  [×3 variants]
+│   └── Event.Ext.sendEventImmediate(reqEvent)
+├── RuleFunctions.Helpers.AllowWriteLog(orderType)
+│   └── Event.createEvent("xslt://Logger")
+│       └── Event.Ext.sendEventImmediate(logEvent)
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(orderRequest, activity, "4")
+└── RuleFunctions.Helpers.HandleActivityException(orderRequest, activity, ae, "")</pre>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§16</span> Concept Definitions Referenced</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Concept</th><th>Key fields used</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>OrderData.Customer.Account[].AccountID, BillingArrangementId, AccountActivityInfo.UserText, ExtendedInfo[ENTITY_TYPE_ID/MEMO_TYPE_ID/FE_OR_CCBS]; ParentOU[].Subscriber[].SubscriberId, SubscriberActivityInfo.UserText, SubscriberOffers[ServiceType=86]</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>extId, ActivityID, Status, RequestCount, Response[], PreExecCheck</td></tr>
+      <tr><td><code>Concepts.FM.Base.ResponseBase</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId — constructed in response handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§17</span> Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Must support three entity types: Account, ParentOU Subscriber, ChildOU Subscriber — each with independent PreExecCheck evaluation</td></tr>
+      <tr><td>R2</td><td>Entity type ID must be determined dynamically: ENTITY_TYPE_ID=2 → AccountID; otherwise BillingArrangementId; subscribers always use "6"</td></tr>
+      <tr><td>R3</td><td>Memo text must append SOC of active SBM DataPack (ServiceType=86 FE/BRMS) when present for subscriber entities</td></tr>
+      <tr><td>R4</td><td>Duplicate suppression: skip entity if already successfully responded (CompletionStatus=2 + RefId match)</td></tr>
+      <tr><td>R5</td><td>Fan-in completion check: all RequestCount parallel sends must return ResponseCode ending "000"</td></tr>
+      <tr><td>R6</td><td>Audit logging must capture RefId per entity for traceability</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Three separate XSLT variants increase maintenance burden</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Consolidate into a single parameterized template in microservice implementation</td></tr>
+      <tr><td>0-based index arithmetic (number($a)+1) is error-prone</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Pass 1-based indices directly or use array/list APIs in target platform</td></tr>
+      <tr><td>No guard on memoTypeId being present — empty ExtendedInfo silently sends blank memoTypeId</td><td><span class="badge badge-red">HIGH</span></td><td>Add validation before send; return early if MEMO_TYPE_ID is missing</td></tr>
+      <tr><td>SOC extraction uses first match of ServiceType=86 FE/BRMS offer — multiple offers could exist</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Clarify business rule: should all matching SOCs be appended, or only the first?</td></tr>
+      <tr><td>Fan-in depends on RequestCount being set before responses arrive — race in resubmit flow</td><td><span class="badge badge-orange">MEDIUM</span></td><td>isActResub guard preserves count; verify resubmit handling in target platform</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§18</span> Full Source Code</div>
+  <div class="card-body">
+    <pre><span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_CCBS_CREATE_MEMO</span> {
+  <span class="kw">attribute</span> { priority = <span class="nm">5</span>; forwardChain = <span class="kw">true</span>; }
+  <span class="kw">declare</span> {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="st">"CCBS_CREATE_MEMO"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="st">"CCBS_CREATE_MEMO"</span>;
+    orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount&gt;<span class="nm">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">try</span> {
+      <span class="ty">String</span> sXML = <span class="st">""</span>;
+      <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+      <span class="ty">Activity</span> nextAct = Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+      <span class="ty">String</span> chkXPath = nextAct.PreExecCheck;
+      <span class="kw">int</span> iAccountLen = orderRequest.OrderData.Customer.Account@length;
+
+      <span class="cm">// Account loop</span>
+      <span class="kw">for</span>(<span class="kw">int</span> a=<span class="nm">0</span>; a &lt; iAccountLen; a++) {
+        <span class="ty">String</span> refAccId = orderRequest.OrderData.Customer.Account[a].RefId;
+        <span class="kw">if</span>(String.length(nextAct.PreExecCheck) &gt; <span class="nm">0</span>) {
+          sXML = <span class="fn">RuleFunctions.Helpers.GetXMLForAccount</span>(orderRequest, refAccId);
+          chkRes = XPath.execute(<span class="st">"/("+chkXPath+")"</span>, sXML, ...);
+        }
+        <span class="kw">if</span>(String.equals(chkRes, <span class="st">"true"</span>)) {
+          <span class="cm">// Skip if already responded successfully</span>
+          <span class="kw">if</span>(!reqSuccess &amp;&amp; AccountActivityInfo != <span class="kw">null</span> &amp;&amp; UserText != <span class="kw">null</span>) {
+            <span class="cm">/* Account Variant XSLT — see §9.8 Variant ①
+               Builds ns2:createMemo with entityId=AccountID|BillingArrangementId,
+               entityTypeId from ENTITY_TYPE_ID|"3", memoText=UserText+channel */</span>
+            Event.Ext.sendEventImmediate(reqEvent);
+            <span class="cm">// Audit log (§11)</span>
+            <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+            isSkipped = <span class="kw">false</span>;
+          }
+        }
+      }
+
+      <span class="cm">// ParentOU Subscriber loop (nested: POU → Subscriber)</span>
+      <span class="kw">for</span>(<span class="kw">int</span> i=<span class="nm">0</span>; i &lt; iPOULen; i++) {
+        <span class="kw">for</span>(<span class="kw">int</span> j=<span class="nm">0</span>; j &lt; iSubscriberLen; j++) {
+          <span class="kw">if</span>(String.equals(chkRes, <span class="st">"true"</span>) &amp;&amp; !reqSuccess &amp;&amp; UserText != <span class="kw">null</span>) {
+            <span class="cm">/* ParentOU Subscriber Variant XSLT — see §9.8 Variant ②
+               entityId=SubscriberId, entityTypeId="6",
+               memoText=UserText[+soc]+channel */</span>
+            Event.Ext.sendEventImmediate(reqEvent);
+            <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+            isSkipped = <span class="kw">false</span>;
+          }
+        }
+
+        <span class="cm">// ChildOU Subscriber loop (nested: POU → COU → Subscriber)</span>
+        <span class="kw">for</span>(<span class="kw">int</span> k=<span class="nm">0</span>; k &lt; iCOULen; k++) {
+          <span class="kw">for</span>(<span class="kw">int</span> j=<span class="nm">0</span>; j &lt; iCSubscriberLen; j++) {
+            <span class="kw">if</span>(String.equals(chkRes, <span class="st">"true"</span>) &amp;&amp; !reqSuccess &amp;&amp; UserText != <span class="kw">null</span>) {
+              <span class="cm">/* ChildOU Subscriber Variant XSLT — see §9.8 Variant ③
+                 Same as Variant ② but path: ParentOU[$iPOU]/ChildOU[$kCOU]/Subscriber[$kCSUB] */</span>
+              Event.Ext.sendEventImmediate(reqEvent);
+              <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+              isSkipped = <span class="kw">false</span>;
+            }
+          }
+        }
+      }
+
+      <span class="kw">if</span>(!isSkipped) {
+        orderCurrentActivity.Status = <span class="fn">RuleFunctions.Helpers.GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+        <span class="fn">RuleFunctions.Helpers.SendDataToDB</span>(orderRequest);
+      } <span class="kw">else</span>
+        <span class="fn">RuleFunctions.Helpers.SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+    } <span class="kw">catch</span>(Exception ae) {
+      <span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+    }
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§19</span> Response Message Rule</div>
+  <div class="card-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.1 — Overview</h3>
+    <p><code>Response_CCBS_CREATE_MEMO</code> handles the reply from CCBS for each entity's memo creation. It builds a <code>ResponseBase</code> concept, appends it to the activity's response array, updates the order's ResponseCode/ResponseMsg, emits a response audit log, then evaluates fan-in completion to signal whether all parallel requests have succeeded.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order context for status updates</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_CREATE_MEMO</code></td><td>The response event from CCBS carrying ResponseCode, ResponseMsg, CompletionStatus, RefID</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity whose RequestCount is compared to success count for fan-in</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">§19.3 — ResponseBase Concept Construction</h3>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">if ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">if ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">if CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">if RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:8px">After construction, the object is appended: <code>currActivity.Response[currActivity.Response@length] = activityRes</code>, and the order's customer-level ResponseCode/ResponseMsg are updated from <code>eventResponse</code>.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">§19.4 — Response Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+      <tr><td>Return "true"</td><td>All RequestCount parallel sends returned ResponseCode ending "000"</td></tr>
+      <tr><td>Return "false"</td><td>Some responses not yet received or some failed (ResponseCode suffix ≠ "000")</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">§19.5 — Response Audit Logging</h3>
+    <table>
+      <tr><th>Audit Field</th><th>Value</th></tr>
+      <tr><td><code>PROCESS_ID</code></td><td><code>concat($pid, "_RES")</code></td></tr>
+      <tr><td><code>OPERATION_NAME</code></td><td><code>"CCBS_CREATE_MEMO"</code> (static)</td></tr>
+      <tr><td><code>TARGET_SYSTEM</code></td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+      <tr><td><code>AUDIT_TRACE</code></td><td><code>"Response received for CCBS_CREATE_MEMO"</code> (static)</td></tr>
+      <tr><td><code>AUDIT_TS</code></td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+      <tr><td><code>payload/ns:ServicePayload</code></td><td>Copy of <code>$eventResponse</code> — conditional on <code>WritePayload="true"</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 8px">§19.6 — Response XSLT Source (ResponseBase)</h3>
+    <pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:OMXUtils="www.tibco.com/be/custom/OMXUtils"</span>
+  <span class="xa">xmlns:xsl="http://www.w3.org/1999/XSL/Transform"</span> <span class="xa">version="1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name="eventResponse"</span><span class="xt">/&gt;</span>   <span class="cm">&lt;!-- CCBS_CREATE_MEMO response event --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match="/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createObject&gt;&lt;object</span> <span class="xa">extId="{OMXUtils:generateTrackingID()}"</span><span class="xt">&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test="$eventResponse/ResponseCode"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ResponseCode&gt;</span>$eventResponse/ResponseCode<span class="xt">&lt;/ResponseCode&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test="$eventResponse/ResponseMsg"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ResponseMessage&gt;</span>$eventResponse/ResponseMsg<span class="xt">&lt;/ResponseMessage&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test="$eventResponse/CompletionStatus"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;CompletionStatus&gt;</span>$eventResponse/CompletionStatus<span class="xt">&lt;/CompletionStatus&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test="$eventResponse/RefID"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ReferenceId&gt;</span>$eventResponse/RefID<span class="xt">&lt;/ReferenceId&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+    <span class="xt">&lt;/object&gt;&lt;/createObject&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+  </div>
+</div>
+
+</div><!-- /content -->
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &middot; Request_CCBS_CREATE_MEMO &middot; Generated 2026-09-15</footer>
+</body>
+</html>

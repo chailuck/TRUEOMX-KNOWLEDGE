@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_OMX_BRMS_DB</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#333;font-size:14px;line-height:1.6;}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+header h1{font-size:1.8rem;font-weight:700;letter-spacing:.5px;}
+header .sub{opacity:.85;margin-top:6px;font-size:.95rem;}
+.meta-row{display:flex;gap:20px;margin-top:14px;flex-wrap:wrap;}
+.meta-badge{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.82rem;}
+main{max-width:1300px;margin:0 auto;padding:28px 24px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.06);}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:13px 20px;font-size:.97rem;font-weight:600;border-left:4px solid var(--true-light);}
+.card-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:hover td{background:#fafafa;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red);line-height:1.5;}
+code{background:#f0e8e8;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.85rem;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.78rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:var(--success);}
+.badge-orange{background:#FFF3E0;color:var(--warning);}
+.badge-blue{background:#E3F0FD;color:var(--info);}
+.badge-purple{background:#F3E5F5;color:var(--skip);}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+details summary{cursor:pointer;padding:10px 0;font-weight:600;color:var(--true-dark);}
+details[open] summary{margin-bottom:10px;}
+.step-flow{counter-reset:step;}
+.step-flow .step{counter-increment:step;display:flex;gap:14px;margin-bottom:12px;align-items:flex-start;}
+.step-flow .step::before{content:counter(step);background:var(--true-red);color:#fff;min-width:26px;height:26px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:2px;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic;}
+.tree-ns{color:#6c7086;font-size:.78rem;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.k{color:#cba6f7;}.t{color:#89b4fa;}.s{color:#a6e3a1;}.c{color:#6c7086;font-style:italic;}
+.n{color:#fab387;}.f{color:#f38ba8;}.x{color:#89dceb;}.xa{color:#f9e2af;}
+.warn-box{background:#FFF8E1;border-left:4px solid #F9A825;padding:12px 16px;border-radius:6px;margin-bottom:14px;font-size:.88rem;}
+.info-box{background:#E3F2FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:6px;margin-bottom:14px;font-size:.88rem;}
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+@media(max-width:760px){.grid-2{grid-template-columns:1fr;}}
+footer{text-align:center;padding:24px;color:#999;font-size:.82rem;border-top:1px solid var(--border);margin-top:20px;}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_OMX_BRMS_DB</h1>
+  <div class="sub">TIBCO BusinessEvents FM Logic — OMX Business Rules Engine (BRMS from DB)</div>
+  <div class="meta-row">
+    <span class="meta-badge">Target: BRMS / Internal DB</span>
+    <span class="meta-badge">Fan-out: Classic Parallel + Resubmit Guard</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Author: boony14</span>
+    <span class="meta-badge">Generated: 2026-08-04</span>
+  </div>
+</header>
+
+<main>
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>This FM is the <strong>BRMS decision engine</strong> for order processing. It sends each subscriber's contextual data (propositions, offer names, company codes, extended flags) to the Business Rules Management System (BRMS) — formerly implemented as decision tables, now stored in a database. BRMS returns a set of <em>actions</em> (AddOffer, RemoveOffer, etc.) that the response handler dynamically executes to modify the <code>OrderRequest</code> working memory.</p>
+    <br/>
+    <p>This FM is significantly more complex than other FMs because it branches on <strong>order type</strong>, constructs a large <strong>pipe-delimited <code>ListInput</code></strong> string from dozens of subscriber/account/extended-info fields, handles <strong>resubmit detection</strong> (avoids double-incrementing RequestCount), and supports a <strong>testBRMS_DB mode</strong> that suppresses audit logging.</p>
+    <div class="warn-box" style="margin-top:14px;">
+      <strong>forwardChain = true:</strong> Unique among OMXFM rules. After this rule fires, TIBCO BE immediately re-evaluates all rule conditions in working memory. This allows downstream rules to respond to the BRMS actions without waiting for an external event cycle.
+    </div>
+    <div class="info-box">
+      <strong>Resubmit guard:</strong> If <code>orderRequest.IsOrderResubmitted == true</code> AND <code>orderCurrentActivity.RequestCount &gt; 0</code>, the resubmit path skips incrementing RequestCount — preventing duplicate fan-in counting when reprocessing an already-in-flight activity.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><code>Request_OMX_BRMS_DB</code></td></tr>
+      <tr><td>Rule File</td><td><code>OMX-OM/Rules/OMConsumers/OMXFM/Request/Request_OMX_BRMS_DB.rule</code></td></tr>
+      <tr><td>Rule Type</td><td><code>rule</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>Forward Chain</td><td><span class="badge badge-orange">true</span> (unusual — most FMs use false)</td></tr>
+      <tr><td>Author</td><td>boony14</td></tr>
+      <tr><td>Description</td><td>"Moved brms from decision table to db"</td></tr>
+      <tr><td>Target System</td><td>BRMS (via GET_BRMS_ACTIONS JMS event)</td></tr>
+      <tr><td>Integration Pattern</td><td>Classic Parallel Fan-out + Resubmit Guard</td></tr>
+      <tr><td>Fan-out Scope</td><td>POU Subscribers (per SubscriberOffer) + COU Subscribers (per SubscriberOffer)</td></tr>
+      <tr><td>ALT_CES Support</td><td><span class="badge badge-red">None</span></td></tr>
+      <tr><td>IntraActivitySequencing</td><td><span class="badge badge-red">Not Used</span></td></tr>
+      <tr><td>Exception Handling</td><td><span class="badge badge-green">try/catch → HandleActivityException</span></td></tr>
+      <tr><td>Audit Log Gate</td><td><code>AllowWriteLog(orderRequest.OrderData.OrderType)</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+  <div class="card-header">§3 — Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Master order — provides all subscriber, account, offer, extended-info data for BRMS inputs</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity state — RequestCount (fan-out counter), Response[], Status, PreExecCheck, IsOrderResubmitted</td></tr>
+    </table>
+    <p style="margin-top:10px;"><em>Note: <code>globalVariables</code> is NOT declared in this rule's declare block; it is accessed from global rule scope or passed implicitly.</em></p>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <p>This FM has <strong>explicit WHEN conditions</strong> (unlike most other FMs that rely on working memory presence alone):</p>
+    <pre><span class="k">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="s">"OMX_BRMS_DB"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="s">"OMX_BRMS_DB"</span>;
+    orderCurrentActivity.Status == <span class="s">"WAITING"</span>;
+}</pre>
+    <table style="margin-top:12px;">
+      <tr><th>Condition</th><th>Purpose</th></tr>
+      <tr><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Ensures this activity is the next scheduled step in the process flow</td></tr>
+      <tr><td><code>orderCurrentActivity.ActivityID == "OMX_BRMS_DB"</code></td><td>Guards that the matched activity is specifically OMX_BRMS_DB</td></tr>
+      <tr><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_BRMS_DB"</code></td><td>Cross-validates that the process flow pointer also agrees</td></tr>
+      <tr><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Prevents re-firing if already in progress or completed</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+  <div class="card-header">§5 — Execution Flow Diagram</div>
+  <div class="card-body">
+    <div class="step-flow">
+      <div class="step"><div><strong>Resubmit detection</strong> — <code>isActResub = (orderCurrentActivity.RequestCount &gt; 0 &amp;&amp; orderRequest.IsOrderResubmitted)</code></div></div>
+      <div class="step"><div><strong>PreExecCheck gate</strong> — evaluate XPath against serialized orderRequest. If chkRes != "true" → <code>SkipActivity("4")</code></div></div>
+      <div class="step"><div><strong>Audit log start</strong> — if <code>AllowWriteLog(OrderType)</code>: send Logger event "OMX-OM BRMS started."</div></div>
+      <div class="step"><div><strong>Order type classification</strong>:
+        <ul style="margin-top:4px;padding-left:18px;">
+          <li><code>IsChangePricePlanOrderType</code> = OrderType == "2"</li>
+          <li><code>IsPostpaidAddOfferSubOrderType</code> = OrderType IN ("3","4","69","11018")</li>
+          <li><code>IsShareplanOrderType</code> = OrderType == "11002"</li>
+        </ul>
+      </div></div>
+      <div class="step"><div><strong>POU Subscriber loop</strong> — for each ParentOU[i].Subscriber[j]:
+        <ul style="margin-top:4px;padding-left:18px;">
+          <li>Resubmit check: if Response already contains success for this refId → skip</li>
+          <li>Find matching Account by AccountRefId</li>
+          <li>Extract companyCode, accSubType, custInfoType, effectiveDate, identification</li>
+          <li>Extract XPath fields: relaxBlacklist, orgChannel, oldPaymentMethod, newPaymentMethod, pricePlan, subType, callverStatus, redZone, verifyResult, faceRec, ccbs_topping_group, final_bill, cancel_type</li>
+          <li><strong>Branch A (PostpaidAddOfferSub)</strong>: loop over SubscriberOffers[pso], skip if FE_OR_CCBS=CCBS/CRM, build ListInput with 22+ fields + conditional RELATED_PROPOSITION/FINAL_BILL/CANCEL_TYPE, fire GET_BRMS_ACTIONS event with mainOffer</li>
+          <li><strong>Branch B (other types)</strong>: single event per subscriber, different proposition/offerName logic per IsChangePricePlanOrderType, build ListInput with different set of fields, fire GET_BRMS_ACTIONS event without mainOffer</li>
+          <li>If !isActResub: <code>RequestCount++</code></li>
+        </ul>
+      </div></div>
+      <div class="step"><div><strong>COU Subscriber loop</strong> — ParentOU[i].ChildOU[n].Subscriber[j]: identical logic to POU loop but uses 3-index path ($i, $n, $j in XSLT)</div></div>
+      <div class="step"><div><strong>Post-loop:</strong> if !isSkipped → <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB(orderRequest)</code>; else → <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></div></div>
+      <div class="step"><div><strong>Exception handler</strong> (catch block) → <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></div></div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="card">
+  <div class="card-header">§6 — Rule Action (THEN) — Annotated Logic</div>
+  <div class="card-body">
+    <pre><span class="k">try</span> {
+    <span class="c">// PreExecCheck</span>
+    String chkXPath = orderCurrentActivity.PreExecCheck;
+    String chkRes   = <span class="s">"true"</span>;
+    <span class="k">boolean</span> isSkipped = <span class="k">true</span>;
+
+    <span class="k">if</span>(String.length(chkXPath) &gt; <span class="n">0</span>) {
+        String sXML = Instance.serializeUsingDefaults(orderRequest);
+        chkRes = XPath.execute(<span class="s">"/("</span> + chkXPath + <span class="s">")"</span>, sXML, <span class="s">"ns0=www.tibco.com/be/ontology/..."</span>);
+    }
+
+    <span class="k">if</span>(String.equals(chkRes, <span class="s">"true"</span>)) {
+        <span class="c">// Optional audit log: "OMX-OM BRMS started."</span>
+        <span class="k">if</span>(RuleFunctions.Helpers.AllowWriteLog(orderRequest.OrderData.OrderType)) { ... }
+
+        <span class="c">// Order type flags</span>
+        <span class="k">boolean</span> IsChangePricePlanOrderType       = String.equals(<span class="s">"2"</span>,  orderRequest.OrderData.OrderType);
+        <span class="k">boolean</span> IsPostpaidAddOfferSubOrderType   = String.equals(<span class="s">"3"</span>,  orderRequest.OrderData.OrderType)
+                                                  || String.equals(<span class="s">"4"</span>,  orderRequest.OrderData.OrderType)
+                                                  || String.equals(<span class="s">"69"</span>, orderRequest.OrderData.OrderType)
+                                                  || String.equals(<span class="s">"11018"</span>, orderRequest.OrderData.OrderType);
+        <span class="k">boolean</span> IsShareplanOrderType             = String.equals(<span class="s">"11002"</span>, orderRequest.OrderData.OrderType);
+
+        <span class="c">// POU Subscriber loop</span>
+        <span class="k">for</span> (<span class="k">int</span> i = <span class="n">0</span>; i &lt; orderRequest.OrderData.Customer.ParentOU@length; i++) {
+            <span class="k">for</span> (<span class="k">int</span> j = <span class="n">0</span>; j &lt; orderRequest.OrderData.Customer.ParentOU[i].Subscriber@length; j++) {
+                String refId = orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].RefId;
+
+                <span class="c">// Resubmit guard</span>
+                <span class="k">boolean</span> reqSuccess = <span class="k">false</span>;
+                <span class="k">for</span>(<span class="k">int</span> iResp = <span class="n">0</span>; iResp &lt; orderCurrentActivity.Response@length; iResp++)
+                    <span class="k">if</span>(String.equals(orderCurrentActivity.Response[iResp].ReferenceId, refId)
+                       &amp;&amp; orderCurrentActivity.Response[iResp].CompletionStatus == <span class="n">2</span>)
+                        reqSuccess = <span class="k">true</span>;
+                <span class="k">if</span>(!reqSuccess) {
+                    <span class="c">// Find matching Account</span>
+                    Concepts.OrderRequest.OrderElements.Account acc = <span class="k">null</span>;
+                    <span class="k">for</span> (<span class="k">int</span> k = <span class="n">0</span>; k &lt; orderRequest.OrderData.Customer.Account@length; k++) {
+                        <span class="k">if</span>(String.equals(acc[k].RefId, subscriber.AccountRefId))
+                            acc = orderRequest.OrderData.Customer.Account[k];
+                    }
+
+                    <span class="c">// Extract BRMS context fields (see §7 for full list)</span>
+                    String companyCode = ...; String accSubType = ...;
+                    String custInfoType = ...; String effectiveDate = ...;
+                    String identification = ...; String relaxBlacklist = ...;
+                    <span class="c">// ... many more XPath extractions ...</span>
+
+                    <span class="k">if</span> (IsPostpaidAddOfferSubOrderType) {
+                        <span class="c">// Branch A: loop over SubscriberOffers, one event per FE offer</span>
+                        <span class="k">for</span>(<span class="k">int</span> pso = <span class="n">0</span>; ...) {
+                            <span class="k">if</span>(FE_OR_CCBS == <span class="s">"CCBS"</span> || <span class="s">"CRM"</span>) { <span class="k">continue</span>; }
+                            String listInput = <span class="s">"COMPANY_CODE="</span> + companyCode
+                                + <span class="s">"|ACC_SUB_TYPE="</span> + accSubType + <span class="s">"|..."</span>;
+                            Events.OMConsumers.OMXFM.Request.GET_BRMS_ACTIONS reqEvent =
+                                Event.createEvent(<span class="s">"xslt://..."</span> <span class="c">/* POU+Offer XSLT, see §9.8 */</span>);
+                            Event.Ext.sendEventImmediate(reqEvent);
+                            <span class="k">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                            isSkipped = <span class="k">false</span>;
+                        }
+                    } <span class="k">else</span> {
+                        <span class="c">// Branch B: single event per subscriber, different proposition logic</span>
+                        String listInput = <span class="s">"COMPANY_CODE="</span> + companyCode + <span class="s">"|..."</span>;
+                        Events.OMConsumers.OMXFM.Request.GET_BRMS_ACTIONS reqEvent =
+                            Event.createEvent(<span class="s">"xslt://..."</span> <span class="c">/* POU-only XSLT, see §9.8 */</span>);
+                        Event.Ext.sendEventImmediate(reqEvent);
+                        <span class="k">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                        isSkipped = <span class="k">false</span>;
+                    }
+                }
+            }
+
+            <span class="c">// COU Subscriber loop — identical logic with (i, n, j) indices</span>
+            <span class="k">for</span> (<span class="k">int</span> n = <span class="n">0</span>; n &lt; ParentOU[i].ChildOU@length; n++) {
+                <span class="k">for</span> (<span class="k">int</span> j = <span class="n">0</span>; j &lt; ChildOU[n].Subscriber@length; j++) {
+                    <span class="c">// ... same logic, XSLT includes $n (ChildOU index) additionally ...</span>
+                }
+            }
+        }
+
+        <span class="k">if</span>(!isSkipped) {
+            orderCurrentActivity.Status = RuleFunctions.Helpers.GetActivityStatusString(<span class="s">"1"</span>, <span class="k">false</span>);
+            RuleFunctions.Helpers.SendDataToDB(orderRequest);
+        } <span class="k">else</span> {
+            RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="s">"4"</span>);
+        }
+    }
+} <span class="k">catch</span> (Exception ae) {
+    RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="s">""</span>);
+}</pre>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="card">
+  <div class="card-header">§7 — Data Extraction — BRMS ListInput Fields</div>
+  <div class="card-body">
+    <p>The BRMS <code>ListInput</code> is a pipe-delimited string assembled from dozens of fields. Different order type branches include different fields.</p>
+
+    <h4 style="margin:12px 0 8px;color:var(--true-dark);">Common Fields (all order types)</h4>
+    <table>
+      <tr><th>Field Key</th><th>Source</th><th>Method</th></tr>
+      <tr><td><code>COMPANY_CODE</code></td><td>AccountManagementInfo.CompanyCode → fallback: Subscriber.SubscriberType</td><td>Direct field (CompanyCode commented out; uses SubscriberType)</td></tr>
+      <tr><td><code>ACC_SUB_TYPE</code></td><td>AccountManagementInfo.AccountSubType</td><td>Direct field</td></tr>
+      <tr><td><code>CUST_INFO_TYPE</code></td><td>CustomerTypeInfo.Type</td><td><code>String.valueOfInt(...)</code></td></tr>
+      <tr><td><code>CHANNEL</code></td><td>OrderData.Channel</td><td>Direct field</td></tr>
+      <tr><td><code>IDENTIFICATION</code></td><td>CustomerGeneralInfo.Identification</td><td>Direct field</td></tr>
+      <tr><td><code>OLD_PAYMENT_METHOD</code></td><td>Account[1]/ExtendedInfo[Name='OLD_PAYMENT_METHOD']/Value</td><td>XPath.evalAsString</td></tr>
+      <tr><td><code>NEW_PAYMENT_METHOD</code></td><td>Account[1]/PayChannelPaymentMethodInfo/PaymentMethod</td><td>XPath.evalAsString</td></tr>
+      <tr><td><code>PRICEPLAN_EXT</code></td><td>Subscriber → GetPriceplan(subscriber, "FE")</td><td>Helper function</td></tr>
+      <tr><td><code>SUB_TYPE_EXT</code></td><td>Subscriber.SubscriberType</td><td>Direct field</td></tr>
+      <tr><td><code>CALL_VER_STATUS</code></td><td>Subscriber/ExtendedInfo[Name='CALL_VER_STATUS']/Value</td><td>XPath with $i/$j params</td></tr>
+      <tr><td><code>RELAX_BLACKLIST</code></td><td>Account[1]/ExtendedInfo[Name='RELAX_BLACKLIST']/Value</td><td>XPath.evalAsString</td></tr>
+      <tr><td><code>ORG_CHANNEL</code></td><td>OrderData/ExtendedInfo[Name='ORG_CHANNEL']/Value</td><td>XPath.evalAsString</td></tr>
+      <tr><td><code>REDZONE</code></td><td>OrderData/ExtendedInfo[Name='REDZONE']/Value</td><td>XPath.evalAsString</td></tr>
+      <tr><td><code>VERIFY_RESULT</code></td><td>OrderData/ExtendedInfo[Name='VERIFY_RESULT']/Value</td><td>XPath.evalAsString</td></tr>
+      <tr><td><code>FACE_REC</code></td><td>OrderData/ExtendedInfo[Name='FACE_REC']/Value</td><td>XPath.evalAsString</td></tr>
+      <tr><td><code>TOPPING_GROUP</code></td><td>GetTROfferGroup(subscriber, "CCBS", "85")</td><td>Helper function</td></tr>
+    </table>
+
+    <h4 style="margin:16px 0 8px;color:var(--true-dark);">Branch A Only (PostpaidAddOfferSub — OrderType 3/4/69/11018)</h4>
+    <table>
+      <tr><th>Field Key</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>PROPOSITION</code></td><td>GetPropositionOffer(sub, "SubscriberOffers.OfferName", "SubscriberOffers.ServiceType", "3")</td><td>ServiceType "3" filter</td></tr>
+      <tr><td><code>OFFER_NAME</code></td><td>GetPriceplan(sub, "CCBS") → priceplanName</td><td>CCBS priceplan</td></tr>
+      <tr><td><code>SOC_NAME</code></td><td>subOff.OfferName</td><td>Current SubscriberOffer being processed</td></tr>
+      <tr><td><code>OLD_PROPOSITION</code></td><td>GetPropositions(sub, "CCBS", true)</td><td></td></tr>
+      <tr><td><code>OLD_OFFER_NAME</code></td><td>GetPriceplan(sub, "CCBS")</td><td>Same as OFFER_NAME in this branch</td></tr>
+      <tr><td><code>DISCOUNT_EXT</code></td><td>GetDiscount(orderRequest, "CCBS")</td><td></td></tr>
+      <tr><td><code>FE_TOPPING_GROUP</code></td><td>subOff[FE_OR_CCBS=FE]/ExtendedInfo[Name=TR_OFFER_GROUP]/Value</td><td>XPath on current subOff</td></tr>
+      <tr><td><code>PP_GROUP</code></td><td>subscriber/SubscriberOffers[ServiceType="80"]/ExtendedInfo[Name=TR_OFFER_GROUP]/Value</td><td>XPath</td></tr>
+      <tr><td><code>5G_DEVICE</code></td><td>subscriber/ExtendedInfo[Name="5G_DEVICE"]/Value</td><td>XPath</td></tr>
+      <tr><td><code>EXISTING_4G</code></td><td>if exists(SubscriberOffers[ServiceType="85" and OfferName="RMHSPS10"]) → "RMHSPS10" else "NO_4G"</td><td>XPath conditional</td></tr>
+      <tr><td><code>DISCOUNT_EMPLOYEE</code></td><td>GetDiscount(orderRequest, "CCBS") if not blank; else "NO_DISCOUNT"</td><td></td></tr>
+      <tr><td><code>RELATED_PROPOSITION</code></td><td>GetRelatedPropositions(sub, "FE", true)</td><td>Conditional: only if != "NO_RELATED_PROPOSITION_OFFER"</td></tr>
+      <tr><td><code>FINAL_BILL</code></td><td>OrderData/ExtendedInfo[Name='FINAL_BILL']/Value</td><td>Conditional: only if not blank</td></tr>
+      <tr><td><code>CANCEL_TYPE</code></td><td>OrderData/ExtendedInfo[Name='CANCEL_TYPE']/Value</td><td>Conditional: only if FINAL_BILL not blank</td></tr>
+    </table>
+
+    <h4 style="margin:16px 0 8px;color:var(--true-dark);">Branch B Only (Other order types)</h4>
+    <table>
+      <tr><th>Field Key</th><th>Source / Notes</th></tr>
+      <tr><td><code>FE_OFFER_NAME</code></td><td>GetPriceplan(sub, "FE") — for 5G config</td></tr>
+      <tr><td><code>DEALER</code></td><td>OrderData.DealerCode</td></tr>
+      <tr><td><code>SOC_NAME</code></td><td>For OrderType 70/12002: SubscriberOffers[FE_OR_CCBS=FE]/OfferName; else blank</td></tr>
+      <tr><td><code>MSIM_IND</code></td><td>SubscriberGeneralInfo.MultiSimInd (conditional: not blank)</td></tr>
+      <tr><td><code>AGE</code></td><td>CalculateAgeFromBD(CustomerGeneralInfo.BirthDate) (conditional: > 0)</td></tr>
+      <tr><td><code>IR_FLAG</code></td><td>Y if exists(SubscriberOffers[contains(SocProperties,"TR_IR_FLAG=Y")]) else N</td></tr>
+      <tr><td><code>FE_PROPOSITION</code></td><td>GetPropositions(sub, "FE", true) (conditional: not blank)</td></tr>
+      <tr><td><code>OLD_SOC_NAME</code></td><td>GetOldSocName(sub, "CCBS","") (conditional: not blank)</td></tr>
+      <tr><td><code>NEW_PP_RATE</code></td><td>SubscriberOffers[FE_OR_CCBS=FE and ServiceType=80]/OfferRate (conditional: for ChangePricePlan)</td></tr>
+      <tr><td><code>FE_PP_GROUP</code></td><td>XPath on FE offer TR_OFFER_GROUP (conditional: != "NO_CONDITION")</td></tr>
+      <tr><td><code>FE_PP_GROUP_CHILD</code></td><td>subscriber/ExtendedInfo[Name=TR_OFFER_GROUP]/Value (conditional: not empty)</td></tr>
+    </table>
+
+    <div class="warn-box" style="margin-top:10px;">
+      <strong>5G Child Shareplan gate:</strong> If subscriber has ExtendedInfo[Name="TR_OFFER_GROUP" and tib:index-of(Value,"_CHILD") &gt; 0], then fe_pp_group, accSubType, discount_employee, and ccbs_topping_group are all set to "NO_CONDITION" and excluded from listInput. This prevents 5G child shareplan subscribers from matching standard BRMS rules.
+    </div>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <details open>
+      <summary>§8.1 — Order Type Dependencies</summary>
+      <table>
+        <tr><th>OrderType</th><th>Flag</th><th>BRMS Branch</th></tr>
+        <tr><td>"2"</td><td>IsChangePricePlanOrderType</td><td>Branch B with ChangePricePlan-specific proposition merge (FE+CCBS combined)</td></tr>
+        <tr><td>"3","4","69","11018"</td><td>IsPostpaidAddOfferSubOrderType</td><td>Branch A — loops SubscriberOffers, one event per FE offer</td></tr>
+        <tr><td>"11002"</td><td>IsShareplanOrderType</td><td>Branch B with offerName = GetPriceplan(sub, "FE") from POU (not COU)</td></tr>
+        <tr><td>"70","12002"</td><td>(no flag)</td><td>Branch B with socName from SubscriberOffers[FE_OR_CCBS=FE]/OfferName</td></tr>
+        <tr><td>all others</td><td>(no flag)</td><td>Branch B generic path</td></tr>
+      </table>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+    <details open>
+      <summary>§8.2 — ESB / JMS Channel Dependencies</summary>
+      <table>
+        <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Protocol</th><th>Purpose</th></tr>
+        <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td>OMXFM JMS Channel</td><td>GET_BRMS_ACTIONS queue</td><td>JMS/ESB</td><td>Send subscriber context to BRMS engine</td></tr>
+        <tr><td><span class="badge badge-log">LOG</span></td><td>OMXESB Logger</td><td>Audit log destination</td><td>JMS event</td><td>Request start audit (gated by AllowWriteLog)</td></tr>
+      </table>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+    <details open>
+      <summary>§8.3 — Backend API Details</summary>
+      <table>
+        <tr><th>System</th><th>Operation</th><th>Schema NS</th><th>Protocol</th></tr>
+        <tr><td><strong>BRMS DB</strong></td><td><code>GetBRMSActions</code></td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd4</code> (ns)</td><td>JMS/ESB</td></tr>
+      </table>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+    <details open>
+      <summary>§8.4 — BE Working Memory Dependencies</summary>
+      <table>
+        <tr><th>Concept/Field</th><th>Direction</th><th>Purpose</th></tr>
+        <tr><td>OrderRequest — all subscriber/account/extended-info fields</td><td>READ</td><td>Build BRMS ListInput</td></tr>
+        <tr><td>Activity.RequestCount</td><td>READ+WRITE</td><td>Resubmit check (read) + fan-out counter (write, if !isActResub)</td></tr>
+        <tr><td>Activity.Response[]</td><td>READ+WRITE</td><td>Read for resubmit check; WRITE by response handler</td></tr>
+        <tr><td>Activity.Status</td><td>WRITE</td><td>Set to IN_PROGRESS after fan-out</td></tr>
+        <tr><td>Activity.PreExecCheck</td><td>READ</td><td>XPath condition for skip gate</td></tr>
+        <tr><td>OrderRequest.IsOrderResubmitted</td><td>READ</td><td>Resubmit detection</td></tr>
+        <tr><td>OrderRequest — modified by BRMS actions</td><td>WRITE (response)</td><td>AddOffer/RemoveOffer actions executed by response handler</td></tr>
+      </table>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+    <details open>
+      <summary>§8.5 — ExtendedInfo Fields Required</summary>
+      <table>
+        <tr><th>Location</th><th>Name</th><th>Usage</th></tr>
+        <tr><td>Account[1]</td><td>RELAX_BLACKLIST</td><td>ListInput field</td></tr>
+        <tr><td>Account[1]</td><td>OLD_PAYMENT_METHOD</td><td>ListInput field</td></tr>
+        <tr><td>OrderData</td><td>ORG_CHANNEL</td><td>ListInput field</td></tr>
+        <tr><td>OrderData</td><td>REDZONE</td><td>ListInput field</td></tr>
+        <tr><td>OrderData</td><td>VERIFY_RESULT</td><td>ListInput field</td></tr>
+        <tr><td>OrderData</td><td>FACE_REC</td><td>ListInput field</td></tr>
+        <tr><td>OrderData</td><td>FINAL_BILL</td><td>ListInput field (conditional)</td></tr>
+        <tr><td>OrderData</td><td>CANCEL_TYPE</td><td>ListInput field (conditional)</td></tr>
+        <tr><td>Subscriber</td><td>CALL_VER_STATUS</td><td>ListInput field</td></tr>
+        <tr><td>Subscriber</td><td>5G_DEVICE</td><td>ListInput field (Branch A)</td></tr>
+        <tr><td>Subscriber</td><td>TR_OFFER_GROUP</td><td>5G child shareplan gate + FE_PP_GROUP_CHILD</td></tr>
+        <tr><td>SubscriberOffers</td><td>FE_OR_CCBS</td><td>Filter which offers to process (Branch A)</td></tr>
+        <tr><td>SubscriberOffers</td><td>TR_OFFER_GROUP</td><td>FE_TOPPING_GROUP / PP_GROUP</td></tr>
+      </table>
+    </details>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="card">
+  <div class="card-header">§9 — Detailed Payload Build (GET_BRMS_ACTIONS Event)</div>
+  <div class="card-body">
+    <details open>
+      <summary>§9.1 — XSLT Parameter Binding (4 XSLT variants)</summary>
+      <table>
+        <tr><th>Variant</th><th>Scope</th><th>Params</th></tr>
+        <tr><td>① POU + Offer (Branch A)</td><td>PostpaidAddOffer, POU subscriber</td><td>$i, $j, $orderRequest, $subOff, $effectiveDate, $listInput</td></tr>
+        <tr><td>② POU only (Branch B)</td><td>Other types, POU subscriber</td><td>$i, $j, $orderRequest, $effectiveDate, $listInput</td></tr>
+        <tr><td>③ COU + Offer (Branch A)</td><td>PostpaidAddOffer, COU subscriber</td><td>$i, $n, $j, $orderRequest, $subOff, $effectiveDate, $listInput</td></tr>
+        <tr><td>④ COU only (Branch B)</td><td>Other types, COU subscriber</td><td>$i, $n, $j, $orderRequest, $effectiveDate, $listInput</td></tr>
+      </table>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+    <details open>
+      <summary>§9.3 — JMS / Event Header Fields</summary>
+      <table>
+        <tr><th>Header Field</th><th>Source</th><th>Condition</th></tr>
+        <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td><span class="badge badge-orange">Conditional</span></td></tr>
+        <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td><span class="badge badge-orange">Conditional</span></td></tr>
+        <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td><span class="badge badge-orange">Conditional</span></td></tr>
+        <tr><td><code>RefID</code></td><td><code>ParentOU[$OU]/Subscriber[$Sub]/RefId</code></td><td><span class="badge badge-green">Always</span></td></tr>
+        <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td><span class="badge badge-orange">Conditional</span></td></tr>
+        <tr><td><code>mainOffer</code></td><td><code>$subOff/OfferName</code></td><td><span class="badge badge-orange">Conditional</span> — only in Variants ①③ (Branch A)</td></tr>
+      </table>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+    <details open>
+      <summary>§9.4 — Payload Root Element</summary>
+      <table>
+        <tr><th>Root Element</th><th>Namespace</th></tr>
+        <tr><td><code>ns:GetBRMSActionsRequest</code></td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd4</code></td></tr>
+      </table>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+    <details open>
+      <summary>§9.6 — Core Payload Structure</summary>
+      <table>
+        <tr><th>Element</th><th>Source</th><th>Condition</th></tr>
+        <tr><td><code>ns:RefId</code></td><td>ParentOU[$OU]/Subscriber[$Sub]/RefId (or ChildOU path)</td><td>Always</td></tr>
+        <tr><td><code>ns:OMXTrackingId</code></td><td>OrderData/OMXTrackingId</td><td>Always</td></tr>
+        <tr><td><code>ns:MSISDN</code></td><td>Subscriber MSISDN</td><td>Conditional</td></tr>
+        <tr><td><code>ns:OrderType</code></td><td>OrderData/OrderType</td><td>Always</td></tr>
+        <tr><td><code>ns:EffectiveDate</code></td><td>$effectiveDate (computed yyyy-MM-dd from EffectiveDate or current-dateTime)</td><td>Always</td></tr>
+        <tr><td><code>ns:ListInput</code></td><td>$listInput (pipe-delimited BRMS context string)</td><td>Always</td></tr>
+      </table>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+    <details open>
+      <summary>§9.7 — Complete Generated XML Example</summary>
+      <pre><span class="x">&lt;ns:GetBRMSActionsRequest</span>
+  <span class="xa">xmlns:ns</span>=<span class="s">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/FM/Schema.xsd4"</span><span class="x">&gt;</span>
+  <span class="x">&lt;ns:RefId&gt;</span>SUB-REF-001<span class="x">&lt;/ns:RefId&gt;</span>
+  <span class="x">&lt;ns:OMXTrackingId&gt;</span>OMX-2025-TRACK-001<span class="x">&lt;/ns:OMXTrackingId&gt;</span>
+  <span class="x">&lt;ns:MSISDN&gt;</span>0812345678<span class="x">&lt;/ns:MSISDN&gt;</span>          <span class="c">&lt;!-- conditional --&gt;</span>
+  <span class="x">&lt;ns:OrderType&gt;</span>3<span class="x">&lt;/ns:OrderType&gt;</span>
+  <span class="x">&lt;ns:EffectiveDate&gt;</span>2026-08-04<span class="x">&lt;/ns:EffectiveDate&gt;</span>
+  <span class="x">&lt;ns:ListInput&gt;</span>COMPANY_CODE=IND|ACC_SUB_TYPE=PPM|CUST_INFO_TYPE=1|PROPOSITION=PROMO_5G|OFFER_NAME=HAPPY5G99|CHANNEL=DTAC_ONLINE|IDENTIFICATION=1234567890123|OLD_PROPOSITION=PROMO_4G|OLD_OFFER_NAME=HAPPY4G79|OLD_PAYMENT_METHOD=CC|NEW_PAYMENT_METHOD=CC|ACC_SUB_TYPE_EXT=PPM|SUB_TYPE_EXT=IND|PRICEPLAN_EXT=HAPPY5G99|SOC_NAME=5G_ADD_DATA|RELAX_BLACKLIST=N|ORG_CHANNEL=ONLINE|VERIFY_RESULT=PASS|REDZONE=N|DISCOUNT_EXT=|FE_TOPPING_GROUP=TOPPING_5G|PP_GROUP=PP_5G|5G_DEVICE=Y|EXISTING_4G=NO_4G|TOPPING_GROUP=NO_CCBS_TOPPING|DISCOUNT_EMPLOYEE=NO_DISCOUNT|FACE_REC=N<span class="x">&lt;/ns:ListInput&gt;</span>
+<span class="x">&lt;/ns:GetBRMSActionsRequest&gt;</span></pre>
+    </details>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span> <span class="tree-arrow">←</span> <span class="tree-src">ParentOU[$OU]/Subscriber[$Sub]/RefId</span> <span class="badge badge-green">Always</span> <span class="tree-cond">$OU = $i+1, $Sub = $j+1</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">mainOffer</span> <span class="tree-arrow">←</span> <span class="tree-src">$subOff/OfferName</span> <span class="badge badge-orange">Conditional</span> <span class="tree-cond">Variants ①③ only (Branch A with SubscriberOffer)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:GetBRMSActionsRequest</span>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:RefId</span> <span class="tree-arrow">←</span> <span class="tree-src">ParentOU[$OU]/Subscriber[$Sub]/RefId</span> <span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:OMXTrackingId</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:MSISDN</span> <span class="tree-arrow">←</span> <span class="tree-src">Subscriber/MSISDN</span> <span class="badge badge-orange">Conditional</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:EffectiveDate</span> <span class="tree-arrow">←</span> <span class="tree-src">$effectiveDate</span> <span class="badge badge-green">Always</span> <span class="tree-cond">yyyy-MM-dd from EffectiveDate field or current-dateTime()</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ListInput</span> <span class="tree-arrow">←</span> <span class="tree-src">$listInput</span> <span class="badge badge-green">Always</span> <span class="tree-cond">Pipe-delimited BRMS context string (22–35 fields depending on branch)</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+  <div class="card-header">§11 — Audit Logging</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Event</th><th>AUDIT_TRACE</th><th>OPERATION_NAME</th><th>Gate</th></tr>
+      <tr><td>Request start</td><td><code>"OMX-OM BRMS started."</code></td><td><code>"/Rules/OMConsumers/OMXOM/OMX_BRMS_DB"</code></td><td><code>AllowWriteLog(OrderType)</code></td></tr>
+      <tr><td>Response received</td><td><code>"Response received for BRMSActions"</code></td><td><code>"OMX_BRMS_DB"</code></td><td><code>!isTestBRMS &amp;&amp; AllowWriteLog(OrderType)</code></td></tr>
+    </table>
+    <div class="info-box" style="margin-top:10px;">
+      <strong>testBRMS_DB suppression:</strong> If <code>eventResponse.Actions</code> contains the literal string "testBRMS_DB", the response handler sets <code>isTestBRMS=true</code> and strips it from the Actions string before processing. In this mode, the response audit log event is NOT sent, enabling non-invasive BRMS rule testing.
+    </div>
+    <p style="margin-top:8px;"><strong>Note:</strong> The request log OPERATION_NAME uses the full rule path (<code>"/Rules/OMConsumers/OMXOM/OMX_BRMS_DB"</code>) while the response uses just <code>"OMX_BRMS_DB"</code> — inconsistency from separate teams/JIRAs.</p>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="card">
+  <div class="card-header">§12 — Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Scenario</th><th>Action</th><th>Status Code</th></tr>
+      <tr><td>At least one event fired</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td><td>1 = IN_PROGRESS</td></tr>
+      <tr><td>No events fired (all skipped)</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>4 = SKIPPED</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="card">
+  <div class="card-header">§13 — Exception / Error Handling</div>
+  <div class="card-body">
+    <p>The entire THEN block is wrapped in a <code>try/catch(Exception ae)</code>. On any exception:</p>
+    <pre>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="s">""</span>);</pre>
+    <p>The 4th argument (empty string) provides no additional context — any exception detail must be derived from the exception object itself inside HandleActivityException.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card">
+  <div class="card-header">§14 — Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Signature</th><th>Purpose</th></tr>
+      <tr><td><code>AllowWriteLog</code></td><td><code>Boolean(orderType)</code></td><td>Gates audit logging by order type</td></tr>
+      <tr><td><code>GetPriceplan</code></td><td><code>String(subscriber, system)</code></td><td>Returns priceplan offer name for given system (FE/CCBS)</td></tr>
+      <tr><td><code>GetPropositionOffer</code></td><td><code>String(sub, offerField, serviceTypeField, serviceType)</code></td><td>Returns proposition filtered by service type</td></tr>
+      <tr><td><code>GetPropositions</code></td><td><code>String(sub, system, bool)</code></td><td>Returns all propositions for a system</td></tr>
+      <tr><td><code>GetRelatedPropositions</code></td><td><code>String(sub, system, bool)</code></td><td>Returns related propositions</td></tr>
+      <tr><td><code>GetDiscount</code></td><td><code>String(orderRequest, system)</code></td><td>Returns discount value from CCBS</td></tr>
+      <tr><td><code>GetTROfferGroup</code></td><td><code>String(sub, system, serviceType)</code></td><td>Returns TR offer group for given system and service type</td></tr>
+      <tr><td><code>GetAttributeValue</code></td><td><code>String(sub, offerField, stField, serviceType)</code></td><td>Returns offer attribute value filtered by service type</td></tr>
+      <tr><td><code>GetOldSocName</code></td><td><code>String(sub, system, default)</code></td><td>Returns existing SOC name from given system</td></tr>
+      <tr><td><code>BRMS.IsBlank</code></td><td><code>Boolean(String)</code></td><td>Null/empty check</td></tr>
+      <tr><td><code>BRMS.IsBlankOrStringNull</code></td><td><code>Boolean(String)</code></td><td>Null/empty/"null" string check</td></tr>
+      <tr><td><code>BRMS.CalculateAgeFromBD</code></td><td><code>int(DateTime)</code></td><td>Calculates age in years from birthdate</td></tr>
+      <tr><td><code>GetActivityStatusString</code></td><td><code>String(code, isSkip)</code></td><td>Returns activity status label</td></tr>
+      <tr><td><code>SendDataToDB</code></td><td><code>void(orderRequest)</code></td><td>Persists activity state</td></tr>
+      <tr><td><code>SkipActivity</code></td><td><code>void(orderRequest, activity, code)</code></td><td>Marks activity as skipped</td></tr>
+      <tr><td><code>HandleActivityException</code></td><td><code>void(orderRequest, activity, exception, context)</code></td><td>Standard exception handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_OMX_BRMS_DB.rule
+├── RuleFunctions.Helpers.AllowWriteLog(OrderType)
+├── RuleFunctions.Helpers.GetPriceplan(subscriber, "FE"/"CCBS")
+├── RuleFunctions.Helpers.GetPropositionOffer(sub, ...)
+├── RuleFunctions.Helpers.GetPropositions(sub, system, bool)
+├── RuleFunctions.Helpers.GetRelatedPropositions(sub, system, bool)
+├── RuleFunctions.Helpers.GetDiscount(orderRequest, "CCBS")
+├── RuleFunctions.Helpers.GetTROfferGroup(sub, "CCBS", "85")
+├── RuleFunctions.Helpers.GetAttributeValue(sub, ...)
+├── RuleFunctions.Helpers.GetOldSocName(sub, "CCBS", "")
+├── RuleFunctions.Helpers.BRMS.IsBlank(String)
+├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(String)
+├── RuleFunctions.Helpers.BRMS.CalculateAgeFromBD(DateTime)
+├── Event.Ext.sendEventImmediate(reqEvent)  ── classic fan-out
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(orderRequest, activity, "4")
+└── RuleFunctions.Helpers.HandleActivityException(orderRequest, activity, ae, "")
+
+Response_OMX_BRMS_DB.rulefunction
+├── GetBrmsItems(orderRequest, eventResponse)  → Concepts.OMX.BrmsItems
+├── Engine.invokeRuleFunction("/RuleFunctions/Helpers/BRMS/" + item.Action, params)
+│   ├── /BRMS/AddOfferToOrderRequest
+│   ├── /BRMS/AddOfferWithExtendedToOrderRequest
+│   ├── /BRMS/AddOfferWithParamToOrderRequest
+│   ├── /BRMS/AddRelatedOfferWithParamToOrderRequest
+│   ├── /BRMS/RemoveOfferToOrderRequest
+│   ├── /BRMS/AddOfferForOrderRemoveToOrderRequest
+│   └── /BRMS/RemoveOfferWithExtendedToOrderRequest
+└── Instance.deleteInstance(items)</pre>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="card">
+  <div class="card-header">§16 — Concept Definitions Referenced</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Concept</th><th>Key Fields Used</th></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>All subscriber/account/offer fields; IsOrderResubmitted; ProcessFlow.NextActivityName/ID</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>RefId, SubscriberType, MSISDN, AccountRefId, SubscriberOffers[], ExtendedInfo[], SubscriberGeneralInfo</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.Account</code></td><td>RefId, AccountManagementInfo.AccountSubType, ExtendedInfo[OLD_PAYMENT_METHOD,RELAX_BLACKLIST], PayChannelPaymentMethodInfo</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>OfferName, ServiceType, SocProperties, ExtendedInfo[FE_OR_CCBS, TR_OFFER_GROUP], OfferRate</td></tr>
+      <tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>RequestCount, Response[], Status, PreExecCheck</td></tr>
+      <tr><td><code>Concepts.FM.Response.GetBRMSActionsRes</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId (response concept, NOT ResponseBase)</td></tr>
+      <tr><td><code>Concepts.OMX.BrmsItems</code></td><td>BrmsItem[] array of action descriptors</td></tr>
+      <tr><td><code>Concepts.OMX.BrmsItem</code></td><td>Action, DeployMode, EffectiveDate, ExpirationDate, OfferName, ServiceType, Soc, PouRefID, CouRefID, SubRefID, OfferLevel, IOT, OfferExtendedNameValue, OfferParamNameValue, MainOfferName, CycleCount</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h4 style="margin-bottom:10px;color:var(--true-dark);">Functional Requirements</h4>
+    <table>
+      <tr><th>#</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Send BRMS query per subscriber (POU and COU) with order-type-specific pipe-delimited ListInput</td></tr>
+      <tr><td>R2</td><td>For PostpaidAddOfferSub (type 3/4/69/11018): fire one BRMS request per FE SubscriberOffer (not per subscriber)</td></tr>
+      <tr><td>R3</td><td>Resubmit guard: do not increment RequestCount if activity was previously in-flight</td></tr>
+      <tr><td>R4</td><td>On response: parse BRMS Actions string, invoke the corresponding AddOffer/RemoveOffer helper for each action item</td></tr>
+      <tr><td>R5</td><td>testBRMS_DB mode: suppress audit log when Actions contains "testBRMS_DB" token</td></tr>
+      <tr><td>R6</td><td>5G child shareplan gate: exclude fe_pp_group, accSubType, discount, topping from BRMS input</td></tr>
+      <tr><td>R7</td><td>EffectiveDate: translate to Asia/Bangkok timezone then format as yyyy-MM-dd; fall back to current date if blank</td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:10px;color:var(--true-dark);">Design Risks</h4>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>812-line rule with 4+ order-type branches and 35+ field extractions — extremely high complexity and maintenance risk</td><td><span class="badge badge-red">HIGH</span></td><td>Decompose into separate strategy classes per order type in modernized platform</td></tr>
+      <tr><td>BRMS actions dispatched via dynamic string-based function invocation (<code>Engine.invokeRuleFunction("path" + action)</code>) — fragile if action names change</td><td><span class="badge badge-red">HIGH</span></td><td>Replace with typed polymorphic command pattern</td></tr>
+      <tr><td>Pipe-delimited ListInput is untyped, positionally fragile, hard to validate</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Replace with structured JSON/XML BRMS API contract</td></tr>
+      <tr><td>CompanyCode mapping commented out (OMX-3213) — currently falls back to SubscriberType; may not reflect true company</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Verify CompanyCode source with business team before migration</td></tr>
+      <tr><td>Account-level loop entirely commented out — may be needed for future order types</td><td><span class="badge badge-blue">LOW</span></td><td>Confirm with business whether account-level BRMS was deprecated</td></tr>
+      <tr><td>forwardChain=true may cause unexpected rule re-evaluation cascades after BRMS actions modify working memory</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Map all downstream rules triggered by forwardChain; test carefully after migration</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Full Source Code (Annotated) -->
+<div class="card">
+  <div class="card-header">§18 — Full Source Code (Annotated, 812 lines)</div>
+  <div class="card-body">
+    <p>Full source is 812 lines. Key structural sections:</p>
+    <table>
+      <tr><th>Lines</th><th>Section</th></tr>
+      <tr><td>1–19</td><td>Rule declaration, attributes, declare block, WHEN conditions</td></tr>
+      <tr><td>20–43</td><td>Resubmit detection, PreExecCheck gate, optional audit log start</td></tr>
+      <tr><td>44–49</td><td>Order type flag classification</td></tr>
+      <tr><td>50–239</td><td>POU Subscriber loop — Branch A (PostpaidAddOfferSub)</td></tr>
+      <tr><td>240–398</td><td>POU Subscriber loop — Branch B (other order types)</td></tr>
+      <tr><td>400–580</td><td>COU Subscriber loop — Branch A (PostpaidAddOfferSub)</td></tr>
+      <tr><td>583–737</td><td>COU Subscriber loop — Branch B (other order types)</td></tr>
+      <tr><td>740–799</td><td>Commented-out Account-level loop (deprecated)</td></tr>
+      <tr><td>800–811</td><td>Post-loop status/skip + catch block</td></tr>
+    </table>
+    <div class="info-box" style="margin-top:10px;">See §6 for annotated logic and §9 for XSLT payload details. Full XSLT for each of the 4 GET_BRMS_ACTIONS event variants follows the same structure: JMSPriority/JMSCorrelationID/OrderID headers + RefID + optional mainOffer (Branch A) + ns:GetBRMSActionsRequest payload.</div>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule</div>
+  <div class="card-body">
+
+    <details open>
+      <summary>§19.1 — Overview</summary>
+      <p><code>Response_OMX_BRMS_DB</code> is the most action-rich response handler in the OMXFM suite. It: (1) detects and strips the <code>testBRMS_DB</code> test flag; (2) if Actions are present, calls <code>GetBrmsItems</code> to parse the BRMS response into typed action objects, then dynamically invokes the appropriate helper rulefunction for each action (AddOffer, RemoveOffer, etc.) to <em>modify the OrderRequest in working memory</em>; (3) constructs a <code>GetBRMSActionsRes</code> concept; (4) fires conditional audit log; (5) evaluates fan-in completion.</p>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+
+    <details open>
+      <summary>§19.2 — Scope Variables</summary>
+      <table>
+        <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+        <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Modified by BRMS action helpers</td></tr>
+        <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.GET_BRMS_ACTIONS</code></td><td>BRMS response — Actions string, RefID, ResponseCode</td></tr>
+        <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Response[] written; RequestCount read for fan-in</td></tr>
+      </table>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+
+    <details open>
+      <summary>§19.3 — BRMS Action Dispatch</summary>
+      <table>
+        <tr><th>Action Name</th><th>Parameters</th></tr>
+        <tr><td><code>AddOfferToOrderRequest</code></td><td>DeployMode, EffectiveDate, ExpirationDate, OfferName, ServiceType, Soc, PouRefID, CouRefID, SubRefID, OfferLevel, IOT, orderRequest</td></tr>
+        <tr><td><code>AddOfferWithExtendedToOrderRequest</code></td><td>+ OfferExtendedNameValue, CycleCount</td></tr>
+        <tr><td><code>AddOfferWithParamToOrderRequest</code></td><td>+ OfferParamNameValue</td></tr>
+        <tr><td><code>AddRelatedOfferWithParamToOrderRequest</code></td><td>+ MainOfferName, OfferParamNameValue</td></tr>
+        <tr><td><code>RemoveOfferToOrderRequest</code></td><td>DeployMode, EffectiveDate, ExpirationDate, OfferName, ServiceType, Soc, PouRefID, CouRefID, SubRefID, OfferLevel, IOT, orderRequest</td></tr>
+        <tr><td><code>AddOfferForOrderRemoveToOrderRequest</code></td><td>Same as RemoveOffer</td></tr>
+        <tr><td><code>RemoveOfferWithExtendedToOrderRequest</code></td><td>+ OfferExtendedNameValue</td></tr>
+      </table>
+      <pre><span class="c">// Dynamic dispatch via string path</span>
+Engine.invokeRuleFunction(<span class="s">"/RuleFunctions/Helpers/BRMS/"</span> + items.BrmsItem[i].Action, params);</pre>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+
+    <details open>
+      <summary>§19.3b — GetBRMSActionsRes Concept Construction</summary>
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">extId</span> <span class="tree-arrow">←</span> <span class="tree-src">$extId (OMXUtils.generateTrackingID() passed as param)</span> <span class="badge badge-green">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge badge-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/RefID</span> <span class="badge badge-orange">Conditional</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div class="warn-box" style="margin-top:10px;">
+        <strong>Not ResponseBase:</strong> This FM uses <code>Concepts.FM.Response.GetBRMSActionsRes</code>, not <code>Concepts.FM.Base.ResponseBase</code>. The <code>extId</code> is passed as an explicit XSLT parameter (pre-generated via <code>OMXUtils.generateTrackingID()</code>) rather than computed inside the stylesheet.
+      </div>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+
+    <details open>
+      <summary>§19.4 — Response Completion Logic (Fan-in)</summary>
+      <table>
+        <tr><th>Component</th><th>Value</th></tr>
+        <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+        <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+        <tr><td>Return "true"</td><td>All BRMS requests completed successfully</td></tr>
+        <tr><td>Return "false"</td><td>Pending responses remain</td></tr>
+      </table>
+    </details>
+    <hr style="margin:10px 0;border-color:var(--border);">
+
+    <details open>
+      <summary>§19.5 — Response Audit Logging</summary>
+      <table>
+        <tr><th>Field</th><th>Value</th></tr>
+        <tr><td>AUDIT_TRACE</td><td><code>"Response received for BRMSActions"</code> (static)</td></tr>
+        <tr><td>OPERATION_NAME</td><td><code>"OMX_BRMS_DB"</code> (static)</td></tr>
+        <tr><td>Gate</td><td><code>!isTestBRMS &amp;&amp; AllowWriteLog(orderRequest.OrderData.OrderType)</code></td></tr>
+        <tr><td>Payload</td><td>Conditional on <code>WritePayload="true"</code> — copy of eventResponse</td></tr>
+      </table>
+    </details>
+
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

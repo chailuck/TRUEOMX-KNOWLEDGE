@@ -1,0 +1,629 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_CALC_ACTIVITY_REASON</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#212121;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.8rem;font-weight:700;letter-spacing:0.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:0.85;font-size:0.95rem;margin-bottom:14px}
+.meta-chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{background:rgba(255,255,255,0.18);border:1px solid rgba(255,255,255,0.35);border-radius:20px;padding:3px 12px;font-size:0.78rem}
+.container{max-width:1300px;margin:0 auto;padding:24px}
+.section{background:var(--card);border-radius:10px;box-shadow:0 1px 4px rgba(0,0,0,0.08);margin-bottom:22px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;border-left:5px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header h2{font-size:1rem;font-weight:600}
+.section-num{background:rgba(255,255,255,0.22);border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0}
+.section-body{padding:20px}
+.sub-section{margin-bottom:18px}
+.sub-section h3{font-size:0.88rem;font-weight:700;color:var(--true-dark);border-bottom:1px solid #f0d0d0;padding-bottom:4px;margin-bottom:10px}
+table{width:100%;border-collapse:collapse;font-size:0.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600}
+td{padding:7px 10px;border-bottom:1px solid #F0E0E0;vertical-align:top}
+tr:hover td{background:#FDF5F5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:0.8rem;border-left:3px solid var(--true-red)}
+code.inline{background:#F5E6E6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:0.8rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:0.72rem;font-weight:600}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}
+.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}
+.b-teal{background:#E0F2F1;color:#00695c}
+.b-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;gap:14px;margin-bottom:12px;align-items:flex-start}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.8rem;flex-shrink:0;margin-top:1px}
+.flow-body{flex:1}
+.flow-body strong{color:var(--true-dark)}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);border-radius:6px;padding:12px 16px;margin-bottom:12px;font-size:0.82rem}
+.warn-box{background:#FFF3E0;border-left:4px solid var(--warning);border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.82rem}
+.success-box{background:#E8F5E9;border-left:4px solid var(--success);border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.82rem}
+.internal-box{background:#F3E5F5;border-left:4px solid var(--skip);border-radius:6px;padding:12px 16px;margin-bottom:10px;font-size:0.82rem}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nm{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-arrow{color:#6c7086;margin:0 6px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.footer{text-align:center;color:#999;font-size:0.75rem;padding:20px;border-top:1px solid var(--border);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1300px;margin:0 auto">
+    <div class="subtitle">TIBCO BusinessEvents · FM Logic Documentation</div>
+    <h1>Request_OMX_CALC_ACTIVITY_REASON</h1>
+    <div class="meta-chips">
+      <span class="chip">Priority: 5</span>
+      <span class="chip">forwardChain: true</span>
+      <span class="chip">Type: Internal OMX Calculation Rule (OMXOM)</span>
+      <span class="chip">Pattern: Per-ParentOU VRF Fan-Out (invokeAllVRFImpls)</span>
+      <span class="chip">Author: RRAWAT-t420</span>
+      <span class="chip">File: OMX_CalcActivityReason.rule</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><div class="section-num">1</div><h2>§1 — Overview &amp; Purpose</h2></div>
+  <div class="section-body">
+    <div class="internal-box">
+      <strong>Internal OMX Calculation Rule (OMXOM) — No External Backend Call</strong><br/>
+      This rule computes the "activity reason" for each ParentOU (subscriber account) in the order before provisioning activities begin. It iterates all ParentOUs and invokes ALL registered <code class="inline">CalcActivityReasonVRF</code> decision tables, passing contextual attributes per subscriber so each DT can compute and write an activity reason code onto the ParentOU concept.
+    </div>
+    <p>The computed activity reason drives downstream routing and provisioning decisions (e.g., which AA provisioning path to take). This rule is an <em>invokeAllVRFImpls</em> fan-out — all matching CalcActivityReason DTs are invoked for each ParentOU iteration, unlike <code class="inline">OMX_BIZ_VAL</code> which uses <code class="inline">invokeVRFImplByName</code> to select a single DT.</p>
+    <table style="margin-top:14px;width:auto">
+      <tr><th>Item</th><th>Value</th></tr>
+      <tr><td>Rule class</td><td><code class="inline">Rules.OMConsumers.OMXOM.OMX_CalcActivityReason</code></td></tr>
+      <tr><td>ActivityID</td><td><code class="inline">OMX_CALC_ACTIVITY_REASON</code></td></tr>
+      <tr><td>Author</td><td>RRAWAT-t420</td></tr>
+      <tr><td>Backend call</td><td>None — invokes local VRF decision tables</td></tr>
+      <tr><td>VRF path</td><td><code class="inline">/DecisionTables/CalcActivityReasonVRF</code></td></tr>
+      <tr><td>VRF invocation style</td><td><code class="inline">invokeAllVRFImpls</code> (ALL registered DTs fire per OU)</td></tr>
+      <tr><td>Loop granularity</td><td>Per-ParentOU (one VRF call per ParentOU)</td></tr>
+      <tr><td>Completion</td><td><code class="inline">NextActivity</code> (synchronous, after loop)</td></tr>
+      <tr><td>Audit logs</td><td>Two: START (triggered) + END (completed), both gated by AllowWriteLog</td></tr>
+      <tr><td>Source ticket</td><td>OMX-1053 (Parameter guard fix)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header"><div class="section-num">2</div><h2>§2 — Rule Metadata &amp; Attributes</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule type</td><td><code class="inline">rule</code></td><td>RETE stateful rule</td></tr>
+      <tr><td>priority</td><td>5</td><td>Standard priority</td></tr>
+      <tr><td>forwardChain</td><td>true</td><td>Re-evaluates if working memory changes during execution</td></tr>
+      <tr><td>Namespace</td><td>OMXOM</td><td>Internal OMX — no external FM/ESB call</td></tr>
+      <tr><td>Response rulefunction</td><td>None</td><td>Synchronous — no async backend call</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><div class="section-num">3</div><h2>§3 — Working Memory — Declared Objects</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code class="inline">orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Root order — serialised for PreExecCheck; all XPath queries run against it; ParentOU array iterated</td></tr>
+      <tr><td><code class="inline">orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current activity — Parameter[0] read for VRF arg; Status advanced via NextActivity</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">4</div><h2>§4 — Rule Conditions (WHEN)</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Meaning</th></tr>
+      <tr><td>1</td><td><code class="inline">orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity matches current process step</td></tr>
+      <tr><td>2</td><td><code class="inline">orderCurrentActivity.ActivityID == "OMX_CALC_ACTIVITY_REASON"</code></td><td>This rule fires only for the activity reason calculation step</td></tr>
+      <tr><td>3</td><td><code class="inline">orderRequest.ProcessFlow.NextActivityID == "OMX_CALC_ACTIVITY_REASON"</code></td><td>Process flow confirms this step is next</td></tr>
+      <tr><td>4</td><td><code class="inline">orderCurrentActivity.Status == "WAITING"</code></td><td>Activity has not yet been processed</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header"><div class="section-num">5</div><h2>§5 — Execution Flow Diagram</h2></div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-body"><strong>Serialise order:</strong> <code class="inline">sXML = Instance.serializeUsingDefaults(orderRequest)</code> — for PreExecCheck evaluation.</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-body"><strong>PreExecCheck:</strong> If PreExecCheck set, evaluate XPath against full order XML. If not "true", skip via <code class="inline">SkipActivity("4")</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-body"><strong>START audit log:</strong> If AllowWriteLog → <code class="inline">sendEventImmediate(Logger)</code> with <code class="inline">AUDIT_TRACE="OMX-OM Rule OMX_CalcActivityReason triggered."</code> and PROCESS_ID <code class="inline">_REQ</code>. Full orderRequest in payload.</div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-body"><strong>Parameter guard (OMX-1053):</strong> If <code class="inline">Parameter@length == 0</code>, insert <code class="inline">Parameter[0] = ""</code> to prevent array-out-of-bounds on first VRF call.</div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-body"><strong>Per-ParentOU loop:</strong> For each ParentOU index <code class="inline">i</code> in <code class="inline">0..iPOULen-1</code>:
+      <ul style="margin-top:8px;margin-left:20px">
+        <li>XPath-extract 7 scalar attributes (see §6)</li>
+        <li>Read <code class="inline">donorOperator</code> and <code class="inline">donorZoneCode</code> via direct field access</li>
+        <li>Build 10-element <code class="inline">Object[] args</code></li>
+        <li>Call <code class="inline">VRF.invokeAllVRFImpls("/DecisionTables/CalcActivityReasonVRF", args)</code></li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-body"><strong>Advance flow:</strong> <code class="inline">NextActivity(orderRequest, orderCurrentActivity)</code> — synchronous after loop completes.</div></div>
+    <div class="flow-step"><div class="flow-num">7</div><div class="flow-body"><strong>END audit log:</strong> If AllowWriteLog → <code class="inline">sendEventImmediate(Logger)</code> with <code class="inline">AUDIT_TRACE="OMX-OM Rule OMX_CalcActivityReason completed."</code> and PROCESS_ID <code class="inline">_RES</code>. Full orderRequest in payload.</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header"><div class="section-num">6</div><h2>§6 — Rule Action (THEN) — Step-by-Step Logic</h2></div>
+  <div class="section-body">
+
+    <div class="sub-section">
+      <h3>§6.1 VRF Arguments Extracted Per-ParentOU</h3>
+      <table>
+        <tr><th>Arg index</th><th>Name</th><th>Source</th><th>XPath / field access</th></tr>
+        <tr><td>args[0]</td><td>ParentOU[i]</td><td>Direct concept ref</td><td><code class="inline">orderRequest.OrderData.Customer.ParentOU[i]</code></td></tr>
+        <tr><td>args[1]</td><td>Parameter[0]</td><td>Activity config</td><td><code class="inline">orderCurrentActivity.Parameter[0]</code></td></tr>
+        <tr><td>args[2]</td><td>MNPInfo</td><td>Direct concept ref</td><td><code class="inline">orderRequest.OrderData.MNPInfo</code></td></tr>
+        <tr><td>args[3]</td><td>orderType</td><td>XPath</td><td><code class="inline">$orderRequest/OrderData/OrderType</code></td></tr>
+        <tr><td>args[4]</td><td>payChanCatg</td><td>XPath</td><td><code class="inline">Account[AgreementRefId=../ParentOU[i+1]/RefId]/PayChannelCategory</code></td></tr>
+        <tr><td>args[5]</td><td>source</td><td>XPath</td><td><code class="inline">Account[AgreementRefId=../ParentOU[i+1]/RefId]/ExtendedInfo[Name="SOURCE_OR_TARGET"]/Value</code></td></tr>
+        <tr><td>args[6]</td><td>channel</td><td>XPath</td><td><code class="inline">$orderRequest/OrderData/Channel</code></td></tr>
+        <tr><td>args[7]</td><td>DealerCode</td><td>Direct field</td><td><code class="inline">orderRequest.OrderData.DealerCode</code></td></tr>
+        <tr><td>args[8]</td><td>sourcePayChannel</td><td>XPath</td><td><code class="inline">Account[AgreementRefId=ParentOU[ExtendedInfo[Name="SOURCE_OR_TARGET" and Value="SOURCE"]]/RefId]/PayChannelCategory</code></td></tr>
+        <tr><td>args[9]</td><td>cdbStatus</td><td>XPath</td><td><code class="inline">ParentOU[i+1]/Subscriber[exists(CdbProfile)]/CdbProfile/Status</code></td></tr>
+      </table>
+      <div class="warn-box" style="margin-top:10px">
+        <strong>[LOW]</strong> <code class="inline">donorZoneCode</code> is read from <code class="inline">orderRequest.OrderData.MNPInfo.DonorZoneCode</code> and printed in <code class="inline">System.debugOut</code>, but is <strong>not</strong> included in the <code class="inline">args</code> array passed to the VRF. Since <code class="inline">MNPInfo</code> (args[2]) is the full MNPInfo concept, VRF DTs can still access it from there — but the explicit extraction implies it was intended as a separate arg that was accidentally omitted.
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3>§6.2 VRF Invocation Style — invokeAllVRFImpls</h3>
+      <div class="info-box">
+        <strong>invokeAllVRFImpls</strong> fires ALL registered implementations of the <code class="inline">CalcActivityReasonVRF</code> interface that match their internal conditions. This differs from <code class="inline">invokeVRFImplByName</code> used in OMX_BIZ_VAL — here, multiple DTs can modify the same ParentOU concept in sequence. The order of DT execution depends on their priority in the VRF registry.
+      </div>
+      <table>
+        <tr><th>Element</th><th>Value</th></tr>
+        <tr><td>VRF interface path</td><td><code class="inline">/DecisionTables/CalcActivityReasonVRF</code></td></tr>
+        <tr><td>Invocation style</td><td><code class="inline">invokeAllVRFImpls</code> — all matching DTs fire</td></tr>
+        <tr><td>Loop</td><td>Once per ParentOU; VRF invoked <code class="inline">iPOULen</code> times</td></tr>
+        <tr><td>DT output</td><td>Written directly onto ParentOU concept (activity reason fields)</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§6.3 Parameter Guard — OMX-1053</h3>
+      <pre><span class="kw">int</span> arrLength = orderCurrentActivity.Parameter@length;
+<span class="kw">if</span>(arrLength == <span class="nm">0</span>)
+    orderCurrentActivity.Parameter[orderCurrentActivity.Parameter@length] = <span class="st">""</span>;</pre>
+      <p style="margin-top:8px">If no <code class="inline">&lt;ns0:Parameter&gt;</code> was configured for this activity in the ProcessConfig XML, the Parameter array is empty and <code class="inline">Parameter[0]</code> would throw an array-out-of-bounds exception in the VRF call. This guard inserts a dummy empty string at index 0. This fix was applied for ticket OMX-1053.</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>§6.4 Key XPath Queries Detail</h3>
+      <table>
+        <tr><th>Variable</th><th>Query purpose</th><th>Notable predicate</th></tr>
+        <tr><td><code class="inline">payChanCatg</code></td><td>Payment channel category for current ParentOU's account</td><td><code class="inline">AgreementRefId = ../ParentOU[i+1]/RefId</code> — 1-based XPath index while loop is 0-based</td></tr>
+        <tr><td><code class="inline">sourcePayChannel</code></td><td>Payment channel category for the SOURCE subscriber's account (MNP/swap)</td><td><code class="inline">ParentOU[ExtendedInfo[Name="SOURCE_OR_TARGET" and Value="SOURCE"]]</code> — finds the source OU regardless of loop index</td></tr>
+        <tr><td><code class="inline">source</code></td><td>SOURCE_OR_TARGET flag for current ParentOU</td><td><code class="inline">ExtendedInfo[Name="SOURCE_OR_TARGET"]/Value</code> — typically "SOURCE" or "TARGET"</td></tr>
+        <tr><td><code class="inline">cdbStatus</code></td><td>CDB profile status for first subscriber with a CdbProfile in current ParentOU</td><td><code class="inline">Subscriber[exists(CdbProfile)]</code> — returns empty string if no subscriber has CdbProfile</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header"><div class="section-num">7</div><h2>§7 — Data Extraction</h2></div>
+  <div class="section-body">
+    <p>All data extraction is via <code class="inline">XPath.evalAsString()</code> calls embedded within the loop. The XPath expressions use the <code class="inline">xpath://&lt;?xml ...&gt;&lt;xpath&gt;&lt;expr&gt;...&lt;/expr&gt;</code> format with explicit namespace and variable bindings.</p>
+    <div class="warn-box" style="margin-top:10px">
+      <strong>[LOW]</strong> <code class="inline">System.debugOut</code> on line 55 is active (not commented out) and will print to the BE engine log for every ParentOU in every PREPAID_CANCEL order. In production with high order volumes this adds log noise. The similar <code class="inline">debugOut</code> at the top of the rule (line 21) is correctly commented out.
+    </div>
+    <table style="margin-top:10px">
+      <tr><th>Variable</th><th>Scope</th><th>Read via</th></tr>
+      <tr><td><code class="inline">payChanCatg</code></td><td>Per-OU</td><td><code class="inline">XPath.evalAsString</code></td></tr>
+      <tr><td><code class="inline">sourcePayChannel</code></td><td>Order-wide (SOURCE OU)</td><td><code class="inline">XPath.evalAsString</code></td></tr>
+      <tr><td><code class="inline">source</code></td><td>Per-OU</td><td><code class="inline">XPath.evalAsString</code></td></tr>
+      <tr><td><code class="inline">orderType</code></td><td>Order-wide</td><td><code class="inline">XPath.evalAsString</code></td></tr>
+      <tr><td><code class="inline">channel</code></td><td>Order-wide</td><td><code class="inline">XPath.evalAsString</code></td></tr>
+      <tr><td><code class="inline">donorOperator</code></td><td>Order-wide (MNP)</td><td>Direct field: <code class="inline">orderRequest.OrderData.MNPInfo.DonorOperator</code></td></tr>
+      <tr><td><code class="inline">donorZoneCode</code></td><td>Order-wide (MNP)</td><td>Direct field: <code class="inline">orderRequest.OrderData.MNPInfo.DonorZoneCode</code> — read but NOT passed to VRF</td></tr>
+      <tr><td><code class="inline">cdbStatus</code></td><td>Per-OU (first sub with CdbProfile)</td><td><code class="inline">XPath.evalAsString</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+  <div class="section-header"><div class="section-num">8</div><h2>§8 — System &amp; Integration Dependencies</h2></div>
+  <div class="section-body">
+
+    <div class="sub-section">
+      <h3>§8.1 Order Type Dependencies</h3>
+      <p>The CalcActivityReasonVRF DTs must cover all order types and channel/MNP combinations. Each DT has its own internal conditions; those whose conditions match the current OU's attributes will fire. No DT name is derived from OrderType — all registered DTs are tried for each ParentOU. For PREPAID_CANCEL, the relevant DTs will typically evaluate <code class="inline">orderType</code> and set an activity reason code on the ParentOU.</p>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.2 ESB / JMS Channel Dependencies</h3>
+      <table>
+        <tr><th>Direction</th><th>Channel / Event</th><th>Used when</th><th>PROCESS_ID</th></tr>
+        <tr><td><span class="badge b-log">LOG START</span></td><td>Events.OMConsumers.OMXESB.Logger</td><td>Before loop (AllowWriteLog)</td><td><code class="inline">_REQ</code></td></tr>
+        <tr><td><span class="badge b-log">LOG END</span></td><td>Events.OMConsumers.OMXESB.Logger</td><td>After NextActivity (AllowWriteLog)</td><td><code class="inline">_RES</code></td></tr>
+      </table>
+      <div class="info-box" style="margin-top:8px">
+        Both log events include the full <code class="inline">orderRequest</code> in <code class="inline">payload/ns1:ServicePayload</code>. This makes the log events large — each includes the complete order XML including all subscriber data.
+      </div>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.3 Working Memory Read/Written</h3>
+      <table>
+        <tr><th>Field</th><th>Read/Written</th><th>Notes</th></tr>
+        <tr><td><code class="inline">orderRequest.OrderData.Customer.ParentOU[i]</code></td><td>READ (ref), WRITTEN by VRF DTs</td><td>VRF DTs write activity reason onto each ParentOU</td></tr>
+        <tr><td><code class="inline">orderCurrentActivity.Parameter[0]</code></td><td>READ</td><td>Passed to VRF as second arg; OMX-1053 guard ensures index 0 always exists</td></tr>
+        <tr><td><code class="inline">orderRequest.OrderData.MNPInfo</code></td><td>READ</td><td>Passed to VRF; donorOperator/donorZoneCode extracted from it</td></tr>
+        <tr><td><code class="inline">orderRequest.OrderData.DealerCode</code></td><td>READ</td><td>Passed to VRF as args[7]</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§8.4 Global Variable Dependencies</h3>
+      <table>
+        <tr><th>Path</th><th>Used for</th></tr>
+        <tr><td><code class="inline">OMX_COMMON/Component_Name/OMX_CEP</code></td><td>COMPONENT_NAME field in both audit log events</td></tr>
+        <tr><td><code class="inline">OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>LOG_LEVEL field in both audit log events</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header"><div class="section-num">9</div><h2>§9 — Payload Build (Audit Log Events Only)</h2></div>
+  <div class="section-body">
+    <p>No outbound JMS message is built for a backend system. Two audit log events are constructed using an inline XSLT. Both events share the same structure — only <code class="inline">PROCESS_ID</code> suffix and <code class="inline">AUDIT_TRACE</code> text differ.</p>
+
+    <div class="sub-section">
+      <h3>§9.1 Shared Logger XSLT Parameters</h3>
+      <table>
+        <tr><th>Parameter</th><th>Bound from</th></tr>
+        <tr><td><code class="inline">$orderRequest</code></td><td>Serialised orderRequest concept</td></tr>
+        <tr><td><code class="inline">$pid</code></td><td><code class="inline">System.nanoTime()</code> — same value for both events in a run</td></tr>
+        <tr><td><code class="inline">$globalVariables</code></td><td>BE global variables tree</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§9.2 Logger XSLT Field Output</h3>
+      <table>
+        <tr><th>Field</th><th>Source</th><th>Start event</th><th>End event</th></tr>
+        <tr><td>ESBUUID</td><td><code class="inline">$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional</td><td>Conditional</td></tr>
+        <tr><td>PROCESS_ID</td><td><code class="inline">concat($pid, "_REQ")</code> / <code class="inline">"_RES"</code></td><td><code class="inline">_REQ</code></td><td><code class="inline">_RES</code></td></tr>
+        <tr><td>COMPONENT_NAME</td><td><code class="inline">$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Always</td><td>Always</td></tr>
+        <tr><td>OPERATION_NAME</td><td><code class="inline">"/Rules/OMConsumers/OMXOM/OMX_CalcActivityReason"</code></td><td>Always</td><td>Always</td></tr>
+        <tr><td>LOG_LEVEL</td><td><code class="inline">$globalVariables/OMX_COMMON/.../MSG_LOG_LEVEL/INFO</code></td><td>Always</td><td>Always</td></tr>
+        <tr><td>AUDIT_TRACE</td><td>Static string</td><td>"triggered."</td><td>"completed."</td></tr>
+        <tr><td>AUDIT_TS</td><td><code class="inline">tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td><td>Always</td><td>Always</td></tr>
+        <tr><td>payload</td><td><code class="inline">&lt;ns1:ServicePayload&gt;&lt;xsl:copy-of select="$orderRequest"/&gt;</code></td><td>Always</td><td>Always</td></tr>
+      </table>
+    </div>
+
+    <div class="sub-section">
+      <h3>§9.8 XSLT Stylesheet Source (START event variant shown; END variant differs only in PROCESS_ID "_RES" and AUDIT_TRACE "completed.")</h3>
+      <pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:ns1</span>=<span class="st">"http://schemas.true.com/AuditLogging/V1_0"</span>
+    <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+    <span class="xa">xmlns:tib</span>=<span class="st">"http://www.tibco.com/bw/xslt/custom-functions"</span>
+    <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:output</span> <span class="xa">method</span>=<span class="st">"xml"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderRequest"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"pid"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;</span>
+      <span class="xt">&lt;event&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ESBUUID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/ESBUUID&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;PROCESS_ID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"concat($pid,'_REQ')"</span><span class="xt">/&gt;&lt;/PROCESS_ID&gt;</span>  <span class="cm">&lt;!-- "_RES" in END event --&gt;</span>
+        <span class="xt">&lt;COMPONENT_NAME&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$globalVariables/OMX_COMMON/Component_Name/OMX_CEP"</span><span class="xt">/&gt;&lt;/COMPONENT_NAME&gt;</span>
+        <span class="xt">&lt;OPERATION_NAME&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"'/Rules/OMConsumers/OMXOM/OMX_CalcActivityReason'"</span><span class="xt">/&gt;&lt;/OPERATION_NAME&gt;</span>
+        <span class="xt">&lt;LOG_LEVEL&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO"</span><span class="xt">/&gt;&lt;/LOG_LEVEL&gt;</span>
+        <span class="xt">&lt;AUDIT_TRACE&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"'OMX-OM Rule OMX_CalcActivityReason triggered.'"</span><span class="xt">/&gt;&lt;/AUDIT_TRACE&gt;</span>  <span class="cm">&lt;!-- "completed." in END event --&gt;</span>
+        <span class="xt">&lt;AUDIT_TS&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())"</span><span class="xt">/&gt;&lt;/AUDIT_TS&gt;</span>
+        <span class="xt">&lt;payload&gt;</span>
+          <span class="xt">&lt;ns1:ServicePayload&gt;</span>
+            <span class="xt">&lt;xsl:copy-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest"</span><span class="xt">/&gt;</span>
+          <span class="xt">&lt;/ns1:ServicePayload&gt;</span>
+        <span class="xt">&lt;/payload&gt;</span>
+      <span class="xt">&lt;/event&gt;</span>
+    <span class="xt">&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+    </div>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header"><div class="section-num">10</div><h2>§10 — XSLT Field Mapping — Audit Log Output Tree</h2></div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ESBUUID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-orange">Conditional</span><span class="tree-cond">xsl:if test="$orderRequest/OrderData/OMXTrackingId"</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PROCESS_ID</span><span class="tree-arrow">←</span><span class="tree-src-static">concat($pid, "_REQ")</span><span class="badge b-green">Always</span><span class="tree-cond">START event; "_RES" in END event</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">COMPONENT_NAME</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OPERATION_NAME</span><span class="tree-arrow">←</span><span class="tree-src-static">"/Rules/OMConsumers/OMXOM/OMX_CalcActivityReason"</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">LOG_LEVEL</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/OMX_COMMON/.../MSG_LOG_LEVEL/INFO</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">AUDIT_TRACE</span><span class="tree-arrow">←</span><span class="tree-src-static">"OMX-OM Rule OMX_CalcActivityReason triggered."</span><span class="badge b-green">Always</span><span class="tree-cond">"completed." in END event</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">AUDIT_TS</span><span class="tree-arrow">←</span><span class="tree-src">tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge b-green">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:ServicePayload</span><span class="tree-arrow">←</span><span class="tree-src">xsl:copy-of $orderRequest</span><span class="badge b-green">Always</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:10px;font-size:0.8rem;color:#666"><strong>Legend:</strong> <span style="color:#a6e3a1">Green text</span> = XPath from source concept | <span style="color:#fab387">Orange text</span> = static literal | <span class="badge b-green">Always</span> emitted | <span class="badge b-orange">Conditional</span> inside xsl:if</p>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header"><div class="section-num">11</div><h2>§11 — Audit Logging</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Event</th><th>When</th><th>PROCESS_ID</th><th>AUDIT_TRACE</th><th>Gated by AllowWriteLog?</th></tr>
+      <tr><td>START</td><td>Before Parameter guard and VRF loop</td><td><code class="inline">pid + "_REQ"</code></td><td>"OMX-OM Rule OMX_CalcActivityReason triggered."</td><td>Yes</td></tr>
+      <tr><td>END</td><td>After NextActivity</td><td><code class="inline">pid + "_RES"</code></td><td>"OMX-OM Rule OMX_CalcActivityReason completed."</td><td>Yes</td></tr>
+    </table>
+    <p style="margin-top:10px">Both events include the full <code class="inline">orderRequest</code> in the payload, making them potentially large log entries. The same <code class="inline">pid</code> (nanoTime captured once before the START event) is used for both, enabling correlation of START/END pairs.</p>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header"><div class="section-num">12</div><h2>§12 — Activity Status Management</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Outcome</th><th>Mechanism</th><th>Activity status</th></tr>
+      <tr><td>PreExecCheck false</td><td><code class="inline">SkipActivity("4")</code></td><td>SKIPPED</td></tr>
+      <tr><td>Loop completed successfully</td><td><code class="inline">NextActivity(orderRequest, orderCurrentActivity)</code></td><td>COMPLETED (via NextActivity)</td></tr>
+      <tr><td>Exception</td><td><code class="inline">HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td><td>FAILED (set by handler)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header"><div class="section-num">13</div><h2>§13 — Exception / Error Handling</h2></div>
+  <div class="section-body">
+    <pre><span class="kw">catch</span> (Exception ae) {
+    RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</pre>
+    <p style="margin-top:10px">Any exception from the loop or VRF invocation is caught generically. A VRF DT with an internal error (null pointer, missing field) will surface here. The loop is not transactional — if a VRF call fails on ParentOU[2] after successfully modifying ParentOU[0] and ParentOU[1], those writes are not rolled back.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">14</div><h2>§14 — Helper Functions Reference</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Return</th><th>Purpose</th></tr>
+      <tr><td><code class="inline">Instance.serializeUsingDefaults(orderRequest)</code></td><td>String (XML)</td><td>Serialises full order for PreExecCheck XPath evaluation</td></tr>
+      <tr><td><code class="inline">XPath.execute(chkXPath, sXML, ns)</code></td><td>String</td><td>Evaluates PreExecCheck expression against full order XML</td></tr>
+      <tr><td><code class="inline">XPath.evalAsString("xpath://...")</code></td><td>String</td><td>Inline XPath evaluation for per-OU attribute extraction (5 calls per loop iteration)</td></tr>
+      <tr><td><code class="inline">VRF.invokeAllVRFImpls(path, args)</code></td><td>void</td><td>Fires ALL registered CalcActivityReason DTs with current OU args</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.AllowWriteLog(orderType)</code></td><td>boolean</td><td>Gates audit log emission by order type</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.NextActivity(req, act)</code></td><td>void</td><td>Advances process flow after loop completes</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.SkipActivity(req, act, "4")</code></td><td>void</td><td>Skips activity if PreExecCheck is false</td></tr>
+      <tr><td><code class="inline">RuleFunctions.Helpers.HandleActivityException(req, act, ae, "")</code></td><td>void</td><td>Generic exception handler</td></tr>
+      <tr><td><code class="inline">System.nanoTime()</code></td><td>long</td><td>PROCESS_ID base; captured once, shared by both audit log events</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header"><div class="section-num">15</div><h2>§15 — Function Dependency Tree</h2></div>
+  <div class="section-body">
+    <pre>OMX_CalcActivityReason / OMX_CALC_ACTIVITY_REASON (rule)
+├── Instance.serializeUsingDefaults(orderRequest)              [BE built-in]
+├── XPath.execute(PreExecCheck, sXML)                          [BE built-in]
+├── RuleFunctions.Helpers.AllowWriteLog(OrderType)            [helper — START log gate]
+├── Event.Ext.sendEventImmediate(Logger — START, _REQ)         [BE built-in]
+├── [PARAMETER GUARD — OMX-1053]
+│   └── orderCurrentActivity.Parameter[0] = ""               [if array empty]
+├── [PER-PARENTOU LOOP: i = 0..iPOULen-1]
+│   ├── XPath.evalAsString(payChanCatg)                       [BE built-in]
+│   ├── XPath.evalAsString(sourcePayChannel)                  [BE built-in]
+│   ├── XPath.evalAsString(source)                            [BE built-in]
+│   ├── XPath.evalAsString(orderType)                         [BE built-in]
+│   ├── XPath.evalAsString(channel)                           [BE built-in]
+│   ├── orderRequest.OrderData.MNPInfo.DonorOperator           [direct field]
+│   ├── orderRequest.OrderData.MNPInfo.DonorZoneCode           [direct field — NOT in args!]
+│   ├── XPath.evalAsString(cdbStatus)                         [BE built-in]
+│   └── VRF.invokeAllVRFImpls("/DecisionTables/CalcActivityReasonVRF", args[10])
+│       └── [All matching CalcActivityReason DTs]
+│           └── Writes: ParentOU[i].ActivityReason (or equivalent field)
+├── RuleFunctions.Helpers.NextActivity(req, act)              [helper]
+├── RuleFunctions.Helpers.AllowWriteLog(OrderType)            [helper — END log gate]
+├── Event.Ext.sendEventImmediate(Logger — END, _RES)           [BE built-in]
+├── RuleFunctions.Helpers.SkipActivity(req, act, "4")        [helper — PreExecCheck=false]
+└── RuleFunctions.Helpers.HandleActivityException(...)       [helper — catch]</pre>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header"><div class="section-num">16</div><h2>§16 — Concept Definitions Referenced</h2></div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field / Concept</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code class="inline">orderRequest.OrderData.Customer.ParentOU[]</code></td><td>Array of ParentOU</td><td>Iterated; each ParentOU passed to VRF; DTs write activity reason onto it</td></tr>
+      <tr><td><code class="inline">orderRequest.OrderData.Customer.Account[]</code></td><td>Array of Account</td><td>XPath-queried for PayChannelCategory per OU</td></tr>
+      <tr><td><code class="inline">orderRequest.OrderData.MNPInfo</code></td><td>MNPInfo concept</td><td>DonorOperator, DonorZoneCode read; entire MNPInfo passed to VRF as args[2]</td></tr>
+      <tr><td><code class="inline">orderRequest.OrderData.OrderType</code></td><td>String</td><td>Passed to VRF and used for AllowWriteLog gate</td></tr>
+      <tr><td><code class="inline">orderRequest.OrderData.Channel</code></td><td>String</td><td>Passed to VRF as args[6]</td></tr>
+      <tr><td><code class="inline">orderRequest.OrderData.DealerCode</code></td><td>String</td><td>Passed to VRF as args[7]</td></tr>
+      <tr><td><code class="inline">orderCurrentActivity.Parameter[0]</code></td><td>String</td><td>Passed to VRF as args[1]; OMX-1053 guard ensures it exists</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header"><div class="section-num">17</div><h2>§17 — Migration Notes &amp; Recommendations</h2></div>
+  <div class="section-body">
+    <div class="sub-section">
+      <h3>Functional Requirements</h3>
+      <table>
+        <tr><th>ID</th><th>Requirement</th></tr>
+        <tr><td>R1</td><td>For each subscriber (ParentOU), compute an activity reason code before provisioning begins</td></tr>
+        <tr><td>R2</td><td>Activity reason determination must consider: payment channel, MNP donor operator, SOURCE/TARGET role, CDB status, order type, channel, and dealer code</td></tr>
+        <tr><td>R3</td><td>Support parallel processing of multiple subscribers in the same order (loop)</td></tr>
+        <tr><td>R4</td><td>Activity reason logic must be externalised per-rule (VRF DT) to allow independent update without redeploying the orchestration rule</td></tr>
+        <tr><td>R5</td><td>Handle missing Parameter configuration gracefully (OMX-1053: empty default)</td></tr>
+        <tr><td>R6</td><td>Emit bracketing audit log events (triggered / completed) to enable duration measurement of the VRF loop</td></tr>
+      </table>
+    </div>
+    <div class="sub-section" style="margin-top:16px">
+      <h3>Design Risks</h3>
+      <table>
+        <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+        <tr><td><code class="inline">donorZoneCode</code> extracted but not passed to VRF — may be missing from DT decisions</td><td><span class="badge b-orange">MEDIUM</span></td><td>Confirm whether DTs access DonorZoneCode via args[2] (MNPInfo) or expected it as a separate arg; add as args[10] if needed</td></tr>
+        <tr><td>VRF loop is not transactional — partial OU writes if exception on later iteration</td><td><span class="badge b-orange">MEDIUM</span></td><td>Add compensating logic or validate all OUs before writing; or wrap each OU in its own try/catch</td></tr>
+        <tr><td>Large payloads in both audit log events (full orderRequest copied twice)</td><td><span class="badge b-red">LOW</span></td><td>Consider logging only orderRequest metadata (TrackingId, OrderType) rather than full payload for performance</td></tr>
+        <tr><td><code class="inline">System.debugOut</code> active on line 55 — debug output in production for every OU on every order</td><td><span class="badge b-red">LOW</span></td><td>Comment out or remove debugOut before production deployment</td></tr>
+        <tr><td>OPERATION_NAME uses rule path not ActivityID — inconsistent with ActivityID "OMX_CALC_ACTIVITY_REASON"</td><td><span class="badge b-red">LOW</span></td><td>Use ActivityID in OPERATION_NAME for log consistency</td></tr>
+        <tr><td>ProcessID assignment commented out — no correlation ID on activity</td><td><span class="badge b-red">LOW</span></td><td>Decide whether ProcessID is needed; if so, uncomment</td></tr>
+        <tr><td>XPath uses 1-based indexing (<code class="inline">ParentOU[i+1]</code>) while loop uses 0-based <code class="inline">i</code> — off-by-one if misread during maintenance</td><td><span class="badge b-red">LOW</span></td><td>Add comment explaining the 0-based/1-based convention</td></tr>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="section">
+  <div class="section-header"><div class="section-num">18</div><h2>§18 — Full Source Code</h2></div>
+  <div class="section-body">
+    <pre><span class="cm">/**
+ * @description
+ * @author RRAWAT-t420
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXOM.OMX_CalcActivityReason</span> {
+    <span class="kw">attribute</span> { priority = <span class="nm">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"OMX_CALC_ACTIVITY_REASON"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"OMX_CALC_ACTIVITY_REASON"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="cm">// [commented out] System.debugOut("["+OMXTrackingId+"] Executing OMX_CalcActivityReason...")</span>
+        <span class="kw">try</span> {
+            <span class="ty">String</span> chkXPath = orderCurrentActivity.PreExecCheck;
+            <span class="ty">String</span> chkRes = <span class="st">"true"</span>;
+            <span class="ty">String</span> sXML = Instance.serializeUsingDefaults(orderRequest);
+            <span class="kw">if</span> (String.length(orderCurrentActivity.PreExecCheck) > <span class="nm">0</span>) {
+                chkRes = XPath.execute(<span class="st">"/("+chkXPath+")"</span>, sXML,
+                    <span class="st">"ns0=www.tibco.com/be/ontology/Concepts/OrderRequest/OrderRequest"</span>);
+            }
+
+            <span class="kw">if</span> (String.equals(chkRes, <span class="st">"true"</span>)) {
+                <span class="cm">//orderCurrentActivity.ProcessID = String.valueOfLong(System.nanoTime());</span>
+                <span class="kw">long</span> pid = System.nanoTime();
+
+                <span class="cm">// START audit log — "triggered."</span>
+                <span class="kw">if</span> (RuleFunctions.Helpers.AllowWriteLog(orderRequest.OrderData.OrderType)) {
+                    Event.Ext.sendEventImmediate(Event.createEvent(
+                        <span class="cm">/* §9.8 Logger START: PROCESS_ID=pid+"_REQ", AUDIT_TRACE="triggered.", payload=orderRequest */</span>));
+                }
+
+                <span class="cm">// OMX-1053: Parameter guard — ensure Parameter[0] exists</span>
+                <span class="kw">int</span> arrLength = orderCurrentActivity.Parameter@length;
+                <span class="kw">if</span>(arrLength == <span class="nm">0</span>)
+                    orderCurrentActivity.Parameter[orderCurrentActivity.Parameter@length] = <span class="st">""</span>;
+
+                <span class="cm">// Per-ParentOU loop</span>
+                <span class="kw">int</span> iPOULen = orderRequest.OrderData.Customer.ParentOU@length;
+                <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">0</span>; i &lt; iPOULen; i++) {
+                    <span class="ty">String</span> payChanCatg = XPath.evalAsString(
+                        <span class="cm">/* Account[AgreementRefId=../ParentOU[i+1]/RefId]/PayChannelCategory */</span>);
+                    <span class="ty">String</span> sourcePayChannel = XPath.evalAsString(
+                        <span class="cm">/* Account[AgreementRefId=ParentOU[ExtendedInfo[Name="SOURCE_OR_TARGET" and Value="SOURCE"]]/RefId]/PayChannelCategory */</span>);
+                    <span class="ty">String</span> source = XPath.evalAsString(
+                        <span class="cm">/* Account[AgreementRefId=../ParentOU[i+1]/RefId]/ExtendedInfo[Name="SOURCE_OR_TARGET"]/Value */</span>);
+                    <span class="ty">String</span> orderType = XPath.evalAsString(<span class="cm">/* $orderRequest/OrderData/OrderType */</span>);
+                    <span class="ty">String</span> channel = XPath.evalAsString(<span class="cm">/* $orderRequest/OrderData/Channel */</span>);
+                    <span class="ty">String</span> donorOperator = orderRequest.OrderData.MNPInfo.DonorOperator;
+                    <span class="ty">String</span> donorZoneCode = orderRequest.OrderData.MNPInfo.DonorZoneCode;  <span class="cm">// read but NOT in args</span>
+                    <span class="ty">String</span> cdbStatus = XPath.evalAsString(
+                        <span class="cm">/* ParentOU[i+1]/Subscriber[exists(CdbProfile)]/CdbProfile/Status */</span>);
+
+                    System.debugOut(<span class="st">"invokeAllVRFImpls\t:"</span> + orderType + <span class="st">"|"</span> + channel + <span class="st">"|"</span>
+                        + source + <span class="st">"|"</span> + payChanCatg + <span class="st">"|"</span> + donorOperator
+                        + <span class="st">"|"</span> + donorZoneCode + <span class="st">"|"</span> + cdbStatus);  <span class="cm">// NOT commented out!</span>
+
+                    <span class="ty">Object[]</span> args = {
+                        orderRequest.OrderData.Customer.ParentOU[i],  <span class="cm">// [0] current ParentOU</span>
+                        orderCurrentActivity.Parameter[<span class="nm">0</span>],             <span class="cm">// [1] activity parameter</span>
+                        orderRequest.OrderData.MNPInfo,                 <span class="cm">// [2] MNP info (incl. donorZoneCode)</span>
+                        orderType,                                       <span class="cm">// [3]</span>
+                        payChanCatg,                                     <span class="cm">// [4]</span>
+                        source,                                          <span class="cm">// [5] SOURCE_OR_TARGET flag</span>
+                        channel,                                         <span class="cm">// [6]</span>
+                        orderRequest.OrderData.DealerCode,              <span class="cm">// [7]</span>
+                        sourcePayChannel,                                <span class="cm">// [8] SOURCE OU's PayChannelCategory</span>
+                        cdbStatus                                        <span class="cm">// [9]</span>
+                    };
+                    VRF.invokeAllVRFImpls(<span class="st">"/DecisionTables/CalcActivityReasonVRF"</span>, args);
+                }
+
+                RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity);
+
+                <span class="cm">// END audit log — "completed."</span>
+                <span class="kw">if</span> (RuleFunctions.Helpers.AllowWriteLog(orderRequest.OrderData.OrderType)) {
+                    Event.Ext.sendEventImmediate(Event.createEvent(
+                        <span class="cm">/* §9.8 Logger END: PROCESS_ID=pid+"_RES", AUDIT_TRACE="completed.", payload=orderRequest */</span>));
+                }
+            } <span class="kw">else</span> {
+                RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+            }
+        } <span class="kw">catch</span> (Exception ae) {
+            RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</pre>
+  </div>
+</div>
+
+</div>
+<div class="footer">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</div>
+</body>
+</html>

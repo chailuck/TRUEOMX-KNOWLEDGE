@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_UPDATE_SUBSCRIBER</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:36px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700}
+.page-header .subtitle{opacity:0.88;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,0.18);border-radius:20px;padding:4px 14px;font-size:0.82rem;font-weight:600}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:28px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;border-left:4px solid var(--true-light);font-size:1.05rem;font-weight:700}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:700}
+td{padding:9px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fdf5f5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 6px;border-radius:3px}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:700}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-red{background:#FFE0E0;color:#8B0000}
+.flow-step{display:flex;align-items:flex-start;gap:12px;margin:8px 0;padding:10px 14px;background:#fdf8f8;border-radius:6px;border-left:3px solid var(--true-red)}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0}
+.step-body{flex:1}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-attr{color:#f9e2af}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.warn-box{background:#FFF3E0;border-left:4px solid #e65100;padding:12px 16px;border-radius:4px;margin:10px 0;font-size:0.88rem}
+.info-box{background:#E3F0FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:4px;margin:10px 0;font-size:0.88rem}
+footer{text-align:center;padding:20px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.82rem;opacity:0.7;margin-bottom:6px">FM Logic Documentation</div>
+    <h1>Request_CCBS_UPDATE_SUBSCRIBER</h1>
+    <div class="subtitle">Update subscriber offers in CCBS — dual POU+COU loop with pooling and split-charge resolution</div>
+    <div class="meta-row">
+      <span class="meta-badge">Backend: CCBS</span>
+      <span class="meta-badge">Pattern: POU+COU Loop · Per-Offer · IntraSeq Fan-in</span>
+      <span class="meta-badge">Author: awalia-t420</span>
+      <span class="meta-badge">Priority: 5</span>
+      <span class="meta-badge">Generated: 2026-09-18</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This rule updates subscriber offers in CCBS for each subscriber (POU and COU). It is the most complex FM in the UPDATE_CALL_VERIFICATION flow. Key responsibilities:</p>
+    <ul style="margin:10px 0 0 20px;line-height:2">
+      <li><strong>Pooling resolution</strong>: Resolves <code>POOLED_OFFER_INSTANCE_ID</code> from the Agreement's ExtendedInfo based on global variable-configured prefix</li>
+      <li><strong>SOC/PropValue list building</strong>: Pre-computes SOC list and split-indicator (PLG/EGI/other) for charge and event distribution</li>
+      <li><strong>Per-offer fan-out</strong>: Sends one request per subscriber containing all qualifying offers (not per-offer individually)</li>
+      <li><strong>Offer filtering</strong>: Skips offers with ServiceType="80"; applies offer-level PreExecCheck via <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code></li>
+      <li><strong>Sequence number</strong>: Requests SOC_SEQ_NO increment for number of offers + related offers</li>
+    </ul>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_UPDATE_SUBSCRIBER</code></td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Fan-in pattern</td><td>IntraActivitySequencing (assertEvent + SendFirstRequestEvent)</td></tr>
+      <tr><td>Loop scope</td><td>POU + COU (per-subscriber, groups offers into array)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order data</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity tracking</td></tr>
+    </table>
+    <p style="margin-top:10px"><strong>Local variables of note:</strong></p>
+    <table>
+      <tr><th>Variable</th><th>Purpose</th></tr>
+      <tr><td><code>alSOCs</code></td><td>ArrayList of unique SOCs in this POU</td></tr>
+      <tr><td><code>alPropVal</code></td><td>ArrayList of split-indicator values (PLG, EGI, etc.) paired with alSOCs</td></tr>
+      <tr><td><code>sPooling</code></td><td>GV <code>OMX-OM/PoolingPooled/PoolingIndicator</code> (default "PLG")</td></tr>
+      <tr><td><code>sPrefix</code></td><td>GV <code>OMX-OM/PoolingPooled/PooledPrefix</code> (default "POOLED_OFFER_INSTANCE_ID")</td></tr>
+      <tr><td><code>plg_pld_socs</code></td><td>HashMap: SOC → pooled SOC from subscriber ExtendedInfo[POOLED_SOC_FOR_*]</td></tr>
+      <tr><td><code>subOffersArray</code></td><td>Filtered array of qualifying SubscriberOffers for current subscriber</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_UPDATE_SUBSCRIBER"</code></td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_UPDATE_SUBSCRIBER"</code></td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-body"><strong>Init:</strong> create alSOCs/alPropVal ArrayLists; read GV PoolingIndicator (sPooling) and PooledPrefix (sPrefix)</div></div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-body"><strong>Resubmit:</strong> if isActResub → <code>PurgePendingRequestsBeforeResubmit</code></div></div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-body"><strong>POU loop (i):</strong> for each ParentOU, clear alSOCs/alPropVal</div></div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-body"><strong>SOC pre-build — POU subscribers (p/q):</strong> build plg_pld_socs HashMap from POOLED_SOC_FOR_* ExtendedInfo; for each non-80 offer: add SOC + split-prop to lists; if PLG pooling: resolve POOLED_OFFER_INSTANCE_ID from Agreement ExtendedInfo; else set POOLED_OFFER_INSTANCE_ID="NA"</div></div>
+    <div class="flow-step"><div class="step-num">5</div><div class="step-body"><strong>SOC pre-build — COU subscribers (u/v/w):</strong> same logic; pooled instance ID from child or parent Agreement (tib:if-absent)</div></div>
+    <div class="flow-step"><div class="step-num">6</div><div class="step-body"><strong>POU subscriber event-send loop (j/k):</strong> for each subscriber, collect qualifying offers into subOffersArray; apply offer-level PreExecCheck using <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code>; if subOffersArray.length&gt;0 → build and send CCBS_UPDATE_SUBSCRIBER event</div></div>
+    <div class="flow-step"><div class="step-num">7</div><div class="step-body"><strong>COU subscriber event-send loop (m/j/k):</strong> same; uses <code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo</code></div></div>
+    <div class="flow-step"><div class="step-num">8</div><div class="step-body"><strong>Completion:</strong> if !isSkipped → <code>SendFirstRequestEvent</code>, Status="1", <code>SendDataToDB</code>; else <code>SkipActivity("4")</code></div></div>
+  </div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:10px;color:var(--true-dark)">§8.2 ESB / JMS Channel</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_UPDATE_SUBSCRIBER</code></td><td>CCBS FM JMS destination</td><td>Update subscriber offers including SOC sequence and pooling</td></tr>
+      <tr><td><span class="badge badge-blue">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Audit log topic</td><td>Audit trail (OPERATION_NAME = "CCBS_UPDATE_SUBS")</td></tr>
+    </table>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Schema Namespace</th><th>Operation</th><th>Correlation</th></tr>
+      <tr><td><span class="badge badge-teal">CCBS</span></td><td><code>http://services.omx.truecorp.co.th/FMServices/updateSubscriberRequest</code></td><td>UpdateSubscriber</td><td>IntraActivitySequencing</td></tr>
+    </table>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">§8.5 ExtendedInfo Fields Used</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Required?</th><th>Notes</th></tr>
+      <tr><td><code>POOLED_SOC_FOR_*</code></td><td>Subscriber ExtendedInfo (prefix match)</td><td>Optional</td><td>Maps SOC → pooled SOC for Agreement lookup</td></tr>
+      <tr><td><code>POOLED_OFFER_INSTANCE_ID</code></td><td>Resolved from Agreement ExtendedInfo</td><td>Optional</td><td>Set on each qualifying offer; "NA" if not PLG pooling</td></tr>
+      <tr><td><code>FE_OR_CCBS</code></td><td>SubscriberOffer ExtendedInfo</td><td>Optional</td><td>Filter value for offer-level PreExecCheck</td></tr>
+      <tr><td><code>CHG_SPLIT_TYPE</code></td><td>SubscriberOffer ExtendedInfo</td><td>Optional</td><td>DR → PayChannelIdPrimary; DS → PayChannelIdSecondary</td></tr>
+    </table>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">§8.6 Global Variables</h3>
+    <table>
+      <tr><th>Path</th><th>Default</th><th>Usage</th></tr>
+      <tr><td><code>OMX-OM/PoolingPooled/PoolingIndicator</code></td><td>"PLG"</td><td>Identifies PLG pooling type for <code>AnyIn</code> check</td></tr>
+      <tr><td><code>OMX-OM/PoolingPooled/PooledPrefix</code></td><td>"POOLED_OFFER_INSTANCE_ID"</td><td>Agreement ExtendedInfo name prefix for pooled instance ID lookup</td></tr>
+      <tr><td><code>OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>—</td><td>Conditional credentials</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>—</td><td>Audit payload logging</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+    <div class="info-box">Two XSLT variants exist: one for POU subscribers, one for COU subscribers. They differ only in the index variables used to navigate the Customer hierarchy: POU uses <code>$OU,$sub</code>; COU uses <code>$OU,$iCOU,$sub</code>.</div>
+    <h3 style="margin:12px 0 8px;color:var(--true-dark)">§9.4 Payload Structure</h3>
+    <p>The <code>ns:UpdateSubscriberRequest</code> has this nested structure:</p>
+<pre><span style="color:#89dceb">&lt;ns:UpdateSubscriberRequest&gt;</span>
+  <span style="color:#89dceb">&lt;ns1:GetSequenceValueRequest&gt;</span>
+    <span style="color:#89dceb">&lt;ns1:sequenceName&gt;</span><span style="color:#a6e3a1">SOC_SEQ_NO</span><span style="color:#89dceb">&lt;/ns1:sequenceName&gt;</span>
+    <span style="color:#89dceb">&lt;ns1:incrementByCount&gt;</span><span style="color:#a6e3a1">count(offers) + count(relatedOffers)</span><span style="color:#89dceb">&lt;/ns1:incrementByCount&gt;</span>
+  <span style="color:#89dceb">&lt;/ns1:GetSequenceValueRequest&gt;</span>
+  <span style="color:#89dceb">&lt;ns:UpdateSubscriberRequest&gt;</span>
+    <span style="color:#89dceb">&lt;ns:SubscriberIdInfo&gt;</span> ← SubscriberId
+    <span style="color:#89dceb">&lt;ns:ChangeSubscriberOffersWithRelatedOffersInputInfo&gt;</span>
+      <span style="color:#89dceb">&lt;ns:offersToAdd&gt;</span> ← for-each subOffersArray
+        <span style="color:#89dceb">&lt;ns:srvAgrInfo&gt;</span> ← dealerCode, deployMode, effectiveDate,
+                        expirationDate, name(OfferName), soc,
+                        serviceType, parentOfferInstanceId,
+                        relatedOffers (nested)
+      <span style="color:#89dceb">&lt;/ns:offersToAdd&gt;</span>
+      <span style="color:#89dceb">&lt;ns:ParameterInfo&gt;</span> ← from SubscriberOffer.ParameterInfo
+      <span style="color:#89dceb">&lt;ns:ParameterInfo&gt;</span> ← PLG pooling: "Agreement level offer instance ID"
+      <span style="color:#89dceb">&lt;ns:ParameterInfo&gt;</span> ← from RelatedOffers.ParameterInfo
+      <span style="color:#89dceb">&lt;ns:ChargeDistributionDetailsInfo&gt;</span> ← CHG_SPLIT_TYPE=DR/DS or SPLITS01
+      <span style="color:#89dceb">&lt;ns:EventDistributionDetailsInfo&gt;</span> ← EGI pooling type
+      <span style="color:#89dceb">&lt;ns:ActivityInfo&gt;</span> ← activityReason, optional userText
+    <span style="color:#89dceb">&lt;/ns:ChangeSubscriberOffersWithRelatedOffersInputInfo&gt;</span>
+    <span style="color:#89dceb">&lt;ns:ActivityInfo&gt;</span> ← activityReason, userText, optional logicalDate in enclosedClientInfo
+  <span style="color:#89dceb">&lt;/ns:UpdateSubscriberRequest&gt;</span>
+<span style="color:#89dceb">&lt;/ns:UpdateSubscriberRequest&gt;</span></pre>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Key Fields</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Output Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>ns1:sequenceName</code></td><td><code>"SOC_SEQ_NO"</code> (static)</td><td>Always</td></tr>
+      <tr><td><code>ns1:incrementByCount</code></td><td>count(offers) + count(relatedOffers)</td><td>Always</td></tr>
+      <tr><td><code>ns:subscrNumber</code></td><td>Subscriber.SubscriberId</td><td>Always</td></tr>
+      <tr><td><code>ns:dealerCode</code></td><td>OrderData.DealerCode</td><td>Always</td></tr>
+      <tr><td><code>ns:deployMode</code></td><td>SubscriberOffer.DeployMode</td><td>If DeployMode exists</td></tr>
+      <tr><td><code>ns:effectiveDate</code></td><td>SubscriberOffer.EffectiveDate</td><td>If EffectiveDate exists</td></tr>
+      <tr><td><code>ns:expirationDate</code></td><td>SubscriberOffer.ExpirationDate</td><td>If ExpirationDate exists</td></tr>
+      <tr><td><code>ns:name</code> (offer)</td><td>SubscriberOffer.OfferName</td><td>Always</td></tr>
+      <tr><td><code>ns:soc</code></td><td>SubscriberOffer.Soc</td><td>Always</td></tr>
+      <tr><td><code>ns:serviceType</code></td><td>SubscriberOffer.ServiceType</td><td>If ServiceType exists</td></tr>
+      <tr><td><code>ns:parentOfferInstanceId</code></td><td>SubscriberOffer.ParentOfferInstanceId</td><td>If exists and ≠ 0</td></tr>
+      <tr><td>PLG ParameterInfo: <code>ns:name</code></td><td><code>"Agreement level offer instance ID"</code> (static)</td><td>If propVal[pos]="PLG"</td></tr>
+      <tr><td>PLG ParameterInfo: <code>ns:values</code></td><td>POOLED_OFFER_INSTANCE_ID ExtendedInfo</td><td>If PLG</td></tr>
+      <tr><td><code>ns:targetPayChannelId</code> (DR)</td><td>Subscriber.PayChannelIdPrimary</td><td>If CHG_SPLIT_TYPE=DR</td></tr>
+      <tr><td><code>ns:targetPayChannelId</code> (DS)</td><td>Subscriber.PayChannelIdSecondary</td><td>If CHG_SPLIT_TYPE=DS</td></tr>
+      <tr><td><code>ns:activityReason</code></td><td>SubscriberActivityInfo.ActivityReason or "CREQ"</td><td>Always</td></tr>
+      <tr><td><code>ns:logicalDate</code></td><td>logicalDateVal</td><td>If logicalDateVal non-empty (currently commented out)</td></tr>
+    </table>
+    <div class="info-box" style="margin-top:10px">logicalDateVal is read from <code>Instance.getByExtIdByUri("LogicalDate", "/Concepts/OM/LogicalDate")</code> but the assignment line is commented out (<code>// logicalDateVal = logicalDateRes.LogicalDate</code>) — it will always be "" and no enclosedClientInfo will be emitted.</div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"CCBS_UPDATE_SUBS"</code> (note: abbreviated, not CCBS_UPDATE_SUBSCRIBER)</td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for CCBS_UPDATE_SUBS"</code> (static)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Transition</th><th>Condition</th></tr>
+      <tr><td>WAITING → IN_PROGRESS</td><td>At least one event sent; <code>GetActivityStatusString("1", false)</code></td></tr>
+      <tr><td>WAITING → SKIPPED</td><td>All subscribers/offers skipped; <code>SkipActivity("4")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <p>All exceptions delegated to <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code>. SOC and PropVal lists are cleared in the <code>finally</code>-equivalent code after the try block: <code>Collections.clear(alSOCs); Collections.clear(alPropVal)</code>.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>GetSplOffIndForSoc(orderRequest, soc)</code></td><td>Returns split-offer indicator (PLG/EGI/other) for given SOC</td></tr>
+      <tr><td><code>BRMS.AnyIn(sPooling, propValue)</code></td><td>Checks if propValue contains sPooling indicator</td></tr>
+      <tr><td><code>BRMS.IsBlank(str)</code></td><td>Null/empty check</td></tr>
+      <tr><td><code>GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, refId, soc, filter)</code></td><td>Serialises subscriber offer XML for offer-level PreExecCheck (POU)</td></tr>
+      <tr><td><code>GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(...)</code></td><td>Same for COU subscriber offers</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionRequestEvent(reqEvent, act)</code></td><td>Fan-in request registration</td></tr>
+      <tr><td><code>IntraActivitySequencing.SendFirstRequestEvent(act)</code></td><td>Dispatch first queued event</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre>Request_CCBS_UPDATE_SUBSCRIBER
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit   [if resubmit]
+├── Collections.List.createArrayList() × 2 (alSOCs, alPropVal)
+├── System.getGlobalVariableAsString("PoolingIndicator")
+├── System.getGlobalVariableAsString("PooledPrefix")
+├── SOC pre-build loops (POU + COU):
+│   ├── String.startsWith(name, "POOLED_SOC_FOR")
+│   ├── Collections.Map.put/get(plg_pld_socs, ...)
+│   ├── GetSplOffIndForSoc(orderRequest, soc)
+│   ├── BRMS.AnyIn(sPooling, propValue)
+│   ├── XPath.evalAsString(pooled instance ID from Agreement)
+│   └── Instance.createInstance(POOLED_OFFER_INSTANCE_ID ExtendedInfo)
+├── Event-send loops (POU + COU):
+│   ├── GetXMLForSubscriberOfferFilterWithExtendedInfo(...)
+│   ├── XPath.evalAsString(FE_OR_CCBS filter)
+│   ├── XPath.execute(PreExecCheck)
+│   ├── Collections.add(subOffers, subOff)
+│   ├── Event.createEvent("xslt://CCBS_UPDATE_SUBSCRIBER")  [2 variants]
+│   ├── Event.assertEvent(reqEvent)
+│   ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, act)
+│   └── Event.Ext.sendEventImmediate(Logger event)
+├── IntraActivitySequencing.SendFirstRequestEvent(act)           [if !isSkipped]
+├── GetActivityStatusString("1", false)
+├── SendDataToDB(orderRequest)
+├── SkipActivity(orderRequest, act, "4")                         [if isSkipped]
+├── Collections.clear(alSOCs); Collections.clear(alPropVal)
+└── HandleActivityException(...)                                  [catch]</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:10px;color:var(--true-dark)">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Skip offers with ServiceType="80"</td></tr>
+      <tr><td>R2</td><td>Pre-build SOC/split-indicator list per POU before sending requests</td></tr>
+      <tr><td>R3</td><td>Resolve POOLED_OFFER_INSTANCE_ID from Agreement.ExtendedInfo using GV-configured prefix; set "NA" if not PLG</td></tr>
+      <tr><td>R4</td><td>For PLG: send ParameterInfo with name="Agreement level offer instance ID" and resolved pldOffInstId</td></tr>
+      <tr><td>R5</td><td>ChargeDistributionDetailsInfo: DR uses PayChannelIdPrimary; DS uses PayChannelIdSecondary; SPLITS01 always uses Secondary</td></tr>
+      <tr><td>R6</td><td>EventDistributionDetailsInfo for EGI pooling type</td></tr>
+      <tr><td>R7</td><td>logicalDate currently disabled (commented-out assignment) — verify if needed in migration</td></tr>
+    </table>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Pooling logic relies on Agreement.ExtendedInfo naming conventions; schema changes break resolution</td><td><span class="badge badge-red">[HIGH]</span></td><td>Document Agreement ExtendedInfo schema; add validation</td></tr>
+      <tr><td>logicalDate assignment commented out — enclosedClientInfo never emitted</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Confirm if logicalDate is needed; clean up dead code</td></tr>
+      <tr><td>OPERATION_NAME in audit log is "CCBS_UPDATE_SUBS" (not "CCBS_UPDATE_SUBSCRIBER") — monitoring discrepancy</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Standardise operation names in migration</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Abbreviated)</div>
+  <div class="section-body">
+<pre><span style="color:#cba6f7">rule</span> <span style="color:#89b4fa">Rules.OMConsumers.OMXFM.Request.Request_CCBS_UPDATE_SUBSCRIBER</span> {
+  <span style="color:#6c7086">// @author awalia-t420</span>
+  <span style="color:#6c7086">attribute</span> { priority=<span style="color:#fab387">5</span>; forwardChain=<span style="color:#cba6f7">true</span>; }
+  <span style="color:#cba6f7">then</span> {
+    Object alSOCs    = Collections.List.createArrayList();
+    Object alPropVal = Collections.List.createArrayList();
+    String sPooling  = System.getGlobalVariableAsString(<span style="color:#a6e3a1">"OMX-OM/PoolingPooled/PoolingIndicator"</span>, <span style="color:#a6e3a1">"PLG"</span>);
+    String sPrefix   = System.getGlobalVariableAsString(<span style="color:#a6e3a1">"OMX-OM/PoolingPooled/PooledPrefix"</span>, <span style="color:#a6e3a1">"POOLED_OFFER_INSTANCE_ID"</span>);
+    <span style="color:#6c7086">// SOC pre-build: POU subscribers → alSOCs, alPropVal, POOLED_OFFER_INSTANCE_ID resolution</span>
+    <span style="color:#6c7086">// SOC pre-build: COU subscribers (same logic, tib:if-absent for parent/child agreement)</span>
+    <span style="color:#6c7086">// Event-send: POU subscribers → per-subscriber offer array → assertEvent + ActionRequestEvent</span>
+    <span style="color:#6c7086">// Event-send: COU subscribers (same pattern)</span>
+    <span style="color:#6c7086">// XSLT payload — see §9 for full structure:</span>
+    <span style="color:#6c7086">//   ns:UpdateSubscriberRequest / ns1:GetSequenceValueRequest (SOC_SEQ_NO)</span>
+    <span style="color:#6c7086">//   ns:ChangeSubscriberOffersWithRelatedOffersInputInfo / offersToAdd / ParameterInfo / ChargeDistribution / EventDistribution / ActivityInfo</span>
+    <span style="color:#6c7086">//   Top-level ns:ActivityInfo with activityReason, userText, optional logicalDate</span>
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.1 Overview</h3>
+    <p><code>Response_CCBS_UPDATE_SUBSCRIBER</code> uses a custom concept <code>CCBS_UpdateSubscriberRes</code> (not the generic ResponseBase). It appends the response and advances the IntraSeq fan-in. The old <code>successResponseCount</code> block is commented out.</p>
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_UPDATE_SUBSCRIBER</code></td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td></tr>
+    </table>
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">§19.3 Response Concept Construction</h3>
+    <p>Creates <code>Concepts.FM.Response.CCBS_UpdateSubscriberRes</code> (not ResponseBase). All 4 fields (ResponseCode, ResponseMessage, CompletionStatus, ReferenceId) are conditional — only emitted if present in eventResponse.</p>
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">§19.4 Fan-in Completion</h3>
+    <p>Uses <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code>. The <code>successResponseCount</code> XPath logic is commented out.</p>
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">§19.5 Audit</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"CCBS_UPDATE_SUBSCRIBER"</code></td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Response received for CCBS_UPDATE_SUBSCRIBER"</code> (static)</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

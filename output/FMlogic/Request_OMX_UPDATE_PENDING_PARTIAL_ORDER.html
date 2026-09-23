@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_UPDATE_PENDING_PARTIAL_ORDER</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:13px;line-height:1.5}
+.hdr{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:28px 40px}
+.hdr h1{font-size:1.6rem;font-weight:700;margin-bottom:4px;word-break:break-all}
+.hdr .sub{opacity:.85;font-size:.9rem;margin-bottom:10px}
+.chips{display:flex;gap:10px;flex-wrap:wrap}
+.chip{background:rgba(255,255,255,.15);border-radius:20px;padding:3px 12px;font-size:.78rem}
+.cont{max-width:1300px;margin:0 auto;padding:20px 32px}
+.sec{background:var(--card);border-radius:10px;margin-bottom:18px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.sec-hdr{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:9px 16px;font-size:.88rem;font-weight:600;border-left:4px solid var(--true-light)}
+.sec-body{padding:14px 16px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:7px 10px;text-align:left;font-weight:600}
+td{padding:6px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre.blk{background:var(--code-bg);color:var(--code-fg);padding:10px 14px;border-radius:6px;font-size:.75rem;overflow-x:auto;white-space:pre-wrap;border-left:3px solid var(--true-red)}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600}
+.b-grn{background:#E8F5E9;color:var(--success)}.b-org{background:#FFF3E0;color:var(--warning)}
+.b-pur{background:#F3E5F5;color:var(--skip)}.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-blu{background:#E3F0FD;color:var(--info)}.b-tl{background:#E0F2F1;color:#00695c}
+.step{display:flex;gap:10px;margin-bottom:10px;align-items:flex-start}
+.step-n{background:var(--true-red);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.8rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:2px 0 2px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:11px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 5px;border-radius:3px}
+.tree-src-s{color:#fab387;background:rgba(250,179,135,.1);padding:1px 5px;border-radius:3px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.tree-arrow{color:#6c7086;margin:0 4px}
+footer{text-align:center;padding:16px;color:#888;font-size:.75rem;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <h1>Request_OMX_UPDATE_PENDING_PARTIAL_ORDER</h1>
+  <div class="sub">Update the pending partial order record in OMX per subscriber; writes MSISDN, orderType, trackingID, channel, and ICCID (from ExtendedInfo ICC_ID or SIM ResourceInfo)</div>
+  <div class="chips">
+    <span class="chip">Rule Priority: 5</span>
+    <span class="chip">ForwardChain: true</span>
+    <span class="chip">Backend: OMX Internal</span>
+    <span class="chip">Pattern: Fire-and-Forget</span>
+    <span class="chip">Author: (none)</span>
+  </div>
+</div>
+<div class="cont">
+
+<div class="sec"><div class="sec-hdr">§1 — Overview &amp; Purpose</div><div class="sec-body">
+<p>This rule fires when the process reaches <code>OMX_UPDATE_PENDING_PARTIAL_ORDER</code> (step 45 in SWAPSIM, only for TARGET subscribers). It sends one <code>UpdatePendingPartialOrderReq</code> message per subscriber (both POU and ChildOU). The pattern is <strong>fire-and-forget</strong> (<code>sendEventImmediate</code> + <code>RequestCount++</code>). The ICCID field uses an <code>xsl:choose</code>: prefers <code>ExtendedInfo[ICC_ID]/Value</code> if present, falls back to <code>ResourceInfo[SIM]/ValuesArray</code>. There is no credential gate and no CES field in this event. Fan-in: count "000" ResponseCodes == RequestCount.</p>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§2 — Rule Metadata</div><div class="sec-body">
+<table><tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_UPDATE_PENDING_PARTIAL_ORDER</code></td></tr>
+<tr><td>Priority</td><td>5</td></tr><tr><td>ForwardChain</td><td>true</td></tr>
+<tr><td>Activity ID</td><td>OMX_UPDATE_PENDING_PARTIAL_ORDER</td></tr>
+<tr><td>Author</td><td>(none listed)</td></tr>
+<tr><td>Backend System</td><td>OMX Internal (pending partial order service)</td></tr>
+<tr><td>Dispatch Pattern</td><td>Fire-and-Forget (sendEventImmediate + RequestCount++)</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§4 — Rule Conditions (WHEN)</div><div class="sec-body">
+<table><tr><th>#</th><th>Condition</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_UPDATE_PENDING_PARTIAL_ORDER"</code></td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_UPDATE_PENDING_PARTIAL_ORDER"</code></td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§5 — Execution Flow</div><div class="sec-body">
+<div class="step"><div class="step-n">1</div><div>Loop POU[p] → Subscriber[ps]; check already-responded guard</div></div>
+<div class="step"><div class="step-n">2</div><div>Evaluate PreExecCheck (GetXMLForSubscriber + XPath.execute)</div></div>
+<div class="step"><div class="step-n">3</div><div>Build UpdatePendingPartialOrderReq with MSISDN, orderType, omxTrackingID, channel, iccid</div></div>
+<div class="step"><div class="step-n">4</div><div>Send via <code>sendEventImmediate</code>; RequestCount++ (not resubmit)</div></div>
+<div class="step"><div class="step-n">5</div><div>Repeat for POU[p] → ChildOU[c] → Subscriber[cs]</div></div>
+<div class="step"><div class="step-n">6</div><div>If requests sent: set IN_PROGRESS, SendDataToDB; else SkipActivity</div></div>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§8 — System &amp; Integration Dependencies</div><div class="sec-body">
+<table><tr><th>Direction</th><th>Event</th><th>Backend</th></tr>
+<tr><td><span class="badge b-org">OUTBOUND</span></td><td>Events.OMConsumers.OMXFM.Request.OMX_UPDATE_PENDING_PARTIAL_ORDER</td><td>OMX Internal</td></tr>
+<tr><td><span class="badge b-tl">INBOUND</span></td><td>Events.OMConsumers.OMXFM.Response.OMX_UPDATE_PENDING_PARTIAL_ORDER</td><td>OMX Internal</td></tr>
+</table>
+<h4 style="margin:10px 0 6px;color:var(--true-dark)">ICCID Resolution Priority</h4>
+<table><tr><th>Priority</th><th>Source</th><th>Path</th></tr>
+<tr><td>1st (preferred)</td><td>ExtendedInfo</td><td>subscriber/ExtendedInfo[Name='ICC_ID']/Value</td></tr>
+<tr><td>2nd (fallback)</td><td>ResourceInfo</td><td>subscriber/ResourceInfo[ResourceName='SIM']/ValuesArray</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§9 — Payload Build (UpdatePendingPartialOrderReq)</div><div class="sec-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge b-org">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-org">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge b-org">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId</span><span class="badge b-grn">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge b-org">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="badge b-grn" style="margin-left:6px">Note: No UserName/PassWord (no credential gate)</span></div></li>
+          <li><div class="tree-row"><span class="badge b-grn" style="margin-left:6px">Note: No CES field</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:UpdatePendingPartialOrderReq</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:msisdn</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/MSISDN</span><span class="badge b-grn">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:orderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge b-grn">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:omxTrackingID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-org">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:channel</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Channel</span><span class="badge b-org">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:iccid</span><span class="badge b-org">xsl:choose</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-src">ExtendedInfo[ICC_ID]/Value</span><span class="badge b-blu">1st choice — if present</span></div></li>
+                      <li><div class="tree-row"><span class="tree-src">ResourceInfo[SIM]/ValuesArray</span><span class="badge b-org">fallback</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§11 — Audit Logging</div><div class="sec-body">
+<table><tr><th>Field</th><th>Value</th></tr>
+<tr><td>OPERATION_NAME</td><td>"OMX_UPDATE_PENDING_PARTIAL_ORDER"</td></tr>
+<tr><td>AUDIT_TRACE</td><td>concat("Request Sent for RefId: ", $refId)</td></tr>
+<tr><td>Guard</td><td>AllowWriteLog(orderType)</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§15 — Function Dependency Tree</div><div class="sec-body">
+<pre class="blk">Request_OMX_UPDATE_PENDING_PARTIAL_ORDER
+├── RuleFunctions.Helpers.GetXMLForSubscriber(req, refId)
+├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(req, refId, pouRefId)
+├── XPath.execute()                       ← PreExecCheck evaluation
+├── Event.Ext.sendEventImmediate(reqEvent)
+├── RuleFunctions.Helpers.AllowWriteLog(orderType)
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(req, activity, "4")
+└── RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")</pre>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§17 — Migration Notes</div><div class="sec-body">
+<table><tr><th>#</th><th>Requirement</th></tr>
+<tr><td>R1</td><td>Send per subscriber (both POU and ChildOU), only for TARGET subscribers (from ProcessConfig PreExecCheck)</td></tr>
+<tr><td>R2</td><td>ICCID resolution: ExtendedInfo[ICC_ID] first, then ResourceInfo[SIM] fallback</td></tr>
+<tr><td>R3</td><td>No credential gate — do not include UserName/PassWord in the request</td></tr>
+<tr><td>R4</td><td>Fan-in: count "000" ResponseCodes == RequestCount</td></tr>
+<tr><td>R5</td><td>No CES field in this event (unlike most other FM events)</td></tr>
+</table>
+</div></div>
+
+<div class="sec"><div class="sec-hdr">§19 — Response Message Rule</div><div class="sec-body">
+<p><strong>§19.1</strong> Creates <code>ResponseBase</code> concept (standard base). extId ← OMXUtils:generateTrackingID().</p>
+<h4 style="color:var(--true-dark);margin:8px 0 6px">§19.4 Fan-in Completion</h4>
+<table><tr><th>Expression</th><th>Value</th></tr>
+<tr><td>successResponseCount</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode),3)="000"])</code></td></tr>
+<tr><td>Completion condition</td><td><code>currActivity.RequestCount == successResponseCount</code> → return "true"</td></tr>
+</table>
+<p style="margin-top:8px"><strong>OPERATION_NAME:</strong> "OMX_UPDATE_PENDING_PARTIAL_ORDER"</p>
+</div></div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_OMX_UPDATE_PENDING_PARTIAL_ORDER</footer>
+</body></html>

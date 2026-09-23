@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_GET_3CJ_EMAIL_TEMPLATE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-high{background:#FFE0E0;color:var(--true-dark)}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_OMX_GET_3CJ_EMAIL_TEMPLATE</h1>
+  <div class="subtitle">3CJ SMS/Email Template Fetch — retrieves notification templates per Subscriber; writes EMAIL_TEMPLATE_CONTENT or SMS_MSG to Subscriber ExtInfo</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: 3CJ (SMS/Email Template)</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: FIRE-AND-FORGET per Subscriber</span>
+    <span class="meta-chip">Author: TIT_CP-CHAYAT2</span>
+    <span class="meta-chip">Write-back: EMAIL_TEMPLATE_CONTENT or SMS_MSG</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>OMX_GET_3CJ_EMAIL_TEMPLATE</strong> fetches notification templates from the 3CJ service for each Subscriber. Despite its name, it uses the <code>OMX_GET_3CJ_SMS_TEMPLATE</code> event type. The response handler determines whether each returned template is an email template (by checking <code>emailSubject</code>) and writes it to the Subscriber's ExtInfo as either <code>EMAIL_TEMPLATE_CONTENT</code> or <code>SMS_MSG</code>.
+    </div>
+    <div class="callout info">
+      <strong>Fire-and-forget per Subscriber:</strong> <code>Event.Ext.sendEventImmediate</code> + manual <code>RequestCount++</code>. Fan-in: <code>count("000") == RequestCount</code>.
+    </div>
+    <div class="callout warn">
+      <strong>Event name mismatch:</strong> The ActivityID is <code>OMX_GET_3CJ_EMAIL_TEMPLATE</code> but the JMS event type sent and received is <code>OMX_GET_3CJ_SMS_TEMPLATE</code>. This is intentional — the same endpoint serves both SMS and email templates; the contentType (from FLOW_ID ExtInfo) differentiates them.
+    </div>
+    <div class="callout success">
+      <strong>CompletionStatus==2 resubmit skip:</strong> Per-subscriber response checked by RefId + CompletionStatus==2 before sending.
+    </div>
+    <div class="callout">
+      <strong>Write-back in response:</strong> Response handler iterates <code>omxnNotiTemplate[]</code>; if <code>emailSubject != ""</code> → <code>EMAIL_TEMPLATE_CONTENT</code>; else → <code>SMS_MSG</code>. Multiple templates possible — one subscriber ExtInfo entry per template item.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_GET_3CJ_EMAIL_TEMPLATE</code></td></tr>
+      <tr><td>Author</td><td>TIT_CP-CHAYAT2</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>3CJ (notification template service)</td></tr>
+      <tr><td>Event type (Request)</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_GET_3CJ_SMS_TEMPLATE</code></td></tr>
+      <tr><td>Event type (Response)</td><td><code>Events.OMConsumers.OMXFM.Response.OMX_GET_3CJ_SMS_TEMPLATE</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> — FIRE-AND-FORGET per Subscriber</td></tr>
+      <tr><td>RequestCount</td><td>Manually: <code>if(!isActResub) RequestCount++</code></td></tr>
+      <tr><td>Fan-in</td><td><code>count(Response[ResponseCode suffix "000"]) == RequestCount</code></td></tr>
+      <tr><td>Iteration</td><td>POU[].Subscriber[] AND ChildOU[].Subscriber[] — with CompletionStatus==2 skip</td></tr>
+      <tr><td>Key inputs</td><td><code>ExtInfo[FLOW_ID].Value</code> → contentType; <code>subscriber.RefId</code> → RefID</td></tr>
+      <tr><td>Write-back</td><td><code>subscriber.ExtendedInfo[]</code> ← <code>EMAIL_TEMPLATE_CONTENT</code> or <code>SMS_MSG</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>Event name vs activity name mismatch</td><td>ActivityID is EMAIL_TEMPLATE but event is SMS_TEMPLATE — same 3CJ endpoint, contentType differentiates</td></tr>
+      <tr><td>contentType from FLOW_ID</td><td><code>contentType = OrderData.ExtendedInfo[Name='FLOW_ID'].Value</code> — drives which template set is returned</td></tr>
+      <tr><td>Template type discrimination</td><td>In response: <code>emailSubject</code> non-empty → email template → <code>EMAIL_TEMPLATE_CONTENT</code>; else → <code>SMS_MSG</code></td></tr>
+      <tr><td>Multiple templates per subscriber</td><td>Response may contain multiple <code>omxnNotiTemplate</code> entries; each written as separate Subscriber ExtInfo entry</td></tr>
+      <tr><td>currActivity.ResponseCode direct set</td><td>Response handler also sets <code>currActivity.ResponseCode</code> and <code>currActivity.ResponseMessage</code> directly (unlike pure ResponseBase pattern)</td></tr>
+      <tr><td>Exception catch in response</td><td>Response rulefunction wraps body in try/catch — returns <code>"false"</code> on any exception (fan-in fails gracefully)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping (request event)</div>
+  <div class="section-body">
+<pre><code>createEvent → event
+├── extId           ← OMXUtils:generateTrackingID()                  [Always]
+├── JMSPriority     ← $orderRequest/OrderPriority                     [Always]
+├── JMSCorrelationID← $orderRequest/OrderData/OMXTrackingId           [Always]
+├── OrderID         ← $orderRequest/OrderData/OrderID                 [Always]
+├── RefID           ← $refId (subscriber.RefId)                       [Always]
+├── UserName        ← $orderRequest/OrderData/User                    [Always]
+├── PassWord        ← $orderRequest/OrderData/Password                [Always]
+├── OrderType       ← $orderRequest/OrderData/OrderType               [Conditional]
+└── payload → ns:OMX_Sms3CJTemplateRequest
+    ├── ns:orderType    ← $orderRequest/OrderData/OrderType           [Conditional]
+    └── ns:contentType  ← $orderRequest/OrderData/ExtendedInfo[Name='FLOW_ID']/Value [Always]
+
+NOTE: language field is declared as $language variable but NOT included in payload (commented out pattern).</code></pre>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_OMX_GET_3CJ_EMAIL_TEMPLATE
+├── for each POU[iPOU].Subscriber[subs]:
+│   ├── refId = subscriber.RefId
+│   ├── [if isActResub] check Response[refId AND CompletionStatus==2] → skip if true
+│   ├── [if PreExecCheck] GetXMLForSubscriber(orderRequest, refId)
+│   └── if chkRes=="true" AND !reqSuccess:
+│       ├── createEvent(OMX_GET_3CJ_SMS_TEMPLATE, XSLT with FLOW_ID contentType)
+│       ├── sendEventImmediate(reqEvent)
+│       ├── if(!isActResub): RequestCount++
+│       └── Logger REQ
+├── for each POU[iPOU].ChildOU[iCOU].Subscriber[subs]:
+│   └── [same as above with child subscriber context]
+├── if !isSkipped: GetActivityStatusString("1") + SendDataToDB
+└── else: SkipActivity("4")
+
+Response_OMX_GET_3CJ_EMAIL_TEMPLATE
+├── createInstance(ResponseBase std 4) → currActivity.Response[n]
+├── currActivity.ResponseCode = eventResponse.ResponseCode
+├── currActivity.ResponseMessage = eventResponse.ResponseMsg
+├── match eventResponse.RefID == subscriber.RefId across all POU/ChildOU:
+│   └── for each omxnNotiTemplate[i]:
+│       ├── templateContent = XPath(...omxnNotiTemplate[$i+1]/templateContent)
+│       ├── isEmailTemplate = XPath(...omxnNotiTemplate[$i+1]/emailSubject) [non-empty → email]
+│       └── subscriber.ExtendedInfo[n] ← EMAIL_TEMPLATE_CONTENT or SMS_MSG = templateContent
+├── Logger RES
+└── count("000") == RequestCount → "true"/"false"
+    catch(Exception) → "false"</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Event type name (SMS_TEMPLATE) does not match activity name (EMAIL_TEMPLATE) — causes confusion in routing and monitoring</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document the intentional reuse of SMS_TEMPLATE event; align naming in migration</td>
+      </tr>
+      <tr>
+        <td>Response writes multiple ExtInfo entries per subscriber — upstream FM35 depends on EMAIL_TEMPLATE_CONTENT being present</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Validate FLOW_ID ExtInfo is present before this FM; document FM34→FM35 dependency</td>
+      </tr>
+      <tr>
+        <td>emailSubject non-empty treated as boolean email indicator — any whitespace value would be treated as email</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Trim emailSubject before length check; document 3CJ emailSubject contract</td>
+      </tr>
+      <tr>
+        <td>ChildOU index bug: <code>ParentOU[iCOU].ChildOU[iCOU]</code> uses same index variable for both levels</td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td>Fix to <code>ParentOU[iPOU].ChildOU[iCOU]</code> — current code iterates wrong ChildOU for multi-POU orders</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>ResponseBase (std 4 fields)</td><td>Always</td></tr>
+      <tr><td><code>currActivity.ResponseCode</code></td><td><code>eventResponse.ResponseCode</code></td><td>Always</td></tr>
+      <tr><td><code>currActivity.ResponseMessage</code></td><td><code>eventResponse.ResponseMsg</code></td><td>Always</td></tr>
+      <tr><td><code>subscriber.ExtendedInfo[EMAIL_TEMPLATE_CONTENT]</code></td><td><code>omxnNotiTemplate[i].templateContent</code> when <code>emailSubject != ""</code></td><td>Conditional</td></tr>
+      <tr><td><code>subscriber.ExtendedInfo[SMS_MSG]</code></td><td><code>omxnNotiTemplate[i].templateContent</code> when <code>emailSubject == ""</code></td><td>Conditional</td></tr>
+    </table>
+    <div class="callout warn" style="margin-top:12px">
+      <strong>Critical dependency:</strong> FM35 (OMX_SEND_EMAIL3CJ) reads <code>EMAIL_TEMPLATE_CONTENT</code> written by this response. If this FM is skipped or fails, FM35 will send empty template_id/version values.
+    </div>
+    <div class="callout info" style="margin-top:8px">
+      Fan-in: <code>count(Response[ResponseCode suffix "000"]) == RequestCount</code>. Response handler catches all exceptions and returns <code>"false"</code>.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

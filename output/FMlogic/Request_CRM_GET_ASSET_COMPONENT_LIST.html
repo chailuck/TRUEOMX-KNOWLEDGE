@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CRM_GET_ASSET_COMPONENT_LIST</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#222;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:36px 40px 28px;}
+.page-header h1{font-size:1.75rem;font-weight:700;margin-bottom:6px;}
+.page-header .subtitle{opacity:.85;font-size:.95rem;}
+.meta-pills{display:flex;gap:10px;flex-wrap:wrap;margin-top:14px;}
+.pill{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:3px 12px;font-size:.8rem;}
+.container{max-width:1280px;margin:0 auto;padding:28px 32px;}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:22px;overflow:hidden;}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;border-left:4px solid var(--true-light);}
+.card-header h2{font-size:1.05rem;font-weight:600;}
+.card-header h3{font-size:.95rem;font-weight:600;}
+.card-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.875rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left;}
+td{padding:7px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fff8f8;}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;border-left:3px solid var(--true-red);overflow-x:auto;}
+code{background:#f3e8e8;color:var(--true-dark);padding:1px 5px;border-radius:3px;}
+.badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.75rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.st{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nu{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+.flow-step{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f0e0e0;}
+.flow-step:last-child{border-bottom:none;}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;}
+.step-content{flex:1;}
+.warn-box{background:#FFF3E0;border-left:4px solid #e65100;border-radius:0 6px 6px 0;padding:10px 14px;margin:8px 0;font-size:.875rem;}
+.info-box{background:#E3F0FD;border-left:4px solid #1565c0;border-radius:0 6px 6px 0;padding:10px 14px;margin:8px 0;font-size:.875rem;}
+.bug-box{background:#FFE0E0;border-left:4px solid var(--true-red);border-radius:0 6px 6px 0;padding:10px 14px;margin:8px 0;font-size:.875rem;}
+/* XSLT tree */
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;}
+.tree-ns{color:#6c7086;font-size:.78rem;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+footer{text-align:center;padding:24px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:20px;}
+.section-label{color:var(--true-red);font-weight:700;font-size:.8rem;margin-bottom:4px;text-transform:uppercase;letter-spacing:.05em;}
+details summary{cursor:pointer;padding:8px;color:var(--true-dark);font-weight:600;}
+details[open] summary{border-bottom:1px solid #f0e0e0;margin-bottom:8px;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="subtitle">TIBCO BusinessEvents · FM Logic Documentation</div>
+  <h1>Request_CRM_GET_ASSET_COMPONENT_LIST</h1>
+  <div class="subtitle">CRM — Fetch active asset components (SIM, IMSI, offers) per subscriber from Siebel</div>
+  <div class="meta-pills">
+    <span class="pill">Priority 5</span>
+    <span class="pill">forwardChain: true</span>
+    <span class="pill">Target: CRM (Siebel)</span>
+    <span class="pill">Fan-out: ParentOU + ChildOU</span>
+    <span class="pill">PREPAID_CANCEL Step 2</span>
+    <span class="pill">Generated: 2026-08-20</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header"><h2>§1 — Overview &amp; Purpose</h2></div>
+<div class="card-body">
+<p>
+  <strong>Request_CRM_GET_ASSET_COMPONENT_LIST</strong> fires when the order process reaches activity
+  <code>CRM_GET_ASSET_COMPONENT_LIST</code>. It queries CRM (Siebel) for every asset component
+  attached to each subscriber — physical resources (SIM card, IMSI, MSISDN, PMATCHID, Equipment, PEID)
+  and commercial offers (Price Plan, SOC/OFFER, Additional Offer, SOC/OFFER(TOPPING)).
+</p>
+<br/>
+<p>
+  In the <strong>PREPAID_CANCEL</strong> flow (step 2), this FM is called with <code>STATUS=Active</code>
+  immediately after <code>CRM_GET_LAST_ASSET_ROOT</code> has confirmed the subscriber is Mobile Prepaid
+  and populated their <code>AssetCrmId</code>. The response RF enriches each subscriber's
+  <code>ResourceInfo[]</code> and <code>SubscriberOffers[]</code> arrays, building the complete
+  asset picture needed by downstream cancellation activities.
+</p>
+<br/>
+<table>
+<tr><th>Property</th><th>Value</th></tr>
+<tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CRM_GET_ASSET_COMPONENT_LIST</code></td></tr>
+<tr><td>Author</td><td>CHAYATORN-PC</td></tr>
+<tr><td>Backend system</td><td>CRM (Siebel) — <code>CRMGetAssetComponentList</code> service</td></tr>
+<tr><td>Fan-out scope</td><td>ParentOU Subscribers + ChildOU Subscribers</td></tr>
+<tr><td>In PREPAID_CANCEL</td><td>Step 2, Parameter: STATUS=Active</td></tr>
+<tr><td>Request event</td><td><code>Events.OMConsumers.OMXFM.Request.CRM_GET_ASSET_COMPONENT_LIST</code></td></tr>
+<tr><td>Response RF</td><td><code>RuleFunctions.OrderResponse.Response_CRM_GET_ASSET_COMPONENT_LIST</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+<div class="card-header"><h2>§2 — Rule Metadata &amp; Attributes</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+<tr><td>priority</td><td><code>5</code></td><td>Standard FM request priority</td></tr>
+<tr><td>forwardChain</td><td><code>true</code></td><td>Re-evaluates when working memory changes</td></tr>
+<tr><td>Rule type</td><td>Fan-out Request</td><td>Sends one event per subscriber (ParentOU + ChildOU)</td></tr>
+<tr><td>Source path</td><td><code>Rules/OMConsumers/OMXFM/Request/Request_CRM_GET_ASSET_COMPONENT_LIST.rule</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+<div class="card-header"><h2>§3 — Working Memory — Declared Objects</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order object; source of Customer hierarchy and order metadata</td></tr>
+<tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current process activity; drives rule firing and holds RequestCount</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 WHEN -->
+<div class="card">
+<div class="card-header"><h2>§4 — Rule Conditions (WHEN)</h2></div>
+<div class="card-body">
+<table>
+<tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Matches activity to current process flow position</td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CRM_GET_ASSET_COMPONENT_LIST"</code></td><td>Fires only for this specific FM</td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CRM_GET_ASSET_COMPONENT_LIST"</code></td><td>Double-check from order side</td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Prevents double-firing; only acts when activity is waiting</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+<div class="card-header"><h2>§5 — Execution Flow Diagram</h2></div>
+<div class="card-body">
+<div class="flow-step"><div class="step-num">1</div><div class="step-content"><strong>Re-submit check</strong> — <code>isActResub = (orderCurrentActivity.RequestCount &gt; 0 &amp;&amp; orderRequest.IsOrderResubmitted)</code></div></div>
+<div class="flow-step"><div class="step-num">2</div><div class="step-content"><strong>Load activity parameters</strong> — <code>STATUS</code> (via GetActivityParameterValueFromKey), <code>GET_FROM_CCBS</code>, <code>OLPRD_DB_FLAG</code> (both via GetActivityParamValueFromKey); defaults: STATUS→"Active", OLPRD_DB_FLAG→"Y"</div></div>
+<div class="flow-step"><div class="step-num">3</div><div class="step-content"><strong>Loop ParentOU[p] → ParentOU Subscriber[ps]</strong>
+  <ul style="margin-top:6px;padding-left:20px;">
+    <li>Skip if already responded (CompletionStatus==2 for this refId)</li>
+    <li>Evaluate PreExecCheck XPath (if any) against subscriber XML</li>
+    <li>Build <code>CRM_GET_ASSET_COMPONENT_LIST</code> event via XSLT (payload: assetRowID, status, olprdDBFlag)</li>
+    <li>Send event via <code>Event.Ext.sendEventImmediate</code></li>
+    <li>Increment <code>RequestCount</code> (unless re-submit)</li>
+    <li>Log audit event if <code>AllowWriteLog</code> is true</li>
+  </ul>
+</div></div>
+<div class="flow-step"><div class="step-num">4</div><div class="step-content"><strong>Loop ChildOU[c] → ChildOU Subscriber[cs]</strong> — same pattern as step 3; uses <code>cSubRefId</code> as the correlation ID</div></div>
+<div class="flow-step"><div class="step-num">5</div><div class="step-content"><strong>Status update</strong> — if any request sent: <code>Status = GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code>; else <code>SkipActivity("4")</code></div></div>
+<div class="flow-step"><div class="step-num">6</div><div class="step-content"><strong>Exception</strong> — catch block calls <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></div></div>
+</div>
+</div>
+
+<!-- §6 Action Logic -->
+<div class="card">
+<div class="card-header"><h2>§6 — Rule Action (THEN) — Step-by-Step Logic</h2></div>
+<div class="card-body">
+<p>The THEN block executes inside a try/catch and follows the standard OMXFM fan-out pattern:</p>
+<br/>
+<details open>
+<summary>Parameter extraction</summary>
+<pre><span class="st">String</span> status = RuleFunctions.Helpers.<span class="fn">GetActivityParameterValueFromKey</span>(orderCurrentActivity, <span class="st">"STATUS"</span>);
+<span class="st">String</span> getFromCCBS = RuleFunctions.Helpers.<span class="fn">GetActivityParamValueFromKey</span>(orderCurrentActivity, <span class="st">"GET_FROM_CCBS"</span>);
+<span class="st">String</span> olprdDbFlag = RuleFunctions.Helpers.<span class="fn">GetActivityParamValueFromKey</span>(orderCurrentActivity, <span class="st">"OLPRD_DB_FLAG"</span>);</pre>
+<div class="info-box">⚠ Two different helper function names are used: <code>GetActivityParameterValueFromKey</code> (for STATUS) and <code>GetActivityParamValueFromKey</code> (for GET_FROM_CCBS, OLPRD_DB_FLAG). These are separate functions — not a typo.</div>
+</details>
+<br/>
+<details>
+<summary>Fan-out per subscriber</summary>
+<p>For each subscriber (ParentOU and ChildOU), the guard checks <code>CompletionStatus==2</code> to skip already-responded subscribers, then evaluates the PreExecCheck if set, then creates and sends the CRM event. The ParentOU variant uses <code>pSubRefId</code> as <code>RefID</code>; the ChildOU variant uses <code>cSubRefId</code>.</p>
+</details>
+</div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="card">
+<div class="card-header"><h2>§7 — Data Extraction</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Parameter Key</th><th>Helper Function</th><th>Default</th><th>Usage</th></tr>
+<tr><td><code>STATUS</code></td><td>GetActivityParameterValueFromKey</td><td>"Active"</td><td>Filter for asset components — in PREPAID_CANCEL: "Active"</td></tr>
+<tr><td><code>GET_FROM_CCBS</code></td><td>GetActivityParamValueFromKey</td><td>(empty)</td><td>If "Y", adds <code>&lt;GetFromCCBS&gt;Y&lt;/GetFromCCBS&gt;</code> to event header</td></tr>
+<tr><td><code>OLPRD_DB_FLAG</code></td><td>GetActivityParamValueFromKey</td><td>"Y"</td><td>Passed to CRM as <code>olprdDBFlag</code> — controls OLPRD DB lookup</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §8 System & Integration -->
+<div class="card">
+<div class="card-header"><h2>§8 — System &amp; Integration Dependencies</h2></div>
+<div class="card-body">
+
+<div class="section-label">§8.1 — Order Type Dependencies</div>
+<p>Called by all order types that require CRM asset enrichment. In PREPAID_CANCEL, fires at step 2 for all Mobile Prepaid subscribers confirmed by the preceding CRM_GET_LAST_ASSET_ROOT guard. The response RF applies different logic based on the <code>STATUS</code> parameter:</p>
+<ul style="margin:8px 0 12px 20px;">
+  <li><strong>STATUS=Active</strong> (PREPAID_CANCEL) — enriches ResourceInfo and SubscriberOffers</li>
+  <li><strong>STATUS=Inactive</strong> — used by SIM renewal flows to find the most recent inactive SIM</li>
+</ul>
+
+<br/><div class="section-label">§8.2 — ESB / JMS Channel Dependencies</div>
+<table>
+<tr><th>Direction</th><th>Channel / Destination</th><th>Protocol</th><th>Purpose</th></tr>
+<tr><td><span class="badge badge-jms">OUTBOUND</span></td><td>OMXFM / CRM_GET_ASSET_COMPONENT_LIST</td><td>JMS</td><td>CRM asset component query per subscriber</td></tr>
+<tr><td><span class="badge badge-log">LOG</span></td><td>OMXESB / Logger</td><td>JMS</td><td>Audit trail (REQ gated by AllowWriteLog; RES always)</td></tr>
+</table>
+
+<br/><div class="section-label">§8.3 — Backend API Details</div>
+<table>
+<tr><th>System</th><th>Operation</th><th>Schema</th><th>Protocol</th><th>Correlation</th></tr>
+<tr><td>CRM (Siebel)</td><td>CRMGetAssetComponentList</td><td><code>CRMGetAssetComponentList.xsd</code></td><td>JMS/ESB</td><td>RefID ← subscriber RefId</td></tr>
+</table>
+
+<br/><div class="section-label">§8.4 — BE Working Memory Dependencies</div>
+<table>
+<tr><th>Field</th><th>Access</th><th>Notes</th></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[].Subscriber[].AssetCrmId</code></td><td>READ</td><td>Sent as <code>assetRowID</code> to CRM (only if not empty)</td></tr>
+<tr><td><code>orderRequest.OrderData.Customer.ParentOU[].Subscriber[].MSISDN</code></td><td>READ</td><td>Used as <code>serviceId</code> variable (available but not sent in payload)</td></tr>
+<tr><td><code>orderCurrentActivity.RequestCount</code></td><td>READ/WRITE</td><td>Incremented per fan-out message sent</td></tr>
+<tr><td><code>sub.ResourceInfo[]</code></td><td>WRITE (Response RF)</td><td>Populated with SIM/IMSI/MSISDN/PMATCHID/Equipment/PEID entries</td></tr>
+<tr><td><code>sub.SubscriberOffers[]</code></td><td>WRITE (Response RF)</td><td>Populated with Price Plan/SOC/OFFER/Additional Offer entries</td></tr>
+</table>
+
+<br/><div class="section-label">§8.5 — ExtendedInfo Fields</div>
+<p>No ExtendedInfo fields are read in the request rule. The response RF creates <code>FE_OR_CCBS = "CRM"</code> on each SubscriberOffers entry it creates.</p>
+
+<br/><div class="section-label">§8.6 — Global Variable Dependencies</div>
+<table>
+<tr><th>Global Variable Path</th><th>Used for</th></tr>
+<tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>COMPONENT_NAME in audit log</td></tr>
+<tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>TARGET_SYSTEM in audit log</td></tr>
+<tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>LOG_LEVEL in audit log</td></tr>
+<tr><td><code>OMX_OM/WritePayload</code></td><td>Gates payload inclusion in audit log (both REQ and RES)</td></tr>
+</table>
+
+</div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="card">
+<div class="card-header"><h2>§9 — Detailed Payload Build</h2></div>
+<div class="card-body">
+
+<div class="section-label">§9.1 — XSLT Parameter Binding</div>
+<table>
+<tr><th>XSLT Param</th><th>BE Source</th><th>Notes</th></tr>
+<tr><td><code>$orderRequest</code></td><td><code>orderRequest</code></td><td>Full order concept</td></tr>
+<tr><td><code>$pSubRefId</code></td><td><code>pSubRefId</code> (ParentOU variant)</td><td>Subscriber RefId used as correlation ID</td></tr>
+<tr><td><code>$cSubRefId</code></td><td><code>cSubRefId</code> (ChildOU variant)</td><td>ChildOU Subscriber RefId</td></tr>
+<tr><td><code>$psub</code> / <code>$csub</code></td><td>Subscriber concept instance</td><td>Source of AssetCrmId</td></tr>
+<tr><td><code>$getFromCCBS</code></td><td><code>getFromCCBS</code> param variable</td><td>Controls optional header field</td></tr>
+<tr><td><code>$status</code></td><td><code>status</code> param variable</td><td>Asset filter status</td></tr>
+<tr><td><code>$olprdDbFlag</code></td><td><code>olprdDbFlag</code> param variable</td><td>OLPRD DB flag</td></tr>
+</table>
+
+<br/><div class="section-label">§9.2 — Event Container</div>
+<p>Event extId: generated via <code>OMXUtils:generateTrackingID()</code>.</p>
+
+<br/><div class="section-label">§9.3 — JMS / Event Header Fields</div>
+<table>
+<tr><th>Field</th><th>Source</th></tr>
+<tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td></tr>
+<tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+<tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td></tr>
+<tr><td><code>RefID</code></td><td><code>$pSubRefId</code> or <code>$cSubRefId</code> — subscriber RefId</td></tr>
+<tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td></tr>
+<tr><td><code>GetFromCCBS</code> (optional)</td><td><code>$getFromCCBS</code> — only emitted if value = "Y"</td></tr>
+</table>
+
+<br/><div class="section-label">§9.4 — Payload Root</div>
+<p>Namespace: <code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/CRM/CRMGetAssetComponentList.xsd</code></p>
+<p>Root element: <code>&lt;ns:CRMGetAssetComponentListRequest&gt;</code></p>
+
+<br/><div class="section-label">§9.5 — Conditional Fields</div>
+<table>
+<tr><th>Field</th><th>Condition</th><th>Value</th></tr>
+<tr><td><code>ns:assetRowID</code></td><td><code>$psub/AssetCrmId</code> exists</td><td><code>$psub/AssetCrmId</code></td></tr>
+<tr><td><code>GetFromCCBS</code> (header)</td><td><code>$getFromCCBS = 'Y'</code></td><td><code>$getFromCCBS</code></td></tr>
+</table>
+
+<br/><div class="section-label">§9.6 — Core Payload Fields</div>
+<table>
+<tr><th>Element</th><th>Source / Logic</th><th>Default</th></tr>
+<tr><td><code>ns:assetRowID</code></td><td><code>sub.AssetCrmId</code> (from previous CRM_GET_LAST_ASSET_ROOT)</td><td>Omitted if blank</td></tr>
+<tr><td><code>ns:status</code></td><td>STATUS activity parameter</td><td>"Active"</td></tr>
+<tr><td><code>ns:olprdDBFlag</code></td><td>OLPRD_DB_FLAG activity parameter</td><td>"Y"</td></tr>
+</table>
+
+<br/><div class="section-label">§9.7 — Complete Generated XML Example</div>
+<pre><span class="cm">&lt;!-- ParentOU Variant --&gt;</span>
+<span class="xt">&lt;event</span> <span class="xa">extId</span>=<span class="st">"OMX-20250720-001"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;JMSPriority&gt;</span>4<span class="xt">&lt;/JMSPriority&gt;</span>
+  <span class="xt">&lt;JMSCorrelationID&gt;</span>OMX-TRK-20250720-001<span class="xt">&lt;/JMSCorrelationID&gt;</span>
+  <span class="xt">&lt;OrderID&gt;</span>1000001<span class="xt">&lt;/OrderID&gt;</span>
+  <span class="xt">&lt;RefID&gt;</span>SUB-REF-001<span class="xt">&lt;/RefID&gt;</span>
+  <span class="xt">&lt;OrderType&gt;</span>35041<span class="xt">&lt;/OrderType&gt;</span>
+  <span class="cm">&lt;!-- GetFromCCBS omitted: not "Y" in PREPAID_CANCEL --&gt;</span>
+  <span class="xt">&lt;payload&gt;</span>
+    <span class="xt">&lt;ns:CRMGetAssetComponentListRequest&gt;</span>
+      <span class="xt">&lt;ns:assetRowID&gt;</span>1-ABCD1234<span class="xt">&lt;/ns:assetRowID&gt;</span>
+      <span class="xt">&lt;ns:status&gt;</span>Active<span class="xt">&lt;/ns:status&gt;</span>
+      <span class="xt">&lt;ns:olprdDBFlag&gt;</span>Y<span class="xt">&lt;/ns:olprdDBFlag&gt;</span>
+    <span class="xt">&lt;/ns:CRMGetAssetComponentListRequest&gt;</span>
+  <span class="xt">&lt;/payload&gt;</span>
+<span class="xt">&lt;/event&gt;</span></pre>
+
+<br/><div class="section-label">§9.8 — XSLT Stylesheet Source</div>
+<p><strong>Variant ①: ParentOU</strong> — params: <code>$orderRequest</code>, <code>$pSubRefId</code>, <code>$getFromCCBS</code>, <code>$psub</code>, <code>$status</code>, <code>$olprdDbFlag</code></p>
+<pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">version</span>=<span class="st">"1.0"</span>
+  <span class="xa">xmlns:OMXUtils</span>=<span class="st">"www.tibco.com/be/custom/OMXUtils"</span>
+  <span class="xa">xmlns:ns</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/.../CRMGetAssetComponentList.xsd"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderRequest"</span><span class="xt">/&gt;</span>    <span class="cm">&lt;!-- bound from BE: orderRequest concept --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"pSubRefId"</span><span class="xt">/&gt;</span>       <span class="cm">&lt;!-- bound from BE: ParentOU subscriber RefId --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"getFromCCBS"</span><span class="xt">/&gt;</span>    <span class="cm">&lt;!-- "Y" or empty --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"psub"</span><span class="xt">/&gt;</span>            <span class="cm">&lt;!-- bound from BE: ParentOU Subscriber instance --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"status"</span><span class="xt">/&gt;</span>          <span class="cm">&lt;!-- "Active" in PREPAID_CANCEL --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"olprdDbFlag"</span><span class="xt">/&gt;</span>    <span class="cm">&lt;!-- default "Y" if empty --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;</span><span class="xt">&lt;event&gt;</span>
+      <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="st">"extId"</span><span class="xt">&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"OMXUtils:generateTrackingID()"</span><span class="xt">/&gt;</span><span class="xt">&lt;/xsl:attribute&gt;</span>
+      <span class="xt">&lt;JMSPriority&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;</span><span class="xt">&lt;/JMSPriority&gt;</span>
+      <span class="xt">&lt;JMSCorrelationID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;</span><span class="xt">&lt;/JMSCorrelationID&gt;</span>
+      <span class="xt">&lt;OrderID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;</span><span class="xt">&lt;/OrderID&gt;</span>
+      <span class="xt">&lt;RefID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$pSubRefId"</span><span class="xt">/&gt;</span><span class="xt">&lt;/RefID&gt;</span>  <span class="cm">&lt;!-- correlation key --&gt;</span>
+      <span class="xt">&lt;OrderType&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;</span><span class="xt">&lt;/OrderType&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$getFromCCBS = 'Y'"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;GetFromCCBS&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$getFromCCBS"</span><span class="xt">/&gt;</span><span class="xt">&lt;/GetFromCCBS&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns:CRMGetAssetComponentListRequest&gt;</span>
+          <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$psub/AssetCrmId"</span><span class="xt">&gt;</span>
+            <span class="xt">&lt;ns:assetRowID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$psub/AssetCrmId"</span><span class="xt">/&gt;</span><span class="xt">&lt;/ns:assetRowID&gt;</span>
+          <span class="xt">&lt;/xsl:if&gt;</span>
+          <span class="xt">&lt;xsl:choose&gt;</span>
+            <span class="xt">&lt;xsl:when</span> <span class="xa">test</span>=<span class="st">"string-length($status)&gt;0"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns:status&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$status"</span><span class="xt">/&gt;</span><span class="xt">&lt;/ns:status&gt;</span>
+            <span class="xt">&lt;/xsl:when&gt;</span>
+            <span class="xt">&lt;xsl:otherwise&gt;</span>
+              <span class="xt">&lt;ns:status&gt;</span>Active<span class="xt">&lt;/ns:status&gt;</span>  <span class="cm">&lt;!-- default --&gt;</span>
+            <span class="xt">&lt;/xsl:otherwise&gt;</span>
+          <span class="xt">&lt;/xsl:choose&gt;</span>
+          <span class="xt">&lt;xsl:choose&gt;</span>
+            <span class="xt">&lt;xsl:when</span> <span class="xa">test</span>=<span class="st">"$olprdDbFlag != ''"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns:olprdDBFlag&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$olprdDbFlag"</span><span class="xt">/&gt;</span><span class="xt">&lt;/ns:olprdDBFlag&gt;</span>
+            <span class="xt">&lt;/xsl:when&gt;</span>
+            <span class="xt">&lt;xsl:otherwise&gt;</span>
+              <span class="xt">&lt;ns:olprdDBFlag&gt;</span>Y<span class="xt">&lt;/ns:olprdDBFlag&gt;</span>  <span class="cm">&lt;!-- default --&gt;</span>
+            <span class="xt">&lt;/xsl:otherwise&gt;</span>
+          <span class="xt">&lt;/xsl:choose&gt;</span>
+        <span class="xt">&lt;/ns:CRMGetAssetComponentListRequest&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+
+<p><strong>Variant ②: ChildOU</strong> — identical structure; differs only in parameter name: <code>$cSubRefId</code> replaces <code>$pSubRefId</code> and <code>$csub</code> replaces <code>$psub</code>.</p>
+<div class="info-box">Unlike CRM_GET_LAST_ASSET_ROOT (which had a nanoTime bug for the ChildOU RefID), this rule correctly uses <code>cSubRefId</code> in both the BE variable (line 112) and the XSLT param. The ParentOU variant declares a <code>refId = nanoTime()</code> variable (line 62) but this is dead code — the XSLT uses <code>$pSubRefId</code> directly.</div>
+
+</div>
+</div>
+
+<!-- §10 Field Mapping Tree -->
+<div class="card">
+<div class="card-header"><h2>§10 — XSLT Field Mapping — Output XML Tree Hierarchy</h2></div>
+<div class="card-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge badge-green">Always</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$pSubRefId</span> / <span class="tree-src">$cSubRefId</span> <span class="badge badge-green">Always</span> <span class="tree-cond">(correlation ID)</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">GetFromCCBS</span><span class="tree-arrow">←</span><span class="tree-src">$getFromCCBS</span> <span class="badge badge-orange">Conditional</span> <span class="tree-cond">if $getFromCCBS = 'Y'</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span> <span class="badge badge-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:CRMGetAssetComponentListRequest</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:assetRowID</span><span class="tree-arrow">←</span><span class="tree-src">$psub/AssetCrmId</span> <span class="badge badge-orange">Conditional</span> <span class="tree-cond">if AssetCrmId exists</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:status</span><span class="tree-arrow">←</span><span class="tree-src">$status</span> <span class="badge badge-green">Always</span> <span class="tree-cond">default: "Active"</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:olprdDBFlag</span><span class="tree-arrow">←</span><span class="tree-src">$olprdDbFlag</span> <span class="badge badge-green">Always</span> <span class="tree-cond">default: "Y"</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<br/>
+<p style="font-size:.8rem;color:#666;"><strong>Legend:</strong> <span class="badge badge-green">Always</span> = unconditionally emitted; <span class="badge badge-orange">Conditional</span> = inside xsl:if or xsl:choose; <span class="tree-src">green</span> = XPath source; <span class="tree-src-static">orange</span> = static value</p>
+</div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+<div class="card-header"><h2>§11 — Audit Logging</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Phase</th><th>Gate</th><th>PROCESS_ID</th><th>AUDIT_TRACE</th></tr>
+<tr><td>Request</td><td><code>AllowWriteLog(OrderType)</code> — conditional</td><td><code>concat(pid, "_REQ")</code></td><td>"Request Sent for CRM_GET_ASSET_COMPONENT_LIST"</td></tr>
+<tr><td>Response</td><td>Always logged (no gate)</td><td><code>concat(pid, "_RES")</code></td><td>"Response received for CRM_GET_ASSET_COMPONENT_LIST"</td></tr>
+</table>
+<div class="warn-box"><strong>[LOW]</strong> Response audit logging is unconditional while request logging uses <code>AllowWriteLog</code>. This asymmetry exists in many FMs but could produce excessive logs for order types where request logging is suppressed.</div>
+</div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="card">
+<div class="card-header"><h2>§12 — Activity Status Management</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Condition</th><th>Status Code</th><th>GetActivityStatusString Call</th></tr>
+<tr><td>At least one request sent</td><td>"1" → PROCESSING</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td></tr>
+<tr><td>All subscribers already responded (isSkipped=true)</td><td>"4" → SKIPPED</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+<tr><td>Exception thrown</td><td>ERROR</td><td><code>HandleActivityException(...)</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="card">
+<div class="card-header"><h2>§13 — Exception / Error Handling</h2></div>
+<div class="card-body">
+<p>The entire THEN block is wrapped in a try/catch:</p>
+<pre><span class="kw">catch</span> (Exception ae) {
+  RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</pre>
+<p><code>HandleActivityException</code> sets the activity to error state and propagates the error through the order process.</p>
+</div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card">
+<div class="card-header"><h2>§14 — Helper Functions Reference</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Function</th><th>Purpose</th><th>Notes</th></tr>
+<tr><td><code>GetActivityParameterValueFromKey</code></td><td>Reads STATUS parameter</td><td>Full name with "eter"</td></tr>
+<tr><td><code>GetActivityParamValueFromKey</code></td><td>Reads GET_FROM_CCBS, OLPRD_DB_FLAG</td><td>Shorter name without "eter" — different function!</td></tr>
+<tr><td><code>AllowWriteLog(OrderType)</code></td><td>Gates request audit logging</td><td>Returns true for specific order types</td></tr>
+<tr><td><code>GetXMLForSubscriber</code></td><td>Serializes subscriber to XML for PreExecCheck evaluation</td><td>ParentOU variant</td></tr>
+<tr><td><code>GetXMLForSubscriberInChildOU</code></td><td>Serializes ChildOU subscriber to XML</td><td>Also includes parent OU RefId</td></tr>
+<tr><td><code>SkipActivity</code></td><td>Marks activity as skipped, advances process</td><td>Called with "4" → skip status</td></tr>
+<tr><td><code>HandleActivityException</code></td><td>Sets activity error state</td><td>Last param "" = no extra message</td></tr>
+<tr><td><code>SendDataToDB</code></td><td>Persists order state to database</td><td>Called after status "1"</td></tr>
+<tr><td><code>GetActivityStatusString</code></td><td>Maps status code to string</td><td>Called with "1" → PROCESSING</td></tr>
+<tr><td><code>BRMS.IsBlankOrStringNull</code></td><td>Null/blank check (Response RF)</td><td>Used to guard assetRowID checks</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+<div class="card-header"><h2>§15 — Function Dependency Tree</h2></div>
+<div class="card-body">
+<pre>Request_CRM_GET_ASSET_COMPONENT_LIST (rule)
+├── RuleFunctions.Helpers.GetActivityParameterValueFromKey [STATUS]
+├── RuleFunctions.Helpers.GetActivityParamValueFromKey [GET_FROM_CCBS, OLPRD_DB_FLAG]
+├── RuleFunctions.Helpers.GetXMLForSubscriber (ParentOU)
+├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU (ChildOU)
+├── Event.Ext.sendEventImmediate [CRM_GET_ASSET_COMPONENT_LIST event]
+├── RuleFunctions.Helpers.AllowWriteLog
+│   └── Event.Ext.sendEventImmediate [OMXESB Logger REQ]
+├── RuleFunctions.Helpers.GetActivityStatusString("1")
+├── RuleFunctions.Helpers.SendDataToDB
+└── RuleFunctions.Helpers.HandleActivityException (on error)
+
+Response_CRM_GET_ASSET_COMPONENT_LIST (rulefunction)
+├── Instance.createInstance [Concepts.FM.Base.ResponseBase]
+├── XPath.evalAsInt [count assetComponentList]
+├── XPath.evalAsString [assetRowID, productType, serialNo, effectiveDate, etc.]
+├── XPath.evalAsBoolean [FE source guard, PEID serialNo format check]
+├── Instance.createInstance [Concepts.OrderRequest.OrderElements.ResourceInfo] (×multiple)
+├── Instance.createInstance [Concepts.OrderRequest.OrderElements.SubscriberOffers] (×multiple)
+├── DateTime.parseString [effectiveDate, expiryDate]
+├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull
+├── Event.Ext.sendEventImmediate [OMXESB Logger RES]
+└── XPath.evalAsInt [count successResponseCount for fan-in]</pre>
+</div>
+</div>
+
+<!-- §16 Concepts -->
+<div class="card">
+<div class="card-header"><h2>§16 — Concept Definitions Referenced</h2></div>
+<div class="card-body">
+<table>
+<tr><th>Concept</th><th>Key Fields</th></tr>
+<tr><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>OrderData.OrderID, OrderData.OrderType, OrderData.OMXTrackingId, OrderPriority, ProcessFlow.NextActivityName, OrderData.Customer.ParentOU[].Subscriber[], IsOrderResubmitted</td></tr>
+<tr><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>ActivityID, Status, RequestCount, Response[], Parameter[], PreExecCheck</td></tr>
+<tr><td><code>Concepts.OrderRequest.OrderElements.Subscriber</code></td><td>RefId, MSISDN, AssetCrmId, ResourceInfo[], SubscriberOffers[]</td></tr>
+<tr><td><code>Concepts.FM.Base.ResponseBase</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId</td></tr>
+<tr><td><code>Concepts.OrderRequest.OrderElements.ResourceInfo</code></td><td>ResourceName, ValuesArray, Source</td></tr>
+<tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberOffers</code></td><td>EffectiveDate, ExpirationDate, OfferName, ServiceType, AssetCompCrmId, ExtendedInfo[]</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+<div class="card-header"><h2>§17 — Migration Notes &amp; Recommendations</h2></div>
+<div class="card-body">
+<div class="section-label">Functional Requirements</div>
+<table>
+<tr><th>#</th><th>Requirement</th></tr>
+<tr><td>R1</td><td>Retrieve all CRM asset components for a subscriber filtered by status (Active / Inactive)</td></tr>
+<tr><td>R2</td><td>Map CRM productType to OMX ResourceName: SIM Card→SIM, Equipment→IMEI, IMSI→IMSI, MSISDN→MSISDN, PMATCHID→PMATCHID, PEID→PEID</td></tr>
+<tr><td>R3</td><td>Strip "MSISDN-" prefix from serialNo when productType=MSISDN</td></tr>
+<tr><td>R4</td><td>When POPULATE_OLD_RESOURCE="Y", also create OLD_SIM, OLD_IMSI, OLD_PMATCHID, OLD_PEID entries</td></tr>
+<tr><td>R5</td><td>Map Price Plan/SOC/OFFER/Additional Offer/SOC/OFFER(TOPPING) to SubscriberOffers with ServiceType codes 80/85/85/90</td></tr>
+<tr><td>R6</td><td>Mark all CRM-sourced offers with ExtendedInfo FE_OR_CCBS="CRM"</td></tr>
+<tr><td>R7</td><td>Back-populate AssetCompCrmId and EffectiveDate onto existing FE/BRMS_REMOVE offers with matching OfferName</td></tr>
+<tr><td>R8</td><td>For Inactive status calls: find the most recently effective SIM Card and add as ResourceInfo.Source="CRM"</td></tr>
+<tr><td>R9</td><td>PEID serialNo: preserve as-is if contains underscore; otherwise concatenate serialNo+"_"+assetRowID</td></tr>
+<tr><td>R10</td><td>Skip adding resources that already exist with Source="FE" (FE data takes precedence over CRM)</td></tr>
+</table>
+<br/>
+<div class="section-label">Design Risks</div>
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td>Dead code variable <code>refId = nanoTime()</code> in ParentOU block (line 62) — unused; XSLT uses <code>$pSubRefId</code> directly</td><td><span class="badge badge-orange">[LOW]</span></td><td>Remove unused variable to avoid confusion</td></tr>
+<tr><td>Large commented-out <code>CRM_CREATE_UPDATE_SR</code> event block in ChildOU section — dead code from copy-paste of another FM</td><td><span class="badge badge-orange">[LOW]</span></td><td>Remove to reduce maintenance risk</td></tr>
+<tr><td>Two different parameter helper functions used: <code>GetActivityParameterValueFromKey</code> vs <code>GetActivityParamValueFromKey</code> — inconsistent API</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Standardise on one helper function name in modernised system</td></tr>
+<tr><td>Response audit always logs (no AllowWriteLog gate) — asymmetric with request logging</td><td><span class="badge badge-orange">[LOW]</span></td><td>Apply consistent log gating in migration</td></tr>
+<tr><td>Commented-out MSISDN ResourceInfo block (lines 98-100, 188-191) — removed feature still in code</td><td><span class="badge badge-orange">[LOW]</span></td><td>Remove dead code in migration</td></tr>
+<tr><td>Complex SubscriberOffers back-population loop (O(n²) complexity) — iterates all offers to find FE/BRMS matches</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Use indexed lookup (map by OfferName) in modernised implementation</td></tr>
+<tr><td>No FE source guard for MSISDN resource in ParentOU (strips "MSISDN-" prefix) — ChildOU has no prefix stripping</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Verify MSISDN serialNo format consistency in CRM; apply uniform stripping in migration</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="card">
+<div class="card-header"><h2>§18 — Full Source Code</h2></div>
+<div class="card-body">
+<pre><span class="cm">/**
+ * @description
+ * @author CHAYATORN-PC
+ */</span>
+<span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.Request_CRM_GET_ASSET_COMPONENT_LIST {
+  <span class="kw">attribute</span> {
+    priority = <span class="nu">5</span>;
+    forwardChain = <span class="kw">true</span>;
+  }
+  <span class="kw">declare</span> {
+    Concepts.OrderRequest.OrderRequest orderRequest;
+    Concepts.OM.ProcessConfig.Activity orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="st">"CRM_GET_ASSET_COMPONENT_LIST"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="st">"CRM_GET_ASSET_COMPONENT_LIST"</span>;
+    orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">try</span> {
+      Concepts.OM.ProcessConfig.Activity nextAct = Instance.getByExtIdByUri(...);
+      <span class="ty">String</span> chkXPath = nextAct.PreExecCheck;
+      <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+      <span class="ty">String</span> status = RuleFunctions.Helpers.<span class="fn">GetActivityParameterValueFromKey</span>(orderCurrentActivity, <span class="st">"STATUS"</span>);
+      <span class="ty">String</span> getFromCCBS = RuleFunctions.Helpers.<span class="fn">GetActivityParamValueFromKey</span>(orderCurrentActivity, <span class="st">"GET_FROM_CCBS"</span>);
+      <span class="ty">String</span> olprdDbFlag = RuleFunctions.Helpers.<span class="fn">GetActivityParamValueFromKey</span>(orderCurrentActivity, <span class="st">"OLPRD_DB_FLAG"</span>);
+
+      <span class="cm">/*** Begin ParentOU ***/</span>
+      <span class="kw">for</span> (<span class="kw">int</span> p = <span class="nu">0</span>; p &lt; pOuLen; p++) {
+        <span class="cm">/*** Begin ParentOU Subscriber ***/</span>
+        <span class="kw">for</span> (<span class="kw">int</span> ps = <span class="nu">0</span>; ps &lt; pSubLen; ps++) {
+          <span class="cm">// reqSuccess guard, PreExecCheck gate, then:</span>
+          <span class="ty">String</span> serviceId = psub.MSISDN;
+          <span class="ty">String</span> refId = String.valueOfLong(System.nanoTime()); <span class="cm">// [LOW BUG] unused variable — XSLT uses $pSubRefId</span>
+          Events.OMConsumers.OMXFM.Request.CRM_GET_ASSET_COMPONENT_LIST reqEvent =
+            Event.createEvent(<span class="st">"xslt://{{/Events/.../CRM_GET_ASSET_COMPONENT_LIST}}"</span>);
+            <span class="cm">// → See §9.8 Variant ① for full XSLT (params: orderRequest, pSubRefId, getFromCCBS, psub, status, olprdDbFlag)</span>
+            <span class="cm">// → Payload: CRMGetAssetComponentListRequest(assetRowID?, status, olprdDBFlag)</span>
+          Event.Ext.<span class="fn">sendEventImmediate</span>(reqEvent);
+          isSkipped = <span class="kw">false</span>;
+          <span class="kw">if</span> (!isActResub) orderCurrentActivity.RequestCount++;
+          <span class="kw">if</span> (RuleFunctions.Helpers.<span class="fn">AllowWriteLog</span>(orderRequest.OrderData.OrderType)) {
+            Event.Ext.<span class="fn">sendEventImmediate</span>(<span class="cm">/* OMXESB Logger REQ event */</span>);
+          }
+        }
+        <span class="cm">/*** Begin ChildOU ***/</span>
+        <span class="kw">for</span> (<span class="kw">int</span> c = <span class="nu">0</span>; c &lt; cOuLen; c++) {
+          <span class="kw">for</span> (<span class="kw">int</span> cs = <span class="nu">0</span>; cs &lt; cSubLen; cs++) {
+            <span class="cm">// reqSuccess guard, PreExecCheck gate, then:</span>
+            <span class="ty">String</span> serviceId = csub.MSISDN;
+            <span class="ty">String</span> refId = cSubRefId; <span class="cm">// ChildOU correctly uses cSubRefId</span>
+            <span class="cm">// [Note] Large commented-out CRM_CREATE_UPDATE_SR block omitted (dead code from copy-paste)</span>
+            Events.OMConsumers.OMXFM.Request.CRM_GET_ASSET_COMPONENT_LIST reqEvent =
+              Event.createEvent(<span class="st">"xslt://{{/Events/.../CRM_GET_ASSET_COMPONENT_LIST}}"</span>);
+              <span class="cm">// → See §9.8 Variant ② for full XSLT (params: orderRequest, cSubRefId, getFromCCBS, csub, status, olprdDbFlag)</span>
+            Event.Ext.<span class="fn">sendEventImmediate</span>(reqEvent);
+            isSkipped = <span class="kw">false</span>;
+            <span class="kw">if</span> (!isActResub) orderCurrentActivity.RequestCount++;
+            <span class="kw">if</span> (RuleFunctions.Helpers.<span class="fn">AllowWriteLog</span>(orderRequest.OrderData.OrderType)) {
+              Event.Ext.<span class="fn">sendEventImmediate</span>(<span class="cm">/* OMXESB Logger REQ event */</span>);
+            }
+          }
+        }
+      }
+
+      <span class="kw">if</span> (!isSkipped) {
+        orderCurrentActivity.Status = RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+        RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+      } <span class="kw">else</span> {
+        RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+      }
+    } <span class="kw">catch</span> (Exception ae) {
+      RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+    }
+  }
+}</pre>
+</div>
+</div>
+
+<!-- §19 Response RF -->
+<div class="card">
+<div class="card-header"><h2>§19 — Response Message Rule</h2></div>
+<div class="card-body">
+
+<div class="section-label">§19.1 — Overview</div>
+<p>
+  <code>Response_CRM_GET_ASSET_COMPONENT_LIST</code> processes each CRM response event, identifies the
+  matching subscriber by <code>RefID</code>, and enriches their concept with every asset component
+  returned. The enrichment logic branches on the <code>STATUS</code> parameter:
+</p>
+<ul style="margin:8px 0 12px 24px;">
+  <li><strong>STATUS ≠ "Inactive"</strong> (normal path, PREPAID_CANCEL) — populates <code>ResourceInfo[]</code> with physical resources and <code>SubscriberOffers[]</code> with commercial offers</li>
+  <li><strong>STATUS = "Inactive"</strong> (SIM renewal path) — finds the most recently effective SIM Card</li>
+</ul>
+<p>The RF handles both ParentOU and ChildOU subscribers identically.</p>
+
+<br/><div class="section-label">§19.2 — Scope Variables</div>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order; subscriber hierarchy to enrich</td></tr>
+<tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CRM_GET_ASSET_COMPONENT_LIST</code></td><td>CRM reply event; contains assetComponentList in payload</td></tr>
+<tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity state; receives ResponseBase; drives fan-in completion</td></tr>
+</table>
+
+<br/><div class="section-label">§19.3 — ResponseBase Concept Construction</div>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject (ResponseBase)</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge badge-green">Always</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span> <span class="badge badge-orange">Conditional</span> <span class="tree-cond">(used for subscriber match)</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<br/><div class="section-label">§19.4 — Subscriber Enrichment Logic (STATUS ≠ Inactive)</div>
+<p>For each <code>assetComponentList</code> item where <code>assetRowID</code> is not blank:</p>
+<table>
+<tr><th>productType</th><th>ResourceName</th><th>ValuesArray (serialNo)</th><th>Also creates OLD_ if POPULATE_OLD_RESOURCE=Y</th></tr>
+<tr><td>SIM Card</td><td>SIM</td><td>serialNo (strip "MSISDN-" prefix if present)</td><td>OLD_SIM</td></tr>
+<tr><td>IMSI</td><td>IMSI</td><td>serialNo</td><td>OLD_IMSI</td></tr>
+<tr><td>MSISDN</td><td>MSISDN</td><td>serialNo (strip "MSISDN-" prefix)</td><td>—</td></tr>
+<tr><td>PMATCHID</td><td>PMATCHID</td><td>serialNo</td><td>OLD_PMATCHID</td></tr>
+<tr><td>Equipment</td><td>IMEI</td><td>serialNo</td><td>—</td></tr>
+<tr><td>PEID</td><td>PEID</td><td>if serialNo contains "_": as-is; else concat(serialNo+"_"+assetRowID)</td><td>OLD_PEID (same logic)</td></tr>
+<tr><td>Price Plan</td><td>— (SubscriberOffers)</td><td>ServiceType="80", OfferName←partNum, FE_OR_CCBS="CRM"</td><td>—</td></tr>
+<tr><td>SOC/OFFER, Additional Offer</td><td>— (SubscriberOffers)</td><td>ServiceType="85", OfferName←partNum, FE_OR_CCBS="CRM"</td><td>—</td></tr>
+<tr><td>SOC/OFFER(TOPPING)</td><td>— (SubscriberOffers)</td><td>ServiceType="90", OfferName←partNum, FE_OR_CCBS="CRM"</td><td>—</td></tr>
+</table>
+<div class="info-box"><strong>FE/BRMS cross-population:</strong> After creating each SubscriberOffers entry, the RF loops all existing offers to find any with <code>FE_OR_CCBS="FE"</code> or <code>="BRMS_REMOVE"</code> and the same OfferName, then updates their <code>AssetCompCrmId</code> and <code>EffectiveDate</code> (if null). This links CRM offer identity to the FE-submitted offer.</div>
+
+<br/><div class="section-label">§19.4b — Inactive SIM Handling (STATUS = Inactive)</div>
+<p>
+  Scans all asset components for <code>productType="SIM Card"</code>, tracks the most recently effective one
+  by comparing parsed <code>effectiveDate</code> values. If no FE SIM exists (<code>ResourceInfo[Source='FE' and ResourceName='SIM']</code> absent),
+  adds a ResourceInfo entry for the most recent inactive SIM with <code>Source="CRM"</code>.
+</p>
+
+<br/><div class="section-label">§19.5 — Fan-in Completion</div>
+<table>
+<tr><th>Element</th><th>Value</th></tr>
+<tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+<tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+<tr><td>Return "true"</td><td>All parallel CRM calls returned a "000"-suffix response code</td></tr>
+<tr><td>Return "false"</td><td>Waiting for remaining responses</td></tr>
+</table>
+
+<br/><div class="section-label">§19.6 — Response Audit Logging</div>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent (Logger)</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ESBUUID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">PROCESS_ID</span><span class="tree-arrow">←</span><span class="tree-src">concat($pid, "_RES")</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">COMPONENT_NAME</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OPERATION_NAME</span><span class="tree-arrow">←</span><span class="tree-src-static">"CRM_GET_ASSET_COMPONENT_LIST"</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">TARGET_SYSTEM</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/OMX_COMMON/Component_Name/OMX_FM</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">LOG_LEVEL</span><span class="tree-arrow">←</span><span class="tree-src">$globalVariables/.../MSG_LOG_LEVEL/INFO</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">AUDIT_TRACE</span><span class="tree-arrow">←</span><span class="tree-src-static">"Response received for CRM_GET_ASSET_COMPONENT_LIST"</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">AUDIT_TS</span><span class="tree-arrow">←</span><span class="tree-src">tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</span> <span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload/ns:ServicePayload</span><span class="tree-arrow">←</span><span class="tree-src">copy-of $eventResponse</span> <span class="badge badge-orange">Conditional</span> <span class="tree-cond">if WritePayload="true"</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+
+<br/><div class="section-label">§19.7 — Response XSLT Source (ResponseBase)</div>
+<pre><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">version</span>=<span class="st">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"eventResponse"</span><span class="xt">/&gt;</span>  <span class="cm">&lt;!-- bound from BE: CRM response event --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createObject&gt;</span><span class="xt">&lt;object&gt;</span>
+      <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="st">"extId"</span><span class="xt">&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"ns:generateTrackingID()"</span><span class="xt">/&gt;</span><span class="xt">&lt;/xsl:attribute&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/ResponseCode"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ResponseCode&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/ResponseCode"</span><span class="xt">/&gt;</span><span class="xt">&lt;/ResponseCode&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/ResponseMsg"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ResponseMessage&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/ResponseMsg"</span><span class="xt">/&gt;</span><span class="xt">&lt;/ResponseMessage&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/CompletionStatus"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;CompletionStatus&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/CompletionStatus"</span><span class="xt">/&gt;</span><span class="xt">&lt;/CompletionStatus&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="st">"$eventResponse/RefID"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ReferenceId&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$eventResponse/RefID"</span><span class="xt">/&gt;</span><span class="xt">&lt;/ReferenceId&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+    <span class="xt">&lt;/object&gt;&lt;/createObject&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+<div class="info-box">A commented-out alternative ResponseBase XSLT variant (using <code>$eventResponse/@extId</code> as the object extId rather than generateTrackingID()) is present at line 16 of the rulefunction but inactive. The active variant uses <code>ns:generateTrackingID()</code>.</div>
+
+</div>
+</div>
+
+</div><!-- /container -->
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CRM_GET_ASSET_COMPONENT_LIST</footer>
+</body>
+</html>

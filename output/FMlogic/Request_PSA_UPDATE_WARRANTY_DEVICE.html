@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_PSA_UPDATE_WARRANTY_DEVICE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_PSA_UPDATE_WARRANTY_DEVICE</h1>
+  <div class="subtitle">PSA Warranty Device Update — iterates Material per Subscriber across all POU/ChildOU</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: PSA</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: FIRE-AND-FORGET per Material</span>
+    <span class="meta-chip">RefId: SubRefId:MatCode composite key</span>
+    <span class="meta-chip">2 XSLT variants (POU/ChildOU)</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>PSA_UPDATE_WARRANTY_DEVICE</strong> registers warranty information for each device material (IMEI/MatCode) in the PSA system. Unlike most FMs, it iterates Subscriber <strong>MaterialInfo.Material</strong> — not Account or Subscriber — making one PSA call per material item.
+    </div>
+    <div class="callout info">
+      <strong>Fire-and-forget per material:</strong> <code>Event.Ext.sendEventImmediate</code> + manual <code>RequestCount++</code> inside the material loop. Fan-in: <code>count("000") == RequestCount</code>.
+    </div>
+    <div class="callout warn">
+      <strong>RefId = composite key:</strong> <code>pSubRefId + ":" + material.MatCode</code> (ParentOU) or <code>cSubRefId + ":" + material.MatCode</code> (ChildOU). This composite key is used for CompletionStatus==2 resubmit skip and is the ReferenceId in the event header.
+    </div>
+    <div class="callout success">
+      <strong>Two XSLT variants:</strong> ParentOU subscriber uses <code>$pMatRefId</code>/<code>$psub</code>; ChildOU subscriber uses <code>$cMatRefId</code>/<code>$csub</code>. Payload structure is identical between variants; only parameter bindings differ.
+    </div>
+    <div class="callout">
+      <strong>SALE_CHANNEL dispatch:</strong> "SHOP" → <code>"1"</code>; "DEALER" → <code>"2"</code>; other → no SALE-CHANNEL element emitted.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_PSA_UPDATE_WARRANTY_DEVICE</code></td></tr>
+      <tr><td>Author</td><td>(not specified)</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>PSA</td></tr>
+      <tr><td>Event type</td><td><code>Events.OMConsumers.OMXFM.Request.PSA_UPDATE_WARRANTY_DEVICE</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> — FIRE-AND-FORGET per material</td></tr>
+      <tr><td>RequestCount</td><td>Manually: <code>if(!isActResub) RequestCount++</code> inside material loop</td></tr>
+      <tr><td>Fan-in</td><td><code>count(Response[ResponseCode suffix "000"]) == RequestCount</code></td></tr>
+      <tr><td>Iteration</td><td>ParentOU[].Subscriber[].MaterialInfo.Material[] AND ChildOU[].Subscriber[].MaterialInfo.Material[]</td></tr>
+      <tr><td>RefId pattern</td><td><code>SubRefId + ":" + material.MatCode</code> (composite)</td></tr>
+      <tr><td>Skip guard</td><td>Subscribers with no MaterialInfo (null check) are skipped entirely</td></tr>
+      <tr><td>Resubmit guard</td><td><code>Response[ReferenceId == matRefId AND CompletionStatus==2]</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>Material-level iteration</td><td>Unique: loops over Material[] under each Subscriber, not Subscriber or Account. One PSA request per material item.</td></tr>
+      <tr><td>MaterialInfo null check</td><td><code>if (psub.MaterialInfo != null)</code> — skips subscribers without devices entirely</td></tr>
+      <tr><td>RefId composite key</td><td><code>pSubRefId + ":" + material.MatCode</code> — enables per-material resubmit tracking</td></tr>
+      <tr><td>SALE_CHANNEL dispatch</td><td>ExtInfo[SALE_CHANNEL]: "SHOP"→"1", "DEALER"→"2"; otherwise element omitted (no default)</td></tr>
+      <tr><td>SALE-DATE format</td><td><code>tib:format-dateTime("dd/MM/yyyy HH:mm:ss", $orderRequest/RawSubmissionDate)</code> — different format from AUDIT_TS</td></tr>
+      <tr><td>key-info pattern</td><td>Two key-info entries: IMEI-ID (MatSerial) and MAT-CODE (MatCode) — both named with hardcoded labels</td></tr>
+      <tr><td>GetXMLForSubscriberMaterialInfo/InChildOU</td><td>PreExecCheck uses subscriber+material scoped XML serialization (different from account-level GetXMLForAccount)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping (ParentOU variant — ChildOU identical except $cMatRefId/$csub)</div>
+  <div class="section-body">
+<pre><code>createEvent → event
+├── JMSPriority         ← $orderRequest/OrderPriority               [Conditional]
+├── JMSCorrelationID    ← $orderRequest/OrderData/OMXTrackingId      [Conditional]
+├── OrderID             ← $orderRequest/OrderData/OrderID            [Conditional]
+├── RefID               ← $pMatRefId (SubRefId+":"+MatCode)          [Always]
+├── UserName / PassWord ← IsEnableUserPass=true                     [Credential-gated]
+├── OrderType           ← $orderRequest/OrderData/OrderType          [Conditional]
+└── payload → ns7:UpdateWarrantyDeviceReq
+    ├── ns7:req-trx-id  ← OMXTrackingId                             [Conditional]
+    ├── ns7:user-info
+    │   ├── ns7:channel-access ← "OMX"                              [Hardcoded]
+    │   ├── ns7:channel-code   ← DealerCode                         [Conditional]
+    │   └── ns7:user-code      ← psub.SubscriberGeneralInfo.saleId  [Conditional]
+    ├── ns7:key-info [1]
+    │   ├── ns7:name  ← "IMEI-ID"                                   [Hardcoded]
+    │   └── ns7:value ← material.MatSerial                          [Conditional]
+    ├── ns7:key-info [2]
+    │   ├── ns7:name  ← "MAT-CODE"                                  [Hardcoded]
+    │   └── ns7:value ← material.MatCode                            [Conditional]
+    └── ns7:params
+        ├── ns7:param-name ← "ONLINE"                               [Hardcoded]
+        └── ns7:param-info
+            ├── ns7:SALE-DATE   ← formatDateTime("dd/MM/yyyy HH:mm:ss", RawSubmissionDate) [Always]
+            ├── ns7:SALE-CHANNEL← SHOP→"1"; DEALER→"2"; else omitted [Dispatch]
+            ├── ns7:SALE-ORDER-ID ← ExtInfo[SALE_ORDER_ID].Value    [Conditional]
+            └── ns7:CAMPAIGN-CODE ← ExtInfo[PRIVILEGE_CODE].Value   [Conditional]
+
+NOTE: No CES field. RefID is the composite matRefId, not Customer.RefId.
+NOTE: ChildOU variant uses $cMatRefId and $csub instead of $pMatRefId and $psub.</code></pre>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_PSA_UPDATE_WARRANTY_DEVICE
+├── for each ParentOU[p]:
+│   ├── pOuId = ParentOU[p].OUId; pOuRefId = ParentOU[p].RefId
+│   ├── for each Subscriber[ps]:
+│   │   ├── pSubRefId = psub.RefId
+│   │   └── if psub.MaterialInfo != null:
+│   │       ├── for each Material[pmat]:
+│   │       │   ├── pMatRefId = pSubRefId + ":" + material.MatCode
+│   │       │   ├── [skip if Response[pMatRefId AND CompletionStatus==2]]
+│   │       │   ├── if !reqSuccess:
+│   │       │   │   ├── [PreExecCheck via GetXMLForSubscriberMaterialInfo]
+│   │       │   │   └── if chkRes == "true":
+│   │       │   │       ├── Event.createEvent(PSA_UPDATE_WARRANTY_DEVICE, pMatRefId XSLT)
+│   │       │   │       ├── Event.Ext.sendEventImmediate(reqEvent)
+│   │       │   │       ├── isSkipped = false
+│   │       │   │       ├── if(!isActResub): RequestCount++
+│   │       │   │       └── sendEventImmediate(Logger REQ)
+│   └── for each ChildOU[c].Subscriber[cs]:
+│       └── [same as above with cMatRefId and csub; GetXMLForSubscriberMaterialInChildOU]
+├── if !isSkipped:
+│   ├── GetActivityStatusString("1", false)
+│   └── SendDataToDB(orderRequest)
+└── else: SkipActivity("4")
+
+Response_PSA_UPDATE_WARRANTY_DEVICE
+├── Instance.createInstance(ResponseBase: std 4 fields) → currActivity.Response[n]
+├── [NO write-back to order data]
+├── sendEventImmediate(Logger RES)
+└── count("000" responses) == RequestCount → "true"/"false"</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>No SALE-CHANNEL element emitted for non-SHOP/DEALER channels — PSA may reject or default silently</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Clarify PSA SALE-CHANNEL requirement; add default or document absence as intentional</td>
+      </tr>
+      <tr>
+        <td>SALE-DATE format "dd/MM/yyyy HH:mm:ss" uses RawSubmissionDate — different from audit timestamp format</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Confirm PSA expected date format; document timezone handling</td>
+      </tr>
+      <tr>
+        <td>Composite RefId (SubRefId:MatCode) must be consistent at response correlation — if SubRefId format changes, response lookup breaks</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document RefId construction rule; add integration test</td>
+      </tr>
+      <tr>
+        <td>PRIVILEGE_CODE → CAMPAIGN-CODE mapping — naming mismatch may confuse PSA integration team</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document the mapping; align naming in PSA interface if possible</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>ResponseBase (std 4 fields: ResponseCode, ResponseMsg, CompletionStatus, ReferenceId)</td><td>Always</td></tr>
+    </table>
+    <div class="callout warn" style="margin-top:12px">
+      No write-back to order data. PSA warranty registration state is not reflected back to the order model.
+    </div>
+    <div class="callout info" style="margin-top:12px">
+      Fan-in: <code>count(Response[ResponseCode suffix "000"]) == RequestCount</code>. One response per material item.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

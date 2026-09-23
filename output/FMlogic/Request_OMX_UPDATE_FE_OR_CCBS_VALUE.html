@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>OMX_UPDATE_FE_OR_CCBS_VALUE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>OMX_UPDATE_FE_OR_CCBS_VALUE</h1>
+  <div class="subtitle">Internal OMX Rule — Updates FE_OR_CCBS ExtendedInfo value on all Offers and SubscriberOffers</div>
+  <div class="meta-row">
+    <span class="meta-chip">Namespace: OMXOM (Internal)</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: IN-MEMORY UPDATE (no backend)</span>
+    <span class="meta-chip">Author: DESKTOP-995HR2V</span>
+    <span class="meta-chip">No response rulefunction</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>OMX_UPDATE_FE_OR_CCBS_VALUE</strong> is an internal OMX rule (OMXOM namespace) that overwrites the <code>FE_OR_CCBS</code> ExtendedInfo value on every matching Offer and SubscriberOffer in the order. The new value comes from <code>Parameter[0]</code> in the ProcessConfig Activity. No backend call is made; the rule directly mutates in-memory working memory.
+    </div>
+    <div class="callout warn">
+      <strong>Mandatory parameter guard:</strong> <code>Parameter@length == 0</code> throws <code>DATA_ISSUE</code> immediately before any processing. The ProcessConfig Activity must supply at least one Parameter.
+    </div>
+    <div class="callout info">
+      <strong>Four iteration scopes:</strong> ParentOU Agreement Offers, ParentOU Subscriber SubscriberOffers, ChildOU Agreement Offers, and ChildOU Subscriber SubscriberOffers — all are processed in one execution pass.
+    </div>
+    <div class="callout success">
+      <strong>PreExecCheck scoped helpers:</strong> Uses four specialized scoped XML helpers (<code>GetXMLForAgreementOfferFilterWithExtendedInfo</code>, <code>GetXMLForSubscriberOfferFilterWithExtendedInfo</code>, and their ChildOU variants) to evaluate the PreExecCheck XPath against the FE_OR_CCBS filter value for each offer.
+    </div>
+    <div class="callout">
+      <strong>Calls NextActivity directly</strong> (like FM24/FM27 OMXOM pattern) — no response rulefunction, no RequestCount, no fan-in wait.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXOM.OMX_UPDATE_FE_OR_CCBS_VALUE</code></td></tr>
+      <tr><td>Author</td><td>DESKTOP-995HR2V</td></tr>
+      <tr><td>Namespace</td><td>OMXOM (internal — no backend JMS call)</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>None — in-memory working memory update only</td></tr>
+      <tr><td>Send pattern</td><td>None — no <code>sendEventImmediate</code></td></tr>
+      <tr><td>RequestCount</td><td>Not used</td></tr>
+      <tr><td>Fan-in</td><td>Not used — calls <code>NextActivity</code> directly after update</td></tr>
+      <tr><td>Mandatory guard</td><td><code>Parameter@length == 0</code> → throw DATA_ISSUE</td></tr>
+      <tr><td>Completion</td><td><code>RuleFunctions.Helpers.NextActivity</code> + audit Logger event</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>Parameter as new value</td><td><code>param = orderCurrentActivity.Parameter[0]</code> — this string is written to all matching <code>FE_OR_CCBS</code> ExtendedInfo entries</td></tr>
+      <tr><td>Four iteration scopes</td><td>POU Agreement Offers → POU Subscriber SubscriberOffers → ChildOU Agreement Offers → ChildOU Subscriber SubscriberOffers</td></tr>
+      <tr><td>FE_OR_CCBS filter read</td><td>Before PreExecCheck, reads <code>ExtendedInfo[Name="FE_OR_CCBS"]/Value</code> from the current offer using <code>XPath.evalAsString</code> and passes it to the scoped XML helper as a <code>filter</code> parameter</td></tr>
+      <tr><td>Scoped PreExecCheck helpers</td><td>Four dedicated helpers that serialize an Offer/SubscriberOffer context with the FE_OR_CCBS filter — different helper per scope (Agreement/Subscriber × POU/ChildOU)</td></tr>
+      <tr><td>Write-back pattern</td><td>Finds <code>ExtendedInfo[Name=="FE_OR_CCBS"]</code> by inner loop with <code>break</code> — replaces only the first matching ExtInfo entry per offer</td></tr>
+      <tr><td>Skip vs NextActivity</td><td>If no offers matched (<code>isSkipped==true</code>): <code>SkipActivity("4")</code>. If any updated: <code>NextActivity</code> + audit log.</td></tr>
+      <tr><td>No response rulefunction</td><td>Same OMXOM pattern as FM24 and FM27 — synchronous in-memory rule, no async response needed</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 Field Mapping -->
+<div class="section">
+  <div class="section-header">§10 — In-Memory Update Mapping</div>
+  <div class="section-body">
+<pre><code>For each POU[p]:
+  → Agreement.Offers[o] (if Agreement != null):
+      filter = XPath(pagof/ExtendedInfo[Name="FE_OR_CCBS"]/Value)
+      scoped XML = GetXMLForAgreementOfferFilterWithExtendedInfo(orderRequest, pAgRefId, pagof.Soc, filter)
+      if PreExecCheck passes:
+          pagof.ExtendedInfo[i where Name=="FE_OR_CCBS"].Value = param  ← write-back
+
+  → Subscriber[ps].SubscriberOffers[o]:
+      filter = XPath(psof/ExtendedInfo[Name="FE_OR_CCBS"]/Value)
+      scoped XML = GetXMLForSubscriberOfferFilterWithExtendedInfo(orderRequest, pSubRefId, psof.Soc, filter)
+      if PreExecCheck passes:
+          psof.ExtendedInfo[i where Name=="FE_OR_CCBS"].Value = param  ← write-back
+
+  → ChildOU[c]:
+      → Agreement.Offers[o] (if Agreement != null):
+          filter = XPath(cagof/ExtendedInfo[Name="FE_OR_CCBS"]/Value)
+          scoped XML = GetXMLForAgreementOfferInChildOUFilterWithExtendedInfo(orderRequest, cAgRefId, cagof.Soc, pOuRefId, filter)
+          if PreExecCheck passes:
+              cagof.ExtendedInfo[i where Name=="FE_OR_CCBS"].Value = param  ← write-back
+
+      → Subscriber[cs].SubscriberOffers[o]:
+          filter = XPath(csof/ExtendedInfo[Name="FE_OR_CCBS"]/Value)
+          scoped XML = GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo(orderRequest, cSubRefId, csof.Soc, pOuRefId, filter)
+          if PreExecCheck passes:
+              csof.ExtendedInfo[i where Name=="FE_OR_CCBS"].Value = param  ← write-back
+
+Result:
+  isSkipped=false → RuleFunctions.Helpers.NextActivity + Logger audit
+  isSkipped=true  → RuleFunctions.Helpers.SkipActivity("4")
+
+NOTE: param = orderCurrentActivity.Parameter[0] (the new FE_OR_CCBS value)
+NOTE: No JMS event sent to any backend system.</code></pre>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>OMX_UPDATE_FE_OR_CCBS_VALUE
+├── if Parameter@length == 0: throw DATA_ISSUE
+├── param = Parameter[0]
+├── for each ParentOU[p]:
+│   ├── if Agreement != null:
+│   │   ├── for each Offers[o]:
+│   │   │   ├── filter = XPath(pagof/ExtendedInfo[FE_OR_CCBS]/Value)
+│   │   │   ├── [if PreExecCheck] GetXMLForAgreementOfferFilterWithExtendedInfo
+│   │   │   └── if chkRes=="true": pagof.ExtendedInfo[FE_OR_CCBS].Value = param
+│   ├── for each Subscriber[ps].SubscriberOffers[o]:
+│   │   ├── filter = XPath(psof/ExtendedInfo[FE_OR_CCBS]/Value)
+│   │   ├── [if PreExecCheck] GetXMLForSubscriberOfferFilterWithExtendedInfo
+│   │   └── if chkRes=="true": psof.ExtendedInfo[FE_OR_CCBS].Value = param
+│   └── for each ChildOU[c]:
+│       ├── if Agreement != null:
+│       │   ├── for each Offers[o]:
+│       │   │   ├── filter = XPath(cagof/ExtendedInfo[FE_OR_CCBS]/Value)
+│       │   │   ├── [if PreExecCheck] GetXMLForAgreementOfferInChildOUFilterWithExtendedInfo
+│       │   │   └── if chkRes=="true": cagof.ExtendedInfo[FE_OR_CCBS].Value = param
+│       └── for each Subscriber[cs].SubscriberOffers[o]:
+│           ├── filter = XPath(csof/ExtendedInfo[FE_OR_CCBS]/Value)
+│           ├── [if PreExecCheck] GetXMLForSubscriberOfferInChildOUFilterWithExtendedInfo
+│           └── if chkRes=="true": csof.ExtendedInfo[FE_OR_CCBS].Value = param
+├── if !isSkipped:
+│   ├── NextActivity(orderRequest, orderCurrentActivity)
+│   └── sendEventImmediate(Logger audit)
+└── else: SkipActivity("4")
+
+No response rulefunction. No RequestCount. No fan-in.</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Four separate iteration scopes with nearly identical logic — high duplication risk in migration</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Consolidate into a single generic offer-update function parameterised by scope type</td>
+      </tr>
+      <tr>
+        <td>Only first matching ExtendedInfo entry is updated (inner loop breaks) — silently ignores duplicates</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document expected data model: at most one FE_OR_CCBS entry per offer; add validation</td>
+      </tr>
+      <tr>
+        <td>FE_OR_CCBS filter value read before PreExecCheck — filter derived from same field being updated</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document the circular pattern: PreExecCheck filters on existing value; write sets new value</td>
+      </tr>
+      <tr>
+        <td>OMXOM internal namespace not discoverable via standard OMXFM request lookup</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Maintain explicit mapping of OMXOM rules in architecture documentation</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 — N/A for internal rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <div class="callout info">
+      No response rulefunction. This is an internal OMXOM rule — working memory is updated synchronously and <code>NextActivity</code> is called directly. The audit Logger event (<code>AUDIT_TRACE="OMX_UPDATE_FE_OR_CCBS_VALUE Completed."</code>) is fired after successful update as the only post-action signal.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

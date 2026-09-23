@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER — FM Logic Documentation</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:0.5px}
+.page-header .subtitle{opacity:0.85;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px;font-size:0.82rem;opacity:0.8}
+.meta-row span{background:rgba(255,255,255,0.15);padding:3px 10px;border-radius:20px}
+.container{max-width:1400px;margin:0 auto;padding:28px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 2px 6px rgba(0,0,0,0.06)}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);padding:10px 12px;text-align:left;border-bottom:2px solid var(--true-red);font-weight:600}
+td{padding:9px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas','Courier New',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.55;border-left:3px solid var(--true-red)}
+code{background:#f5f0f0;color:var(--true-dark);padding:1px 5px;border-radius:3px;font-size:0.85em}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.b-red{background:#FFE0E0;color:var(--true-dark)}.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}.b-teal{background:#E0F2F1;color:#00695c}
+.b-jms{background:#FFE0B2;color:#E65100}.b-db{background:#E8EAF6;color:#3949AB}
+.b-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px dashed var(--border)}
+.flow-step:last-child{border-bottom:none}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0;margin-top:2px}
+.step-desc{flex:1}
+.step-label{font-weight:600;color:var(--true-dark);margin-bottom:3px}
+.highlight-warn{background:#FFF8E1;border-left:4px solid #F9A825;padding:10px 14px;border-radius:4px;margin:8px 0}
+.highlight-info{background:#E3F2FD;border-left:4px solid #1565c0;padding:10px 14px;border-radius:4px;margin:8px 0}
+.highlight-crit{background:#FFEBEE;border-left:4px solid var(--true-red);padding:10px 14px;border-radius:4px;margin:8px 0}
+.section-num{color:var(--true-red);font-weight:700;margin-right:6px}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nm{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+footer{text-align:center;padding:20px;font-size:0.78rem;color:#999;border-top:1px solid var(--border);margin-top:16px}
+h3{color:var(--true-dark);margin-bottom:10px;font-size:1rem}
+.variant-badge{display:inline-block;padding:3px 12px;border-radius:20px;font-size:0.8rem;font-weight:700;margin:4px 2px}
+.v1{background:#E8F5E9;color:#1B5E20}.v2{background:#E3F0FD;color:#0D47A1}.v3{background:#F3E5F5;color:#4A148C}.v4{background:#FFF3E0;color:#E65100}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="font-size:0.8rem;opacity:0.7;margin-bottom:4px">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic</div>
+  <h1>Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER</h1>
+  <div class="subtitle">CCBS subscriber offer management — orchestrates ADD, REMOVE, CHG_PARAM and CHG_CHARGE operations on POU/COU subscribers with pooling resolution, IOT/MSIM resource binding, and old-priceplan swap logic</div>
+  <div class="meta-row">
+    <span>Author: Sakrapee-SCM-PC</span>
+    <span>Namespace: Rules.OMConsumers.OMXFM.Request</span>
+    <span>Priority: 5</span>
+    <span>ForwardChain: true</span>
+    <span>Target: CCBS (Amdocs CSM3G)</span>
+    <span>Lines: 655</span>
+    <span>Generated: 2026-08-03</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§1</span> Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p><strong>CCBS_CHANGE_PACKAGE_SUBSCRIBER</strong> is the subscriber offer mutation step — it sends <code>UpdateSubscriber</code> requests to the Amdocs CCBS system. The FM is reusable across many order types: new subscriber provisioning, offer add/remove, parameter changes, and charge-distribution changes all flow through this same rule. Which operations are dispatched depends on the <code>Action</code> field on each SubscriberOffer.</p>
+    <div class="highlight-warn" style="margin-top:12px">
+      <strong>Actual JMS event dispatched:</strong> <code>Events.OMConsumers.OMXFM.Request.CCBS_UPDATE_SUBSCRIBER</code> — not <code>CCBS_CHANGE_PACKAGE_SUBSCRIBER</code>. The FM name is a logical label; the underlying ESB operation is <code>UpdateSubscriber</code>.
+    </div>
+    <div style="margin-top:14px">
+      <strong>Four action types</strong> are built into separate dispatch queues per subscriber:
+      <ul style="margin:8px 0 0 20px;line-height:2">
+        <li><span class="variant-badge v1">ADD</span> — offer additions; includes SOC sequence reservation, resource binding (EID, PEID, IMEI_KNOX, etc.), charge distribution, pooled offer instance resolution</li>
+        <li><span class="variant-badge v1">REMOVE</span> — offer removals; may include old priceplan swap when adding ServiceType=80 offers simultaneously</li>
+        <li><span class="variant-badge v2">CHG_CHARGE</span> — charge distribution changes (<code>ChangeSubscriberDistributionInputInfo</code>); LogicalDate forwarded</li>
+        <li><span class="variant-badge v3">CHG_PARAM</span> — parameter updates (<code>UpdateParameterInputInfo</code>); per-offer loop with OfferInstanceId lookup; LogicalDate forwarded</li>
+      </ul>
+    </div>
+    <div class="highlight-info" style="margin-top:12px">
+      <strong>Pre-dispatch pooling resolution:</strong> Before building the dispatch queues, the rule resolves <code>POOLED_OFFER_INSTANCE_ID</code> ExtendedInfo for pooling (PLG) SOCs by joining Subscriber <code>POOLED_SOC_FOR_*</code> ExtendedInfo with Agreement <code>POOLED_OFFER_INSTANCE_ID_*</code> ExtendedInfo. This write-back to working memory happens before the offer categorization loop.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name (full)</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER</code></td></tr>
+      <tr><td>File</td><td><code>Rules/OMConsumers/OMXFM/Request/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.rule</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Author</td><td>Sakrapee-SCM-PC</td></tr>
+      <tr><td>Lines</td><td>655</td></tr>
+      <tr><td>Response handler</td><td><code>RuleFunctions.OrderResponse.Response_CCBS_CHANGE_PACKAGE_SUBSCRIBER</code></td></tr>
+      <tr><td>Response event type</td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_UPDATE_SUBSCRIBER</code></td></tr>
+      <tr><td>Target system</td><td>Amdocs CCBS CSM3G (via OMX_FM ESB adapter)</td></tr>
+      <tr><td>Dispatch pattern</td><td>IntraActivitySequencing — throttled sequential fan-out per subscriber</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§3</span> Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Root order graph — provides Customer hierarchy, ExtendedInfo, OrderData</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current process step — RequestCount, Response[], PreExecCheck, Status</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN Conditions -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Binds activity to order's active step</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_CHANGE_PACKAGE_SUBSCRIBER"</code></td><td>Guards this rule to its step</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_CHANGE_PACKAGE_SUBSCRIBER"</code></td><td>Double-check process pointer</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Fires only when activity is in WAITING state</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§5</span> Execution Flow Diagram</div>
+  <div class="card-body">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-desc"><div class="step-label">Setup: LogicalDate, Pooling globals, Parameters</div>Load LogicalDate (with DateTime.now() fallback). Read pooling globals: <code>PoolingIndicator</code> ("PLG"), <code>PooledPrefix</code> ("POOLED_OFFER_INSTANCE_ID"). Read activity params: <code>ACTIVITY_REASON</code>, raw <code>Parameter[1]</code> (if not ACTIVITY_REASON), <code>REMOVE_IMMEDIATE</code>, <code>ALT_CES</code>. Compute <code>forceChange</code> from <code>ServiceChangeOnPSUSAllowed</code> global.</div></div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-desc"><div class="step-label">Resubmit guard</div>If <code>RequestCount &gt; 0 AND IsOrderResubmitted</code> → <code>PurgePendingRequestsBeforeResubmit</code>.</div></div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-desc"><div class="step-label">POU loop: Pooling resolution pass (Phase 1)</div>For each POU[p]: scan Agreement.ExtendedInfo for keys starting with <code>sPrefix</code> → build <code>pld_socs_insId_inParent</code> HashMap. For each Subscriber: scan ExtendedInfo for <code>POOLED_SOC_FOR_*</code> → build <code>plg_pld_socs</code> HashMap (maps PLG SOC → POOLED SOC). For each SubscriberOffer (excl ServiceType=80): if SOC is a PLG offer (AnyIn check) → resolve <code>POOLED_OFFER_INSTANCE_ID</code> and write it back to the offer's ExtendedInfo (create or update).</div></div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-desc"><div class="step-label">COU loop: Pooling resolution pass (Phase 1)</div>Same as step 3 for all COU[u] subscribers. COU additionally checks <code>pld_socs_insId_inChild</code> first, then fallback to <code>pld_socs_insId_inParent</code>.</div></div>
+    <div class="flow-step"><div class="step-num">5</div><div class="step-desc"><div class="step-label">POU loop: Offer categorization (Phase 2)</div>For each POU subscriber: iterate SubscriberOffers. If param set and valid (ADD/REMOVE/CHG_PARAM) → override subOff.Action. Check reqSuccess (Response[] matched by subscriber.RefId + CompletionStatus==2). If not done and PreExecCheck passes and <code>chkSocLevelSub</code> is true → route by Action into addSubOffers / removeSubOffers / changeParameterOffers / changeChargeSubOffers lists. Also capture <code>subPriceplan</code> for ServiceType=80 CCBS offers.</div></div>
+    <div class="flow-step"><div class="step-num">6</div><div class="step-desc"><div class="step-label">POU loop: ExpirationDateNull tagging for ADD offers</div>For each ADD offer: create <code>ExpirationDateNull</code> ExtendedInfo. Set to "Yes" if OrderType ∈ {128, 121, 3, 37, 44009, 44008, 44006, 44001, 11018} AND ExpirationDate is FUT-type. Otherwise "No". The XSLT only emits <code>ns:expirationDate</code> when ExpirationDateNull="No".</div></div>
+    <div class="flow-step"><div class="step-num">7</div><div class="step-desc"><div class="step-label">POU Dispatch 1: ADD+REMOVE</div>If <code>addSubOffersArray.length &gt; 0 OR removeSubOffersArray.length &gt; 0</code>: Build CCBS_UPDATE_SUBSCRIBER event via <code>ChangeSubscriberOffersWithRelatedOffersInputInfo</code> XSLT. Includes SOC sequence request, resource bindings (PEID, PMATCHID, EID/MIIMSI/MIIMEI/MISIM for MSIM, IMEI_KNOX, Cloud ID, CCTV), charge distribution, EventDistributionDetailsInfo (EGI), ResourceRangeInfo (PP). Dispatch via IntraActivitySequencing.ActionRequestEvent. Audit via sendEventImmediate.</div></div>
+    <div class="flow-step"><div class="step-num">8</div><div class="step-desc"><div class="step-label">POU Dispatch 2: CHG_CHARGE</div>If <code>changeChargeSubOffersArray.length &gt; 0</code>: Build event via <code>ChangeSubscriberDistributionInputInfo</code> XSLT. Includes ChargeDistributionDetailsInfo for each CHG_CHARGE offer + defaultOCPayChannelId/defaultRCPayChannelId/primaryEventPayChannelId from Account[1].AccountID. Includes logicalDate in ActivityInfo. Audit via <code>Event.sendEvent</code> (not sendEventImmediate!).</div></div>
+    <div class="flow-step"><div class="step-num">9</div><div class="step-desc"><div class="step-label">POU Dispatch 3: CHG_PARAM (per offer)</div>For each CHG_PARAM offer with ParameterInfo@length &gt; 0: look up offerInstanceId from subscriber's existing SubscriberOffers. Build event via <code>UpdateParameterInputInfo</code> XSLT. Each ParameterInfo entry generates one <code>ns:UpdateParameterInputInfo</code> block. logicalDate forwarded in ActivityInfo. Audit via sendEventImmediate.</div></div>
+    <div class="flow-step"><div class="step-num">10</div><div class="step-desc"><div class="step-label">COU loop: same sequence as steps 5–9</div>COU mirrors POU offer categorization and dispatch. Note: IoT AfterSale special handling (RelatedOffersArray REMOVE conversion) is POU-only. COU CHG_CHARGE audit uses <code>Event.sendEvent</code>.</div></div>
+    <div class="flow-step"><div class="step-num">11</div><div class="step-desc"><div class="step-label">Fan-out fire</div>If <code>!isSkipped</code>: SendFirstRequestEvent + Status=1 + SendDataToDB. Else: SkipActivity("4").</div></div>
+  </div>
+</div>
+
+<!-- §6 Key Logic Details -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§6</span> Key Logic Details</div>
+  <div class="card-body">
+    <h3>SocLevelSub Gate</h3>
+    <pre>boolean chkSocLevelSub = XPath.evalAsBoolean(
+  <span class="st">"contains($subOff/SocProperties,'level=Subscriber') or</span>
+   <span class="st">count($subOff/SocProperties)=0 or</span>
+   <span class="st">contains($subOff/SocProperties,'TR_OFFER_EXCL_GROUP_NAME=')"</span>
+);</pre>
+    <p style="margin-top:6px">Only offers with subscriber-level SocProperties (or no SocProperties, or with TR_OFFER_EXCL_GROUP_NAME) are categorized. Agreement-level offers are silently skipped.</p>
+
+    <h3 style="margin-top:16px">ALT_CES Override Logic</h3>
+    <pre><span class="cm">// ALT_CES parameter from activity config</span>
+String altParam = RuleFunctions.Helpers.GetActivityParameterValueFromKey(orderCurrentActivity, <span class="st">"ALT_CES"</span>);
+<span class="cm">// In XSLT:</span>
+<span class="cm">// if altParam="Y" AND ExtendedInfo[ALT_CES]/Value != "" → use ALT_CES value as CES</span>
+<span class="cm">// otherwise → use $orderRequest/OrderData/CES</span></pre>
+    <p style="margin-top:6px">Allows order-level CES override for specific routing scenarios without changing the order's primary CES.</p>
+
+    <h3 style="margin-top:16px">FCR SOC Filtering in offersToAdd</h3>
+    <pre><span class="cm">// In XSLT offersToAdd loop:</span>
+<span class="cm">// Exclude FCR SOC unless it came from FE channel</span>
+<span class="kw">if</span>(OfferName != $globalVariables/OMX_OM/Services/CJ/FCRSoc
+   OR (OfferName = FCRSoc AND ExtendedInfo[FE_OR_CCBS]/Value = <span class="st">"FE"</span>)) {
+    <span class="cm">// include in srvAgrInfo</span>
+}</pre>
+
+    <h3 style="margin-top:16px">IoT AfterSale REMOVE Conversion (POU only)</h3>
+    <p>For REMOVE action on OrderType "11025" when <code>MaterialInfo/Material[no FE_OR_CCBS] count &lt; RelatedOffersArray[CLOID] count</code>: instead of removing the parent offer, the rule iterates <code>RelatedOffersArray</code> entries that have <code>TR_SPECIAL_OFFER_IND=CLOID</code> or <code>RSCTV</code> AND match <code>MatSerial</code> on subscriber's MaterialInfo → converts each to a SubscriberOffer concept and adds to removeSubOffers. Effectively removes individual device-bound sub-offers rather than the parent bundle.</p>
+
+    <h3 style="margin-top:16px">Old Priceplan Swap in offersToRemove</h3>
+    <pre><span class="cm">// When adding new ServiceType=80 offers AND OldPriceplan exists:</span>
+<span class="cm">// OldPriceplan = subscriber/SubscriberOffers[ServiceType='80' AND FE_OR_CCBS='CCBS']</span>
+<span class="cm">// Added to offersToRemove with:</span>
+<span class="cm">// expirationDate = new priceplan's EffectiveDate (FE source)</span>
+<span class="cm">// (NOT included when OrderType = '11002')</span></pre>
+
+    <h3 style="margin-top:16px">SOC Sequence Request</h3>
+    <pre><span class="cm">// Requested when addSubOffersArray is non-empty:</span>
+ns1:GetSequenceValueRequest:
+  sequenceName = <span class="st">"SOC_SEQ_NO"</span>
+  incrementByCount = count(addSubOffersArray) + count(addSubOffersArray/RelatedOffersArray)</pre>
+
+    <h3 style="margin-top:16px">ActivityReason Resolution</h3>
+    <table>
+      <tr><th>Priority</th><th>Source</th><th>Value</th></tr>
+      <tr><td>1 (highest)</td><td>Activity parameter</td><td><code>actReasonParam</code> from <code>ACTIVITY_REASON</code> key</td></tr>
+      <tr><td>2</td><td>Subscriber CAN flag</td><td><code>"CREQ"</code> when SubscriberActivityInfo/ActivityReason == "CAN"</td></tr>
+      <tr><td>3</td><td>Subscriber</td><td><code>SubscriberActivityInfo/ActivityReason</code> if non-blank</td></tr>
+      <tr><td>4 (default)</td><td>Hardcoded</td><td><code>"CREQ"</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">forceChange userText injection</h3>
+    <pre>if(forceChange) → userText = concat(UserText, <span class="st">";isServiceChangeOnPSUSAllowed=true;"</span>)
+else if(removeSubOffers contains FE_OR_CCBS="ATS_REMOVE") → userText = <span class="st">"isServiceChangeOnPSUSAllowed=true;"</span>
+else → userText = subscriber.SubscriberActivityInfo.UserText</pre>
+
+    <div class="highlight-warn" style="margin-top:14px">
+      <strong>Audit method inconsistency:</strong> ADD+REMOVE uses <code>Event.Ext.sendEventImmediate</code> for POU but <code>Event.sendEvent</code> for COU CHG_CHARGE. CHG_PARAM uses <code>sendEventImmediate</code> in both. This mixed pattern is a design defect — some audit logs may be deferred or lost.
+    </div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§7</span> Data Extraction — Pooling Resolution</div>
+  <div class="card-body">
+    <p>The pooling resolution logic is unique to CCBS_CHANGE_PACKAGE_SUBSCRIBER and runs as a <strong>pre-pass</strong> before the dispatch loop:</p>
+    <div class="highlight-info">
+      <strong>Step 1 — Build Agreement → Pooled SOC → InstanceId map</strong><br/>
+      Iterate <code>Agreement.ExtendedInfo[starts-with(Name, sPrefix)]</code> where <code>sPrefix = "POOLED_OFFER_INSTANCE_ID"</code><br/>
+      Key = <code>substringAfter(Name, sPrefix+"_") + "_" + i</code> (i incremented to avoid collisions)<br/>
+      Value = <code>ExtendedInfo.Value</code> (the pooled offer instance ID)<br/>
+      Result: <code>pld_socs_insId_inParent</code> / <code>pld_socs_insId_inChild</code>
+    </div>
+    <div class="highlight-info" style="margin-top:8px">
+      <strong>Step 2 — Build Subscriber PLG SOC → Pooled SOC map</strong><br/>
+      Iterate <code>Subscriber.ExtendedInfo[starts-with(Name, "POOLED_SOC_FOR")]</code><br/>
+      Key = <code>substringAfter(Name, "POOLED_SOC_FOR_") + "_j"</code> (pooling SOC)<br/>
+      Value = <code>ExtendedInfo.Value + "_i"</code> (pooled SOC)<br/>
+      Result: <code>plg_pld_socs</code>
+    </div>
+    <div class="highlight-info" style="margin-top:8px">
+      <strong>Step 3 — Write POOLED_OFFER_INSTANCE_ID back to SubscriberOffer</strong><br/>
+      For each PLG offer (BRMS.AnyIn check): find pooled SOC in plg_pld_socs by offer.Soc or offer.OfferName → get instance ID from pld_socs_insId map → write/update <code>POOLED_OFFER_INSTANCE_ID</code> ExtendedInfo on the SubscriberOffer<br/>
+      This is then passed to CCBS as <code>ns:ParameterInfo[name="Agreement level offer instance ID"]</code>
+    </div>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§8</span> System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3>§8.1 Order Type Dependencies</h3>
+    <table>
+      <tr><th>OrderType</th><th>Condition</th><th>Effect</th></tr>
+      <tr><td>11001, 11002</td><td>In offersToAdd XSLT</td><td>dealerCode sourced from <code>subscriber.SubscriberGeneralInfo.saleId</code> instead of order DealerCode</td></tr>
+      <tr><td>11025</td><td>REMOVE with IoT device mismatch</td><td>Converts RelatedOffersArray items (CLOID/RSCTV) to individual SubscriberOffer removals</td></tr>
+      <tr><td>11002</td><td>In old priceplan REMOVE</td><td>RelatedOffersArray of old priceplan NOT included in offersToRemove</td></tr>
+      <tr><td>128,121,3,37,44009,44008,44006,44001,11018</td><td>FUT ExpirationDate check</td><td>ExpirationDateNull="Yes" → ExpirationDate not sent to CCBS</td></tr>
+      <tr><td>Any in ServiceChangeOnPSUSAllowed GV</td><td>forceChange=true</td><td>userText includes <code>;isServiceChangeOnPSUSAllowed=true;</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§8.2 ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Dispatch</th><th>Purpose</th></tr>
+      <tr><td><span class="badge b-jms">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_UPDATE_SUBSCRIBER</code></td><td>IntraActivitySequencing (throttled)</td><td>UpdateSubscriber to Amdocs CCBS — ADD/REMOVE, CHG_CHARGE, or CHG_PARAM variant</td></tr>
+      <tr><td><span class="badge b-log">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>sendEventImmediate (POU) / sendEvent (COU CHG_CHARGE)</td><td>Request audit trail</td></tr>
+      <tr><td><span class="badge b-jms">INBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_UPDATE_SUBSCRIBER</code></td><td>JMS push</td><td>UpdateSubscriber result with ClosedAndReopenedOffers / OfferInstanceIds</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operations</th><th>Schema namespace</th><th>Correlation</th></tr>
+      <tr><td>Amdocs CCBS CSM3G</td><td>ChangeSubscriberOffersWithRelatedOffersInputInfo<br/>ChangeSubscriberDistributionInputInfo<br/>UpdateParameterInputInfo</td><td><code>http://services.omx.truecorp.co.th/FMServices/updateSubscriberRequest</code></td><td>RefID = <code>subscriber.RefId</code></td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§8.4 BE Working Memory Dependencies — Reads</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Used for</th></tr>
+      <tr><td><code>subOff.Action</code></td><td>Set by FE or overridden by param</td><td>Routes to ADD/REMOVE/CHG_PARAM/CHG_CHARGE list</td></tr>
+      <tr><td><code>subOff.SocProperties</code></td><td>CCBS SOC metadata</td><td>chkSocLevelSub gate; FCR filter; MSIM detection</td></tr>
+      <tr><td><code>subOff.RelatedOffersArray[]</code></td><td>Bundle sub-offers</td><td>Sent in relatedOffers; IoT REMOVE conversion; Cloud ID/CCTV resource binding</td></tr>
+      <tr><td><code>subOff.ParameterInfo[]</code></td><td>Offer-specific parameters</td><td>Sent in CHG_PARAM UpdateParameterInputInfo; also in ADD srvAgrInfo</td></tr>
+      <tr><td><code>subOff.ExtendedInfo[FE_OR_CCBS]</code></td><td>Channel marker</td><td>Filter context; FCR SOC gate; old priceplan detection</td></tr>
+      <tr><td><code>sub.ResourceInfo[]</code></td><td>Subscriber resources</td><td>PEID/PMATCHID/EID/MIIMSI/MIIMEI/MISIM bindings</td></tr>
+      <tr><td><code>sub.SubscriberActivityInfo</code></td><td>Activity context</td><td>ActivityReason, UserText for ActivityInfo</td></tr>
+      <tr><td><code>sub.PayChannelIdPrimary/Secondary</code></td><td>Payment channels</td><td>CHG_SPLIT_TYPE and SPLITS01 charge distribution</td></tr>
+      <tr><td><code>sub.EventGroupItem</code></td><td>Event pooling config</td><td>EventDistributionDetailsInfo for EGI SOCs</td></tr>
+      <tr><td><code>Agreement.ExtendedInfo[POOLED_OFFER_INSTANCE_ID_*]</code></td><td>Agreement pooling data</td><td>Pooling resolution pre-pass</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§8.4b BE Working Memory — Writes</h3>
+    <table>
+      <tr><th>Field</th><th>Written value</th><th>When</th></tr>
+      <tr><td><code>subOff.ExtendedInfo[POOLED_OFFER_INSTANCE_ID]</code></td><td>Resolved pooled offer instance ID</td><td>Pre-pass: PLG offers with matching Agreement ExtendedInfo</td></tr>
+      <tr><td><code>subOff.ExtendedInfo[ExpirationDateNull]</code></td><td>"Yes" or "No"</td><td>ADD offers before dispatch — controls whether ExpirationDate is forwarded to CCBS</td></tr>
+      <tr><td><code>subOff.Action</code></td><td>From param override (ADD/REMOVE/CHG_PARAM)</td><td>If activity param[1] is not ACTIVITY_REASON and is a valid action code</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§8.5 ExtendedInfo Fields Read</h3>
+    <table>
+      <tr><th>Key</th><th>Scope</th><th>Used for</th></tr>
+      <tr><td>FE_OR_CCBS</td><td>subOff</td><td>Filter context; FCR gate; priceplan detection; IoT REMOVE detection</td></tr>
+      <tr><td>POOLED_SOC_FOR_*</td><td>Subscriber</td><td>Pooling: maps PLG SOC → POOLED SOC</td></tr>
+      <tr><td>POOLED_OFFER_INSTANCE_ID_*</td><td>Agreement</td><td>Pooling: instance IDs to inject</td></tr>
+      <tr><td>SPECIAL_OFFER_INDICATOR</td><td>subOff</td><td>EGI SOC detection for EventDistributionDetailsInfo</td></tr>
+      <tr><td>TR_MULTISIM_IND</td><td>subOff</td><td>REE → EID/MIIMSI/MIIMEI/MISIM binding; RES → MIIMSI/MISIM binding</td></tr>
+      <tr><td>LOGICAL_RESOURCE</td><td>subOff</td><td>Additional LogicalResourceInfo entries (tokenize by ",")</td></tr>
+      <tr><td>IMEI_KNOX</td><td>subOff</td><td>PhysicalResourceInfo for KNOX binding (value ≠ "NONE")</td></tr>
+      <tr><td>CHG_SPLIT_TYPE</td><td>subOff</td><td>"DR" → PayChannelIdPrimary, "RS" → PayChannelIdSecondary charge split</td></tr>
+      <tr><td>ALT_CES</td><td>orderRequest.OrderData</td><td>CES override when altParam="Y"</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§8.6 Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Default</th><th>Used for</th></tr>
+      <tr><td><code>OMX-OM/PoolingPooled/PoolingIndicator</code></td><td>"PLG"</td><td>Identifies PLG SOCs for pooled offer resolution</td></tr>
+      <tr><td><code>OMX-OM/PoolingPooled/PooledPrefix</code></td><td>"POOLED_OFFER_INSTANCE_ID"</td><td>Agreement ExtendedInfo key prefix for pooled instance IDs</td></tr>
+      <tr><td><code>OMX_OM/OrderTypes/ServiceChangeOnPSUSAllowed</code></td><td>",32,"</td><td>Comma-delimited list of OrderTypes that force PSUS change</td></tr>
+      <tr><td><code>OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>varies</td><td>Gates UserName/PassWord inclusion in event header</td></tr>
+      <tr><td><code>OMX_OM/Services/CJ/FCRSoc</code></td><td>varies</td><td>FCR SOC name excluded from offersToAdd unless FE channel</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>—</td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>—</td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>—</td><td>Gates payload inclusion in audit</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Variants -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§9</span> Detailed Payload Build — Three XSLT Dispatch Variants</div>
+  <div class="card-body">
+    <div class="highlight-info">All three variants send a <code>CCBS_UPDATE_SUBSCRIBER</code> event wrapping an <code>ns:UpdateSubscriberRequest</code> payload. They differ in the inner operation element. Each may also include an optional <code>ns1:GetSequenceValueRequest</code> when there are ADD offers.</div>
+
+    <h3 style="margin-top:16px">Variant ① — ADD/REMOVE: ChangeSubscriberOffersWithRelatedOffersInputInfo</h3>
+    <p>Used when addSubOffersArray or removeSubOffersArray is non-empty. Most complex variant.</p>
+
+    <div style="overflow-x:auto;margin-top:10px;background:var(--code-bg);padding:16px;border-radius:8px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree" style="background:var(--code-bg)">
+        <li><div class="tree-row"><span class="tree-tag">ns:UpdateSubscriberRequest</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">ns1:GetSequenceValueRequest</span><span class="tree-cond">if addSubOffersArray non-empty</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ns1:sequenceName</span><span class="tree-arrow">←</span><span class="tree-src-static">"SOC_SEQ_NO"</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ns1:incrementByCount</span><span class="tree-arrow">←</span><span class="tree-src">count(addSubOffers) + count(addSubOffers/RelatedOffersArray)</span></div></li>
+              </ul>
+            </li>
+            <li><div class="tree-row"><span class="tree-tag">ns:UpdateSubscriberRequest</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ns:SubscriberIdInfo/ns:subscrNumber</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/SubscriberId</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ns:ChangeSubscriberOffersWithRelatedOffersInputInfo</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-tag">ns:offersToAdd</span><span class="tree-cond">for each addSubOffer (excl FCRSoc unless FE channel)</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-tag">ns:srvAgrInfo</span></div>
+                          <ul>
+                            <li><div class="tree-row"><span class="tree-tag">ns:dealerCode</span><span class="tree-arrow">←</span><span class="tree-src">saleId (OrderType 11001/11002) or DealerCode (others)</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:deployMode</span><span class="tree-arrow">←</span><span class="tree-src">DeployMode</span><span class="tree-cond">if present</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:effectiveDate</span><span class="tree-arrow">←</span><span class="tree-src">EffectiveDate</span><span class="tree-cond">if present</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:expirationDate</span><span class="tree-arrow">←</span><span class="tree-src">ExpirationDate</span><span class="badge b-orange" style="font-size:0.72rem">only when ExpirationDateNull="No"</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:name</span><span class="tree-arrow">←</span><span class="tree-src">OfferName</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:parentOfferInstanceId</span><span class="tree-arrow">←</span><span class="tree-src">ParentOfferInstanceId</span><span class="tree-cond">if &gt; 0</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:refId</span><span class="tree-arrow">←</span><span class="tree-src">@Id (offer BE @Id)</span><span class="tree-cond">if present</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:relatedOffers</span><span class="tree-cond">for each RelatedOffersArray</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:serviceType</span><span class="tree-arrow">←</span><span class="tree-src">ServiceType</span></div></li>
+                            <li><div class="tree-row"><span class="tree-tag">ns:soc</span><span class="tree-arrow">←</span><span class="tree-src">Soc</span></div></li>
+                          </ul>
+                        </li>
+                      </ul>
+                    </li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:offersToRemove</span><span class="tree-cond">for each removeSubOffer (ServiceType≠80)</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-cond">Additional: old priceplan if new ServiceType=80 add (excl OrderType=11002)</span></div></li>
+                      </ul>
+                    </li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:LogicalResourceInfo</span><span class="tree-cond">PEID, PMATCHID, EID/MIIMSI (MSIM REE), MIIMSI (RES), LOGICAL_RESOURCE, Cloud ID (CLOID), CCTV (RSCTV)</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:PhysicalResourceInfo</span><span class="tree-cond">MIIMEI/MISIM (MSIM REE), MISIM (RES), KNOX (IMEI_KNOX)</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:ParameterInfo</span><span class="tree-cond">for each addSubOffer/ParameterInfo + RelatedOffersArray/ParameterInfo</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:ParameterInfo[Agreement level offer instance ID]</span><span class="tree-cond">if PLG offer without existing Agreement level param; value = POOLED_OFFER_INSTANCE_ID</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:ChargeDistributionDetailsInfo</span><span class="tree-cond">RCIndicator=65, CHG_SPLIT_TYPE=DR/RS, OfferName=SPLITS01</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:EventDistributionDetailsInfo</span><span class="tree-cond">SPECIAL_OFFER_INDICATOR=EGI SOCs</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:ResourceInfo</span><span class="tree-cond">ResourceRangeInfo[Action=PP] when adding ServiceType=80 offers</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ns:ActivityInfo</span><span class="tree-arrow">←</span><span class="tree-src">activityReason (priority: actReasonParam/CREQ/SubscriberActivityInfo), userText (forceChange/ATS_REMOVE logic)</span></div></li>
+                  </ul>
+                </li>
+                <li><div class="tree-row"><span class="tree-tag">ns:ActivityInfo</span><span class="tree-cond">Same activityReason/userText at outer UpdateSubscriberRequest level</span></div></li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3 style="margin-top:16px">Variant ② — CHG_CHARGE: ChangeSubscriberDistributionInputInfo</h3>
+    <div class="highlight-info">Sends charge-distribution changes. All three pay channel IDs (OC, RC, primary event) are set from Account[1].AccountID. logicalDate forwarded in enclosedClientInfo.</div>
+    <pre><span class="xt">&lt;ns:ChangeSubscriberDistributionInputInfo&gt;</span>
+  <span class="xt">&lt;ns:ChargeDistributionDetailsInfo&gt;</span>
+    <span class="xt">&lt;ns:soc&gt;</span>...from CHG_CHARGE offer...<span class="xt">&lt;/ns:soc&gt;</span>
+    <span class="xt">&lt;ns:targetPayChannelId&gt;</span>...subscriber.PayChannelIdSecondary...<span class="xt">&lt;/ns:targetPayChannelId&gt;</span>
+  <span class="xt">&lt;/ns:ChargeDistributionDetailsInfo&gt;</span>
+  <span class="xt">&lt;ns:defaultOCPayChannelIdInfo&gt;&lt;ns:payChannelId&gt;</span>Account[1].AccountID<span class="xt">&lt;/ns:payChannelId&gt;&lt;/ns:defaultOCPayChannelIdInfo&gt;</span>
+  <span class="xt">&lt;ns:defaultRCPayChannelIdInfo&gt;&lt;ns:payChannelId&gt;</span>Account[1].AccountID<span class="xt">&lt;/ns:payChannelId&gt;&lt;/ns:defaultRCPayChannelIdInfo&gt;</span>
+  <span class="xt">&lt;ns:primaryEventPayChannelIdInfo&gt;&lt;ns:payChannelId&gt;</span>Account[1].AccountID<span class="xt">&lt;/ns:payChannelId&gt;&lt;/ns:primaryEventPayChannelIdInfo&gt;</span>
+  <span class="xt">&lt;ns:ActivityInfo&gt;</span>
+    <span class="xt">&lt;ns:activityReason&gt;</span>...<span class="xt">&lt;/ns:activityReason&gt;</span>
+    <span class="xt">&lt;ns:enclosedClientInfo&gt;&lt;ns:logicalDate&gt;</span>logicalDateVal<span class="xt">&lt;/ns:logicalDate&gt;&lt;/ns:enclosedClientInfo&gt;</span>
+  <span class="xt">&lt;/ns:ActivityInfo&gt;</span>
+<span class="xt">&lt;/ns:ChangeSubscriberDistributionInputInfo&gt;</span></pre>
+
+    <h3 style="margin-top:16px">Variant ③ — CHG_PARAM: UpdateParameterInputInfo (per offer)</h3>
+    <div class="highlight-info">One event per CHG_PARAM offer that has ParameterInfo. Looks up current OfferInstanceId from subscriber's SubscriberOffers (by OfferName). Old ArrayList-based implementation is commented out; active code uses XSLT's <code>$subOffer/ParameterInfo</code> directly.</div>
+    <pre><span class="xt">&lt;ns:UpdateParameterInputInfo&gt;</span>
+  <span class="xt">&lt;ns:ParameterInfo&gt;</span>
+    <span class="xt">&lt;ns:name&gt;</span>ParamName<span class="xt">&lt;/ns:name&gt;</span>
+    <span class="xt">&lt;ns:values&gt;</span>ValuesArray<span class="xt">&lt;/ns:values&gt;</span>
+    <span class="xt">&lt;ns:offerInstanceId&gt;</span>offerInstanceId (if &gt; 0)<span class="xt">&lt;/ns:offerInstanceId&gt;</span>
+    <span class="xt">&lt;ns:effectiveDate&gt;</span>EffectiveDate<span class="xt">&lt;/ns:effectiveDate&gt;</span>
+    <span class="xt">&lt;ns:expirationDate&gt;</span>ExpirationDate<span class="xt">&lt;/ns:expirationDate&gt;</span>
+  <span class="xt">&lt;/ns:ParameterInfo&gt;</span>
+  <span class="xt">&lt;ns:ActivityInfo&gt;&lt;ns:enclosedClientInfo&gt;&lt;ns:logicalDate&gt;</span>logicalDateVal<span class="xt">&lt;/ns:logicalDate&gt;&lt;/ns:enclosedClientInfo&gt;&lt;/ns:ActivityInfo&gt;</span>
+<span class="xt">&lt;/ns:UpdateParameterInputInfo&gt;</span></pre>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§11</span> Audit Logging</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variant</th><th>AUDIT_TRACE</th><th>Dispatch method</th><th>PROCESS_ID</th></tr>
+      <tr><td>ADD/REMOVE (POU)</td><td>"Request Sent for CCBS_CHANGE_PACKAGE_SUBSCRIBER for add/remove offer"</td><td><code>sendEventImmediate</code></td><td>concat(pid,"_REQ")</td></tr>
+      <tr><td>CHG_CHARGE (POU)</td><td>"Request Sent for CCBS_CHANGE_PACKAGE_SUBSCRIBER for add/remove offer"</td><td><code>Event.sendEvent</code> (deferred!)</td><td>concat(pid,"_REQ")</td></tr>
+      <tr><td>CHG_PARAM</td><td>"Request Sent for CCBS_CHANGE_PACKAGE_SUBSCRIBER for change offer parameter"</td><td><code>sendEventImmediate</code></td><td>concat(pid,"_REQ")</td></tr>
+    </table>
+    <div class="highlight-warn" style="margin-top:8px"><strong>Risk:</strong> CHG_CHARGE audit uses <code>Event.sendEvent</code> (not immediate) — the log entry may be delayed or lost if the engine is under load. Not consistent with other variants.</div>
+  </div>
+</div>
+
+<!-- §12 Status Management -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§12</span> Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Condition</th><th>Status Call</th><th>Result</th></tr>
+      <tr><td>At least one request dispatched</td><td><code>GetActivityStatusString("1", false)</code></td><td>Activity in-flight</td></tr>
+      <tr><td>No dispatchable offers/actions found</td><td><code>SkipActivity("4")</code></td><td>Activity skipped</td></tr>
+      <tr><td>Invalid param value</td><td><code>Exception.newException("DATA_ISSUE", "Param is missing.")</code></td><td>Exception thrown → HandleActivityException</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§15</span> Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER
+├── [setup]
+│   ├── Log.getLogger()
+│   ├── Instance.getByExtIdByUri("LogicalDate")
+│   ├── GetActivityParameterValueFromKey() × 4 (ACTIVITY_REASON, param, REMOVE_IMMEDIATE, ALT_CES)
+│   └── System.getGlobalVariableAsString() × 2 (PoolingIndicator, PooledPrefix)
+├── [resubmit guard]
+│   └── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit()
+├── [POU/COU Phase 1: Pooling resolution]
+│   ├── BRMS.AnyIn(sPooling, propValue)
+│   ├── XPath.evalAsBoolean() — POOLED_OFFER_INSTANCE_ID absent check
+│   ├── Instance.createInstance() — create SubscriberOffersExtendedInfo (if absent)
+│   └── Instance.getByExtId() — get existing ExtendedInfo concept (if present)
+├── [POU/COU Phase 2: Categorization]
+│   ├── BRMS.IsBlank(param)
+│   ├── GetSplOffIndForSoc()
+│   ├── GetXMLForSubscriberOfferFilterWithExtendedInfo() / ...InChildOU...() — PreExecCheck
+│   ├── XPath.execute() — PreExecCheck gate
+│   ├── XPath.evalAsBoolean() — chkSocLevelSub
+│   └── XPath.evalAsBoolean() — ISPriceplanFromCCBS; IoT afterSale; ExpirationDateNull
+├── [POU/COU Dispatch 1: ADD/REMOVE]
+│   ├── GetActivityEffectiveType() — FUT check for ExpirationDateNull
+│   ├── Instance.createInstance() — ExpirationDateNull ExtendedInfo
+│   ├── Event.createEvent() — CCBS_UPDATE_SUBSCRIBER (Variant ①)
+│   ├── Event.assertEvent()
+│   ├── IntraActivitySequencing.ActionRequestEvent()
+│   └── Event.Ext.sendEventImmediate() / Event.sendEvent() — Logger (POU/COU differ)
+├── [POU/COU Dispatch 2: CHG_CHARGE]
+│   ├── Event.createEvent() — CCBS_UPDATE_SUBSCRIBER (Variant ②)
+│   ├── Event.assertEvent()
+│   ├── IntraActivitySequencing.ActionRequestEvent()
+│   └── Event.sendEvent() — Logger (POU) / Event.sendEvent() (COU)
+├── [POU/COU Dispatch 3: CHG_PARAM per offer]
+│   ├── XPath.evalAsInt() — offerInstanceId lookup
+│   ├── Event.createEvent() — CCBS_UPDATE_SUBSCRIBER (Variant ③)
+│   ├── Event.assertEvent()
+│   ├── IntraActivitySequencing.ActionRequestEvent()
+│   ├── Log.log("warn") — if no ParameterInfo on offer
+│   └── Event.Ext.sendEventImmediate() — Logger
+├── [after loops]
+│   ├── IntraActivitySequencing.SendFirstRequestEvent()
+│   ├── GetActivityStatusString("1", false)
+│   └── SendDataToDB()
+├── [skip path]
+│   └── SkipActivity("4")
+└── [catch]
+    └── HandleActivityException()</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§17</span> Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Resolve POOLED_OFFER_INSTANCE_ID for PLG SOCs before dispatch using Agreement/Subscriber ExtendedInfo join</td></tr>
+      <tr><td>R2</td><td>Classify subscriber offers into ADD/REMOVE/CHG_PARAM/CHG_CHARGE queues based on subOff.Action</td></tr>
+      <tr><td>R3</td><td>Gate classification on chkSocLevelSub (subscriber-level SocProperties only)</td></tr>
+      <tr><td>R4</td><td>For ADD offers: tag ExpirationDateNull based on OrderType + FUT date check; suppress ExpirationDate to CCBS when "Yes"</td></tr>
+      <tr><td>R5</td><td>Old priceplan swap: auto-remove CCBS priceplan when adding new ServiceType=80 offer (excl. OrderType 11002)</td></tr>
+      <tr><td>R6</td><td>SOC sequence request: increment by addOffers + addOffers/RelatedOffers count</td></tr>
+      <tr><td>R7</td><td>Resource binding: PEID, PMATCHID, EID/MIIMSI/MIIMEI/MISIM (MSIM), IMEI_KNOX, Cloud ID (CLOID), CCTV (RSCTV), LOGICAL_RESOURCE</td></tr>
+      <tr><td>R8</td><td>Charge distribution: RCIndicator=65, CHG_SPLIT_TYPE DR/RS, SPLITS01, EventDistributionDetailsInfo (EGI)</td></tr>
+      <tr><td>R9</td><td>IoT AfterSale (OrderType 11025): convert CLOID/RSCTV RelatedOffersArray items to individual removes when device count mismatch</td></tr>
+      <tr><td>R10</td><td>CHG_PARAM: look up OfferInstanceId from subscriber's existing SubscriberOffers; one event per CHG_PARAM offer</td></tr>
+      <tr><td>R11</td><td>Forward LogicalDate to CHG_CHARGE and CHG_PARAM variants in enclosedClientInfo</td></tr>
+      <tr><td>R12</td><td>FCR SOC excluded from offersToAdd unless FE_OR_CCBS="FE"</td></tr>
+      <tr><td>R13</td><td>ALT_CES override: use ExtendedInfo[ALT_CES]/Value as CES when altParam="Y"</td></tr>
+      <tr><td>R14</td><td>forceChange: inject ";isServiceChangeOnPSUSAllowed=true;" in userText when OrderType in ServiceChangeOnPSUSAllowed</td></tr>
+      <tr><td>R15</td><td>Response: map ClosedAndReopenedOffers[NewOfferInstanceId] back to subscriber.SubscriberOffers.OfferInstanceId and RelatedOffersArray.OfferInstanceId</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Audit method inconsistency: CHG_CHARGE uses <code>Event.sendEvent</code> (deferred) instead of <code>sendEventImmediate</code> — logs may be lost under load</td><td><span class="badge b-orange">MEDIUM</span></td><td>Standardize all audit dispatches to sendEventImmediate</td></tr>
+      <tr><td>Commented-out CHG_PARAM ArrayList implementation — old code still in source, creating confusion about what the active behavior is</td><td><span class="badge b-blue">LOW</span></td><td>Remove commented-out code blocks in migration</td></tr>
+      <tr><td>reqSuccess check is at subscriber granularity (sub.RefId) not offer granularity — a single success prevents ALL offers for that subscriber from re-dispatching on retry</td><td><span class="badge b-red">HIGH</span></td><td>Migration should evaluate per-offer success tracking; confirm with business if partial retry is needed</td></tr>
+      <tr><td>ExpirationDateNull OrderType list hardcoded in BE rule — adding a new order type requires code change</td><td><span class="badge b-orange">MEDIUM</span></td><td>Externalize to a global variable or configuration table</td></tr>
+      <tr><td>SocLevelSub gate silently skips agreement-level offers without warning/logging</td><td><span class="badge b-blue">LOW</span></td><td>Add audit log entry when offers are skipped by this gate</td></tr>
+      <tr><td>Pooling resolution writes back to working memory (subOff.ExtendedInfo) — side effect before dispatch; if the rule fires twice, duplicates may occur</td><td><span class="badge b-orange">MEDIUM</span></td><td>Guard with existence check (already done for create, but not for value update path)</td></tr>
+      <tr><td>IoT AfterSale REMOVE conversion is POU-only; COU does not have the same logic</td><td><span class="badge b-blue">LOW</span></td><td>Confirm with business: are IoT COU subscribers a possibility?</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header"><span class="section-num">§19</span> Response Message Rule — Response_CCBS_CHANGE_PACKAGE_SUBSCRIBER</div>
+  <div class="card-body">
+    <h3>§19.1 Overview</h3>
+    <p>The response handler: (1) creates <code>CCBS_UpdateSubscriberRes</code> from the incoming response (with <code>ClosedAndReopenedOffers</code> → <code>SocInstance[]</code> mapping), (2) reverse-looks up the subscriber by RefID, (3) maps returned <code>NewOfferInstanceId</code> values back to <code>subscriber.SubscriberOffers[].OfferInstanceId</code> and <code>RelatedOffersArray[].OfferInstanceId</code>, then (4) drives fan-in via ActionResponseEvent.</p>
+    <div class="highlight-crit">
+      <strong>Critical:</strong> The response event type is <code>Events.OMConsumers.OMXFM.Response.CCBS_UPDATE_SUBSCRIBER</code>, not CCBS_CHANGE_PACKAGE_SUBSCRIBER. The response handler is triggered by CCBS_UPDATE_SUBSCRIBER response events.
+    </div>
+
+    <h3 style="margin-top:16px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Needed for audit logging (OMXTrackingId)</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_UPDATE_SUBSCRIBER</code></td><td>Inbound CCBS response — ResponseCode, RefID, ClosedAndReopenedOffers</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Response[] appended; drives fan-in</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px">§19.3 ResponseBase Concept — CCBS_UpdateSubscriberRes</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:8px;overflow-x:auto;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree" style="background:var(--code-bg)">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span><span class="tree-attr"> extId=</span><span class="tree-src">OMXUtils.generateTrackingID()</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">if present</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">if present</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">if present</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">if present</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">SocInstance[]</span><span class="tree-cond">for each ClosedAndReopenedOffers in response</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-tag">OfferInstanceId</span><span class="tree-arrow">←</span><span class="tree-src">ns1:NewOfferInstanceId</span><span class="tree-cond">if present</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">Soc</span><span class="tree-arrow">←</span><span class="tree-src">ns1:Soc</span><span class="tree-cond">if present</span></div></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+
+    <h3 style="margin-top:16px">§19.4 OfferInstanceId Write-Back</h3>
+    <p>After constructing the response concept, the handler performs a critical working-memory write-back:</p>
+    <pre><span class="cm">// Subscriber lookup by RefID (two patterns):</span>
+subscriber = Instance.getByExtIdByUri(<span class="st">"SUB:"</span> + OMXTrackingId + <span class="st">":"</span> + eventResponse.RefID, ...);
+<span class="kw">if</span>(subscriber == <span class="kw">null</span>) subscriber = Instance.getByExtIdByUri(<span class="st">"CSUB:"</span> + OMXTrackingId + <span class="st">":"</span> + eventResponse.RefID, ...);
+param = GetActivityParameterValueFromKey(currActivity, <span class="st">"REPLACE_NEW_INSTANCE_ID"</span>);
+
+<span class="cm">// Cross-match activityRes.SocInstance[i] vs subscriber.SubscriberOffers[j] by Soc:</span>
+<span class="kw">if</span>(Soc match AND (OfferInstanceId == <span class="nm">0</span> OR param == <span class="st">"Y"</span>)) {
+    subscriber.SubscriberOffers[j].OfferInstanceId = activityRes.SocInstance[i].OfferInstanceId;
+}
+<span class="cm">// Also check RelatedOffersArray (OfferInstanceId == 0 only, no REPLACE gate):</span>
+<span class="kw">if</span>(Soc match AND RelatedOffersArray[k].OfferInstanceId == <span class="nm">0</span>) {
+    subscriber.SubscriberOffers[j].RelatedOffersArray[k].OfferInstanceId = ...;
+}</pre>
+    <div class="highlight-warn" style="margin-top:8px">The <code>REPLACE_NEW_INSTANCE_ID="Y"</code> parameter allows forced OfferInstanceId overwrite for resubmit scenarios. RelatedOffersArray does not respect this gate — it always skips if OfferInstanceId already non-zero.</div>
+
+    <h3 style="margin-top:16px">§19.5 Completion Logic</h3>
+    <p><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> → <code>"true"</code> when all enqueued requests have been responded to; <code>"false"</code> otherwise.</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER</footer>
+</body>
+</html>

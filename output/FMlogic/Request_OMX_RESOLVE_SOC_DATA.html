@@ -1,0 +1,842 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Request_OMX_RESOLVE_SOC_DATA — FM Logic Documentation</title>
+<style>
+:root{
+  --true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;
+  --true-light:#FF5252;--true-pale:#FFF5F5;
+  --success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;
+  --bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;
+  --code-bg:#1e1e2e;--code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:-0.5px}
+.page-header .subtitle{opacity:.85;font-size:0.95rem;margin-top:6px}
+.meta-row{display:flex;gap:18px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:6px;padding:4px 12px;font-size:0.8rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:1rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.section-header .num{background:rgba(255,255,255,.2);border-radius:4px;padding:1px 8px;font-size:0.82rem}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:700}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#FAFAFA}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.code-block{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:6px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+.code-block .kw{color:#cba6f7}.code-block .ty{color:#89b4fa}.code-block .str{color:#a6e3a1}.code-block .cm{color:#6c7086}.code-block .nu{color:#fab387}.code-block .fn{color:#f38ba8}.code-block .xt{color:#89dceb}.code-block .xa{color:#f9e2af}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:700}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}.badge-green{background:#E8F5E9;color:var(--success)}.badge-orange{background:#FFF3E0;color:var(--warning)}.badge-blue{background:#E3F0FD;color:var(--info)}.badge-purple{background:#F3E5F5;color:var(--skip)}.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-jms{background:#FFE0B2;color:#E65100}.badge-db{background:#E8EAF6;color:#3949AB}.badge-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:14px;margin-bottom:14px}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:0.85rem;flex-shrink:0}
+.flow-text{flex:1}
+.callout{border-left:4px solid var(--true-light);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin:12px 0;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warning{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+.callout.purple{border-color:var(--skip);background:#F3E5F5}
+.tag{display:inline-block;background:#f4f4f4;border:1px solid var(--border);border-radius:4px;padding:1px 7px;font-size:0.8rem;font-family:monospace}
+details>summary{cursor:pointer;padding:8px 4px;font-weight:600;color:var(--true-dark)}
+details[open]>summary{color:var(--true-red)}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:720px){.grid2{grid-template-columns:1fr}}
+footer{text-align:center;padding:20px;color:#888;font-size:0.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.8rem;opacity:.7;margin-bottom:6px">TRUE OMX · TIBCO BusinessEvents FM Logic</div>
+    <h1>Request_OMX_RESOLVE_SOC_DATA</h1>
+    <div class="subtitle">Batch SOC data resolution — aggregate all unique offer names, fire single request, enrich orderRequest with package metadata</div>
+    <div class="meta-row">
+      <span class="meta-badge">Target: OMX FM Service</span>
+      <span class="meta-badge">Pattern: Batch/Aggregate + Data Enrichment</span>
+      <span class="meta-badge">forwardChain: true</span>
+      <span class="meta-badge">Event: OMX_RESOLVE_SOC_DATA</span>
+      <span class="meta-badge">Author: RS33-BANDIT</span>
+      <span class="meta-badge">Generated: 2026-08-04</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header"><span class="num">§1</span> Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This FM resolves detailed SOC (Service Offer Code) package metadata for every unique offer name referenced in the order. It collects all unique SOC names across Agreement Offers, SubscriberOffers, and their RelatedOffersArrays for all POU and COU levels, deduplicates them via an ArrayList, and fires a <strong>single batch request event</strong>. The response handler then writes resolved metadata (ServiceType, RevenueType, OfferRate, DataInfo, IR flag) back into every matching offer entry in the orderRequest.</p>
+    <div class="callout purple">
+      <strong>Architectural pattern:</strong> Unlike per-subscriber fan-out FMs, this FM uses a <strong>batch/aggregate pattern</strong> — one request covers all SOC names simultaneously. There is always exactly RequestCount = 1 (unless resubmit is skipped). The fan-in simply checks <code>RequestCount == Response@length</code> rather than counting "000" successes.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header"><span class="num">§2</span> Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+      <tr><td>Rule file</td><td><code>Request_OMX_RESOLVE_SOC_DATA.rule</code></td><td>Path: Rules/OMConsumers/OMXFM/Request/</td></tr>
+      <tr><td>Response file</td><td><code>Response_OMX_RESOLVE_SOC_DATA.rulefunction</code></td><td>Path: RuleFunctions/OrderResponse/</td></tr>
+      <tr><td>Author</td><td>RS33-BANDIT</td><td></td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-orange">true</span></td><td>BE re-evaluates all rule conditions immediately after firing</td></tr>
+      <tr><td>Rule type</td><td>Rule (request dispatch)</td><td>Response is a separate rulefunction</td></tr>
+      <tr><td>Request event</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_RESOLVE_SOC_DATA</code></td><td></td></tr>
+      <tr><td>Response event</td><td><code>Events.OMConsumers.OMXFM.Response.OMX_RESOLVE_SOC_DATA</code></td><td></td></tr>
+      <tr><td>Schema NS</td><td><code>http://services.omx.truecorp.co.th/ResolveSocDataRequest</code></td><td>Request payload</td></tr>
+      <tr><td>Response NS</td><td><code>http://services.omx.truecorp.co.th/ResolveSocDataResponse</code></td><td>Response payload</td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.OMX_ResolveSocDataRes</code></td><td>NOT ResponseBase — custom concept with SocData[] array</td></tr>
+      <tr><td>RefID level</td><td>Customer-level</td><td><code>$orderRequest/OrderData/Customer/RefId</code></td></tr>
+      <tr><td>Credential gate</td><td>IsEnableUserPass</td><td>Adds UserName/PassWord headers when enabled</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header"><span class="num">§3</span> Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Full order data — read for offer lists; written with SOC metadata by response handler</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Current FM activity tracking state</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:12px">No <code>globalVariables</code> in declare block — accessed dynamically via <code>System.getGlobalVariableAsString()</code> within the rule.</div>
+  </div>
+</div>
+
+<!-- §4 WHEN Conditions -->
+<div class="section">
+  <div class="section-header"><span class="num">§4</span> Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <div class="callout warning">This rule uses <strong>explicit WHEN block conditions</strong> (same 4-condition pattern as OMX_BRMS_DB). Combined with <code>forwardChain=true</code>, BE re-evaluates after each rule firing — conditions prevent re-entry.</div>
+    <table>
+      <tr><th>#</th><th>Condition Expression</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Matches this activity instance to the current process position</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_RESOLVE_SOC_DATA"</code></td><td>Type guard — ensures this rule fires only for this FM</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_RESOLVE_SOC_DATA"</code></td><td>Process flow alignment check</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity must be in WAITING state (not already executing or complete)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header"><span class="num">§5</span> Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div class="flow-text"><strong>PreExecCheck gate</strong> — evaluate skip/active condition; if <code>isSkipped</code>, call <code>SkipActivity("4")</code> and exit</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div class="flow-text"><strong>Resubmit check</strong> — if <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code>: call <code>PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code>; do NOT increment RequestCount</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div class="flow-text"><strong>Obtain nextAct</strong> — <code>Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, "/Concepts/OM/ProcessConfig/Activity")</code></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div class="flow-text"><strong>Initialize collection</strong> — <code>arrLstSOCs = Collections.List.createArrayList()</code></div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div class="flow-text"><strong>Aggregate SOC names</strong> — 4-pass loop across all POU/COU × Agreement/Subscriber offer sources; also collect RelatedOffersArray names; deduplicate with <code>Collections.contains(arrLstSOCs, socName)</code></div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div class="flow-text"><strong>PreExecCheck per offer</strong> — call appropriate helper function for each offer source before adding to list</div></div>
+    <div class="flow-step"><div class="flow-num">7</div><div class="flow-text"><strong>Build request event</strong> — XSLT generates <code>ns:ResolveSocDataRequest</code> with <code>xsl:for-each select="$socNames/elements"</code> producing multiple <code>&lt;ns:SocName&gt;</code> elements</div></div>
+    <div class="flow-step"><div class="flow-num">8</div><div class="flow-text"><strong>Fire single event</strong> — <code>Event.Ext.sendEventImmediate(reqEvent)</code>; if !isActResub → <code>RequestCount++</code> (always 1)</div></div>
+    <div class="flow-step"><div class="flow-num">9</div><div class="flow-text"><strong>Audit log</strong> — <code>Event.sendEvent(auditEvent)</code> (queued, not immediate); AUDIT_TRACE: <code>"Request Sent for OMX_RESOLVE_SOC_DATA"</code></div></div>
+    <div class="flow-step"><div class="flow-num">10</div><div class="flow-text"><strong>Status update</strong> — if !isSkipped: <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB(orderRequest)</code></div></div>
+    <div class="flow-step"><div class="flow-num">11</div><div class="flow-text"><strong>Cleanup</strong> — <code>Collections.clear(arrLstSOCs)</code></div></div>
+    <div class="flow-step"><div class="flow-num">12</div><div class="flow-text"><strong>Exception handler</strong> — try/catch → <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header"><span class="num">§6</span> Rule Action (THEN) — Step-by-Step Logic</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:12px">6.1 — SOC Name Collection (4-Pass Deduplication)</h3>
+    <div class="callout purple">
+      <strong>Core architectural behavior:</strong> Rather than sending one request per subscriber, this FM collects ALL unique SOC names from the entire order into a single ArrayList, then fires ONE event containing all names. The backend resolves all SOC metadata in a single call.
+    </div>
+    <table>
+      <tr><th>Pass</th><th>Source Path</th><th>PreExecCheck Helper</th><th>Also Collects</th></tr>
+      <tr><td>①</td><td><code>ParentOU[i].Agreement.Offers[j].OfferName</code></td><td><code>GetXMLForAgreementOffer(orderRequest, pAgreeRefId, socName)</code></td><td><code>RelatedOffersArray[].OfferName</code></td></tr>
+      <tr><td>②</td><td><code>ParentOU[i].Subscriber[j].SubscriberOffers[k].OfferName</code></td><td><code>GetXMLForSubscriberOffer(orderRequest, pSubRefId, socName)</code></td><td><code>RelatedOffersArray[].OfferName</code></td></tr>
+      <tr><td>③</td><td><code>ParentOU[i].ChildOU[ci].Agreement.Offers[j].OfferName</code></td><td><code>GetXMLForAgreementOfferInChildOU(orderRequest, cAgreeRefId, socName, pOuRefId)</code></td><td><code>RelatedOffersArray[].OfferName</code></td></tr>
+      <tr><td>④</td><td><code>ParentOU[i].ChildOU[ci].Subscriber[j].SubscriberOffers[k].OfferName</code></td><td><code>GetXMLForSubscriberOfferInChildOU(orderRequest, cSubRefId, socName, pOuRefId)</code></td><td><code>RelatedOffersArray[].OfferName</code></td></tr>
+    </table>
+    <p style="margin-top:10px;font-size:0.88rem">Deduplication: <code>if (!Collections.contains(arrLstSOCs, socName)) { Collections.List.add(arrLstSOCs, socName); }</code></p>
+
+    <h3 style="color:var(--true-dark);margin:18px 0 12px">6.2 — Single Batch Event Dispatch</h3>
+    <table>
+      <tr><th>Element</th><th>Value</th></tr>
+      <tr><td>Event type</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_RESOLVE_SOC_DATA</code></td></tr>
+      <tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> — synchronous immediate</td></tr>
+      <tr><td>RequestCount</td><td>Incremented once (if !isActResub) — always results in RequestCount = 1</td></tr>
+      <tr><td>RefID header</td><td><code>$orderRequest/OrderData/Customer/RefId</code> — customer-level (not subscriber)</td></tr>
+      <tr><td>SOC names payload</td><td><code>xsl:for-each select="$socNames/elements"</code> → multiple <code>&lt;ns:SocName&gt;</code> elements</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:18px 0 12px">6.3 — Resubmit Guard</h3>
+    <div class="code-block"><span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+<span class="kw">if</span> (isActResub) {
+    <span class="fn">PurgePendingRequestsBeforeResubmit</span>(orderCurrentActivity); <span class="cm">// clear stale responses</span>
+    <span class="cm">// RequestCount NOT incremented</span>
+}</div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header"><span class="num">§7</span> Data Extraction — SOC Name Aggregation</div>
+  <div class="section-body">
+    <p>The FM uses Java ArrayList via BE Collections API to aggregate and deduplicate SOC names:</p>
+    <div class="code-block"><span class="ty">Collections.List</span> arrLstSOCs = <span class="fn">Collections.List.createArrayList</span>();
+
+<span class="cm">// For each offer source loop:</span>
+<span class="kw">String</span> socName = offer.OfferName;
+<span class="kw">if</span> (!<span class="fn">Collections.contains</span>(arrLstSOCs, socName)) {
+    <span class="cm">// PreExecCheck per offer:</span>
+    preExecCheckXML = <span class="fn">GetXMLForSubscriberOffer</span>(orderRequest, pSubRefId, socName);
+    <span class="fn">Collections.List.add</span>(arrLstSOCs, socName);
+}
+<span class="cm">// Also loop RelatedOffersArray and add unique names</span>
+
+<span class="cm">// Cleanup:</span>
+<span class="fn">Collections.clear</span>(arrLstSOCs);</div>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="section">
+  <div class="section-header"><span class="num">§8</span> System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§8.1 — Order Type Dependencies</h3>
+    <p>This FM fires for <strong>all order types</strong> — no order-type branching. The offer collection logic applies uniformly regardless of order type. The single batch event carries an <code>OrderType</code> header for the backend to use.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td>OMX FM JMS</td><td>OMX_RESOLVE_SOC_DATA queue</td><td>Batch SOC name resolution request</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td>OMX FM JMS</td><td>OMX_RESOLVE_SOC_DATA response queue</td><td>Resolved SOC data (SocData[] array)</td></tr>
+      <tr><td><span class="badge badge-log">LOG</span></td><td>OMXESB Logger</td><td>Audit log event (queued)</td><td>Request and response audit trail</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>OMX FM (internal service)</td></tr>
+      <tr><td>Operation</td><td>ResolveSocData</td></tr>
+      <tr><td>Request schema</td><td><code>http://services.omx.truecorp.co.th/ResolveSocDataRequest</code></td></tr>
+      <tr><td>Response schema</td><td><code>http://services.omx.truecorp.co.th/ResolveSocDataResponse</code></td></tr>
+      <tr><td>Request root element</td><td><code>ns:ResolveSocDataRequest</code></td></tr>
+      <tr><td>Response root element</td><td><code>ns:ResolveSocDataResponse / ns:ResolveSocData[]</code></td></tr>
+      <tr><td>Correlation</td><td>RefID (customer-level) echoed in response <code>RefID</code> field</td></tr>
+      <tr><td>Send pattern</td><td>Single batch — ONE request for ALL SOC names</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Concept</th><th>Field Path</th><th>Access</th><th>Notes</th></tr>
+      <tr><td>OrderRequest</td><td>Customer.ParentOU[].Agreement.Offers[].OfferName</td><td>READ</td><td>SOC name collection</td></tr>
+      <tr><td>OrderRequest</td><td>Customer.ParentOU[].Subscriber[].SubscriberOffers[].OfferName</td><td>READ</td><td>SOC name collection</td></tr>
+      <tr><td>OrderRequest</td><td>Customer.ParentOU[].ChildOU[].Agreement.Offers[].OfferName</td><td>READ</td><td>SOC name collection</td></tr>
+      <tr><td>OrderRequest</td><td>Customer.ParentOU[].ChildOU[].Subscriber[].SubscriberOffers[].OfferName</td><td>READ</td><td>SOC name collection</td></tr>
+      <tr><td>OrderRequest</td><td>[All above].RelatedOffersArray[].OfferName</td><td>READ</td><td>Related SOC names also collected</td></tr>
+      <tr><td>OrderRequest</td><td>[All Offers].ServiceType / RevenueType / OfferRate / DataInfo</td><td>WRITTEN</td><td>Populated by response handler</td></tr>
+      <tr><td>OrderRequest</td><td>[SubscriberOffers].ExtendedInfo[] (IR_DATA)</td><td>WRITTEN</td><td>Added when ServiceType == "87"</td></tr>
+      <tr><td>Activity</td><td>RequestCount / Response[] / Status</td><td>READ+WRITTEN</td><td>Fan-out/fan-in tracking</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.5 — ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Name</th><th>Value</th><th>Set Where</th><th>Condition</th></tr>
+      <tr><td><code>IR_DATA</code></td><td>"Y"</td><td>SubscriberOffers.ExtendedInfo[]</td><td>ServiceType == "87" (IR service)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Path</th><th>Purpose</th></tr>
+      <tr><td><code>OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</code></td><td>If "true" → add UserName/PassWord headers to request event</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit log COMPONENT_NAME</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit log TARGET_SYSTEM</td></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit log LOG_LEVEL</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>If "true" → include event payload in response audit log</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Detailed Payload Build -->
+<div class="section">
+  <div class="section-header"><span class="num">§9</span> Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§9.1 — XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>Working memory: full OrderRequest concept</td></tr>
+      <tr><td><code>$socNames</code></td><td>Serialized ArrayList of unique SOC name strings</td></tr>
+      <tr><td><code>$globalVariables</code></td><td>BE global variables tree</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.2 — Event Container Construction</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td>extId</td><td><code>OMXUtils:generateTrackingID()</code></td><td>Always</td></tr>
+      <tr><td>RefID header</td><td><code>$orderRequest/OrderData/Customer/RefId</code></td><td>Always — customer-level, not subscriber</td></tr>
+      <tr><td>OrderType header</td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional</td></tr>
+      <tr><td>UserName header</td><td>Global variable UserName</td><td>IsEnableUserPass == "true"</td></tr>
+      <tr><td>PassWord header</td><td>Global variable PassWord</td><td>IsEnableUserPass == "true"</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.3 — Request Payload Fields</h3>
+    <table>
+      <tr><th>XML Element</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>ns:RefId</code></td><td><code>$orderRequest/OrderData/Customer/RefId</code></td><td>Customer-level correlation ID</td></tr>
+      <tr><td><code>ns:OMXTrackingId</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>End-to-end tracking</td></tr>
+      <tr><td><code>ns:MSISDN</code></td><td>Conditional from orderRequest</td><td>Optional</td></tr>
+      <tr><td><code>ns:OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional</td></tr>
+      <tr><td><code>ns:SocName</code> (repeated)</td><td><code>$socNames/elements</code> via <code>xsl:for-each</code></td><td>One element per unique SOC name in deduplicated list</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.4 — Complete Generated XML Example</h3>
+    <div class="code-block"><span class="xt">&lt;ns:ResolveSocDataRequest</span> <span class="xa">xmlns:ns</span>=<span class="str">"http://services.omx.truecorp.co.th/ResolveSocDataRequest"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;ns:RefId&gt;</span>CUST-12345<span class="xt">&lt;/ns:RefId&gt;</span>
+  <span class="xt">&lt;ns:OMXTrackingId&gt;</span>OMX-TRK-20250804-001<span class="xt">&lt;/ns:OMXTrackingId&gt;</span>
+  <span class="xt">&lt;ns:OrderType&gt;</span>3<span class="xt">&lt;/ns:OrderType&gt;</span>
+  <span class="xt">&lt;ns:SocName&gt;</span>SOC_PACKAGE_A<span class="xt">&lt;/ns:SocName&gt;</span>
+  <span class="xt">&lt;ns:SocName&gt;</span>SOC_PACKAGE_B<span class="xt">&lt;/ns:SocName&gt;</span>
+  <span class="xt">&lt;ns:SocName&gt;</span>SOC_RELATED_X<span class="xt">&lt;/ns:SocName&gt;</span>
+<span class="xt">&lt;/ns:ResolveSocDataRequest&gt;</span></div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.5 — Request XSLT Stylesheet Source</h3>
+    <details>
+      <summary>Show full request XSLT</summary>
+      <div class="code-block" style="margin-top:8px"><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:OMXUtils</span>=<span class="str">"www.tibco.com/be/custom/OMXUtils"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="str">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:ns</span>=<span class="str">"http://services.omx.truecorp.co.th/ResolveSocDataRequest"</span>
+  <span class="xa">version</span>=<span class="str">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"orderRequest"</span><span class="xt">/&gt;</span>       <span class="cm">&lt;!-- full OrderRequest concept --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"socNames"</span><span class="xt">/&gt;</span>          <span class="cm">&lt;!-- serialized ArrayList of unique SOC names --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"globalVariables"</span><span class="xt">/&gt;</span>   <span class="cm">&lt;!-- global config tree --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="str">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;</span>
+      <span class="xt">&lt;event&gt;</span>
+        <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="str">"extId"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"OMXUtils:generateTrackingID()"</span><span class="xt">/&gt;</span>
+        <span class="xt">&lt;/xsl:attribute&gt;</span>
+        <span class="cm">&lt;!-- RefID header: customer-level --&gt;</span>
+        <span class="xt">&lt;RefID&gt;</span>
+          <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$orderRequest/OrderData/Customer/RefId"</span><span class="xt">/&gt;</span>
+        <span class="xt">&lt;/RefID&gt;</span>
+        <span class="cm">&lt;!-- Credential gate --&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass='true'"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;UserName&gt;</span>...<span class="xt">&lt;/UserName&gt;</span>
+          <span class="xt">&lt;PassWord&gt;</span>...<span class="xt">&lt;/PassWord&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="cm">&lt;!-- Payload --&gt;</span>
+        <span class="xt">&lt;payload&gt;</span>
+          <span class="xt">&lt;ns:ResolveSocDataRequest&gt;</span>
+            <span class="xt">&lt;ns:RefId&gt;</span>...<span class="xt">&lt;/ns:RefId&gt;</span>
+            <span class="xt">&lt;ns:OMXTrackingId&gt;</span>...<span class="xt">&lt;/ns:OMXTrackingId&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"..."</span><span class="xt">&gt;&lt;ns:MSISDN&gt;</span>...<span class="xt">&lt;/ns:MSISDN&gt;&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"..."</span><span class="xt">&gt;&lt;ns:OrderType&gt;</span>...<span class="xt">&lt;/ns:OrderType&gt;&lt;/xsl:if&gt;</span>
+            <span class="cm">&lt;!-- One &lt;ns:SocName&gt; per unique SOC name in arrLstSOCs --&gt;</span>
+            <span class="xt">&lt;xsl:for-each</span> <span class="xa">select</span>=<span class="str">"$socNames/elements"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns:SocName&gt;</span>
+                <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"."</span><span class="xt">/&gt;</span>
+              <span class="xt">&lt;/ns:SocName&gt;</span>
+            <span class="xt">&lt;/xsl:for-each&gt;</span>
+          <span class="xt">&lt;/ns:ResolveSocDataRequest&gt;</span>
+        <span class="xt">&lt;/payload&gt;</span>
+      <span class="xt">&lt;/event&gt;</span>
+    <span class="xt">&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></div>
+    </details>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§10</span> XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">event</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">RefID</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/Customer/RefId</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">UserName</span> <span class="tree-arrow">←</span> <span class="tree-src">global UserName</span> <span class="badge badge-purple" style="font-size:0.7rem">Credential-gated: IsEnableUserPass="true"</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">PassWord</span> <span class="tree-arrow">←</span> <span class="tree-src">global PassWord</span> <span class="badge badge-purple" style="font-size:0.7rem">Credential-gated: IsEnableUserPass="true"</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">ResolveSocDataRequest</span></div>
+                      <ul>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">RefId</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/Customer/RefId</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">OMXTrackingId</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">MSISDN</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/MSISDN</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">OrderType</span> <span class="tree-arrow">←</span> <span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                        <li><div class="tree-row"><span class="tree-ns">ns:</span><span class="tree-tag">SocName</span> <span class="tree-arrow">←</span> <span class="tree-src">$socNames/elements (xsl:for-each — one per unique SOC)</span> <span class="badge badge-green" style="font-size:0.7rem">Repeated</span></div></li>
+                      </ul>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+      <div style="margin-top:14px;padding-top:10px;border-top:1px solid #444;font-size:0.78rem;color:#888">
+        <strong style="color:#cdd6f4">Legend:</strong>
+        <span style="color:#a6e3a1">green</span> = XPath source &nbsp;|&nbsp;
+        <span style="color:#fab387">orange</span> = static literal &nbsp;|&nbsp;
+        <span style="color:#cba6f7">purple italic</span> = xsl:if condition &nbsp;|&nbsp;
+        <span class="badge badge-green" style="font-size:0.7rem">Always</span> always emitted &nbsp;|&nbsp;
+        <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span> xsl:if &nbsp;|&nbsp;
+        <span class="badge badge-purple" style="font-size:0.7rem">Credential-gated</span> IsEnableUserPass gate
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header"><span class="num">§11</span> Audit Logging</div>
+  <div class="section-body">
+    <div class="grid2">
+      <div>
+        <h3 style="color:var(--true-dark);margin-bottom:10px">Request Audit</h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for OMX_RESOLVE_SOC_DATA"</code> (static)</td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"OMX_RESOLVE_SOC_DATA"</code></td></tr>
+          <tr><td>Send method</td><td><code>Event.sendEvent()</code> — queued (NOT immediate)</td></tr>
+          <tr><td>Audit payload</td><td><code>xsl:copy-of select="$reqEvent"</code> — copies the request event</td></tr>
+        </table>
+        <div class="callout warning" style="margin-top:8px;font-size:0.83rem">Audit uses <code>Event.sendEvent()</code> (queued), while the business event uses <code>Event.Ext.sendEventImmediate()</code>. Audit delivery is asynchronous.</div>
+      </div>
+      <div>
+        <h3 style="color:var(--true-dark);margin-bottom:10px">Response Audit</h3>
+        <table>
+          <tr><th>Field</th><th>Value</th></tr>
+          <tr><td>AUDIT_TRACE</td><td><code>concat("Response received for OMX_RESOLVE_SOC_DATA, RefId: ", $eventResponse/RefID)</code> — DYNAMIC</td></tr>
+          <tr><td>OPERATION_NAME</td><td><code>"OMX_RESOLVE_SOC_DATA"</code></td></tr>
+          <tr><td>PROCESS_ID</td><td><code>concat($pid, "_RES")</code></td></tr>
+          <tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate()</code> — immediate</td></tr>
+          <tr><td>No AllowWriteLog gate</td><td>Response audit always fires (no order-type gate)</td></tr>
+          <tr><td>payload</td><td>copy of <code>$eventResponse</code> (gated by WritePayload="true")</td></tr>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header"><span class="num">§12</span> Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Condition</th><th>Call</th><th>Status Code</th><th>Effect</th></tr>
+      <tr><td>Normal send (not skipped)</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB(orderRequest)</code></td><td>"1"</td><td>Activity marked RUNNING; persisted to DB</td></tr>
+      <tr><td>isSkipped == true</td><td><code>SkipActivity("4")</code></td><td>"4"</td><td>Activity bypassed</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header"><span class="num">§13</span> Exception / Error Handling</div>
+  <div class="section-body">
+    <div class="code-block"><span class="kw">try</span> {
+    <span class="cm">// ... entire rule body ...</span>
+} <span class="kw">catch</span> (Exception ae) {
+    <span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+}</div>
+    <p style="margin-top:10px;font-size:0.88rem">Standard catch-all pattern. <code>HandleActivityException</code> sets activity to error state, logs the exception, and triggers order-level error handling.</p>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header"><span class="num">§14</span> Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Return Type</th><th>Purpose</th></tr>
+      <tr><td><code>GetXMLForAgreementOffer(orderRequest, refId, socName)</code></td><td>String (XML)</td><td>Serializes POU Agreement offer for PreExecCheck evaluation</td></tr>
+      <tr><td><code>GetXMLForSubscriberOffer(orderRequest, refId, socName)</code></td><td>String (XML)</td><td>Serializes POU Subscriber offer for PreExecCheck evaluation</td></tr>
+      <tr><td><code>GetXMLForAgreementOfferInChildOU(orderRequest, refId, socName, pOuRefId)</code></td><td>String (XML)</td><td>Serializes COU Agreement offer for PreExecCheck evaluation (includes parent OU context)</td></tr>
+      <tr><td><code>GetXMLForSubscriberOfferInChildOU(orderRequest, refId, socName, pOuRefId)</code></td><td>String (XML)</td><td>Serializes COU Subscriber offer for PreExecCheck evaluation (includes parent OU context)</td></tr>
+      <tr><td><code>PurgePendingRequestsBeforeResubmit(activity)</code></td><td>void</td><td>Clears stale pending requests before resubmit attempt</td></tr>
+      <tr><td><code>GetActivityStatusString(code, flag)</code></td><td>String</td><td>Returns status string for activity state update</td></tr>
+      <tr><td><code>SendDataToDB(orderRequest)</code></td><td>void</td><td>Persists current order state to database</td></tr>
+      <tr><td><code>SkipActivity(code)</code></td><td>void</td><td>Marks activity as skipped with given status code</td></tr>
+      <tr><td><code>HandleActivityException(orderRequest, activity, ae, msg)</code></td><td>void</td><td>Standard exception handler</td></tr>
+      <tr><td><code>IndentifySocDataServiceType(packageCat, dataType)</code></td><td>String</td><td><strong>Response-side:</strong> derives serviceType code from packageCat + dataType</td></tr>
+      <tr><td><code>IsBlankOrStringNull(value)</code></td><td>boolean</td><td><strong>Response-side:</strong> null/blank guard; in RuleFunctions.Helpers.BRMS</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header"><span class="num">§15</span> Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_OMX_RESOLVE_SOC_DATA (rule)
+├── Collections.List.createArrayList()
+├── Collections.contains(arrLstSOCs, socName)
+├── Collections.List.add(arrLstSOCs, socName)
+├── GetXMLForAgreementOffer(orderRequest, pAgreeRefId, socName)
+├── GetXMLForSubscriberOffer(orderRequest, pSubRefId, socName)
+├── GetXMLForAgreementOfferInChildOU(orderRequest, cAgreeRefId, socName, pOuRefId)
+├── GetXMLForSubscriberOfferInChildOU(orderRequest, cSubRefId, socName, pOuRefId)
+├── Instance.getByExtIdByUri(extId, conceptPath)
+├── PurgePendingRequestsBeforeResubmit(orderCurrentActivity)  [if isActResub]
+├── Event.Ext.sendEventImmediate(reqEvent)
+├── Event.sendEvent(auditEvent)
+├── GetActivityStatusString("1", false)
+├── SendDataToDB(orderRequest)
+├── SkipActivity("4")                                          [if isSkipped]
+├── Collections.clear(arrLstSOCs)
+└── HandleActivityException(orderRequest, activity, ae, "")   [catch]
+
+Response_OMX_RESOLVE_SOC_DATA (rulefunction)
+├── Instance.createInstance("xslt://{{/Concepts/FM/Response/OMX_ResolveSocDataRes}}")
+├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(value)
+├── RuleFunctions.Helpers.IndentifySocDataServiceType(packageCat, dataType)
+├── Number.doubleValue(price)
+├── String.equals(a, b)
+├── Instance.createInstance("xslt://{{/Concepts/OrderRequest/OrderElements/AgreementDataInfo}}")
+├── Instance.createInstance("xslt://{{/Concepts/OrderRequest/OrderElements/SubscriberDataInfo}}")
+├── Instance.createInstance("xslt://{{/Concepts/OrderRequest/OrderElements/ExtendedInfos/SubscriberOffersExtendedInfo}}")
+├── System.nanoTime()
+└── Event.Ext.sendEventImmediate(auditLogEvent)</div>
+  </div>
+</div>
+
+<!-- §16 Concept Definitions -->
+<div class="section">
+  <div class="section-header"><span class="num">§16</span> Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Key Fields</th><th>Role</th></tr>
+      <tr><td><code>Concepts.FM.Response.OMX_ResolveSocDataRes</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId, SocData[]</td><td>Response holder with resolved SOC data array</td></tr>
+      <tr><td><code>OMX_ResolveSocDataRes.SocData</code></td><td>PackageCode, PackageCat, PackageType, ChargeType, Company, Price, DataType, TssDisplayType</td><td>Per-SOC resolved metadata</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.AgreementDataInfo</code></td><td>Package, ChargeType, PackType</td><td>Created/updated on Agreement Offers by response handler</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.SubscriberDataInfo</code></td><td>Package, ChargeType, PackType</td><td>Created/updated on SubscriberOffers by response handler</td></tr>
+      <tr><td><code>Concepts.OrderRequest.OrderElements.ExtendedInfos.SubscriberOffersExtendedInfo</code></td><td>Name, Value</td><td>Used for IR_DATA flag (ServiceType="87")</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header"><span class="num">§17</span> Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>Ref</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Collect all unique SOC names (Agreement Offers + SubscriberOffers + RelatedOffersArrays) across all POU and COU levels before making any backend call.</td></tr>
+      <tr><td>R2</td><td>Fire exactly ONE batch request per FM execution containing all deduplicated SOC names.</td></tr>
+      <tr><td>R3</td><td>Evaluate PreExecCheck per individual offer (not per subscriber) using the 4 helper serialization functions.</td></tr>
+      <tr><td>R4</td><td>Response handler must distribute resolved metadata (ServiceType, RevenueType, OfferRate, DataInfo, ChargeType) back to every matching offer in all 4 sources by PackageCode == socName match.</td></tr>
+      <tr><td>R5</td><td>Apply serviceType derivation via <code>IndentifySocDataServiceType(packageCat, dataType)</code> — not a simple field copy.</td></tr>
+      <tr><td>R6</td><td>Apply OMX-2771 fix: if serviceType == "88" AND TssDisplayType == "ROAM" → override serviceType to "91".</td></tr>
+      <tr><td>R7</td><td>Add IR_DATA=Y ExtendedInfo to SubscriberOffers (POU and COU) when ServiceType resolves to "87".</td></tr>
+      <tr><td>R8</td><td>Support IsEnableUserPass credential gate for UserName/PassWord headers.</td></tr>
+      <tr><td>R9</td><td>Use customer-level RefId (not subscriber RefId) for request correlation.</td></tr>
+      <tr><td>R10</td><td>Fan-in condition: <code>RequestCount == Response.length</code> (always 1 vs 1).</td></tr>
+      <tr><td>R11</td><td>Resubmit path must call PurgePendingRequestsBeforeResubmit and skip RequestCount increment.</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:18px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Batch payload size — if an order has 50+ unique SOC names, the single request XML could be very large</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Add pagination or chunking for large orders in modern implementation</td>
+      </tr>
+      <tr>
+        <td>Response enrichment loop complexity — O(S × O) where S=SocData entries, O=total offers across all POU/COU levels</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Modern impl: build a HashMap&lt;socName, SocData&gt; from response, then single pass over offers</td>
+      </tr>
+      <tr>
+        <td>TssDisplayType field present in SocData concept but NOT populated by response XSLT — silently null</td>
+        <td><span class="badge badge-orange">MEDIUM</span></td>
+        <td>Verify if OMX-2771 fix (serviceType "88"→"91") ever triggers in practice; add test coverage</td>
+      </tr>
+      <tr>
+        <td>DataInfo null-check / create pattern — dual code path (create new vs update existing) risks divergence</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Modern impl: merge into upsert operation</td>
+      </tr>
+      <tr>
+        <td>RelatedOffersArray ServiceType update only (not full metadata) — asymmetric enrichment</td>
+        <td><span class="badge badge-blue">LOW</span></td>
+        <td>Confirm this is intentional business design; document in data contract</td>
+      </tr>
+      <tr>
+        <td>forwardChain=true combined with response-side orderRequest mutation could cause unexpected rule re-evaluation</td>
+        <td><span class="badge badge-red">HIGH</span></td>
+        <td>Modern streaming/event-driven design should avoid in-place mutation of the order object; use immutable event flow</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="section">
+  <div class="section-header"><span class="num">§18</span> Full Source Code</div>
+  <div class="section-body">
+    <details>
+      <summary>Request_OMX_RESOLVE_SOC_DATA.rule (202 lines)</summary>
+      <div class="code-block" style="margin-top:8px"><span class="cm">/**
+ * Request_OMX_RESOLVE_SOC_DATA
+ * Author: RS33-BANDIT
+ * Batch SOC data resolution — collect unique SOC names, fire single request
+ */</span>
+<span class="kw">rule</span> <span class="fn">Rules.OMConsumers.OMXFM.Request.Request_OMX_RESOLVE_SOC_DATA</span> {
+  <span class="kw">attribute</span> {
+    priority = <span class="nu">5</span>;
+    forwardChain = <span class="kw">true</span>;
+  }
+  <span class="kw">declare</span> {
+    <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+    <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="str">"OMX_RESOLVE_SOC_DATA"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="str">"OMX_RESOLVE_SOC_DATA"</span>;
+    orderCurrentActivity.Status == <span class="str">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="kw">try</span> {
+      <span class="cm">// Obtain next activity</span>
+      <span class="ty">Activity</span> nextAct = <span class="fn">Instance.getByExtIdByUri</span>(
+        orderRequest.ProcessFlow.NextActivityName,
+        <span class="str">"/Concepts/OM/ProcessConfig/Activity"</span>);
+
+      <span class="cm">// Resubmit guard</span>
+      <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+      <span class="kw">if</span> (isActResub) { <span class="fn">PurgePendingRequestsBeforeResubmit</span>(orderCurrentActivity); }
+
+      <span class="cm">// Initialize deduplicated SOC name list</span>
+      <span class="ty">Collections.List</span> arrLstSOCs = <span class="fn">Collections.List.createArrayList</span>();
+
+      <span class="cm">// Pass 1: POU Agreement Offers (+ RelatedOffersArray)</span>
+      <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nu">0</span>; i &lt; pOuLen; i++) {
+        <span class="kw">if</span> (orderRequest.OrderData.Customer.ParentOU[i].Agreement != <span class="kw">null</span>) {
+          <span class="kw">for</span> (<span class="kw">int</span> j=<span class="nu">0</span>; j &lt; pagofLen; j++) {
+            <span class="kw">String</span> socName = ParentOU[i].Agreement.Offers[j].OfferName;
+            preExecXML = <span class="fn">GetXMLForAgreementOffer</span>(orderRequest, pAgreeRefId, socName);
+            <span class="kw">if</span> (!<span class="fn">Collections.contains</span>(arrLstSOCs, socName))
+              <span class="fn">Collections.List.add</span>(arrLstSOCs, socName);
+            <span class="cm">// Also loop RelatedOffersArray for this offer...</span>
+          }
+        }
+      }
+
+      <span class="cm">// Pass 2: POU Subscriber SubscriberOffers (+ RelatedOffersArray)</span>
+      <span class="cm">// Pass 3: COU Agreement Offers (+ RelatedOffersArray)</span>
+      <span class="cm">// Pass 4: COU Subscriber SubscriberOffers (+ RelatedOffersArray)</span>
+      <span class="cm">// [same pattern as Pass 1 — see §6 for full detail]</span>
+
+      <span class="cm">// Build and fire single batch event</span>
+      <span class="cm">// [XSLT generates ns:ResolveSocDataRequest with xsl:for-each over $socNames/elements → multiple ns:SocName elements]</span>
+      <span class="cm">// [See §9.5 for full XSLT source]</span>
+      <span class="ty">Event</span> reqEvent = <span class="fn">Event.createEvent</span>(<span class="str">"xslt://{{/Events/OMConsumers/OMXFM/Request/OMX_RESOLVE_SOC_DATA}}..."</span>);
+      <span class="fn">Event.Ext.sendEventImmediate</span>(reqEvent);
+
+      <span class="kw">if</span> (!isActResub) { orderCurrentActivity.RequestCount++; }
+
+      <span class="cm">// Queued audit log</span>
+      <span class="ty">Event</span> auditEvent = <span class="fn">Event.createEvent</span>(<span class="str">"xslt://{{/Events/OMConsumers/OMXESB/Logger}}..."</span>);
+      <span class="fn">Event.sendEvent</span>(auditEvent);  <span class="cm">// queued (not immediate)</span>
+
+      <span class="kw">if</span> (!isSkipped) {
+        <span class="fn">GetActivityStatusString</span>(<span class="str">"1"</span>, <span class="kw">false</span>);
+        <span class="fn">SendDataToDB</span>(orderRequest);
+      } <span class="kw">else</span> {
+        <span class="fn">SkipActivity</span>(<span class="str">"4"</span>);
+      }
+
+      <span class="fn">Collections.clear</span>(arrLstSOCs);
+
+    } <span class="kw">catch</span> (Exception ae) {
+      <span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+    }
+  }
+}</div>
+    </details>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="section">
+  <div class="section-header"><span class="num">§19</span> Response Message Rule</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§19.1 — Overview</h3>
+    <p>The response handler for OMX_RESOLVE_SOC_DATA performs two distinct functions:</p>
+    <ol style="margin:10px 0 10px 24px;line-height:2">
+      <li><strong>Parse response</strong> — map the backend ResolveSocDataResponse into <code>OMX_ResolveSocDataRes</code> concept with a <code>SocData[]</code> array.</li>
+      <li><strong>Enrich orderRequest</strong> — for each resolved SocData record, walk all 4 offer sources and write ServiceType, RevenueType, OfferRate, DataInfo fields back to every matching offer by PackageCode. Also applies IR flag and OMX-2771 serviceType override.</li>
+    </ol>
+    <div class="callout purple">This is the most complex response handler in this FM set — it does NOT simply store the response and signal fan-in. It performs an O(S × O) enrichment pass across the entire order structure.</div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td><td>Full order — WRITTEN with enriched SOC metadata</td></tr>
+      <tr><td><code>eventResponse</code></td><td>Events.OMConsumers.OMXFM.Response.OMX_RESOLVE_SOC_DATA</td><td>Backend response event</td></tr>
+      <tr><td><code>currActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td><td>Activity tracking — Response[] appended here; fan-in checked</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.3 — Response Concept Construction (OMX_ResolveSocDataRes)</h3>
+    <div style="background:var(--code-bg);padding:16px;border-radius:6px;border-left:3px solid var(--true-red)">
+      <ul class="xslt-tree">
+        <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+          <ul>
+            <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div>
+              <ul>
+                <li><div class="tree-row"><span class="tree-tag">ResponseCode</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional: $eventResponse/ResponseCode</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/ResponseMsg</span> <span class="tree-cond">(note: source field is ResponseMsg, not ResponseMessage)</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">ReferenceId</span> <span class="tree-arrow">←</span> <span class="tree-src">$eventResponse/RefID</span> <span class="tree-cond">(note: source field is RefID, target is ReferenceId)</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                <li><div class="tree-row"><span class="tree-tag">SocData</span> <span class="tree-attr">@extId</span> <span class="tree-arrow">←</span> <span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="tree-cond">xsl:for-each $eventResponse/payload/ns:ResolveSocDataResponse/ns:ResolveSocData</span> <span class="badge badge-orange" style="font-size:0.7rem">Repeated</span></div>
+                  <ul>
+                    <li><div class="tree-row"><span class="tree-tag">PackageCode</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:PackageCode</span> <span class="badge badge-green" style="font-size:0.7rem">Always</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">PackageCat</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:PackageCat</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional: ns:PackageCat exists</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">PackageType</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:PackageType</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">ChargeType</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:ChargeType</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">Company</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:Company</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">Price</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:Price</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                    <li><div class="tree-row"><span class="tree-tag">DataType</span> <span class="tree-arrow">←</span> <span class="tree-src">ns:DataType</span> <span class="badge badge-orange" style="font-size:0.7rem">Conditional</span></div></li>
+                  </ul>
+                </li>
+              </ul>
+            </li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div class="callout warning" style="margin-top:10px;font-size:0.83rem">
+      <strong>Field name asymmetries:</strong> Source <code>ResponseMsg</code> → target <code>ResponseMessage</code>; source <code>RefID</code> → target <code>ReferenceId</code>. <code>TssDisplayType</code> is present in the concept but NOT populated by response XSLT — defaults to null/empty.
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.4 — SOC Data Enrichment Logic</h3>
+    <table>
+      <tr><th>Step</th><th>Logic</th></tr>
+      <tr><td>1. Filter</td><td>Skip SocData entries where <code>PackageCat</code> is blank/null</td></tr>
+      <tr><td>2. Compute serviceType</td><td><code>RuleFunctions.Helpers.IndentifySocDataServiceType(packageCat, dataType)</code></td></tr>
+      <tr><td>3. OMX-2771 override</td><td>If serviceType == "88" AND SocData.TssDisplayType == "ROAM" → serviceType = "91" (IR Data Pack via iService)</td></tr>
+      <tr><td>4. Compute rate</td><td><code>rate = Number.doubleValue(SocData.Price)</code> if not blank; else 0.0</td></tr>
+      <tr><td>5. Match offers</td><td>4-pass loop: POU Agreement → POU Subscriber → COU Agreement → COU Subscriber; match by <code>packageCode == offer.OfferName</code></td></tr>
+      <tr><td>6. Write metadata</td><td>ServiceType, RevenueType=packageType, OfferRate=rate; create or update DataInfo (Package, ChargeType, PackType)</td></tr>
+      <tr><td>7. IR flag</td><td>If <code>offer.ServiceType == "87"</code> (SubscriberOffers only): append SubscriberOffersExtendedInfo(Name="IR_DATA", Value="Y")</td></tr>
+      <tr><td>8. RelatedOffers</td><td>Loop RelatedOffersArray; match by packageCode; write only ServiceType (not full metadata)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.5 — Fan-in Completion Logic</h3>
+    <div class="code-block"><span class="cm">// Append response concept to activity response array:</span>
+currActivity.Response[currActivity.Response@length] = activityRes;
+
+<span class="cm">// Fan-in check:</span>
+<span class="kw">if</span> (currActivity.RequestCount == currActivity.Response@length) {
+    <span class="kw">return</span> <span class="str">"true"</span>;  <span class="cm">// all responses received</span>
+} <span class="kw">else</span> {
+    <span class="kw">return</span> <span class="str">"false"</span>; <span class="cm">// still waiting</span>
+}</div>
+    <div class="callout info" style="margin-top:8px;font-size:0.83rem">
+      <strong>Different from other FMs:</strong> Uses <code>currActivity.Response@length</code> (total response count) NOT a count of ResponseCode "000" success entries. Since only ONE event is sent (RequestCount=1), this returns "true" immediately on the first response regardless of ResponseCode. Error handling is expected to be done via ResponseCode inspection in a subsequent step.
+    </div>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.5 — Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code> (conditional)</td></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat($pid, "_RES")</code></td></tr>
+      <tr><td>COMPONENT_NAME</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"OMX_RESOLVE_SOC_DATA"</code></td></tr>
+      <tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+      <tr><td>LOG_LEVEL</td><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>concat("Response received for OMX_RESOLVE_SOC_DATA, RefId: ", $eventResponse/RefID)</code> — includes RefID dynamically</td></tr>
+      <tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+      <tr><td>payload/ns:ServicePayload</td><td>copy of <code>$eventResponse</code> — gated by <code>WritePayload="true"</code></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.6 — Response XSLT Source (OMX_ResolveSocDataRes)</h3>
+    <details>
+      <summary>Show full response XSLT</summary>
+      <div class="code-block" style="margin-top:8px"><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:OMXUtils</span>=<span class="str">"www.tibco.com/be/custom/OMXUtils"</span>
+  <span class="xa">xmlns:xsl</span>=<span class="str">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:ns</span>=<span class="str">"http://services.omx.truecorp.co.th/ResolveSocDataResponse"</span>
+  <span class="xa">xmlns:xsd</span>=<span class="str">"http://www.w3.org/2001/XMLSchema"</span>
+  <span class="xa">version</span>=<span class="str">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="str">"eventResponse"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="str">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createObject&gt;</span>
+      <span class="xt">&lt;object&gt;</span>
+        <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="str">"extId"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"OMXUtils:generateTrackingID()"</span><span class="xt">/&gt;</span>
+        <span class="xt">&lt;/xsl:attribute&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$eventResponse/ResponseCode"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ResponseCode&gt;</span>
+            <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$eventResponse/ResponseCode"</span><span class="xt">/&gt;</span>
+          <span class="xt">&lt;/ResponseCode&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$eventResponse/ResponseMsg"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ResponseMessage&gt;</span>  <span class="cm">&lt;!-- note: source=ResponseMsg, target=ResponseMessage --&gt;</span>
+            <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$eventResponse/ResponseMsg"</span><span class="xt">/&gt;</span>
+          <span class="xt">&lt;/ResponseMessage&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$eventResponse/CompletionStatus"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;CompletionStatus&gt;</span>
+            <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$eventResponse/CompletionStatus"</span><span class="xt">/&gt;</span>
+          <span class="xt">&lt;/CompletionStatus&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"$eventResponse/RefID"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;ReferenceId&gt;</span>  <span class="cm">&lt;!-- note: source=RefID, target=ReferenceId --&gt;</span>
+            <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"$eventResponse/RefID"</span><span class="xt">/&gt;</span>
+          <span class="xt">&lt;/ReferenceId&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="cm">&lt;!-- SocData array — one element per ns:ResolveSocData in response --&gt;</span>
+        <span class="xt">&lt;xsl:for-each</span> <span class="xa">select</span>=<span class="str">"$eventResponse/payload/ns:ResolveSocDataResponse/ns:ResolveSocData"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;SocData&gt;</span>
+            <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="str">"extId"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"OMXUtils:generateTrackingID()"</span><span class="xt">/&gt;</span>
+            <span class="xt">&lt;/xsl:attribute&gt;</span>
+            <span class="xt">&lt;PackageCode&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"ns:PackageCode"</span><span class="xt">/&gt;&lt;/PackageCode&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"ns:PackageCat"</span><span class="xt">&gt;&lt;PackageCat&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"ns:PackageCat"</span><span class="xt">/&gt;&lt;/PackageCat&gt;&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"ns:PackageType"</span><span class="xt">&gt;&lt;PackageType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"ns:PackageType"</span><span class="xt">/&gt;&lt;/PackageType&gt;&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"ns:ChargeType"</span><span class="xt">&gt;&lt;ChargeType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"ns:ChargeType"</span><span class="xt">/&gt;&lt;/ChargeType&gt;&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"ns:Company"</span><span class="xt">&gt;&lt;Company&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"ns:Company"</span><span class="xt">/&gt;&lt;/Company&gt;&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"ns:Price"</span><span class="xt">&gt;&lt;Price&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"ns:Price"</span><span class="xt">/&gt;&lt;/Price&gt;&lt;/xsl:if&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test</span>=<span class="str">"ns:DataType"</span><span class="xt">&gt;&lt;DataType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="str">"ns:DataType"</span><span class="xt">/&gt;&lt;/DataType&gt;&lt;/xsl:if&gt;</span>
+          <span class="xt">&lt;/SocData&gt;</span>
+        <span class="xt">&lt;/xsl:for-each&gt;</span>
+      <span class="xt">&lt;/object&gt;</span>
+    <span class="xt">&lt;/createObject&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></div>
+    </details>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

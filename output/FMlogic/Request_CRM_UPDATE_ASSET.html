@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CRM_UPDATE_ASSET</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-high{background:#FFE0E0;color:var(--true-dark)}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CRM_UPDATE_ASSET</h1>
+  <div class="subtitle">CRM Asset Registration — registers subscriber as CRM asset with KYC/identity data; IntraActivitySequencing fan-in; OrderType 1/34/52/66 dispatch</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: CRM</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: IntraActivitySequencing</span>
+    <span class="meta-chip">Author: DESKTOP-HINKNF3</span>
+    <span class="meta-chip">POU Subscribers only</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>CRM_UPDATE_ASSET</strong> registers each subscriber as an asset in the CRM system with KYC/identity verification data. It sends <code>ns:updateAssetRequest</code> and uses <strong>IntraActivitySequencing</strong> — events are asserted (<code>Event.assertEvent</code>) and dispatched via <code>ActionRequestEvent</code>/<code>SendFirstRequestEvent</code>, not fire-and-forget.
+    </div>
+    <div class="callout info">
+      <strong>IntraActivitySequencing pattern:</strong> <code>Event.assertEvent(reqEvent)</code> + <code>ActionRequestEvent(reqEvent, currActivity)</code> + <code>SendFirstRequestEvent(currActivity)</code>. Fan-in: <code>ActionResponseEvent(currActivity)</code> returns true/false.
+    </div>
+    <div class="callout warn">
+      <strong>OrderType=1 TrueFamily skip:</strong> If <code>OrderType="1"</code> AND <code>campaignCode=="TrueFamily"</code> AND subscriber has no FE ResourceInfo → <code>continue</code> (skip this subscriber). No exception — silently skips.
+    </div>
+    <div class="callout success">
+      <strong>CustomerAccount dispatch by OrderType:</strong> OT=1/66 → customer-level name/address; OT=34/52 → subscriber-level name/address. Asset section always uses subscriber-level MSISDN.
+    </div>
+    <div class="callout">
+      <strong>OT=34 dummyMsisdn:</strong> OT=34 uses <code>dummyMsisdn</code> + <code>dummyMsisdnFlag="true"</code> instead of <code>serviceId</code>. Supports pre-provisioning with dummy MSISDN.
+    </div>
+    <div class="callout">
+      <strong>ParentCustomer section:</strong> Emitted only if <code>Customer.OtherAddress</code> exists — holds parent/guardian data for minor subscriber cases.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CRM_UPDATE_ASSET</code></td></tr>
+      <tr><td>Author</td><td>DESKTOP-HINKNF3</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>CRM</td></tr>
+      <tr><td>Event type (Request)</td><td><code>Events.OMConsumers.OMXFM.Request.CRM_UPDATE_ASSET</code></td></tr>
+      <tr><td>Event type (Response)</td><td><code>Events.OMConsumers.OMXFM.Response.CRM_UPDATE_ASSET</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.assertEvent + ActionRequestEvent + SendFirstRequestEvent</code> — INTRA-ACTIVITY SEQUENCING</td></tr>
+      <tr><td>RequestCount</td><td>Not manually incremented — IntraActivitySequencing manages it</td></tr>
+      <tr><td>Fan-in</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> → true/false</td></tr>
+      <tr><td>Iteration</td><td>POU[].Subscriber[] only (no ChildOU)</td></tr>
+      <tr><td>Resubmit</td><td><code>PurgePendingRequestsBeforeResubmit</code> + CompletionStatus==2 skip per Subscriber</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>CustomerType→type</td><td>CustomerTypeInfo.Type==80 → <code>"Prepay"</code>; else → <code>"Postpay"</code></td></tr>
+      <tr><td>BirthDate formatting</td><td><code>DateTime.translateTime(birthDateFormat, "Asia/Bangkok")</code> → <code>DateTime.format("yyyy-MM-dd")</code></td></tr>
+      <tr><td>OT=1 TrueFamily skip</td><td>If OT="1" AND campaignCode=="TrueFamily" AND no FE ResourceInfo → <code>continue</code> silently</td></tr>
+      <tr><td>OrderType customerAccount dispatch</td><td>OT=1/66: Customer-level IdType/IdNumber/Name/BirthDate/Address. OT=34/52: Subscriber-level SubscriberName/Address</td></tr>
+      <tr><td>OT=34 dummyMsisdn</td><td><code>dummyMsisdn</code> + <code>dummyMsisdnFlag="true"</code> instead of serviceId. OT!=34 uses <code>serviceId</code>.</td></tr>
+      <tr><td>ParentCustomer section</td><td>Emitted only if <code>Customer.OtherAddress</code> exists; reads from Customer.ExtInfo PARENT_FIRSTNAME/LASTNAME/ID/CONTACT</td></tr>
+      <tr><td>title default fallback</td><td>If Title empty or length==0 → <code>"คุณ"</code> (Thai honorific)</td></tr>
+      <tr><td>PreExecCheck uses full order XML</td><td><code>Instance.serializeUsingDefaults(orderRequest)</code> — unlike subscriber-scoped XML in other FMs</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping</div>
+  <div class="section-body">
+<pre><code>createEvent → event
+├── extId           ← OMXUtils:generateTrackingID()                    [Always]
+├── JMSPriority     ← $orderRequest/OrderPriority                      [Always]
+├── JMSCorrelationID← $orderRequest/OrderData/OMXTrackingId            [Always]
+├── OrderID         ← $orderRequest/OrderData/OrderID                  [Always]
+├── RefID           ← $refId (subscriber.RefId)                        [Always]
+├── OrderType       ← $orderRequest/OrderData/OrderType                [Always]
+└── payload → ns:updateAssetRequest
+    ├── ns:transactionId ← OMXTrackingId                              [Always]
+    ├── ns:customerAccount [OrderType dispatch]
+    │   ├── OT=1 or OT=66:
+    │   │   idType/idNumber ← Customer.CustomerGeneralInfo.Identification*
+    │   │   title ← Title || "คุณ" (fallback)
+    │   │   firstName/lastName/gender ← Customer.CustomerName.*
+    │   │   birthDate ← $birthDate (formatted "yyyy-MM-dd")
+    │   │   ccbsCustId ← Customer.CustomerId
+    │   │   address ← Customer.CustomerAddress.*                      [Conditional: OtherAddress exists]
+    │   └── OT=34 or OT=52:
+    │       idType/idNumber ← Subscriber.SubscriberName.Identification*
+    │       title/firstName/lastName/gender ← Subscriber.SubscriberName.*
+    │       birthDate ← $birthDate; ccbsCustId ← Customer.CustomerId
+    │       address ← Subscriber.SubscriberAddress.*
+    ├── ns:asset
+    │   ├── ns:serviceId   ← Subscriber.MSISDN                        [if OT != "34"]
+    │   ├── ns:dummyMsisdn ← Subscriber.MSISDN                        [if OT == "34"]
+    │   ├── ns:dummyMsisdnFlag ← "true"                               [if OT == "34"]
+    │   ├── ns:productType  ← $type (Prepay | Postpay)                [Always]
+    │   ├── ns:subscriberNo ← Subscriber.SubscriberId                 [Always]
+    │   ├── ns:dealerCode   ← OrderData.DealerCode                    [Always]
+    │   ├── ns:channelOrder ← ExtInfo[ORG_CHANNEL].Value              [Always]
+    │   ├── ns:verifyMethod ← ExtInfo[VERIFY_METHOD].Value            [Always]
+    │   ├── ns:verifyResult ← ExtInfo[VERIFY_RESULT].Value            [Always]
+    │   ├── ns:kycData      ← ExtInfo[KYC_DATA].Value                 [Always]
+    │   ├── ns:transDocID   ← ExtInfo[TRANSACTION_DOC_ID].Value       [Always]
+    │   ├── ns:issueDate    ← ExtInfo[ID_ISSUE_DATE].Value            [Always]
+    │   ├── ns:expireDate   ← ExtInfo[ID_EXPIRE_DATE].Value           [Always]
+    │   └── ns:isCardReader ← ExtInfo[ID_FROM_CARD_READER].Value      [Always]
+    └── ns:parentCustomer  [Conditional: Customer.OtherAddress exists]
+        ├── firstName/lastName ← ExtInfo[PARENT_FIRSTNAME/PARENT_LASTNAME]
+        ├── idType ← "Thai Id" (hardcoded)
+        ├── idNumber ← ExtInfo[PARENT_ID]
+        ├── contactPhoneType ← "Mobile" (hardcoded)
+        ├── contactPhone ← ExtInfo[PARENT_CONTACT]
+        └── address ← Customer.OtherAddress.*</code></pre>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_CRM_UPDATE_ASSET
+├── if isActResub: PurgePendingRequestsBeforeResubmit
+├── for each POU[i].Subscriber[j]:
+│   ├── sub.RefId → refId
+│   ├── check CompletionStatus==2 skip → reqSuccess
+│   ├── [if PreExecCheck] Instance.serializeUsingDefaults(orderRequest) → chkRes
+│   └── if chkRes=="true" AND !reqSuccess:
+│       ├── [OT=1 TrueFamily check] if TrueFamily AND no FE ResourceInfo → continue
+│       ├── CustomerType==80 → type="Prepay"; else → type="Postpay"
+│       ├── BirthDate → translateTime(Asia/Bangkok) → format("yyyy-MM-dd") → birthDate
+│       ├── Event.createEvent(CRM_UPDATE_ASSET, XSLT) → reqEvent
+│       ├── Event.assertEvent(reqEvent)
+│       ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, currActivity)
+│       └── Logger REQ
+├── if !isSkipped:
+│   ├── IntraActivitySequencing.SendFirstRequestEvent(currActivity)
+│   ├── GetActivityStatusString("1")
+│   └── SendDataToDB
+└── else: SkipActivity("4")
+
+Response_CRM_UPDATE_ASSET
+├── createInstance(ResponseBase std 4, extId from event@extId) → currActivity.Response[n]
+├── currActivity.ResponseCode/ResponseMessage = eventResponse.*
+├── assetId = XPath(eventResponse/payload/updateAssetResponse/asset/assetId)
+├── dummyMsisdnFlag = XPath(eventResponse/payload/updateAssetResponse/asset/dummyMsisdnFlag)
+├── Logger RES
+└── IntraActivitySequencing.ActionResponseEvent(currActivity) → "true"/"false"</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>OT=1 TrueFamily silent skip — subscribers without FE ResourceInfo are excluded without warning</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Document skip condition; add audit log entry when subscriber is skipped</td>
+      </tr>
+      <tr>
+        <td>Full order XML serialized for PreExecCheck (<code>serializeUsingDefaults</code>) — expensive for large orders</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Review PreExecCheck; consider subscriber-scoped XML if possible</td>
+      </tr>
+      <tr>
+        <td>assetId/dummyMsisdnFlag extracted in response but not written back to order data</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Clarify whether assetId needs to be persisted; add write-back if required</td>
+      </tr>
+      <tr>
+        <td>title fallback "คุณ" hardcoded (Thai honorific) — may be wrong for non-Thai customers or corporate accounts</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Externalise fallback or add OT/customerType conditional</td>
+      </tr>
+      <tr>
+        <td>ChildOU subscribers NOT processed — CRM asset registration only covers POU subscribers</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Verify CRM scope with business; document exclusion of ChildOU</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td>ResponseBase (std 4 fields)</td><td>Always</td></tr>
+      <tr><td><code>currActivity.ResponseCode</code></td><td><code>eventResponse.ResponseCode</code></td><td>Always</td></tr>
+      <tr><td><code>currActivity.ResponseMessage</code></td><td><code>eventResponse.ResponseMsg</code></td><td>Always</td></tr>
+      <tr><td><code>assetId</code> (local var only)</td><td><code>eventResponse/payload/updateAssetResponse/asset/assetId</code></td><td>Read but not written back to order</td></tr>
+      <tr><td><code>dummyMsisdnFlag</code> (local var only)</td><td><code>eventResponse/payload/updateAssetResponse/asset/dummyMsisdnFlag</code></td><td>Read but not written back to order</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:12px">
+      Fan-in: <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> — driven by sequence tracker, not RequestCount comparison.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

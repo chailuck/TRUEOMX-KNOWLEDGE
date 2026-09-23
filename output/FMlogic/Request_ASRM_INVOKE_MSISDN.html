@@ -1,0 +1,945 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_ASRM_INVOKE_MSISDN</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#212121;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px;}
+.page-header .sub{opacity:.85;margin-top:6px;font-size:.97rem;}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap;}
+.meta-badge{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.82rem;}
+.container{max-width:1300px;margin:0 auto;padding:28px 24px;}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:20px;}
+table{width:100%;border-collapse:collapse;font-size:.88rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:last-child td{border-bottom:none;}
+tr:hover td{background:#fafafa;}
+pre,code{font-family:'Cascadia Code','Consolas','Courier New',monospace;}
+.code-block{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:.82rem;line-height:1.55;border-left:3px solid var(--true-red);}
+.inline-code{background:#f0e6e6;color:var(--true-dark);padding:1px 6px;border-radius:4px;font-size:.84em;}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.76rem;font-weight:600;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-purple{background:#F3E5F5;color:#6a1b9a;}
+.badge-teal{background:#E0F2F1;color:#00695c;}
+.badge-jms{background:#FFE0B2;color:#E65100;}
+.badge-db{background:#E8EAF6;color:#3949AB;}
+.badge-log{background:#F1F8E9;color:#558B2F;}
+.flow-step{display:flex;align-items:flex-start;gap:14px;padding:10px 0;border-bottom:1px dashed var(--border);}
+.flow-step:last-child{border-bottom:none;}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:28px;height:28px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:2px;}
+.cond-block{background:#FFFDE7;border-left:3px solid #F9A825;padding:10px 14px;border-radius:0 6px 6px 0;margin:6px 0;}
+.warn-block{background:#FFF3E0;border-left:3px solid var(--warning);padding:10px 14px;border-radius:0 6px 6px 0;margin:8px 0;}
+details summary{cursor:pointer;font-weight:600;color:var(--true-dark);padding:6px 0;}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem;}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0;}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px;}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0;}
+.tree-tag{color:#89dceb;font-weight:600;}
+.tree-attr{color:#f9e2af;}
+.tree-arrow{color:#6c7086;margin:0 6px;}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px;}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px;}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic;}
+.tree-ns{color:#6c7086;font-size:.78rem;}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9;}
+.tree-legend{display:flex;gap:16px;flex-wrap:wrap;font-size:.78rem;margin-top:10px;padding:8px 12px;background:#f8f8f8;border-radius:6px;}
+.kw{color:#cba6f7;}.ty{color:#89b4fa;}.str{color:#a6e3a1;}.cm{color:#6c7086;font-style:italic;}.nm{color:#fab387;}.fn{color:#f38ba8;}.xt{color:#89dceb;}.xa{color:#f9e2af;}
+h3{color:var(--true-dark);font-size:.97rem;margin:16px 0 8px;padding-bottom:4px;border-bottom:1px solid #f0dede;}
+h4{color:#555;font-size:.88rem;margin:12px 0 6px;}
+p{margin-bottom:8px;}
+ul.plain{padding-left:20px;}
+ul.plain li{margin-bottom:4px;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="sub">TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</div>
+  <h1>Request_ASRM_INVOKE_MSISDN</h1>
+  <div class="sub">ASRM Unified Resource Activity — MSISDN Operations (LOCK / RESERVE / PREACTIVATE / ACTIVATE / PORT IN / PORT OUT)</div>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">forwardChain: true</span>
+    <span class="meta-badge">Backend: ASRM</span>
+    <span class="meta-badge">Channel: OMXFMConnectionRequest</span>
+    <span class="meta-badge">Generated: 2026-07-23</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This rule fires when the order orchestration engine reaches an activity with <span class="inline-code">ActivityID = ASRM_INVOKE_MSISDN</span> and status <span class="inline-code">WAITING</span>. It sends a <strong>UnifiedResourceActivity</strong> request to ASRM (Amdocs Resource Manager 3G) for every eligible subscriber in the order — both at ParentOU and ChildOU levels.</p>
+    <p>The specific MSISDN operation is driven by the <span class="inline-code">ACTIVITY</span> parameter defined in the ProcessConfig, which can be one of: <strong>LOCK, RESERVE, PREACTIVATE, ACTIVATE, PORT IN, PORT OUT RELEASE, PORT IN REVERSE, PORT OUT REVERSE, ACTIVATED</strong>.</p>
+    <p>For PORT IN and PORT OUT RELEASE activities, zone codes stored as ASCII integers in the order are first decoded to text using <span class="inline-code">OMXUtils.asciiCodeToText</span> before being sent to ASRM. Subscribers that already have a SUCCESS response (CompletionStatus=2) for the current activity are skipped, enabling safe resubmission.</p>
+    <p>Each sent request increments <span class="inline-code">orderCurrentActivity.RequestCount</span>. The activity status transitions to <strong>IN_PROGRESS</strong> after dispatching. If all subscribers are skipped by the PreExecCheck, the activity is marked <strong>SKIPPED</strong>.</p>
+    <div class="warn-block">⚠ <strong>Two subscriber scopes:</strong> This rule handles both <em>ParentOU subscribers</em> (ParentOU[i]/Subscriber[j]) and <em>ChildOU subscribers</em> (ParentOU[i]/ChildOU[k]/Subscriber[j]) producing two XSLT variants that differ only in the XPath subscriber navigation path.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><span class="inline-code">Request_ASRM_INVOKE_MSISDN</span></td></tr>
+      <tr><td>Full Path</td><td><span class="inline-code">Rules.OMConsumers.OMXFM.Request.Request_ASRM_INVOKE_MSISDN</span></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td><span class="badge badge-green">true</span></td></tr>
+      <tr><td>Rule Type</td><td>Request Dispatch — sends outbound JMS event to ASRM FM</td></tr>
+      <tr><td>Author</td><td>chch</td></tr>
+      <tr><td>Backend System</td><td>ASRM (Amdocs Resource Manager)</td></tr>
+      <tr><td>Operation</td><td>UnifiedResourceActivity (MSISDN)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type Path</th><th>Role</th></tr>
+      <tr><td><span class="inline-code">orderRequest</span></td><td><span class="inline-code">Concepts.OrderRequest.OrderRequest</span></td><td>Master order concept — contains customer hierarchy, subscriber data, order metadata</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity</span></td><td><span class="inline-code">Concepts.OM.ProcessConfig.Activity</span></td><td>Current orchestration step — holds status, parameters, response array, RequestCount</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+      <tr><td>1</td><td><span class="inline-code">orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</span></td><td>Correlates activity instance to the current order's next step</td></tr>
+      <tr><td>2</td><td><span class="inline-code">orderCurrentActivity.ActivityID == "ASRM_INVOKE_MSISDN"</span></td><td>Ensures only ASRM MSISDN activities fire this rule</td></tr>
+      <tr><td>3</td><td><span class="inline-code">orderRequest.ProcessFlow.NextActivityID == "ASRM_INVOKE_MSISDN"</span></td><td>Double-check at the order level — prevents mis-firing on stale working memory</td></tr>
+      <tr><td>4</td><td><span class="inline-code">orderCurrentActivity.Status == "WAITING"</span></td><td>Ensures the rule only fires on a fresh/ready activity, not one already in progress</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="step-num">1</div><div><strong>Parameter Parsing</strong> — Iterate <span class="inline-code">orderCurrentActivity.Parameter[]</span> using XPath <span class="inline-code">tib:tokenize($param, "=")</span> to extract <span class="inline-code">ACTIVITY</span> key-value pair → <span class="inline-code">activityValue</span></div></div>
+    <div class="flow-step"><div class="step-num">2</div><div><strong>Zone Code Decode</strong> — If <span class="inline-code">activityValue == "PORT IN"</span> or <span class="inline-code">"PORT OUT RELEASE"</span>: decode <span class="inline-code">DonorZoneCode</span> and <span class="inline-code">RCPZoneCode</span> via <span class="inline-code">OMXUtils.asciiCodeToText(Number.intValue(code, 10))</span></div></div>
+    <div class="flow-step"><div class="step-num">3</div><div><strong>Build operator name</strong> — <span class="inline-code">operatorname = ActivityID + "_" + activityValue</span> (used in audit log OPERATION_NAME)</div></div>
+    <div class="flow-step"><div class="step-num">4</div><div><strong>ParentOU Loop</strong> — For each <span class="inline-code">ParentOU[i] → Subscriber[j]</span>:
+      <ul class="plain" style="margin-top:6px;">
+        <li>Skip if <span class="inline-code">Response[].ReferenceId == refId &amp;&amp; CompletionStatus == 2</span> (already succeeded)</li>
+        <li>Run PreExecCheck via <span class="inline-code">RuleFunctions.Helpers.GetXMLForSubscriber</span> + <span class="inline-code">XPath.execute</span></li>
+        <li>If passes: build &amp; send <span class="inline-code">ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span> event (ParentOU XSLT variant ①)</li>
+        <li>Send audit Logger event (if <span class="inline-code">AllowWriteLog</span> is true)</li>
+        <li>Increment <span class="inline-code">orderCurrentActivity.RequestCount</span> (if not resubmit)</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="step-num">5</div><div><strong>ChildOU Loop</strong> — For each <span class="inline-code">ParentOU[i] → ChildOU[k] → Subscriber[j]</span>: same logic as step 4 using ChildOU XSLT variant ②</div></div>
+    <div class="flow-step"><div class="step-num">6</div><div><strong>Status Update</strong>
+      <ul class="plain" style="margin-top:6px;">
+        <li>If any request sent (<span class="inline-code">!isSkipped</span>) → <span class="inline-code">Status = IN_PROGRESS</span>, call <span class="inline-code">SendDataToDB</span></li>
+        <li>If all skipped → <span class="inline-code">RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, "4")</span> → Status = SKIPPED, advance to next activity</li>
+      </ul>
+    </div></div>
+    <div class="flow-step"><div class="step-num">7</div><div><strong>Exception Handling</strong> — <span class="inline-code">catch(Exception ae)</span> → <span class="inline-code">RuleFunctions.Helpers.HandleActivityException</span> → Status = ERROR, order status = FAILED, error logger fired</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Step-by-Step Logic</div>
+  <div class="section-body">
+    <h3>6.1 Initialization</h3>
+    <div class="code-block"><span class="cm">// Resubmit guard — if order is being resubmitted, don't double-count RequestCount</span>
+<span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nm">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+<span class="cm">// Get next activity concept by extId for PreExecCheck evaluation</span>
+Concepts.OM.ProcessConfig.Activity nextAct = Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName, <span class="str">"/Concepts/OM/ProcessConfig/Activity"</span>);
+<span class="kw">int</span> iPOULen = orderRequest.OrderData.Customer.ParentOU@length;</div>
+
+    <h3>6.2 Parameter Parsing</h3>
+    <div class="code-block"><span class="kw">for</span> (<span class="kw">int</span> iParam=<span class="nm">0</span>; iParam&lt;orderCurrentActivity.Parameter@length; iParam++) {
+    String param = XPath.evalAsString(<span class="str">"xpath://... $orderCurrentActivity/Parameter[(number($iParam)+1)]"</span>);
+    String paramKey   = XPath.evalAsString(<span class="str">"xpath://... tib:tokenize($param, \"=\")[1]"</span>);
+    String paramValue = XPath.evalAsString(<span class="str">"xpath://... tib:tokenize($param, \"=\")[2]"</span>);
+    <span class="kw">if</span>(String.equals(<span class="str">"ACTIVITY"</span>, paramKey)) activityValue = paramValue;
+}</div>
+
+    <h3>6.3 Zone Code Decode (PORT IN / PORT OUT RELEASE only)</h3>
+    <div class="code-block"><span class="kw">if</span>(String.equals(activityValue, <span class="str">"PORT IN"</span>) || String.equals(activityValue, <span class="str">"PORT OUT RELEASE"</span>)) {
+    <span class="kw">if</span>(!RuleFunctions.Helpers.BRMS.IsBlank(orderRequest.OrderData.MNPInfo.DonorZoneCode))
+        donorZoneText = OMXUtils.asciiCodeToText(Number.intValue(orderRequest.OrderData.MNPInfo.DonorZoneCode, <span class="nm">10</span>));
+    <span class="kw">if</span>(!RuleFunctions.Helpers.BRMS.IsBlank(orderRequest.OrderData.MNPInfo.RCPZoneCode))
+        rcpZoneText = OMXUtils.asciiCodeToText(Number.intValue(orderRequest.OrderData.MNPInfo.RCPZoneCode, <span class="nm">10</span>));
+}</div>
+
+    <h3>6.4 Per-Subscriber Dispatch (ParentOU)</h3>
+    <div class="code-block"><span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;iPOULen; i++) {
+    <span class="kw">for</span>(<span class="kw">int</span> j=<span class="nm">0</span>; j&lt;iSubscriberLen; j++) {
+        <span class="cm">// 1. Skip check</span>
+        <span class="kw">boolean</span> reqSuccess = <span class="kw">false</span>;
+        <span class="kw">for</span>(<span class="kw">int</span> iResp=<span class="nm">0</span>; iResp&lt;orderCurrentActivity.Response@length; iResp++)
+            <span class="kw">if</span>(refId matches &amp;&amp; CompletionStatus==<span class="nm">2</span>) reqSuccess = <span class="kw">true</span>;
+        <span class="kw">if</span>(!reqSuccess) {
+            <span class="cm">// 2. PreExecCheck</span>
+            String chkRes = <span class="str">"true"</span>;
+            <span class="kw">if</span>(String.length(nextAct.PreExecCheck) &gt; <span class="nm">0</span>) {
+                String sXML = RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId);
+                chkRes = XPath.execute(<span class="str">"/("+nextAct.PreExecCheck+")"</span>, sXML, ns);
+            }
+            <span class="kw">if</span>(String.equals(chkRes, <span class="str">"true"</span>)) {
+                <span class="cm">// 3. Send ASRM request event (ParentOU XSLT variant)</span>
+                Events.OMConsumers.OMXFM.Request.ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY reqEvent =
+                    Event.createEvent(<span class="str">"xslt://{{/Events/OMConsumers/OMXFM/Request/ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY}}"</span>
+                    <span class="cm">/* see §9.8 Variant ① for full XSLT — builds UnifiedResourceActivityInfo for ParentOU[i]/Subscriber[j]/MSISDN */</span>);
+                Event.Ext.sendEventImmediate(reqEvent);
+                <span class="cm">// 4. Audit log</span>
+                <span class="kw">if</span>(RuleFunctions.Helpers.AllowWriteLog(orderRequest.OrderData.OrderType))
+                    Event.Ext.sendEventImmediate(Event.createEvent(<span class="str">"xslt://{{/Events/OMConsumers/OMXESB/Logger}}"</span>
+                    <span class="cm">/* see §11 for Logger XSLT */</span>));
+                <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                isSkipped = <span class="kw">false</span>;
+            }
+        }
+    }
+}</div>
+
+    <h3>6.5 Status Transition</h3>
+    <div class="code-block"><span class="kw">if</span>(!isSkipped) {
+    orderCurrentActivity.Status = RuleFunctions.Helpers.GetActivityStatusString(<span class="str">"1"</span>, <span class="kw">false</span>); <span class="cm">// → "IN_PROGRESS"</span>
+    RuleFunctions.Helpers.SendDataToDB(orderRequest);
+} <span class="kw">else</span> {
+    RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="str">"4"</span>); <span class="cm">// → "SKIPPED"</span>
+}</div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction</div>
+  <div class="section-body">
+    <h3>Parameter Parsing — tib:tokenize</h3>
+    <p>Parameters in <span class="inline-code">orderCurrentActivity.Parameter[]</span> are stored as <span class="inline-code">KEY=VALUE</span> strings. The rule uses <span class="inline-code">tib:tokenize($param, "=")</span> to split on <code>=</code>:</p>
+    <table>
+      <tr><th>Token Index</th><th>Extracted Value</th><th>Variable</th></tr>
+      <tr><td>[1]</td><td>Key (e.g., <span class="inline-code">ACTIVITY</span>)</td><td><span class="inline-code">paramKey</span></td></tr>
+      <tr><td>[2]</td><td>Value (e.g., <span class="inline-code">LOCK</span>, <span class="inline-code">RESERVE</span>, etc.)</td><td><span class="inline-code">paramValue</span> → <span class="inline-code">activityValue</span></td></tr>
+    </table>
+    <h3>Zone Code ASCII Conversion</h3>
+    <p>DonorZoneCode and RCPZoneCode are stored as decimal ASCII values. <span class="inline-code">Number.intValue(code, 10)</span> converts string to integer, then <span class="inline-code">OMXUtils.asciiCodeToText(int)</span> produces the human-readable zone text sent to ASRM.</p>
+  </div>
+</div>
+
+<!-- §8 System & Integration Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3>§8.1 — Order Type Dependencies</h3>
+    <p>PORT IN activity attributes are conditionally populated based on OrderType:</p>
+    <table>
+      <tr><th>OrderType(s)</th><th>Condition</th><th>Extra Attributes Sent</th></tr>
+      <tr><td>7, 57, 12001, 21, 11028, 11029, 12016, 12017, 11030</td><td>Standard PORT IN order types</td><td>DONOR_OPERATOR, DONOR_ZONE, RECIPIENT_OPERATOR, RECIPIENT_ZONE</td></tr>
+      <tr><td>8, 9, 58, 59</td><td>PORT IN when <span class="inline-code">MSISDN_TRUE_RES = "N"</span></td><td>DONOR_OPERATOR, DONOR_ZONE, RECIPIENT_OPERATOR, RECIPIENT_ZONE</td></tr>
+      <tr><td>Any</td><td>LOCK</td><td>DEALER</td></tr>
+      <tr><td>Any</td><td>PORT OUT RELEASE</td><td>RECIPIENT_OPERATOR, RECIPIENT_ZONE</td></tr>
+      <tr><td>Any</td><td>PORT IN REVERSE / PORT OUT REVERSE</td><td>RECIPIENT_OPERATOR (from ExtendedInfo DONOR_OPERATOR)</td></tr>
+      <tr><td>Any</td><td>ACTIVATED</td><td>SOURCE_COMPANY (from ExtendedInfo), TARGET_COMPANY = "06"</td></tr>
+    </table>
+
+    <h3>§8.2 — ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel URI</th><th>Destination</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><span class="inline-code">/Channels/OMXFMConnectionRequest</span></td><td><span class="inline-code">ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span></td><td><span class="inline-code">Events.OMConsumers.OMXFM.Request.ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span></td><td>ASRM MSISDN resource operation request</td></tr>
+      <tr><td><span class="badge badge-log">OUTBOUND</span></td><td><span class="inline-code">/Channels/LogConnection</span></td><td><span class="inline-code">AuditLog</span></td><td><span class="inline-code">Events.OMConsumers.OMXESB.Logger</span></td><td>Audit trail per subscriber request</td></tr>
+    </table>
+
+    <h3>§8.3 — Backend API Details</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>System</td><td>ASRM — Amdocs Resource Manager 3G</td></tr>
+      <tr><td>Operation</td><td>UnifiedResourceActivity</td></tr>
+      <tr><td>Resource Type</td><td>MSISDN (static, always set)</td></tr>
+      <tr><td>Schema</td><td><span class="inline-code">amdocs.rm3g.interfaces.datatypes.UnifiedResourceActivityInfo</span> (XSD: <span class="inline-code">_SharedResources\Schemas\ESB\UnifiedResource\UnifiedResourceActivityInfo.xsd</span>)</td></tr>
+      <tr><td>Correlation</td><td>JMSCorrelationID = OMXTrackingId; RefID = subscriber RefId (per-subscriber fan-out)</td></tr>
+      <tr><td>Event base</td><td>Extends <span class="inline-code">/Events/Base/OMXRequestBaseEvent</span></td></tr>
+    </table>
+
+    <h3>§8.4 — BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Field</th><th>Direction</th><th>Purpose</th></tr>
+      <tr><td><span class="inline-code">orderRequest.OrderData.OMXTrackingId</span></td><td><span class="badge badge-blue">READ</span></td><td>JMSCorrelationID and audit ESBUUID</td></tr>
+      <tr><td><span class="inline-code">orderRequest.OrderData.OrderID</span></td><td><span class="badge badge-blue">READ</span></td><td>Order identifier in request</td></tr>
+      <tr><td><span class="inline-code">orderRequest.OrderData.OrderType</span></td><td><span class="badge badge-blue">READ</span></td><td>Drives PORT IN attribute selection; log filter</td></tr>
+      <tr><td><span class="inline-code">orderRequest.OrderData.OrderPriority</span></td><td><span class="badge badge-blue">READ</span></td><td>JMSPriority on outbound event</td></tr>
+      <tr><td><span class="inline-code">orderRequest.OrderData.DealerCode</span></td><td><span class="badge badge-blue">READ</span></td><td>DEALER attribute for LOCK</td></tr>
+      <tr><td><span class="inline-code">orderRequest.OrderData.MNPInfo.*</span></td><td><span class="badge badge-blue">READ</span></td><td>DonorOperator, DonorZoneCode, RCPOperator, RCPZoneCode for PORT IN/OUT</td></tr>
+      <tr><td><span class="inline-code">orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].*</span></td><td><span class="badge badge-blue">READ</span></td><td>MSISDN, RefId, ResourceInfo, ExtendedInfo per subscriber</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.Parameter[]</span></td><td><span class="badge badge-blue">READ</span></td><td>ACTIVITY=VALUE parameter</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.Response[]</span></td><td><span class="badge badge-blue">READ</span></td><td>Check for existing SUCCESS responses</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.Status</span></td><td><span class="badge badge-red">WRITE</span></td><td>Set to IN_PROGRESS (1) or SKIPPED (4)</td></tr>
+      <tr><td><span class="inline-code">orderCurrentActivity.RequestCount</span></td><td><span class="badge badge-red">WRITE</span></td><td>Incremented per dispatched request</td></tr>
+    </table>
+
+    <h3>§8.5 — ExtendedInfo Fields Required</h3>
+    <table>
+      <tr><th>Field Name</th><th>Required/Optional</th><th>Activity</th><th>Usage</th></tr>
+      <tr><td><span class="inline-code">DONOR_OPERATOR</span></td><td><span class="badge badge-orange">Conditional</span></td><td>PORT IN REVERSE, PORT OUT REVERSE</td><td>Sent as RECIPIENT_OPERATOR to ASRM</td></tr>
+      <tr><td><span class="inline-code">COMPANY_CODE</span></td><td><span class="badge badge-orange">Conditional</span></td><td>ACTIVATED</td><td>Sent as SOURCE_COMPANY to ASRM</td></tr>
+      <tr><td><span class="inline-code">MSISDN_TRUE_RES</span></td><td><span class="badge badge-orange">Conditional</span></td><td>PORT IN (OrderType 8/9/58/59)</td><td>If = "N", triggers PORT IN attribute population</td></tr>
+    </table>
+
+    <h3>§8.6 — Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Global Variable Path</th><th>Purpose</th></tr>
+      <tr><td><span class="inline-code">OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass</span></td><td>If "true", include User/Password in request event</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/Component_Name/OMX_CEP</span></td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/Component_Name/OMX_FM</span></td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</span></td><td>LOG_LEVEL value in audit log</td></tr>
+      <tr><td><span class="inline-code">OMX_OM/WritePayload</span></td><td>If "true", include full request payload in audit log</td></tr>
+      <tr><td><span class="inline-code">OMX_COMMON/_SharedResources/Common/Log/OrderTypeFilter</span></td><td>Comma-separated order types to suppress audit logging</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Detailed Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build (XSLT Decomposition)</div>
+  <div class="section-body">
+
+    <h3>§9.1 — XSLT Parameter Binding</h3>
+    <table>
+      <tr><th>Parameter</th><th>Bound From</th><th>Notes</th></tr>
+      <tr><td><span class="inline-code">$orderRequest</span></td><td>Working memory concept</td><td>Full order request tree</td></tr>
+      <tr><td><span class="inline-code">$refId</span></td><td><span class="inline-code">subscriber.RefId</span></td><td>Per-subscriber iteration variable</td></tr>
+      <tr><td><span class="inline-code">$globalVariables</span></td><td>BE global variables</td><td>IsEnableUserPass, logging config</td></tr>
+      <tr><td><span class="inline-code">$activityValue</span></td><td>Parsed from Parameter (ACTIVITY=…)</td><td>Drives xsl:choose branching</td></tr>
+      <tr><td><span class="inline-code">$i</span></td><td>Loop counter — ParentOU index</td><td>0-based; XPath uses <span class="inline-code">number($i)+1</span></td></tr>
+      <tr><td><span class="inline-code">$j</span></td><td>Loop counter — Subscriber index</td><td>0-based; XPath uses <span class="inline-code">number($j)+1</span></td></tr>
+      <tr><td><span class="inline-code">$k</span></td><td>Loop counter — ChildOU index (Variant ② only)</td><td>0-based; XPath uses <span class="inline-code">number($k)+1</span></td></tr>
+      <tr><td><span class="inline-code">$donorZoneText</span></td><td>OMXUtils.asciiCodeToText(DonorZoneCode)</td><td>Only populated for PORT IN / PORT OUT RELEASE</td></tr>
+      <tr><td><span class="inline-code">$rcpZoneText</span></td><td>OMXUtils.asciiCodeToText(RCPZoneCode)</td><td>Only populated for PORT IN / PORT OUT RELEASE</td></tr>
+    </table>
+
+    <h3>§9.2 — Event Container</h3>
+    <p>Event type: <span class="inline-code">Events.OMConsumers.OMXFM.Request.ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span><br>
+    Channel: <span class="inline-code">/Channels/OMXFMConnectionRequest</span> → destination <span class="inline-code">ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span></p>
+
+    <h3>§9.3 — JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><span class="inline-code">JMSPriority</span></td><td><span class="inline-code">$orderRequest/OrderPriority</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">JMSCorrelationID</span></td><td><span class="inline-code">$orderRequest/OrderData/OMXTrackingId</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">OrderID</span></td><td><span class="inline-code">$orderRequest/OrderData/OrderID</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">RefID</span></td><td><span class="inline-code">$refId</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">UserName</span></td><td><span class="inline-code">$orderRequest/OrderData/User</span></td><td><span class="inline-code">IsEnableUserPass='true'</span> AND User exists</td></tr>
+      <tr><td><span class="inline-code">PassWord</span></td><td><span class="inline-code">$orderRequest/OrderData/Password</span></td><td><span class="inline-code">IsEnableUserPass='true'</span> AND Password exists</td></tr>
+      <tr><td><span class="inline-code">OrderType</span></td><td><span class="inline-code">$orderRequest/OrderData/OrderType</span></td><td>If OrderType element exists</td></tr>
+    </table>
+
+    <h3>§9.4 — Payload Root</h3>
+    <p>Schema root: <span class="inline-code">ns2:UnifiedResourceActivityInfo</span> (namespace: <span class="inline-code">amdocs.rm3g.interfaces.datatypes.UnifiedResourceActivityInfo</span>)</p>
+
+    <h3>§9.5 — Conditional ActivityAttributes (xsl:choose)</h3>
+    <table>
+      <tr><th>activityValue</th><th>Attributes Emitted</th><th>Source</th></tr>
+      <tr><td><strong>LOCK</strong></td><td>DEALER</td><td><span class="inline-code">$orderRequest/OrderData/DealerCode</span></td></tr>
+      <tr><td><strong>PORT IN</strong> (qualifying OrderTypes or MSISDN_TRUE_RES=N)</td><td>DONOR_OPERATOR, DONOR_ZONE, RECIPIENT_OPERATOR, RECIPIENT_ZONE</td><td>MNPInfo fields + decoded zone texts</td></tr>
+      <tr><td><strong>PORT OUT RELEASE</strong></td><td>RECIPIENT_OPERATOR, RECIPIENT_ZONE</td><td>MNPInfo.RCPOperator, rcpZoneText</td></tr>
+      <tr><td><strong>PORT IN REVERSE / PORT OUT REVERSE</strong></td><td>RECIPIENT_OPERATOR</td><td>Subscriber ExtendedInfo[Name="DONOR_OPERATOR"]/Value</td></tr>
+      <tr><td><strong>ACTIVATED</strong></td><td>SOURCE_COMPANY, TARGET_COMPANY="06"</td><td>Subscriber ExtendedInfo[Name="COMPANY_CODE"]/Value; "06" static</td></tr>
+      <tr><td><strong>RESERVE, PREACTIVATE, ACTIVATE</strong></td><td>(none)</td><td>No ActivityAttributes emitted</td></tr>
+    </table>
+
+    <h3>§9.6 — UnifiedResource Block</h3>
+    <table>
+      <tr><th>Element</th><th>Value</th><th>Condition</th></tr>
+      <tr><td><span class="inline-code">ns1:Type</span></td><td><span class="inline-code">"MSISDN"</span> (static)</td><td>Always</td></tr>
+      <tr><td><span class="inline-code">ns1:Value</span></td><td><span class="inline-code">ParentOU[(i+1)]/Subscriber[(j+1)]/MSISDN</span></td><td>If MSISDN element exists on subscriber</td></tr>
+    </table>
+
+    <h3>§9.7 — Complete Generated XML Example (LOCK operation)</h3>
+    <div class="code-block"><span class="xt">&lt;createEvent&gt;</span>
+  <span class="xt">&lt;event&gt;</span>
+    <span class="xt">&lt;JMSPriority&gt;</span><span class="str">5</span><span class="xt">&lt;/JMSPriority&gt;</span>
+    <span class="xt">&lt;JMSCorrelationID&gt;</span><span class="str">OMX-TRK-20260723-001</span><span class="xt">&lt;/JMSCorrelationID&gt;</span>
+    <span class="xt">&lt;OrderID&gt;</span><span class="str">ORD-12345</span><span class="xt">&lt;/OrderID&gt;</span>
+    <span class="xt">&lt;RefID&gt;</span><span class="str">SUB-REF-001</span><span class="xt">&lt;/RefID&gt;</span>
+    <span class="xt">&lt;OrderType&gt;</span><span class="str">1</span><span class="xt">&lt;/OrderType&gt;</span>
+    <span class="xt">&lt;payload&gt;</span>
+      <span class="xt">&lt;ns2:UnifiedResourceActivityInfo</span>
+        <span class="xa">xmlns:ns2=</span><span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.rm3g.interfaces.datatypes.UnifiedResourceActivityInfo"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ns2:Activity&gt;</span>
+          <span class="xt">&lt;ns:ActivityName</span> <span class="xa">xmlns:ns=</span><span class="str">"www.tibco.com/.../ActivityInfo"</span><span class="xt">&gt;</span><span class="str">LOCK</span><span class="xt">&lt;/ns:ActivityName&gt;</span>
+        <span class="xt">&lt;/ns2:Activity&gt;</span>
+        <span class="xt">&lt;ns2:ActivityAttributes&gt;</span>
+          <span class="xt">&lt;ns3:AttrName&gt;</span><span class="str">DEALER</span><span class="xt">&lt;/ns3:AttrName&gt;</span>
+          <span class="xt">&lt;ns3:AttrValue&gt;</span><span class="str">DLR-001</span><span class="xt">&lt;/ns3:AttrValue&gt;</span>
+        <span class="xt">&lt;/ns2:ActivityAttributes&gt;</span>
+        <span class="xt">&lt;ns2:UnifiedResource&gt;</span>
+          <span class="xt">&lt;ns1:Type&gt;</span><span class="str">MSISDN</span><span class="xt">&lt;/ns1:Type&gt;</span>
+          <span class="xt">&lt;ns1:Value&gt;</span><span class="str">0812345678</span><span class="xt">&lt;/ns1:Value&gt;</span>
+        <span class="xt">&lt;/ns2:UnifiedResource&gt;</span>
+      <span class="xt">&lt;/ns2:UnifiedResourceActivityInfo&gt;</span>
+    <span class="xt">&lt;/payload&gt;</span>
+  <span class="xt">&lt;/event&gt;</span>
+<span class="xt">&lt;/createEvent&gt;</span></div>
+
+    <h3>§9.8 — XSLT Stylesheet Source</h3>
+    <p><strong>Variant ①: ParentOU Subscriber</strong> (params: i, j — no k)</p>
+    <div class="code-block"><span class="xt">&lt;xsl:stylesheet</span>
+  <span class="xa">xmlns:ns2=</span><span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.rm3g.interfaces.datatypes.UnifiedResourceActivityInfo"</span>
+  <span class="xa">xmlns:ns1=</span><span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.rm3g.interfaces.datatypes.RMEntityIdInfo"</span>
+  <span class="xa">xmlns:xsl=</span><span class="str">"http://www.w3.org/1999/XSL/Transform"</span>
+  <span class="xa">xmlns:ns=</span><span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.rm3g.interfaces.datatypes.ActivityInfo"</span>
+  <span class="xa">xmlns:ns3=</span><span class="str">"www.tibco.com/plugin/java/xmlSchema/amdocs.rm3g.interfaces.datatypes.AttributesData"</span>
+  <span class="xa">xmlns:tib=</span><span class="str">"http://www.tibco.com/bw/xslt/custom-functions"</span>
+  <span class="xa">version=</span><span class="str">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:output</span> <span class="xa">method=</span><span class="str">"xml"</span><span class="xt">/&gt;</span>
+  <span class="cm">&lt;!-- Parameters bound from BE rule context --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"orderRequest"</span><span class="xt">/&gt;</span>   <span class="cm">&lt;!-- full order concept --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"refId"</span><span class="xt">/&gt;</span>         <span class="cm">&lt;!-- subscriber RefId --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"globalVariables"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"activityValue"</span><span class="xt">/&gt;</span>  <span class="cm">&lt;!-- LOCK/RESERVE/PREACTIVATE/ACTIVATE/PORT IN/etc. --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"i"</span><span class="xt">/&gt;</span>             <span class="cm">&lt;!-- 0-based ParentOU index --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"j"</span><span class="xt">/&gt;</span>             <span class="cm">&lt;!-- 0-based Subscriber index --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"donorZoneText"</span><span class="xt">/&gt;</span> <span class="cm">&lt;!-- ASCII-decoded donor zone --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"rcpZoneText"</span><span class="xt">/&gt;</span>   <span class="cm">&lt;!-- ASCII-decoded recipient zone --&gt;</span>
+
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match=</span><span class="str">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span class="xt">&lt;JMSPriority&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;&lt;/JMSPriority&gt;</span>
+      <span class="xt">&lt;JMSCorrelationID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/JMSCorrelationID&gt;</span>
+      <span class="xt">&lt;OrderID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;&lt;/OrderID&gt;</span>
+      <span class="xt">&lt;RefID&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$refId"</span><span class="xt">/&gt;&lt;/RefID&gt;</span>
+
+      <span class="cm">&lt;!-- Credential gate: only if IsEnableUserPass global = 'true' --&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$globalVariables/OMX_OM/Rules/OMConsumers/OMXFM/Request/IsEnableUserPass='true'"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/User"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;UserName&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/User"</span><span class="xt">/&gt;&lt;/UserName&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+        <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/Password"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;PassWord&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/Password"</span><span class="xt">/&gt;&lt;/PassWord&gt;</span>
+        <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/OrderType"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;OrderType&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;&lt;/OrderType&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+
+      <span class="xt">&lt;payload&gt;</span>
+        <span class="xt">&lt;ns2:UnifiedResourceActivityInfo&gt;</span>
+          <span class="xt">&lt;ns2:Activity&gt;</span>
+            <span class="xt">&lt;ns:ActivityName&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$activityValue"</span><span class="xt">/&gt;&lt;/ns:ActivityName&gt;</span>
+          <span class="xt">&lt;/ns2:Activity&gt;</span>
+
+          <span class="cm">&lt;!-- ActivityAttributes: branched by activityValue --&gt;</span>
+          <span class="xt">&lt;xsl:choose&gt;</span>
+            <span class="xt">&lt;xsl:when</span> <span class="xa">test=</span><span class="str">"$activityValue='LOCK'"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns2:ActivityAttributes&gt;</span>
+                <span class="xt">&lt;ns3:AttrName&gt;</span>DEALER<span class="xt">&lt;/ns3:AttrName&gt;</span>
+                <span class="xt">&lt;ns3:AttrValue&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/DealerCode"</span><span class="xt">/&gt;&lt;/ns3:AttrValue&gt;</span>
+              <span class="xt">&lt;/ns2:ActivityAttributes&gt;</span>
+            <span class="xt">&lt;/xsl:when&gt;</span>
+
+            <span class="xt">&lt;xsl:when</span> <span class="xa">test=</span><span class="str">"$activityValue='PORT IN' and (
+                (OrderType=7|57|12001|21|11028|11029|12016|12017|11030)
+                or (MSISDN_TRUE_RES/ValuesArray='N' and OrderType=8|9|58|59))"</span><span class="xt">&gt;</span>
+              <span class="cm">&lt;!-- DONOR_OPERATOR --&gt;</span>
+              <span class="xt">&lt;ns2:ActivityAttributes&gt;</span>
+                <span class="xt">&lt;ns3:AttrName&gt;</span>DONOR_OPERATOR<span class="xt">&lt;/ns3:AttrName&gt;</span>
+                <span class="xt">&lt;ns3:AttrValue&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/MNPInfo/DonorOperator"</span><span class="xt">/&gt;&lt;/ns3:AttrValue&gt;</span>
+              <span class="xt">&lt;/ns2:ActivityAttributes&gt;</span>
+              <span class="cm">&lt;!-- DONOR_ZONE (ASCII-decoded before XSLT) --&gt;</span>
+              <span class="xt">&lt;ns2:ActivityAttributes&gt;</span>
+                <span class="xt">&lt;ns3:AttrName&gt;</span>DONOR_ZONE<span class="xt">&lt;/ns3:AttrName&gt;</span>
+                <span class="xt">&lt;ns3:AttrValue&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$donorZoneText"</span><span class="xt">/&gt;&lt;/ns3:AttrValue&gt;</span>
+              <span class="xt">&lt;/ns2:ActivityAttributes&gt;</span>
+              <span class="cm">&lt;!-- RECIPIENT_OPERATOR --&gt;</span>
+              <span class="xt">&lt;ns2:ActivityAttributes&gt;</span>
+                <span class="xt">&lt;ns3:AttrName&gt;</span>RECIPIENT_OPERATOR<span class="xt">&lt;/ns3:AttrName&gt;</span>
+                <span class="xt">&lt;ns3:AttrValue&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/MNPInfo/RCPOperator"</span><span class="xt">/&gt;&lt;/ns3:AttrValue&gt;</span>
+              <span class="xt">&lt;/ns2:ActivityAttributes&gt;</span>
+              <span class="cm">&lt;!-- RECIPIENT_ZONE (ASCII-decoded) --&gt;</span>
+              <span class="xt">&lt;ns2:ActivityAttributes&gt;</span>
+                <span class="xt">&lt;ns3:AttrName&gt;</span>RECIPIENT_ZONE<span class="xt">&lt;/ns3:AttrName&gt;</span>
+                <span class="xt">&lt;ns3:AttrValue&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$rcpZoneText"</span><span class="xt">/&gt;&lt;/ns3:AttrValue&gt;</span>
+              <span class="xt">&lt;/ns2:ActivityAttributes&gt;</span>
+            <span class="xt">&lt;/xsl:when&gt;</span>
+
+            <span class="xt">&lt;xsl:when</span> <span class="xa">test=</span><span class="str">"$activityValue='PORT OUT RELEASE'"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns2:ActivityAttributes&gt;&lt;ns3:AttrName&gt;</span>RECIPIENT_OPERATOR<span class="xt">&lt;/ns3:AttrName&gt;</span>
+                <span class="xt">&lt;ns3:AttrValue&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/MNPInfo/RCPOperator"</span><span class="xt">/&gt;&lt;/ns3:AttrValue&gt;&lt;/ns2:ActivityAttributes&gt;</span>
+              <span class="xt">&lt;ns2:ActivityAttributes&gt;&lt;ns3:AttrName&gt;</span>RECIPIENT_ZONE<span class="xt">&lt;/ns3:AttrName&gt;</span>
+                <span class="xt">&lt;ns3:AttrValue&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$rcpZoneText"</span><span class="xt">/&gt;&lt;/ns3:AttrValue&gt;&lt;/ns2:ActivityAttributes&gt;</span>
+            <span class="xt">&lt;/xsl:when&gt;</span>
+
+            <span class="xt">&lt;xsl:when</span> <span class="xa">test=</span><span class="str">"$activityValue='PORT IN REVERSE' or $activityValue='PORT OUT REVERSE'"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns2:ActivityAttributes&gt;&lt;ns3:AttrName&gt;</span>RECIPIENT_OPERATOR<span class="xt">&lt;/ns3:AttrName&gt;</span>
+                <span class="xt">&lt;ns3:AttrValue&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/Customer/ParentOU[(number($i)+1)]/Subscriber[(number($j)+1)]/ExtendedInfo[Name='DONOR_OPERATOR']/Value"</span><span class="xt">/&gt;&lt;/ns3:AttrValue&gt;&lt;/ns2:ActivityAttributes&gt;</span>
+            <span class="xt">&lt;/xsl:when&gt;</span>
+
+            <span class="xt">&lt;xsl:when</span> <span class="xa">test=</span><span class="str">"$activityValue='ACTIVATED'"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns2:ActivityAttributes&gt;&lt;ns3:AttrName&gt;</span>SOURCE_COMPANY<span class="xt">&lt;/ns3:AttrName&gt;</span>
+                <span class="xt">&lt;ns3:AttrValue&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/Customer/ParentOU[(number($i)+1)]/Subscriber[(number($j)+1)]/ExtendedInfo[Name='COMPANY_CODE']/Value"</span><span class="xt">/&gt;&lt;/ns3:AttrValue&gt;&lt;/ns2:ActivityAttributes&gt;</span>
+              <span class="xt">&lt;ns2:ActivityAttributes&gt;&lt;ns3:AttrName&gt;</span>TARGET_COMPANY<span class="xt">&lt;/ns3:AttrName&gt;</span>
+                <span class="xt">&lt;ns3:AttrValue&gt;</span>06<span class="xt">&lt;/ns3:AttrValue&gt;&lt;/ns2:ActivityAttributes&gt;</span>
+            <span class="xt">&lt;/xsl:when&gt;</span>
+            <span class="cm">&lt;!-- RESERVE, PREACTIVATE, ACTIVATE: no ActivityAttributes block --&gt;</span>
+          <span class="xt">&lt;/xsl:choose&gt;</span>
+
+          <span class="xt">&lt;ns2:UnifiedResource&gt;</span>
+            <span class="xt">&lt;ns1:Type&gt;</span>MSISDN<span class="xt">&lt;/ns1:Type&gt;</span>  <span class="cm">&lt;!-- always MSISDN for this FM --&gt;</span>
+            <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$orderRequest/OrderData/Customer/ParentOU[(number($i)+1)]/Subscriber[(number($j)+1)]/MSISDN"</span><span class="xt">&gt;</span>
+              <span class="xt">&lt;ns1:Value&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$orderRequest/OrderData/Customer/ParentOU[(number($i)+1)]/Subscriber[(number($j)+1)]/MSISDN"</span><span class="xt">/&gt;&lt;/ns1:Value&gt;</span>
+            <span class="xt">&lt;/xsl:if&gt;</span>
+          <span class="xt">&lt;/ns2:UnifiedResource&gt;</span>
+        <span class="xt">&lt;/ns2:UnifiedResourceActivityInfo&gt;</span>
+      <span class="xt">&lt;/payload&gt;</span>
+    <span class="xt">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></div>
+
+    <p style="margin-top:12px;"><strong>Variant ②: ChildOU Subscriber</strong> — identical structure but subscriber XPath uses <span class="inline-code">ParentOU[(number($i)+1)]/ChildOU[(number($k)+1)]/Subscriber[(number($j)+1)]</span> and adds parameter <span class="inline-code">$k</span>. PORT IN order type check also navigates through ChildOU path.</p>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <p><em>Variant ① (ParentOU) shown. Variant ② differs only in subscriber XPath path.</em></p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="badge badge-purple" style="font-size:.7rem">Credential-gated</span><span class="tree-cond">IsEnableUserPass='true' AND User exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="badge badge-purple" style="font-size:.7rem">Credential-gated</span><span class="tree-cond">IsEnableUserPass='true' AND Password exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span><span class="tree-cond">if OrderType exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns2:UnifiedResourceActivityInfo</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:Activity</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:ActivityName</span><span class="tree-arrow">←</span><span class="tree-src">$activityValue</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:ActivityAttributes</span><span class="badge badge-orange" style="font-size:.7rem">Conditional (xsl:choose)</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-cond">when LOCK:</span></div>
+                            <ul>
+                              <li><div class="tree-row"><span class="tree-tag">ns3:AttrName</span><span class="tree-arrow">←</span><span class="tree-src-static">"DEALER"</span></div></li>
+                              <li><div class="tree-row"><span class="tree-tag">ns3:AttrValue</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/DealerCode</span></div></li>
+                            </ul>
+                          </li>
+                          <li><div class="tree-row"><span class="tree-cond">when PORT IN (qualifying types): DONOR_OPERATOR + DONOR_ZONE + RECIPIENT_OPERATOR + RECIPIENT_ZONE</span></div></li>
+                          <li><div class="tree-row"><span class="tree-cond">when PORT OUT RELEASE: RECIPIENT_OPERATOR + RECIPIENT_ZONE</span></div></li>
+                          <li><div class="tree-row"><span class="tree-cond">when PORT IN/OUT REVERSE: RECIPIENT_OPERATOR ← ExtendedInfo[DONOR_OPERATOR]/Value</span></div></li>
+                          <li><div class="tree-row"><span class="tree-cond">when ACTIVATED: SOURCE_COMPANY ← ExtendedInfo[COMPANY_CODE]/Value; TARGET_COMPANY ← "06"</span></div></li>
+                          <li><div class="tree-row"><span class="tree-cond">otherwise (RESERVE/PREACTIVATE/ACTIVATE): no block</span></div></li>
+                        </ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:UnifiedResource</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:Type</span><span class="tree-arrow">←</span><span class="tree-src-static">"MSISDN"</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:Value</span><span class="tree-arrow">←</span><span class="tree-src">ParentOU[(i+1)]/Subscriber[(j+1)]/MSISDN</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span><span class="tree-cond">if MSISDN exists</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div class="tree-legend">
+      <span><span style="color:#a6e3a1">■</span> Green = XPath source</span>
+      <span><span style="color:#fab387">■</span> Orange = Static literal</span>
+      <span><span style="color:#cba6f7">■</span> Purple italic = xsl:if/xsl:when condition</span>
+      <span><span class="badge badge-green" style="font-size:.7rem">Always</span> = Unconditionally emitted</span>
+      <span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span> = Inside xsl:if</span>
+      <span><span class="badge badge-purple" style="font-size:.7rem">Credential-gated</span> = Behind global variable check</span>
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <p>Logger event: <span class="inline-code">Events.OMConsumers.OMXESB.Logger</span> → Channel <span class="inline-code">/Channels/LogConnection</span> → Destination <span class="inline-code">AuditLog</span></p>
+    <p>Guarded by <span class="inline-code">RuleFunctions.Helpers.AllowWriteLog(orderRequest.OrderData.OrderType)</span> — reads global <span class="inline-code">OMX_COMMON/_SharedResources/Common/Log/OrderTypeFilter</span> to suppress logging for certain order types.</p>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><span class="inline-code">ESBUUID</span></td><td><span class="inline-code">$orderRequest/OrderData/OMXTrackingId</span></td><td>If OMXTrackingId exists</td></tr>
+      <tr><td><span class="inline-code">PROCESS_ID</span></td><td><span class="inline-code">concat($pid, "_REQ")</span> (nanoTime)</td><td>Always</td></tr>
+      <tr><td><span class="inline-code">COMPONENT_NAME</span></td><td><span class="inline-code">$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">OPERATION_NAME</span></td><td><span class="inline-code">$operatorname</span> (= ActivityID_activityValue)</td><td>Always</td></tr>
+      <tr><td><span class="inline-code">TARGET_SYSTEM</span></td><td><span class="inline-code">$globalVariables/OMX_COMMON/Component_Name/OMX_FM</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">LOG_LEVEL</span></td><td><span class="inline-code">$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">AUDIT_TRACE</span></td><td><span class="inline-code">concat("Request Sent for RefId ", $refId)</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">AUDIT_TS</span></td><td><span class="inline-code">tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">payload/ns:ServicePayload</span></td><td>copy-of($reqEvent)</td><td>Only if <span class="inline-code">OMX_OM/WritePayload = "true"</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Activity Status Management -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Trigger</th><th>Status Code</th><th>Status String</th><th>Method</th></tr>
+      <tr><td>Rule fires (initial)</td><td>0</td><td><span class="badge badge-blue">WAITING</span></td><td>Pre-condition</td></tr>
+      <tr><td>At least one request sent</td><td>1</td><td><span class="badge badge-orange">IN_PROGRESS</span></td><td><span class="inline-code">GetActivityStatusString("1", false)</span></td></tr>
+      <tr><td>All subscribers skipped by PreExecCheck</td><td>4</td><td><span class="badge badge-purple">SKIPPED</span></td><td><span class="inline-code">SkipActivity(…, "4")</span> → advances NextActivity pointer</td></tr>
+      <tr><td>Exception caught</td><td>3</td><td><span class="badge badge-red">ERROR</span></td><td><span class="inline-code">HandleActivityException</span> → order status = FAILED</td></tr>
+    </table>
+    <p style="margin-top:10px;">After setting IN_PROGRESS, <span class="inline-code">RuleFunctions.Helpers.SendDataToDB(orderRequest)</span> persists the state change to the database.</p>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <p>The entire THEN block is wrapped in <span class="inline-code">try { ... } catch(Exception ae) { ... }</span>.</p>
+    <p><span class="inline-code">RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</span> performs:</p>
+    <ul class="plain">
+      <li>Builds error response code: <span class="inline-code">ComponentName + ServiceCode + OpCode + HighSeverity("03") + GenericError("999")</span></li>
+      <li>Sets <span class="inline-code">orderCurrentActivity.Status = ERROR</span></li>
+      <li>Sets <span class="inline-code">orderRequest.OrderStatus = FAILED</span></li>
+      <li>Fires error Logger event to <span class="inline-code">/Channels/LogConnection/ErrorLog</span> with ERROR_CODE, ERROR_MSG, ERROR_STACKTRACE</li>
+      <li>If <span class="inline-code">orderCurrentActivity.ExceptionActivity</span> is configured, advances to that exception-handling activity</li>
+      <li>Calls <span class="inline-code">SendDataToDB</span> to persist failure</li>
+    </ul>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Return</th><th>Purpose</th></tr>
+      <tr><td><span class="inline-code">RuleFunctions.Helpers.BRMS.IsBlank(String)</span></td><td>boolean</td><td>Returns true if string is null or empty after trim</td></tr>
+      <tr><td><span class="inline-code">RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId)</span></td><td>String</td><td>Serializes subscriber XML for XPath-based PreExecCheck evaluation</td></tr>
+      <tr><td><span class="inline-code">RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</span></td><td>String</td><td>Same as above for ChildOU context</td></tr>
+      <tr><td><span class="inline-code">RuleFunctions.Helpers.AllowWriteLog(orderType)</span></td><td>boolean</td><td>Returns false if orderType is in the global filter list (suppresses audit logging)</td></tr>
+      <tr><td><span class="inline-code">RuleFunctions.Helpers.GetActivityStatusString("1", false)</span></td><td>String "IN_PROGRESS"</td><td>Maps numeric status code to string</td></tr>
+      <tr><td><span class="inline-code">RuleFunctions.Helpers.SendDataToDB(orderRequest)</span></td><td>void</td><td>Persists order/activity state to database</td></tr>
+      <tr><td><span class="inline-code">RuleFunctions.Helpers.SkipActivity(orderRequest, activity, "4")</span></td><td>void</td><td>Sets SKIPPED status, advances NextActivityName pointer, handles order completion if last activity</td></tr>
+      <tr><td><span class="inline-code">RuleFunctions.Helpers.HandleActivityException(orderRequest, activity, ae, "")</span></td><td>void</td><td>Full error handling: status, logging, optional exception activity routing</td></tr>
+      <tr><td><span class="inline-code">OMXUtils.asciiCodeToText(int)</span></td><td>String</td><td>Converts ASCII decimal integer to character string (for zone codes)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <div class="code-block">Request_ASRM_INVOKE_MSISDN (rule)
+├── Instance.getByExtIdByUri(...)                  [BE built-in]
+├── XPath.evalAsString(tib:tokenize ...)            [BE built-in — parameter parsing]
+├── RuleFunctions.Helpers.BRMS.IsBlank(String)
+├── OMXUtils.asciiCodeToText(int)                  [OMX utility]
+├── RuleFunctions.Helpers.GetXMLForSubscriber(...)
+├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(...)
+├── XPath.execute(preExecCheck, xml, ns)           [BE built-in]
+├── Event.createEvent(xslt://ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY ...)  [BE built-in]
+├── Event.Ext.sendEventImmediate(reqEvent)          [BE built-in]
+├── RuleFunctions.Helpers.AllowWriteLog(orderType)
+│   └── System.getGlobalVariableAsString(OrderTypeFilter)
+├── Event.createEvent(xslt://Logger ...)            [BE built-in]
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(...)
+│   ├── RuleFunctions.Helpers.GetActivityStatusString("4", false)
+│   ├── Instance.getByExtIdByUri(nxtAct ...)
+│   ├── RuleFunctions.Helpers.BRMS.IsBlank(...)
+│   ├── RuleFunctions.Helpers.GetOrderStatusString(2)
+│   └── RuleFunctions.Helpers.SendDataToDB(...)
+└── RuleFunctions.Helpers.HandleActivityException(...)
+    ├── RuleFunctions.Helpers.GetActivityStatusString("3", false)
+    ├── RuleFunctions.Helpers.GetOrderStatusString(3)
+    ├── RuleFunctions.Helpers.SetResponseCode(...)
+    ├── Event.Ext.routeToImmediate(Logger/ErrorLog ...)
+    └── RuleFunctions.Helpers.SendDataToDB(...)</div>
+  </div>
+</div>
+
+<!-- §16 Concepts -->
+<div class="section">
+  <div class="section-header">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Path</th><th>Key Fields Used</th></tr>
+      <tr><td><span class="inline-code">OrderRequest</span></td><td><span class="inline-code">Concepts.OrderRequest.OrderRequest</span></td><td>OrderData.OMXTrackingId, OrderID, OrderType, OrderPriority, DealerCode, MNPInfo, Customer.ParentOU[], IsOrderResubmitted</td></tr>
+      <tr><td><span class="inline-code">Activity</span></td><td><span class="inline-code">Concepts.OM.ProcessConfig.Activity</span></td><td>ActivityID, Status, Parameter[], Response[], RequestCount, PreExecCheck, NextActivity, ExceptionActivity, ResubmitActivity</td></tr>
+      <tr><td><span class="inline-code">ASRM_InvokeUnifiedResourceRes</span></td><td><span class="inline-code">Concepts.FM.Response.ASRM_InvokeUnifiedResourceRes</span></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId (populated by response rule)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <ul class="plain">
+      <li><strong>R1</strong> — Must support all 8 MSISDN activity types: LOCK, RESERVE, PREACTIVATE, ACTIVATE, PORT IN, PORT OUT RELEASE, PORT IN REVERSE, PORT OUT REVERSE, ACTIVATED.</li>
+      <li><strong>R2</strong> — Must iterate over both ParentOU and ChildOU subscriber hierarchies independently.</li>
+      <li><strong>R3</strong> — Must evaluate per-subscriber PreExecCheck XPath before dispatching to avoid unnecessary ASRM calls.</li>
+      <li><strong>R4</strong> — Must skip subscribers with existing SUCCESS responses (idempotent resubmission safety).</li>
+      <li><strong>R5</strong> — Zone codes (DonorZone, RCPZone) must be decoded from ASCII decimal before sending to ASRM.</li>
+      <li><strong>R6</strong> — PORT IN attribute population depends on OrderType; migrate the full condition matrix in §8.1.</li>
+      <li><strong>R7</strong> — RequestCount must only be incremented on fresh requests (not resubmit flag).</li>
+    </ul>
+    <h3>Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Fan-out request count mismatch on resubmit</td><td><span class="badge badge-red">HIGH</span></td><td>The <span class="inline-code">isActResub</span> guard must be replicated exactly; ensure RequestCount is only updated when <span class="inline-code">IsOrderResubmitted=false</span></td></tr>
+      <tr><td>ASCII zone code decoding</td><td><span class="badge badge-orange">MEDIUM</span></td><td><span class="inline-code">OMXUtils.asciiCodeToText</span> must be replaced with equivalent in target stack; test with PORT IN orders</td></tr>
+      <tr><td>ORDER TYPE matrix for PORT IN attributes</td><td><span class="badge badge-orange">MEDIUM</span></td><td>The xsl:when conditions reference specific OrderType literals — must validate the complete list is migrated (7,57,12001,21,11028,11029,12016,12017,11030)</td></tr>
+      <tr><td>ChildOU hierarchy traversal</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Migration must handle both flat (ParentOU→Subscriber) and nested (ParentOU→ChildOU→Subscriber) structures</td></tr>
+      <tr><td>RESOURCE_INFO / MSISDN_TRUE_RES conditional</td><td><span class="badge badge-blue">LOW</span></td><td>Ensure ResourceInfo array XPath navigation is correctly translated for PORT IN secondary condition</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Full Source Code -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code</div>
+  <div class="section-body">
+    <div class="code-block"><span class="cm">/**
+ * @description
+ * @author chch
+ */</span>
+<span class="kw">rule</span> <span class="fn">Rules.OMConsumers.OMXFM.Request.Request_ASRM_INVOKE_MSISDN</span> {
+    <span class="kw">attribute</span> {
+        priority = <span class="nm">5</span>;
+        forwardChain = <span class="kw">true</span>;
+    }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="str">"ASRM_INVOKE_MSISDN"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="str">"ASRM_INVOKE_MSISDN"</span>;
+        orderCurrentActivity.Status == <span class="str">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        String donorZoneText, rcpZoneText;
+        <span class="kw">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span class="nm">0</span>
+                            &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">try</span> {
+            <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct =
+                Instance.getByExtIdByUri(orderRequest.ProcessFlow.NextActivityName,
+                                         <span class="str">"/Concepts/OM/ProcessConfig/Activity"</span>);
+            <span class="kw">int</span> iPOULen = orderRequest.OrderData.Customer.ParentOU@length;
+            String activityValue = <span class="kw">null</span>;
+
+            <span class="cm">// Parse ACTIVITY=VALUE parameter</span>
+            <span class="kw">for</span> (<span class="kw">int</span> iParam=<span class="nm">0</span>; iParam&lt;orderCurrentActivity.Parameter@length; iParam++) {
+                String param     = XPath.evalAsString(<span class="cm">/* xpath: Parameter[(iParam+1)] */</span>);
+                String paramKey  = XPath.evalAsString(<span class="cm">/* xpath: tib:tokenize(param,"=")[1] */</span>);
+                String paramValue= XPath.evalAsString(<span class="cm">/* xpath: tib:tokenize(param,"=")[2] */</span>);
+                <span class="kw">if</span>(String.equals(<span class="str">"ACTIVITY"</span>, paramKey)) activityValue = paramValue;
+            }
+
+            <span class="cm">// Decode zone codes for PORT IN / PORT OUT RELEASE</span>
+            <span class="kw">if</span>(String.equals(activityValue, <span class="str">"PORT IN"</span>) ||
+               String.equals(activityValue, <span class="str">"PORT OUT RELEASE"</span>)) {
+                <span class="kw">if</span>(!RuleFunctions.Helpers.BRMS.IsBlank(orderRequest.OrderData.MNPInfo.DonorZoneCode))
+                    donorZoneText = OMXUtils.asciiCodeToText(
+                        Number.intValue(orderRequest.OrderData.MNPInfo.DonorZoneCode, <span class="nm">10</span>));
+                <span class="kw">if</span>(!RuleFunctions.Helpers.BRMS.IsBlank(orderRequest.OrderData.MNPInfo.RCPZoneCode))
+                    rcpZoneText = OMXUtils.asciiCodeToText(
+                        Number.intValue(orderRequest.OrderData.MNPInfo.RCPZoneCode, <span class="nm">10</span>));
+            }
+
+            String operatorname = String.format(<span class="str">"%s_%s"</span>, orderCurrentActivity.ActivityID, activityValue);
+            <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+            <span class="ty">Concepts.OrderRequest.OrderElements.Subscriber</span> subscriber;
+
+            <span class="cm">// === ParentOU Loop ===</span>
+            <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nm">0</span>; i&lt;iPOULen; i++) {
+                <span class="kw">int</span> iSubscriberLen = orderRequest.OrderData.Customer.ParentOU[i].Subscriber@length;
+                <span class="kw">for</span>(<span class="kw">int</span> j=<span class="nm">0</span>; j&lt;iSubscriberLen; j++) {
+                    subscriber = orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j];
+                    String refId = subscriber.RefId;
+                    <span class="kw">boolean</span> reqSuccess = <span class="kw">false</span>;
+                    <span class="kw">for</span>(<span class="kw">int</span> iResp=<span class="nm">0</span>; iResp&lt;orderCurrentActivity.Response@length; iResp++)
+                        <span class="kw">if</span>(refId matches &amp;&amp; CompletionStatus==<span class="nm">2</span>) reqSuccess = <span class="kw">true</span>;
+                    <span class="kw">if</span>(!reqSuccess) {
+                        String chkRes = <span class="str">"true"</span>;
+                        <span class="kw">if</span>(String.length(nextAct.PreExecCheck) &gt; <span class="nm">0</span>) {
+                            String sXML = RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId);
+                            chkRes = XPath.execute(<span class="str">"/("+nextAct.PreExecCheck+")"</span>, sXML, ns);
+                        }
+                        <span class="kw">if</span>(String.equals(chkRes, <span class="str">"true"</span>)) {
+                            <span class="ty">Events.OMConsumers.OMXFM.Request.ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span> reqEvent =
+                                Event.createEvent(<span class="str">"xslt://{{/Events/OMConsumers/OMXFM/Request/ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY}}"</span>
+                                <span class="cm">/* Variant ① XSLT — see §9.8: builds UnifiedResourceActivityInfo
+                                   Output fields: JMSPriority, JMSCorrelationID, OrderID, RefID,
+                                   [UserName, PassWord], [OrderType], payload/UnifiedResourceActivityInfo
+                                   (Activity.ActivityName=$activityValue, [ActivityAttributes per §9.5],
+                                   UnifiedResource.Type=MSISDN, [Value=subscriber.MSISDN]) */</span>);
+                            Event.Ext.sendEventImmediate(reqEvent);
+                            <span class="kw">if</span>(RuleFunctions.Helpers.AllowWriteLog(orderRequest.OrderData.OrderType)) {
+                                <span class="kw">long</span> pid = System.nanoTime();
+                                Event.Ext.sendEventImmediate(Event.createEvent(
+                                    <span class="str">"xslt://{{/Events/OMConsumers/OMXESB/Logger}}"</span>
+                                    <span class="cm">/* Logger XSLT — see §11: ESBUUID, PROCESS_ID=pid+"_REQ",
+                                       COMPONENT_NAME, OPERATION_NAME=operatorname, TARGET_SYSTEM,
+                                       LOG_LEVEL, AUDIT_TRACE="Request Sent for RefId "+refId,
+                                       AUDIT_TS, [payload if WritePayload=true] */</span>));
+                            }
+                            <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+                            isSkipped = <span class="kw">false</span>;
+                        }
+                    }
+                }
+
+                <span class="cm">// === ChildOU Loop (same logic, Variant ② XSLT) ===</span>
+                <span class="kw">int</span> iCOULen = orderRequest.OrderData.Customer.ParentOU[i].ChildOU@length;
+                <span class="kw">for</span>(<span class="kw">int</span> k=<span class="nm">0</span>; k&lt;iCOULen; k++) {
+                    iSubscriberLen = orderRequest.OrderData.Customer.ParentOU[i].ChildOU[k].Subscriber@length;
+                    <span class="kw">for</span>(<span class="kw">int</span> j=<span class="nm">0</span>; j&lt;iSubscriberLen; j++) {
+                        <span class="cm">/* ... identical skip/PreExecCheck/sendEvent logic using ChildOU[k] path ... */</span>
+                        <span class="cm">/* Event.createEvent uses Variant ② XSLT — adds $k param, navigates ChildOU[(k+1)] */</span>
+                    }
+                }
+            }
+
+            <span class="kw">if</span>(!isSkipped) {
+                orderCurrentActivity.Status = RuleFunctions.Helpers.GetActivityStatusString(<span class="str">"1"</span>, <span class="kw">false</span>);
+                RuleFunctions.Helpers.SendDataToDB(orderRequest);
+            } <span class="kw">else</span> {
+                RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="str">"4"</span>);
+            }
+        } <span class="kw">catch</span>(Exception ae) {
+            RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="str">""</span>);
+        }
+    }
+}</div>
+  </div>
+</div>
+
+<!-- §19 Response Message Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+
+    <h3>§19.1 — Overview</h3>
+    <p>Rule function <span class="inline-code">RuleFunctions.OrderResponse.Response_ASRM_INVOKE_MSISDN</span> is invoked when ASRM returns a <span class="inline-code">ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span> response event. It parses the response, appends it to the activity's Response array, logs the audit trail, then evaluates whether all parallel requests have succeeded (fan-in completion check).</p>
+
+    <h3>§19.2 — Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type Path</th><th>Role</th></tr>
+      <tr><td><span class="inline-code">orderRequest</span></td><td><span class="inline-code">Concepts.OrderRequest.OrderRequest</span></td><td>Master order — used for log filtering and tracking ID</td></tr>
+      <tr><td><span class="inline-code">eventResponse</span></td><td><span class="inline-code">Events.OMConsumers.OMXFM.Response.ASRM_INVOKE_UNIFIED_RESOURCE_ACTIVITY</span></td><td>ASRM response event — source of ResponseCode, ResponseMsg, CompletionStatus, RefID</td></tr>
+      <tr><td><span class="inline-code">currActivity</span></td><td><span class="inline-code">Concepts.OM.ProcessConfig.Activity</span></td><td>Current activity — Response[] array appended; RequestCount checked for fan-in</td></tr>
+    </table>
+
+    <h3>§19.3 — ResponseBase Concept Construction</h3>
+    <p>Creates <span class="inline-code">Concepts.FM.Response.ASRM_InvokeUnifiedResourceRes</span> via XSLT:</p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span> <span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span><span class="badge badge-green" style="font-size:.7rem">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span><span class="tree-cond">if ResponseCode exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span><span class="tree-cond">if ResponseMsg exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span><span class="tree-cond">if CompletionStatus exists</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange" style="font-size:.7rem">Conditional</span><span class="tree-cond">if RefID exists</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:8px;">Result appended: <span class="inline-code">currActivity.Response[currActivity.Response@length] = activityRes</span></p>
+
+    <h3>§19.4 — Response Completion Logic (Fan-in)</h3>
+    <div class="code-block"><span class="cm">// Count responses with ResponseCode ending in "000" (success)</span>
+<span class="kw">int</span> successResponseCount = XPath.evalAsInt(
+    <span class="str">"count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = \"000\"])"</span>);
+
+<span class="cm">// Fan-in: all dispatched requests must have succeeded</span>
+<span class="kw">if</span>(currActivity.RequestCount == successResponseCount)
+    <span class="kw">return</span> <span class="str">"true"</span>;   <span class="cm">// all parallel ASRM calls succeeded → advance to next activity</span>
+<span class="kw">else</span>
+    <span class="kw">return</span> <span class="str">"false"</span>;  <span class="cm">// still waiting for more responses</span></div>
+    <p>When <span class="inline-code">"true"</span> is returned, the order orchestration engine advances <span class="inline-code">ProcessFlow.NextActivityName</span> to the next configured activity.</p>
+
+    <h3>§19.5 — Response Audit Logging</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><span class="inline-code">ESBUUID</span></td><td><span class="inline-code">$orderRequest/OrderData/OMXTrackingId</span></td><td>If OMXTrackingId exists</td></tr>
+      <tr><td><span class="inline-code">PROCESS_ID</span></td><td><span class="inline-code">concat($pid, "_RES")</span></td><td>Always (<strong>_RES</strong> suffix distinguishes from request log)</td></tr>
+      <tr><td><span class="inline-code">COMPONENT_NAME</span></td><td><span class="inline-code">OMX_COMMON/Component_Name/OMX_CEP</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">OPERATION_NAME</span></td><td><span class="inline-code">$operatorname</span> (ActivityID_Parameter[0])</td><td>Always</td></tr>
+      <tr><td><span class="inline-code">TARGET_SYSTEM</span></td><td><span class="inline-code">OMX_COMMON/Component_Name/OMX_FM</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">AUDIT_TRACE</span></td><td><span class="inline-code">concat("Response received for RefId ", $eventResponse/RefID)</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">AUDIT_TS</span></td><td><span class="inline-code">tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</span></td><td>Always</td></tr>
+      <tr><td><span class="inline-code">payload/ns:ServicePayload</span></td><td>copy-of($eventResponse)</td><td>Only if <span class="inline-code">OMX_OM/WritePayload = "true"</span></td></tr>
+    </table>
+
+    <h3>§19.6 — Response XSLT Source</h3>
+    <div class="code-block"><span class="xt">&lt;xsl:stylesheet</span> <span class="xa">xmlns:xsl=</span><span class="str">"http://www.w3.org/1999/XSL/Transform"</span> <span class="xa">version=</span><span class="str">"1.0"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"extId"</span><span class="xt">/&gt;</span>        <span class="cm">&lt;!-- OMXUtils.generateTrackingID() --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name=</span><span class="str">"eventResponse"</span><span class="xt">/&gt;</span> <span class="cm">&lt;!-- ASRM response event --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match=</span><span class="str">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createObject&gt;&lt;object&gt;</span>
+      <span class="xt">&lt;xsl:attribute</span> <span class="xa">name=</span><span class="str">"extId"</span><span class="xt">&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$extId"</span><span class="xt">/&gt;&lt;/xsl:attribute&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$eventResponse/ResponseCode"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ResponseCode&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$eventResponse/ResponseCode"</span><span class="xt">/&gt;&lt;/ResponseCode&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$eventResponse/ResponseMsg"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ResponseMessage&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$eventResponse/ResponseMsg"</span><span class="xt">/&gt;&lt;/ResponseMessage&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$eventResponse/CompletionStatus"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;CompletionStatus&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$eventResponse/CompletionStatus"</span><span class="xt">/&gt;&lt;/CompletionStatus&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+      <span class="xt">&lt;xsl:if</span> <span class="xa">test=</span><span class="str">"$eventResponse/RefID"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ReferenceId&gt;</span><span class="xt">&lt;xsl:value-of</span> <span class="xa">select=</span><span class="str">"$eventResponse/RefID"</span><span class="xt">/&gt;&lt;/ReferenceId&gt;</span>
+      <span class="xt">&lt;/xsl:if&gt;</span>
+    <span class="xt">&lt;/object&gt;&lt;/createObject&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></div>
+  </div>
+</div>
+
+<div style="text-align:center;padding:20px;color:#888;font-size:.82rem;border-top:1px solid var(--border);margin-top:8px;">
+  TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-07-23
+</div>
+
+</div><!-- /container -->
+</body>
+</html>

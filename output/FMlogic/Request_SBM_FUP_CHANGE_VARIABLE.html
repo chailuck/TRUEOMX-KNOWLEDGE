@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_SBM_FUP_CHANGE_VARIABLE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:1rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:0.82rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:24px;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,.07)}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:0.95rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover{background:#fafafa}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);padding:12px 16px;border-radius:0 6px 6px 0;margin-bottom:12px;font-size:0.88rem}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.callout.success{border-color:var(--success);background:#E8F5E9}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:0.82rem;line-height:1.5;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:600}
+.badge-high{background:#FFE0E0;color:var(--true-dark)}
+.badge-med{background:#FFF9C4;color:#F57F17}
+.badge-low{background:#F1F8E9;color:#558B2F}
+footer{text-align:center;padding:24px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_SBM_FUP_CHANGE_VARIABLE</h1>
+  <div class="subtitle">SBM FUP Add/Remove Variable SOC — iterates Agreement Offers per OU (POU + ChildOU)</div>
+  <div class="meta-row">
+    <span class="meta-chip">Backend: SBM</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Pattern: FIRE-AND-FORGET per OU</span>
+    <span class="meta-chip">Author: RS33-BANDIT</span>
+    <span class="meta-chip">Param: ADD | REMOVE</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <div class="callout">
+      <strong>SBM_FUP_CHANGE_VARIABLE</strong> adds or removes a variable SOC on SBM's Fair-Use Policy (FUP) service. One <code>SBM_FUP_DO_SERVICE</code> event is sent per OU (ParentOU or ChildOU) that has matching SPECIAL_OFFER_INDICATOR offers with <code>FE_OR_CCBS=="FE"</code>.
+    </div>
+    <div class="callout warn">
+      <strong>Mandatory parameter guard:</strong> <code>Parameter[0]</code> must be <code>"ADD"</code> or <code>"REMOVE"</code> — any other value throws <code>DATA_ISSUE</code> immediately. function_id is dispatched: ADD→<code>104300008</code>; REMOVE→<code>104300009</code>.
+    </div>
+    <div class="callout info">
+      <strong>BRMS filter + FE_OR_CCBS filter:</strong> Only Agreement Offers where <code>FE_OR_CCBS=="FE"</code> AND <code>SPECIAL_OFFER_INDICATOR</code> is in the global <code>FUPAddVariableOfferInd</code> list qualify. Matching OfferNames are concatenated into <code>fupElement</code> as the <code>variableSOC</code> parameter.
+    </div>
+    <div class="callout warn">
+      <strong>Hard fail on no FUP offer:</strong> If no matching offers are found in an OU that passed PreExecCheck, throws <code>OMX_DATA_ERROR: "There is no FUP offer. OU: &lt;OUId&gt;"</code>.
+    </div>
+    <div class="callout success">
+      <strong>Resubmit support:</strong> <code>isActResub</code> flag used; calls <code>PurgePendingRequestsBeforeResubmit</code> at the start of a resubmit run.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_SBM_FUP_CHANGE_VARIABLE</code></td></tr>
+      <tr><td>Author</td><td>RS33-BANDIT</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>SBM (FUP doService)</td></tr>
+      <tr><td>Event type (Request)</td><td><code>Events.OMConsumers.OMXFM.Request.SBM_FUP_DO_SERVICE</code></td></tr>
+      <tr><td>Event type (Response)</td><td><code>Events.OMConsumers.OMXFM.Response.SBM_FUP_DO_SERVICE</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate(reqEvent)</code> — FIRE-AND-FORGET per OU</td></tr>
+      <tr><td>RequestCount</td><td>Manually: <code>if(!isActResub) RequestCount++</code> per OU sent</td></tr>
+      <tr><td>Fan-in</td><td><code>count(Response[ResponseCode suffix "000"]) == RequestCount</code></td></tr>
+      <tr><td>Iteration scope</td><td>Agreement Offers per ParentOU AND per ChildOU (not per Subscriber)</td></tr>
+      <tr><td>Mandatory parameter</td><td><code>Parameter[0]</code> must be <code>"ADD"</code> or <code>"REMOVE"</code></td></tr>
+      <tr><td>Resubmit</td><td>PurgePendingRequestsBeforeResubmit + isActResub RequestCount skip</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §7 Logic -->
+<div class="section">
+  <div class="section-header">§7 — Key Logic Patterns</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Pattern</th><th>Detail</th></tr>
+      <tr><td>ADD/REMOVE dispatch</td><td><code>param=="ADD"</code> → function_id <code>"104300008"</code>; <code>param=="REMOVE"</code> → <code>"104300009"</code></td></tr>
+      <tr><td>FE_OR_CCBS filter</td><td>Each offer's <code>FE_OR_CCBS</code> ExtInfo must equal <code>"FE"</code> to qualify for FUP processing</td></tr>
+      <tr><td>SPECIAL_OFFER_INDICATOR + BRMS</td><td><code>SPECIAL_OFFER_INDICATOR</code> must be non-empty AND in global <code>FUPAddVariableOfferInd</code> list (via <code>BRMS.AnyIn</code>)</td></tr>
+      <tr><td>fupElement accumulation</td><td>Matching OfferNames comma-joined: <code>fupElement = fupElement + "," + OfferName</code>; first → no comma prefix</td></tr>
+      <tr><td>Hard fail on empty fupElement</td><td>If <code>fupElement==""</code> after scanning all offers in a qualifying OU → throws <code>OMX_DATA_ERROR</code></td></tr>
+      <tr><td>subAmount</td><td><code>count($currPOU/Subscriber)</code> or <code>count($currCOU/Subscriber)</code> — subscriber count within the OU</td></tr>
+      <tr><td>service_no</td><td>Set to <code>OUId</code> (same as fupID) — identifies the FUP service being modified</td></tr>
+      <tr><td>PreExecCheck via GetXMLForOU/GetXMLForChildOU</td><td>OU-level (not offer-level) scoped XML for PreExecCheck evaluation</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping (ParentOU; ChildOU identical except $cOURefId/$cOUId/$currCOU)</div>
+  <div class="section-body">
+<pre><code>createEvent → event
+├── JMSPriority         ← $orderRequest/OrderPriority               [Conditional]
+├── JMSCorrelationID    ← $orderRequest/OrderData/OMXTrackingId      [Conditional]
+├── OrderID             ← $orderRequest/OrderData/OrderID            [Conditional]
+├── RefID               ← $pOURefId (ParentOU RefId)                 [Always]
+├── OrderType           ← $orderRequest/OrderData/OrderType          [Conditional]
+└── payload → ns:doServiceRequest
+    └── ns:req
+        ├── ns:function_id
+        │   ├── param=="ADD"    → "104300008"                        [Dispatch]
+        │   └── param=="REMOVE" → "104300009"                        [Dispatch]
+        ├── ns:parameters
+        │   ├── ns:item [1]: key="fupID",      value=$pOUId          [Always]
+        │   ├── ns:item [2]: key="variableSOC", value=$fupElement    [Always — comma-joined OfferNames]
+        │   └── ns:item [3]: key="subAmount",  value=count($currPOU/Subscriber) [Always]
+        └── ns:service_no ← $pOUId                                  [Always]
+
+NOTE: No UserName/PassWord fields. No CES field.
+NOTE: ChildOU variant uses $cOURefId, $cOUId, $currCOU with count($currCOU/Subscriber).</code></pre>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre><code>Request_SBM_FUP_CHANGE_VARIABLE
+├── if isActResub: PurgePendingRequestsBeforeResubmit(orderCurrentActivity)
+├── if !(param=="ADD" || param=="REMOVE"): throw DATA_ISSUE
+├── param = nextAct.Parameter[0]
+├── for each ParentOU[iPOU]:
+│   ├── GetXMLForOU(orderRequest, pOURefId)
+│   ├── [if PreExecCheck] XPath.execute on pOU XML → chkRes
+│   └── if chkRes=="true":
+│       ├── for each Offers[iOffer]:
+│       │   ├── specialOfferInd = XPath(currOffer/ExtendedInfo[SPECIAL_OFFER_INDICATOR])
+│       │   ├── fe_or_ccbs = XPath(currOffer/ExtendedInfo[FE_OR_CCBS])
+│       │   └── if length(specialOfferInd)>0 AND fe_or_ccbs=="FE" AND BRMS.AnyIn(FUPAddVariableOfferInd, specialOfferInd):
+│       │       fupElement += OfferName
+│       ├── if fupElement=="": throw OMX_DATA_ERROR
+│       ├── createEvent(SBM_FUP_DO_SERVICE, pOU XSLT)
+│       ├── sendEventImmediate(reqEvent)
+│       ├── if(!isActResub): RequestCount++
+│       └── sendEventImmediate(Logger REQ)
+│   └── for each ChildOU[iCOU]:
+│       ├── GetXMLForChildOU(orderRequest, cOURefId, pOURefId)
+│       └── [same as POU above with cOURefId/cOUId/currCOU]
+├── if !isSkipped: GetActivityStatusString("1") + SendDataToDB
+└── else: SkipActivity("4")
+
+Response_SBM_FUP_CHANGE_VARIABLE
+├── createInstance(SBM_FUP_DoServiceRes: std 4 + SBM fields) → currActivity.Response[n]
+│   SBM extra fields: extra_xml, req_transaction_id, response_message, result_code, result_desc, result_namespace, transaction_id
+├── Logger RES
+└── count("000") == RequestCount → "true"/"false"</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr>
+        <td>Hard fail if no FUP offer found in qualifying OU — entire order aborts on missing SPECIAL_OFFER_INDICATOR</td>
+        <td><span class="badge badge-high">HIGH</span></td>
+        <td>Pre-validate offer data before order submission; document required offer attributes</td>
+      </tr>
+      <tr>
+        <td>BRMS.AnyIn references global variable <code>FUPAddVariableOfferInd</code> — must be deployed and current in runtime</td>
+        <td><span class="badge badge-med">MEDIUM</span></td>
+        <td>Include FUP variable offer indicator list in deployment validation; externalize to config</td>
+      </tr>
+      <tr>
+        <td>fupElement is comma-joined OfferNames — SBM variableSOC must accept multi-value comma-delimited string</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Verify SBM API spec for variableSOC multi-value handling; document delimiter</td>
+      </tr>
+      <tr>
+        <td>SBM_FUP_DoServiceRes uses non-standard concept (not ResponseBase) — extended fields map to SBM-specific result structure</td>
+        <td><span class="badge badge-low">LOW</span></td>
+        <td>Document SBM result fields; map to canonical response model in migration</td>
+      </tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Write Target</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>currActivity.Response[]</code></td><td><code>SBM_FUP_DoServiceRes</code> concept (ResponseBase + SBM fields)</td><td>Always</td></tr>
+      <tr><td><code>extra_xml</code></td><td><code>payload.ns:doServiceResponse.ns:doServiceReturn.ns:extra_xml</code></td><td>Conditional</td></tr>
+      <tr><td><code>result_code / result_desc / result_namespace</code></td><td>SBM doServiceReturn response fields</td><td>Conditional</td></tr>
+      <tr><td><code>transaction_id / req_transaction_id</code></td><td>SBM transaction identifiers from doServiceReturn</td><td>Conditional</td></tr>
+    </table>
+    <div class="callout info" style="margin-top:12px">
+      No write-back to order ExtendedInfo. Fan-in: <code>count(Response[ResponseCode suffix "000"]) == RequestCount</code>.
+    </div>
+    <div class="callout warn" style="margin-top:8px">
+      Uses <code>SBM_FUP_DoServiceRes</code> concept (not generic <code>ResponseBase</code>) — extended with SBM-specific response fields.
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-09-21</footer>
+</body>
+</html>

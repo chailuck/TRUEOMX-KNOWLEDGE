@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+<title>Request_OMX_CAL_NO_OF_IDD_AND_IR</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4;}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;font-size:14px;background:var(--bg);color:#212121;line-height:1.6;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px 24px;}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:4px;}
+.page-header .subtitle{font-size:0.9rem;opacity:0.88;margin-bottom:14px;}
+.meta-row{display:flex;gap:16px;flex-wrap:wrap;}
+.meta-badge{background:rgba(255,255,255,0.15);border-radius:6px;padding:4px 12px;font-size:0.8rem;}
+main{max-width:1200px;margin:0 auto;padding:28px 20px;}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden;}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 18px;font-size:0.9rem;font-weight:600;border-left:4px solid var(--true-light);}
+.section-body{padding:18px 20px;}
+table{width:100%;border-collapse:collapse;font-size:0.83rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;}
+td{padding:7px 10px;border-bottom:1px solid var(--border);vertical-align:top;}
+tr:hover td{background:#fafafa;}
+code,pre{font-family:'Cascadia Code','Consolas',monospace;}
+code{background:#f0e6e6;color:var(--true-dark);border-radius:3px;padding:1px 5px;font-size:0.81rem;}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:0.82rem;border-left:3px solid var(--true-red);margin:8px 0;}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:0.75rem;font-weight:600;}
+.badge-green{background:#E8F5E9;color:#2e7d32;}
+.badge-orange{background:#FFF3E0;color:#e65100;}
+.badge-blue{background:#E3F0FD;color:#1565c0;}
+.badge-red{background:#FFE0E0;color:var(--true-dark);}
+.callout{border-left:4px solid;padding:10px 14px;border-radius:0 6px 6px 0;margin:10px 0;font-size:0.85rem;}
+.callout-info{border-color:var(--info);background:#E3F0FD;color:#0d47a1;}
+.callout-warn{border-color:var(--warning);background:#FFF3E0;color:#bf360c;}
+.callout-success{border-color:var(--success);background:#E8F5E9;color:#1b5e20;}
+.step-list{counter-reset:step;list-style:none;padding:0;}
+.step-list li{counter-increment:step;position:relative;padding-left:36px;margin-bottom:8px;font-size:0.86rem;}
+.step-list li::before{content:counter(step);position:absolute;left:0;top:0;background:var(--true-red);color:#fff;border-radius:50%;width:22px;height:22px;display:flex;align-items:center;justify-content:center;font-size:0.75rem;font-weight:700;line-height:22px;text-align:center;}
+footer{text-align:center;font-size:0.76rem;color:#9e9e9e;padding:20px;border-top:1px solid var(--border);margin-top:6px;}
+h3{font-size:0.95rem;color:var(--true-dark);margin-bottom:10px;margin-top:18px;}
+h3:first-child{margin-top:0;}
+p{font-size:0.85rem;margin-bottom:8px;}
+</style>
+</head>
+<body>
+<header class="page-header">
+  <h1>Request_OMX_CAL_NO_OF_IDD_AND_IR</h1>
+  <p class="subtitle">In-memory calculation — counts subscribers requiring IDD/IR provisioning and stores results in POU</p>
+  <div class="meta-row">
+    <span class="meta-badge">Rule: Rules.OMConsumers.OMXOM.OMX_CAL_NO_OF_IDD_AND_IR</span>
+    <span class="meta-badge">Type: In-memory calculation (no backend call)</span>
+    <span class="meta-badge">Author: CHAYATORN.P</span>
+    <span class="meta-badge">Generated: 2026-09-18</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 Overview -->
+<section class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p><strong>OMX_CAL_NO_OF_IDD_AND_IR</strong> is a pure in-memory calculation rule. It iterates over each POU's subscribers and counts how many require IDD provisioning (<code>NumberOfIDD</code>) and how many require IR provisioning (<code>NumberOfIR</code>), then stores these counts on the <code>ParentOU</code> concept. No external system is called; no JMS message is sent to a backend.</p>
+    <p>The counts drive downstream steps that need to know whether IDD/IR services need to be provisioned for the current batch of subscribers (e.g., SBM, CCBS package changes).</p>
+    <div class="callout callout-success"><strong>No external system call.</strong> This rule only reads and writes BE working memory. It advances to <code>NextActivity()</code> immediately after calculation.</div>
+    <div class="callout callout-info">Found in <code>Rules/OMConsumers/OMXOM/</code> — OMX orchestration rule, not an OMXFM backend-calling rule.</div>
+  </div>
+</section>
+
+<!-- §2 Metadata -->
+<section class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXOM.OMX_CAL_NO_OF_IDD_AND_IR</code></td></tr>
+      <tr><td>Author</td><td>CHAYATORN.P</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Backend</td><td>None — in-memory only</td></tr>
+      <tr><td>Fan-in</td><td>None — calls <code>NextActivity()</code> directly</td></tr>
+      <tr><td>Response handler</td><td>None</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §3 Working Memory -->
+<section class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order — POU/Subscriber hierarchy is read; <code>ParentOU.NumberOfIDD</code> and <code>ParentOU.NumberOfIR</code> are written</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>PreExecCheck source and activity state management</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §4 Rule Conditions -->
+<section class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "OMX_CAL_NO_OF_IDD_AND_IR"</code></td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "OMX_CAL_NO_OF_IDD_AND_IR"</code></td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §5 Execution Flow -->
+<section class="section">
+  <div class="section-header">§5 — Execution Flow</div>
+  <div class="section-body">
+    <ol class="step-list">
+      <li>Evaluate runtime PreExecCheck from <code>orderCurrentActivity.PreExecCheck</code> via <code>XPath.execute()</code></li>
+      <li>If PreExecCheck fails → <code>SkipActivity("4")</code> and exit</li>
+      <li>Loop <code>iPOU</code> over all <code>orderRequest.OrderData.Customer.ParentOU</code>:
+        <ul style="margin-left:20px;margin-top:6px;font-size:0.85rem;">
+          <li>Initialize <code>noOfIdd = 0</code>, <code>noOfIR = 0</code></li>
+          <li>Loop <code>subs</code> over <code>pOu.Subscriber</code>:<br/>
+            &nbsp;&nbsp;• <strong>IDD check:</strong> if subscriber has a CCBS offer with <code>TR_IDD_FLAG=Y</code> → noOfIdd += 0 (already provisioned, skip); else noOfIdd += 1<br/>
+            &nbsp;&nbsp;• <strong>IR check:</strong> if subscriber has a CCBS offer with <code>TR_IR_FLAG=Y</code> OR a FE offer with <code>OFFER_TYPE=IDD</code> → noOfIR += 0; else noOfIR += 1
+          </li>
+          <li>Set <code>pOu.NumberOfIDD = noOfIdd</code></li>
+          <li>Set <code>pOu.NumberOfIR = noOfIR</code></li>
+        </ul>
+      </li>
+      <li>Log "OmxCalNoOfIddAndIR Started" via <code>sendEventImmediate(Logger)</code></li>
+      <li>Call <code>NextActivity(orderRequest, orderCurrentActivity)</code></li>
+      <li>Exception → <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></li>
+    </ol>
+    <div class="callout callout-warn" style="margin-top:10px;">
+      <strong>Counter naming note:</strong> The rule increments <code>noOfIdd += 0</code> when the flag IS already set (i.e., CCBS already has it). The counter counts subscribers who do NOT yet have the service. This is intentional: the count represents how many NEW IDD/IR registrations are needed, not how many exist.
+    </div>
+    <div class="callout callout-warn" style="margin-top:6px;">
+      <strong>Commented-out inner loop:</strong> The <code>for (int subOffer ...)</code> inner loop over SubscriberOffers is fully commented out in the source. The subscriber-level check runs per-subscriber (not per-offer). The loop comment is dead code.
+    </div>
+  </div>
+</section>
+
+<!-- §7 Logic Detail -->
+<section class="section">
+  <div class="section-header">§7 — Calculation Logic Detail</div>
+  <div class="section-body">
+    <h3>IDD Count Logic (per subscriber)</h3>
+    <table>
+      <tr><th>XPath Condition</th><th>noOfIdd increment</th><th>Meaning</th></tr>
+      <tr><td><code>boolean($subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS'] and contains(SocProperties,'TR_IDD_FLAG=Y')])</code></td><td>+0 (skip)</td><td>Subscriber already has IDD on CCBS — no new IDD needed</td></tr>
+      <tr><td>else</td><td>+1</td><td>Subscriber needs IDD provisioning</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">IR Count Logic (per subscriber)</h3>
+    <table>
+      <tr><th>XPath Condition</th><th>noOfIR increment</th><th>Meaning</th></tr>
+      <tr><td><code>boolean($subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS'] and contains(SocProperties,'TR_IR_FLAG=Y')]) or exists($subscriber/SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='FE'] and ExtendedInfo[Name='OFFER_TYPE' and Value='IDD']])</code></td><td>+0 (skip)</td><td>Subscriber already has IR on CCBS, OR has an FE IDD offer (treated as IR-equivalent)</td></tr>
+      <tr><td>else</td><td>+1</td><td>Subscriber needs IR provisioning</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">Output Fields Written</h3>
+    <table>
+      <tr><th>Field</th><th>Type</th><th>Value</th></tr>
+      <tr><td><code>ParentOU.NumberOfIDD</code></td><td>int</td><td>Count of subscribers needing IDD provisioning</td></tr>
+      <tr><td><code>ParentOU.NumberOfIR</code></td><td>int</td><td>Count of subscribers needing IR provisioning</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §8 System Dependencies -->
+<section class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <div class="callout callout-success"><strong>No external system call.</strong> All computation is in-memory. Only a Logger audit event is sent.</div>
+    <h3>§8.2 Logging Events</h3>
+    <table>
+      <tr><th>Direction</th><th>Event</th><th>AUDIT_TRACE</th></tr>
+      <tr><td><span class="badge badge-blue">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td><code>"OMX-OM OmxCalNoOfIddAndIR Started."</code></td></tr>
+    </table>
+    <div class="callout callout-warn" style="margin-top:10px;">Only one log event (start). There is no "Completed" log event after <code>NextActivity()</code>.</div>
+
+    <h3 style="margin-top:14px;">§8.5 ExtendedInfo Fields Read</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Usage</th></tr>
+      <tr><td><code>FE_OR_CCBS = "CCBS"</code></td><td>SubscriberOffers</td><td>Identifies CCBS-sourced offers; checked for TR_IDD_FLAG=Y and TR_IR_FLAG=Y</td></tr>
+      <tr><td><code>FE_OR_CCBS = "FE"</code></td><td>SubscriberOffers</td><td>Identifies FE-sourced offers; checked for OFFER_TYPE=IDD</td></tr>
+      <tr><td><code>OFFER_TYPE = "IDD"</code></td><td>SubscriberOffers</td><td>FE offers — treated as IR-equivalent for noOfIR counter</td></tr>
+    </table>
+
+    <h3 style="margin-top:14px;">§8.4 BE Working Memory Written</h3>
+    <table>
+      <tr><th>Object</th><th>Field</th><th>Written Value</th></tr>
+      <tr><td><code>ParentOU</code></td><td><code>NumberOfIDD</code></td><td>Count of subscribers needing IDD</td></tr>
+      <tr><td><code>ParentOU</code></td><td><code>NumberOfIR</code></td><td>Count of subscribers needing IR</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §11 Audit Logging -->
+<section class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>PROCESS_ID</th><th>OPERATION_NAME</th><th>AUDIT_TRACE</th></tr>
+      <tr><td><code>concat($pid, "_REQ")</code></td><td><code>/Rules/OMConsumers/OMXOM/OMX_CAL_NO_OF_IDD_AND_IR</code></td><td><code>OMX-OM OmxCalNoOfIddAndIR Started.</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §12 Activity Status -->
+<section class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Transition</th><th>Condition</th><th>Action</th></tr>
+      <tr><td>WAITING → COMPLETED</td><td>PreExecCheck passes</td><td><code>NextActivity(orderRequest, orderCurrentActivity)</code></td></tr>
+      <tr><td>WAITING → SKIPPED</td><td>PreExecCheck fails</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §13 Exception Handling -->
+<section class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <p>All exceptions → <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code>.</p>
+    <p>No custom exceptions are thrown by this rule (no required parameter validation).</p>
+  </div>
+</section>
+
+<!-- §14 Helper Functions -->
+<section class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>XPath.evalAsBoolean(xpath, vars)</code></td><td>Evaluates IDD/IR flag presence per subscriber</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.NextActivity(req, act)</code></td><td>Advances to next activity</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.SkipActivity(req, act, "4")</code></td><td>Marks activity skipped</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.HandleActivityException(req, act, ae, "")</code></td><td>Uniform exception handler</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §15 Function Dependency Tree -->
+<section class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre>OMX_CAL_NO_OF_IDD_AND_IR
+├── XPath.execute(PreExecCheck, sXML, ns)               [PreExecCheck eval]
+│
+├── for iPOU over ParentOU
+│   ├── noOfIdd = 0; noOfIR = 0
+│   └── for subs over pOu.Subscriber
+│       ├── XPath.evalAsBoolean(IDD flag check)         [TR_IDD_FLAG=Y on CCBS offer]
+│       │   → noOfIdd += 0 (flag found) / +1 (not found)
+│       └── XPath.evalAsBoolean(IR flag check)          [TR_IR_FLAG=Y on CCBS OR FE OFFER_TYPE=IDD]
+│           → noOfIR += 0 (flag found) / +1 (not found)
+│   pOu.NumberOfIDD = noOfIdd
+│   pOu.NumberOfIR = noOfIR
+│
+├── sendEventImmediate(Logger — Start)
+├── NextActivity(orderRequest, orderCurrentActivity)
+└── HandleActivityException(...)                        [catch]</pre>
+  </div>
+</section>
+
+<!-- §17 Migration Notes -->
+<section class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3>Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Count subscribers per POU who need IDD provisioning (no existing CCBS TR_IDD_FLAG=Y)</td></tr>
+      <tr><td>R2</td><td>Count subscribers per POU who need IR provisioning (no CCBS TR_IR_FLAG=Y AND no FE OFFER_TYPE=IDD)</td></tr>
+      <tr><td>R3</td><td>Store results in <code>ParentOU.NumberOfIDD</code> and <code>ParentOU.NumberOfIR</code></td></tr>
+      <tr><td>R4</td><td>Runtime PreExecCheck evaluation (from Activity config, not rule WHEN)</td></tr>
+      <tr><td>R5</td><td>No backend call — pure working memory read/write</td></tr>
+    </table>
+
+    <h3 style="margin-top:16px;">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Commented-out <code>for (int subOffer ...)</code> loop — dead code reduces readability</td><td><span class="badge badge-blue">[LOW]</span></td><td>Remove comment block during migration</td></tr>
+      <tr><td>IDD counter semantics: noOfIdd += 0 when flag IS set — confusing double-negative logic</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Rewrite as: <code>if (!hasIDD) noOfIdd++</code> for clarity in target platform</td></tr>
+      <tr><td>FE IDD offer (OFFER_TYPE=IDD) counted as IR-equivalent — business rule not documented</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Verify with product team whether FE IDD offers truly substitute IR</td></tr>
+      <tr><td>Only one log event (start, no completion log)</td><td><span class="badge badge-blue">[LOW]</span></td><td>Add completion log in migration for full observability</td></tr>
+    </table>
+  </div>
+</section>
+
+<!-- §18 Full Source Code -->
+<section class="section">
+  <div class="section-header">§18 — Full Source Code</div>
+  <div class="section-body">
+<pre><span style="color:#cba6f7">rule</span> <span style="color:#89b4fa">Rules.OMConsumers.OMXOM.OMX_CAL_NO_OF_IDD_AND_IR</span> {
+  <span style="color:#6c7086">// author: CHAYATORN.P</span>
+  attribute { priority = 5; forwardChain = true; }
+  declare {
+    Concepts.OrderRequest.OrderRequest orderRequest;
+    Concepts.OM.ProcessConfig.Activity orderCurrentActivity;
+  }
+  when {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == "OMX_CAL_NO_OF_IDD_AND_IR";
+    orderRequest.ProcessFlow.NextActivityID == "OMX_CAL_NO_OF_IDD_AND_IR";
+    orderCurrentActivity.Status == "WAITING";
+  }
+  then {
+    <span style="color:#6c7086">// 1. Evaluate PreExecCheck; skip if false</span>
+    <span style="color:#6c7086">// 2. for iPOU → Subscriber loop</span>
+    <span style="color:#6c7086">//    noOfIdd=0; noOfIR=0</span>
+    <span style="color:#6c7086">//    IDD: if CCBS offer has TR_IDD_FLAG=Y → +0; else +1</span>
+    <span style="color:#6c7086">//    IR:  if CCBS TR_IR_FLAG=Y OR FE OFFER_TYPE=IDD → +0; else +1</span>
+    <span style="color:#6c7086">//    pOu.NumberOfIDD = noOfIdd; pOu.NumberOfIR = noOfIR</span>
+    <span style="color:#6c7086">// 3. Log "OmxCalNoOfIddAndIR Started"</span>
+    <span style="color:#6c7086">// 4. NextActivity()</span>
+    <span style="color:#6c7086">// — No backend call, no fan-in, no response handler —</span>
+    <span style="color:#6c7086">// NOTE: inner for(subOffer) loop is commented out in source — dead code</span>
+  }
+}</pre>
+  </div>
+</section>
+
+<!-- §19 No Response Handler -->
+<section class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <div class="callout callout-info">No response rulefunction exists for <code>OMX_CAL_NO_OF_IDD_AND_IR</code>. The rule completes synchronously: it calculates counts, stores them on the POU concept, and calls <code>NextActivity()</code> — all within the same rule firing.</div>
+  </div>
+</section>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_OMX_CAL_NO_OF_IDD_AND_IR · Generated 2026-09-18</footer>
+</body>
+</html>

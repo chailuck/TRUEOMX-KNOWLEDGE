@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CRM_CREATE_UPDATE_SR</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:36px 40px;border-bottom:4px solid var(--true-light)}
+.page-header h1{font-size:1.9rem;font-weight:700}
+.page-header .subtitle{opacity:0.88;margin-top:6px;font-size:0.95rem}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap}
+.meta-badge{background:rgba(255,255,255,0.18);border-radius:20px;padding:4px 14px;font-size:0.82rem;font-weight:600}
+.container{max-width:1200px;margin:0 auto;padding:32px 24px}
+.section{background:var(--card);border-radius:10px;border:1px solid var(--border);margin-bottom:28px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;border-left:4px solid var(--true-light);font-size:1.05rem;font-weight:700}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:10px 12px;text-align:left;font-weight:700}
+td{padding:9px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fdf5f5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;border-left:3px solid var(--true-red);line-height:1.5}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 6px;border-radius:3px}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:0.75rem;font-weight:700}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-red{background:#FFE0E0;color:#8B0000}
+.flow-step{display:flex;align-items:flex-start;gap:12px;margin:8px 0;padding:10px 14px;background:#fdf8f8;border-radius:6px;border-left:3px solid var(--true-red)}
+.step-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:0.78rem;font-weight:700;flex-shrink:0}
+.step-body{flex:1}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:0.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-attr{color:#f9e2af}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,0.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,0.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:0.75rem;margin-left:6px}
+.tree-ns{color:#6c7086;font-size:0.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.warn-box{background:#FFF3E0;border-left:4px solid #e65100;padding:12px 16px;border-radius:4px;margin:10px 0;font-size:0.88rem}
+.info-box{background:#E3F0FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:4px;margin:10px 0;font-size:0.88rem}
+footer{text-align:center;padding:20px;color:#888;font-size:0.82rem;border-top:1px solid var(--border);margin-top:20px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div style="max-width:1200px;margin:0 auto">
+    <div style="font-size:0.82rem;opacity:0.7;margin-bottom:6px">FM Logic Documentation</div>
+    <h1>Request_CRM_CREATE_UPDATE_SR</h1>
+    <div class="subtitle">Create or update a Service Request in CRM — fire-and-forget pattern with dual POU+COU loop</div>
+    <div class="meta-row">
+      <span class="meta-badge">Backend: CRM</span>
+      <span class="meta-badge">Pattern: POU+COU Loop · Fire-and-Forget</span>
+      <span class="meta-badge">Author: CHAYATORN-PC</span>
+      <span class="meta-badge">Priority: 5</span>
+      <span class="meta-badge">Generated: 2026-09-18</span>
+    </div>
+  </div>
+</div>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This rule creates or updates a Service Request (SR) in the CRM system for each subscriber (POU and COU). It uses a <strong>fire-and-forget pattern</strong> — unlike most FM rules it does <em>not</em> use IntraActivitySequencing. Instead it uses <code>Event.Ext.sendEventImmediate</code> directly and manually increments <code>RequestCount++</code>.</p>
+    <p style="margin-top:8px">The payload varies by <strong>OrderType</strong>: OrderType 1 or 11013 is a Call Verification flow that maps CALL_VER_* ExtendedInfo fields; all other OrderTypes map TRUE_CARD_* fields and use parameter-driven values.</p>
+    <div class="warn-box">⚠ <strong>Guard:</strong> If <code>CustomerTypeInfo.Type == 0</code> (or null), the rule throws a <code>DATA_ISSUE</code> exception immediately. This prevents CRM calls with unknown customer types.</div>
+    <div class="warn-box">⚠ <strong>RefId:</strong> Uses <code>String.valueOfLong(System.nanoTime())</code> — not the subscriber RefId. This is a random nano-time string used as the JMS correlation key with CRM. The response is matched by RequestCount, not by RefId/ReferenceId.</div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CRM_CREATE_UPDATE_SR</code></td></tr>
+      <tr><td>Author</td><td>CHAYATORN-PC</td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td><strong>Fan-in pattern</strong></td><td><span class="badge badge-red">NONE — Fire-and-Forget</span> (<code>sendEventImmediate</code>; manual <code>RequestCount++</code>)</td></tr>
+      <tr><td>Response correlation</td><td>RequestCount == successResponseCount (count of "000" responses)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order data and customer info</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity tracking — RequestCount incremented manually</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CRM_CREATE_UPDATE_SR"</code></td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CRM_CREATE_UPDATE_SR"</code></td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="step-num">1</div><div class="step-body"><strong>Resubmit check:</strong> <code>isActResub = RequestCount&gt;0 &amp;&amp; IsOrderResubmitted</code> (note: no PurgePending — fire-and-forget resubmit skips re-increment)</div></div>
+    <div class="flow-step"><div class="step-num">2</div><div class="step-body"><strong>POU loop:</strong> each ParentOU → each POU Subscriber (ps)</div></div>
+    <div class="flow-step"><div class="step-num">3</div><div class="step-body"><strong>Already-succeeded guard:</strong> skip if Response has CompletionStatus=2 for pSubRefId</div></div>
+    <div class="flow-step"><div class="step-num">4</div><div class="step-body"><strong>PreExecCheck:</strong> <code>GetXMLForSubscriber + XPath.execute</code>; skip if false</div></div>
+    <div class="flow-step"><div class="step-num">5</div><div class="step-body"><strong>Parameter extraction:</strong> STATUS, FCR_GLAG, EMPLOYEE_ID (POU: from SubscriberGeneralInfo.saleId if available), CATEGORY, SUB_CATEGORY, CASE_TYPE; DETAIL (POU: from SubscriberActivityInfo.UserText if available)</div></div>
+    <div class="flow-step"><div class="step-num">6</div><div class="step-body"><strong>CustomerTypeInfo guard:</strong> if Type==0 or null → throw DATA_ISSUE exception</div></div>
+    <div class="flow-step"><div class="step-num">7</div><div class="step-body"><strong>RefId:</strong> <code>String.valueOfLong(System.nanoTime())</code> — random nano-time string</div></div>
+    <div class="flow-step"><div class="step-num">8</div><div class="step-body"><strong>Build + send event:</strong> <code>Event.Ext.sendEventImmediate(reqEvent)</code> — NO assertEvent, NO IntraSeq</div></div>
+    <div class="flow-step"><div class="step-num">9</div><div class="step-body"><strong>RequestCount++:</strong> if <code>!isActResub</code> → <code>orderCurrentActivity.RequestCount++</code></div></div>
+    <div class="flow-step"><div class="step-num">10</div><div class="step-body"><strong>Audit log:</strong> <code>sendEventImmediate(Logger)</code></div></div>
+    <div class="flow-step"><div class="step-num">11</div><div class="step-body"><strong>COU loop:</strong> same pattern but always uses params for employeeId and detail (no saleId check)</div></div>
+    <div class="flow-step"><div class="step-num">12</div><div class="step-body"><strong>Completion:</strong> if !isSkipped → Status="1", <code>SendDataToDB</code>; else <code>SkipActivity("4")</code> — no SendFirstRequestEvent needed</div></div>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="section">
+  <div class="section-header">§7 — Data Extraction — OrderType Branching</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:10px;color:var(--true-dark)">POU Subscriber — Parameter Resolution</h3>
+    <table>
+      <tr><th>Field</th><th>POU Source</th><th>COU Source</th></tr>
+      <tr><td>employeeId</td><td>SubscriberGeneralInfo.saleId if present, else param EMPLOYEE_ID</td><td>param EMPLOYEE_ID always</td></tr>
+      <tr><td>detail</td><td>SubscriberActivityInfo.UserText if present, else param DETAIL</td><td>param DETAIL always</td></tr>
+      <tr><td>status, fcrFlag, category, subCategory, caseType</td><td>Activity params (same for both)</td><td>Activity params (same for both)</td></tr>
+    </table>
+    <div class="info-box" style="margin-top:10px">Note: FCR_GLAG parameter name has a typo in the source code (<code>GetActivityParameterValueFromKey(orderCurrentActivity, "FCR_GLAG")</code>). ProcessConfig must use the same key "FCR_GLAG" to match.</div>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">OrderType Payload Branching</h3>
+    <table>
+      <tr><th>Field</th><th>OrderType 1 or 11013</th><th>Other OrderTypes</th></tr>
+      <tr><td><code>ns:resolution</code></td><td>subscriber.ExtendedInfo[CALL_VER_RESOLUTION]/Value (conditional)</td><td>OrderData.ExtendedInfo[TRUE_CARD_RESOLUTION]/Value</td></tr>
+      <tr><td><code>ns:status</code></td><td><code>"Open"</code> (hardcoded)</td><td>param STATUS</td></tr>
+      <tr><td><code>ns:reason</code></td><td>subscriber.ExtendedInfo[CALL_VER_SR_REASON]/Value (conditional)</td><td>— (omitted)</td></tr>
+      <tr><td><code>ns:category</code></td><td>subscriber.ExtendedInfo[CALL_VER_SR_CAT]/Value (conditional)</td><td>param CATEGORY</td></tr>
+      <tr><td><code>ns:subCategory</code></td><td>subscriber.ExtendedInfo[CALL_VER_SR_SUBCAT]/Value (conditional)</td><td>param SUB_CATEGORY</td></tr>
+      <tr><td><code>ns:issue</code></td><td>subscriber.ExtendedInfo[CALL_VER_SR_ISSUE]/Value (conditional)</td><td>OrderData.ExtendedInfo[TRUE_CARD_ISSUE]/Value</td></tr>
+      <tr><td><code>ns:subReason</code></td><td>subscriber.ExtendedInfo[CALL_VER_SUB_REASON]/Value (conditional)</td><td>— (omitted)</td></tr>
+      <tr><td><code>ns:serviceId</code></td><td>subscriber.MSISDN (conditional)</td><td>— (omitted in POU; COU has MSISDN in old commented XSLT)</td></tr>
+      <tr><td><code>ns:ban</code></td><td>Account[account_refId=RefId].AccountID (conditional)</td><td>— (omitted)</td></tr>
+    </table>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">Common Fields (All OrderTypes)</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th></tr>
+      <tr><td><code>ns:integrationId</code></td><td>OrderData.OrderID</td></tr>
+      <tr><td><code>ns:fcrFlag</code></td><td>param FCR_GLAG</td></tr>
+      <tr><td><code>ns:summary</code></td><td>OrderData.ExtendedInfo[TRUE_CARD_NUMBER]/Value</td></tr>
+      <tr><td><code>ns:employeeId</code></td><td>See parameter resolution above</td></tr>
+      <tr><td><code>ns:contactPhone</code></td><td>subscriber.MSISDN (POU); PrefContactNumber is in old COU XSLT</td></tr>
+      <tr><td><code>ns:productLine</code></td><td><code>"True Mobile"</code> (static)</td></tr>
+      <tr><td><code>ns:productType</code></td><td><code>"Postpay"</code> (static)</td></tr>
+      <tr><td><code>ns:caseType</code></td><td>param CASE_TYPE</td></tr>
+      <tr><td><code>ns:detail</code></td><td>See parameter resolution above</td></tr>
+      <tr><td><code>ns:autoCloseSRFlag</code></td><td><code>true()</code> (always)</td></tr>
+    </table>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">prospectCustomerAccount (All OrderTypes)</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th></tr>
+      <tr><td><code>ns:idType</code></td><td><code>"Thai ID"</code> (static)</td></tr>
+      <tr><td><code>ns:idNumber</code></td><td>CustomerGeneralInfo.Identification</td></tr>
+      <tr><td><code>ns:title</code></td><td>CustomerName.Title or <code>"คุณ"</code> (default)</td></tr>
+      <tr><td><code>ns:firstName</code></td><td>CustomerName.FirstName</td></tr>
+      <tr><td><code>ns:lastName</code></td><td>CustomerName.LastName</td></tr>
+      <tr><td><code>ns:type</code></td><td>73→"Individual"; 66/67→"Business"; else ""</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:10px;color:var(--true-dark)">§8.2 ESB / JMS Channel</h3>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.CRM_CREATE_UPDATE_SR</code></td><td>Create/update SR in CRM</td></tr>
+      <tr><td><span class="badge badge-blue">LOG</span></td><td><code>Events.OMConsumers.OMXESB.Logger</code></td><td>Audit trail</td></tr>
+    </table>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Schema Namespace</th><th>Correlation Pattern</th></tr>
+      <tr><td><span class="badge badge-teal">CRM</span></td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/CRM/CRMCreateUpdateSRService.xsd</code></td><td>RequestCount == successResponseCount (count of "000" ResponseCode suffix)</td></tr>
+    </table>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">§8.5 ExtendedInfo Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>OrderType</th></tr>
+      <tr><td><code>CALL_VER_RESOLUTION</code></td><td>Subscriber</td><td>1, 11013</td></tr>
+      <tr><td><code>CALL_VER_SR_REASON</code></td><td>Subscriber</td><td>1, 11013</td></tr>
+      <tr><td><code>CALL_VER_SR_CAT</code></td><td>Subscriber</td><td>1, 11013</td></tr>
+      <tr><td><code>CALL_VER_SR_SUBCAT</code></td><td>Subscriber</td><td>1, 11013</td></tr>
+      <tr><td><code>CALL_VER_SR_ISSUE</code></td><td>Subscriber</td><td>1, 11013</td></tr>
+      <tr><td><code>CALL_VER_SUB_REASON</code></td><td>Subscriber</td><td>1, 11013</td></tr>
+      <tr><td><code>TRUE_CARD_RESOLUTION</code></td><td>OrderData</td><td>Other</td></tr>
+      <tr><td><code>TRUE_CARD_NUMBER</code></td><td>OrderData</td><td>All</td></tr>
+      <tr><td><code>TRUE_CARD_ISSUE</code></td><td>OrderData</td><td>Other</td></tr>
+      <tr><td><code>ACTIVITY_LIST*</code></td><td>Subscriber (starts-with check in PreExecCheck)</td><td>All (PreExecCheck gate)</td></tr>
+    </table>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">§8.1 Activity Parameters</h3>
+    <table>
+      <tr><th>Parameter Key</th><th>Notes</th></tr>
+      <tr><td>STATUS</td><td>Used when OrderType ≠ 1/11013</td></tr>
+      <tr><td>FCR_GLAG</td><td>⚠ Typo in source — param key must match exactly in ProcessConfig</td></tr>
+      <tr><td>EMPLOYEE_ID</td><td>Fallback for POU when saleId absent; always used for COU</td></tr>
+      <tr><td>CATEGORY</td><td>Fallback for POU when OrderType ≠ 1/11013</td></tr>
+      <tr><td>SUB_CATEGORY</td><td>Fallback for POU when OrderType ≠ 1/11013</td></tr>
+      <tr><td>CASE_TYPE</td><td>Always from param</td></tr>
+      <tr><td>DETAIL</td><td>Fallback for POU when UserText absent</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-attr">Id</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src-static">String.valueOfLong(System.nanoTime())</span><span class="badge badge-green">Always</span><span class="tree-cond">⚠ not subscriber RefId</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge badge-green">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:CRMCreateUpdateSRServiceRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:integrationId</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.OrderID</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:resolution</span><span class="tree-cond">OrderType=1/11013: CALL_VER_RESOLUTION (conditional); else: TRUE_CARD_RESOLUTION</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:status</span><span class="tree-cond">OrderType=1/11013: "Open" (static); else: param STATUS</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:reason</span><span class="tree-cond">OrderType=1/11013 only: CALL_VER_SR_REASON (conditional)</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:fcrFlag</span><span class="tree-arrow">←</span><span class="tree-src">param FCR_GLAG</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:summary</span><span class="tree-arrow">←</span><span class="tree-src">OrderData.ExtendedInfo[TRUE_CARD_NUMBER]</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:employeeId</span><span class="tree-cond">POU: saleId || param; COU: param</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:contactPhone</span><span class="tree-arrow">←</span><span class="tree-src">subscriber.MSISDN</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:category</span><span class="tree-cond">OrderType=1/11013: CALL_VER_SR_CAT; else: param CATEGORY</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:subCategory</span><span class="tree-cond">OrderType=1/11013: CALL_VER_SR_SUBCAT; else: param SUB_CATEGORY</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:issue</span><span class="tree-cond">OrderType=1/11013: CALL_VER_SR_ISSUE; else: TRUE_CARD_ISSUE</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:subReason</span><span class="tree-cond">OrderType=1/11013 only: CALL_VER_SUB_REASON (conditional)</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:productLine</span><span class="tree-arrow">←</span><span class="tree-src-static">"True Mobile"</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:productType</span><span class="tree-arrow">←</span><span class="tree-src-static">"Postpay"</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:caseType</span><span class="tree-arrow">←</span><span class="tree-src">param CASE_TYPE</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:detail</span><span class="tree-cond">POU: UserText || param DETAIL; COU: param DETAIL</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:autoCloseSRFlag</span><span class="tree-arrow">←</span><span class="tree-src-static">true()</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:serviceId</span><span class="tree-cond">OrderType=1/11013 only: subscriber.MSISDN (conditional)</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:ban</span><span class="tree-cond">OrderType=1/11013 only: Account[account_refId=RefId].AccountID (conditional)</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:prospectCustomerAccount</span><span class="badge badge-green">Always</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:idType</span><span class="tree-arrow">←</span><span class="tree-src-static">"Thai ID"</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:idNumber</span><span class="tree-arrow">←</span><span class="tree-src">CustomerGeneralInfo.Identification</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:title</span><span class="tree-arrow">←</span><span class="tree-src">CustomerName.Title or "คุณ"</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:firstName</span><span class="tree-arrow">←</span><span class="tree-src">CustomerName.FirstName</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:lastName</span><span class="tree-arrow">←</span><span class="tree-src">CustomerName.LastName</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:type</span><span class="tree-arrow">←</span><span class="tree-src-static">73→"Individual" · 66/67→"Business" · else ""</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §11 Audit -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"CRM_CREATE_UPDATE_SR"</code></td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for CRM_CREATE_UPDATE_SR"</code> (static)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Transition</th><th>Condition</th><th>Action</th></tr>
+      <tr><td>WAITING → IN_PROGRESS</td><td><code>!isSkipped</code></td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code> (no SendFirstRequestEvent)</td></tr>
+      <tr><td>WAITING → SKIPPED</td><td><code>isSkipped</code></td><td><code>SkipActivity("4")</code></td></tr>
+    </table>
+    <div class="info-box" style="margin-top:10px"><code>SendFirstRequestEvent</code> is <strong>not called</strong> for this FM — fire-and-forget uses direct <code>sendEventImmediate</code>, so no queued events exist to dispatch.</div>
+  </div>
+</div>
+
+<!-- §13 Exception -->
+<div class="section">
+  <div class="section-header">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Exception Type</th><th>Trigger</th><th>Handling</th></tr>
+      <tr><td><code>DATA_ISSUE</code></td><td><code>CustomerTypeInfo == null || Type == 0</code></td><td>Thrown immediately → <code>HandleActivityException</code></td></tr>
+      <tr><td>Any other</td><td>Runtime error in try block</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+<pre>Request_CRM_CREATE_UPDATE_SR
+├── POU loop (p, ps):
+│   ├── GetXMLForSubscriber(orderRequest, pSubRefId)              [if PreExecCheck]
+│   ├── XPath.execute(PreExecCheck)
+│   ├── GetActivityParameterValueFromKey(act, "STATUS/FCR_GLAG/EMPLOYEE_ID/...")
+│   ├── BRMS.IsBlankOrStringNull(saleId/UserText)
+│   ├── Exception.newException("DATA_ISSUE", ...)                 [if Type==0]
+│   ├── String.valueOfLong(System.nanoTime())                     [RefId]
+│   ├── Event.createEvent("xslt://CRM_CREATE_UPDATE_SR") [POU variant]
+│   ├── Event.Ext.sendEventImmediate(reqEvent)                    [NO assertEvent]
+│   ├── orderCurrentActivity.RequestCount++                       [if !isActResub]
+│   └── Event.Ext.sendEventImmediate(Logger event)
+├── COU loop (p, c, cs):
+│   └── [same pattern; always uses params for employeeId/detail]
+├── GetActivityStatusString("1", false)                           [if !isSkipped]
+├── SendDataToDB(orderRequest)                                    [if !isSkipped]
+├── SkipActivity(orderRequest, act, "4")                          [if isSkipped]
+└── HandleActivityException(...)                                   [catch]</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="margin-bottom:10px;color:var(--true-dark)">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Fire-and-forget: send immediately, no async fan-in tracking</td></tr>
+      <tr><td>R2</td><td>OrderType=1 or 11013: use CALL_VER_* subscriber ExtendedInfo fields; status hardcoded "Open"</td></tr>
+      <tr><td>R3</td><td>Other OrderTypes: use TRUE_CARD_* and param-driven fields</td></tr>
+      <tr><td>R4</td><td>Guard: CustomerTypeInfo.Type==0 must throw DATA_ISSUE before CRM call</td></tr>
+      <tr><td>R5</td><td>RefId = nanoTime string — not subscriber RefId; response correlation is by count</td></tr>
+      <tr><td>R6</td><td>POU employeeId from saleId; COU always from param</td></tr>
+    </table>
+    <h3 style="margin:16px 0 10px;color:var(--true-dark)">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>FCR_GLAG typo: ProcessConfig parameter must spell "FCR_GLAG" exactly or CRM call gets blank fcrFlag</td><td><span class="badge badge-red">[HIGH]</span></td><td>Fix typo in parameter name in ProcessConfig XML and code together</td></tr>
+      <tr><td>RefId = nanoTime — not subscriber-correlated; no per-subscriber response validation</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>In migration, correlate by order/subscriber for proper error isolation</td></tr>
+      <tr><td>Two XSLT variants for POU (old commented one + active one) — active uses <code>prospectCustomerAccount</code> (preferred); COU uses same newer pattern</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Remove commented-out XSLT variants before migration</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+  <div class="section-header">§18 — Full Source Code (Key Logic)</div>
+  <div class="section-body">
+<pre><span style="color:#cba6f7">rule</span> <span style="color:#89b4fa">Rules.OMConsumers.OMXFM.Request.Request_CRM_CREATE_UPDATE_SR</span> {
+  <span style="color:#6c7086">// @author CHAYATORN-PC</span>
+  <span style="color:#cba6f7">then</span> {
+    <span style="color:#cba6f7">boolean</span> isActResub = (orderCurrentActivity.RequestCount &gt; <span style="color:#fab387">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span style="color:#cba6f7">try</span> {
+      <span style="color:#6c7086">// POU loop</span>
+      <span style="color:#6c7086">// employeeId: saleId if present, else param EMPLOYEE_ID</span>
+      <span style="color:#6c7086">// detail: UserText if present, else param DETAIL</span>
+      <span style="color:#cba6f7">if</span> (orderRequest.OrderData.Customer.CustomerTypeInfo == <span style="color:#cba6f7">null</span>
+          || orderRequest.OrderData.Customer.CustomerTypeInfo.Type == <span style="color:#fab387">0</span>)
+        <span style="color:#cba6f7">throw</span> Exception.newException(<span style="color:#a6e3a1">"DATA_ISSUE"</span>, <span style="color:#a6e3a1">"CustomerTypeInfo.type not found"</span>, <span style="color:#cba6f7">null</span>);
+
+      String refId = String.valueOfLong(System.nanoTime());  <span style="color:#6c7086">// NOT subscriber RefId</span>
+
+      Events.OMConsumers.OMXFM.Request.CRM_CREATE_UPDATE_SR reqEvent =
+        Event.createEvent(<span style="color:#a6e3a1">"xslt://{{/Events/.../CRM_CREATE_UPDATE_SR}} &lt;!-- §9: OrderType branching CALL_VER_* vs TRUE_CARD_* --&gt;"</span>);
+      Event.Ext.sendEventImmediate(reqEvent);  <span style="color:#6c7086">// NO assertEvent — fire-and-forget</span>
+      isSkipped = <span style="color:#cba6f7">false</span>;
+      <span style="color:#cba6f7">if</span>(!isActResub) { orderCurrentActivity.RequestCount++; }
+
+      <span style="color:#6c7086">// Logger audit (sendEventImmediate)</span>
+      <span style="color:#6c7086">// COU loop — same pattern, always uses params for employeeId/detail</span>
+
+      <span style="color:#cba6f7">if</span> (!isSkipped) {
+        orderCurrentActivity.Status = RuleFunctions.Helpers.GetActivityStatusString(<span style="color:#a6e3a1">"1"</span>, <span style="color:#cba6f7">false</span>);
+        RuleFunctions.Helpers.SendDataToDB(orderRequest);  <span style="color:#6c7086">// no SendFirstRequestEvent</span>
+      } <span style="color:#cba6f7">else</span> {
+        RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span style="color:#a6e3a1">"4"</span>);
+      }
+    } <span style="color:#cba6f7">catch</span>(Exception ae) {
+      RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span style="color:#a6e3a1">""</span>);
+    }
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.1 Overview</h3>
+    <p><code>Response_CRM_CREATE_UPDATE_SR</code> is the <strong>only</strong> response handler among these 4 FMs that still uses the <code>successResponseCount</code> pattern (count of "000" suffix responses). The IntraSeq block was <em>not</em> adopted here — this matches the fire-and-forget request pattern.</p>
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CRM_CREATE_UPDATE_SR</code></td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td></tr>
+    </table>
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">§19.3 ResponseBase Construction</h3>
+    <p>Creates <code>Concepts.FM.Base.ResponseBase</code> using <code>$activityRes/@extId</code> as the extId (passes the pre-created object). All 4 fields are conditional.</p>
+    <p style="margin-top:6px">Also sets <code>currActivity.ResponseCode</code> and <code>currActivity.ResponseMessage</code> directly from the event.</p>
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">§19.4 Fan-in Completion</h3>
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+      <tr><td>Returns "true"</td><td>All dispatched SR requests have received "000" response codes</td></tr>
+    </table>
+    <h3 style="color:var(--true-dark);margin:14px 0 8px">§19.5 Audit</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"CRM_CREATE_UPDATE_SR"</code></td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Response received for CRM_CREATE_UPDATE_SR"</code> (static)</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

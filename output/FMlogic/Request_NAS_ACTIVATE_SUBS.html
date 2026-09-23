@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_NAS_ACTIVATE_SUBS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem}
+.meta-row{display:flex;gap:20px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.8rem}
+.container{max-width:1400px;margin:0 auto;padding:28px 32px}
+.section{background:var(--card);border-radius:10px;margin-bottom:22px;border:1px solid var(--border);overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover{background:#FAFAFA}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem;background:#F0F0F0;padding:1px 5px;border-radius:3px;color:var(--true-dark)}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red);white-space:pre-wrap}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:2px}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.info-box{background:#E3F0FD;border-left:4px solid var(--info);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+.warn-box{background:#FFF3E0;border-left:4px solid var(--warning);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+.note-box{background:var(--true-pale);border-left:4px solid var(--true-red);border-radius:6px;padding:12px 16px;margin:12px 0;font-size:.88rem}
+h3{color:var(--true-dark);margin:18px 0 8px;font-size:1rem}
+ul,ol{padding-left:20px;margin:8px 0}
+li{margin:4px 0}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086;font-style:italic}.nu{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;color:#999;font-size:.8rem;padding:20px;border-top:1px solid var(--border);margin-top:10px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_NAS_ACTIVATE_SUBS</h1>
+  <div class="subtitle">TIBCO BusinessEvents FM Logic — NAS Number Activation (Serial IntraActivitySequencing)</div>
+  <div class="meta-row">
+    <span class="meta-chip">Author: awalia-t420</span>
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">Forward Chain: true</span>
+    <span class="meta-chip">Target: NAS (Number Activation System)</span>
+    <span class="meta-chip">Pattern: IntraActivitySequencing (Serial Queue)</span>
+    <span class="meta-chip">Lines: 104</span>
+  </div>
+</div>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+<div class="section-header">§1 — Overview &amp; Purpose</div>
+<div class="section-body">
+<p>This rule activates subscriber MSISDNs in the <strong>NAS (Number Activation System)</strong> by sending one <code>NAS_ACTIVATE_SUBS</code> JMS event per subscriber. Unlike most FM rules that use <code>Event.Ext.sendEventImmediate()</code> for parallel fan-out, this rule uses the <strong>IntraActivitySequencing serial queue</strong> — events are asserted and queued, then dispatched one-at-a-time via <code>ActionRequestEvent()</code> and started with <code>SendFirstRequestEvent()</code>.</p>
+<div class="warn-box">
+<strong>Serial Dispatch Pattern:</strong> This FM uses <code>Event.assertEvent()</code> + <code>IntraActivitySequencing.ActionRequestEvent()</code> instead of <code>Event.Ext.sendEventImmediate()</code>. All subscriber events are queued first, then <code>SendFirstRequestEvent()</code> initiates the serial chain. NAS must process one MSISDN at a time.
+</div>
+<div class="info-box">
+<strong>Loop Order — COU before POU:</strong> Unusually, COU subscribers are processed in the outer loop before POU subscribers. This differs from ASRM_UPDATE_ATTRIBUTE_SIM which processes POU first.
+</div>
+<table>
+<tr><th>Item</th><th>Value</th></tr>
+<tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_NAS_ACTIVATE_SUBS</code></td></tr>
+<tr><td>Author</td><td>awalia-t420</td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>Forward Chain</td><td>true</td></tr>
+<tr><td>JMS Event Dispatched</td><td><code>Events.OMConsumers.OMXFM.Request.NAS_ACTIVATE_SUBS</code></td></tr>
+<tr><td>Payload Schema</td><td><code>ns:ActivateNumber</code> (OMX_ESBBW_NAS_ActivateNum Schema.xsd)</td></tr>
+<tr><td>Response Concept</td><td><code>Concepts.FM.Response.NAS_ActivateSubscriberRes</code></td></tr>
+<tr><td>Response Handler</td><td><code>Response_NAS_ACTIVATE_SUBS.rulefunction</code></td></tr>
+<tr><td>Dispatch Method</td><td><code>Event.assertEvent()</code> + <code>IntraActivitySequencing.ActionRequestEvent()</code></td></tr>
+<tr><td>Fan-In Method</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+<tr><td>Target System</td><td>NAS (Number Activation System)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+<div class="section-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="section-body">
+<table>
+<tr><th>Attribute</th><th>Value</th><th>Notes</th></tr>
+<tr><td>priority</td><td>5</td><td>Standard FM rule priority</td></tr>
+<tr><td>forwardChain</td><td>true</td><td>Rule may re-fire after working memory update</td></tr>
+<tr><td>Rule type</td><td>Request dispatcher — serial queue</td><td>Events queued and sent one at a time, not parallel</td></tr>
+<tr><td>Resubmit handling</td><td>PurgePendingRequestsBeforeResubmit</td><td>Clears all pending events before re-queuing; more aggressive than skip-only</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+<div class="section-header">§3 — Working Memory — Declared Objects</div>
+<div class="section-body">
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order: customer, POU/COU/subscriber hierarchy, MSISDNs</td></tr>
+<tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity node; holds event queue (via IntraActivitySequencing), Response[], Status</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+<div class="section-header">§4 — Rule Conditions (WHEN)</div>
+<div class="section-body">
+<table>
+<tr><th>#</th><th>Condition</th><th>Purpose</th></tr>
+<tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Match current process step</td></tr>
+<tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "NAS_ACTIVATE_SUBS"</code></td><td>Activity type guard</td></tr>
+<tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "NAS_ACTIVATE_SUBS"</code></td><td>Process flow confirmation</td></tr>
+<tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Only fire if not already in progress</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+<div class="section-header">§5 — Execution Flow Diagram</div>
+<div class="section-body">
+<ol>
+<li>Detect resubmit: <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code></li>
+<li>If resubmit → <code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code> — clears existing queued events</li>
+<li>Load <code>nextAct.PreExecCheck</code> XPath string</li>
+<li><strong>Loop A — COU Subscribers</strong> (processed first): for each ParentOU[i] → ChildOU[k] → Subscriber[j]:
+  <ul>
+    <li>Evaluate PreExecCheck via <code>GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</code></li>
+    <li>If chkRes=="true": check reqSuccess (CompletionStatus==2 + RefId match) → skip if done</li>
+    <li>Build <code>NAS_ACTIVATE_SUBS</code> event with subscriber MSISDN</li>
+    <li><code>Event.assertEvent(reqEvent)</code> — adds to working memory event queue</li>
+    <li><code>IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)</code> — registers in serial queue</li>
+    <li>Send audit log immediately</li>
+  </ul>
+</li>
+<li><strong>Loop B — POU Subscribers</strong> (processed second): same pattern via <code>GetXMLForSubscriber(orderRequest, refId)</code></li>
+<li>Post-loop (if any events queued):
+  <ul>
+    <li><code>IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)</code> — fires first event from queue, starting the serial chain</li>
+    <li><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB()</code></li>
+  </ul>
+</li>
+<li>If no events queued: <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></li>
+<li>catch: <code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></li>
+</ol>
+<div class="note-box"><strong>Serial vs Parallel:</strong> <code>Event.assertEvent()</code> places the event in the BE working memory. <code>ActionRequestEvent()</code> registers it in the IntraActivitySequencing queue. No event is sent to NAS until <code>SendFirstRequestEvent()</code> is called. Subsequent events are sent one-by-one as each response arrives (driven by the response handler calling <code>ActionResponseEvent()</code>).</div>
+</div>
+</div>
+
+<!-- §6 IntraActivitySequencing Pattern -->
+<div class="section">
+<div class="section-header">§6 — IntraActivitySequencing Serial Queue Pattern</div>
+<div class="section-body">
+<p>This rule implements the <strong>full serial IntraActivitySequencing pattern</strong>, distinct from the parallel fan-out used by most other FMs in this process:</p>
+<table>
+<tr><th>Step</th><th>Call</th><th>Purpose</th></tr>
+<tr><td>Resubmit cleanup</td><td><code>PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code></td><td>Clears any previously queued but unprocessed events before re-queueing</td></tr>
+<tr><td>Queue event</td><td><code>Event.assertEvent(reqEvent)</code></td><td>Places event into BE working memory (not yet sent to NAS)</td></tr>
+<tr><td>Register in queue</td><td><code>ActionRequestEvent(reqEvent, orderCurrentActivity)</code></td><td>Adds event reference to the activity's serial dispatch queue; increments RequestCount</td></tr>
+<tr><td>Start chain</td><td><code>SendFirstRequestEvent(orderCurrentActivity)</code></td><td>Sends only the first event to NAS; subsequent events wait for responses</td></tr>
+<tr><td>Advance queue</td><td><code>ActionResponseEvent(currActivity)</code> (in response handler)</td><td>On each response: removes from queue, sends next event, returns true when all done</td></tr>
+</table>
+<div class="info-box"><strong>Why serial?</strong> NAS number activation may have ordering constraints or system-level rate limits. The serial pattern ensures each MSISDN is fully activated before the next is sent, preventing race conditions in the number assignment system.</div>
+<table>
+<tr><th>Comparison</th><th>Parallel Fan-out (e.g., ASRM_UPDATE_ATTRIBUTE_SIM)</th><th>Serial Queue (NAS_ACTIVATE_SUBS)</th></tr>
+<tr><td>Dispatch method</td><td><code>Event.Ext.sendEventImmediate()</code></td><td><code>Event.assertEvent()</code> + <code>ActionRequestEvent()</code></td></tr>
+<tr><td>Events in flight</td><td>All at once</td><td>One at a time</td></tr>
+<tr><td>RequestCount mgmt</td><td>Manual <code>RequestCount++</code></td><td>Managed by <code>ActionRequestEvent()</code></td></tr>
+<tr><td>Fan-in check</td><td>XPath "000" suffix or <code>IsAllResponseSuccess()</code></td><td><code>ActionResponseEvent()</code> return value</td></tr>
+<tr><td>Resubmit purge</td><td>No explicit purge (skip-by-CompletionStatus)</td><td><code>PurgePendingRequestsBeforeResubmit()</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §7 Loop Order -->
+<div class="section">
+<div class="section-header">§7 — Loop Order: COU Before POU</div>
+<div class="section-body">
+<div class="warn-box"><strong>Non-standard loop order:</strong> This rule processes COU subscribers in the outer loop before POU subscribers. Most other multi-subscriber FMs (e.g., ASRM_UPDATE_ATTRIBUTE_SIM) process POU first. The serial nature of NAS dispatch means this order determines the actual activation sequence.</div>
+<table>
+<tr><th>Order</th><th>Context</th><th>PreExecCheck Helper</th><th>XSLT Params</th></tr>
+<tr><td>1st</td><td>COU Subscribers: ParentOU[i] → ChildOU[k] → Subscriber[j]</td><td><code>GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</code></td><td>i, k, j</td></tr>
+<tr><td>2nd</td><td>POU Subscribers: ParentOU[i] → Subscriber[j]</td><td><code>GetXMLForSubscriber(orderRequest, refId)</code></td><td>i, j</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+<div class="section-header">§8 — System &amp; Integration Dependencies</div>
+<div class="section-body">
+
+<h3>§8.1 ESB / JMS Channel Dependencies</h3>
+<table>
+<tr><th>Direction</th><th>Event</th><th>Channel</th><th>Purpose</th></tr>
+<tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>NAS_ACTIVATE_SUBS</code></td><td>NAS FM JMS (serial)</td><td>Activate MSISDN in Number Activation System</td></tr>
+<tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>Logger</code></td><td>ESB Audit Log</td><td>Per-subscriber audit (sent immediately after queue, before dispatch)</td></tr>
+</table>
+
+<h3>§8.2 Backend API Details</h3>
+<table>
+<tr><th>System</th><th>Operation</th><th>Schema</th><th>Protocol</th></tr>
+<tr><td>NAS</td><td>ActivateNumber</td><td><code>ns:ActivateNumber / MSISDNList</code></td><td>JMS (serial)</td></tr>
+</table>
+
+<h3>§8.3 BE Working Memory Dependencies</h3>
+<table>
+<tr><th>Field</th><th>Access</th><th>Notes</th></tr>
+<tr><td><code>orderCurrentActivity.RequestCount</code></td><td>Managed by IntraActivitySequencing</td><td>Not manually incremented — ActionRequestEvent() handles this</td></tr>
+<tr><td><code>orderCurrentActivity.Status</code></td><td>Write</td><td>Set to ACTIVE or SKIP</td></tr>
+<tr><td><code>orderCurrentActivity.Response[]</code></td><td>Read</td><td>reqSuccess check: CompletionStatus==2 + RefId match</td></tr>
+<tr><td><code>orderRequest.IsOrderResubmitted</code></td><td>Read</td><td>Triggers PurgePendingRequestsBeforeResubmit if true</td></tr>
+</table>
+
+<h3>§8.4 Global Variable Dependencies</h3>
+<table>
+<tr><th>Path</th><th>Purpose</th></tr>
+<tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td><td>Audit COMPONENT_NAME</td></tr>
+<tr><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td><td>Audit TARGET_SYSTEM</td></tr>
+<tr><td><code>$globalVariables/OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>Audit LOG_LEVEL</td></tr>
+<tr><td><code>$globalVariables/OMX_OM/WritePayload</code></td><td>Gate for payload logging</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+<div class="section-header">§9 — Detailed Payload Build (XSLT Decomposition)</div>
+<div class="section-body">
+<div class="info-box">Two XSLT variants — COU subscriber (params: i, k, j) and POU subscriber (params: i, j). The payload is identical; only the XPath to the subscriber node differs.</div>
+
+<h3>§9.1 Payload — ActivateNumber (extremely simple)</h3>
+<table>
+<tr><th>Element</th><th>Source</th><th>Notes</th></tr>
+<tr><td><code>ns:ActivateNumber / MSISDNList</code></td><td><code>ParentOU[$i+1]/ChildOU[$k+1]/Subscriber[$j+1]/MSISDN</code> (COU) or <code>ParentOU[$i+1]/Subscriber[$j+1]/MSISDN</code> (POU)</td><td>Always — the subscriber's mobile number</td></tr>
+</table>
+<div class="note-box">This is the simplest payload of any FM in this process — a single MSISDN string. No credentials, no extended info, no order type. Just activate this number.</div>
+
+<h3>§9.2 Event Container Fields</h3>
+<table>
+<tr><th>Field</th><th>Source</th><th>Notes</th></tr>
+<tr><td>JMSPriority</td><td><code>$orderRequest/OrderPriority</code></td><td>Conditional</td></tr>
+<tr><td>JMSCorrelationID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Conditional</td></tr>
+<tr><td>OrderID</td><td><code>$orderRequest/OrderData/OrderID</code></td><td>Conditional</td></tr>
+<tr><td>RefID</td><td><code>ParentOU[i+1]/.../Subscriber[j+1]/RefId</code></td><td>Conditional (XPath from subscriber node)</td></tr>
+<tr><td>OrderType</td><td><code>$orderRequest/OrderData/OrderType</code></td><td>Conditional</td></tr>
+<tr><td>UserName / PassWord</td><td>—</td><td><strong>Not included</strong> — no credentials in NAS payload</td></tr>
+</table>
+
+<h3>§9.3 Complete Generated XML Example</h3>
+<pre>&lt;createEvent&gt;
+  &lt;event&gt;
+    &lt;JMSPriority&gt;5&lt;/JMSPriority&gt;
+    &lt;JMSCorrelationID&gt;OMX-TRK-20250727-001&lt;/JMSCorrelationID&gt;
+    &lt;OrderID&gt;ORD-12345&lt;/OrderID&gt;
+    &lt;RefID&gt;SUB-REF-COU-001&lt;/RefID&gt;
+    &lt;OrderType&gt;CREATE_SUBSCRIBER&lt;/OrderType&gt;
+    &lt;payload&gt;
+      &lt;ns:ActivateNumber&gt;
+        &lt;MSISDNList&gt;0812345678&lt;/MSISDNList&gt;
+      &lt;/ns:ActivateNumber&gt;
+    &lt;/payload&gt;
+  &lt;/event&gt;
+&lt;/createEvent&gt;</pre>
+</div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="section">
+<div class="section-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+<div class="section-body">
+<div style="background:var(--code-bg);border-radius:8px;padding:16px;overflow-x:auto">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">ParentOU[$i+1]/[ChildOU[$k+1]/]Subscriber[$j+1]/RefId</span><span class="tree-cond">[Conditional — guarded by xsl:if]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span><span class="tree-cond">[Always]</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:ActivateNumber</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">MSISDNList</span><span class="tree-arrow">←</span><span class="tree-src">ParentOU[$i+1]/[ChildOU[$k+1]/]Subscriber[$j+1]/MSISDN</span><span class="tree-cond">[Always — no xsl:if guard]</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+<p style="margin-top:10px;font-size:.8rem;color:#666"><span style="color:#a6e3a1">■</span> Green = XPath from working memory &nbsp; <span style="color:#fab387">■</span> Orange = Static literal &nbsp; <span style="color:#cba6f7">■</span> Purple = Condition</p>
+</div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+<div class="section-header">§11 — Audit Logging</div>
+<div class="section-body">
+<div class="note-box"><strong>Timing note:</strong> The audit log is sent via <code>Event.Ext.sendEventImmediate()</code> right after <code>ActionRequestEvent()</code> — i.e., after the event is queued but <em>before</em> <code>SendFirstRequestEvent()</code> is called. So the audit fires before NAS actually receives the request for non-first events.</div>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+<tr><td>PROCESS_ID</td><td><code>concat(System.nanoTime(), "_REQ")</code></td></tr>
+<tr><td>COMPONENT_NAME</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+<tr><td>OPERATION_NAME</td><td><code>"NAS_ACTIVATE_SUBS"</code> (static)</td></tr>
+<tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+<tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+<tr><td>AUDIT_TRACE</td><td><code>concat("Request Sent for RefId ", $refId)</code></td></tr>
+<tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+<tr><td>payload</td><td>Copy of reqEvent (gated on WritePayload="true")</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+<div class="section-header">§12 — Activity Status Management</div>
+<div class="section-body">
+<table>
+<tr><th>State</th><th>Trigger</th><th>Call</th></tr>
+<tr><td><span class="badge badge-blue">ACTIVE</span></td><td>At least one event queued</td><td><code>SendFirstRequestEvent()</code> → <code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB()</code></td></tr>
+<tr><td><span class="badge badge-purple">SKIPPED</span></td><td>No eligible subscribers</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+<div class="section-header">§13 — Exception / Error Handling</div>
+<div class="section-body">
+<table>
+<tr><th>Exception</th><th>Handler</th></tr>
+<tr><td><code>Exception ae</code> (catch-all)</td><td><code>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+<div class="section-header">§14 — Helper Functions Reference</div>
+<div class="section-body">
+<table>
+<tr><th>Function</th><th>Return</th><th>Purpose</th></tr>
+<tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code></td><td>void</td><td>Clears queued events before resubmit re-queues them</td></tr>
+<tr><td><code>IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)</code></td><td>void</td><td>Registers event in serial queue; manages RequestCount</td></tr>
+<tr><td><code>IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)</code></td><td>void</td><td>Fires first queued event to NAS; starts serial chain</td></tr>
+<tr><td><code>GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</code></td><td>String XML</td><td>Serializes COU subscriber for PreExecCheck XPath</td></tr>
+<tr><td><code>GetXMLForSubscriber(orderRequest, refId)</code></td><td>String XML</td><td>Serializes POU subscriber for PreExecCheck XPath</td></tr>
+<tr><td><code>GetActivityStatusString("1", false)</code></td><td>String</td><td>Maps "1" → ACTIVE status</td></tr>
+<tr><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>void</td><td>Marks SKIPPED with reason 4</td></tr>
+<tr><td><code>SendDataToDB(orderRequest)</code></td><td>void</td><td>Persists order state</td></tr>
+<tr><td><code>HandleActivityException(...)</code></td><td>void</td><td>Centralized exception handler</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+<div class="section-header">§15 — Function Dependency Tree</div>
+<div class="section-body">
+<pre>Request_NAS_ACTIVATE_SUBS (BE rule)
+├── IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity)  [if resubmit]
+├── Instance.getByExtIdByUri(NextActivityName, "/Concepts/OM/ProcessConfig/Activity")
+│
+├── [Loop A — COU Subscribers (processed FIRST)]
+│   ├── GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)
+│   ├── XPath.execute("/("+chkXPath+")", sXML, ...)           [PreExecCheck]
+│   ├── Event.createEvent("xslt://{{.../NAS_ACTIVATE_SUBS}}...")
+│   │   └── [XSLT: ActivateNumber/MSISDNList = COU subscriber MSISDN]
+│   ├── Event.assertEvent(reqEvent)                            [queue to working memory]
+│   ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+│   ├── Event.createEvent("xslt://{{.../Logger}}...")
+│   └── Event.Ext.sendEventImmediate(auditEvent)
+│
+├── [Loop B — POU Subscribers (processed SECOND)]
+│   ├── GetXMLForSubscriber(orderRequest, refId)
+│   ├── XPath.execute(...)                                     [PreExecCheck]
+│   ├── Event.createEvent("xslt://{{.../NAS_ACTIVATE_SUBS}}...")
+│   │   └── [XSLT: ActivateNumber/MSISDNList = POU subscriber MSISDN]
+│   ├── Event.assertEvent(reqEvent)
+│   ├── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+│   └── Event.Ext.sendEventImmediate(auditEvent)
+│
+├── IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)   [start serial chain]
+├── GetActivityStatusString("1", false)
+├── SendDataToDB(orderRequest)
+├── SkipActivity(...)
+└── HandleActivityException(...)</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+<div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="section-body">
+<h3>Functional Requirements</h3>
+<ul>
+<li><strong>R1</strong> — Activate MSISDNs for all COU subscribers first, then all POU subscribers (serial order)</li>
+<li><strong>R2</strong> — Serial dispatch: one NAS request in flight at a time</li>
+<li><strong>R3</strong> — On resubmit: purge queued requests before re-queuing to prevent duplicate sends</li>
+<li><strong>R4</strong> — Payload contains only MSISDN; no credentials, no extended attributes</li>
+<li><strong>R5</strong> — reqSuccess gate: skip subscriber if CompletionStatus==2 response already exists for its RefId</li>
+</ul>
+
+<h3>Design Risks</h3>
+<table>
+<tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+<tr><td>Serial queue bottleneck — large subscriber counts slow overall order completion</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Profile NAS throughput; consider batching MSISDNList if NAS supports multi-MSISDN per call</td></tr>
+<tr><td>Audit log fires before event is sent to NAS (for non-first items in queue)</td><td><span class="badge badge-blue">LOW</span></td><td>Acceptable for tracing; note in migration that audit timestamp ≠ NAS send time</td></tr>
+<tr><td>COU-before-POU loop order not documented in config — implicit ordering dependency</td><td><span class="badge badge-blue">LOW</span></td><td>Document explicit ordering requirement; add comment in migration code</td></tr>
+<tr><td><code>PurgePendingRequestsBeforeResubmit</code> removes all pending events including partially-processed — resubmit restarts from first unconfirmed</td><td><span class="badge badge-orange">MEDIUM</span></td><td>Verify reqSuccess check prevents re-sending to already-confirmed subscribers</td></tr>
+</table>
+
+<h3>Modernisation Note</h3>
+<p>The NAS <code>ActivateNumber</code> API could potentially accept a list of MSISDNs (the field is named <code>MSISDNList</code>, suggesting it may support multiple values). A modern implementation should investigate batching to replace the serial single-MSISDN pattern and eliminate the IntraActivitySequencing queue overhead.</p>
+</div>
+</div>
+
+<!-- §18 Source Code -->
+<div class="section">
+<div class="section-header">§18 — Full Source Code</div>
+<div class="section-body">
+<pre><span class="cm">/**
+ * @description
+ * @author awalia-t420
+ */</span>
+<span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_NAS_ACTIVATE_SUBS</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"NAS_ACTIVATE_SUBS"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"NAS_ACTIVATE_SUBS"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="kw">boolean</span> isActResub=(orderCurrentActivity.RequestCount&gt;<span class="nu">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+        <span class="kw">try</span> {
+            <span class="kw">boolean</span> isSkipped = <span class="kw">true</span>;
+            <span class="ty">Concepts.OM.ProcessConfig.Activity</span> nextAct = Instance.getByExtIdByUri(
+                orderRequest.ProcessFlow.NextActivityName, <span class="st">"/Concepts/OM/ProcessConfig/Activity"</span>);
+
+            <span class="kw">if</span>(isActResub) {
+                RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(orderCurrentActivity);
+            }
+
+            <span class="cm">// Loop A: COU Subscribers FIRST</span>
+            <span class="kw">for</span> (<span class="kw">int</span> i=<span class="nu">0</span>; i &lt; iPOULen; i++) {
+                <span class="kw">for</span> (<span class="kw">int</span> k=<span class="nu">0</span>; k &lt; iCOULen; k++) {
+                    <span class="kw">for</span>(<span class="kw">int</span> j=<span class="nu">0</span>; j &lt; iCOUSubscriberLen; j++) {
+                        <span class="cm">// PreExecCheck via GetXMLForSubscriberInChildOU()
+                        // reqSuccess: CompletionStatus==2 + RefId match
+                        // dispatch Event.createEvent("xslt://{{.../NAS_ACTIVATE_SUBS}}...")
+                        //   → §9 for XSLT: ActivateNumber/MSISDNList = COU MSISDN (params i,k,j)</span>
+                        Event.assertEvent(reqEvent);
+                        RuleFunctions.Helpers.IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity);
+                        <span class="cm">// audit: "Request Sent for RefId " + refId</span>
+                    }
+                }
+                <span class="cm">// Loop B: POU Subscribers SECOND</span>
+                <span class="kw">for</span>(<span class="kw">int</span> j=<span class="nu">0</span>; j &lt; iSubscriberLen; j++) {
+                    <span class="cm">// PreExecCheck via GetXMLForSubscriber()
+                    // dispatch: ActivateNumber/MSISDNList = POU MSISDN (params i,j)</span>
+                    Event.assertEvent(reqEvent);
+                    RuleFunctions.Helpers.IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity);
+                }
+            }
+
+            <span class="kw">if</span>(!isSkipped) {
+                RuleFunctions.Helpers.IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity);
+                orderCurrentActivity.Status = RuleFunctions.Helpers.GetActivityStatusString(<span class="st">"1"</span>, <span class="kw">false</span>);
+                RuleFunctions.Helpers.SendDataToDB(orderRequest);
+            } <span class="kw">else</span>
+                RuleFunctions.Helpers.SkipActivity(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+        } <span class="kw">catch</span> (Exception ae) {
+            RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</pre>
+</div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+<div class="section-header">§19 — Response Message Rule</div>
+<div class="section-body">
+
+<h3>§19.1 Overview</h3>
+<p><code>Response_NAS_ACTIVATE_SUBS.rulefunction</code> creates a <code>NAS_ActivateSubscriberRes</code> concept and calls <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> to advance the serial queue and determine fan-in completion. The old XPath "000" check is present but commented out.</p>
+
+<h3>§19.2 Scope Variables</h3>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order context</td></tr>
+<tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.NAS_ACTIVATE_SUBS</code></td><td>Inbound JMS response</td></tr>
+<tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Serial queue owner; Response[] appended</td></tr>
+</table>
+
+<h3>§19.3 ResponseBase Concept Construction</h3>
+<div style="background:var(--code-bg);border-radius:8px;padding:16px;overflow-x:auto;margin:12px 0">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject (NAS_ActivateSubscriberRes)</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">object</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-arrow">@extId</span><span class="tree-arrow">←</span><span class="tree-src">$extId (OMXUtils.generateTrackingID() called in BE, passed as param)</span><span class="tree-cond">[Always]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">[Conditional]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+
+<h3>§19.4 Fan-In Completion Logic</h3>
+<table>
+<tr><th>Step</th><th>Detail</th></tr>
+<tr><td>Append response</td><td><code>currActivity.Response[currActivity.Response@length] = activityRes</code></td></tr>
+<tr><td>Advance queue</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+<tr><td>Return "true"</td><td>All serial events complete — queue exhausted</td></tr>
+<tr><td>Return "false"</td><td>More events remain in queue; next event dispatched by ActionResponseEvent</td></tr>
+</table>
+<div class="warn-box"><strong>Commented-out XPath fan-in:</strong> The original "000" suffix XPath check is present in the source as a comment block (<code>/* ... */</code>). It was replaced by <code>ActionResponseEvent()</code>. The commented code should be removed in migration to avoid confusion.</div>
+
+<h3>§19.5 Response Audit</h3>
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>PROCESS_ID</td><td><code>concat(System.nanoTime(), "_RES")</code></td></tr>
+<tr><td>OPERATION_NAME</td><td><code>"NAS_ACTIVATE_SUBS"</code> (static)</td></tr>
+<tr><td>AUDIT_TRACE</td><td><code>"Response received for NAS_ACTIVATE_SUBS"</code> (static — no RefId)</td></tr>
+<tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate()</code> (synchronous)</td></tr>
+</table>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Generated 2026-07-27</footer>
+</body>
+</html>

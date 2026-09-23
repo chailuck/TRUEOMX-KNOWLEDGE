@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_MVP_CHECK_DEVICES</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',Arial,sans-serif;background:var(--bg);color:#212121;line-height:1.6}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px 24px}
+header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+header .sub{opacity:.85;font-size:.95rem;margin-top:6px}
+.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.meta-chip{background:rgba(255,255,255,.18);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem}
+.container{max-width:1200px;margin:0 auto;padding:28px 24px}
+.section{background:var(--card);border-radius:10px;box-shadow:0 2px 8px rgba(0,0,0,.07);margin-bottom:24px;overflow:hidden}
+.section-hd{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 22px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px 22px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;white-space:nowrap}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr:hover td{background:#fafafa}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.82rem;line-height:1.55}
+code{background:#f0e8e8;color:var(--true-dark);padding:1px 5px;border-radius:4px;font-size:.85em}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}
+.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}
+.b-teal{background:#E0F2F1;color:#00695c}
+.b-jms{background:#FFE0B2;color:#E65100}
+.b-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;gap:12px;align-items:flex-start;margin-bottom:12px;padding:12px 16px;background:#fafafa;border-radius:8px;border-left:3px solid var(--true-red)}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.8rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nb{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-ns{color:#6c7086;font-size:.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.info-box{background:#E3F0FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:0 8px 8px 0;font-size:.9rem;margin:8px 0}
+.highlight-box{background:#E8F5E9;border-left:4px solid #2e7d32;padding:12px 16px;border-radius:0 8px 8px 0;font-size:.9rem;margin:8px 0}
+</style>
+</head>
+<body>
+<header>
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX · FM Logic Documentation</div>
+  <h1>Request_MVP_CHECK_DEVICES</h1>
+  <div class="sub">Checks whether each subscriber's device supports 5G via MVP (Mobile Value Platform) — fan-out per subscriber, populates 5G_DEVICE flag in working memory</div>
+  <div class="meta-row">
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">ForwardChain: true</span>
+    <span class="meta-chip">Backend: MVP</span>
+    <span class="meta-chip">Pattern: Fan-out per subscriber</span>
+    <span class="meta-chip">Generated: 2026-08-13</span>
+  </div>
+</header>
+
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-hd">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>This rule fires when the order orchestrator reaches the <code>MVP_CHECK_DEVICES</code> activity. It iterates over every subscriber in the order (ParentOU and ChildOU hierarchy) and sends a <code>MvpCheckDevicesRequest</code> to the MVP (Mobile Value Platform) system for each one, asking whether the subscriber's device is 5G-capable.</p>
+    <p style="margin-top:10px">The response handler checks the <code>MvpCheckDevicesResponse/device</code> field — if it equals <code>"5G"</code>, a <code>SubscriberExtendedInfo</code> concept with <code>Name="5G_DEVICE", Value="Y"</code> is written to the subscriber in working memory; otherwise <code>Value="N"</code>. Downstream rules use this flag to gate 5G-specific offer provisioning.</p>
+    <div class="highlight-box" style="margin-top:12px">
+      <strong>Business Purpose:</strong> Before removing or adding offers, determine if the subscriber's handset is 5G-capable. Enables conditional offer routing — e.g., skip 5G SA offer provisioning for non-5G devices.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="section">
+  <div class="section-hd">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_MVP_CHECK_DEVICES</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>Forward Chain</td><td>true</td></tr>
+      <tr><td>Rule Type</td><td>Request dispatcher with fan-out loop</td></tr>
+      <tr><td>Author</td><td>Chayatorn Pan.</td></tr>
+      <tr><td>Activity ID</td><td>MVP_CHECK_DEVICES</td></tr>
+      <tr><td>Backend System</td><td>MVP — Mobile Value Platform (schema: <code>MvpCheckDevices.xsd</code>)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-hd">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>/Concepts/OrderRequest/OrderRequest</code></td><td>Master order — customer hierarchy, order metadata</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>/Concepts/OM/ProcessConfig/Activity</code></td><td>Tracks RequestCount, Response[], Status</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="section">
+  <div class="section-hd">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <table>
+      <tr><th>#</th><th>Condition</th><th>Meaning</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td><td>Activity instance matches current next activity</td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "MVP_CHECK_DEVICES"</code></td><td>Activity type is this FM</td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "MVP_CHECK_DEVICES"</code></td><td>Process flow pointer matches (dual-check)</td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td><td>Activity is in WAITING state</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-hd">§5 — Execution Flow Diagram</div>
+  <div class="section-body">
+    <div class="flow-step"><div class="flow-num">1</div><div><strong>Resub check:</strong> <code>isActResub = RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div><strong>Load nextAct:</strong> Retrieve Activity concept for PreExecCheck access.</div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div><strong>POU Subscriber loop:</strong> For each ParentOU[i].Subscriber[j] — check if already succeeded; evaluate PreExecCheck; send <code>MVP_CHECK_DEVICES</code> event with subscriber object reference; log audit; increment RequestCount.</div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div><strong>COU Subscriber loop:</strong> For each ParentOU[i].ChildOU[p].Subscriber[q] — same pattern. XSLT is identical — the subscriber concept is passed directly as <code>$subscriber</code> param.</div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div><strong>Status update:</strong> If any requests sent → REQUESTING (status "1") + <code>SendDataToDB()</code>. If all skipped → <code>SkipActivity("4")</code>.</div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div><strong>Exception:</strong> <code>HandleActivityException()</code>.</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-hd">§6 — Rule Action (THEN) — Step-by-Step Logic</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Step</th><th>Code Action</th><th>Detail</th></tr>
+      <tr><td>1</td><td>Resub detection</td><td><code>isActResub = (RequestCount&gt;0 &amp;&amp; IsOrderResubmitted)</code></td></tr>
+      <tr><td>2</td><td>Load nextAct</td><td><code>Instance.getByExtIdByUri(NextActivityName, Activity)</code></td></tr>
+      <tr><td>3</td><td>POU loop (i, j)</td><td>Success-check; PreExecCheck; send Variant ① (same XSLT as COU); increment RequestCount</td></tr>
+      <tr><td>4</td><td>COU loop (i, p, q)</td><td>Same pattern; subscriber concept passed directly as <code>$subscriber</code> XSLT param</td></tr>
+      <tr><td>5</td><td>Status → REQUESTING</td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB()</code></td></tr>
+      <tr><td>6</td><td>Skip path</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+      <tr><td>7</td><td>Exception</td><td><code>HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></td></tr>
+    </table>
+    <div class="info-box" style="margin-top:12px">
+      <strong>Key difference from GET_PROFILE_FROM_CCP_ALL:</strong> Both XSLT variants (POU and COU) are <strong>identical</strong> — the subscriber concept object is passed as <code>$subscriber</code> directly. There is no index-based path difference between variants; both use <code>$subscriber/MSISDN</code>. Also, the event extId is generated via <code>OMXUtils:generateTrackingID()</code> (unlike GET_PROFILE_FROM_CCP which uses correlation ID).
+    </div>
+  </div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="section">
+  <div class="section-hd">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§8.1 Order Type Dependencies</h3>
+    <p>Fires for postpaid orders with <code>MVP_CHECK_DEVICES</code> in the ProcessConfig, including <strong>POSTPAID_REMOVE_OFFER_SUB</strong>. Used to determine 5G device capability before offer manipulation — important for 5G standalone (SA) offer add/remove flows.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.2 ESB / JMS Channel Dependencies</h3>
+    <table>
+      <tr><th>Direction</th><th>Channel URI</th><th>Destination</th><th>Protocol</th><th>Purpose</th></tr>
+      <tr><td><span class="badge b-jms">OUTBOUND</span></td><td><code>/Channels/OMXFMConnectionRequest</code></td><td><code>MVP_CHECK_DEVICES</code></td><td>JMS</td><td>Send MvpCheckDevicesRequest to MVP</td></tr>
+      <tr><td><span class="badge b-log">INBOUND</span></td><td><code>/Channels/OMXFMConnectionResponse</code></td><td><code>MVP_CHECK_DEVICES</code></td><td>JMS</td><td>Receive MvpCheckDevicesResponse from MVP</td></tr>
+      <tr><td><span class="badge b-log">OUTBOUND</span></td><td>Logger channel</td><td>OMXESB Logger</td><td>JMS</td><td>Audit log for request and response</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.3 Backend API Details</h3>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Request Schema</th><th>Response Schema</th><th>Namespace</th></tr>
+      <tr>
+        <td><strong>MVP</strong></td>
+        <td>MvpCheckDevices</td>
+        <td><code>CheckDevices.xsd</code> (<code>MvpCheckDevicesRequest</code>)</td>
+        <td><code>MvpCheckDevicesResponse</code></td>
+        <td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MVP/MvpCheckDevices.xsd</code></td>
+      </tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.4 BE Working Memory Dependencies</h3>
+    <table>
+      <tr><th>Field</th><th>Access</th><th>Purpose</th></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[].Subscriber[]</code></td><td>READ</td><td>POU subscriber fan-out</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[].ChildOU[].Subscriber[]</code></td><td>READ</td><td>COU subscriber fan-out</td></tr>
+      <tr><td><code>subscriber.MSISDN</code></td><td>READ</td><td>Passed as <code>$subscriber</code> XSLT param</td></tr>
+      <tr><td><code>subscriber.ExtendedInfo[]</code></td><td>WRITE (response)</td><td>Appended with <code>5G_DEVICE=Y/N</code></td></tr>
+      <tr><td><code>orderCurrentActivity.Response[]</code></td><td>READ/WRITE</td><td>Fan-in tracking</td></tr>
+      <tr><td><code>orderCurrentActivity.RequestCount</code></td><td>READ/WRITE</td><td>Fan-in counter</td></tr>
+      <tr><td><code>orderCurrentActivity.Status</code></td><td>WRITE</td><td>REQUESTING or SKIPPED</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.5 ExtendedInfo Fields Written (Response)</h3>
+    <table>
+      <tr><th>Concept</th><th>Name</th><th>Value</th><th>Condition</th></tr>
+      <tr><td><code>SubscriberExtendedInfo</code></td><td><code>5G_DEVICE</code></td><td><code>"Y"</code></td><td>If <code>MvpCheckDevicesResponse/device = "5G"</code></td></tr>
+      <tr><td><code>SubscriberExtendedInfo</code></td><td><code>5G_DEVICE</code></td><td><code>"N"</code></td><td>Otherwise (default)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§8.6 Global Variable Dependencies</h3>
+    <table>
+      <tr><th>Global Variable Path</th><th>Used For</th></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/Log/OrderTypeFilter</code></td><td>Suppress logging for specific order types (AllowWriteLog)</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_CEP</code></td><td>COMPONENT_NAME in audit log</td></tr>
+      <tr><td><code>OMX_COMMON/Component_Name/OMX_FM</code></td><td>TARGET_SYSTEM in audit log</td></tr>
+      <tr><td><code>OMX_COMMON/_SharedResources/Common/MSG_LOG_LEVEL/INFO</code></td><td>LOG_LEVEL in audit log</td></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>Payload inclusion gate in audit log</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-hd">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§9.1 XSLT Parameter Binding</h3>
+    <p>Both POU and COU loops use the <strong>same XSLT template</strong> with params: <code>orderRequest</code>, <code>refId</code>, <code>subscriber</code>. The subscriber concept object is passed directly — no index arithmetic needed.</p>
+    <table>
+      <tr><th>Parameter</th><th>Source</th></tr>
+      <tr><td><code>$orderRequest</code></td><td>orderRequest concept</td></tr>
+      <tr><td><code>$refId</code></td><td><code>subscriber.RefId</code></td></tr>
+      <tr><td><code>$subscriber</code></td><td>Subscriber concept object (POU or COU variant resolved in BE loop)</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.2 Event Container Construction</h3>
+    <p>Event type: <code>/Events/OMConsumers/OMXFM/Request/MVP_CHECK_DEVICES</code><br>
+    Extends: <code>/Events/Base/OMXRequestBaseEvent</code><br>
+    Channel: <code>/Channels/OMXFMConnectionRequest</code> → destination <code>MVP_CHECK_DEVICES</code><br>
+    <strong>extId:</strong> generated via <code>OMXUtils:generateTrackingID()</code> (unique per event instance)</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.3 JMS / Event Header Fields</h3>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>extId</code> (attribute)</td><td><code>OMXUtils:generateTrackingID()</code></td><td>Unique event ID</td></tr>
+      <tr><td><code>JMSPriority</code></td><td><code>$orderRequest/OrderPriority</code></td><td></td></tr>
+      <tr><td><code>JMSCorrelationID</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Order correlation</td></tr>
+      <tr><td><code>OrderID</code></td><td><code>$orderRequest/OrderData/OrderID</code></td><td></td></tr>
+      <tr><td><code>RefID</code></td><td><code>$refId</code> (subscriber.RefId)</td><td>Used for fan-in matching</td></tr>
+      <tr><td><code>OrderType</code></td><td><code>$orderRequest/OrderData/OrderType</code></td><td></td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.6 Core Payload Fields</h3>
+    <table>
+      <tr><th>XML Element</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>ns:MvpCheckDevicesRequest/ns:transaction_id</code></td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td><td>Transaction correlation in MVP</td></tr>
+      <tr><td><code>ns:MvpCheckDevicesRequest/ns:channel</code></td><td><code>"omx"</code> (static literal)</td><td>Always "omx"</td></tr>
+      <tr><td><code>ns:MvpCheckDevicesRequest/ns:msisdn</code></td><td><code>$subscriber/MSISDN</code></td><td>Subscriber's mobile number</td></tr>
+      <tr><td><code>ns:MvpCheckDevicesRequest/ns:check_current_soc</code></td><td><code>"no"</code> (static literal)</td><td>Do not check current SOC — device check only</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.7 Complete Generated XML Example</h3>
+    <pre><span class="xt">&lt;createEvent</span> <span class="xa">extId</span>=<span class="st">"OMX-GEN-UUID-001"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;event&gt;</span>
+    <span class="xt">&lt;JMSPriority&gt;</span><span class="st">5</span><span class="xt">&lt;/JMSPriority&gt;</span>
+    <span class="xt">&lt;JMSCorrelationID&gt;</span><span class="st">OMX-TRK-20260813-001</span><span class="xt">&lt;/JMSCorrelationID&gt;</span>
+    <span class="xt">&lt;OrderID&gt;</span><span class="st">ORD-20260813-99001</span><span class="xt">&lt;/OrderID&gt;</span>
+    <span class="xt">&lt;RefID&gt;</span><span class="st">SUB-REF-001</span><span class="xt">&lt;/RefID&gt;</span>
+    <span class="xt">&lt;OrderType&gt;</span><span class="st">POSTPAID_REMOVE_OFFER_SUB</span><span class="xt">&lt;/OrderType&gt;</span>
+    <span class="xt">&lt;payload&gt;</span>
+      <span class="xt">&lt;ns:MvpCheckDevicesRequest</span> <span class="xa">xmlns:ns="http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MVP/MvpCheckDevices.xsd"</span><span class="xt">&gt;</span>
+        <span class="xt">&lt;ns:transaction_id&gt;</span><span class="st">OMX-TRK-20260813-001</span><span class="xt">&lt;/ns:transaction_id&gt;</span>
+        <span class="xt">&lt;ns:channel&gt;</span><span class="st">omx</span><span class="xt">&lt;/ns:channel&gt;</span>
+        <span class="xt">&lt;ns:msisdn&gt;</span><span class="st">0812345678</span><span class="xt">&lt;/ns:msisdn&gt;</span>
+        <span class="xt">&lt;ns:check_current_soc&gt;</span><span class="st">no</span><span class="xt">&lt;/ns:check_current_soc&gt;</span>
+      <span class="xt">&lt;/ns:MvpCheckDevicesRequest&gt;</span>
+    <span class="xt">&lt;/payload&gt;</span>
+  <span class="xt">&lt;/event&gt;</span>
+<span class="xt">&lt;/createEvent&gt;</span></pre>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§9.8 XSLT Stylesheet Source</h3>
+    <p style="margin-bottom:8px">Both POU and COU variants use the <strong>same XSLT</strong> (subscriber is passed as a concept param, not via index path):</p>
+    <pre><span class="cm">&lt;?xml version="1.0" encoding="UTF-8"?&gt;</span>
+<span class="xt">&lt;xsl:stylesheet</span>
+    <span class="xa">xmlns:OMXUtils</span>=<span class="st">"www.tibco.com/be/custom/OMXUtils"</span>
+    <span class="xa">xmlns:xsl</span>=<span class="st">"http://www.w3.org/1999/XSL/Transform"</span>
+    <span class="xa">xmlns:ns</span>=<span class="st">"http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/MVP/MvpCheckDevices.xsd"</span>
+    <span class="xa">xmlns:xsd</span>=<span class="st">"http://www.w3.org/2001/XMLSchema"</span>
+    <span class="xa">version</span>=<span class="st">"1.0"</span> <span class="xa">exclude-result-prefixes</span>=<span class="st">"OMXUtils xsl ns xsd"</span><span class="xt">&gt;</span>
+  <span class="xt">&lt;xsl:output</span> <span class="xa">method</span>=<span class="st">"xml"</span><span class="xt">/&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"orderRequest"</span><span class="xt">/&gt;</span>   <span class="cm">&lt;!-- bound from orderRequest concept --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"refId"</span><span class="xt">/&gt;</span>         <span class="cm">&lt;!-- subscriber.RefId --&gt;</span>
+  <span class="xt">&lt;xsl:param</span> <span class="xa">name</span>=<span class="st">"subscriber"</span><span class="xt">/&gt;</span>    <span class="cm">&lt;!-- Subscriber concept (POU or COU) --&gt;</span>
+  <span class="xt">&lt;xsl:template</span> <span class="xa">match</span>=<span class="st">"/"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;createEvent&gt;</span>
+      <span class="xt">&lt;event&gt;</span>
+        <span class="xt">&lt;xsl:attribute</span> <span class="xa">name</span>=<span class="st">"extId"</span><span class="xt">&gt;</span>
+          <span class="xt">&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"OMXUtils:generateTrackingID()"</span><span class="xt">/&gt;</span>
+        <span class="xt">&lt;/xsl:attribute&gt;</span>
+        <span class="xt">&lt;JMSPriority&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderPriority"</span><span class="xt">/&gt;&lt;/JMSPriority&gt;</span>
+        <span class="xt">&lt;JMSCorrelationID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/JMSCorrelationID&gt;</span>
+        <span class="xt">&lt;OrderID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderID"</span><span class="xt">/&gt;&lt;/OrderID&gt;</span>
+        <span class="xt">&lt;RefID&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$refId"</span><span class="xt">/&gt;&lt;/RefID&gt;</span>
+        <span class="xt">&lt;OrderType&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OrderType"</span><span class="xt">/&gt;&lt;/OrderType&gt;</span>
+        <span class="xt">&lt;payload&gt;</span>
+          <span class="xt">&lt;ns:MvpCheckDevicesRequest&gt;</span>
+            <span class="xt">&lt;ns:transaction_id&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$orderRequest/OrderData/OMXTrackingId"</span><span class="xt">/&gt;&lt;/ns:transaction_id&gt;</span>
+            <span class="xt">&lt;ns:channel&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"'omx'"</span><span class="xt">/&gt;&lt;/ns:channel&gt;</span>
+            <span class="xt">&lt;ns:msisdn&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"$subscriber/MSISDN"</span><span class="xt">/&gt;&lt;/ns:msisdn&gt;</span>
+            <span class="xt">&lt;ns:check_current_soc&gt;&lt;xsl:value-of</span> <span class="xa">select</span>=<span class="st">"'no'"</span><span class="xt">/&gt;&lt;/ns:check_current_soc&gt;</span>
+          <span class="xt">&lt;/ns:MvpCheckDevicesRequest&gt;</span>
+        <span class="xt">&lt;/payload&gt;</span>
+      <span class="xt">&lt;/event&gt;</span>
+    <span class="xt">&lt;/createEvent&gt;</span>
+  <span class="xt">&lt;/xsl:template&gt;</span>
+<span class="xt">&lt;/xsl:stylesheet&gt;</span></pre>
+  </div>
+</div>
+
+<!-- §10 Tree -->
+<div class="section">
+  <div class="section-hd">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span><span class="tree-attr"> @extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge b-green">Always</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId (subscriber.RefId)</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span><span class="badge b-green">Always</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:MvpCheckDevicesRequest</span><span class="tree-ns">xmlns:ns="…ESB/MVP/MvpCheckDevices.xsd"</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:transaction_id</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:channel</span><span class="tree-arrow">←</span><span class="tree-src-static">"omx"</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:msisdn</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/MSISDN</span><span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:check_current_soc</span><span class="tree-arrow">←</span><span class="tree-src-static">"no"</span><span class="badge b-green">Always</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div style="margin-top:12px;font-size:.82rem;color:#666">
+      <strong>Legend:</strong>
+      <span class="badge b-green">Always</span> = unconditionally present &nbsp;
+      <span class="tree-src" style="padding:2px 8px;border-radius:4px">XPath source</span> &nbsp;
+      <span class="tree-src-static" style="padding:2px 8px;border-radius:4px">Literal</span>
+    </div>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-hd">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Request Value</th><th>Response Value</th></tr>
+      <tr><td><code>ESBUUID</code></td><td colspan="2">OMXTrackingId (conditional if non-empty)</td></tr>
+      <tr><td><code>PROCESS_ID</code></td><td><code>concat($pid,"_REQ")</code></td><td><code>concat($pid,"_RES")</code></td></tr>
+      <tr><td><code>OPERATION_NAME</code></td><td colspan="2"><code>"MVP_CHECK_DEVICES"</code></td></tr>
+      <tr><td><code>AUDIT_TRACE</code></td><td><code>"Request Sent for MVP_CHECK_DEVICES"</code></td><td><code>concat("Response received for RefId ", $eventResponse/RefID)</code></td></tr>
+      <tr><td><code>LOG_LEVEL</code></td><td colspan="2">INFO</td></tr>
+      <tr><td><code>payload/ns:ServicePayload</code></td><td colspan="2">Gated on <code>OMX_OM/WritePayload="true"</code></td></tr>
+    </table>
+    <p style="margin-top:8px;font-size:.87rem">Response audit log is <strong>always written</strong> (no AllowWriteLog check in the response handler — unlike request side).</p>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="section">
+  <div class="section-hd">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Status Code</th><th>Meaning</th><th>Trigger</th></tr>
+      <tr><td><code>"1"</code> → REQUESTING</td><td>Requests dispatched, awaiting MVP responses</td><td>After any request sent</td></tr>
+      <tr><td><code>"4"</code> → SKIPPED</td><td>All subscribers skipped via PreExecCheck or already succeeded</td><td>isSkipped remains true</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception -->
+<div class="section">
+  <div class="section-hd">§13 — Exception / Error Handling</div>
+  <div class="section-body">
+    <pre><span class="kw">catch</span> (Exception ae) {
+    RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</pre>
+  </div>
+</div>
+
+<!-- §14 Helpers -->
+<div class="section">
+  <div class="section-hd">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Signature</th><th>Purpose</th></tr>
+      <tr><td><code>AllowWriteLog</code></td><td><code>boolean(String orderType)</code></td><td>Suppress log for filtered order types</td></tr>
+      <tr><td><code>GetXMLForSubscriber</code></td><td><code>String(orderRequest, refId)</code></td><td>Serialise POU subscriber for PreExecCheck</td></tr>
+      <tr><td><code>GetXMLForSubscriberInChildOU</code></td><td><code>String(orderRequest, refId, pouRefId)</code></td><td>Serialise COU subscriber for PreExecCheck</td></tr>
+      <tr><td><code>GetActivityStatusString</code></td><td><code>String(code, bool)</code></td><td>Map status code to string</td></tr>
+      <tr><td><code>SendDataToDB</code></td><td><code>void(orderRequest)</code></td><td>Persist order state</td></tr>
+      <tr><td><code>SkipActivity</code></td><td><code>void(orderRequest, activity, code)</code></td><td>Skip and advance</td></tr>
+      <tr><td><code>HandleActivityException</code></td><td><code>void(orderRequest, activity, ex, msg)</code></td><td>Error handling and escalation</td></tr>
+      <tr><td><code>OMXUtils.generateTrackingID</code></td><td><code>String()</code></td><td>Generate unique ID for event extId and ResponseBase extId</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="section">
+  <div class="section-hd">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre>Request_MVP_CHECK_DEVICES (rule)
+├── RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId)          [POU PreExecCheck]
+├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)  [COU PreExecCheck]
+├── XPath.execute(expression, xml, namespace)
+├── OMXUtils.generateTrackingID()                                           [event extId]
+├── Event.createEvent("xslt://MVP_CHECK_DEVICES")                          [POU+COU — same XSLT]
+├── Event.Ext.sendEventImmediate(reqEvent)
+├── RuleFunctions.Helpers.AllowWriteLog(orderType)
+│   └── System.getGlobalVariableAsString("OMX_COMMON/.../OrderTypeFilter")
+├── Event.createEvent("xslt://Logger")
+├── Event.Ext.sendEventImmediate(logEvent)
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── RuleFunctions.Helpers.SkipActivity(orderRequest, activity, "4")
+└── RuleFunctions.Helpers.HandleActivityException(orderRequest, activity, ae, "")</pre>
+  </div>
+</div>
+
+<!-- §16 Concepts -->
+<div class="section">
+  <div class="section-hd">§16 — Concept Definitions Referenced</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Concept</th><th>Path</th><th>Key Properties</th></tr>
+      <tr><td><code>OrderRequest</code></td><td><code>/Concepts/OrderRequest/OrderRequest</code></td><td>OrderData, ProcessFlow, IsOrderResubmitted</td></tr>
+      <tr><td><code>Activity</code></td><td><code>/Concepts/OM/ProcessConfig/Activity</code></td><td>ActivityID, Status, RequestCount, Response[], PreExecCheck</td></tr>
+      <tr><td><code>Subscriber</code></td><td><code>/Concepts/OrderRequest/OrderElements/Subscriber</code></td><td>MSISDN, RefId, ExtendedInfo[]</td></tr>
+      <tr><td><code>SubscriberExtendedInfo</code></td><td><code>/Concepts/OrderRequest/OrderElements/ExtendedInfos/SubscriberExtendedInfo</code></td><td>Name, Value — written with 5G_DEVICE flag</td></tr>
+      <tr><td><code>ResponseBase</code></td><td><code>/Concepts/FM/Base/ResponseBase</code></td><td>ResponseCode, ResponseMessage, CompletionStatus, ReferenceId</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-hd">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <h3 style="color:var(--true-dark);margin-bottom:10px">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Query MVP to determine if each subscriber's device supports 5G</td></tr>
+      <tr><td>R2</td><td>Fan-out to ALL subscribers (POU + COU); identical request for both</td></tr>
+      <tr><td>R3</td><td>Store result as <code>SubscriberExtendedInfo[5G_DEVICE=Y/N]</code> per subscriber</td></tr>
+      <tr><td>R4</td><td>Skip subscribers that already have a successful response</td></tr>
+      <tr><td>R5</td><td>Fan-in: complete when RequestCount == success-response count (ResponseCode suffix "000")</td></tr>
+      <tr><td>R6</td><td>channel="omx" and check_current_soc="no" are hardcoded — cannot be configured per-order</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Hardcoded <code>channel="omx"</code></td><td><span class="badge b-orange">MEDIUM</span></td><td>If MVP requires different channel identifiers per environment or caller, this needs parameterisation.</td></tr>
+      <tr><td>Hardcoded <code>check_current_soc="no"</code></td><td><span class="badge b-blue">LOW</span></td><td>Intentional design — device check only, not SOC check. Document assumption explicitly in migration.</td></tr>
+      <tr><td>Response audit always logs (no AllowWriteLog gate)</td><td><span class="badge b-blue">LOW</span></td><td>Response handler logs unconditionally. Minor performance impact for high-volume order types.</td></tr>
+      <tr><td>5G_DEVICE flag matching</td><td><span class="badge b-orange">MEDIUM</span></td><td>Value comparison is case-sensitive (<code>= "5G"</code>). Any MVP response returning "5g" or "5G SA" would set flag to "N".</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source -->
+<div class="section">
+  <div class="section-hd">§18 — Full Source Code</div>
+  <div class="section-body">
+    <pre><span class="kw">rule</span> Rules.OMConsumers.OMXFM.Request.<span class="fn">Request_MVP_CHECK_DEVICES</span> {
+  <span class="kw">attribute</span> { priority = <span class="nb">5</span>; forwardChain = <span class="kw">true</span>; }
+  <span class="kw">declare</span> {
+    Concepts.OrderRequest.<span class="ty">OrderRequest</span> orderRequest;
+    Concepts.OM.ProcessConfig.<span class="ty">Activity</span> orderCurrentActivity;
+  }
+  <span class="kw">when</span> {
+    orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+    orderCurrentActivity.ActivityID == <span class="st">"MVP_CHECK_DEVICES"</span>;
+    orderRequest.ProcessFlow.NextActivityID == <span class="st">"MVP_CHECK_DEVICES"</span>;
+    orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+  }
+  <span class="kw">then</span> {
+    <span class="ty">boolean</span> isActResub = (orderCurrentActivity.RequestCount&gt;<span class="nb">0</span> &amp;&amp; orderRequest.IsOrderResubmitted);
+    <span class="kw">try</span> {
+      Concepts.OM.ProcessConfig.<span class="ty">Activity</span> nextAct = Instance.<span class="fn">getByExtIdByUri</span>(...);
+      <span class="ty">int</span> iPOULen = orderRequest.OrderData.Customer.ParentOU@length;
+      <span class="ty">String</span> pouRefId = <span class="st">""</span>;
+      <span class="ty">boolean</span> isSkipped = <span class="kw">true</span>;
+      <span class="kw">for</span> (<span class="ty">int</span> i=<span class="nb">0</span>; i&lt;iPOULen; i++) {
+        pouRefId = orderRequest.OrderData.Customer.ParentOU[i].RefId;
+        <span class="kw">for</span> (<span class="ty">int</span> j=<span class="nb">0</span>; j&lt;iSubscriberLen; j++) {
+          Concepts.OrderRequest.OrderElements.<span class="ty">Subscriber</span> subscriber = orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j];
+          <span class="cm">// [success-check, PreExecCheck omitted for brevity]</span>
+          Events.OMConsumers.OMXFM.Request.<span class="ty">MVP_CHECK_DEVICES</span> reqEvent = Event.<span class="fn">createEvent</span>(
+            <span class="cm">/* xslt://MVP_CHECK_DEVICES — see §9.8 for full XSLT
+               params: orderRequest, refId, subscriber
+               Outputs: extId(OMXUtils:generateTrackingID), JMSPriority, JMSCorrelationID,
+                        OrderID, RefID, OrderType,
+                        payload/ns:MvpCheckDevicesRequest{ns:transaction_id, ns:channel="omx",
+                        ns:msisdn, ns:check_current_soc="no"} */</span>);
+          Event.Ext.<span class="fn">sendEventImmediate</span>(reqEvent);
+          <span class="kw">if</span> (RuleFunctions.Helpers.<span class="fn">AllowWriteLog</span>(orderRequest.OrderData.OrderType)) {
+            Event.Ext.<span class="fn">sendEventImmediate</span>(Event.<span class="fn">createEvent</span>(<span class="cm">/* Logger XSLT — OPERATION_NAME=MVP_CHECK_DEVICES */</span>));
+          }
+          <span class="kw">if</span>(!isActResub) orderCurrentActivity.RequestCount++;
+          isSkipped = <span class="kw">false</span>;
+        }
+        <span class="cm">// COU loop (p, q) — same XSLT, same subscriber param pattern</span>
+      }
+      <span class="kw">if</span>(!isSkipped) {
+        orderCurrentActivity.Status = RuleFunctions.Helpers.<span class="fn">GetActivityStatusString</span>(<span class="st">"1"</span>, <span class="kw">false</span>);
+        RuleFunctions.Helpers.<span class="fn">SendDataToDB</span>(orderRequest);
+      } <span class="kw">else</span> {
+        RuleFunctions.Helpers.<span class="fn">SkipActivity</span>(orderRequest, orderCurrentActivity, <span class="st">"4"</span>);
+      }
+    } <span class="kw">catch</span> (Exception ae) {
+      RuleFunctions.Helpers.<span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+    }
+  }
+}</pre>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="section">
+  <div class="section-hd">§19 — Response Message Rule</div>
+  <div class="section-body">
+
+    <h3 style="color:var(--true-dark);margin-bottom:10px">§19.1 Overview</h3>
+    <p>Receives <code>MvpCheckDevicesResponse</code> from MVP. Appends ResponseBase; iterates all subscribers to find the matching RefID; creates a <code>SubscriberExtendedInfo</code> with <code>Name="5G_DEVICE"</code> and <code>Value="Y"/"N"</code> based on the device field; logs audit; returns fan-in completion status.</p>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>/Concepts/OrderRequest/OrderRequest</code></td><td>Master order</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>/Events/OMConsumers/OMXFM/Response/MVP_CHECK_DEVICES</code></td><td>MVP response — ResponseCode, RefID, payload/MvpCheckDevicesResponse</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>/Concepts/OM/ProcessConfig/Activity</code></td><td>Fan-in tracking</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.3 ResponseBase Concept Construction</h3>
+    <p>extId = <code>OMXUtils.generateTrackingID()</code></p>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span><span class="tree-attr"> @extId</span><span class="tree-arrow">←</span><span class="tree-src">$extId (OMXUtils:generateTrackingID())</span><span class="badge b-green">Always</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge b-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge b-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge b-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge b-orange">Conditional</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.4 5G Device Flag Population</h3>
+    <pre><span class="cm">// Find subscriber matching RefID (searches POU and COU)</span>
+<span class="kw">if</span> (subscriber.RefId == eventResponse.RefID) {
+    <span class="cm">// Create SubscriberExtendedInfo with Name="5G_DEVICE"</span>
+    <span class="cm">// Value = "Y" if MvpCheckDevicesResponse/device = "5G", else "N"</span>
+    subscriber.ExtendedInfo[subscriber.ExtendedInfo@length] = subscriberExtendedInfo;
+}</pre>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.5 Response Completion Logic</h3>
+    <table>
+      <tr><th>Check</th><th>Expression</th><th>Meaning</th></tr>
+      <tr><td>Success count</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td><td>Counts responses with ResponseCode ending "000"</td></tr>
+      <tr><td>Fan-in condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td><td>All successful responses received</td></tr>
+      <tr><td>Return "true"</td><td>RequestCount == successResponseCount</td><td>All MVP calls succeeded — advance to next activity</td></tr>
+      <tr><td>Return "false"</td><td>Still waiting or some responses failed</td><td>Orchestrator keeps activity in REQUESTING state</td></tr>
+    </table>
+
+    <h3 style="color:var(--true-dark);margin:16px 0 10px">§19.6 SubscriberExtendedInfo XSLT (5G Device Flag)</h3>
+    <pre><span class="xt">&lt;createObject&gt;</span>
+  <span class="xt">&lt;object</span> <span class="xa">extId</span>=<span class="st">"[OMXUtils:generateTrackingID()]"</span><span class="xt">&gt;</span>
+    <span class="xt">&lt;Name&gt;</span><span class="st">5G_DEVICE</span><span class="xt">&lt;/Name&gt;</span>
+    <span class="cm">&lt;!-- xsl:choose --&gt;</span>
+    <span class="kw">if</span> <span class="st">$eventResponse/payload/ns:MvpCheckDevicesResponse/ns:device = "5G"</span>:
+      <span class="xt">&lt;Value&gt;</span><span class="st">Y</span><span class="xt">&lt;/Value&gt;</span>
+    otherwise:
+      <span class="xt">&lt;Value&gt;</span><span class="st">N</span><span class="xt">&lt;/Value&gt;</span>
+  <span class="xt">&lt;/object&gt;</span>
+<span class="xt">&lt;/createObject&gt;</span></pre>
+  </div>
+</div>
+
+<div style="text-align:center;color:#888;font-size:.8rem;padding:24px 0">
+  TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation
+</div>
+</div>
+</body>
+</html>
