@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_EXP_FUT_FOR_SHAREPLAN</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6;font-size:.9rem}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.7rem;font-weight:700;font-family:monospace}header p{margin-top:6px;opacity:.85}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+main{max-width:1200px;margin:0 auto;padding:28px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:18px}table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}tr:hover td{background:#fdf5f5}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 6px;font-size:.82rem;font-family:monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:14px;overflow-x:auto;font-size:.82rem;font-family:monospace;border-left:3px solid var(--true-red);white-space:pre-wrap}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:1px}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.callout-info{border-left:4px solid #1565c0;background:#E3F2FD;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.callout-warn{border-left:4px solid #e65100;background:#FFF3E0;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+footer{text-align:center;padding:20px;font-size:.78rem;color:#888;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_OMX_EXP_FUT_FOR_SHAREPLAN</h1>
+  <p>OMX internal — expires/processes future orders for SharePlan; reads OMX_SEARCH_FUT_ALL response and handles future-dated SOC changes</p>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span><span class="meta-badge">Target: OMX Internal</span>
+    <span class="meta-badge">Scope: ParentOU only</span><span class="meta-badge">Author: DESKTOP-KB4BEG4</span>
+    <span class="meta-badge">Reads: OMX_SEARCH_FUT_ALL response</span><span class="meta-badge">Uses LogicalDate</span>
+  </div>
+</header>
+<main>
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <div class="callout">
+      <strong>OMX_EXP_FUT_FOR_SHAREPLAN</strong> processes future-dated order records for subscribers in an APPLY_SHARE_PLAN flow. It reads the pre-computed response from <code>OMX_SEARCH_FUT_ALL</code> (activity extId <code>processFlow:OMX_SEARCH_FUT_ALL</code>) and processes FutureOrdersWithSoc entries. Uses the <code>LogicalDate</code> concept for date comparisons. The Parameter[1] provides a status update value (format "key=value", parses after "=").
+    </div>
+    <div class="callout-warn">
+      <strong>Dependencies:</strong><br/>
+      1. Reads <code>OMX_SEARCH_FUT_ALL</code> activity response — must run after that step<br/>
+      2. Uses <code>Concepts.OM.LogicalDate</code> singleton for logical date overrides<br/>
+      3. Complex future order processing — partially read (rule truncated); full logic extends from line 80+
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table><thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>ActivityID match</td><td><code>OMX_EXP_FUT_FOR_SHAREPLAN</code></td></tr>
+        <tr><td>Target</td><td>OMX internal future order processing</td></tr>
+        <tr><td>Prerequisite activity</td><td><code>OMX_SEARCH_FUT_ALL</code> — reads its Response[0]</td></tr>
+        <tr><td>Date handling</td><td>Uses <code>Concepts.OM.LogicalDate</code>; fallback to <code>DateTime.now()</code></td></tr>
+        <tr><td>Status update param</td><td>Parameter[1] — format "key=value"; parses value after "="</td></tr>
+        <tr><td>Scope</td><td>ParentOU only</td></tr>
+        <tr><td>Fan-in</td><td>Standard RefId + CompletionStatus==2</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol style="padding-left:18px;line-height:2">
+      <li>Read LogicalDate concept; fall back to DateTime.now() if blank</li>
+      <li>Parse status_update from Parameter[1] (substring-after "="); default "4" if no parameter</li>
+      <li>Iterate ParentOU → Subscriber; check response already received</li>
+      <li>Evaluate PreExecCheck per subscriber</li>
+      <li>Locate OMX_SEARCH_FUT_ALL activity response by extId (<code>processFlow@extId + ":OMX_SEARCH_FUT_ALL"</code>)</li>
+      <li>Iterate FutureOrdersWithSoc entries; apply date-based filtering against LogicalDate</li>
+      <li>Process qualifying future orders (expire or update status)</li>
+      <li>Set activity status "1"; persist</li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <table><thead><tr><th>Dependency Type</th><th>Detail</th></tr></thead>
+      <tbody>
+        <tr><td>Reads working memory</td><td>OMX_SEARCH_FUT_ALL Response[0] from ProcessFlow.Activities</td></tr>
+        <tr><td>Reads concept</td><td><code>Concepts.OM.LogicalDate</code> (extId="LogicalDate") — logical date override</td></tr>
+        <tr><td>Writes</td><td>Future order status updates via internal OMX event (full rule required for complete picture)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table><thead><tr><th>#</th><th>Note</th><th>Risk</th></tr></thead>
+      <tbody>
+        <tr><td>R1</td><td>Reads OMX_SEARCH_FUT_ALL response from working memory</td><td>Target must maintain in-flight working memory concept traversal pattern</td></tr>
+        <tr><td>R2</td><td>LogicalDate concept for date override</td><td>Test environments may use logical date shifting — must be replicated in target</td></tr>
+        <tr><td>R3</td><td>FutureOrdersWithSoc iteration</td><td>Complex future-order logic — requires full rule reading for complete migration spec; only first 80 lines read</td></tr>
+        <tr><td>R4</td><td>Parameter[1] format "key=value"</td><td>Unusual parameter encoding — must be documented in target API contract</td></tr>
+      </tbody>
+    </table>
+    <div class="callout-warn" style="margin-top:12px">
+      <strong>⚠ Note:</strong> The rule was partially read (first 80 lines of ~200+). The full future-order processing logic after the FutureOrdersWithSoc loop is not captured here. A complete migration assessment requires reading the full rule file.
+    </div>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_OMX_EXP_FUT_FOR_SHAREPLAN</footer>
+</body></html>

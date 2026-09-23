@@ -1,0 +1,214 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;font-size:14px;background:var(--bg);color:#333}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:24px 32px}
+header h1{font-size:1.6rem;margin-bottom:4px}
+header p{opacity:.85;font-size:.9rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:12px;padding:3px 12px;font-size:.78rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:20px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+code,pre{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.82rem;line-height:1.5}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.76rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.callout{border-left:4px solid var(--info);background:#E3F0FD;padding:10px 16px;border-radius:4px;margin:10px 0}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:24px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</h1>
+  <p>OMX — Submit Postpaid Change Package as Child Orders per Subscriber</p>
+  <div class="meta-row">
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Backend: OMX</span>
+    <span class="meta-chip">Event: OMX_CREATE_CHILD_ORDER</span>
+    <span class="meta-chip">Loop: ParentOU + ChildOU Subscribers</span>
+    <span class="meta-chip">Generated: 2026-09-23</span>
+  </div>
+</header>
+<div class="container">
+
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>Creates child OMX orders for each subscriber (across ParentOU + ChildOU) to change their postpaid package. The <code>OFFER</code> parameter is parsed from a comma-separated key=value string into offer components: <code>offerName</code>, <code>soc</code>, <code>serviceType</code>, <code>reasonCode</code>, <code>userText</code>.</p>
+    <div class="callout warn">
+      <strong>⚠ Naming anomaly:</strong> ActivityID is <code>OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</code> but JMS event dispatched is <code>OMX_CREATE_CHILD_ORDER</code>.
+    </div>
+    <div class="callout" style="margin-top:8px">
+      <strong>💡 childIndex:</strong> A global counter incremented across <em>all</em> subscribers (ParentOU + ChildOU combined), not reset per OU. Used in <code>orderId = concat(OrderID, "-", childIndex)</code> and <code>channel = concat(Channel, "-OMX")</code>.
+    </div>
+    <p style="margin-top:8px"><strong>ExtendedInfo written:</strong> <code>MAIN_TRACKING_ID=OMXTrackingId</code>, <code>SBM_CHANNEL="OMX"</code>.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</code></td></tr>
+      <tr><td>Activity ID</td><td><code>OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</code></td></tr>
+      <tr><td>JMS Event type</td><td><code>OMX_CREATE_CHILD_ORDER</code> [Naming anomaly]</td></tr>
+      <tr><td>Fan-in</td><td><code>count(Response[...000]) == RequestCount</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate</code> per subscriber</td></tr>
+      <tr><td>Required parameters</td><td><code>ORDER_TYPE</code>, <code>OFFER</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§5 — Execution Flow</div>
+  <div class="section-body">
+    <ol style="margin-left:20px;line-height:2">
+      <li>Check resubmit; evaluate PreExecCheck</li>
+      <li>Read parameters: <code>ORDER_TYPE</code> (required), <code>OFFER</code> (required)</li>
+      <li>Validate — throw exception if ORDER_TYPE or OFFER missing</li>
+      <li>Parse OFFER: <code>String.split(offerParam, ",")</code> → per token: <code>String.split(token, "=")</code> → map to offerName, soc, serviceType, reasonCode, userText</li>
+      <li>childIndex = 0</li>
+      <li>Outer loop: ParentOU[p].Subscriber[s] → send child order; childIndex++</li>
+      <li>Inner loop: ChildOU[c][under ParentOU[p]] Subscriber[s] → send child order; childIndex++</li>
+      <li>Set WAITING_RESPONSE; persist to DB</li>
+    </ol>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§7 — OFFER Parameter Parsing</div>
+  <div class="section-body">
+    <p>The <code>OFFER</code> parameter is a comma-separated list of <code>key=value</code> pairs. Example: <code>offerName=POSTPAID_BASIC,soc=SOC_001,serviceType=80,reasonCode=CHG,userText=Change Package</code></p>
+    <table>
+      <tr><th>Key</th><th>Variable</th><th>Use</th></tr>
+      <tr><td>offerName</td><td><code>offerName</code></td><td>Plan name in child order</td></tr>
+      <tr><td>soc</td><td><code>soc</code></td><td>SOC code</td></tr>
+      <tr><td>serviceType</td><td><code>serviceType</code></td><td>Service type</td></tr>
+      <tr><td>reasonCode</td><td><code>reasonCode</code></td><td>Reason code</td></tr>
+      <tr><td>userText</td><td><code>userText</code></td><td>User text</td></tr>
+    </table>
+    <p style="margin-top:8px">If OFFER or ORDER_TYPE is missing: <code>throw new Exception("Required parameter missing")</code></p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h4 style="margin-bottom:8px">§8.2 — ESB/JMS Channel</h4>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>OMX_CREATE_CHILD_ORDER</code></td><td>Create child order per subscriber</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td><code>OMX_CREATE_CHILD_ORDER</code> (response)</td><td>Child order tracking ID</td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.3 — Derived Header Values</h4>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td><code>channel</code></td><td><code>concat(Channel, "-OMX")</code></td></tr>
+      <tr><td><code>orderId</code></td><td><code>concat(OrderID, "-", childIndex)</code></td></tr>
+      <tr><td>ExtendedInfo MAIN_TRACKING_ID</td><td><code>OMXTrackingId</code></td></tr>
+      <tr><td>ExtendedInfo SBM_CHANNEL</td><td><code>"OMX"</code> (hardcoded)</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping Tree</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent / event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority / JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData fields</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src-static">concat(OrderID, "-", childIndex)</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">subscriber.ServiceNumber</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload / submitOrderRequest</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:channel</span><span class="tree-arrow">←</span><span class="tree-src-static">concat(Channel, "-OMX")</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:orderId</span><span class="tree-arrow">←</span><span class="tree-src-static">concat(OrderID, "-", childIndex)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:msisdn</span><span class="tree-arrow">←</span><span class="tree-src">subscriber.ServiceNumber</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:offerName</span><span class="tree-arrow">←</span><span class="tree-src-static">$offerName (from OFFER param)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:soc</span><span class="tree-arrow">←</span><span class="tree-src-static">$soc (from OFFER param)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:serviceType</span><span class="tree-arrow">←</span><span class="tree-src-static">$serviceType (from OFFER param)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:reasonCode</span><span class="tree-arrow">←</span><span class="tree-src-static">$reasonCode (from OFFER param)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:userText</span><span class="tree-arrow">←</span><span class="tree-src-static">$userText (from OFFER param)</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:orderType</span><span class="tree-arrow">←</span><span class="tree-src">ORDER_TYPE param</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:ExtendedInfo[MAIN_TRACKING_ID]</span><span class="tree-arrow">←</span><span class="tree-src">OMXTrackingId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:ExtendedInfo[SBM_CHANNEL]</span><span class="tree-arrow">←</span><span class="tree-src-static">"OMX"</span><span class="badge badge-green">Always (hardcoded)</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§17 — Migration Notes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>ActivityID vs JMS event type mismatch (OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE vs OMX_CREATE_CHILD_ORDER)</td><td><span class="badge badge-red">[HIGH]</span></td><td>Align naming in modernized system</td></tr>
+      <tr><td>OFFER parameter uses custom key=value serialization — no schema enforcement</td><td><span class="badge badge-red">[HIGH]</span></td><td>Replace with structured parameter or JSON input; validate each key presence</td></tr>
+      <tr><td>childIndex is global counter across all ParentOU+ChildOU subscribers — order matters</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Document counter scope; ensure orderId uniqueness is guaranteed in modernized system</td></tr>
+      <tr><td>Nested OU loop: every subscriber gets a separate child order — potentially high volume</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Monitor for large subscriber counts; consider batching</td></tr>
+      <tr><td>SBM_CHANNEL hardcoded to "OMX"</td><td><span class="badge badge-blue">[LOW]</span></td><td>Move to configuration parameter</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h4>§19.1 — Overview</h4>
+    <p><code>Response_OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</code>: Response event scope <code>OMX_CREATE_CHILD_ORDER</code>. Creates <code>OMX_CreateChildOrder</code> concept. Captures <code>childOmxTrackingId</code> from <code>submitOrderResponse.OMXTrackingId</code>.</p>
+    <h4 style="margin-top:12px">§19.3 — Response Concept (<code>OMX_CreateChildOrder</code>)</h4>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">OMX_CreateChildOrder</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">extId</span><span class="tree-arrow">←</span><span class="tree-src-static">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">childOmxTrackingId</span><span class="tree-arrow">←</span><span class="tree-src">submitOrderResponse/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h4 style="margin-top:12px">§19.4 — Fan-in</h4>
+    <pre>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"]) == RequestCount</pre>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

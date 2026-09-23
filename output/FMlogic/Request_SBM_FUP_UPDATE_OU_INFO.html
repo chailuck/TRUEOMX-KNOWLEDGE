@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_SBM_FUP_UPDATE_OU_INFO</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;font-size:14px;background:var(--bg);color:#333}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:24px 32px}
+header h1{font-size:1.6rem;margin-bottom:4px}
+header p{opacity:.85;font-size:.9rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:12px;padding:3px 12px;font-size:.78rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:20px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+code,pre{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.82rem;line-height:1.5}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.76rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.callout{border-left:4px solid var(--info);background:#E3F0FD;padding:10px 16px;border-radius:4px;margin:10px 0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:24px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_SBM_FUP_UPDATE_OU_INFO</h1>
+  <p>SBM FUP — doService (function_id=104300015) — Update OU Billing Cycle</p>
+  <div class="meta-row">
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Backend: SBM</span>
+    <span class="meta-chip">Event: SBM_FUP_DO_SERVICE</span>
+    <span class="meta-chip">Loop: ParentOU + ChildOU</span>
+    <span class="meta-chip">Generated: 2026-09-23</span>
+  </div>
+</header>
+<div class="container">
+
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>Invokes SBM FUP <code>doService</code> (function_id <strong>104300015</strong>) to update billing cycle information for each OU. Loops over all <strong>ParentOU</strong> entries and their nested <strong>ChildOU</strong> entries populated by the preceding <code>INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code> step. Sends one request per OU (ParentOU or ChildOU), with the OU's RefId as the correlation key.</p>
+    <div class="callout">
+      <strong>💡 Note:</strong> The JMS event type dispatched is <code>SBM_FUP_DO_SERVICE</code> — the rule name uses the logical alias <code>SBM_FUP_UPDATE_OU_INFO</code>. The <code>function_id=104300015</code> is hardcoded.
+    </div>
+    <p style="margin-top:8px">Parameters sent per OU: <code>fupID</code> = OUId, <code>bc</code> = BillCycleNo from Customer.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_SBM_FUP_UPDATE_OU_INFO</code></td></tr>
+      <tr><td>Author</td><td>RS33-BANDIT</td></tr>
+      <tr><td>Activity ID</td><td><code>SBM_FUP_UPDATE_OU_INFO</code></td></tr>
+      <tr><td>JMS Event type</td><td><code>SBM_FUP_DO_SERVICE</code></td></tr>
+      <tr><td>Loop pattern</td><td>ParentOU (outer) + ChildOU (inner)</td></tr>
+      <tr><td>Fan-in</td><td><code>count(Response[...000]) == RequestCount</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate</code> per OU</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§5 — Execution Flow</div>
+  <div class="section-body">
+    <ol style="margin-left:20px;line-height:2">
+      <li>Check resubmit; if so: <code>PurgePendingRequestsBeforeResubmit</code></li>
+      <li>Outer loop: iterate over <code>Customer.ParentOU[p]</code></li>
+      <li>For each ParentOU: check if already succeeded (response array scan); evaluate PreExecCheck using <code>GetXMLForOU</code></li>
+      <li>If pass: send <code>SBM_FUP_DO_SERVICE</code> with <code>pOuRefId</code> and <code>pOuId</code></li>
+      <li>Inner loop: iterate over <code>ParentOU[p].ChildOU[c]</code></li>
+      <li>For each ChildOU: same success check, <code>GetXMLForChildOU</code>, send request with <code>cOuRefId</code> and <code>cOuId</code></li>
+      <li>Set WAITING_RESPONSE; persist to DB</li>
+    </ol>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h4 style="margin-bottom:8px">§8.2 — ESB/JMS Channel</h4>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>SBM_FUP_DO_SERVICE</code></td><td>Call SBM FUP doService per OU</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td><code>SBM_FUP_DO_SERVICE</code> (response)</td><td>SBM result + transaction IDs</td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.3 — Backend API</h4>
+    <table>
+      <tr><th>Field</th><th>Value</th><th>Notes</th></tr>
+      <tr><td><code>ns:function_id</code></td><td><code>"104300015"</code></td><td>Hardcoded SBM FUP function</td></tr>
+      <tr><td><code>ns:parameters[fupID]</code></td><td>OUId (ParentOU or ChildOU)</td><td>OU identifier</td></tr>
+      <tr><td><code>ns:parameters[bc]</code></td><td><code>Customer.BillCycleNo</code></td><td>New billing cycle</td></tr>
+      <tr><td><code>ns:service_no</code></td><td>OUId</td><td>Same as fupID</td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.4 — Working Memory</h4>
+    <table>
+      <tr><th>Field</th><th>Access</th></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[]</code></td><td>READ (loop source, populated by INTX step)</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ParentOU[p].ChildOU[]</code></td><td>READ (nested loop)</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.BillCycleNo</code></td><td>READ (mapped to bc)</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§9 — Payload Build</div>
+  <div class="section-body">
+    <h4>§9.7 — Generated XML Example (ParentOU variant)</h4>
+    <pre>&lt;ns:doServiceRequest&gt;
+  &lt;ns:req&gt;
+    &lt;ns:function_id&gt;104300015&lt;/ns:function_id&gt;
+    &lt;ns:parameters&gt;
+      &lt;ns:item&gt;&lt;ns:key&gt;fupID&lt;/ns:key&gt;&lt;ns:value&gt;OU-001&lt;/ns:value&gt;&lt;/ns:item&gt;
+      &lt;ns:item&gt;&lt;ns:key&gt;bc&lt;/ns:key&gt;&lt;ns:value&gt;5&lt;/ns:value&gt;&lt;/ns:item&gt;
+    &lt;/ns:parameters&gt;
+    &lt;ns:service_no&gt;OU-001&lt;/ns:service_no&gt;
+  &lt;/ns:req&gt;
+&lt;/ns:doServiceRequest&gt;</pre>
+    <p style="margin-top:8px">ChildOU variant uses <code>cOuRefId</code> and <code>cOuId</code> instead.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping (ParentOU variant)</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent / event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src-static">$pOuRefId (ParentOU.RefId)</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload / doServiceRequest / req</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">function_id</span><span class="tree-arrow">←</span><span class="tree-src-static">"104300015"</span><span class="badge badge-green">Always (hardcoded)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">parameters / item[fupID]</span><span class="tree-arrow">←</span><span class="tree-src-static">$pOuId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">parameters / item[bc]</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/BillCycleNo</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">service_no</span><span class="tree-arrow">←</span><span class="tree-src-static">$pOuId</span><span class="badge badge-green">Always</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§17 — Migration Notes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>ParentOU list depends on INTX_GET_SPECIAL_OFFER_IND_BY_CUST having run first</td><td><span class="badge badge-red">[HIGH]</span></td><td>Enforce ordering dependency; validate ParentOU list non-empty before loop</td></tr>
+      <tr><td>function_id=104300015 hardcoded — no parameterization</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Move function_id to configuration/parameter</td></tr>
+      <tr><td>Event type <code>SBM_FUP_DO_SERVICE</code> differs from ActivityID — naming anomaly</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Align naming in modernized system</td></tr>
+      <tr><td>Nested ParentOU+ChildOU loop with per-OU requests — potentially high fanout</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Monitor for large OU counts; consider batching in modernized system</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h4>§19.1 — Overview</h4>
+    <p><code>Response_SBM_FUP_UPDATE_OU_INFO</code>: Parses <code>SBM_FUP_DO_SERVICE</code> response. Creates <code>SBM_FUP_DoServiceRes</code> concept with SBM-specific result fields.</p>
+    <h4 style="margin-top:12px">§19.3 — Response Concept (<code>SBM_FUP_DoServiceRes</code>)</h4>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">SBM_FUP_DoServiceRes</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">extra_xml</span><span class="tree-arrow">←</span><span class="tree-src">doServiceReturn/extra_xml</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">req_transaction_id</span><span class="tree-arrow">←</span><span class="tree-src">doServiceReturn/req_transaction_id</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">response_message</span><span class="tree-arrow">←</span><span class="tree-src">doServiceReturn/response_message</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">result_code</span><span class="tree-arrow">←</span><span class="tree-src">doServiceReturn/result_code</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">result_desc</span><span class="tree-arrow">←</span><span class="tree-src">doServiceReturn/result_desc</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">transaction_id</span><span class="tree-arrow">←</span><span class="tree-src">doServiceReturn/transaction_id</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h4 style="margin-top:12px">§19.4 — Fan-in</h4>
+    <pre>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"]) == RequestCount</pre>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

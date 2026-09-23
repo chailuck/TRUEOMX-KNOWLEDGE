@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>RESTORE — Order Journey</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default',flowchart:{curve:'basis'}});</script>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6;font-size:.9rem}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:2rem;font-weight:700;letter-spacing:.5px}
+header p{margin-top:6px;opacity:.85;font-size:.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+.meta-badge.new{background:rgba(255,255,100,.25);border-color:rgba(255,255,100,.5)}
+main{max-width:1400px;margin:0 auto;padding:28px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light);display:flex;align-items:center;gap:10px}
+.card-header .step-count{background:rgba(255,255,255,.2);border-radius:12px;padding:2px 10px;font-size:.78rem}
+.card-body{padding:18px}
+.section-title{color:var(--true-dark);font-size:1.1rem;font-weight:700;margin:0 0 16px;padding-bottom:8px;border-bottom:2px solid #F5E6E6}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+tr.has-preexec td{border-left:3px solid #FFC107}
+tr.has-preexec{background:#FFFDE7}
+tr.has-preexec:hover td{background:#FFF9C4}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 5px;font-size:.78rem;font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:6px;padding:12px;overflow-x:auto;font-size:.78rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red);margin:6px 0}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.73rem;font-weight:600;margin:1px;white-space:nowrap}
+.b-gen{background:#E8F5E9;color:#2e7d32}
+.b-new{background:#E8F5E9;color:#2e7d32;border:1px solid #81C784}
+.b-notfound{background:#FFF3E0;color:#e65100}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}
+.b-multi{background:#F3E5F5;color:#6a1b9a}
+details{border:1px solid #f0e0e0;border-radius:6px;margin:6px 0}
+details summary{background:#FFF8F8;padding:8px 14px;cursor:pointer;font-weight:600;color:var(--true-dark);border-radius:6px;list-style:none;display:flex;align-items:center;gap:8px}
+details summary::before{content:'▶';font-size:.7rem;color:var(--true-red);transition:transform .2s}
+details[open] summary::before{transform:rotate(90deg)}
+details .detail-body{padding:12px 16px;font-size:.83rem}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.fm-card{border:1px solid var(--border);border-radius:8px;padding:14px;background:#fff;border-top:3px solid var(--true-red);transition:box-shadow .2s}
+.fm-card:hover{box-shadow:0 4px 12px rgba(204,0,0,.15)}
+.fm-card.is-new{border-top-color:#2e7d32;background:#f9fff9}
+.fm-card h4{color:var(--true-dark);font-size:.88rem;margin-bottom:6px}
+.fm-card h4 a{color:var(--true-dark);text-decoration:none}
+.fm-card h4 a:hover{text-decoration:underline}
+.fm-card .steps{font-size:.75rem;color:#666;margin-bottom:6px}
+.callout{border-radius:6px;padding:10px 14px;margin:10px 0;font-size:.85rem}
+.callout-warn{background:#FFF8E1;border-left:4px solid #FFC107}
+.callout-high{background:#FFEBEE;border-left:4px solid var(--true-red)}
+.callout-info{background:#E3F2FD;border-left:4px solid #1565c0}
+.diagram-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:#fff}
+.param-cell{font-size:.76rem;color:#333;white-space:pre-line}
+.link-cell a{color:var(--true-dark);font-size:.8rem;font-weight:600}
+footer{text-align:center;padding:20px;font-size:.78rem;color:#888;border-top:1px solid var(--border);margin-top:32px}
+@media(max-width:768px){header{padding:20px 16px}main{padding:16px 10px}th,td{padding:6px 8px}}
+</style>
+</head>
+<body>
+<header>
+  <h1>RESTORE</h1>
+  <p>Process Configuration for RESTORE — subscriber reinstatement with SRS/RSP/MultiSIM activation, Knox unlock, future order cleanup, and CALL_VER sub-flow</p>
+  <div class="meta-row">
+    <span class="meta-badge">Total Steps: 48</span>
+    <span class="meta-badge">Unique FMs: 34</span>
+    <span class="meta-badge">Entry: CCBS_GET_CUST_ACC_SUB_ID</span>
+    <span class="meta-badge new">✨ New FM docs: 4</span>
+    <span class="meta-badge">Generated: 2026-09-23</span>
+  </div>
+</header>
+<main>
+
+<!-- Notable Patterns -->
+<div class="card">
+  <div class="card-header">Notable Multi-Call Patterns &amp; Anomalies</div>
+  <div class="card-body">
+    <div class="callout callout-info">
+      <strong>Multi-call FMs in this process:</strong>
+      <ul style="margin-top:6px;padding-left:20px;font-size:.83rem">
+        <li><strong>OMX_GET_SRV_TRX_NO</strong> × 3: steps 10 (SRS/soft-suspend restore), 12 (RSP/full restore), 44 (CCD/CALL_VER sub-flow)</li>
+        <li><strong>AA_ACTIVATE_SUBS</strong> × 3: steps 11 (SRS), 13 (RSP), 45 (CCD) — mirrors GET_SRV_TRX_NO</li>
+        <li><strong>CCBS_REMOVE_BAR_SOFTSPND</strong> × 2: step 20 (non-CCBS channel, Soc 50412 status=65/83), step 22 (CCBS channel, status=85, SocStatus=84)</li>
+        <li><strong>OMX_NOTI_TO_KAFKA</strong> × 2: step 26 (knoxEvent=UNLOCK), step 31 (knoxEvent=COMPLETE)</li>
+        <li><strong>PSA_UPDATE_KNOX_STATUS</strong> × 2: step 30 (COMPLETE), step 32 (ACTIVE)</li>
+        <li><strong>CCBS_CHANGE_PACKAGE_SUBSCRIBER</strong> × 2: step 29 (REMOVE+REMOVE_IMMEDIATE, Knox contract), step 43 (REMOVE, CALL_VER sub-flow)</li>
+        <li><strong>OMX_SEARCH_FUT</strong> × 2: step 35 (ORDER_TYPE=18/FULLSUS), step 37 (ORDER_TYPE=12/CANCEL)</li>
+        <li><strong>OMX_EXP_FUT_BALOS</strong> × 2: step 36 (no param → expire FULLSUS), step 38 (EXT=_CANCEL → expire CANCEL)</li>
+        <li><strong>ICC_TVS_SUBMIT_ORDER</strong> × 3: step 33 (TDISCOTT/non-CCBS), step 34 (TFULLOTT/CCBS), step 48 (TFULL/CVG)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- §2 Activity Table -->
+<div class="card">
+  <div class="card-header">§2 — Order Flow <span class="step-count">48 steps</span></div>
+  <div class="card-body">
+    <p style="margin-bottom:12px;font-size:.8rem;color:#666"><span style="display:inline-block;width:12px;height:12px;background:#FFFDE7;border-left:3px solid #FFC107;margin-right:6px;vertical-align:middle"></span>Yellow rows = conditional (PreExecCheck present)</p>
+    <div style="overflow-x:auto">
+    <table>
+      <thead><tr>
+        <th>#</th><th>Step ID</th><th>FM (ActivityID)</th><th>Parameter(s)</th><th>PreExecCheck</th><th>Prev</th><th>Next</th><th>Doc</th>
+      </tr></thead>
+      <tbody>
+        <tr class="has-preexec"><td>1</td><td><code>CCBS_GET_CUST_ACC_SUB_ID</code></td><td>CCBS_GET_CUST_ACC_SUB_ID</td><td>—</td><td><code>exists(//Subscriber/MSISDN[./text()])</code></td><td>START</td><td>CCBS_GET_SUBS_INFO</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr><td>2</td><td><code>CCBS_GET_SUBS_INFO</code></td><td>CCBS_GET_SUBS_INFO</td><td>—</td><td>—</td><td>CCBS_GET_CUST_ACC_SUB_ID</td><td>CCBS_GET_SUBSCRIBER_HEADER</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>3</td><td><code>CCBS_GET_SUBSCRIBER_HEADER</code></td><td>CCBS_GET_SUBSCRIBER_HEADER</td><td>—</td><td><code>Channel!="OMX" and Channel!="CCBS"</code></td><td>CCBS_GET_SUBS_INFO</td><td>CCBS_GET_ACCOUNT_HEADER</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>4</td><td><code>CCBS_GET_ACCOUNT_HEADER</code></td><td>CCBS_GET_ACCOUNT_HEADER</td><td>—</td><td><code>SubscriberType!="6A"</code></td><td>CCBS_GET_SUBSCRIBER_HEADER</td><td>OMX_BIZ_VAL</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr><td>5</td><td><code>OMX_BIZ_VAL</code></td><td>OMX_BIZ_VAL</td><td>—</td><td>—</td><td>CCBS_GET_ACCOUNT_HEADER</td><td>OMX_INJECT_OFFER</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>6</td><td><code>OMX_INJECT_OFFER</code></td><td>OMX_INJECT_OFFER</td><td class="param-cell">soc=15510927,serviceType=85,<br>action=REMOVE,offerName=PROFCVBAR,<br>level=SUB</td><td><code>CALL_VER_STATUS=PASS and OfferName=PROFCVBAR and FE_OR_CCBS=CCBS</code></td><td>OMX_BIZ_VAL</td><td>AA_GET_SWITCH_FEATURE_OFFER</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>7</td><td><code>AA_GET_SWITCH_FEATURE_OFFER</code></td><td>AA_GET_SWITCH_FEATURE_OFFER</td><td>—</td><td><code>SubscriberType!="6A"</code></td><td>OMX_INJECT_OFFER</td><td>INTX_GET_MASTER_MINOR_SIM_INFO</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>8</td><td><code>INTX_GET_MASTER_MINOR_SIM_INFO</code></td><td>INTX_GET_MASTER_MINOR_SIM_INFO</td><td>—</td><td><code>FE_OR_CCBS=CCBS and MultiSIM (RES/REE)</code></td><td>AA_GET_SWITCH_FEATURE_OFFER</td><td>OMX_TRANSFORM_NETWORK_CMD_TO_IOT</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>9</td><td><code>OMX_TRANSFORM_NETWORK_CMD_TO_IOT</code></td><td>OMX_TRANSFORM_NETWORK_CMD_TO_IOT</td><td>—</td><td><code>SubscriberType=INB or ICA</code></td><td>INTX_GET_MASTER_MINOR_SIM_INFO</td><td>OMX_GET_SRV_TRX_NO_FROM_SOFT</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>10</td><td><code>OMX_GET_SRV_TRX_NO_FROM_SOFT</code></td><td><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a> <span class="badge b-multi">×3</span></td><td>SRS</td><td><code>Not MultiSIM and (Soc=50412/non-CCBS or CCBS) and Status=65</code></td><td>OMX_TRANSFORM_NETWORK_CMD_TO_IOT</td><td>AA_ACTIVATE_FROM_SOFT</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>11</td><td><code>AA_ACTIVATE_FROM_SOFT</code></td><td><a href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a> <span class="badge b-multi">×3</span></td><td>SRS</td><td>Same as step 10</td><td>OMX_GET_SRV_TRX_NO_FROM_SOFT</td><td>OMX_GET_SRV_TRX_NO_FROM_FULL</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>12</td><td><code>OMX_GET_SRV_TRX_NO_FROM_FULL</code></td><td><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a> <span class="badge b-multi">×3</span></td><td>RSP</td><td><code>Not MultiSIM and SubscriberType!="6A" and Status=83 or 85</code></td><td>AA_ACTIVATE_FROM_SOFT</td><td>AA_ACTIVATE_FROM_FULL</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>13</td><td><code>AA_ACTIVATE_FROM_FULL</code></td><td><a href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a> <span class="badge b-multi">×3</span></td><td>RSP</td><td>Same as step 12</td><td>OMX_GET_SRV_TRX_NO_FROM_FULL</td><td>OMX_GET_SRV_TRX_NO_MSIM_FROM_SOFT</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>14</td><td><code>OMX_GET_SRV_TRX_NO_MSIM_FROM_SOFT</code></td><td><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO_MSIM.html">OMX_GET_SRV_TRX_NO_MSIM</a> <span class="badge b-multi">×2</span></td><td>SRS</td><td><code>MultiSIM PREV_MSIM and (50412/non-CCBS or CCBS) and Status=65</code></td><td>AA_ACTIVATE_FROM_FULL</td><td>AA_ACTIVATE_SUBS_MSIM_FROM_SOFT</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>15</td><td><code>AA_ACTIVATE_SUBS_MSIM_FROM_SOFT</code></td><td><a href="../FMlogic/Request_AA_ACTIVATE_SUBS_MSIM.html">AA_ACTIVATE_SUBS_MSIM</a> <span class="badge b-multi">×2</span></td><td class="param-cell">SRS<br>UPDATE</td><td>Same as step 14</td><td>OMX_GET_SRV_TRX_NO_MSIM_FROM_SOFT</td><td>OMX_GET_SRV_TRX_NO_MSIM_FROM_FULL</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>16</td><td><code>OMX_GET_SRV_TRX_NO_MSIM_FROM_FULL</code></td><td><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO_MSIM.html">OMX_GET_SRV_TRX_NO_MSIM</a> <span class="badge b-multi">×2</span></td><td>RSP</td><td><code>MultiSIM PREV_MSIM and Status=83 or 85</code></td><td>AA_ACTIVATE_SUBS_MSIM_FROM_SOFT</td><td>AA_ACTIVATE_SUBS_MSIM_FROM_FULL</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>17</td><td><code>AA_ACTIVATE_SUBS_MSIM_FROM_FULL</code></td><td><a href="../FMlogic/Request_AA_ACTIVATE_SUBS_MSIM.html">AA_ACTIVATE_SUBS_MSIM</a> <span class="badge b-multi">×2</span></td><td class="param-cell">RSP<br>UPDATE</td><td>Same as step 16</td><td>OMX_GET_SRV_TRX_NO_MSIM_FROM_FULL</td><td>SMSGATEWAY_SEND_SMS</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>18</td><td><code>SMSGATEWAY_SEND_SMS</code></td><td>SMSGATEWAY_SEND_SMS</td><td>—</td><td><code>Channel!="CCBS" and Channel!="OMX"</code></td><td>AA_ACTIVATE_SUBS_MSIM_FROM_FULL</td><td>CCBS_RESTORE_SUBSCRIBERS</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>19</td><td><code>CCBS_RESTORE_SUBSCRIBERS</code></td><td>CCBS_RESTORE_SUBSCRIBERS</td><td>—</td><td><code>Channel!="CCBS" and Status=83</code></td><td>SMSGATEWAY_SEND_SMS</td><td>CCBS_REMOVE_BAR_SOFTSPND</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>20</td><td><code>CCBS_REMOVE_BAR_SOFTSPND</code></td><td><a href="../FMlogic/Request_CCBS_REMOVE_BAR_SOFTSPND.html">CCBS_REMOVE_BAR_SOFTSPND</a> ✨ <span class="badge b-multi">×2</span></td><td>SYSREQ</td><td><code>Channel!="CCBS" and FE_OR_CCBS=CCBS and Soc=50412 (SocStatus=65/83)</code></td><td>CCBS_RESTORE_SUBSCRIBERS</td><td>CCBS_APPLY_COLL_ACTIVITIES</td><td><span class="badge b-new">✨ New</span></td></tr>
+        <tr class="has-preexec"><td>21</td><td><code>CCBS_APPLY_COLL_ACTIVITIES</code></td><td>CCBS_APPLY_COLL_ACTIVITIES</td><td>RESTORE</td><td><code>Channel="CCBS"</code></td><td>CCBS_REMOVE_BAR_SOFTSPND</td><td>CCBS_REMOVE_BAR_SOFTSPND_FROM_COLLECTION</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>22</td><td><code>CCBS_REMOVE_BAR_SOFTSPND_FROM_COLLECTION</code></td><td><a href="../FMlogic/Request_CCBS_REMOVE_BAR_SOFTSPND.html">CCBS_REMOVE_BAR_SOFTSPND</a> ✨ <span class="badge b-multi">×2</span></td><td>SYSREQ</td><td><code>Channel="CCBS" and Status=85 and Soc=50412 (SocStatus=84)</code></td><td>CCBS_APPLY_COLL_ACTIVITIES</td><td>STATUS_UPDATE_CREATING_PROFILE</td><td><span class="badge b-new">✨ New</span></td></tr>
+        <tr><td>23</td><td><code>STATUS_UPDATE_CREATING_PROFILE</code></td><td>STATUS_UPDATE_CREATING_PROFILE</td><td>—</td><td>—</td><td>CCBS_REMOVE_BAR_SOFTSPND_FROM_COLLECTION</td><td>PSA_GET_DEVICE_INFO</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>24</td><td><code>PSA_GET_DEVICE_INFO</code></td><td>PSA_GET_DEVICE_INFO</td><td>—</td><td><code>FE_OR_CCBS=CCBS and IMEI_KNOX!=''</code></td><td>STATUS_UPDATE_CREATING_PROFILE</td><td>KNOX_UNLOCK_DEVICE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>25</td><td><code>KNOX_UNLOCK_DEVICE</code></td><td><a href="../FMlogic/Request_KNOX_UNLOCK_DEVICE.html">KNOX_UNLOCK_DEVICE</a> ✨</td><td>—</td><td><code>FE_OR_CCBS=CCBS and DEVICE_STATUS=LOCKED</code></td><td>PSA_GET_DEVICE_INFO</td><td>OMX_NOTIFY_KNOX_EVENT_UNLOCK</td><td><span class="badge b-new">✨ New</span></td></tr>
+        <tr class="has-preexec"><td>26</td><td><code>OMX_NOTIFY_KNOX_EVENT_UNLOCK</code></td><td><a href="../FMlogic/Request_OMX_NOTI_TO_KAFKA.html">OMX_NOTI_TO_KAFKA</a> <span class="badge b-multi">×2</span></td><td>knoxEvent=UNLOCK</td><td>Same as step 25</td><td>KNOX_UNLOCK_DEVICE</td><td>OMX_SEARCH_FUT_ALL</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>27</td><td><code>OMX_SEARCH_FUT_ALL</code></td><td>OMX_SEARCH_FUT_ALL</td><td class="param-cell">STATUS=1<br>ORDER_TYPE=4<br>GET_FUT_EXP_DATE=Y</td><td><code>FE_OR_CCBS=CCBS and TR_ORIG_CONTRACT_EXPIRE_DATE!=''</code></td><td>OMX_NOTIFY_KNOX_EVENT_UNLOCK</td><td>OMX_CAL_OFFER_FUT_DATE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>28</td><td><code>OMX_CAL_OFFER_FUT_DATE</code></td><td>OMX_CAL_OFFER_FUT_DATE</td><td>CAL_PARAM_EXP=Y</td><td>Same as step 27</td><td>OMX_SEARCH_FUT_ALL</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>29</td><td><code>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</code></td><td><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a> <span class="badge b-multi">×2</span></td><td class="param-cell">REMOVE<br>REMOVE_IMMEDIATE=Y<br>ACTIVITY_REASON=SYSREQ</td><td><code>FE_OR_CCBS=CCBS and TR_ORIG_CONTRACT_EXPIRE_DATE!='' and EXP_TYPE!='FUT'</code></td><td>OMX_CAL_OFFER_FUT_DATE</td><td>PSA_UPDATE_KNOX_STATUS_COMPLETE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>30</td><td><code>PSA_UPDATE_KNOX_STATUS_COMPLETE</code></td><td><a href="../FMlogic/Request_PSA_UPDATE_KNOX_STATUS.html">PSA_UPDATE_KNOX_STATUS</a> <span class="badge b-multi">×2</span></td><td>KNOX_STATUS=COMPLETE</td><td><code>FE_OR_CCBS=CCBS and IMEI_KNOX!='' and EXP_TYPE!='FUT'</code></td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td><td>OMX_NOTIFY_KNOX_EVENT_COMPLETE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>31</td><td><code>OMX_NOTIFY_KNOX_EVENT_COMPLETE</code></td><td><a href="../FMlogic/Request_OMX_NOTI_TO_KAFKA.html">OMX_NOTI_TO_KAFKA</a> <span class="badge b-multi">×2</span></td><td>knoxEvent=COMPLETE</td><td>Same as step 30</td><td>PSA_UPDATE_KNOX_STATUS_COMPLETE</td><td>PSA_UPDATE_KNOX_STATUS_ACTIVE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>32</td><td><code>PSA_UPDATE_KNOX_STATUS_ACTIVE</code></td><td><a href="../FMlogic/Request_PSA_UPDATE_KNOX_STATUS.html">PSA_UPDATE_KNOX_STATUS</a> <span class="badge b-multi">×2</span></td><td>KNOX_STATUS=ACTIVE</td><td><code>FE_OR_CCBS=CCBS and IMEI_KNOX!='' and DEVICE_STATUS=LOCKED and EXP_TYPE='FUT'</code></td><td>OMX_NOTIFY_KNOX_EVENT_COMPLETE</td><td>ICC_TVS_SUBMIT_ORDER_BY_REQ</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>33</td><td><code>ICC_TVS_SUBMIT_ORDER_BY_REQ</code></td><td><a href="../FMlogic/Request_ICC_TVS_SUBMIT_ORDER.html">ICC_TVS_SUBMIT_ORDER</a> <span class="badge b-multi">×3</span></td><td class="param-cell">ORDER_TYPE=collection<br>ACTION_CODE=R<br>REASON=TDISCOTT</td><td><code>Channel!="CCBS" and trueIDTV!='' and ActivityReason!=MONRS/MRESR</code></td><td>PSA_UPDATE_KNOX_STATUS_ACTIVE</td><td>ICC_TVS_SUBMIT_ORDER_BY_COLLECTION</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>34</td><td><code>ICC_TVS_SUBMIT_ORDER_BY_COLLECTION</code></td><td><a href="../FMlogic/Request_ICC_TVS_SUBMIT_ORDER.html">ICC_TVS_SUBMIT_ORDER</a> <span class="badge b-multi">×3</span></td><td class="param-cell">ORDER_TYPE=collection<br>ACTION_CODE=R<br>REASON=TFULLOTT</td><td><code>Channel="CCBS" and trueIDTV!='' and ActivityReason!=MONRS/MRESR</code></td><td>ICC_TVS_SUBMIT_ORDER_BY_REQ</td><td>OMX_SEARCH_FUT</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>35</td><td><code>OMX_SEARCH_FUT</code></td><td><a href="../FMlogic/Request_OMX_SEARCH_FUT.html">OMX_SEARCH_FUT</a> <span class="badge b-multi">×2</span></td><td class="param-cell">STATUS=1<br>ORDER_TYPE=18</td><td><code>Channel!="CCBS"</code></td><td>ICC_TVS_SUBMIT_ORDER_BY_COLLECTION</td><td>OMX_EXP_FUT_BALOS</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>36</td><td><code>OMX_EXP_FUT_BALOS</code></td><td><a href="../FMlogic/Request_OMX_EXP_FUT_BALOS.html">OMX_EXP_FUT_BALOS</a> ✨ <span class="badge b-multi">×2</span></td><td>—</td><td><code>Channel!="CCBS"</code></td><td>OMX_SEARCH_FUT</td><td>OMX_SEARCH_FUT_CANCEL</td><td><span class="badge b-new">✨ New</span></td></tr>
+        <tr class="has-preexec"><td>37</td><td><code>OMX_SEARCH_FUT_CANCEL</code></td><td><a href="../FMlogic/Request_OMX_SEARCH_FUT.html">OMX_SEARCH_FUT</a> <span class="badge b-multi">×2</span></td><td class="param-cell">STATUS=1<br>ORDER_TYPE=12</td><td><code>Channel!="CCBS"</code></td><td>OMX_EXP_FUT_BALOS</td><td>OMX_EXP_FUT_CANCEL</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>38</td><td><code>OMX_EXP_FUT_CANCEL</code></td><td><a href="../FMlogic/Request_OMX_EXP_FUT_BALOS.html">OMX_EXP_FUT_BALOS</a> ✨ <span class="badge b-multi">×2</span></td><td>EXT=_CANCEL</td><td><code>Channel!="CCBS"</code></td><td>OMX_SEARCH_FUT_CANCEL</td><td>TDG_RESUME_SUBSCRIBER</td><td><span class="badge b-new">✨ New</span></td></tr>
+        <tr class="has-preexec"><td>39</td><td><code>TDG_RESUME_SUBSCRIBER</code></td><td><a href="../FMlogic/Request_TDG_RESUME_SUBSCRIBER.html">TDG_RESUME_SUBSCRIBER</a> ✨</td><td>—</td><td><code>FE_OR_CCBS=CCBS and TR_SPECIAL_OFFER_IND=IOTBU</code></td><td>OMX_EXP_FUT_CANCEL</td><td>MCS_GET_PACKCODE</td><td><span class="badge b-new">✨ New</span></td></tr>
+        <tr><td>40</td><td><code>MCS_GET_PACKCODE</code></td><td>MCS_GET_PACKCODE</td><td>—</td><td>—</td><td>TDG_RESUME_SUBSCRIBER</td><td>MCS_CANCEL_AFTER_SALE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>41</td><td><code>MCS_CANCEL_AFTER_SALE</code></td><td>MCS_CANCEL_AFTER_SALE</td><td>—</td><td><code>MCS_CANCEL_AFS='Y'</code></td><td>MCS_GET_PACKCODE</td><td>CJ_UPDATE_CALL_VERIFICATION</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>42</td><td><code>CJ_UPDATE_CALL_VERIFICATION</code></td><td>CJ_UPDATE_CALL_VERIFICATION</td><td>—</td><td><code>CALL_VER_STATUS=PASS</code></td><td>MCS_CANCEL_AFTER_SALE</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>43</td><td><code>CCBS_CHANGE_PACKAGE_SUBSCRIBER</code></td><td><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a> <span class="badge b-multi">×2</span></td><td class="param-cell">REMOVE<br>ACTIVITY_REASON=SYSREQ</td><td><code>CALL_VER_STATUS=PASS and OfferName=PROFCVBAR and FE_OR_CCBS=INJECT_OFFER</code></td><td>CJ_UPDATE_CALL_VERIFICATION</td><td>OMX_GET_SRV_TRX_NO</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>44</td><td><code>OMX_GET_SRV_TRX_NO</code></td><td><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a> <span class="badge b-multi">×3</span></td><td>CCD</td><td><code>CALL_VER_STATUS=PASS and OfferName=PROFCVBAR</code></td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td>AA_ACTIVATE_SUBS</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>45</td><td><code>AA_ACTIVATE_SUBS</code></td><td><a href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a> <span class="badge b-multi">×3</span></td><td>CCD</td><td>Same as step 44</td><td>OMX_GET_SRV_TRX_NO</td><td>OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>46</td><td><code>OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</code></td><td>OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</td><td class="param-cell">ORDER_TYPE=4<br>OFFER=offerName=TSNTSS02,<br>serviceType=85,reasonCode=CREQ</td><td><code>TSNTSS02 offer with FE_OR_CCBS=CCBS</code></td><td>AA_ACTIVATE_SUBS</td><td>ATS_ENQUIRY_CAMPAIGN_CVG</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr><td>47</td><td><code>ATS_ENQUIRY_CAMPAIGN_CVG</code></td><td>ATS_ENQUIRY_CAMPAIGN_CVG</td><td>FUNCTION=Convergence</td><td>—</td><td>OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</td><td>ICC_TVS_SUBMIT_ORDER_CVG</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>48</td><td><code>ICC_TVS_SUBMIT_ORDER_CVG</code></td><td><a href="../FMlogic/Request_ICC_TVS_SUBMIT_ORDER.html">ICC_TVS_SUBMIT_ORDER</a> <span class="badge b-multi">×3</span></td><td class="param-cell">ORDER_TYPE=collection<br>ACTION_CODE=R<br>REASON=TFULL</td><td><code>TVS_NO exists</code></td><td>ATS_ENQUIRY_CAMPAIGN_CVG</td><td>END</td><td><span class="badge b-gen">✓</span></td></tr>
+      </tbody>
+    </table>
+    </div>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="card">
+  <div class="card-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="card-body">
+    <details><summary>Step 1 — CCBS_GET_CUST_ACC_SUB_ID</summary><div class="detail-body"><pre>exists(//Subscriber/MSISDN[./text()])</pre></div></details>
+    <details><summary>Step 3 — CCBS_GET_SUBSCRIBER_HEADER — non-CCBS/OMX channel gate</summary><div class="detail-body"><pre>/ns0:OrderRequest/OrderData/Channel/text()!="OMX" and /ns0:OrderRequest/OrderData/Channel/text()!="CCBS"</pre></div></details>
+    <details><summary>Step 4 — CCBS_GET_ACCOUNT_HEADER — non-enterprise subscriber</summary><div class="detail-body"><pre>//Subscriber/SubscriberType[./text()]!="6A"</pre></div></details>
+    <details><summary>Step 6 — OMX_INJECT_OFFER — CALL_VER sub-flow, PROFCVBAR removal</summary><div class="detail-body"><pre>boolean(//Customer/ParentOU/Subscriber/ExtendedInfo[Name="CALL_VER_STATUS" and Value='PASS'])
+and boolean(//SubscriberOffers/OfferName/text() = 'PROFCVBAR')
+and //SubscriberOffers/ExtendedInfo[Name='FE_OR_CCBS']/Value/text()='CCBS'</pre></div></details>
+    <details><summary>Step 8 — INTX_GET_MASTER_MINOR_SIM_INFO — MultiSIM (RES/REE)</summary><div class="detail-body"><pre>count(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS']
+  and (contains(SocProperties, 'TR_MULTISIM_IND=RES') or contains(SocProperties, 'TR_MULTISIM_IND=REE'))]) > 0</pre></div></details>
+    <details><summary>Steps 10–11 — SRS activation (SoftSuspend restore, Status=65)</summary><div class="detail-body"><pre>not(boolean(//Subscriber/MultiSIMInfo))
+and ((//Subscriber/SubscriberType[./text()]!="6A"
+      and boolean(//Subscriber/SubscriberOffers[Soc[.='50412']])
+      and /ns0:OrderRequest/OrderData/Channel/text()!="CCBS")
+  or (//Subscriber/SubscriberType[./text()]!="6A"
+      and /ns0:OrderRequest/OrderData/Channel/text()="CCBS"))
+and (//Subscriber/Status/text()="65"
+     and not(boolean(//Subscriber/SubscriberOffers[SocStatus[.='84']])))</pre></div></details>
+    <details><summary>Steps 12–13 — RSP activation (Full restore, Status=83/85)</summary><div class="detail-body"><pre>not(boolean(//Subscriber/MultiSIMInfo))
+and (//Subscriber/SubscriberType[./text()]!="6A"
+     and (//Subscriber/Status/text()="83" or //Subscriber/Status/text()="85"))</pre></div></details>
+    <details><summary>Step 20 — CCBS_REMOVE_BAR_SOFTSPND (non-CCBS channel)</summary><div class="detail-body"><pre>not(/ns0:OrderRequest/OrderData/Channel/text()="CCBS")
+and (//SubscriberOffers/ExtendedInfo[Name/text() = 'FE_OR_CCBS']/Value/text() = 'CCBS'
+     and boolean(//Subscriber/SubscriberOffers[Soc[.='50412'] and SocStatus[.='65' or .='83']]))</pre></div></details>
+    <details><summary>Step 22 — CCBS_REMOVE_BAR_SOFTSPND (CCBS channel, SocStatus=84)</summary><div class="detail-body"><pre>/ns0:OrderRequest/OrderData/Channel/text()="CCBS"
+and //Subscriber/Status/text()="85"
+and (//SubscriberOffers/ExtendedInfo[Name/text() = 'FE_OR_CCBS']/Value/text() = 'CCBS'
+     and boolean(//Subscriber/SubscriberOffers[Soc[.='50412'] and SocStatus[.='84']]))</pre></div></details>
+    <details><summary>Step 25 — KNOX_UNLOCK_DEVICE ✨</summary><div class="detail-body"><pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS']
+  and ExtendedInfo[Name='DEVICE_STATUS' and Value='LOCKED']])</pre></div></details>
+    <details><summary>Step 29 — CCBS_CHANGE_PACKAGE_SUBSCRIBER (Knox contract, REMOVE_IMMEDIATE)</summary><div class="detail-body"><pre>boolean(//SubscriberOffers[OfferName!='RMVX00000000001'
+  and ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS']
+  and ParameterInfo[ParamName='TR_ORIG_CONTRACT_EXPIRE_DATE' and ValuesArray!='']
+  and ExtendedInfo[Name='EXP_TYPE' and Value!='FUT']])</pre></div></details>
+    <details><summary>Step 39 — TDG_RESUME_SUBSCRIBER ✨ (IoT Bundle)</summary><div class="detail-body"><pre>boolean(//Subscriber/SubscriberOffers[(ExtendedInfo[Name='FE_OR_CCBS' and Value='CCBS'])
+  and contains(SocProperties,'TR_SPECIAL_OFFER_IND=IOTBU')])</pre></div></details>
+  </div>
+</div>
+
+<!-- §4 FM Index -->
+<div class="card">
+  <div class="card-header">§4 — FM Documentation Index <span class="step-count">34 unique FMs</span></div>
+  <div class="card-body">
+    <p style="margin-bottom:14px;font-size:.8rem;color:#666"><span style="display:inline-block;width:10px;height:10px;background:#f9fff9;border-top:3px solid #2e7d32;margin-right:6px;vertical-align:middle"></span>Green border = new FM doc generated this session</p>
+    <div class="fm-grid">
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html">CCBS_GET_CUST_ACC_SUB_ID</a></h4><div class="steps">Steps: 1</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">CCBS_GET_SUBS_INFO</a></h4><div class="steps">Steps: 2</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_SUBSCRIBER_HEADER.html">CCBS_GET_SUBSCRIBER_HEADER</a></h4><div class="steps">Steps: 3</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></h4><div class="steps">Steps: 4</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></h4><div class="steps">Steps: 5</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_INJECT_OFFER.html">OMX_INJECT_OFFER</a></h4><div class="steps">Steps: 6</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_AA_GET_SWITCH_FEATURE_OFFER.html">AA_GET_SWITCH_FEATURE_OFFER</a></h4><div class="steps">Steps: 7</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_INTX_GET_MASTER_MINOR_SIM_INFO.html">INTX_GET_MASTER_MINOR_SIM_INFO</a></h4><div class="steps">Steps: 8</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_TRANSFORM_NETWORK_CMD_TO_IOT.html">OMX_TRANSFORM_NETWORK_CMD_TO_IOT</a></h4><div class="steps">Steps: 9</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></h4><div class="steps">Steps: 10, 12, 44</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a></h4><div class="steps">Steps: 11, 13, 45</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO_MSIM.html">OMX_GET_SRV_TRX_NO_MSIM</a></h4><div class="steps">Steps: 14, 16</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_AA_ACTIVATE_SUBS_MSIM.html">AA_ACTIVATE_SUBS_MSIM</a></h4><div class="steps">Steps: 15, 17</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></h4><div class="steps">Steps: 18</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_RESTORE_SUBSCRIBERS.html">CCBS_RESTORE_SUBSCRIBERS</a></h4><div class="steps">Steps: 19</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card is-new"><h4><a href="../FMlogic/Request_CCBS_REMOVE_BAR_SOFTSPND.html">CCBS_REMOVE_BAR_SOFTSPND ✨</a></h4><div class="steps">Steps: 20, 22</div><span class="badge b-new">✨ New</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_APPLY_COLL_ACTIVITIES.html">CCBS_APPLY_COLL_ACTIVITIES</a></h4><div class="steps">Steps: 21</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></h4><div class="steps">Steps: 23</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_PSA_GET_DEVICE_INFO.html">PSA_GET_DEVICE_INFO</a></h4><div class="steps">Steps: 24</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card is-new"><h4><a href="../FMlogic/Request_KNOX_UNLOCK_DEVICE.html">KNOX_UNLOCK_DEVICE ✨</a></h4><div class="steps">Steps: 25</div><span class="badge b-new">✨ New</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_NOTI_TO_KAFKA.html">OMX_NOTI_TO_KAFKA</a></h4><div class="steps">Steps: 26, 31</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_SEARCH_FUT_ALL.html">OMX_SEARCH_FUT_ALL</a></h4><div class="steps">Steps: 27</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_CAL_OFFER_FUT_DATE.html">OMX_CAL_OFFER_FUT_DATE</a></h4><div class="steps">Steps: 28</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></h4><div class="steps">Steps: 29, 43</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_PSA_UPDATE_KNOX_STATUS.html">PSA_UPDATE_KNOX_STATUS</a></h4><div class="steps">Steps: 30, 32</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_ICC_TVS_SUBMIT_ORDER.html">ICC_TVS_SUBMIT_ORDER</a></h4><div class="steps">Steps: 33, 34, 48</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_SEARCH_FUT.html">OMX_SEARCH_FUT</a></h4><div class="steps">Steps: 35, 37</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card is-new"><h4><a href="../FMlogic/Request_OMX_EXP_FUT_BALOS.html">OMX_EXP_FUT_BALOS ✨</a></h4><div class="steps">Steps: 36, 38</div><span class="badge b-new">✨ New</span></div>
+      <div class="fm-card is-new"><h4><a href="../FMlogic/Request_TDG_RESUME_SUBSCRIBER.html">TDG_RESUME_SUBSCRIBER ✨</a></h4><div class="steps">Steps: 39</div><span class="badge b-new">✨ New</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_MCS_GET_PACKCODE.html">MCS_GET_PACKCODE</a></h4><div class="steps">Steps: 40</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_MCS_CANCEL_AFTER_SALE.html">MCS_CANCEL_AFTER_SALE</a></h4><div class="steps">Steps: 41</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CJ_UPDATE_CALL_VERIFICATION.html">CJ_UPDATE_CALL_VERIFICATION</a></h4><div class="steps">Steps: 42</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE.html">OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE</a></h4><div class="steps">Steps: 46</div><span class="badge b-gen">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_ATS_ENQUIRY_CAMPAIGN_CVG.html">ATS_ENQUIRY_CAMPAIGN_CVG</a></h4><div class="steps">Steps: 47</div><span class="badge b-gen">✓ Generated</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="card">
+  <div class="card-header">§5 — Sequence Diagram</div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+    participant OMX as OMX
+    participant AA as AA
+    participant INTX as INTX
+    participant SMS as SMSGATEWAY
+    participant PSA as PSA
+    participant KNOX as KNOX
+    participant ICC as ICC
+    participant TDG as TDG
+    participant MCS as MCS
+    participant CJ as CJ
+    participant ATS as ATS
+
+    opt exists(MSISDN)
+        O->>CCBS: CCBS_GET_CUST_ACC_SUB_ID
+        CCBS-->>O: response
+    end
+    O->>CCBS: CCBS_GET_SUBS_INFO
+    CCBS-->>O: response
+    opt Channel!=OMX/CCBS
+        O->>CCBS: CCBS_GET_SUBSCRIBER_HEADER
+        CCBS-->>O: response
+    end
+    opt SubscriberType!=6A
+        O->>CCBS: CCBS_GET_ACCOUNT_HEADER
+        CCBS-->>O: response
+    end
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    opt CALL_VER_STATUS=PASS and PROFCVBAR
+        O->>OMX: OMX_INJECT_OFFER [REMOVE PROFCVBAR]
+        OMX-->>O: response
+    end
+    opt SubscriberType!=6A
+        O->>AA: AA_GET_SWITCH_FEATURE_OFFER
+        AA-->>O: response
+    end
+    opt FE_OR_CCBS=CCBS and MultiSIM RES/REE
+        O->>INTX: INTX_GET_MASTER_MINOR_SIM_INFO
+        INTX-->>O: response
+    end
+    opt INB/ICA SubscriberType
+        O->>OMX: OMX_TRANSFORM_NETWORK_CMD_TO_IOT
+        OMX-->>O: response
+    end
+    opt Not MultiSIM, Status=65
+        O->>OMX: OMX_GET_SRV_TRX_NO [SRS]
+        OMX-->>O: response
+        O->>AA: AA_ACTIVATE_SUBS [SRS]
+        AA-->>O: response
+    end
+    opt Not MultiSIM, Status=83/85
+        O->>OMX: OMX_GET_SRV_TRX_NO [RSP]
+        OMX-->>O: response
+        O->>AA: AA_ACTIVATE_SUBS [RSP]
+        AA-->>O: response
+    end
+    opt MultiSIM PREV_MSIM, Status=65
+        O->>OMX: OMX_GET_SRV_TRX_NO_MSIM [SRS]
+        OMX-->>O: response
+        O->>AA: AA_ACTIVATE_SUBS_MSIM [SRS+UPDATE]
+        AA-->>O: response
+    end
+    opt MultiSIM PREV_MSIM, Status=83/85
+        O->>OMX: OMX_GET_SRV_TRX_NO_MSIM [RSP]
+        OMX-->>O: response
+        O->>AA: AA_ACTIVATE_SUBS_MSIM [RSP+UPDATE]
+        AA-->>O: response
+    end
+    opt Channel!=CCBS/OMX
+        O->>SMS: SMSGATEWAY_SEND_SMS
+        SMS-->>O: response
+    end
+    opt Channel!=CCBS, Status=83
+        O->>CCBS: CCBS_RESTORE_SUBSCRIBERS
+        CCBS-->>O: response
+    end
+    opt Channel!=CCBS, Soc=50412(65/83)
+        O->>CCBS: CCBS_REMOVE_BAR_SOFTSPND [SYSREQ]
+        CCBS-->>O: response
+    end
+    opt Channel=CCBS
+        O->>CCBS: CCBS_APPLY_COLL_ACTIVITIES [RESTORE]
+        CCBS-->>O: response
+    end
+    opt Channel=CCBS, Soc=50412(84)
+        O->>CCBS: CCBS_REMOVE_BAR_SOFTSPND [SYSREQ]
+        CCBS-->>O: response
+    end
+    O->>OMX: STATUS_UPDATE_CREATING_PROFILE
+    OMX-->>O: response
+    opt FE_OR_CCBS=CCBS, IMEI_KNOX!=''
+        O->>PSA: PSA_GET_DEVICE_INFO
+        PSA-->>O: response
+    end
+    opt DEVICE_STATUS=LOCKED
+        O->>KNOX: KNOX_UNLOCK_DEVICE
+        KNOX-->>O: response
+        O->>OMX: OMX_NOTI_TO_KAFKA [UNLOCK]
+        OMX-->>O: response
+    end
+    opt FE_OR_CCBS=CCBS, EXPIRE_DATE!=''
+        O->>OMX: OMX_SEARCH_FUT_ALL
+        OMX-->>O: response
+        O->>OMX: OMX_CAL_OFFER_FUT_DATE
+        OMX-->>O: response
+    end
+    opt EXP_TYPE!='FUT'
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER [REMOVE+IMMEDIATE]
+        CCBS-->>O: response
+        O->>PSA: PSA_UPDATE_KNOX_STATUS [COMPLETE]
+        PSA-->>O: response
+        O->>OMX: OMX_NOTI_TO_KAFKA [COMPLETE]
+        OMX-->>O: response
+    end
+    opt EXP_TYPE='FUT'
+        O->>PSA: PSA_UPDATE_KNOX_STATUS [ACTIVE]
+        PSA-->>O: response
+    end
+    opt Channel!=CCBS, trueIDTV!=''
+        O->>ICC: ICC_TVS_SUBMIT_ORDER [TDISCOTT]
+        ICC-->>O: response
+    end
+    opt Channel=CCBS, trueIDTV!=''
+        O->>ICC: ICC_TVS_SUBMIT_ORDER [TFULLOTT]
+        ICC-->>O: response
+    end
+    opt Channel!=CCBS
+        O->>OMX: OMX_SEARCH_FUT [ORDER_TYPE=18]
+        OMX-->>O: response
+        O->>OMX: OMX_EXP_FUT_BALOS [FULLSUS]
+        OMX-->>O: response
+        O->>OMX: OMX_SEARCH_FUT [ORDER_TYPE=12]
+        OMX-->>O: response
+        O->>OMX: OMX_EXP_FUT_BALOS [EXT=_CANCEL]
+        OMX-->>O: response
+    end
+    opt FE_OR_CCBS=CCBS, TR_SPECIAL_OFFER_IND=IOTBU
+        O->>TDG: TDG_RESUME_SUBSCRIBER
+        TDG-->>O: response
+    end
+    O->>MCS: MCS_GET_PACKCODE
+    MCS-->>O: response
+    opt MCS_CANCEL_AFS='Y'
+        O->>MCS: MCS_CANCEL_AFTER_SALE
+        MCS-->>O: response
+    end
+    opt CALL_VER_STATUS=PASS
+        O->>CJ: CJ_UPDATE_CALL_VERIFICATION
+        CJ-->>O: response
+    end
+    opt CALL_VER=PASS, PROFCVBAR, FE=INJECT_OFFER
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER [REMOVE]
+        CCBS-->>O: response
+        O->>OMX: OMX_GET_SRV_TRX_NO [CCD]
+        OMX-->>O: response
+        O->>AA: AA_ACTIVATE_SUBS [CCD]
+        AA-->>O: response
+    end
+    opt TSNTSS02 offer
+        O->>OMX: OMX_SUBMIT_POSTPAID_CHANGE_PACKAGE
+        OMX-->>O: response
+    end
+    O->>ATS: ATS_ENQUIRY_CAMPAIGN_CVG
+    ATS-->>O: response
+    opt TVS_NO exists
+        O->>ICC: ICC_TVS_SUBMIT_ORDER [TFULL]
+        ICC-->>O: response
+    end
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · Order Journey Documentation · RESTORE · 2026-09-23</footer>
+</body>
+</html>

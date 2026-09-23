@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CREATE_BILL_ADJUSTMENT — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+.page-header .sub{opacity:.85;font-size:.95rem;margin-top:6px}
+.meta-row{display:flex;gap:24px;flex-wrap:wrap;margin-top:14px}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.8rem}
+.container{max-width:1400px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+tr.conditional{border-left:4px solid #FFC107;background:#fffde7}
+tr.conditional:hover td{background:#fff9c4}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:16px;border-radius:8px;overflow-x:auto;font-size:.82rem;border-left:3px solid var(--true-red)}
+code{background:#f5e6e6;color:var(--true-dark);padding:2px 6px;border-radius:4px;font-size:.85rem}
+.badge{display:inline-block;padding:2px 10px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-new{background:#E8F5E9;color:#1b5e20;border:1px solid #81c784}
+.badge-exist{background:#E3F0FD;color:#0d47a1;border:1px solid #90caf9}
+.badge-high{background:#FFE0E0;color:#b71c1c;border:1px solid #ef9a9a}
+.badge-med{background:#FFF3E0;color:#e65100;border:1px solid #ffcc80}
+.info-box{background:#E3F0FD;border-left:4px solid #1565c0;padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.9rem}
+.warn-box{background:#FFF3E0;border-left:4px solid #e65100;padding:12px 16px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.9rem}
+.crit-box{background:#FFE0E0;border-left:4px solid var(--true-red);padding:14px 18px;border-radius:0 8px 8px 0;margin:12px 0;font-size:.92rem}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:16px}
+.fm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:16px;border-top:3px solid var(--true-red)}
+.fm-card h3{font-size:.95rem;color:var(--true-dark);margin-bottom:6px}
+.fm-card .steps{font-size:.8rem;color:#666;margin-bottom:8px}
+.mermaid-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card);margin-top:12px}
+details{margin:8px 0}
+details summary{cursor:pointer;padding:8px 12px;background:#F5E6E6;border-radius:6px;font-weight:600;font-size:.88rem;color:var(--true-dark)}
+details[open] summary{border-radius:6px 6px 0 0}
+details .detail-body{padding:12px;border:1px solid #f0d0d0;border-top:none;border-radius:0 0 6px 6px}
+.route-box{background:#e8f5e9;border:2px solid #43a047;border-radius:8px;padding:14px 18px;margin:8px 0}
+.route-box.route-ar{background:#E3F0FD;border-color:#1565c0}
+.route-box.route-bl{background:#FFF3E0;border-color:#e65100}
+footer{background:var(--true-deep);color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:.8rem;margin-top:32px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+</head>
+<body>
+<div class="page-header">
+  <h1>CREATE_BILL_ADJUSTMENT</h1>
+  <div class="sub">Process Configuration for CREATE_BILL_ADJUSTMENT</div>
+  <div class="meta-row">
+    <span class="meta-chip">Total steps: 4</span>
+    <span class="meta-chip">Unique FMs: 4</span>
+    <span class="meta-chip">New FM docs: 2</span>
+    <span class="meta-chip">Entry: INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE</span>
+    <span class="meta-chip">Generated: 2026-09-23</span>
+  </div>
+</div>
+<div class="container">
+
+<!-- Routing callout -->
+<div class="crit-box">
+  <strong>⚡ Mutual Exclusion Routing — BILL=Y / BILL=N</strong><br>
+  Steps 3 and 4 are <strong>mutually exclusive</strong>. After CCBS_GET_ACCOUNT_HEADER (step 2), the order routes to exactly one of:
+  <ul style="margin:8px 0 0 20px">
+    <li><strong>Step 3 (AR credit)</strong> — when <code>BILL=Y</code> in SubscriberOffers ExtendedInfo</li>
+    <li><strong>Step 4 (BL charge)</strong> — when <code>BILL=N</code> in SubscriberOffers ExtendedInfo</li>
+  </ul>
+  Both PreExecChecks are complementary — only one evaluates to true for any given order.
+</div>
+
+<!-- §2 Order Flow Table -->
+<div class="card">
+  <div class="card-header">§2 — Order Flow</div>
+  <div class="card-body">
+    <table>
+      <thead>
+        <tr>
+          <th style="width:50px">Step</th>
+          <th>Step ID</th>
+          <th>FM (ActivityID)</th>
+          <th>Parameter(s)</th>
+          <th>PreExecCheck</th>
+          <th>Previous</th>
+          <th>Next</th>
+          <th>FM Doc</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="conditional">
+          <td><strong>1</strong></td>
+          <td><code>INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE</code></td>
+          <td><a href="../FMlogic/Request_INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE.html">INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE</a></td>
+          <td>—</td>
+          <td><code>boolean(//Subscriber[ExtendedInfo[Name='PRIMARY_RESOURCE_TYPE' and Value='C']]) and exists(//SubscriberOffers/ExtendedInfo[Name='BILL'])</code></td>
+          <td>START</td>
+          <td>CCBS_GET_ACCOUNT_HEADER</td>
+          <td><span class="badge badge-new">✦ NEW</span></td>
+        </tr>
+        <tr>
+          <td><strong>2</strong></td>
+          <td><code>CCBS_GET_ACCOUNT_HEADER</code></td>
+          <td><a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></td>
+          <td>—</td>
+          <td>—</td>
+          <td>INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE</td>
+          <td>AR / BL (branch)</td>
+          <td><span class="badge badge-exist">Pre-existing</span></td>
+        </tr>
+        <tr class="conditional" style="border-left:4px solid #1565c0">
+          <td><strong>3</strong></td>
+          <td><code>AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT</code></td>
+          <td><a href="../FMlogic/Request_AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT.html">AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT</a></td>
+          <td>—</td>
+          <td><code>boolean(//SubscriberOffers[ExtendedInfo[Name='BILL' and Value='Y']])</code></td>
+          <td>CCBS_GET_ACCOUNT_HEADER</td>
+          <td>END</td>
+          <td><span class="badge badge-new">✦ NEW</span></td>
+        </tr>
+        <tr class="conditional" style="border-left:4px solid #e65100">
+          <td><strong>4</strong></td>
+          <td><code>BL_CREATE_CHARGE</code></td>
+          <td><a href="../FMlogic/Request_BL_CREATE_CHARGE.html">BL_CREATE_CHARGE</a></td>
+          <td>—</td>
+          <td><code>boolean(//SubscriberOffers[ExtendedInfo[Name='BILL' and Value='N']])</code></td>
+          <td>CCBS_GET_ACCOUNT_HEADER</td>
+          <td>END</td>
+          <td><span class="badge badge-exist">Pre-existing</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:10px;font-size:.82rem;color:#666">Rows with yellow/blue/orange left border = conditional steps (PreExecCheck present). Steps 3 and 4 are mutually exclusive branches.</p>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck Details -->
+<div class="card">
+  <div class="card-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="card-body">
+    <details open>
+      <summary>Step 1 — INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE</summary>
+      <div class="detail-body">
+        <p style="margin-bottom:8px"><strong>FM:</strong> <a href="../FMlogic/Request_INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE.html">INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE</a></p>
+        <pre>boolean(//Subscriber[ExtendedInfo[Name='PRIMARY_RESOURCE_TYPE' and Value='C']])
+and exists(//SubscriberOffers/ExtendedInfo[Name='BILL'])</pre>
+        <p style="margin-top:8px;font-size:.88rem">Two-part gate: subscriber must be type C (cellular/mobile) AND at least one SubscriberOffer must have a BILL key. If either condition fails, the entire activity is skipped and the process moves to CCBS_GET_ACCOUNT_HEADER directly.</p>
+      </div>
+    </details>
+
+    <div style="margin:16px 0">
+      <div class="route-box route-ar">
+        <strong>Step 3 — AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT (BILL=Y path)</strong>
+        <pre style="margin-top:8px;background:#fff;color:#1a1a1a;border-left:3px solid #1565c0">boolean(//SubscriberOffers[ExtendedInfo[Name='BILL' and Value='Y']])</pre>
+        <p style="font-size:.88rem;margin-top:6px">Routes to Amdocs AR charge-level credit when any SubscriberOffer has BILL=Y. Per offer with BILL=Y, sends an AR credit request (amount ← AMOUNT ExtendedInfo, taxInclude ← TAX_INCLUDE). Response writes CRM_COMPLETE_IND, CRM_CREDIT_ID, CRM_CREDIT_NOTE_NUMBER, CRM_ERROR_MESSAGE back to each offer.</p>
+      </div>
+      <div class="route-box route-bl" style="margin-top:10px">
+        <strong>Step 4 — BL_CREATE_CHARGE (BILL=N path)</strong>
+        <pre style="margin-top:8px;background:#fff;color:#1a1a1a;border-left:3px solid #e65100">boolean(//SubscriberOffers[ExtendedInfo[Name='BILL' and Value='N']])</pre>
+        <p style="font-size:.88rem;margin-top:6px">Routes to BL charge creation when any SubscriberOffer has BILL=N. Mutually exclusive with step 3.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §4 FM Index -->
+<div class="card">
+  <div class="card-header">§4 — FM Documentation Index</div>
+  <div class="card-body">
+    <div class="fm-grid">
+      <div class="fm-card">
+        <h3><a href="../FMlogic/Request_INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE.html">INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE</a></h3>
+        <div class="steps">Used in step: 1</div>
+        <p style="font-size:.82rem;margin-bottom:10px">Gets primary key (productId, productStatus) per subscriber MSISDN from INTX. Writes CRM_SUB_STATUS and SubscriberId.</p>
+        <span class="badge badge-new">✦ NEW — Generated this run</span>
+      </div>
+      <div class="fm-card">
+        <h3><a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></h3>
+        <div class="steps">Used in step: 2</div>
+        <p style="font-size:.82rem;margin-bottom:10px">Retrieves account header data from CCBS. Unconditional — always executes.</p>
+        <span class="badge badge-exist">Pre-existing</span>
+      </div>
+      <div class="fm-card" style="border-top-color:#1565c0">
+        <h3><a href="../FMlogic/Request_AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT.html">AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT</a></h3>
+        <div class="steps">Used in step: 3 (BILL=Y path)</div>
+        <p style="font-size:.82rem;margin-bottom:10px">Creates charge-level credit in Amdocs AR per SubscriberOffer (BILL=Y). Writes CRM_COMPLETE_IND, CRM_CREDIT_ID, CRM_CREDIT_NOTE_NUMBER, CRM_ERROR_MESSAGE.</p>
+        <span class="badge badge-new">✦ NEW — Generated this run</span>
+      </div>
+      <div class="fm-card" style="border-top-color:#e65100">
+        <h3><a href="../FMlogic/Request_BL_CREATE_CHARGE.html">BL_CREATE_CHARGE</a></h3>
+        <div class="steps">Used in step: 4 (BILL=N path)</div>
+        <p style="font-size:.82rem;margin-bottom:10px">Creates BL charge per SubscriberOffer (BILL=N). Mutually exclusive with AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT.</p>
+        <span class="badge badge-exist">Pre-existing</span>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="card">
+  <div class="card-header">§5 — Sequence Diagram (Mermaid)</div>
+  <div class="card-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant INTX as INTX
+    participant CCBS as CCBS
+    participant AR as AR (Amdocs)
+    participant BL as BL
+
+    opt PRIMARY_RESOURCE_TYPE=C and BILL exists
+        O->>INTX: INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE
+        INTX-->>O: productId, productStatus
+        Note over O,INTX: FM: INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE
+    end
+
+    O->>CCBS: CCBS_GET_ACCOUNT_HEADER
+    CCBS-->>O: account header data
+    Note over O,CCBS: FM: CCBS_GET_ACCOUNT_HEADER
+
+    opt BILL=Y [mutually exclusive with BILL=N]
+        O->>AR: AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT
+        AR-->>O: creditId, completeIndicator
+        Note over O,AR: FM: AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT
+    end
+
+    opt BILL=N [mutually exclusive with BILL=Y]
+        O->>BL: BL_CREATE_CHARGE
+        BL-->>O: charge result
+        Note over O,BL: FM: BL_CREATE_CHARGE
+    end
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="card">
+  <div class="card-header">§6 — Flow Diagram (Mermaid)</div>
+  <div class="card-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1{"INTX_GET_PK_LIST\nFM: INTX_GET_PK_LIST_WITHOUT_RESOURCE_TYPE\n[Conditional: PRIMARY_RESOURCE_TYPE=C AND BILL exists]"}
+    S1 -->|pass / skip| S2[CCBS_GET_ACCOUNT_HEADER\nFM: CCBS_GET_ACCOUNT_HEADER]
+    S2 --> BRANCH{BILL value?}
+    BRANCH -->|BILL=Y| S3[AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT\nFM: AR charge-level credit\nCondition: BILL=Y]
+    BRANCH -->|BILL=N| S4[BL_CREATE_CHARGE\nFM: BL charge creation\nCondition: BILL=N]
+    S3 --> END([END])
+    S4 --> END
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §7 Migration Risks -->
+<div class="card">
+  <div class="card-header">§7 — Migration Risks</div>
+  <div class="card-body">
+    <table>
+      <thead>
+        <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>BILL=Y / BILL=N routing is implicit via PreExecCheck XPath — no explicit branch node in ProcessConfig. Both steps 3 and 4 appear as sequential activities; mutual exclusion relies entirely on complementary XPath conditions.</td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>Model as an explicit branch/gateway (exclusive gateway) in the modernized workflow engine. Make the routing logic explicit and testable.</td>
+        </tr>
+        <tr>
+          <td>CES path in AR_L9_MULTI_CREATE_CHARGE_LEVEL_CREDIT is commented out — dead code for an abandoned CES routing branch.</td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>Confirm with AR team whether CES routing is still required. Remove dead code or document the decision explicitly.</td>
+        </tr>
+        <tr>
+          <td>Response audit log suppressed on AR error (chkError=true) — failed credits produce no standard audit trail.</td>
+          <td><span class="badge badge-high">HIGH</span></td>
+          <td>Always emit audit log regardless of chkError; use ERROR log level for failures rather than suppressing the event.</td>
+        </tr>
+        <tr>
+          <td>INTX response uses <code>primaryKeyInfoArray[1]</code> — only first element processed. Multi-SIM subscribers may miss alternate productIds.</td>
+          <td><span class="badge badge-med">MEDIUM</span></td>
+          <td>Validate single-SIM assumption with INTX team. Expand to iterate if multi-SIM scenarios exist.</td>
+        </tr>
+        <tr>
+          <td><code>Account[1]</code> hardcoded in both INTX and AR payloads — only first account used.</td>
+          <td><span class="badge badge-med">MEDIUM</span></td>
+          <td>Confirm that accountId is always account[0] for bill adjustment scenarios.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · Order Journey Documentation · CREATE_BILL_ADJUSTMENT · Generated 2026-09-23</footer>
+</body>
+</html>

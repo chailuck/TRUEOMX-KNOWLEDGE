@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_UPDATE_CUSTOMER_NAME_ADDRESS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;font-size:14px;background:var(--bg);color:#333}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:24px 32px}
+header h1{font-size:1.6rem;margin-bottom:4px}
+header p{opacity:.85;font-size:.9rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:12px;padding:3px 12px;font-size:.78rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:20px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+code,pre{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.82rem;line-height:1.5}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.76rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.callout{border-left:4px solid var(--info);background:#E3F0FD;padding:10px 16px;border-radius:4px;margin:10px 0}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:24px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_CCBS_UPDATE_CUSTOMER_NAME_ADDRESS</h1>
+  <p>CCBS — Update Customer Name &amp; Address (3-variant: CORP / INDY / Default)</p>
+  <div class="meta-row">
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Backend: CCBS</span>
+    <span class="meta-chip">Pattern: IntraActivitySequencing</span>
+    <span class="meta-chip">NameType: CORP(66) / INDY(73) / Default(69)</span>
+    <span class="meta-chip">Generated: 2026-09-23</span>
+  </div>
+</header>
+<div class="container">
+
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>Updates customer name and address information in CCBS. A <strong>3-way <code>xsl:choose</code></strong> on <code>NameType</code> determines which set of fields is submitted:</p>
+    <ul style="margin:10px 0 0 20px;line-height:2">
+      <li><strong>CORP (nameType=66):</strong> 8 core name elements + extended corporate block</li>
+      <li><strong>INDY (nameType=73):</strong> 10 core name elements + extended individual block</li>
+      <li><strong>Default (nameType=69):</strong> element2=PrefContactNumber only + extended block</li>
+    </ul>
+    <p style="margin-top:8px">Uses <strong>IntraActivitySequencing</strong> (ActionRequestEvent + SendFirstRequestEvent) — one request per customer. <code>ActionResponseEvent</code> in the response handler is <strong>active</strong> (not commented out).</p>
+    <div class="callout" style="margin-top:10px">
+      <strong>💡 LogicalDate:</strong> Mapped to both <code>enclosedClientInfo.logicalDate</code> and <code>ActivityDateInfo.activityDate</code>.
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_UPDATE_CUSTOMER_NAME_ADDRESS</code></td></tr>
+      <tr><td>Activity ID</td><td><code>CCBS_UPDATE_CUSTOMER_NAME_ADDRESS</code></td></tr>
+      <tr><td>Fan-in</td><td>IntraActivitySequencing (ActionRequestEvent + SendFirstRequestEvent)</td></tr>
+      <tr><td>Send pattern</td><td><code>Event.assertEvent</code> + <code>IntraActivitySequencing.SendFirstRequestEvent</code></td></tr>
+      <tr><td>RefID</td><td><code>Customer.RefId</code> (single request)</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§5 — Execution Flow</div>
+  <div class="section-body">
+    <ol style="margin-left:20px;line-height:2">
+      <li>Read LogicalDate singleton</li>
+      <li>Evaluate PreExecCheck; if resubmit: PurgePendingRequestsBeforeResubmit</li>
+      <li>Build UpdateCustomerNameAddressRequest via XSLT (3-way NameType branch)</li>
+      <li><code>Event.assertEvent(reqEvent)</code> — add to working memory</li>
+      <li><code>IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)</code></li>
+      <li>Send audit log</li>
+      <li><code>IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)</code></li>
+      <li>Set WAITING_RESPONSE; persist to DB</li>
+    </ol>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h4 style="margin-bottom:8px">§8.2 — ESB/JMS Channel</h4>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>CCBS_UPDATE_CUSTOMER_NAME_ADDRESS</code></td><td>Update customer name &amp; address</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td><code>CCBS_UPDATE_CUSTOMER_NAME_ADDRESS</code> (response)</td><td>Confirmation</td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.3 — NameType Branch Table</h4>
+    <table>
+      <tr><th>NameType</th><th>nameType Code</th><th>Name Elements</th><th>Extended Block</th></tr>
+      <tr><td>CORP</td><td>66</td><td>8 elements</td><td>Corporate: Language, AuthFirstName, AuthLastName, AuthPersonalId, POAName, POAPersonalId — conditional on isExtendedNameInfoExist</td></tr>
+      <tr><td>INDY</td><td>73</td><td>10 elements</td><td>Individual: Language, PrefContactNumber, HomePhone, BizPhone, privatePhone, AuthFirstName, AuthLastName, AuthPersonalId — conditional on isExtendedNameInfoExist</td></tr>
+      <tr><td>Default</td><td>69</td><td>element2=PrefContactNumber only</td><td>Full extended block: Language, PrefContactNumber, HomePhone, BizPhone, privatePhone, AuthFirstName, AuthLastName, AuthPersonalId, POAName, POAPersonalId — conditional on isExtendedNameInfoExist</td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.4 — Address Block</h4>
+    <p>15 <code>addressElements</code>; <code>addressType</code>: 66=CORP, 73=other (mapped from NameType).</p>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.5 — LogicalDate</h4>
+    <table>
+      <tr><th>Field</th><th>Source</th></tr>
+      <tr><td><code>enclosedClientInfo.logicalDate</code></td><td><code>LogicalDate.currentDate</code></td></tr>
+      <tr><td><code>ActivityDateInfo.activityDate</code></td><td><code>LogicalDate.currentDate</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping Tree</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent / event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/RefId</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="tree-arrow">←</span><span class="tree-src">User / Password</span><span class="tree-cond">if IsEnableUserPass='true'</span><span class="badge badge-purple">Credential-gated</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload / UpdateCustomerNameAddressRequest</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">CustomerIdInfo / CustomerNo</span><span class="tree-arrow">←</span><span class="tree-src">Customer/CustomerId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">enclosedClientInfo / logicalDate</span><span class="tree-arrow">←</span><span class="tree-src">LogicalDate.currentDate</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CustomerNameInfo</span><span class="tree-cond">[xsl:choose on NameType]</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-src-static">CORP branch (nameType=66)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">nameType</span><span class="tree-arrow">←</span><span class="tree-src-static">"66"</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">element1..element8</span><span class="tree-arrow">←</span><span class="tree-src">Customer.NameInfo fields</span><span class="badge badge-green">Always (8 elements)</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ExtendedNameInfo</span><span class="tree-cond">if isExtendedNameInfoExist</span><span class="badge badge-orange">Conditional</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-src-static">INDY branch (nameType=73)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">nameType</span><span class="tree-arrow">←</span><span class="tree-src-static">"73"</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">element1..element10</span><span class="tree-arrow">←</span><span class="tree-src">Customer.NameInfo fields</span><span class="badge badge-green">Always (10 elements)</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ExtendedNameInfo</span><span class="tree-cond">if isExtendedNameInfoExist</span><span class="badge badge-orange">Conditional</span></div></li>
+                    </ul>
+                  </li>
+                  <li><div class="tree-row"><span class="tree-src-static">Default branch (nameType=69)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">nameType</span><span class="tree-arrow">←</span><span class="tree-src-static">"69"</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">element2=PrefContactNumber</span><span class="tree-arrow">←</span><span class="tree-src">Customer.PrefContactNumber</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ExtendedNameInfo (full)</span><span class="tree-cond">if isExtendedNameInfoExist</span><span class="badge badge-orange">Conditional</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">CustomerAddressInfo</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">addressType</span><span class="tree-arrow">←</span><span class="tree-src-static">"66" if NameType=CORP, else "73"</span><span class="badge badge-orange">Conditional</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">addressElement1..15</span><span class="tree-arrow">←</span><span class="tree-src">Customer.AddressInfo fields</span><span class="badge badge-green">Always (15 elements)</span></div></li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ActivityDateInfo / activityDate</span><span class="tree-arrow">←</span><span class="tree-src">LogicalDate.currentDate</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ActivityInfo / ActivityReason</span><span class="tree-arrow">←</span><span class="tree-src">ActivityReason param or "CREQ"</span><span class="badge badge-green">Always</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§17 — Migration Notes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>3-way NameType branch — each variant maps different fields to the same API</td><td><span class="badge badge-red">[HIGH]</span></td><td>Document all three variants explicitly in new API spec; validate NameType values at order entry</td></tr>
+      <tr><td>IntraActivitySequencing ActionResponseEvent is ACTIVE (not commented out) — unlike CCBS_CHANGE_CUSTOMER_GENERAL_INFO</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Verify IntraActivitySequencing engine compatibility in modernized platform</td></tr>
+      <tr><td>Extended name block (10+ sub-fields) gated on isExtendedNameInfoExist — absent value = silent skip</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Validate flag presence before update; document which fields require extended block</td></tr>
+      <tr><td>LogicalDate injected into two separate fields (enclosedClientInfo + ActivityDateInfo)</td><td><span class="badge badge-blue">[LOW]</span></td><td>Confirm both CCBS fields serve the same purpose; simplify if redundant</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h4>§19.1 — Overview</h4>
+    <p><code>Response_CCBS_UPDATE_CUSTOMER_NAME_ADDRESS</code>: Creates <code>CCBS_UpdateCustomerNameAddress</code> concept. Uses <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> — <strong>active, not commented out</strong>.</p>
+    <h4 style="margin-top:12px">§19.3 — Response Concept (<code>CCBS_UpdateCustomerNameAddress</code>)</h4>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">CCBS_UpdateCustomerNameAddress</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">extId</span><span class="tree-arrow">←</span><span class="tree-src-static">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h4 style="margin-top:12px">§19.4 — Fan-in &amp; IntraActivitySequencing</h4>
+    <pre>// ActionResponseEvent is ACTIVE here (NOT commented out)
+IntraActivitySequencing.ActionResponseEvent(currActivity)
+// simple count fan-in commented out in source:
+// count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"]) == currActivity.RequestCount</pre>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

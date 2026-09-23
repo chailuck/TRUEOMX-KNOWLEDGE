@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_AA_UPDATE_SHARE_PLAN_PROFILE</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6;font-size:.9rem}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.7rem;font-weight:700;font-family:monospace}header p{margin-top:6px;opacity:.85}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+main{max-width:1200px;margin:0 auto;padding:28px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:18px}table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}tr:hover td{background:#fdf5f5}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 6px;font-size:.82rem;font-family:monospace}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:1px}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.callout-info{border-left:4px solid #1565c0;background:#E3F2FD;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.callout-warn{border-left:4px solid #e65100;background:#FFF3E0;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:monospace;font-size:.83rem}.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;padding:1px 6px;border-radius:4px;background:rgba(166,227,161,.1)}
+.tree-src-static{color:#fab387;padding:1px 6px;border-radius:4px;background:rgba(250,179,135,.1)}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;font-size:.78rem;color:#888;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_AA_UPDATE_SHARE_PLAN_PROFILE</h1>
+  <p>Updates AA subscriber profile for SharePlan assignment — reuses AA_ACTIVATE_SUBS event with MNUM AATags; propagates RequestCount to AA_CHECK_CONFIRMATION</p>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span><span class="meta-badge">Target: AA</span>
+    <span class="meta-badge">Event: AA_ACTIVATE_SUBS (reused)</span><span class="meta-badge">Scope: ParentOU + ChildOU</span>
+    <span class="meta-badge">Author: SathidP-PC</span><span class="meta-badge">LogLevel: ERROR (anomaly)</span>
+  </div>
+</header>
+<main>
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <div class="callout">
+      <strong>AA_UPDATE_SHARE_PLAN_PROFILE</strong> updates the AA (Activation &amp; Assurance) system with the SharePlan multi-number (MNUM) profile for each subscriber. It reuses the <code>AA_ACTIVATE_SUBS</code> event and request schema, but sets specific AATags for the SharePlan relationship: MNUM/MAIN=SHAREPLAN_MAIN_NUMBER and MNUM/CHILD=subscriber MSISDN. After sending, it copies its <code>RequestCount</code> to the corresponding <code>AA_CHECK_CONFIRMATION</code> activity (same Parameter[0]).
+    </div>
+    <div class="callout-warn">
+      <strong>⚠ Anomalies:</strong><br/>
+      1. <strong>Audit log level = ERROR</strong> (unusual for a request log — typically INFO)<br/>
+      2. <strong>RequestCount propagation:</strong> Copies RequestCount to AA_CHECK_CONFIRMATION activity with matching Parameter[0] — ensures confirmation step knows how many responses to wait for
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table><thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_AA_UPDATE_SHARE_PLAN_PROFILE</code></td></tr>
+        <tr><td>ActivityID match</td><td><code>AA_UPDATE_SHARE_PLAN_PROFILE</code></td></tr>
+        <tr><td>Event type reused</td><td><code>Events.OMConsumers.OMXFM.Request.AA_ACTIVATE_SUBS</code></td></tr>
+        <tr><td>Required parameters</td><td>Parameter[0] (transaction type, e.g. CCD/UPDATE_PROFILE), Parameter[1], Parameter[2]</td></tr>
+        <tr><td>Subscriber scope</td><td>ParentOU + ChildOU (dual iteration)</td></tr>
+        <tr><td>Fan-in</td><td>Standard RefId + CompletionStatus==2</td></tr>
+        <tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate()</code></td></tr>
+        <tr><td>Post-send action</td><td>Propagates RequestCount to AA_CHECK_CONFIRMATION activity (same Parameter[0])</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol style="padding-left:18px;line-height:2">
+      <li>Validate parameters present (throw DATA_ISSUE if empty)</li>
+      <li>Iterate ParentOU → Subscriber: evaluate PreExecCheck, determine pp/prev_pp from FE_OR_CCBS offer flags</li>
+      <li>Call <code>ProcessSwitchFeatures()</code> and <code>ConvertBillCycleDate()</code></li>
+      <li>Build AA_ACTIVATE_SUBS event with MNUM AATags: MNUM/MNUM=Y, MNUM/MAIN=SHAREPLAN_MAIN_NUMBER, MNUM/CHILD=MSISDN</li>
+      <li>Send <code>sendEventImmediate()</code>; increment RequestCount</li>
+      <li>Repeat for ChildOU → Subscriber (same logic)</li>
+      <li>After all iterations: find AA_CHECK_CONFIRMATION activity with same Parameter[0]; set its RequestCount = this activity's RequestCount</li>
+      <li>Set status "1"; persist</li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <table><thead><tr><th>Direction</th><th>Event</th><th>System</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge" style="background:#E3F2FD;color:#1565c0">OUTBOUND</span></td><td><code>AA_ACTIVATE_SUBS</code></td><td>AA</td><td>Update subscriber with SharePlan MNUM profile</td></tr>
+      </tbody>
+    </table>
+    <h4 style="margin:14px 0 8px;color:var(--true-dark)">§8.5 ExtendedInfo / AATags</h4>
+    <table><thead><tr><th>Source Field</th><th>Maps To</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td><code>ExtendedInfo[SHAREPLAN_MAIN_NUMBER]</code></td><td>AATags[MNUM/MAIN]</td><td>Main SharePlan MSISDN</td></tr>
+        <tr><td>Subscriber MSISDN</td><td>AATags[MNUM/CHILD]</td><td>Child subscriber MSISDN</td></tr>
+        <tr><td>Subscriber AA_XML_Array</td><td>AATags (append)</td><td>Existing AA feature tags carried forward</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§9 — Key Payload Fields (AA_ACTIVATE_SUBS)</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">ActivateSubscriberRequest</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">subscriptioninfo</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">SRV_TRX_TP_CD</span><span class="tree-arrow">←</span><span class="tree-src-static">"CCD"</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PP</span><span class="tree-arrow">←</span><span class="tree-src">pp (from FE_OR_CCBS offer flags)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">AATags</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">AAXML</span> <span class="tree-cond">MNUM/MNUM=Y (always)</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">AAXML</span> <span class="tree-cond">MNUM/MAIN=SHAREPLAN_MAIN_NUMBER</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">AAXML</span> <span class="tree-cond">MNUM/CHILD=Subscriber.MSISDN</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">AAXML[]</span> <span class="tree-cond">from subscriberInstance.AA_XML_Array (existing tags)</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table><thead><tr><th>#</th><th>Requirement</th><th>Risk</th></tr></thead>
+      <tbody>
+        <tr><td>R1</td><td>RequestCount propagation to AA_CHECK_CONFIRMATION</td><td>Target must replicate the fan-in count synchronization between this activity and AA_CHECK_CONFIRMATION</td></tr>
+        <tr><td>R2</td><td>AATags MNUM structure</td><td>AA system must support MNUM feature group with MAIN/CHILD parameters for SharePlan</td></tr>
+        <tr><td>R3</td><td>ERROR log level anomaly</td><td>Likely intentional for visibility; target logging should preserve this distinction</td></tr>
+        <tr><td>R4</td><td>Dual OU iteration</td><td>Both ParentOU and ChildOU subscribers must be updated with SharePlan profile</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_AA_UPDATE_SHARE_PLAN_PROFILE</footer>
+</body></html>

@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_SAVE_RESOURCE_INFO</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6;font-size:.9rem}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.8rem;font-weight:700;font-family:monospace}
+header p{margin-top:6px;opacity:.85;font-size:.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+main{max-width:1200px;margin:0 auto;padding:28px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:18px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 6px;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:14px;overflow-x:auto;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red);white-space:pre-wrap}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:1px}
+.b-omx{background:#FFE0E0;color:var(--true-dark)}
+.b-internal{background:#E0F7FA;color:#006064}
+.b-always{background:#E8F5E9;color:#2e7d32}
+.b-cond{background:#FFF3E0;color:#e65100}
+.b-req{background:#FCE4EC;color:#c62828}
+.b-opt{background:#F3E5F5;color:#6a1b9a}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.callout-info{border-left:4px solid #1565c0;background:#E3F2FD;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;font-size:.78rem;color:#888;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_OMX_SAVE_RESOURCE_INFO</h1>
+  <p>Saves partial order state (swapsim) to downstream OMX system — persists subscriber resource and offer data mid-flow</p>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">ForwardChain: true</span>
+    <span class="meta-badge">Target: OMX Internal</span>
+    <span class="meta-badge">Event: OMX_SAVE_PARTIAL_ORDER</span>
+    <span class="meta-badge">Scope: ParentOU + ChildOU</span>
+  </div>
+</header>
+<main>
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <div class="callout">
+      <strong>OMX_SAVE_RESOURCE_INFO</strong> persists a partial order record to an OMX downstream system at the mid-point of a SIM-swap or resource change flow. It fires the <code>OMX_SAVE_PARTIAL_ORDER</code> event with <code>status="swapsim"</code>, carrying the full subscriber context, offers, resource info, and extended info arrays. Required for the GET_AND_CONFIRM_RESOURCE order flow.
+    </div>
+    <table>
+      <thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_SAVE_RESOURCE_INFO</code></td></tr>
+        <tr><td>ActivityID match</td><td><code>OMX_SAVE_RESOURCE_INFO</code></td></tr>
+        <tr><td>Priority</td><td>5</td></tr>
+        <tr><td>ForwardChain</td><td>true</td></tr>
+        <tr><td>Required parameter</td><td>ACTION (validated via GetActivityParameterValueFromKey)</td></tr>
+        <tr><td>Target system</td><td>OMX internal — <code>OMX_SAVE_PARTIAL_ORDER</code> event</td></tr>
+        <tr><td>Subscriber scope</td><td>ParentOU[p] → Subscriber[ps] &amp;&amp; ChildOU[c] → Subscriber[cs]</td></tr>
+        <tr><td>Fan-in strategy</td><td>Per-subscriber response: CompletionStatus==2 + ReferenceId match</td></tr>
+        <tr><td>Status on completion</td><td>GetActivityStatusString("1", false)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Field</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Rule file</td><td><code>Request_OMX_SAVE_RESOURCE_INFO.rule</code></td></tr>
+        <tr><td>Rule namespace</td><td><code>Rules.OMConsumers.OMXFM.Request</code></td></tr>
+        <tr><td>When condition</td><td>ActivityID == "OMX_SAVE_RESOURCE_INFO" &amp;&amp; Status == "WAITING" &amp;&amp; NextActivityID match</td></tr>
+        <tr><td>Event type sent</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_SAVE_PARTIAL_ORDER</code></td></tr>
+        <tr><td>Send method</td><td><code>Event.sendEvent()</code> (asynchronous)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§3 — Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Variable</th><th>Type</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Source of all order data — customer, subscriber, resource info, extended info</td></tr>
+        <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity config — parameters, response array, RequestCount</td></tr>
+        <tr><td><code>nextAct</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Loaded for PreExecCheck evaluation per subscriber</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <pre>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName
+orderCurrentActivity.ActivityID == "OMX_SAVE_RESOURCE_INFO"
+orderRequest.ProcessFlow.NextActivityID == "OMX_SAVE_RESOURCE_INFO"
+orderCurrentActivity.Status == "WAITING"</pre>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol style="padding-left:18px;line-height:2">
+      <li>Validate required parameter ACTION via <code>GetActivityParameterValueFromKey</code>; throw DATA_ISSUE if absent</li>
+      <li>Iterate ParentOU[p] → Subscriber[ps]: check if response already received (CompletionStatus==2 + RefId match)</li>
+      <li>Evaluate PreExecCheck per subscriber (if defined)</li>
+      <li>Build <code>OMX_SAVE_PARTIAL_ORDER</code> event via XSLT; include full subscriber context, offers, resources, extended info</li>
+      <li>Send event (<code>Event.sendEvent()</code>); increment RequestCount; log audit</li>
+      <li>Repeat for ChildOU[c] → Subscriber[cs] (same logic)</li>
+      <li>Set activity status to "1" (SENT); persist via <code>SendDataToDB</code></li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h4 style="color:var(--true-dark);margin-bottom:10px">§8.2 ESB / JMS Channel</h4>
+    <table>
+      <thead><tr><th>Direction</th><th>Event Type</th><th>Target System</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge b-omx">OUTBOUND</span></td><td><code>OMX_SAVE_PARTIAL_ORDER</code></td><td>OMX Internal</td><td>Persist partial order with swapsim status</td></tr>
+      </tbody>
+    </table>
+    <h4 style="color:var(--true-dark);margin:14px 0 10px">§8.3 Backend API Details</h4>
+    <div class="callout-info">
+      <strong>Schema:</strong> <code>ns:SubmitOrderRequest</code><br/>
+      <strong>Status hardcoded:</strong> "swapsim" — this FM is specific to SIM-swap partial order persistence<br/>
+      <strong>RefID:</strong> per-subscriber pSubRefId / cSubRefId — drives per-subscriber fan-in
+    </div>
+    <h4 style="color:var(--true-dark);margin:14px 0 10px">§8.5 ExtendedInfo Fields Required</h4>
+    <table>
+      <thead><tr><th>Key</th><th>Source</th><th>Required?</th></tr></thead>
+      <tbody>
+        <tr><td><code>PARTIAL_ORDER_ID</code></td><td>OrderData.ExtendedInfo</td><td><span class="badge b-cond">Conditional</span></td></tr>
+        <tr><td><code>ICC_ID_CHG_SUM</code></td><td>Subscriber.ExtendedInfo</td><td><span class="badge b-cond">Conditional</span></td></tr>
+        <tr><td>All order/customer/account/agreement/subscriber ExtendedInfo</td><td>Respective object arrays</td><td><span class="badge b-cond">Pass-through</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§9 — Detailed Payload Build (SubmitOrderRequest)</div>
+  <div class="card-body">
+    <div class="callout-info">Payload schema: <code>ns:SubmitOrderRequest</code> — sent to OMX_SAVE_PARTIAL_ORDER event</div>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">SubmitOrderRequest</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">OMXTrackingId</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge b-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">partialOrderId</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[PARTIAL_ORDER_ID]/Value</span> <span class="badge b-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">status</span><span class="tree-arrow">←</span><span class="tree-src-static">"swapsim"</span> <span class="badge b-always">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">orderId</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge b-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">channel</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Channel</span> <span class="badge b-always">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">serviceId</span><span class="tree-arrow">←</span><span class="tree-src">Subscriber.MSISDN</span> <span class="badge b-always">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">iccid_chksum</span><span class="tree-arrow">←</span><span class="tree-src">Subscriber.ExtendedInfo[ICC_ID_CHG_SUM]/Value</span> <span class="badge b-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">action</span><span class="tree-arrow">←</span><span class="tree-src">Activity.Parameter[ACTION]</span> <span class="badge b-always">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">customerInfo</span> <span class="tree-cond">name, email, title, firstName, lastName, customerType, birthdate, gender, subscriberType</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">subscriberOffer[]</span><span class="tree-arrow">←</span><span class="tree-src">for-each SubscriberOffers → offerName, serviceType</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">subscriberResource[]</span><span class="tree-arrow">←</span><span class="tree-src">for-each ResourceInfo → resourceName, valuesArray</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">orderExtendedInfo[]</span><span class="tree-arrow">←</span><span class="tree-src">for-each OrderData.ExtendedInfo</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">customerExtendedInfo[]</span><span class="tree-arrow">←</span><span class="tree-src">for-each Customer.ExtendedInfo</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">accountExtendedInfo[]</span><span class="tree-arrow">←</span><span class="tree-src">for-each Account[RefId=AccountRefId].ExtendedInfo</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">agreementExtendedInfo[]</span><span class="tree-arrow">←</span><span class="tree-src">for-each Agreement.ExtendedInfo (ParentOU or ChildOU)</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">subscriberExtendedInfo[]</span><span class="tree-arrow">←</span><span class="tree-src">for-each Subscriber.ExtendedInfo</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§12 — Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Condition</th><th>Action</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>At least one subscriber request sent</td><td><code>GetActivityStatusString("1", false)</code></td><td>SENT (1)</td></tr>
+        <tr><td>All subscribers skipped</td><td><code>SkipActivity(..., "4")</code></td><td>SKIPPED (4)</td></tr>
+        <tr><td>Exception</td><td><code>HandleActivityException()</code></td><td>ERROR</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>#</th><th>Requirement</th><th>Notes</th></tr></thead>
+      <tbody>
+        <tr><td>R1</td><td>OMX_SAVE_PARTIAL_ORDER endpoint required</td><td>OMX-internal service; must be available in target architecture</td></tr>
+        <tr><td>R2</td><td>ACTION parameter mandatory</td><td>Order must supply ACTION in activity parameters; absence throws DATA_ISSUE</td></tr>
+        <tr><td>R3</td><td>Dual-OU iteration</td><td>Both ParentOU and ChildOU subscribers processed — target must handle multi-subscriber payloads</td></tr>
+        <tr><td>R4</td><td>status="swapsim" hardcoded</td><td>This FM is exclusively for SIM-swap partial order saves; other flows need separate FMs</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule</div>
+  <div class="card-body">
+    <div class="callout-info"><strong>Response file:</strong> <code>Response_OMX_SAVE_RESOURCE_INFO.rulefunction</code> — found</div>
+    <h4 style="margin:12px 0 8px;color:var(--true-dark)">§19.1 Overview</h4>
+    <p>Receives <code>OMX_SAVE_PARTIAL_ORDER</code> response. Constructs ResponseBase from event fields; logs audit; checks if all parallel requests succeeded.</p>
+    <h4 style="margin:12px 0 8px;color:var(--true-dark)">§19.2 Scope Variables</h4>
+    <table>
+      <thead><tr><th>Variable</th><th>Type</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td><code>orderRequest</code></td><td>OrderRequest</td><td>Source order</td></tr>
+        <tr><td><code>eventResponse</code></td><td>OMX_SAVE_PARTIAL_ORDER</td><td>Backend response event</td></tr>
+        <tr><td><code>currActivity</code></td><td>Activity</td><td>Current activity for tracking</td></tr>
+      </tbody>
+    </table>
+    <h4 style="margin:12px 0 8px;color:var(--true-dark)">§19.3 ResponseBase Construction</h4>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">object</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge b-always">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span> <span class="badge b-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span> <span class="badge b-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span> <span class="badge b-cond">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span> <span class="badge b-cond">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h4 style="margin:12px 0 8px;color:var(--true-dark)">§19.4 Response Completion Logic</h4>
+    <div class="callout-info">
+      <strong>Success XPath:</strong> <code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code><br/>
+      <strong>Fan-in condition:</strong> <code>currActivity.RequestCount == successResponseCount</code><br/>
+      → returns "true" when all sent requests have received ResponseCode ending in "000"<br/>
+      → returns "false" if any are still pending or failed
+    </div>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_OMX_SAVE_RESOURCE_INFO</footer>
+</body>
+</html>

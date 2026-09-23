@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_EXP_FUT_BALOS</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+header p{margin-top:6px;opacity:.85;font-size:.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+main{max-width:1200px;margin:0 auto;padding:32px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:28px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 6px;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red);margin:10px 0}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:1px}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}
+.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}
+.b-jms{background:#FFE0B2;color:#E65100}
+.b-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:12px;margin:8px 0}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.callout-warn{background:#FFF8E1;border-left:4px solid #FFC107;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.875rem}
+.callout-high{background:#FFEBEE;border-left:4px solid var(--true-red);border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.875rem}
+.callout-info{background:#E3F2FD;border-left:4px solid #1565c0;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.875rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;font-size:.8rem;color:#888;border-top:1px solid var(--border);margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_OMX_EXP_FUT_BALOS</h1>
+  <p>Expire future orders from a prior OMX_SEARCH_FUT result — dual usage: FULLSUS/FCVG/CCVG expiry (step 36) and CANCEL expiry (step 38, EXT=_CANCEL)</p>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">ForwardChain: true</span>
+    <span class="meta-badge">Target: OMX (internal)</span>
+    <span class="meta-badge">Event: OMX_UPDATE_FUTURE</span>
+    <span class="meta-badge">Fan-in: hardcoded "true"</span>
+    <span class="meta-badge">Used in RESTORE: Steps 36, 38</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>This FM reads the results of a prior <code>OMX_SEARCH_FUT</code> activity from the ProcessFlow working memory and sets matching future orders to status=4 (expired). It is called twice in RESTORE:</p>
+    <ul style="margin:10px 0 0 20px">
+      <li><strong>Step 36</strong> (no EXT param): reads from activity extId <code>PROCESS:OMX_SEARCH_FUT</code>; expires FULLSUS future orders with ActivityReason=SUS1 or FCVG, and CANSUB orders with ActivityReason=CCVG.</li>
+      <li><strong>Step 38</strong> (EXT=_CANCEL param): reads from activity extId <code>PROCESS:OMX_SEARCH_FUT_CANCEL</code>; type set to "CANCEL"; same filter criteria.</li>
+    </ul>
+    <br/>
+    <div class="callout-high">
+      <strong>Fan-in: hardcoded "true"</strong> — The response rulefunction always returns <code>"true"</code> regardless of ResponseCode. There is no per-subscriber loop and no RequestCount check. Any failure from OMX_UPDATE_FUTURE is silently accepted.
+    </div>
+    <br/>
+    <div class="callout-warn">
+      <strong>Logger OPERATION_NAME:</strong> Both request and response loggers use <code>"OMX_EXP_FUT"</code> — not <code>"OMX_EXP_FUT_BALOS"</code>.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_EXP_FUT_BALOS</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Author</td><td>usuf-chu</td></tr>
+      <tr><td>Target system</td><td>OMX (internal future order management)</td></tr>
+      <tr><td>JMS event dispatched</td><td><code>Events.OMConsumers.OMXFM.Request.OMX_UPDATE_FUTURE</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.OMX_UpdateFutureRes</code></td></tr>
+      <tr><td>Fan-in method</td><td>Hardcoded — always returns "true"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+  <div class="card-header">§3 — Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order context; ProcessFlow.Activities scanned for prior OMX_SEARCH_FUT response</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity; Parameter[] determines EXT suffix</td></tr>
+    </table>
+    <br/>
+    <p><strong>Prior activity result read from ProcessFlow.Activities[]:</strong></p>
+    <table>
+      <tr><th>ActivityExtId</th><th>Used when</th></tr>
+      <tr><td><code>PROCESS:OMX_SEARCH_FUT</code></td><td>No EXT parameter (step 36)</td></tr>
+      <tr><td><code>PROCESS:OMX_SEARCH_FUT_CANCEL</code></td><td>EXT=_CANCEL parameter (step 38)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN -->
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <pre><span style="color:#cba6f7">orderCurrentActivity</span><span style="color:#89b4fa">@extId</span> == <span style="color:#cba6f7">orderRequest</span>.ProcessFlow.<span style="color:#a6e3a1">NextActivityName</span>;
+<span style="color:#cba6f7">orderCurrentActivity</span>.<span style="color:#a6e3a1">ActivityID</span> == <span style="color:#a6e3a1">"OMX_EXP_FUT_BALOS"</span>;
+<span style="color:#cba6f7">orderRequest</span>.ProcessFlow.<span style="color:#a6e3a1">NextActivityID</span> == <span style="color:#a6e3a1">"OMX_EXP_FUT_BALOS"</span>;
+<span style="color:#cba6f7">orderCurrentActivity</span>.<span style="color:#a6e3a1">Status</span> == <span style="color:#a6e3a1">"WAITING"</span>;</pre>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+  <div class="card-header">§5 — Execution Flow Diagram</div>
+  <div class="card-body">
+    <div class="flow-step"><div class="flow-num">1</div><div>Evaluate PreExecCheck on serialised orderRequest (order-level, not subscriber-level)</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div>Build <code>reqActivityExtID = ProcessFlow@extId + ":OMX_SEARCH_FUT"</code>; set <code>type = "FULLSUS"</code></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div>Parse Parameter[] looking for key <code>EXT</code>; if found: append EXT value to reqActivityExtID, set <code>type = "CANCEL"</code></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div>Scan ProcessFlow.Activities[] for activity whose extId matches reqActivityExtID; read its Response[0] as <code>future</code></div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div>If <code>future != null</code> and <code>future.FutureOrders.length &gt; 0</code>: build <code>OMX_UPDATE_FUTURE</code> event with filter</div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div>Guard: send event only if <code>count(futureOrder) &gt; 0</code> in the built event; increment RequestCount; send audit log</div></div>
+    <div class="flow-step"><div class="flow-num">7</div><div>If isSkipped → SkipActivity("4"); else status=PROCESSING + SendDataToDB</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action details -->
+<div class="card">
+  <div class="card-header">§6 — Rule Action (THEN) — Key Details</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Parameter-driven source lookup</h3>
+    <pre>reqActivityExtID = orderRequest.ProcessFlow@extId + ":OMX_SEARCH_FUT"
+type = "FULLSUS"
+
+<span style="color:#6c7086">// If Parameter EXT=_CANCEL:</span>
+reqActivityExtID += "_CANCEL"   <span style="color:#6c7086">// → "...OMX_SEARCH_FUT_CANCEL"</span>
+type = "CANCEL"</pre>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">FutureOrder filter criteria</h3>
+    <p>Only future orders matching these criteria are included in the expiry payload:</p>
+    <table>
+      <tr><th>futureType</th><th>ActivityReason</th><th>Included</th></tr>
+      <tr><td><code>FULLSUS</code></td><td><code>SUS1</code></td><td>Yes</td></tr>
+      <tr><td><code>FULLSUS</code></td><td><code>FCVG</code></td><td>Yes</td></tr>
+      <tr><td><code>CANSUB</code></td><td><code>CCVG</code></td><td>Yes</td></tr>
+      <tr><td>Anything else</td><td>Any</td><td>No</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Expiry payload fields</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td><code>ns:futureOrderId</code></td><td><code>FutureOrderId</code> from search result</td></tr>
+      <tr><td><code>ns:status</code></td><td><code>4</code> (hardcoded — expired)</td></tr>
+      <tr><td><code>ns:orderType</code></td><td><code>OrderType</code> from search result</td></tr>
+      <tr><td><code>ns:nodeLevel</code></td><td><code>NodeLevel</code> from search result</td></tr>
+      <tr><td><code>ns:nodeId</code></td><td><code>NodeId</code> from search result</td></tr>
+      <tr><td><code>ns:updatedDate</code></td><td><code>UpdatedDate</code> from search result</td></tr>
+      <tr><td><code>ns:updatedBy</code></td><td><code>"OMX"</code> (hardcoded)</td></tr>
+      <tr><td><code>ns:remark</code></td><td><code>concat(existing Remark + "Remove &lt;type&gt; From restore order : " + OMXTrackingId)</code></td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Guard: empty payload</h3>
+    <p>After building the event, checks <code>count($reqEvent/payload/xsd2:futureOrders/xsd2:futureOrder) &gt; 0</code> before sending. If no orders match the filter, the event is not sent and the activity is skipped.</p>
+  </div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="card">
+  <div class="card-header">§7 — Data Extraction — Parameter Parsing</div>
+  <div class="card-body">
+    <p>Parameters in the ProcessConfig are key=value pairs parsed using <code>tib:tokenize($param, "=")</code>:</p>
+    <table>
+      <tr><th>Key</th><th>Value</th><th>Effect</th></tr>
+      <tr><td><code>EXT</code></td><td><code>_CANCEL</code></td><td>Appends to reqActivityExtID; sets type="CANCEL"</td></tr>
+    </table>
+    <p style="margin-top:8px">No EXT parameter → default behaviour (FULLSUS type, OMX_SEARCH_FUT source).</p>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin:0 0 10px">§8.2 ESB / JMS</h3>
+    <table>
+      <tr><th>Direction</th><th>Event</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge b-jms">OUTBOUND</span></td><td><code>OMX_UPDATE_FUTURE</code></td><td>OMX future order service</td><td>Set matched future orders to status=4 (expired)</td></tr>
+      <tr><td><span class="badge b-log">LOG</span></td><td><code>Logger</code></td><td>OMX audit</td><td>Request/response trace (OPERATION_NAME="OMX_EXP_FUT")</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin:0 0 10px">§8.3 Backend API</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>OMX (internal)</td></tr>
+      <tr><td>Payload root</td><td><code>ns:futureOrders</code></td></tr>
+      <tr><td>Schema</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/OMX/FutureOrder.xsd</code></td></tr>
+      <tr><td>Target status</td><td>4 (expired — hardcoded)</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin:0 0 10px">§8.4 BE Working Memory Read</h3>
+    <table>
+      <tr><th>Source</th><th>ExtId Pattern</th><th>Field read</th></tr>
+      <tr><td>ProcessFlow.Activities[].Response[0]</td><td><code>PROCESS:OMX_SEARCH_FUT</code> or <code>PROCESS:OMX_SEARCH_FUT_CANCEL</code></td><td><code>Concepts.FM.Response.OMX_SearchFutureRes</code> → FutureOrders[]</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 Tree -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree</div>
+  <div class="card-body">
+    <p><em>Single variant (no ParentOU/ChildOU loop — order-level operation)</em></p>
+    <ul class="xslt-tree" style="background:#1e1e2e;padding:16px;border-radius:8px;margin-top:8px">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="tree-cond">[Conditional: User present]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="tree-cond">[Conditional: Password present]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:futureOrders</span> <span class="badge b-green">xsl:for-each on future.FutureOrders (filtered)</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-cond">Filter: (futureType='FULLSUS' and ActivityReason='SUS1') or (futureType='FULLSUS' and ActivityReason='FCVG') or (futureType='CANSUB' and ActivityReason='CCVG')</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns:futureOrder</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:futureOrderId</span><span class="tree-arrow">←</span><span class="tree-src">FutureOrderId</span><span class="tree-cond">[Conditional]</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:status</span><span class="tree-arrow">←</span><span class="tree-src-static">4</span> <span class="badge b-green">Always (hardcoded)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:orderType</span><span class="tree-arrow">←</span><span class="tree-src">OrderType</span><span class="tree-cond">[Conditional]</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:nodeLevel</span><span class="tree-arrow">←</span><span class="tree-src">NodeLevel</span><span class="tree-cond">[Conditional]</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:nodeId</span><span class="tree-arrow">←</span><span class="tree-src">NodeId</span><span class="tree-cond">[Conditional]</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:updatedDate</span><span class="tree-arrow">←</span><span class="tree-src">UpdatedDate</span><span class="tree-cond">[Conditional]</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:updatedBy</span><span class="tree-arrow">←</span><span class="tree-src-static">"OMX"</span> <span class="badge b-green">Always (hardcoded)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns:remark</span><span class="tree-arrow">←</span><span class="tree-src">concat(current()/Remark + "Remove &lt;type&gt; From restore order : " + OMXTrackingId)</span> <span class="badge b-green">Always</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <br/>
+    <p><strong>Legend:</strong> <span class="tree-tag">Tag</span> = XML element &nbsp; <code>←</code> = source &nbsp; <span class="tree-src">Green</span> = XPath &nbsp; <span class="tree-src-static">Orange</span> = literal/hardcoded &nbsp; <span class="tree-cond">Purple italic</span> = condition</p>
+  </div>
+</div>
+
+<!-- §11 Audit -->
+<div class="card">
+  <div class="card-header">§11 — Audit Logging</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"OMX_EXP_FUT"</code> ⚠ (not OMX_EXP_FUT_BALOS)</td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for OMX_EXP_FUT"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="card">
+  <div class="card-header">§12 — Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Transition</th><th>Condition</th><th>Method</th></tr>
+      <tr><td>WAITING → PROCESSING</td><td>Event sent (count(futureOrder) &gt; 0)</td><td><code>GetActivityStatusString("1", false)</code></td></tr>
+      <tr><td>WAITING → SKIPPED</td><td>PreExecCheck fails OR no matching future orders</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception -->
+<div class="card">
+  <div class="card-header">§13 — Exception / Error Handling</div>
+  <div class="card-body">
+    <p>Wrapped in <code>try/catch(Exception ae)</code>. On exception: <code>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></p>
+  </div>
+</div>
+
+<!-- §14 Helpers -->
+<div class="card">
+  <div class="card-header">§14 — Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Instance.serializeUsingDefaults(orderRequest)</code></td><td>Serialise full orderRequest for order-level PreExecCheck</td></tr>
+      <tr><td><code>Helpers.GetActivityStatusString</code></td><td>Status string lookup</td></tr>
+      <tr><td><code>Helpers.SendDataToDB</code></td><td>Persist order state</td></tr>
+      <tr><td><code>Helpers.SkipActivity</code></td><td>Skip + advance</td></tr>
+      <tr><td><code>Helpers.HandleActivityException</code></td><td>Exception handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_OMX_EXP_FUT_BALOS
+├── Instance.serializeUsingDefaults(orderRequest)          [PreExecCheck serialisation]
+├── ProcessFlow.Activities[] scan                          [find prior OMX_SEARCH_FUT result]
+├── Event.Ext.sendEventImmediate(OMX_UPDATE_FUTURE)        [if count(futureOrder)>0]
+├── Helpers.GetActivityStatusString("1", false)
+├── Helpers.SendDataToDB
+├── Helpers.SkipActivity("4")
+└── Helpers.HandleActivityException                        [catch]</pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Two modes driven by EXT parameter: FULLSUS mode (step 36) and CANCEL mode (step 38)</td></tr>
+      <tr><td>R2</td><td>Source future orders from prior OMX_SEARCH_FUT or OMX_SEARCH_FUT_CANCEL activity result in ProcessFlow</td></tr>
+      <tr><td>R3</td><td>Filter: only FULLSUS/SUS1, FULLSUS/FCVG, CANSUB/CCVG future orders</td></tr>
+      <tr><td>R4</td><td>Expire by setting status=4; updatedBy="OMX"; append remark with OMXTrackingId</td></tr>
+      <tr><td>R5</td><td>Skip if no matching future orders; response always returns "true"</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Hardcoded "true" return — failures silently ignored</td><td><span class="badge b-red">[HIGH]</span></td><td>Add proper ResponseCode check in migration; alert on non-"000" responses</td></tr>
+      <tr><td>Parameter-driven source lookup — tight coupling to prior activity extId naming</td><td><span class="badge b-orange">[MEDIUM]</span></td><td>Make source activity ID explicit in service configuration</td></tr>
+      <tr><td>OPERATION_NAME="OMX_EXP_FUT" in logs — does not match ActivityID or rule name</td><td><span class="badge b-orange">[MEDIUM]</span></td><td>Standardise log operation names in migration</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Rule: Response_OMX_EXP_FUT_BALOS</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.1 Overview</h3>
+    <p>Maps response to <code>OMX_UpdateFutureRes</code> concept (no ReferenceId — order-level response), appends to <code>currActivity.Response[]</code>, sends audit log, then <strong>always returns "true"</strong>.</p>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>OrderRequest</code></td><td>Order context</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.OMX_UPDATE_FUTURE</code></td><td>Inbound response</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Activity</code></td><td>Activity for response append</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.3 OMX_UpdateFutureRes Concept</h3>
+    <ul class="xslt-tree" style="background:#1e1e2e;padding:16px;border-radius:8px">
+      <li><div class="tree-row"><span class="tree-tag">OMX_UpdateFutureRes</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">[Conditional]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:10px"><strong>Note:</strong> No <code>ReferenceId</code> field — this is an order-level (non-subscriber) response.</p>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.4 Fan-in / Completion Logic</h3>
+    <div class="callout-high"><strong>[HIGH RISK]</strong> Response rulefunction <strong>always returns "true"</strong> — there is no ResponseCode check. Even if OMX returns an error, the process advances. This is by design (non-blocking cleanup step) but creates a silent failure risk.</div>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · 2026-09-23</footer>
+</body>
+</html>

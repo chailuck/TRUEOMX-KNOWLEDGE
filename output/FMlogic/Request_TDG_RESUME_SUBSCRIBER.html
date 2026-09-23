@@ -1,0 +1,400 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_TDG_RESUME_SUBSCRIBER</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+header p{margin-top:6px;opacity:.85;font-size:.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+main{max-width:1200px;margin:0 auto;padding:32px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:28px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 6px;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red);margin:10px 0}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:1px}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}
+.b-blue{background:#E3F0FD;color:#1565c0}
+.b-purple{background:#F3E5F5;color:#6a1b9a}
+.b-jms{background:#FFE0B2;color:#E65100}
+.b-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:12px;margin:8px 0}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.callout-warn{background:#FFF8E1;border-left:4px solid #FFC107;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.875rem}
+.callout-high{background:#FFEBEE;border-left:4px solid var(--true-red);border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.875rem}
+.callout-info{background:#E3F2FD;border-left:4px solid #1565c0;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.875rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;font-size:.8rem;color:#888;border-top:1px solid var(--border);margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_TDG_RESUME_SUBSCRIBER</h1>
+  <p>Resume a TDG (TRUE Digital) subscriber — iterates MaterialInfo per subscriber, sends ResumeSubscriberRequest with reason RC (CCBS) or RR (non-CCBS)</p>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">ForwardChain: true</span>
+    <span class="meta-badge">Target: TDG (TRUE Digital)</span>
+    <span class="meta-badge">Event: TDG_RESUME_SUBSCRIBER</span>
+    <span class="meta-badge">Fan-in: RequestCount == successResponseCount</span>
+    <span class="meta-badge">Used in RESTORE: Step 39</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>This FM resumes a TDG (TRUE Digital) subscriber by sending a <code>ResumeSubscriberRequest</code> for each Material item in the subscriber's <code>MaterialInfo.Material[]</code> array. It is used during the RESTORE process for subscribers with <code>TR_SPECIAL_OFFER_IND=IOTBU</code> (IoT Bundle subscribers on TDG).</p>
+    <br/>
+    <p><strong>RefID construction:</strong> <code>SubRefId + ":" + material.MatCode</code> (or <code>MatSerial</code> if MatCode is blank) — per-material granularity.</p>
+    <br/>
+    <div class="callout-warn">
+      <strong>Logger OPERATION_NAME anomaly:</strong> Both ParentOU and ChildOU variants use <code>"TDG_CREATE_SUBSCRIBER"</code> in the audit logger — not <code>"TDG_RESUME_SUBSCRIBER"</code>. This is a copy-paste naming error.
+    </div>
+    <br/>
+    <div class="callout-info">
+      <strong>reason field:</strong> Channel="CCBS" → reason=<code>"RC"</code>; all other channels → reason=<code>"RR"</code>. This is a 2-way xsl:choose.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_TDG_RESUME_SUBSCRIBER</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Author</td><td>CHAYATORN P.</td></tr>
+      <tr><td>Target system</td><td>TDG (TRUE Digital Gateway)</td></tr>
+      <tr><td>JMS event type</td><td><code>Events.OMConsumers.OMXFM.Request.TDG_RESUME_SUBSCRIBER</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Base.ResponseBase</code></td></tr>
+      <tr><td>Fan-in method</td><td>count(Response[ResponseCode suffix "000"]) == RequestCount</td></tr>
+      <tr><td>Logger OPERATION_NAME ⚠</td><td><code>"TDG_CREATE_SUBSCRIBER"</code> (naming error — should be TDG_RESUME_SUBSCRIBER)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+  <div class="card-header">§3 — Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order — ParentOU/ChildOU/Subscriber/MaterialInfo tree</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>PreExecCheck, Response[]</td></tr>
+    </table>
+    <br/>
+    <p><strong>Key Subscriber fields accessed:</strong></p>
+    <table>
+      <tr><th>Field</th><th>Usage</th></tr>
+      <tr><td><code>Subscriber.MaterialInfo.Material[]</code></td><td>Primary iteration target — one request per material</td></tr>
+      <tr><td><code>Material.MatCode</code></td><td>RefID component (primary key)</td></tr>
+      <tr><td><code>Material.MatSerial</code></td><td>RefID component (fallback when MatCode blank); also used in payload</td></tr>
+      <tr><td><code>Subscriber.MSISDN</code></td><td>Payload <code>ns2:id</code></td></tr>
+      <tr><td><code>SubscriberOffers.RelatedOffersArray[ServiceType="85" and contains(SocProperties,'TR_CONTRACT_IND=Y')]/OfferName</code></td><td>Payload <code>ns2:propositioncode</code></td></tr>
+      <tr><td><code>OrderData.Channel</code></td><td>Determines reason: "CCBS" → "RC" | else → "RR"</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN -->
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <pre><span style="color:#cba6f7">orderCurrentActivity</span><span style="color:#89b4fa">@extId</span> == <span style="color:#cba6f7">orderRequest</span>.ProcessFlow.<span style="color:#a6e3a1">NextActivityName</span>;
+<span style="color:#cba6f7">orderCurrentActivity</span>.<span style="color:#a6e3a1">ActivityID</span> == <span style="color:#a6e3a1">"TDG_RESUME_SUBSCRIBER"</span>;
+<span style="color:#cba6f7">orderRequest</span>.ProcessFlow.<span style="color:#a6e3a1">NextActivityID</span> == <span style="color:#a6e3a1">"TDG_RESUME_SUBSCRIBER"</span>;
+<span style="color:#cba6f7">orderCurrentActivity</span>.<span style="color:#a6e3a1">Status</span> == <span style="color:#a6e3a1">"WAITING"</span>;</pre>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+  <div class="card-header">§5 — Execution Flow Diagram</div>
+  <div class="card-body">
+    <div class="flow-step"><div class="flow-num">1</div><div>Check <code>isActResub</code> flag</div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div>Iterate ParentOU[p] → Subscriber[ps]; skip subscriber if <code>MaterialInfo == null</code> or <code>Material.length == 0</code></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div>Iterate Material[pmat]: build <code>pmatchRefId = pSubRefId + ":" + MatCode</code> (or MatSerial if MatCode blank)</div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div>Check if already successful (CompletionStatus==2) — skip if so</div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div>Evaluate PreExecCheck via <code>GetXMLForSubscriberMaterialInfo</code> (MatCode or MatSerial)</div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div>Build and send <code>TDG_RESUME_SUBSCRIBER</code> event immediately; increment RequestCount (if not resub)</div></div>
+    <div class="flow-step"><div class="flow-num">7</div><div>Iterate ParentOU[p] → ChildOU[c] → Subscriber[cs] → Material[pmat]: same flow using <code>GetXMLForSubscriberMaterialInChildOU</code></div></div>
+    <div class="flow-step"><div class="flow-num">8</div><div>After all loops: status=PROCESSING + SendDataToDB, or SkipActivity("4")</div></div>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="card">
+  <div class="card-header">§6 — Rule Action (THEN) — Key Details</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Material-level fan-out</h3>
+    <p>Unlike most FMs that iterate Subscribers, this FM iterates <strong>Material items</strong> within each Subscriber's MaterialInfo. Each material gets its own TDG request. RefID = <code>SubRefId:MatCode</code> (or <code>SubRefId:MatSerial</code>).</p>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">reason field (2-way choose)</h3>
+    <table>
+      <tr><th>Condition</th><th>reason</th><th>Meaning</th></tr>
+      <tr><td><code>OrderData.Channel = 'CCBS'</code></td><td><code>"RC"</code></td><td>Resume — Collection</td></tr>
+      <tr><td>Otherwise</td><td><code>"RR"</code></td><td>Resume — Regular</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">propositioncode lookup</h3>
+    <p>Finds the offer with <code>ServiceType="85"</code> AND <code>SocProperties</code> contains <code>'TR_CONTRACT_IND=Y'</code> in <code>RelatedOffersArray</code> and uses its <code>OfferName</code>. This is a XPath expression in the XSLT template.</p>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">extId on event</h3>
+    <p>The TDG_RESUME_SUBSCRIBER event sets <code>extId = OMXUtils:generateTrackingID()</code> directly on the event (via <code>xsl:attribute name="extId"</code>) — different from most FMs that do not set event extId in XSLT.</p>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin:0 0 10px">§8.2 ESB / JMS</h3>
+    <table>
+      <tr><th>Direction</th><th>Event</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge b-jms">OUTBOUND</span></td><td><code>TDG_RESUME_SUBSCRIBER</code></td><td>TDG service</td><td>Resume IoT/TRUE Digital subscriber per material</td></tr>
+      <tr><td><span class="badge b-log">LOG</span></td><td><code>Logger</code></td><td>OMX audit</td><td>Per-material request trace (OPERATION_NAME="TDG_CREATE_SUBSCRIBER" ⚠)</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin:0 0 10px">§8.3 Backend API</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>TDG (TRUE Digital Gateway)</td></tr>
+      <tr><td>Payload root</td><td><code>ns2:ResumeSubscriberRequest</code></td></tr>
+      <tr><td>Schema namespace</td><td><code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/TDG/ResumeSubscriber.xsd</code></td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin:0 0 10px">§8.6 Global Variables</h3>
+    <table>
+      <tr><th>Path</th><th>Usage</th></tr>
+      <tr><td><code>OMX_OM/WritePayload</code></td><td>Payload in audit log</td></tr>
+    </table>
+    <p style="margin-top:8px">Note: No <code>IsEnableUserPass</code> gate — TDG_RESUME_SUBSCRIBER does not include UserName/PassWord in event header.</p>
+  </div>
+</div>
+
+<!-- §9 Payload -->
+<div class="card">
+  <div class="card-header">§9 — Detailed Payload Build</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§9.6 ResumeSubscriberRequest Payload</h3>
+    <pre><span style="color:#89dceb">&lt;ns2:ResumeSubscriberRequest&gt;</span>
+  <span style="color:#89dceb">&lt;ns2:serial&gt;</span><span style="color:#a6e3a1">$material/MatSerial</span><span style="color:#89dceb">&lt;/ns2:serial&gt;</span>
+  <span style="color:#89dceb">&lt;ns2:id&gt;</span><span style="color:#a6e3a1">$psub/MSISDN</span> <span style="color:#6c7086">/* or $csub/MSISDN */</span><span style="color:#89dceb">&lt;/ns2:id&gt;</span>
+  <span style="color:#89dceb">&lt;ns2:propositioncode&gt;</span>
+    <span style="color:#a6e3a1">SubscriberOffers/RelatedOffersArray[ServiceType="85" and contains(SocProperties,'TR_CONTRACT_IND=Y')]/OfferName</span>
+  <span style="color:#89dceb">&lt;/ns2:propositioncode&gt;</span>
+  <span style="color:#89dceb">&lt;ns2:reason&gt;</span>
+    <span style="color:#6c7086">/* Channel='CCBS' → "RC"  | else → "RR" */</span>
+  <span style="color:#89dceb">&lt;/ns2:reason&gt;</span>
+<span style="color:#89dceb">&lt;/ns2:ResumeSubscriberRequest&gt;</span></pre>
+  </div>
+</div>
+
+<!-- §10 Tree -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree</div>
+  <div class="card-body">
+    <p><strong>Variant ① ParentOU Subscriber Material</strong> (params: $orderRequest, $pmatchRefId, $material, $psub)</p>
+    <ul class="xslt-tree" style="background:#1e1e2e;padding:16px;border-radius:8px;margin-top:8px">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span> <span class="badge b-green">Always (unique per event)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span> <span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span> <span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span> <span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$pmatchRefId</span> <span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span> <span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns2:ResumeSubscriberRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:serial</span><span class="tree-arrow">←</span><span class="tree-src">$material/MatSerial</span> <span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:id</span><span class="tree-arrow">←</span><span class="tree-src">$psub/MSISDN</span> <span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:propositioncode</span><span class="tree-arrow">←</span><span class="tree-src">RelatedOffersArray[ServiceType=85, TR_CONTRACT_IND=Y]/OfferName</span> <span class="badge b-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns2:reason</span><span class="tree-arrow">←</span><span class="tree-src-static">Channel='CCBS'→"RC" | else→"RR"</span> <span class="badge b-green">Always (2-way choose)</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <br/>
+    <p><em>Variant ② (ChildOU): params use <code>$csub</code> instead of <code>$psub</code> for subscriber reference. Payload structure identical.</em></p>
+    <br/>
+    <p><strong>Legend:</strong> <span class="tree-tag">Tag</span> = XML element &nbsp; <code>←</code> = source &nbsp; <span class="tree-src">Green</span> = XPath &nbsp; <span class="tree-src-static">Orange</span> = conditional/computed &nbsp; <span class="tree-cond">Purple italic</span> = condition</p>
+  </div>
+</div>
+
+<!-- §11 Audit -->
+<div class="card">
+  <div class="card-header">§11 — Audit Logging</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"TDG_CREATE_SUBSCRIBER"</code> ⚠ (naming error — should be TDG_RESUME_SUBSCRIBER)</td></tr>
+      <tr><td>AUDIT_TRACE</td><td><code>"Request Sent for TDG_CREATE_SUBSCRIBER"</code> ⚠ (same naming error)</td></tr>
+      <tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="card">
+  <div class="card-header">§12 — Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Transition</th><th>Condition</th><th>Method</th></tr>
+      <tr><td>WAITING → PROCESSING</td><td>At least one request sent</td><td><code>GetActivityStatusString("1", false)</code></td></tr>
+      <tr><td>WAITING → SKIPPED</td><td>isSkipped == true (no material passed PreExecCheck)</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception -->
+<div class="card">
+  <div class="card-header">§13 — Exception / Error Handling</div>
+  <div class="card-body">
+    <p>Wrapped in <code>try/catch(Exception ae)</code>. On exception: <code>RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "")</code></p>
+  </div>
+</div>
+
+<!-- §14 Helpers -->
+<div class="card">
+  <div class="card-header">§14 — Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Helpers.BRMS.IsBlankOrStringNull(material.MatCode)</code></td><td>Check if MatCode is blank; if so use MatSerial for refId and PreExecCheck</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberMaterialInfo</code></td><td>Serialise ParentOU subscriber material for PreExecCheck XPath evaluation</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberMaterialInChildOU</code></td><td>Serialise ChildOU subscriber material for PreExecCheck</td></tr>
+      <tr><td><code>Helpers.GetActivityStatusString</code></td><td>Status string lookup</td></tr>
+      <tr><td><code>Helpers.SendDataToDB</code></td><td>Persist order state</td></tr>
+      <tr><td><code>Helpers.SkipActivity</code></td><td>Skip + advance</td></tr>
+      <tr><td><code>Helpers.HandleActivityException</code></td><td>Exception handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_TDG_RESUME_SUBSCRIBER
+├── Helpers.BRMS.IsBlankOrStringNull(material.MatCode)           [MatCode/MatSerial branch]
+├── Helpers.GetXMLForSubscriberMaterialInfo                       [PreExecCheck, ParentOU material]
+├── Helpers.GetXMLForSubscriberMaterialInChildOU                  [PreExecCheck, ChildOU material]
+├── Event.Ext.sendEventImmediate(TDG_RESUME_SUBSCRIBER)           [per material — parallel]
+├── orderCurrentActivity.RequestCount++                           [manual counter]
+├── Helpers.GetActivityStatusString("1", false)
+├── Helpers.SendDataToDB
+├── Helpers.SkipActivity("4")
+└── Helpers.HandleActivityException                               [catch]</pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Iterate Material[] per Subscriber (both ParentOU and ChildOU); skip subscriber with no MaterialInfo</td></tr>
+      <tr><td>R2</td><td>RefID = <code>SubRefId:MatCode</code> (or <code>SubRefId:MatSerial</code> if MatCode blank)</td></tr>
+      <tr><td>R3</td><td>reason: Channel="CCBS" → "RC"; else → "RR"</td></tr>
+      <tr><td>R4</td><td>propositioncode from RelatedOffersArray[ServiceType=85, TR_CONTRACT_IND=Y]</td></tr>
+      <tr><td>R5</td><td>Event extId set from OMXUtils:generateTrackingID() (unique per event)</td></tr>
+      <tr><td>R6</td><td>Parallel fan-out; RequestCount incremented manually; fan-in via ResponseCode suffix "000"</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>Logger OPERATION_NAME = "TDG_CREATE_SUBSCRIBER" — wrong operation name in audit trail</td><td><span class="badge b-red">[HIGH]</span></td><td>Fix in migration — correct to "TDG_RESUME_SUBSCRIBER" to enable audit tracing</td></tr>
+      <tr><td>propositioncode XPath may return empty if no matching offer</td><td><span class="badge b-orange">[MEDIUM]</span></td><td>Add guard; confirm TDG accepts empty propositioncode</td></tr>
+      <tr><td>MatCode blank → MatSerial fallback for refId</td><td><span class="badge b-orange">[MEDIUM]</span></td><td>Ensure consistency — both code paths should produce valid, unique refIds</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Rule: Response_TDG_RESUME_SUBSCRIBER</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.1 Overview</h3>
+    <p>Maps TDG response fields to <code>Concepts.FM.Base.ResponseBase</code>, appends to <code>currActivity.Response[]</code>, sends audit log, then checks standard fan-in via ResponseCode "000" count.</p>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>OrderRequest</code></td><td>Order context</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.TDG_RESUME_SUBSCRIBER</code></td><td>Inbound TDG response</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Activity</code></td><td>Activity for response append</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.3 ResponseBase Concept</h3>
+    <ul class="xslt-tree" style="background:#1e1e2e;padding:16px;border-radius:8px">
+      <li><div class="tree-row"><span class="tree-tag">ResponseBase</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span> <span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">[Conditional]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.4 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>Success XPath</td><td><code>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])</code></td></tr>
+      <tr><td>Completion condition</td><td><code>currActivity.RequestCount == successResponseCount</code></td></tr>
+      <tr><td>Return "true"</td><td>All TDG resume calls returned ResponseCode ending in "000"</td></tr>
+      <tr><td>Return "false"</td><td>Still waiting for remaining responses</td></tr>
+    </table>
+    <br/>
+    <div class="callout-warn"><strong>Logger anomaly:</strong> Response audit log also uses <code>OPERATION_NAME="TDG_RESUME_SUBSCRIBER"</code> correctly in the response rulefunction, but the request rule's audit logger uses <code>"TDG_CREATE_SUBSCRIBER"</code>. The request and response log records will have mismatched OPERATION_NAME values.</div>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · 2026-09-23</footer>
+</body>
+</html>

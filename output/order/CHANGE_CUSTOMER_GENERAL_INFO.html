@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>CHANGE_CUSTOMER_GENERAL_INFO — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;font-size:14px;background:var(--bg);color:#333}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:24px 32px}
+header h1{font-size:1.8rem;margin-bottom:4px}
+header p{opacity:.85;font-size:.95rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:12px;padding:3px 14px;font-size:.8rem}
+.container{max-width:1400px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:20px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px;overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:.84rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;white-space:nowrap}
+td{padding:8px 10px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr.has-preexec td{background:#FFFDE7;border-left:3px solid #F9A825}
+code{font-family:'Cascadia Code','Consolas',monospace;background:#F5E6E6;padding:1px 5px;border-radius:3px;font-size:.82rem}
+pre{font-family:'Cascadia Code','Consolas',monospace;background:var(--code-bg);color:var(--code-fg);padding:12px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.82rem;line-height:1.5}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.76rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-warn{background:#FFF8E1;color:#F57F17;border:1px solid #FFE082}
+.anomaly-box{background:#FFF3E0;border:1px solid #FFB74D;border-radius:6px;padding:12px 16px;margin:12px 0}
+.anomaly-box h4{color:var(--warning);margin-bottom:6px}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;margin-top:4px}
+.fm-card{background:var(--card);border:1px solid var(--border);border-radius:6px;padding:14px;border-top:3px solid var(--true-red)}
+.fm-card h4{font-size:.9rem;margin-bottom:6px}
+.fm-card a{color:var(--true-dark);text-decoration:none;font-weight:600}
+.fm-card a:hover{text-decoration:underline}
+.step-num{display:inline-flex;align-items:center;justify-content:center;width:26px;height:26px;background:var(--true-red);color:#fff;border-radius:50%;font-size:.78rem;font-weight:700;flex-shrink:0}
+details summary{cursor:pointer;padding:8px 0;font-weight:600;color:var(--true-dark)}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:24px}
+</style>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+</head>
+<body>
+<header>
+  <h1>CHANGE_CUSTOMER_GENERAL_INFO</h1>
+  <p>Update customer general information including name, address, identification, and billing cycle data</p>
+  <div class="meta-row">
+    <span class="meta-chip">Total steps: 15</span>
+    <span class="meta-chip">Unique FMs: 14</span>
+    <span class="meta-chip">Entry: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</span>
+    <span class="meta-chip">Generated: 2026-09-23</span>
+    <span class="meta-chip badge-warn">⚠ 4 anomalies</span>
+  </div>
+</header>
+<div class="container">
+
+<div class="anomaly-box">
+  <h4>⚠ Anomalies Found</h4>
+  <ul style="margin-left:18px;line-height:1.9">
+    <li><strong>Step 5 extId/ActivityID mismatch:</strong> extId=<code>INTX_GET_TOTAL_OU_BY_CUST</code> but ActivityID=<code>INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code></li>
+    <li><strong>FM reuse:</strong> <code>INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code> called twice — step 5 (PAGE_SIZE=1 count probe) and step 6 (PAGE_SIZE=50 full fetch)</li>
+    <li><strong>CCBS_GET_CUSTOMER_INFO</strong> dispatches <code>CCBS_GET_CUSTOMER_HEADER</code> JMS event (naming anomaly)</li>
+    <li><strong>CCBS_CHANGE_CUSTOMER_GENERAL_INFO</strong> <code>ActionResponseEvent</code> commented out in response handler — fan-in risk</li>
+  </ul>
+</div>
+
+<div class="section">
+  <div class="section-header">§2 — Order Flow</div>
+  <div class="section-body">
+    <table>
+      <thead>
+        <tr><th>Step</th><th>Step ID</th><th>FM (ActivityID)</th><th>Parameter(s)</th><th>PreExecCheck</th><th>Previous</th><th>Next</th><th>Doc</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><span class="step-num">1</span></td><td>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</td><td>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</td><td>—</td><td>—</td><td>START</td><td>Step 2</td><td><span class="badge badge-green">✓ Existing</span></td></tr>
+        <tr><td><span class="step-num">2</span></td><td>CCBS_GET_CUSTOMER_INFO</td><td><a href="../FMlogic/Request_CCBS_GET_CUSTOMER_INFO.html">CCBS_GET_CUSTOMER_INFO</a></td><td>GET_OLD_IDENTIFICATION=Y<br/>GET_CUST_GENERAL_INFO=Y</td><td>—</td><td>Step 1</td><td>Step 3</td><td><span class="badge badge-green">✓ Generated</span></td></tr>
+        <tr><td><span class="step-num">3</span></td><td>CCBS_CHANGE_CUSTOMER_GENERAL_INFO</td><td><a href="../FMlogic/Request_CCBS_CHANGE_CUSTOMER_GENERAL_INFO.html">CCBS_CHANGE_CUSTOMER_GENERAL_INFO</a></td><td>—</td><td>—</td><td>Step 2</td><td>Step 4</td><td><span class="badge badge-green">✓ Generated</span></td></tr>
+        <tr><td><span class="step-num">4</span></td><td>CCBS_UPDATE_CUSTOMER_NAME_ADDRESS</td><td><a href="../FMlogic/Request_CCBS_UPDATE_CUSTOMER_NAME_ADDRESS.html">CCBS_UPDATE_CUSTOMER_NAME_ADDRESS</a></td><td>—</td><td>—</td><td>Step 3</td><td>Step 5</td><td><span class="badge badge-green">✓ Generated</span></td></tr>
+        <tr class="has-preexec"><td><span class="step-num">5</span></td><td>INTX_GET_TOTAL_OU_BY_CUST <span class="badge badge-orange">⚠ extId anomaly</span></td><td><a href="../FMlogic/Request_INTX_GET_SPECIAL_OFFER_IND_BY_CUST.html">INTX_GET_SPECIAL_OFFER_IND_BY_CUST</a></td><td>SPECIAL_OFFER_IND=FSH,FPL<br/>PAGE_SIZE=1</td><td><code>//BillCycleNo/text()!= ""</code></td><td>Step 4</td><td>Step 6</td><td><span class="badge badge-green">✓ Generated</span></td></tr>
+        <tr class="has-preexec"><td><span class="step-num">6</span></td><td>INTX_GET_SPECIAL_OFFER_IND_BY_CUST</td><td><a href="../FMlogic/Request_INTX_GET_SPECIAL_OFFER_IND_BY_CUST.html">INTX_GET_SPECIAL_OFFER_IND_BY_CUST</a></td><td>SPECIAL_OFFER_IND=FSH,FPL<br/>PAGE_SIZE=50</td><td><code>//BillCycleNo/text()!= ""</code></td><td>Step 5</td><td>Step 7</td><td><span class="badge badge-green">✓ Generated</span></td></tr>
+        <tr class="has-preexec"><td><span class="step-num">7</span></td><td>SBM_FUP_UPDATE_OU_INFO</td><td><a href="../FMlogic/Request_SBM_FUP_UPDATE_OU_INFO.html">SBM_FUP_UPDATE_OU_INFO</a></td><td>—</td><td><code>//BillCycleNo/text()!= ""</code></td><td>Step 6</td><td>Step 8</td><td><span class="badge badge-green">✓ Generated</span></td></tr>
+        <tr><td><span class="step-num">8</span></td><td>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE_2</td><td>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</td><td>—</td><td>—</td><td>Step 7</td><td>Step 9</td><td><span class="badge badge-green">✓ Existing</span></td></tr>
+        <tr><td><span class="step-num">9</span></td><td>CCBS_GET_IDENTIFICATION</td><td>CCBS_GET_IDENTIFICATION</td><td>—</td><td>—</td><td>Step 8</td><td>Step 10</td><td><span class="badge badge-green">✓ Existing</span></td></tr>
+        <tr class="has-preexec"><td><span class="step-num">10</span></td><td>SYNCE_IDENTIFICATION</td><td>SYNCE_IDENTIFICATION</td><td>—</td><td><code>//Identification/text()!= ""</code></td><td>Step 9</td><td>Step 11</td><td><span class="badge badge-green">✓ Existing</span></td></tr>
+        <tr class="has-preexec"><td><span class="step-num">11</span></td><td>CCBS_CHANGE_IDENTIFICATION</td><td>CCBS_CHANGE_IDENTIFICATION</td><td>—</td><td><code>//Identification/text()!= ""</code></td><td>Step 10</td><td>Step 12</td><td><span class="badge badge-green">✓ Existing</span></td></tr>
+        <tr><td><span class="step-num">12</span></td><td>CCBS_GET_ADDRESS_TYPE</td><td>CCBS_GET_ADDRESS_TYPE</td><td>—</td><td>—</td><td>Step 11</td><td>Step 13</td><td><span class="badge badge-green">✓ Existing</span></td></tr>
+        <tr><td><span class="step-num">13</span></td><td>CCBS_UPDATE_ADDRESS</td><td>CCBS_UPDATE_ADDRESS</td><td>—</td><td>—</td><td>Step 12</td><td>Step 14</td><td><span class="badge badge-green">✓ Existing</span></td></tr>
+        <tr><td><span class="step-num">14</span></td><td>SBM_SEARCH_SUBSCRIBER</td><td>SBM_SEARCH_SUBSCRIBER</td><td>—</td><td>—</td><td>Step 13</td><td>Step 15</td><td><span class="badge badge-green">✓ Existing</span></td></tr>
+        <tr><td><span class="step-num">15</span></td><td>ATS_UPDATE_CUSTOMER_INFO</td><td>ATS_UPDATE_CUSTOMER_INFO</td><td>—</td><td>—</td><td>Step 14</td><td>END</td><td><span class="badge badge-green">✓ Existing</span></td></tr>
+      </tbody>
+    </table>
+    <p style="margin-top:10px;font-size:.82rem;color:#666">Rows with yellow background have a PreExecCheck (conditional execution).</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§3 — PreExecCheck Details</div>
+  <div class="section-body">
+    <details open><summary>Steps 5, 6, 7 — BillCycleNo sub-flow gate</summary>
+      <pre>//BillCycleNo/text()!= ""</pre>
+      <p>Steps 5–7 form the billing-cycle update sub-flow (INTX probe → INTX full fetch → SBM update). All three are gated on BillCycleNo being present in orderRequest.</p>
+    </details>
+    <details><summary>Steps 10, 11 — Identification change gate</summary>
+      <pre>//Identification/text()!= ""</pre>
+      <p>Steps 10–11 (SYNCE_IDENTIFICATION + CCBS_CHANGE_IDENTIFICATION) are gated on an Identification value being present. These form the identification update sub-flow.</p>
+    </details>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§4 — FM Documentation Index</div>
+  <div class="section-body">
+    <div class="fm-grid">
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_CUSTOMER_INFO.html">CCBS_GET_CUSTOMER_INFO</a></h4><p>Steps: 2</p><span class="badge badge-green">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_CHANGE_CUSTOMER_GENERAL_INFO.html">CCBS_CHANGE_CUSTOMER_GENERAL_INFO</a></h4><p>Steps: 3</p><span class="badge badge-green">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_UPDATE_CUSTOMER_NAME_ADDRESS.html">CCBS_UPDATE_CUSTOMER_NAME_ADDRESS</a></h4><p>Steps: 4</p><span class="badge badge-green">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_INTX_GET_SPECIAL_OFFER_IND_BY_CUST.html">INTX_GET_SPECIAL_OFFER_IND_BY_CUST</a></h4><p>Steps: 5, 6</p><span class="badge badge-green">✓ Generated</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_SBM_FUP_UPDATE_OU_INFO.html">SBM_FUP_UPDATE_OU_INFO</a></h4><p>Steps: 7</p><span class="badge badge-green">✓ Generated</span></div>
+      <div class="fm-card"><h4>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</h4><p>Steps: 1, 8</p><span class="badge badge-blue">Existing doc</span></div>
+      <div class="fm-card"><h4>CCBS_GET_IDENTIFICATION</h4><p>Steps: 9</p><span class="badge badge-blue">Existing doc</span></div>
+      <div class="fm-card"><h4>SYNCE_IDENTIFICATION</h4><p>Steps: 10</p><span class="badge badge-blue">Existing doc</span></div>
+      <div class="fm-card"><h4>CCBS_CHANGE_IDENTIFICATION</h4><p>Steps: 11</p><span class="badge badge-blue">Existing doc</span></div>
+      <div class="fm-card"><h4>CCBS_GET_ADDRESS_TYPE</h4><p>Steps: 12</p><span class="badge badge-blue">Existing doc</span></div>
+      <div class="fm-card"><h4>CCBS_UPDATE_ADDRESS</h4><p>Steps: 13</p><span class="badge badge-blue">Existing doc</span></div>
+      <div class="fm-card"><h4>SBM_SEARCH_SUBSCRIBER</h4><p>Steps: 14</p><span class="badge badge-blue">Existing doc</span></div>
+      <div class="fm-card"><h4>ATS_UPDATE_CUSTOMER_INFO</h4><p>Steps: 15</p><span class="badge badge-blue">Existing doc</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§5 — Sequence Diagram</div>
+  <div class="section-body">
+    <div style="overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+    participant INTX as INTX
+    participant SBM as SBM
+    participant ATS as ATS
+
+    O->>CCBS: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE
+    O->>CCBS: CCBS_GET_CUSTOMER_INFO [GET_OLD_IDENTIFICATION=Y]
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_CUSTOMER_INFO ⚠ dispatches CCBS_GET_CUSTOMER_HEADER
+    O->>CCBS: CCBS_CHANGE_CUSTOMER_GENERAL_INFO
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_CHANGE_CUSTOMER_GENERAL_INFO
+    O->>CCBS: CCBS_UPDATE_CUSTOMER_NAME_ADDRESS
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_UPDATE_CUSTOMER_NAME_ADDRESS
+    opt BillCycleNo != ""
+        O->>INTX: INTX_GET_TOTAL_OU_BY_CUST anomaly [PAGE_SIZE=1]
+        INTX-->>O: response
+        Note over O,INTX: FM: INTX_GET_SPECIAL_OFFER_IND_BY_CUST
+        O->>INTX: INTX_GET_SPECIAL_OFFER_IND_BY_CUST [PAGE_SIZE=50]
+        INTX-->>O: response
+        Note over O,INTX: FM: INTX_GET_SPECIAL_OFFER_IND_BY_CUST
+        O->>SBM: SBM_FUP_UPDATE_OU_INFO
+        SBM-->>O: response
+        Note over O,SBM: FM: SBM_FUP_UPDATE_OU_INFO
+    end
+    O->>CCBS: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE (2)
+    CCBS-->>O: response
+    O->>CCBS: CCBS_GET_IDENTIFICATION
+    CCBS-->>O: response
+    opt Identification != ""
+        O->>CCBS: SYNCE_IDENTIFICATION
+        CCBS-->>O: response
+        O->>CCBS: CCBS_CHANGE_IDENTIFICATION
+        CCBS-->>O: response
+    end
+    O->>CCBS: CCBS_GET_ADDRESS_TYPE
+    CCBS-->>O: response
+    O->>CCBS: CCBS_UPDATE_ADDRESS
+    CCBS-->>O: response
+    O->>SBM: SBM_SEARCH_SUBSCRIBER
+    SBM-->>O: response
+    O->>ATS: ATS_UPDATE_CUSTOMER_INFO
+    ATS-->>O: response
+      </div>
+    </div>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · Order Journey Documentation</footer>
+</body>
+</html>

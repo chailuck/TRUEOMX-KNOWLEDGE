@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_SEARCH_SHAREPLAN_MAIN_SUB_ID</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6;font-size:.9rem}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.7rem;font-weight:700;font-family:monospace}
+header p{margin-top:6px;opacity:.85;font-size:.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+main{max-width:1200px;margin:0 auto;padding:28px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:18px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 6px;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:14px;overflow-x:auto;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red);white-space:pre-wrap}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:1px}
+.b-ccbs{background:#FFE0B2;color:#E65100}
+.b-always{background:#E8F5E9;color:#2e7d32}
+.b-cond{background:#FFF3E0;color:#e65100}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.callout-info{border-left:4px solid #1565c0;background:#E3F2FD;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.callout-warn{border-left:4px solid #e65100;background:#FFF3E0;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;font-size:.78rem;color:#888;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_CCBS_SEARCH_SHAREPLAN_MAIN_SUB_ID</h1>
+  <p>Searches CCBS for the SharePlan main subscriber by MSISDN — uses IntraActivitySequencing (sequential fan-in)</p>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">ForwardChain: true</span>
+    <span class="meta-badge">Target: CCBS</span>
+    <span class="meta-badge">Event: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</span>
+    <span class="meta-badge">Scope: ParentOU only</span>
+    <span class="meta-badge">Fan-in: IntraActivitySequencing</span>
+  </div>
+</header>
+<main>
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <div class="callout">
+      <strong>CCBS_SEARCH_SHAREPLAN_MAIN_SUB_ID</strong> looks up the SharePlan main subscriber's CCBS ID. It reads MSISDN from <code>ExtendedInfo[SHAREPLAN_MAIN_NUMBER]</code> (primary) or <code>SHAREPLAN_RELATED_SUBSCRIBER</code> (fallback), throws DATA_ISSUE if both are blank. Reuses the existing <code>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</code> event. Uses IntraActivitySequencing for sequential per-subscriber processing (not standard parallel fan-in).
+    </div>
+    <div class="callout-warn">
+      <strong>⚠ IntraActivitySequencing:</strong> Requests are sent one-at-a-time via <code>ActionRequestEvent()</code>. Responses must arrive in order before the next request fires. This differs from standard parallel fan-in rules.
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_SEARCH_SHAREPLAN_MAIN_SUB_ID</code></td></tr>
+        <tr><td>ActivityID match</td><td><code>CCBS_SEARCH_SHAREPLAN_MAIN_SUB_ID</code></td></tr>
+        <tr><td>Event type reused</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</code></td></tr>
+        <tr><td>Fan-in pattern</td><td>IntraActivitySequencing — <code>ActionRequestEvent(reqEvent, orderCurrentActivity)</code></td></tr>
+        <tr><td>Subscriber scope</td><td>ParentOU only (no ChildOU iteration)</td></tr>
+        <tr><td>MSISDN source</td><td>ExtendedInfo[SHAREPLAN_MAIN_NUMBER] → fallback ExtendedInfo[SHAREPLAN_RELATED_SUBSCRIBER] → throw DATA_ISSUE</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol style="padding-left:18px;line-height:2">
+      <li>If resubmit: call <code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit()</code></li>
+      <li>Iterate ParentOU[i] → Subscriber[j]</li>
+      <li>Evaluate PreExecCheck per subscriber</li>
+      <li>Resolve <code>mainSubMsisdn</code>: read SHAREPLAN_MAIN_NUMBER ExtendedInfo; if blank try SHAREPLAN_RELATED_SUBSCRIBER; if still blank throw DATA_ISSUE</li>
+      <li>Build <code>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</code> event with mainSubMsisdn as parameterValue</li>
+      <li>Send via <code>Event.sendEvent()</code>; register with <code>IntraActivitySequencing.ActionRequestEvent()</code></li>
+      <li>Increment RequestCount; log audit</li>
+      <li>Set activity status "1"; persist</li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Direction</th><th>Event Type</th><th>System</th><th>Purpose</th></tr></thead>
+      <tbody>
+        <tr><td><span class="badge b-ccbs">OUTBOUND</span></td><td><code>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</code></td><td>CCBS</td><td>Retrieve main SharePlan subscriber record by MSISDN</td></tr>
+      </tbody>
+    </table>
+    <h4 style="margin:14px 0 8px;color:var(--true-dark)">§8.5 ExtendedInfo Fields Required</h4>
+    <table>
+      <thead><tr><th>Key</th><th>Role</th><th>Required?</th></tr></thead>
+      <tbody>
+        <tr><td><code>SHAREPLAN_MAIN_NUMBER</code></td><td>Primary MSISDN source for the SharePlan main subscriber</td><td><span class="badge" style="background:#FCE4EC;color:#c62828">PRIMARY</span></td></tr>
+        <tr><td><code>SHAREPLAN_RELATED_SUBSCRIBER</code></td><td>Fallback MSISDN if SHAREPLAN_MAIN_NUMBER is absent</td><td><span class="badge b-cond">FALLBACK</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§9 — Payload Build (SearchSubscriberByResourceRequest)</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">SearchSubscriberByResourceRequest</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">ResourceSearchInputInfo</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">parameterType</span><span class="tree-arrow">←</span><span class="tree-src-static">"C"</span> <span class="badge b-always">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">parameterValue</span><span class="tree-arrow">←</span><span class="tree-src">mainSubMsisdn (from SHAREPLAN_MAIN_NUMBER or SHAREPLAN_RELATED_SUBSCRIBER)</span> <span class="badge b-always">Always</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <div class="callout-info" style="margin-top:12px">
+      <strong>RefID</strong> = <code>orderRequest.OrderData.Customer.ParentOU[i].Subscriber[j].RefId</code><br/>
+      Used by the response handler to match the correct subscriber.
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§12 — Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>Condition</th><th>Status</th></tr></thead>
+      <tbody>
+        <tr><td>Request sent for at least one subscriber</td><td>GetActivityStatusString("1", false) — SENT</td></tr>
+        <tr><td>All subscribers skipped</td><td>SkipActivity("4") — SKIPPED</td></tr>
+        <tr><td>Exception thrown</td><td>HandleActivityException — ERROR</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>#</th><th>Requirement</th><th>Risk</th></tr></thead>
+      <tbody>
+        <tr><td>R1</td><td>SHAREPLAN_MAIN_NUMBER or SHAREPLAN_RELATED_SUBSCRIBER must be populated in order request</td><td>Missing value throws DATA_ISSUE and halts the order</td></tr>
+        <tr><td>R2</td><td>IntraActivitySequencing dependency</td><td>Sequential pattern — target system must preserve sequential fan-in behavior</td></tr>
+        <tr><td>R3</td><td>Reuses CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE event</td><td>Shares event/channel with the standard search FM; differentiated only by OPERATION_NAME in audit log</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCBS_SEARCH_SHAREPLAN_MAIN_SUB_ID</footer>
+</body>
+</html>

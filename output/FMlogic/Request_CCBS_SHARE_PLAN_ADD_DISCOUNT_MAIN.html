@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_SHARE_PLAN_ADD_DISCOUNT_MAIN</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6;font-size:.9rem}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.7rem;font-weight:700;font-family:monospace}header p{margin-top:6px;opacity:.85}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+main{max-width:1200px;margin:0 auto;padding:28px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:18px}table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}tr:hover td{background:#fdf5f5}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 6px;font-size:.82rem;font-family:monospace}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:1px}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.callout-info{border-left:4px solid #1565c0;background:#E3F2FD;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:monospace;font-size:.83rem}.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;padding:1px 6px;border-radius:4px;background:rgba(166,227,161,.1)}
+.tree-src-static{color:#fab387;padding:1px 6px;border-radius:4px;background:rgba(250,179,135,.1)}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;font-size:.78rem;color:#888;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_CCBS_SHARE_PLAN_ADD_DISCOUNT_MAIN</h1>
+  <p>Adds SharePlan discount offers (ServiceType=68, FE_OR_CCBS=FE) to the SharePlan main subscriber in CCBS via UpdateSubscriber</p>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span><span class="meta-badge">Target: CCBS</span>
+    <span class="meta-badge">Event: CCBS_UPDATE_SUBSCRIBER</span><span class="meta-badge">Scope: ParentOU only</span>
+    <span class="meta-badge">Gate: SHAREPLAN_MAIN_ID required</span>
+  </div>
+</header>
+<main>
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <div class="callout">
+      <strong>CCBS_SHARE_PLAN_ADD_DISCOUNT_MAIN</strong> adds discount SOC offers (ServiceType=68 with FE_OR_CCBS=FE) to the SharePlan main subscriber in CCBS. Uses the <code>CCBS_UPDATE_SUBSCRIBER</code> event (not the search event). Gated on subscriber having <code>ExtendedInfo[SHAREPLAN_MAIN_ID]</code> present (the CCBS ID of the main subscriber). Includes a <code>GetSequenceValueRequest</code> to obtain SOC sequence numbers.
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table><thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>ActivityID match</td><td><code>CCBS_SHARE_PLAN_ADD_DISCOUNT_MAIN</code></td></tr>
+        <tr><td>Event type</td><td><code>CCBS_UPDATE_SUBSCRIBER</code></td></tr>
+        <tr><td>Gate</td><td>SHAREPLAN_MAIN_ID present in subscriber ExtendedInfo (not blank)</td></tr>
+        <tr><td>Offer filter</td><td>SubscriberOffers[ServiceType='68'][FE_OR_CCBS=FE]</td></tr>
+        <tr><td>Target subscriber</td><td>mainSubId from ExtendedInfo[SHAREPLAN_MAIN_ID]</td></tr>
+        <tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate()</code></td></tr>
+        <tr><td>Fan-in</td><td>Standard RequestCount == successResponseCount</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§9 — Payload Build (UpdateSubscriberRequest)</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">UpdateSubscriberRequest</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">GetSequenceValueRequest</span> <span class="tree-cond">sequenceName=SOC_SEQ_NO, incrementByCount=count(SubscriberOffers[ServiceType='68'])</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UpdateSubscriberRequest</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">SubscriberIdInfo.subscrNumber</span><span class="tree-arrow">←</span><span class="tree-src">mainSubId (ExtendedInfo[SHAREPLAN_MAIN_ID])</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">offersToAdd</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">srvAgrInfo[]</span> <span class="tree-cond">for-each SubscriberOffers[ServiceType='68'][FE_OR_CCBS=FE]</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">dealerCode, effectiveDate, expirationDate, name, parentOfferInstanceId, relatedOffers[], serviceType, soc</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li><div class="tree-row"><span class="tree-tag">ActivityInfo</span><span class="tree-arrow">←</span><span class="tree-src">activityReason (CREQ fallback), userText</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table><thead><tr><th>#</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>R1</td><td>SHAREPLAN_MAIN_ID must be pre-populated by upstream CCBS_SEARCH_SHAREPLAN_MAIN_SUB_ID step</td></tr>
+        <tr><td>R2</td><td>SOC sequence number acquisition (GetSequenceValueRequest) must be replicated in target system</td></tr>
+        <tr><td>R3</td><td>Only ServiceType=68 offers with FE_OR_CCBS=FE are sent — CCBS-only discount SOCs</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCBS_SHARE_PLAN_ADD_DISCOUNT_MAIN</footer>
+</body></html>

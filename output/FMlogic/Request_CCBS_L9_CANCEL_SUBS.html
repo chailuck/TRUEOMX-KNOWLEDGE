@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_L9_CANCEL_SUBS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.9rem;font-weight:700;letter-spacing:.5px}
+header p{margin-top:6px;opacity:.85;font-size:.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:12px;margin-top:14px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+main{max-width:1200px;margin:0 auto;padding:32px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:28px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:14px 20px;font-weight:600;font-size:1rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.875rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 6px;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:.82rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red);margin:10px 0}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:1px}
+.b-red{background:#FFE0E0;color:var(--true-dark)}
+.b-green{background:#E8F5E9;color:#2e7d32}
+.b-orange{background:#FFF3E0;color:#e65100}
+.b-blue{background:#E3F0FD;color:#1565c0}
+.b-jms{background:#FFE0B2;color:#E65100}
+.b-log{background:#F1F8E9;color:#558B2F}
+.flow-step{display:flex;align-items:flex-start;gap:12px;margin:8px 0}
+.flow-num{background:var(--true-red);color:#fff;border-radius:50%;width:26px;height:26px;display:flex;align-items:center;justify-content:center;font-size:.75rem;font-weight:700;flex-shrink:0;margin-top:2px}
+.callout-warn{background:#FFF8E1;border-left:4px solid #FFC107;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.875rem}
+.callout-info{background:#E3F2FD;border-left:4px solid #1565c0;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.875rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.82rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px;font-style:italic}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:24px;font-size:.8rem;color:#888;border-top:1px solid var(--border);margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_CCBS_L9_CANCEL_SUBS</h1>
+  <p>Cancel an L9 (postpaid) subscriber via CCBS — iterates ParentOU/ChildOU subscribers, uses IntraActivitySequencing sequential fan-out, portOutIndicator set by Channel (MNP=89, else=78)</p>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span>
+    <span class="meta-badge">ForwardChain: true</span>
+    <span class="meta-badge">Target: CCBS (L9 Cancel)</span>
+    <span class="meta-badge">Event: CCBS_L9_CANCEL_SUBS</span>
+    <span class="meta-badge">Fan-in: IntraActivitySequencing</span>
+    <span class="meta-badge">Used in: TNP_CANCEL_SUB (step 4)</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Cancels an L9 (postpaid) subscriber in CCBS via the <code>L9CancelSubscriberRequest</code> API. Iterates all ParentOU and ChildOU subscribers and sends one <code>CCBS_L9_CANCEL_SUBS</code> event per subscriber using <strong>IntraActivitySequencing</strong> (sequential fan-out: requests are queued and sent one at a time).</p>
+    <br/>
+    <div class="callout-info">
+      <strong>EffectiveDate transformation:</strong> Before the subscriber loop, the rule calls <code>BN.OrderDataEffectiveDateTransform(ActivityID, EffectiveDate)</code> to adjust the effective date based on the activity. This is applied order-wide, not per-subscriber.
+    </div>
+    <br/>
+    <div class="callout-info">
+      <strong>IntraActivitySequencing:</strong> Uses <code>ActionRequestEvent</code> + <code>SendFirstRequestEvent</code> (sequential dispatch). Response uses <code>IntraActivitySequencing.ActionResponseEvent</code> — NOT RequestCount-based fan-in.
+    </div>
+    <br/>
+    <div class="callout-warn">
+      <strong>portOutIndicator:</strong> Channel="MNP" → <code>89</code> (MNP port-out); else → <code>78</code> (non-port). This field controls CCBS MNP handling.
+    </div>
+    <br/>
+    <p><strong>preActivityInfo = "OPENPCH"</strong> — hardcoded activity code (Open/Pre-cancel handle). Sent to CCBS for all subscribers.</p>
+  </div>
+</div>
+
+<!-- §2 Metadata -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_L9_CANCEL_SUBS</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Target system</td><td>CCBS (L9 postpaid cancel)</td></tr>
+      <tr><td>JMS event type</td><td><code>Events.OMConsumers.OMXFM.Request.CCBS_L9_CANCEL_SUBS</code></td></tr>
+      <tr><td>Response concept</td><td><code>Concepts.FM.Response.CCBSCancelSubsRes</code></td></tr>
+      <tr><td>Fan-in method</td><td>IntraActivitySequencing.ActionResponseEvent (sequential)</td></tr>
+      <tr><td>Payload schema</td><td><code>http://services.omx.truecorp.co.th/FMServices/L9CancelSubscriberRequest</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+  <div class="card-header">§3 — Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order — ParentOU/ChildOU/Subscriber tree, EffectiveDate, Channel</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>IntraActivitySequencing state, Response[]</td></tr>
+    </table>
+    <br/>
+    <table>
+      <tr><th>Field</th><th>Usage</th></tr>
+      <tr><td><code>Subscriber.SubscriberId</code></td><td>Payload: <code>ns1:subscrNumber</code></td></tr>
+      <tr><td><code>Subscriber.MSISDN</code></td><td>Event header <code>msisdn</code> + userText when OrderType=48</td></tr>
+      <tr><td><code>Subscriber.SubscriberActivityInfo.ActivityReason</code></td><td>Payload <code>ns1:activityReason</code> (fallback "CREQ")</td></tr>
+      <tr><td><code>Subscriber.SubscriberActivityInfo.UserText</code></td><td>Payload <code>ns1:userText</code> (one of 3 sources)</td></tr>
+      <tr><td><code>OrderData.EffectiveDate</code></td><td>Payload <code>ns1:activityDate</code> (after BN.OrderDataEffectiveDateTransform)</td></tr>
+      <tr><td><code>OrderData.Channel</code></td><td>portOutIndicator: MNP → 89; else → 78</td></tr>
+      <tr><td><code>OrderData.OrderType</code></td><td>userText branch: OrderType=48 → special message</td></tr>
+      <tr><td><code>OrderData.Customer.CustomerActivityInfo.UserText</code></td><td>userText branch: customer-level text override</td></tr>
+      <tr><td><code>OrderData.CES</code></td><td>Event header <code>CES</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 WHEN -->
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <pre><span style="color:#cba6f7">orderCurrentActivity</span><span style="color:#89b4fa">@extId</span> == <span style="color:#cba6f7">orderRequest</span>.ProcessFlow.<span style="color:#a6e3a1">NextActivityName</span>;
+<span style="color:#cba6f7">orderCurrentActivity</span>.<span style="color:#a6e3a1">ActivityID</span> == <span style="color:#a6e3a1">"CCBS_L9_CANCEL_SUBS"</span>;
+<span style="color:#cba6f7">orderRequest</span>.ProcessFlow.<span style="color:#a6e3a1">NextActivityID</span> == <span style="color:#a6e3a1">"CCBS_L9_CANCEL_SUBS"</span>;
+<span style="color:#cba6f7">orderCurrentActivity</span>.<span style="color:#a6e3a1">Status</span> == <span style="color:#a6e3a1">"WAITING"</span>;</pre>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+  <div class="card-header">§5 — Execution Flow Diagram</div>
+  <div class="card-body">
+    <div class="flow-step"><div class="flow-num">1</div><div>Check <code>isActResub</code>; if resub → <code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit</code></div></div>
+    <div class="flow-step"><div class="flow-num">2</div><div>Transform EffectiveDate: <code>BN.OrderDataEffectiveDateTransform(ActivityID, EffectiveDate)</code></div></div>
+    <div class="flow-step"><div class="flow-num">3</div><div>Set <code>preActivityInfop = "OPENPCH"</code></div></div>
+    <div class="flow-step"><div class="flow-num">4</div><div>Loop ParentOU[i] → Subscriber[j]: build <code>refId</code>; skip if already CompletionStatus==2</div></div>
+    <div class="flow-step"><div class="flow-num">5</div><div>Evaluate nextAct PreExecCheck via <code>GetXMLForSubscriber</code>; if "true" → build + assert <code>CCBS_L9_CANCEL_SUBS</code> event; call <code>ActionRequestEvent</code>; send audit log; <code>isSkipped=false</code></div></div>
+    <div class="flow-step"><div class="flow-num">6</div><div>Loop ParentOU[i] → ChildOU[k] → Subscriber[j]: same flow using <code>GetXMLForSubscriberInChildOU</code></div></div>
+    <div class="flow-step"><div class="flow-num">7</div><div>If not skipped: <code>SendFirstRequestEvent</code>; status=PROCESSING + <code>SendDataToDB</code>; else <code>SkipActivity("4")</code></div></div>
+  </div>
+</div>
+
+<!-- §6 Business Logic -->
+<div class="card">
+  <div class="card-header">§6 — Rule Action (THEN) — Key Business Logic</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">portOutIndicator Logic</h3>
+    <table>
+      <tr><th>Condition</th><th>portOutIndicator</th><th>Meaning</th></tr>
+      <tr><td><code>OrderData.Channel = "MNP"</code></td><td><code>89</code></td><td>Mobile Number Portability port-out</td></tr>
+      <tr><td>Otherwise</td><td><code>78</code></td><td>Regular cancel (non-port)</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">activityReason — 2-way choose</h3>
+    <table>
+      <tr><th>Condition</th><th>activityReason</th></tr>
+      <tr><td><code>SubscriberActivityInfo/ActivityReason</code> exists and not blank</td><td>SubscriberActivityInfo/ActivityReason</td></tr>
+      <tr><td>Otherwise</td><td><code>"CREQ"</code> (hardcoded default)</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">userText — 3-way choose</h3>
+    <table>
+      <tr><th>Priority</th><th>Condition</th><th>userText value</th></tr>
+      <tr><td>1</td><td><code>OrderData.OrderType = '48'</code></td><td><code>concat("This subscriber is created by ", Subscriber.MSISDN)</code></td></tr>
+      <tr><td>2</td><td><code>CustomerActivityInfo.UserText</code> not blank</td><td>CustomerActivityInfo.UserText</td></tr>
+      <tr><td>3</td><td>Otherwise</td><td>SubscriberActivityInfo.UserText</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin:0 0 10px">§8.2 ESB / JMS</h3>
+    <table>
+      <tr><th>Direction</th><th>Event</th><th>Destination</th><th>Purpose</th></tr>
+      <tr><td><span class="badge b-jms">OUTBOUND</span></td><td><code>CCBS_L9_CANCEL_SUBS</code></td><td>CCBS L9</td><td>Cancel L9 postpaid subscriber via L9CancelSubscriberRequest</td></tr>
+      <tr><td><span class="badge b-log">LOG</span></td><td><code>Logger</code></td><td>OMX audit</td><td>OPERATION_NAME="CCBS_L9_CANCEL_SUBS", per-subscriber</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin:0 0 10px">§8.3 Backend API</h3>
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>System</td><td>CCBS (L9 postpaid interface)</td></tr>
+      <tr><td>Payload root</td><td><code>ns1:L9CancelSubscriberRequest</code></td></tr>
+      <tr><td>Schema namespace</td><td><code>http://services.omx.truecorp.co.th/FMServices/L9CancelSubscriberRequest</code></td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin:0 0 10px">§8.6 Helper Dependencies</h3>
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Helpers.BN.OrderDataEffectiveDateTransform</code></td><td>Transforms EffectiveDate for BN-type orders</td></tr>
+      <tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit</code></td><td>Clear pending queue on resubmit</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionRequestEvent</code></td><td>Queue request in sequential fan-out</td></tr>
+      <tr><td><code>IntraActivitySequencing.SendFirstRequestEvent</code></td><td>Dispatch first queued request</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 XSLT Tree -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Tree Hierarchy</div>
+  <div class="card-body">
+    <p><strong>Variant ① ParentOU Subscriber</strong> (params: $orderRequest, $refId, $globalVariables, $subscriber, $i, $j, $preActivityInfop)</p>
+    <ul class="xslt-tree" style="background:#1e1e2e;padding:16px;border-radius:8px;margin-top:8px">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId</span> <span class="badge b-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/User</span><span class="tree-cond">[Credential-gated: IsEnableUserPass=true]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">PassWord</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Password</span><span class="tree-cond">[Credential-gated: IsEnableUserPass=true]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">msisdn</span><span class="tree-arrow">←</span><span class="tree-src">$subscriber/MSISDN</span><span class="tree-cond">[Conditional]</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:L9CancelSubscriberRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:subscriberIdInfo</span></div>
+                        <ul><li><div class="tree-row"><span class="tree-tag">ns1:subscrNumber</span><span class="tree-arrow">←</span><span class="tree-src">ParentOU[i+1]/Subscriber[j+1]/SubscriberId</span> <span class="badge b-green">Always</span></div></li></ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:preActivityInfo</span><span class="tree-arrow">←</span><span class="tree-src-static">"OPENPCH"</span> <span class="badge b-green">Always, hardcoded</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:portOutInfo</span></div>
+                        <ul><li><div class="tree-row"><span class="tree-tag">ns1:portOutIndicator</span><span class="tree-arrow">←</span><span class="tree-src-static">Channel="MNP" → 89 | else → 78</span> <span class="badge b-green">Always (2-way if)</span></div></li></ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:actDateInfo</span></div>
+                        <ul><li><div class="tree-row"><span class="tree-tag">ns1:activityDate</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/EffectiveDate</span><span class="tree-cond">[Conditional: string-length(trim(EffectiveDate))&gt;0]</span></div></li></ul>
+                      </li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:ActivityInfo</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:activityReason</span><span class="tree-arrow">←</span><span class="tree-src-static">SubscriberActivityInfo/ActivityReason or "CREQ"</span> <span class="badge b-green">Always (2-way)</span></div></li>
+                          <li><div class="tree-row"><span class="tree-tag">ns1:userText</span><span class="tree-arrow">←</span><span class="tree-src-static">OrderType=48→"created by MSISDN" | CustomerUserText | SubscriberUserText</span> <span class="badge b-green">Always (3-way choose)</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <br/>
+    <p><em>Variant ② (ChildOU): extra param <code>$k</code>; references <code>ParentOU[i+1]/ChildOU[k+1]/Subscriber[j+1]</code>. All logic identical except subscriber path depth.</em></p>
+    <br/>
+    <p><strong>Legend:</strong> <span class="tree-tag">Tag</span> = XML element &nbsp; <code>←</code> = source &nbsp; <span class="tree-src">Green</span> = XPath &nbsp; <span class="tree-src-static">Orange</span> = conditional/computed &nbsp; <span class="tree-cond">Purple italic</span> = condition</p>
+  </div>
+</div>
+
+<!-- §14 Helpers -->
+<div class="card">
+  <div class="card-header">§14 — Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>Helpers.BN.OrderDataEffectiveDateTransform(activityID, effectiveDate)</code></td><td>Compute adjusted effective date for BN process type</td></tr>
+      <tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit</code></td><td>Clear pending queue on resubmit</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)</code></td><td>Queue request for sequential dispatch</td></tr>
+      <tr><td><code>IntraActivitySequencing.SendFirstRequestEvent(activity)</code></td><td>Start sequential fan-out — sends first queued request</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriber(orderRequest, refId)</code></td><td>Serialise ParentOU subscriber for PreExecCheck</td></tr>
+      <tr><td><code>Helpers.GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</code></td><td>Serialise ChildOU subscriber for PreExecCheck</td></tr>
+      <tr><td><code>Helpers.GetActivityStatusString("1", false)</code></td><td>Status=PROCESSING</td></tr>
+      <tr><td><code>Helpers.SendDataToDB</code></td><td>Persist order state</td></tr>
+      <tr><td><code>Helpers.SkipActivity</code></td><td>Skip + advance</td></tr>
+      <tr><td><code>Helpers.HandleActivityException</code></td><td>Exception handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre>Request_CCBS_L9_CANCEL_SUBS
+├── [resub] IntraActivitySequencing.PurgePendingRequestsBeforeResubmit
+├── BN.OrderDataEffectiveDateTransform(ActivityID, EffectiveDate)
+├── [per subscriber] Helpers.GetXMLForSubscriber / GetXMLForSubscriberInChildOU
+├── Event.createEvent(CCBS_L9_CANCEL_SUBS XSLT)          [per subscriber]
+├── Event.assertEvent(reqEvent)
+├── IntraActivitySequencing.ActionRequestEvent(reqEvent, orderCurrentActivity)
+├── [audit] Event.createEvent(Logger XSLT)
+├── IntraActivitySequencing.SendFirstRequestEvent(orderCurrentActivity)
+├── Helpers.GetActivityStatusString("1", false)
+├── Helpers.SendDataToDB
+├── Helpers.SkipActivity("4")
+└── Helpers.HandleActivityException                        [catch]</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Functional Requirements</h3>
+    <table>
+      <tr><th>ID</th><th>Requirement</th></tr>
+      <tr><td>R1</td><td>Iterate all ParentOU and ChildOU subscribers; one L9 cancel request per subscriber</td></tr>
+      <tr><td>R2</td><td>EffectiveDate must be transformed via BN.OrderDataEffectiveDateTransform before sending</td></tr>
+      <tr><td>R3</td><td>preActivityInfo = "OPENPCH" (hardcoded)</td></tr>
+      <tr><td>R4</td><td>portOutIndicator: Channel="MNP" → 89; else → 78</td></tr>
+      <tr><td>R5</td><td>activityReason: SubscriberActivityInfo/ActivityReason or "CREQ"</td></tr>
+      <tr><td>R6</td><td>userText: 3-way (OrderType=48 / CustomerActivityInfo / SubscriberActivityInfo)</td></tr>
+      <tr><td>R7</td><td>Sequential fan-out via IntraActivitySequencing; response fan-in via ActionResponseEvent</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">Design Risks</h3>
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>preActivityInfo "OPENPCH" hardcoded — no override possible</td><td><span class="badge b-orange">[MEDIUM]</span></td><td>Externalize as config parameter in migration</td></tr>
+      <tr><td>portOutIndicator relies on Channel string match "MNP" — case-sensitive</td><td><span class="badge b-orange">[MEDIUM]</span></td><td>Validate Channel normalization upstream</td></tr>
+      <tr><td>ChildOU userText bug: references ParentOU[i+1]/Subscriber[j+1]/SubscriberActivityInfo/ActivityReason (not ChildOU path) in branch 1</td><td><span class="badge b-red">[HIGH]</span></td><td>Fix XPath reference in migration to use ChildOU path</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §19 Response -->
+<div class="card">
+  <div class="card-header">§19 — Response Rule: Response_CCBS_L9_CANCEL_SUBS</div>
+  <div class="card-body">
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.2 Scope Variables</h3>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>OrderRequest</code></td><td>Order context</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_L9_CANCEL_SUBS</code></td><td>Inbound CCBS response</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Activity</code></td><td>Activity for response append</td></tr>
+    </table>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.3 CCBSCancelSubsRes Concept</h3>
+    <ul class="xslt-tree" style="background:#1e1e2e;padding:16px;border-radius:8px">
+      <li><div class="tree-row"><span class="tree-tag">CCBSCancelSubsRes</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span> <span class="badge b-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="tree-cond">[Conditional]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="tree-cond">[Conditional]</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <br/>
+    <h3 style="color:var(--true-dark);margin-bottom:8px">§19.4 Fan-in Completion Logic</h3>
+    <table>
+      <tr><th>Method</th><th>Value</th></tr>
+      <tr><td>Fan-in type</td><td>IntraActivitySequencing (sequential)</td></tr>
+      <tr><td>Completion check</td><td><code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td></tr>
+      <tr><td>Return "true"</td><td>All sequential requests have received responses</td></tr>
+      <tr><td>Return "false"</td><td>Still processing (sends next queued request)</td></tr>
+    </table>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · 2026-09-23</footer>
+</body>
+</html>

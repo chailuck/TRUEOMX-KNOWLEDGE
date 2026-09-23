@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_INTX_GET_SPECIAL_OFFER_IND_BY_CUST</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;font-size:14px;background:var(--bg);color:#333}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:24px 32px}
+header h1{font-size:1.6rem;margin-bottom:4px}
+header p{opacity:.85;font-size:.9rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:12px;padding:3px 12px;font-size:.78rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:20px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+code,pre{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.82rem;line-height:1.5}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.76rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.callout{border-left:4px solid var(--info);background:#E3F0FD;padding:10px 16px;border-radius:4px;margin:10px 0}
+.callout.warn{border-color:var(--warning);background:#FFF3E0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:24px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_INTX_GET_SPECIAL_OFFER_IND_BY_CUST</h1>
+  <p>INTX — Get Special Offer Indicator List by Customer (Paginated)</p>
+  <div class="meta-row">
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Backend: INTX</span>
+    <span class="meta-chip">Fan-in: Count("000") == RequestCount</span>
+    <span class="meta-chip">Pattern: Paginated loop</span>
+    <span class="meta-chip">Generated: 2026-09-23</span>
+  </div>
+</header>
+<div class="container">
+
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>Fetches the complete list of special offer indicator records for a customer from INTX, using a paginated approach. The total number of records (<code>TOTAL_OU</code> ExtendedInfo) is divided by <code>PAGE_SIZE</code> parameter, and one JMS request is sent per page.</p>
+    <div class="callout">
+      <strong>💡 Dual usage in CHANGE_CUSTOMER_GENERAL_INFO:</strong> This FM is called twice in the same order flow:<br/>
+      <strong>Step 6</strong> (extId: <code>INTX_GET_TOTAL_OU_BY_CUST</code>): <code>PAGE_SIZE=1</code> — quick probe to see if TOTAL_OU &gt; 0<br/>
+      <strong>Step 7</strong> (extId: <code>INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code>): <code>PAGE_SIZE=50</code> — full fetch to populate ParentOU list
+    </div>
+    <div class="callout warn" style="margin-top:10px">
+      <strong>⚠ extId/ActivityID mismatch at step 6:</strong> The ProcessConfig extId is <code>INTX_GET_TOTAL_OU_BY_CUST</code> but ActivityID is <code>INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code>. The same rule fires for both steps.
+    </div>
+    <p style="margin-top:10px"><strong>Key response side-effect:</strong> The response handler populates <code>orderRequest.OrderData.Customer.ParentOU</code> with OU objects built from the INTX response — this is the input for the subsequent <code>SBM_FUP_UPDATE_OU_INFO</code> step.</p>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code></td></tr>
+      <tr><td>Author</td><td>RS33-BANDIT</td></tr>
+      <tr><td>Activity ID</td><td><code>INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code></td></tr>
+      <tr><td>Loop pattern</td><td>Pagination: <code>iteration = ceil(TOTAL_OU / PAGE_SIZE)</code></td></tr>
+      <tr><td>RefID per request</td><td><code>OMXTrackingId + ":PAGE:" + i</code></td></tr>
+      <tr><td>Fan-in</td><td><code>count(Response[...000]) == RequestCount</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate</code> per page</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§5 — Execution Flow</div>
+  <div class="section-body">
+    <ol style="margin-left:20px;line-height:2">
+      <li>Check resubmit; if so: <code>PurgePendingRequestsBeforeResubmit</code></li>
+      <li>Read parameters: <code>SPECIAL_OFFER_IND</code> (required), <code>PAGE_SIZE</code> (default "50" if blank)</li>
+      <li>Validate <code>SPECIAL_OFFER_IND</code> — throw DATA_ISSUE if missing</li>
+      <li>If PreExecCheck passes: read <code>TOTAL_OU</code> ExtendedInfo value from orderRequest</li>
+      <li>Compute <code>iteration = ceil(TOTAL_OU / PAGE_SIZE)</code></li>
+      <li>For each page i = 1..iteration:
+        <ul style="margin-left:20px;margin-top:4px">
+          <li>Build <code>refId = OMXTrackingId + ":PAGE:" + i</code></li>
+          <li>Check if this page already succeeded (resubmit guard)</li>
+          <li>If not succeeded: send `GetSpecialOfferIndListByCustomerReq` for this page</li>
+          <li>Increment <code>RequestCount</code>; send audit log</li>
+        </ul>
+      </li>
+      <li>Set WAITING_RESPONSE; persist to DB</li>
+    </ol>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h4 style="margin-bottom:8px">§8.2 — ESB/JMS Channel</h4>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code></td><td>Paginated query for special offer indicators</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td><code>INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code> (response)</td><td>List of OU special offer arrays</td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.3 — Backend API</h4>
+    <p>Schema: <code>http://www.tibco.com/schemas/OMX-COMMON/_SharedResources/Schemas/ESB/INTX/GetSpecialOfferIndListByCustomer.xsd</code></p>
+    <table>
+      <tr><th>Field</th><th>Source</th><th>Notes</th></tr>
+      <tr><td><code>ns:correlatedId</code></td><td><code>OMXTrackingId</code></td><td>Always</td></tr>
+      <tr><td><code>ns:customerId</code></td><td><code>Customer.CustomerId</code></td><td>Always</td></tr>
+      <tr><td><code>ns:specialOfferIndicator</code> (multiple)</td><td><code>spcIndArr</code> items</td><td>Parsed from SPECIAL_OFFER_IND param (comma-separated)</td></tr>
+      <tr><td><code>ns:pageSize</code></td><td>PAGE_SIZE param</td><td>Default 50</td></tr>
+      <tr><td><code>ns:pageNumber</code></td><td>Loop variable <code>i</code></td><td>1-based</td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.5 — Parameters</h4>
+    <table>
+      <tr><th>Parameter</th><th>Example</th><th>Usage</th></tr>
+      <tr><td><code>SPECIAL_OFFER_IND</code></td><td>FSH,FPL</td><td>Comma-separated special offer indicator codes; required</td></tr>
+      <tr><td><code>PAGE_SIZE</code></td><td>1 or 50</td><td>Records per page; defaults to 50</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§9 — Payload Build</div>
+  <div class="section-body">
+    <h4>§9.7 — Generated XML Example (page 1, FSH+FPL)</h4>
+    <pre>&lt;ns:GetSpecialOfferIndListByCustomerReq&gt;
+  &lt;ns:correlatedId&gt;OMX-TRK-20240923-001&lt;/ns:correlatedId&gt;
+  &lt;ns:customerId&gt;1234567&lt;/ns:customerId&gt;
+  &lt;ns:specialOfferIndicator&gt;FSH&lt;/ns:specialOfferIndicator&gt;
+  &lt;ns:specialOfferIndicator&gt;FPL&lt;/ns:specialOfferIndicator&gt;
+  &lt;ns:pageSize&gt;50&lt;/ns:pageSize&gt;
+  &lt;ns:pageNumber&gt;1&lt;/ns:pageNumber&gt;
+&lt;/ns:GetSpecialOfferIndListByCustomerReq&gt;</pre>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping Tree</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">extId</span><span class="tree-arrow">←</span><span class="tree-src-static">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src-static">OMXTrackingId + ":PAGE:" + i</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="tree-arrow">←</span><span class="tree-src">User / Password</span><span class="tree-cond">if IsEnableUserPass='true'</span><span class="badge badge-purple">Credential-gated</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload / GetSpecialOfferIndListByCustomerReq</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:correlatedId</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:customerId</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/CustomerId</span><span class="badge badge-green">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:specialOfferIndicator</span><span class="tree-arrow">←</span><span class="tree-src-static">for-each spcIndArr/elements</span><span class="badge badge-green">Always (one per indicator)</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:pageSize</span><span class="tree-arrow">←</span><span class="tree-src-static">$pageSize param</span><span class="badge badge-green">Always</span></div></li>
+                  <li><div class="tree-row"><span class="tree-tag">ns:pageNumber</span><span class="tree-arrow">←</span><span class="tree-src-static">$i (loop variable)</span><span class="badge badge-green">Always</span></div></li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§12 — Activity Status</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Transition</th><th>Method</th></tr>
+      <tr><td>Requests sent</td><td><code>GetActivityStatusString("1", false)</code></td></tr>
+      <tr><td>Skipped</td><td><code>SkipActivity(req, act, "4")</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§17 — Migration Notes</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>extId=<code>INTX_GET_TOTAL_OU_BY_CUST</code> but ActivityID=<code>INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code> (step 6 anomaly)</td><td><span class="badge badge-red">[HIGH]</span></td><td>Document dual usage; modernized system should use distinct activity names</td></tr>
+      <tr><td>Pagination computed from TOTAL_OU ExtendedInfo — if missing, division fails silently</td><td><span class="badge badge-red">[HIGH]</span></td><td>Add null/zero guard for TOTAL_OU before computing iterations</td></tr>
+      <tr><td>Response populates ParentOU list — subsequent SBM_FUP_UPDATE_OU_INFO depends on this</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Ensure data contract between INTX response and SBM request is preserved</td></tr>
+      <tr><td>SPECIAL_OFFER_IND parameter is required — missing throws DATA_ISSUE exception</td><td><span class="badge badge-blue">[LOW]</span></td><td>Validate parameter at order entry point</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h4>§19.1 — Overview</h4>
+    <p><code>Response_INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code>: Parses paginated response. For each <code>ouSpecialOfferArray</code> entry, creates a <strong>ParentOU</strong> concept and appends to <code>orderRequest.OrderData.Customer.ParentOU</code>. This populates the OU list consumed by <code>SBM_FUP_UPDATE_OU_INFO</code>.</p>
+    <h4 style="margin-top:12px">§19.2 — Scope Variables</h4>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>ParentOU list written here</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.INTX_GET_SPECIAL_OFFER_IND_BY_CUST</code></td><td>Response data</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Fan-in tracking</td></tr>
+    </table>
+    <h4 style="margin-top:12px">§19.3 — ParentOU Construction</h4>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">ParentOU[i] (for each ouSpecialOfferArray)</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">extId</span><span class="tree-arrow">←</span><span class="tree-src-static">concat("OU:", OMXTrackingId, ":", ouId)</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefId</span><span class="tree-arrow">←</span><span class="tree-src">ouSpecialOfferArray[i]/ou/ouId</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OUId</span><span class="tree-arrow">←</span><span class="tree-src">ouSpecialOfferArray[i]/ou/ouId</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h4 style="margin-top:12px">§19.4 — Fan-in</h4>
+    <pre>count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"]) == RequestCount</pre>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

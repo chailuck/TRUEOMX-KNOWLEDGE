@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>GPRS_ENABLE — Order Journey</title>
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default'});</script>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6;font-size:.9rem}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:2rem;font-weight:700}
+header p{margin-top:6px;opacity:.85;font-size:.95rem}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}
+.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+main{max-width:1280px;margin:0 auto;padding:28px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:18px}
+table{width:100%;border-collapse:collapse;font-size:.82rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:7px 10px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover td{background:#fdf5f5}
+tr.has-preexec td{border-left:3px solid #FFC107}
+tr.has-preexec{background:#FFFDE7}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 6px;font-size:.78rem;font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:14px;overflow-x:auto;font-size:.78rem;font-family:'Cascadia Code','Consolas',monospace;border-left:3px solid var(--true-red)}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:1px}
+.b-gen{background:#E8F5E9;color:#2e7d32}
+.callout-info{background:#E3F2FD;border-left:4px solid #1565c0;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:10px;margin-top:8px}
+.fm-card{border:1px solid var(--border);border-radius:8px;padding:12px;background:#fff;border-top:3px solid var(--true-red)}
+.fm-card h4{color:var(--true-dark);font-size:.83rem;margin-bottom:4px}
+.fm-card h4 a{color:var(--true-dark);text-decoration:none}
+.fm-card h4 a:hover{text-decoration:underline}
+.fm-card .steps{font-size:.73rem;color:#666;margin-bottom:4px}
+.diagram-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:#fff}
+details{border:1px solid #f0e0e0;border-radius:6px;margin:6px 0}
+details summary{background:#FFF8F8;padding:8px 14px;cursor:pointer;font-weight:600;color:var(--true-dark);border-radius:6px;list-style:none}
+details summary::before{content:'▶ ';font-size:.7rem;color:var(--true-red)}
+details[open] summary::before{content:'▼ '}
+details .detail-body{padding:12px 16px}
+footer{text-align:center;padding:20px;font-size:.78rem;color:#888;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<header>
+  <h1>GPRS_ENABLE</h1>
+  <p>Process Configuration for GPRS_ENABLE — GPRS service activation: subscriber lookup, BRMS offer resolution, AA network provisioning, and package add/remove</p>
+  <div class="meta-row">
+    <span class="meta-badge">Total Steps: 17</span>
+    <span class="meta-badge">Unique FMs: 16</span>
+    <span class="meta-badge">Entry: CCBS_GET_CUST_ACC_SUB_ID</span>
+    <span class="meta-badge">Generated: 2026-09-23</span>
+  </div>
+</header>
+<main>
+
+<div class="card">
+  <div class="card-header">Notable Patterns</div>
+  <div class="card-body">
+    <div class="callout-info">
+      <strong>Multi-call FM:</strong> <code>CCBS_CHANGE_PACKAGE_SUBSCRIBER</code> called twice — step 14 (ADD, gated on FE/BRMS) and step 15 (REMOVE, gated on FE_REMOVE/BRMS_REMOVE). Both check ServiceType 85/86/68.<br/>
+      <strong>FE_OR_CCBS routing:</strong> Steps 7–16 are BRMS-driven — conditional on <code>FE_OR_CCBS</code> flag values.<br/>
+      <strong>Subscriber active check:</strong> Step 4 only runs if subscriber <code>subStatus='A'</code>.
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Order Flow</div>
+  <div class="card-body">
+    <table>
+      <thead><tr><th>#</th><th>Step ID</th><th>FM (ActivityID)</th><th>Param(s)</th><th>PreExecCheck</th><th>Prev</th><th>Next</th><th>Doc</th></tr></thead>
+      <tbody>
+        <tr><td>1</td><td><code>CCBS_GET_CUST_ACC_SUB_ID</code></td><td><a href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html">CCBS_GET_CUST_ACC_SUB_ID</a></td><td>—</td><td>—</td><td>START</td><td>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr><td>2</td><td><code>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</code></td><td><a href="../FMlogic/Request_CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE.html">CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</a></td><td>—</td><td>—</td><td>CCBS_GET_CUST_ACC_SUB_ID</td><td>CCBS_GET_SUBSCRIBER_HEADER</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr><td>3</td><td><code>CCBS_GET_SUBSCRIBER_HEADER</code></td><td><a href="../FMlogic/Request_CCBS_GET_SUBSCRIBER_HEADER.html">CCBS_GET_SUBSCRIBER_HEADER</a></td><td>—</td><td>—</td><td>CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</td><td>CCBS_GET_SUBS_INFO</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>4</td><td><code>CCBS_GET_SUBS_INFO</code></td><td><a href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">CCBS_GET_SUBS_INFO</a></td><td>—</td><td><code>subStatus='A'</code></td><td>CCBS_GET_SUBSCRIBER_HEADER</td><td>CCBS_GET_ACCOUNT_HEADER</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr><td>5</td><td><code>CCBS_GET_ACCOUNT_HEADER</code></td><td><a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></td><td>—</td><td>—</td><td>CCBS_GET_SUBS_INFO</td><td>OMX_BRMS_DB</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr><td>6</td><td><code>OMX_BRMS_DB</code></td><td><a href="../FMlogic/Request_OMX_BRMS_DB.html">OMX_BRMS_DB</a></td><td>—</td><td>—</td><td>CCBS_GET_ACCOUNT_HEADER</td><td>CCBS_RESOLVE_SOC_CODE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>7</td><td><code>CCBS_RESOLVE_SOC_CODE</code></td><td><a href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></td><td>—</td><td><code>boolean(SubscriberOffers[not(Soc)])</code></td><td>OMX_BRMS_DB</td><td>CCBS_GOD</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>8</td><td><code>CCBS_GOD</code></td><td><a href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></td><td>—</td><td><code>FE_OR_CCBS='FE' or 'BRMS'</code></td><td>CCBS_RESOLVE_SOC_CODE</td><td>OMX_OFFER_INCLUSION</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>9</td><td><code>OMX_OFFER_INCLUSION</code></td><td><a href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">OMX_OFFER_INCLUSION</a></td><td>—</td><td><code>Channel!='EOC' and EFF_TYPE conditions</code></td><td>CCBS_GOD</td><td>OMX_BIZ_VAL</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr><td>10</td><td><code>OMX_BIZ_VAL</code></td><td><a href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></td><td>—</td><td>—</td><td>OMX_OFFER_INCLUSION</td><td>AA_GET_SWITCH_FEATURE_OFFER</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr><td>11</td><td><code>AA_GET_SWITCH_FEATURE_OFFER</code></td><td><a href="../FMlogic/Request_AA_GET_SWITCH_FEATURE_OFFER.html">AA_GET_SWITCH_FEATURE_OFFER</a></td><td>—</td><td>—</td><td>OMX_BIZ_VAL</td><td>OMX_GET_SRV_TRX_NO</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>12</td><td><code>OMX_GET_SRV_TRX_NO</code></td><td><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></td><td>CCD</td><td><code>SwitchFeature in FE/BRMS/BRMS_REMOVE</code></td><td>AA_GET_SWITCH_FEATURE_OFFER</td><td>AA_ACTIVATE_SUBS</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>13</td><td><code>AA_ACTIVATE_SUBS</code></td><td><a href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a></td><td>CCD</td><td><code>SwitchFeature in FE/BRMS/BRMS_REMOVE</code></td><td>OMX_GET_SRV_TRX_NO</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>14</td><td><code>CCBS_CHANGE_PACKAGE_SUBSCRIBER</code></td><td><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td><td>ADD</td><td><code>SubscriberOffers FE/BRMS, ST 85/86/68</code></td><td>AA_ACTIVATE_SUBS</td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>15</td><td><code>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</code></td><td><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></td><td>REMOVE</td><td><code>SubscriberOffers FE_REMOVE/BRMS_REMOVE, ST 85/86/68</code></td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER</td><td>AA_CHECK_CONFIRMATION</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>16</td><td><code>AA_CHECK_CONFIRMATION</code></td><td><a href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a></td><td>CCD | UPDATE_NETWORK_STATUS</td><td><code>SwitchFeature in FE/BRMS</code></td><td>CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE</td><td>SMSGATEWAY_SEND_SMS</td><td><span class="badge b-gen">✓</span></td></tr>
+        <tr class="has-preexec"><td>17</td><td><code>SMSGATEWAY_SEND_SMS</code></td><td><a href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></td><td>—</td><td><code>has MSISDN AND Channel!='CCBS'/'OMX'</code></td><td>AA_CHECK_CONFIRMATION</td><td>END</td><td><span class="badge b-gen">✓</span></td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="card-body">
+    <details><summary>Step 4 — CCBS_GET_SUBS_INFO — subscriber active check</summary><div class="detail-body"><pre>//Subscriber/ExtendedInfo[Name/text()='subStatus']/Value/text()='A'</pre></div></details>
+    <details><summary>Step 7 — CCBS_RESOLVE_SOC_CODE</summary><div class="detail-body"><pre>boolean(//SubscriberOffers[not(Soc/text())])</pre></div></details>
+    <details><summary>Step 8 — CCBS_GOD</summary><div class="detail-body"><pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]])</pre></div></details>
+    <details open><summary>Step 9 — OMX_OFFER_INCLUSION</summary><div class="detail-body"><pre>/ns0:OrderRequest/OrderData/Channel/text()!="EOC"
+and ((not(boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE']]))
+  or boolean(//SubscriberOffers[ExtendedInfo[Name='EFF_TYPE' and Value!='FUT']]))
+  or boolean(//SubscriberOffers[ExtendedInfo[Name='LOGICALDATE_PROV']]))</pre></div></details>
+    <details><summary>Step 12 — OMX_GET_SRV_TRX_NO</summary><div class="detail-body"><pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS' or Value='BRMS_REMOVE')]]/SwitchFeature[1])
+or boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS' or Value='BRMS_REMOVE')]]/RelatedOffersArray/SwitchFeature[1])</pre></div></details>
+    <details><summary>Step 13 — AA_ACTIVATE_SUBS</summary><div class="detail-body"><pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS' or Value='BRMS_REMOVE')]]/SwitchFeature[1])
+or boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS' or Value='BRMS_REMOVE')]]/RelatedOffersArray/SwitchFeature[1])</pre></div></details>
+    <details open><summary>Step 14 — CCBS_CHANGE_PACKAGE_SUBSCRIBER (ADD)</summary><div class="detail-body"><pre>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')] and (ServiceType='85' or ServiceType='86' or ServiceType='68')])</pre></div></details>
+    <details open><summary>Step 15 — CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE (REMOVE)</summary><div class="detail-body"><pre>boolean(//Subscriber/SubscriberOffers[1] and //SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE_REMOVE' or Value='BRMS_REMOVE')] and (ServiceType='85' or ServiceType='86' or ServiceType='68')])</pre></div></details>
+    <details><summary>Step 16 — AA_CHECK_CONFIRMATION</summary><div class="detail-body"><pre>boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]]/SwitchFeature[1])
+or boolean(//SubscriberOffers[ExtendedInfo[Name='FE_OR_CCBS' and (Value='FE' or Value='BRMS')]]/RelatedOffersArray/SwitchFeature[1])</pre></div></details>
+    <details><summary>Step 17 — SMSGATEWAY_SEND_SMS</summary><div class="detail-body"><pre>boolean(//Subscriber[MSISDN/text()][1] and /ns0:OrderRequest/OrderData/Channel/text()!="CCBS" and /ns0:OrderRequest/OrderData/Channel/text()!="OMX")</pre></div></details>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§4 — FM Documentation Index</div>
+  <div class="card-body">
+    <div class="fm-grid">
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_CUST_ACC_SUB_ID.html">CCBS_GET_CUST_ACC_SUB_ID</a></h4><div class="steps">Step: 1</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE.html">CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE</a></h4><div class="steps">Step: 2</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_SUBSCRIBER_HEADER.html">CCBS_GET_SUBSCRIBER_HEADER</a></h4><div class="steps">Step: 3</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_SUBS_INFO.html">CCBS_GET_SUBS_INFO</a></h4><div class="steps">Step: 4</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GET_ACCOUNT_HEADER.html">CCBS_GET_ACCOUNT_HEADER</a></h4><div class="steps">Step: 5</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_BRMS_DB.html">OMX_BRMS_DB</a></h4><div class="steps">Step: 6</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_RESOLVE_SOC_CODE.html">CCBS_RESOLVE_SOC_CODE</a></h4><div class="steps">Step: 7</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_GOD.html">CCBS_GOD</a></h4><div class="steps">Step: 8</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_OFFER_INCLUSION.html">OMX_OFFER_INCLUSION</a></h4><div class="steps">Step: 9</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_BIZ_VAL.html">OMX_BIZ_VAL</a></h4><div class="steps">Step: 10</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_AA_GET_SWITCH_FEATURE_OFFER.html">AA_GET_SWITCH_FEATURE_OFFER</a></h4><div class="steps">Step: 11</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_OMX_GET_SRV_TRX_NO.html">OMX_GET_SRV_TRX_NO</a></h4><div class="steps">Step: 12</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_AA_ACTIVATE_SUBS.html">AA_ACTIVATE_SUBS</a></h4><div class="steps">Step: 13</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_CCBS_CHANGE_PACKAGE_SUBSCRIBER.html">CCBS_CHANGE_PACKAGE_SUBSCRIBER</a></h4><div class="steps">Steps: 14 (ADD), 15 (REMOVE)</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_AA_CHECK_CONFIRMATION.html">AA_CHECK_CONFIRMATION</a></h4><div class="steps">Step: 16</div><span class="badge b-gen">✓</span></div>
+      <div class="fm-card"><h4><a href="../FMlogic/Request_SMSGATEWAY_SEND_SMS.html">SMSGATEWAY_SEND_SMS</a></h4><div class="steps">Step: 17</div><span class="badge b-gen">✓</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Sequence Diagram</div>
+  <div class="card-body">
+    <div class="diagram-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CCBS as CCBS
+    participant OMX as OMX
+    participant AA as AA
+    participant SMS as SMSGATEWAY
+
+    O->>CCBS: CCBS_GET_CUST_ACC_SUB_ID
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_CUST_ACC_SUB_ID
+
+    O->>CCBS: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_SEARCH_SUBSCRIBER_BY_RESOURCE
+
+    O->>CCBS: CCBS_GET_SUBSCRIBER_HEADER
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_SUBSCRIBER_HEADER
+
+    opt subStatus='A'
+        O->>CCBS: CCBS_GET_SUBS_INFO
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GET_SUBS_INFO
+    end
+
+    O->>CCBS: CCBS_GET_ACCOUNT_HEADER
+    CCBS-->>O: response
+    Note over O,CCBS: FM: CCBS_GET_ACCOUNT_HEADER
+
+    O->>OMX: OMX_BRMS_DB
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BRMS_DB
+
+    opt SubscriberOffers without Soc
+        O->>CCBS: CCBS_RESOLVE_SOC_CODE
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_RESOLVE_SOC_CODE
+    end
+
+    opt FE_OR_CCBS=FE or BRMS
+        O->>CCBS: CCBS_GOD
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_GOD
+    end
+
+    opt Channel!=EOC and EFF_TYPE conditions
+        O->>OMX: OMX_OFFER_INCLUSION
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_OFFER_INCLUSION
+    end
+
+    O->>OMX: OMX_BIZ_VAL
+    OMX-->>O: response
+    Note over O,OMX: FM: OMX_BIZ_VAL
+
+    O->>AA: AA_GET_SWITCH_FEATURE_OFFER
+    AA-->>O: response
+    Note over O,AA: FM: AA_GET_SWITCH_FEATURE_OFFER
+
+    opt SwitchFeature in FE/BRMS/BRMS_REMOVE
+        O->>OMX: OMX_GET_SRV_TRX_NO [CCD]
+        OMX-->>O: response
+        Note over O,OMX: FM: OMX_GET_SRV_TRX_NO
+    end
+
+    opt SwitchFeature in FE/BRMS/BRMS_REMOVE
+        O->>AA: AA_ACTIVATE_SUBS [CCD]
+        AA-->>O: response
+        Note over O,AA: FM: AA_ACTIVATE_SUBS
+    end
+
+    opt FE/BRMS, ServiceType 85/86/68
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER [ADD]
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER (ADD)
+    end
+
+    opt FE_REMOVE/BRMS_REMOVE, ServiceType 85/86/68
+        O->>CCBS: CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE [REMOVE]
+        CCBS-->>O: response
+        Note over O,CCBS: FM: CCBS_CHANGE_PACKAGE_SUBSCRIBER (REMOVE)
+    end
+
+    opt SwitchFeature in FE/BRMS
+        O->>AA: AA_CHECK_CONFIRMATION [CCD|UPDATE_NETWORK_STATUS]
+        AA-->>O: response
+        Note over O,AA: FM: AA_CHECK_CONFIRMATION
+    end
+
+    opt has MSISDN and Channel!=CCBS/OMX
+        O->>SMS: SMSGATEWAY_SEND_SMS
+        SMS-->>O: response
+        Note over O,SMS: FM: SMSGATEWAY_SEND_SMS
+    end
+      </div>
+    </div>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · Order Journey Documentation · GPRS_ENABLE · 2026-09-23</footer>
+</body>
+</html>

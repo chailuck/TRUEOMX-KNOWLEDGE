@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_GET_CUST_ACC_SUB_SHAREPLAN</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6;font-size:.9rem}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.7rem;font-weight:700;font-family:monospace}header p{margin-top:6px;opacity:.85}
+.meta-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:14px}.meta-badge{background:rgba(255,255,255,.15);border:1px solid rgba(255,255,255,.3);border-radius:20px;padding:4px 14px;font-size:.82rem;color:#fff}
+main{max-width:1200px;margin:0 auto;padding:28px 20px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:18px}table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}tr:hover td{background:#fdf5f5}
+code{background:#f5e6e6;color:var(--true-dark);border-radius:4px;padding:1px 6px;font-size:.82rem;font-family:monospace}
+.badge{display:inline-block;border-radius:12px;padding:2px 10px;font-size:.75rem;font-weight:600;margin:1px}
+.callout{border-left:4px solid var(--true-red);background:var(--true-pale);border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.callout-info{border-left:4px solid #1565c0;background:#E3F2FD;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.callout-warn{border-left:4px solid #e65100;background:#FFF3E0;border-radius:6px;padding:12px 16px;margin:10px 0;font-size:.88rem}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:monospace;font-size:.83rem}.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;padding:1px 6px;border-radius:4px;background:rgba(166,227,161,.1)}
+.tree-src-static{color:#fab387;padding:1px 6px;border-radius:4px;background:rgba(250,179,135,.1)}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;font-size:.78rem;color:#888;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_CCBS_GET_CUST_ACC_SUB_SHAREPLAN</h1>
+  <p>Fetches customer/account/subscriber info from CCBS for SharePlan — reuses CCBS_GET_CUST_ACC_SUB_ID event; iterates BOTH ChildOU and ParentOU subscribers</p>
+  <div class="meta-row">
+    <span class="meta-badge">Priority: 5</span><span class="meta-badge">Target: CCBS</span>
+    <span class="meta-badge">Event: CCBS_GET_CUST_ACC_SUB_ID (reused)</span>
+    <span class="meta-badge">Scope: ChildOU + ParentOU (both)</span>
+    <span class="meta-badge">Author: DESKTOP-KB4BEG4</span>
+  </div>
+</header>
+<main>
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <div class="callout">
+      <strong>CCBS_GET_CUST_ACC_SUB_SHAREPLAN</strong> retrieves customer, account, and subscriber data from CCBS for all SharePlan participants. Uniquely, it iterates <strong>both ChildOU subscribers first, then ParentOU subscribers</strong>. This is used in the APPLY_SHARE_PLAN flow to populate subscriber data for all SharePlan members. Reuses the <code>CCBS_GET_CUST_ACC_SUB_ID</code> event with SubNumber=MSISDN plus optional ParameterType from PRIMARY_RESOURCE_TYPE.
+    </div>
+    <div class="callout-warn">
+      <strong>⚠ Dual-scope iteration order:</strong> ChildOU subscribers are iterated first (primary SharePlan children), then ParentOU subscribers (main/secondary). Most FMs iterate only ParentOU.
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table><thead><tr><th>Attribute</th><th>Value</th></tr></thead>
+      <tbody>
+        <tr><td>ActivityID match</td><td><code>CCBS_GET_CUST_ACC_SUB_SHAREPLAN</code></td></tr>
+        <tr><td>Event type reused</td><td><code>CCBS_GET_CUST_ACC_SUB_ID</code></td></tr>
+        <tr><td>Iteration order</td><td>1) ChildOU → Subscriber, 2) ParentOU → Subscriber</td></tr>
+        <tr><td>Fan-in</td><td>Standard RefId + CompletionStatus==2 per subscriber</td></tr>
+        <tr><td>Send method</td><td><code>Event.Ext.sendEventImmediate()</code></td></tr>
+        <tr><td>PreExecCheck</td><td>Evaluated per subscriber (ChildOU uses GetXMLForSubscriberInChildOU)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§9 — Payload Build (CCBS_GET_CUST_ACC_SUB_ID event)</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId (ChildOU or ParentOU subscriber RefId)</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">SubNumber</span><span class="tree-arrow">←</span><span class="tree-src">Subscriber.MSISDN</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ParameterType</span><span class="tree-arrow">←</span><span class="tree-src">ExtendedInfo[PRIMARY_RESOURCE_TYPE]/Value</span> <span class="tree-cond">(Conditional)</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <div class="callout-info" style="margin-top:12px">
+      Unlike <code>CCBS_GET_CUST_ACC_SUB_ID</code> which uses a different payload structure, this FM sends SubNumber and optional ParameterType directly in the event (no nested request schema).
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§8.5 — ExtendedInfo Fields</div>
+  <div class="card-body">
+    <table><thead><tr><th>Key</th><th>Role</th></tr></thead>
+      <tbody>
+        <tr><td><code>PRIMARY_RESOURCE_TYPE</code></td><td>Optional parameter type for the CCBS lookup (e.g., differentiating SIM vs. MSISDN resource)</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <table><thead><tr><th>#</th><th>Note</th></tr></thead>
+      <tbody>
+        <tr><td>R1</td><td>Iterates ChildOU first — target must preserve this ordering for SharePlan member data enrichment</td></tr>
+        <tr><td>R2</td><td>Reuses CCBS_GET_CUST_ACC_SUB_ID event but with SharePlan-specific payload (SubNumber only, no customer number)</td></tr>
+        <tr><td>R3</td><td>Used specifically in APPLY_SHARE_PLAN flow — result enriches subscriber data for all SharePlan members</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation · Request_CCBS_GET_CUST_ACC_SUB_SHAREPLAN</footer>
+</body></html>

@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_GET_CUSTOMER_INFO</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;font-size:14px;background:var(--bg);color:#333}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:24px 32px}
+header h1{font-size:1.6rem;margin-bottom:4px}
+header p{opacity:.85;font-size:.9rem}
+.meta-row{display:flex;gap:16px;margin-top:12px;flex-wrap:wrap}
+.meta-chip{background:rgba(255,255,255,.15);border-radius:12px;padding:3px 12px;font-size:.78rem}
+.container{max-width:1200px;margin:0 auto;padding:24px 32px}
+.section{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:20px;overflow:hidden}
+.section-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:10px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.section-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:last-child td{border-bottom:none}
+code,pre{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.82rem;line-height:1.5}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.76rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.badge-warn{background:#FFF9C4;color:#F57F17}
+.callout{border-left:4px solid var(--warning);background:#FFF3E0;padding:10px 16px;border-radius:4px;margin:10px 0}
+.callout.info{border-color:var(--info);background:#E3F0FD}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:24px}
+</style>
+</head>
+<body>
+<header>
+  <h1>Request_CCBS_GET_CUSTOMER_INFO</h1>
+  <p>CCBS — Retrieve Customer Header / Identification Info</p>
+  <div class="meta-row">
+    <span class="meta-chip">Priority: 5</span>
+    <span class="meta-chip">forwardChain: true</span>
+    <span class="meta-chip">Backend: CCBS</span>
+    <span class="meta-chip">Event: CCBS_GET_CUSTOMER_HEADER</span>
+    <span class="meta-chip">Generated: 2026-09-23</span>
+  </div>
+</header>
+<div class="container">
+
+<!-- §1 Overview -->
+<div class="section">
+  <div class="section-header">§1 — Overview &amp; Purpose</div>
+  <div class="section-body">
+    <p>Fires when the order orchestrator reaches the <code>CCBS_GET_CUSTOMER_INFO</code> activity. Retrieves customer header data from CCBS using the <code>GetCustomerHeaderRequest</code> operation. Despite the activity name suggesting full customer info, the dispatched JMS event type is <code>CCBS_GET_CUSTOMER_HEADER</code> — indicating this rule reuses the header event channel.</p>
+    <p style="margin-top:8px">The response handler (via parameter flags) can optionally extract and write back:</p>
+    <ul style="margin:8px 0 0 20px">
+      <li><strong>OLD_IDENTIFICATION</strong> ExtendedInfo — when <code>GET_OLD_IDENTIFICATION=Y</code></li>
+      <li><strong>CustomerGeneralInfo.Identification</strong> — when <code>GET_CUST_GENERAL_INFO=Y</code></li>
+    </ul>
+    <div class="callout" style="margin-top:12px">
+      <strong>⚠ Naming anomaly:</strong> ActivityID is <code>CCBS_GET_CUSTOMER_INFO</code> but the JMS event type dispatched is <code>CCBS_GET_CUSTOMER_HEADER</code>. Both share the same underlying CCBS operation (<code>GetCustomerHeaderRequest</code>). Modernization should clarify this naming discrepancy.
+    </div>
+  </div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="section">
+  <div class="section-header">§2 — Rule Metadata</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_GET_CUSTOMER_INFO</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>forwardChain</td><td>true</td></tr>
+      <tr><td>Author</td><td>RNAPP-PC</td></tr>
+      <tr><td>Activity ID</td><td><code>CCBS_GET_CUSTOMER_INFO</code></td></tr>
+      <tr><td>JMS Event type</td><td><code>CCBS_GET_CUSTOMER_HEADER</code> <span class="badge badge-warn">Naming anomaly</span></td></tr>
+      <tr><td>Fan-in type</td><td>Simple count — <code>RequestCount == successResponseCount</code></td></tr>
+      <tr><td>Send pattern</td><td><code>Event.Ext.sendEventImmediate</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="section">
+  <div class="section-header">§3 — Working Memory — Declared Objects</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order context</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity state &amp; parameters</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 Conditions -->
+<div class="section">
+  <div class="section-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="section-body">
+    <pre>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName
+orderCurrentActivity.ActivityID == "CCBS_GET_CUSTOMER_INFO"
+orderRequest.ProcessFlow.NextActivityID == "CCBS_GET_CUSTOMER_INFO"
+orderCurrentActivity.Status == "WAITING"</pre>
+  </div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="section">
+  <div class="section-header">§5 — Execution Flow</div>
+  <div class="section-body">
+    <ol style="margin-left:20px;line-height:2">
+      <li>Check resubmit flag (<code>isActResub</code>)</li>
+      <li>Read <code>PreExecCheck</code> XPath from activity; evaluate against serialized orderRequest</li>
+      <li>If check passes: build <code>GetCustomerHeaderRequest</code> event via XSLT and send immediately</li>
+      <li>Increment <code>RequestCount</code> (skip if resubmit)</li>
+      <li>Send audit log event</li>
+      <li>Set status to WAITING_RESPONSE via <code>GetActivityStatusString("1", false)</code></li>
+      <li>If check fails: call <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></li>
+    </ol>
+  </div>
+</div>
+
+<!-- §6 Rule Action -->
+<div class="section">
+  <div class="section-header">§6 — Rule Action (THEN) — Key Logic</div>
+  <div class="section-body">
+    <pre><span style="color:#6c7086">// Check resubmit</span>
+boolean isActResub = (orderCurrentActivity.RequestCount &gt; 0 &amp;&amp; orderRequest.IsOrderResubmitted);
+
+<span style="color:#6c7086">// Evaluate PreExecCheck</span>
+String chkXPath = nextAct.PreExecCheck;
+String chkRes = "true";
+if(String.length(orderCurrentActivity.PreExecCheck) &gt; 0) {
+    chkRes = XPath.execute("/(" + chkXPath + ")", sXML, "ns0=...");
+}
+
+<span style="color:#6c7086">// Send CCBS_GET_CUSTOMER_HEADER event (not CCBS_GET_CUSTOMER_INFO)</span>
+Events.OMConsumers.OMXFM.Request.CCBS_GET_CUSTOMER_HEADER reqEvent =
+    Event.createEvent("xslt://{{/Events/OMConsumers/OMXFM/Request/CCBS_GET_CUSTOMER_HEADER}}...");
+Event.Ext.sendEventImmediate(reqEvent);
+
+if(!isActResub) orderCurrentActivity.RequestCount++;
+orderCurrentActivity.Status = RuleFunctions.Helpers.GetActivityStatusString("1", false);</pre>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="section">
+  <div class="section-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="section-body">
+    <h4 style="margin-bottom:8px">§8.1 — Order Types / Scenarios</h4>
+    <p>Used by <code>CHANGE_CUSTOMER_GENERAL_INFO</code> (step 3, <code>GET_OLD_IDENTIFICATION=Y</code>) and potentially other order types requiring customer identification data.</p>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.2 — ESB/JMS Channel Dependencies</h4>
+    <table>
+      <tr><th>Direction</th><th>Event Type</th><th>Protocol</th><th>Purpose</th></tr>
+      <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td><code>CCBS_GET_CUSTOMER_HEADER</code></td><td>JMS</td><td>Get customer header from CCBS</td></tr>
+      <tr><td><span class="badge badge-blue">INBOUND</span></td><td><code>CCBS_GET_CUSTOMER_HEADER</code> (response)</td><td>JMS</td><td>Customer header / identification data</td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.3 — Backend API</h4>
+    <table>
+      <tr><th>System</th><th>Operation</th><th>Schema</th></tr>
+      <tr><td>CCBS</td><td>GetCustomerHeaderRequest</td><td><code>ns:GetCustomerHeaderRequest / ns:CustomerIdInfo / ns:customerNo</code></td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.4 — Working Memory</h4>
+    <table>
+      <tr><th>Field</th><th>Access</th><th>Notes</th></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.CustomerId</code></td><td>READ</td><td>Mapped to customerNo</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.ExtendedInfo</code></td><td>WRITE</td><td>Adds OLD_IDENTIFICATION entry</td></tr>
+      <tr><td><code>orderRequest.OrderData.Customer.CustomerGeneralInfo</code></td><td>WRITE</td><td>Populates Identification field</td></tr>
+    </table>
+    <h4 style="margin-top:16px;margin-bottom:8px">§8.5 — Activity Parameters</h4>
+    <table>
+      <tr><th>Parameter Key</th><th>Value</th><th>Effect</th></tr>
+      <tr><td><code>GET_OLD_IDENTIFICATION</code></td><td>Y</td><td>Extract <code>OLD_IDENTIFICATION</code> ExtendedInfo from response</td></tr>
+      <tr><td><code>GET_CUST_GENERAL_INFO</code></td><td>Y</td><td>Populate <code>CustomerGeneralInfo.Identification</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="section">
+  <div class="section-header">§9 — Detailed Payload Build</div>
+  <div class="section-body">
+    <h4>§9.4 — Payload Root</h4>
+    <p>Schema: <code>http://www.tibco.com/schemas/tibco-ccbs-client/Schemas/CustomerServices/Schema.xsd7</code> (prefix <code>ns</code>)</p>
+    <h4 style="margin-top:12px">§9.7 — Generated XML Example</h4>
+    <pre>&lt;createEvent&gt;
+  &lt;event&gt;
+    &lt;JMSPriority&gt;5&lt;/JMSPriority&gt;
+    &lt;JMSCorrelationID&gt;OMX-TRK-20240923-001&lt;/JMSCorrelationID&gt;
+    &lt;OrderID&gt;ORD-123456&lt;/OrderID&gt;
+    &lt;RefID&gt;CUST-REF-001&lt;/RefID&gt;
+    &lt;OrderType&gt;CHANGE_CUSTOMER_GENERAL_INFO&lt;/OrderType&gt;
+    &lt;payload&gt;
+      &lt;ns:GetCustomerHeaderRequest&gt;
+        &lt;ns:CustomerIdInfo&gt;
+          &lt;ns:customerNo&gt;1234567&lt;/ns:customerNo&gt;
+        &lt;/ns:CustomerIdInfo&gt;
+      &lt;/ns:GetCustomerHeaderRequest&gt;
+    &lt;/payload&gt;
+  &lt;/event&gt;
+&lt;/createEvent&gt;</pre>
+    <h4 style="margin-top:12px">§9.8 — XSLT Source</h4>
+    <pre>&lt;xsl:stylesheet version="1.0"
+  xmlns:ns="http://www.tibco.com/schemas/tibco-ccbs-client/Schemas/CustomerServices/Schema.xsd7"&gt;
+  &lt;xsl:param name="orderRequest"/&gt;
+  &lt;!-- Event headers --&gt;
+  &lt;!-- JMSPriority, JMSCorrelationID, OrderID, RefID, OrderType, CES — all conditional --&gt;
+  &lt;!-- Payload: single customerNo from Customer.CustomerId --&gt;
+  &lt;ns:GetCustomerHeaderRequest&gt;
+    &lt;ns:CustomerIdInfo&gt;
+      &lt;ns:customerNo&gt;$orderRequest/OrderData/Customer/CustomerId&lt;/ns:customerNo&gt;
+    &lt;/ns:CustomerIdInfo&gt;
+  &lt;/ns:GetCustomerHeaderRequest&gt;
+&lt;/xsl:stylesheet&gt;</pre>
+  </div>
+</div>
+
+<!-- §10 XSLT Field Mapping -->
+<div class="section">
+  <div class="section-header">§10 — XSLT Field Mapping — Output XML Tree</div>
+  <div class="section-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">event</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/RefId</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/CES</span><span class="badge badge-orange">Conditional</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns:GetCustomerHeaderRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns:CustomerIdInfo</span></div>
+                        <ul>
+                          <li><div class="tree-row"><span class="tree-tag">ns:customerNo</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/CustomerId</span><span class="badge badge-green">Always</span></div></li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="section">
+  <div class="section-header">§11 — Audit Logging</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>OPERATION_NAME</td><td><code>"CCBS_GET_CUSTOMER_INFO"</code></td></tr>
+      <tr><td>AUDIT_TRACE (REQ)</td><td><code>"Request Sent for CCBS_GET_CUSTOMER_INFO"</code></td></tr>
+      <tr><td>AUDIT_TRACE (RES)</td><td><code>"Response received for CCBS_GET_CUSTOMER_INFO"</code></td></tr>
+      <tr><td>payload</td><td>Conditional on <code>WritePayload="true"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="section">
+  <div class="section-header">§12 — Activity Status Management</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Transition</th><th>Method</th><th>Code</th></tr>
+      <tr><td>Request sent</td><td><code>GetActivityStatusString("1", false)</code></td><td>WAITING_RESPONSE</td></tr>
+      <tr><td>Skipped (PreExecCheck false)</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td><td>SKIPPED</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="section">
+  <div class="section-header">§13 — Exception Handling</div>
+  <div class="section-body">
+    <pre>catch (Exception ae) {
+    RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "");
+}</pre>
+  </div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="section">
+  <div class="section-header">§14 — Helper Functions Reference</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>GetActivityStatusString("1", false)</code></td><td>Returns WAITING_RESPONSE status string</td></tr>
+      <tr><td><code>SkipActivity(req, act, "4")</code></td><td>Marks activity skipped, advances flow</td></tr>
+      <tr><td><code>SendDataToDB(orderRequest)</code></td><td>Persists order state to DB</td></tr>
+      <tr><td><code>HandleActivityException(req, act, ae, "")</code></td><td>Error handler with audit</td></tr>
+      <tr><td><code>GetActivityParameterValueFromKey(act, key)</code></td><td>Reads activity parameter by key</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="section">
+  <div class="section-header">§15 — Function Dependency Tree</div>
+  <div class="section-body">
+    <pre>Request_CCBS_GET_CUSTOMER_INFO (then block)
+├── RuleFunctions.Helpers.GetActivityStatusString("1", false)
+├── RuleFunctions.Helpers.SkipActivity(req, act, "4")
+├── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+└── RuleFunctions.Helpers.HandleActivityException(req, act, ae, "")
+
+Response_CCBS_GET_CUSTOMER_INFO (response handler)
+├── RuleFunctions.Helpers.GetActivityParameterValueFromKey(act, "GET_OLD_IDENTIFICATION")
+├── RuleFunctions.Helpers.GetActivityParameterValueFromKey(act, "GET_CUST_GENERAL_INFO")
+├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(str)
+└── XPath.evalAsInt (count Response[...000])</pre>
+  </div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="section">
+  <div class="section-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="section-body">
+    <table>
+      <tr><th>Risk</th><th>Severity</th><th>Mitigation</th></tr>
+      <tr><td>ActivityID is <code>CCBS_GET_CUSTOMER_INFO</code> but JMS event type is <code>CCBS_GET_CUSTOMER_HEADER</code></td><td><span class="badge badge-red">[HIGH]</span></td><td>Rename activity or event to match; confirm same CCBS endpoint serves both operations</td></tr>
+      <tr><td>Parameter flags <code>GET_OLD_IDENTIFICATION</code> and <code>GET_CUST_GENERAL_INFO</code> control response behavior silently</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Make branching explicit in modernized orchestration</td></tr>
+      <tr><td>Resubmit skip of <code>RequestCount++</code> may cause fan-in mismatch if response count diverges</td><td><span class="badge badge-orange">[MEDIUM]</span></td><td>Verify resubmit logic handles existing responses correctly</td></tr>
+    </table>
+    <p style="margin-top:8px"><strong>Functional requirements:</strong> R1: Retrieve customer header from CCBS by CustomerId; R2: Extract OLD_IDENTIFICATION when parameter flag set; R3: Populate CustomerGeneralInfo.Identification when parameter flag set.</p>
+  </div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="section">
+  <div class="section-header">§19 — Response Message Rule</div>
+  <div class="section-body">
+    <h4>§19.1 — Overview</h4>
+    <p>Handler: <code>Response_CCBS_GET_CUSTOMER_INFO</code>. Parses the <code>CCBS_GET_CUSTOMER_HEADER</code> response event. Builds a <code>ResponseBase</code> concept and appends to <code>currActivity.Response</code>. Conditionally writes identification fields back to orderRequest. Drives fan-in by counting successful responses.</p>
+    <h4 style="margin-top:12px">§19.2 — Scope Variables</h4>
+    <table>
+      <tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Order context (written back)</td></tr>
+      <tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CCBS_GET_CUSTOMER_HEADER</code></td><td>Response data from CCBS</td></tr>
+      <tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Fan-in tracking</td></tr>
+    </table>
+    <h4 style="margin-top:12px">§19.3 — ResponseBase Construction</h4>
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject / object</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">extId</span><span class="tree-arrow">←</span><span class="tree-src-static">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+    <h4 style="margin-top:12px">§19.4 — Response Completion Logic</h4>
+    <pre>int successResponseCount = count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"]);
+if(currActivity.RequestCount == successResponseCount) return "true";</pre>
+    <p>Fan-in: all requests (RequestCount=1 for simple call) must succeed (code ending "000").</p>
+    <h4 style="margin-top:12px">§19.4b — Write-back Logic</h4>
+    <table>
+      <tr><th>Condition</th><th>Write Target</th><th>Source</th></tr>
+      <tr><td>GET_OLD_IDENTIFICATION=Y</td><td><code>Customer.ExtendedInfo[Name='OLD_IDENTIFICATION']</code></td><td><code>eventResponse/.../ns1:L9Identification</code></td></tr>
+      <tr><td>GET_CUST_GENERAL_INFO=Y AND CustomerGeneralInfo null</td><td><code>Customer.CustomerGeneralInfo.Identification</code> (new object)</td><td><code>eventResponse/.../ns1:L9Identification</code></td></tr>
+      <tr><td>GET_CUST_GENERAL_INFO=Y AND Identification is blank</td><td><code>Customer.CustomerGeneralInfo.Identification</code> (update)</td><td>XPath.evalAsString on L9Identification</td></tr>
+    </table>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>
