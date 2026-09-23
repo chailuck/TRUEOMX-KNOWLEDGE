@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CANCEL_SUBSCRIBER — Order Journey</title>
+<style>
+:root {
+  --true-red:#CC0000; --true-dark:#8B0000; --true-deep:#5C0000; --true-light:#FF5252;
+  --true-pale:#FFF5F5; --success:#2e7d32; --warning:#e65100; --info:#1565c0;
+  --skip:#6a1b9a; --bg:#F9F9F9; --card:#FFFFFF; --border:#E0E0E0;
+  --code-bg:#1e1e2e; --code-fg:#cdd6f4;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#333;font-size:14px;}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px;}
+.page-header h1{font-size:2rem;font-weight:700;letter-spacing:0.5px;}
+.page-header .subtitle{opacity:.85;margin-top:6px;font-size:1rem;}
+.meta-row{display:flex;gap:24px;margin-top:16px;flex-wrap:wrap;}
+.meta-pill{background:rgba(255,255,255,0.15);border-radius:20px;padding:4px 14px;font-size:.82rem;border:1px solid rgba(255,255,255,0.25);}
+.container{max-width:1400px;margin:0 auto;padding:24px 20px;}
+.card{background:var(--card);border-radius:8px;border:1px solid var(--border);margin-bottom:24px;overflow:hidden;}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;font-size:.95rem;border-left:4px solid var(--true-light);}
+.card-body{padding:20px;}
+.section-nav{display:flex;gap:8px;flex-wrap:wrap;padding:16px 20px;border-bottom:1px solid var(--border);}
+.nav-btn{padding:6px 14px;border-radius:16px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:.8rem;color:#555;text-decoration:none;}
+.nav-btn:hover{background:var(--true-pale);border-color:var(--true-red);color:var(--true-dark);}
+/* phase badges */
+.phase-badge{display:inline-block;padding:2px 8px;border-radius:10px;font-size:.72rem;font-weight:600;margin-right:4px;}
+.p1{background:#E3F2FD;color:#0D47A1;} .p2{background:#E8F5E9;color:#1B5E20;}
+.p3{background:#FFF8E1;color:#E65100;} .p4{background:#FCE4EC;color:#880E4F;}
+.p5{background:#F3E5F5;color:#4A148C;} .p6{background:#E0F2F1;color:#004D40;}
+.p7{background:#FBE9E7;color:#BF360C;} .p8{background:#F1F8E9;color:#33691E;}
+.p9{background:#E8EAF6;color:#1A237E;}
+/* table */
+table{width:100%;border-collapse:collapse;font-size:.82rem;}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 10px;text-align:left;white-space:nowrap;position:sticky;top:0;z-index:2;}
+td{padding:7px 10px;border-bottom:1px solid #F0E0E0;vertical-align:top;}
+tr:hover{background:#FFF5F5;}
+tr.has-preexec{border-left:3px solid #F9A825;}
+tr.not-found td:nth-child(3){color:var(--warning);}
+.step-num{font-weight:700;color:var(--true-dark);text-align:center;width:40px;}
+.fm-link{color:var(--info);text-decoration:none;font-weight:500;}
+.fm-link:hover{text-decoration:underline;}
+.badge{display:inline-block;padding:2px 7px;border-radius:10px;font-size:.7rem;font-weight:600;}
+.badge-ok{background:#E8F5E9;color:#2e7d32;}
+.badge-new{background:#E3F2FD;color:#1565c0;}
+.badge-warn{background:#FFF3E0;color:#e65100;}
+.badge-notfound{background:#FCE4EC;color:#880E4F;}
+.preexec-code{font-family:'Cascadia Code','Consolas',monospace;font-size:.73rem;background:#F8F0F0;border-left:2px solid #F9A825;padding:3px 6px;border-radius:3px;color:#5C0000;max-width:340px;white-space:pre-wrap;word-break:break-all;}
+.param-tag{background:#EDE7F6;color:#4527A0;padding:2px 6px;border-radius:4px;font-size:.71rem;margin:1px;display:inline-block;}
+/* search */
+.search-bar{display:flex;gap:10px;align-items:center;margin-bottom:16px;flex-wrap:wrap;}
+.search-bar input{padding:6px 12px;border:1px solid var(--border);border-radius:20px;font-size:.85rem;width:260px;}
+.search-bar select{padding:6px 10px;border:1px solid var(--border);border-radius:8px;font-size:.85rem;}
+/* fm grid */
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px;}
+.fm-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:14px;transition:box-shadow .15s;}
+.fm-card:hover{box-shadow:0 2px 8px rgba(140,0,0,.12);border-color:#dbc0c0;}
+.fm-card h4{font-size:.82rem;color:var(--true-dark);font-weight:600;margin-bottom:6px;}
+.fm-card .fm-steps{font-size:.72rem;color:#666;margin-bottom:6px;}
+.fm-card a{font-size:.75rem;color:var(--info);text-decoration:none;}
+/* phases summary */
+.phases{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+.phase-card{background:var(--card);border-radius:8px;border:1px solid var(--border);padding:14px;}
+.phase-card h4{font-size:.85rem;font-weight:600;color:var(--true-dark);margin-bottom:6px;}
+.phase-card p{font-size:.78rem;color:#555;line-height:1.5;}
+/* preexec details */
+details{border:1px solid var(--border);border-radius:6px;margin-bottom:8px;}
+details summary{padding:8px 14px;cursor:pointer;font-weight:600;font-size:.83rem;background:#FFF8F8;color:var(--true-dark);}
+details summary:hover{background:var(--true-pale);}
+details .detail-body{padding:10px 14px;font-size:.8rem;}
+pre.xpath{background:var(--code-bg);color:#F9E2AF;padding:10px 14px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;font-size:.78rem;white-space:pre-wrap;}
+/* warnings */
+.warn-box{background:#FFF3E0;border:1px solid #FFB74D;border-radius:6px;padding:12px 16px;margin-bottom:16px;font-size:.83rem;color:#5D3A00;}
+.warn-box strong{color:#E65100;}
+/* scroll wrapper */
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;}
+/* phase filter buttons */
+.filter-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px;}
+.filter-btn{padding:4px 10px;border-radius:14px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:.75rem;color:#555;}
+.filter-btn.active{background:var(--true-pale);border-color:var(--true-red);color:var(--true-dark);font-weight:600;}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>CANCEL_SUBSCRIBER</h1>
+  <div class="subtitle">Process Configuration for CANCEL_SUBSCRIBER · Order Types: 10 (MNP Port-Out), 12 (Standard Cancel), 14 (Suspension/Collections)</div>
+  <div class="meta-row">
+    <span class="meta-pill">79 Steps</span>
+    <span class="meta-pill">64 Unique FMs</span>
+    <span class="meta-pill">Entry: CCBS_GET_SUBS_LIST</span>
+    <span class="meta-pill">6 New FM Docs Generated</span>
+    <span class="meta-pill">2 Not Found (Internal OMX)</span>
+    <span class="meta-pill">Generated: 2026-09-23</span>
+  </div>
+</div>
+
+<div class="container">
+  <!-- NAV -->
+  <div class="section-nav" style="background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:20px;">
+    <a class="nav-btn" href="#phases">§1 Phases</a>
+    <a class="nav-btn" href="#flow">§2 Flow Table</a>
+    <a class="nav-btn" href="#preexec">§3 PreExecCheck</a>
+    <a class="nav-btn" href="#fmindex">§4 FM Index</a>
+    <a class="nav-btn" href="#warnings">⚠ Warnings</a>
+  </div>
+
+  <!-- WARNINGS -->
+  <div id="warnings" class="warn-box">
+    <strong>⚠ 2 FM rule files not found (internal OMX functions):</strong><br>
+    Step 29 — <strong>OMX_UPDATE_OFFER_PARAMETER</strong>: No rule file found; internal OMX function. Parameter: ACCEPT_AMOUNT=100.<br>
+    Step 37 — <strong>OMX_CAL_ORDER</strong>: No rule file found; internal OMX function.<br><br>
+    <strong>⚠ Migration risk in TVS_REMOVE_COMPO_OTT:</strong> AUDIT_TRACE label contains copy-paste error "TDG_UPDATE_SERIAL" — should be "TVS_REMOVE_COMPO_OTT".
+  </div>
+
+  <!-- PHASES -->
+  <div id="phases" class="card">
+    <div class="card-header">§1 — Order Journey Phases</div>
+    <div class="card-body">
+      <div class="phases">
+        <div class="phase-card"><h4><span class="phase-badge p1">Phase 1</span> Data Collection (Steps 1–16)</h4><p>Gather subscriber, account, BA, agreement, SIM info from CCBS/INTX/ASRM. Business validation and BRMS rule evaluation.</p></div>
+        <div class="phase-card"><h4><span class="phase-badge p2">Phase 2</span> ATS SoftBundle (Steps 17–27)</h4><p>Gate: FE_OR_CCBS=ATS. Enquire/remove ATS campaign; re-fetch CCBS data for ATS subscribers; remove SOC codes.</p></div>
+        <div class="phase-card"><h4><span class="phase-badge p3">Phase 3</span> Zero Final Bill (Steps 28–29)</h4><p>Gate: CANCEL_TYPE=endbill. Get obligation info and update offer parameter (BRMS_REMOVE).</p></div>
+        <div class="phase-card"><h4><span class="phase-badge p4">Phase 4</span> Package/SOC Changes (Steps 30–36)</h4><p>Remove/add SOC packages via CCBS. Handle SBM data pack cancel/expire/buy. BL charge creation.</p></div>
+        <div class="phase-card"><h4><span class="phase-badge p5">Phase 5</span> Billing &amp; Profile (Steps 37–43)</h4><p>OMX order calculation, billing arrangement, MCS final bill, future orders, SBM FUP, AA feature removal.</p></div>
+        <div class="phase-card"><h4><span class="phase-badge p6">Phase 6</span> CCBS GOD + MultiSIM (Steps 44–54)</h4><p>CCBS_GOD data enrichment. MultiSIM cancel/populate/transform; AA/network SIM operations.</p></div>
+        <div class="phase-card"><h4><span class="phase-badge p7">Phase 7</span> TVS &amp; Direct Debit (Steps 55–56)</h4><p>Gate: TVS_CUSTOMER_NUMBER. Remove TVS OTT component; update direct debit for final bill.</p></div>
+        <div class="phase-card"><h4><span class="phase-badge p8">Phase 8</span> Core Cancellation (Steps 57–65)</h4><p>CCBS cancel, MNP L9 updates (79=cancel, 86=reversal), collection activities (OT=14), ASRM MSISDN/SIM release.</p></div>
+        <div class="phase-card"><h4><span class="phase-badge p9">Phase 9</span> Post-Cancel (Steps 66–79)</h4><p>CVSS cancel, TDS profile, PSA/TDG IoT, MCS after-sale, CJ call-verify, SFF call cancel, ATS debundle, SMS, APIGW opt-out.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FLOW TABLE -->
+  <div id="flow" class="card">
+    <div class="card-header">§2 — Order Flow Table (79 Steps)</div>
+    <div class="card-body">
+      <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Search step ID, FM, parameter..." oninput="filterTable()">
+        <select id="phaseFilter" onchange="filterTable()">
+          <option value="">All Phases</option>
+          <option value="p1">Phase 1: Data Collection (1–16)</option>
+          <option value="p2">Phase 2: ATS SoftBundle (17–27)</option>
+          <option value="p3">Phase 3: Zero Final Bill (28–29)</option>
+          <option value="p4">Phase 4: Package Changes (30–36)</option>
+          <option value="p5">Phase 5: Billing &amp; Profile (37–43)</option>
+          <option value="p6">Phase 6: CCBS GOD + MultiSIM (44–54)</option>
+          <option value="p7">Phase 7: TVS &amp; Direct Debit (55–56)</option>
+          <option value="p8">Phase 8: Core Cancellation (57–65)</option>
+          <option value="p9">Phase 9: Post-Cancel (66–79)</option>
+        </select>
+      </div>
+      <div class="table-wrap">
+        <table id="flowTable">
+          <thead>
+            <tr>
+              <th style="width:40px">#</th>
+              <th>Phase</th>
+              <th>Step ID</th>
+              <th>FM (ActivityID)</th>
+              <th>Parameter(s)</th>
+              <th>PreExecCheck (truncated)</th>
+              <th>Doc</th>
+            </tr>
+          </thead>
+          <tbody id="flowBody"></tbody>
+        </table>
+      </div>
+      <p style="margin-top:10px;font-size:.75rem;color:#888;">Rows with yellow left border have PreExecCheck conditions. Click FM links to open documentation.</p>
+    </div>
+  </div>
+
+  <!-- PREEXEC DETAILS -->
+  <div id="preexec" class="card">
+    <div class="card-header">§3 — Conditional Execution Rules (PreExecCheck Details)</div>
+    <div class="card-body" id="preexecBody"></div>
+  </div>
+
+  <!-- FM INDEX -->
+  <div id="fmindex" class="card">
+    <div class="card-header">§4 — FM Documentation Index (64 Unique FMs)</div>
+    <div class="card-body">
+      <div class="fm-grid" id="fmGrid"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const activities = [
+  {s:1,phase:"p1",id:"CCBS_GET_SUBS_LIST",fm:"CCBS_GET_SUBS_LIST",param:"",preexec:"exists(//ParentOU/OUId) and not(exists(//Subscriber/SubscriberId[./text()])) and not(exists(//Subscriber/MSISDN[./text()]))",found:true,isNew:false},
+  {s:2,phase:"p1",id:"CCBS_GET_SUBS_INFO_COLL",fm:"CCBS_GET_SUBS_INFO",param:"",preexec:'//OrderType/text()="14"',found:true,isNew:false},
+  {s:3,phase:"p1",id:"CCBS_GET_CUST_ACC_SUB_ID",fm:"CCBS_GET_CUST_ACC_SUB_ID",param:"",preexec:"exists(//Subscriber/MSISDN[./text()])",found:true,isNew:false},
+  {s:4,phase:"p1",id:"CCBS_GET_CUSTOMER_HEADER",fm:"CCBS_GET_CUSTOMER_HEADER",param:"",preexec:"",found:true,isNew:false},
+  {s:5,phase:"p1",id:"CCBS_GET_ACCOUNT_HEADER",fm:"CCBS_GET_ACCOUNT_HEADER",param:"",preexec:'not(exists(//Subscriber/SubscriberType)) or //Subscriber/SubscriberType[./text()]!="6A"',found:true,isNew:false},
+  {s:6,phase:"p1",id:"CCBS_GET_BA_HEADER",fm:"CCBS_GET_BA_HEADER",param:"",preexec:"exists(//Customer/Account/AccountID)",found:true,isNew:false},
+  {s:7,phase:"p1",id:"CCBS_GET_AGREEMENT_HEADER",fm:"CCBS_GET_AGREEMENT_HEADER",param:"",preexec:"boolean(//AgreementId) and not(exists(//ParentOU/OUId))",found:true,isNew:false},
+  {s:8,phase:"p1",id:"CCBS_GET_SUBS_INFO",fm:"CCBS_GET_SUBS_INFO",param:"",preexec:'//OrderType/text()="10" or //OrderType/text()="12"',found:true,isNew:false},
+  {s:9,phase:"p1",id:"CCBS_GET_SUBSCRIBER_HEADER",fm:"CCBS_GET_SUBSCRIBER_HEADER",param:"",preexec:"",found:true,isNew:false},
+  {s:10,phase:"p1",id:"GET_SPECIAL_OFFER_INDICATOR",fm:"GET_SPECIAL_OFFER_INDICATOR",param:"ADD_PROP=TR_MULTISIM_IND",preexec:"count(//Offers) > 0 or count(//SubscriberOffers) > 0",found:true,isNew:false},
+  {s:11,phase:"p1",id:"ASRM_GET_UR_DETAILS_MSISDN",fm:"ASRM_GET_UR_DETAILS_MSISDN",param:"",preexec:"",found:true,isNew:false},
+  {s:12,phase:"p1",id:"INTX_GET_SIM_INFO_BY_SIM",fm:"INTX_GET_SIM_INFO_BY_SIM",param:"",preexec:"",found:true,isNew:false},
+  {s:13,phase:"p1",id:"INTX_GET_SIM_INFO_BY_ICCID",fm:"INTX_GET_SIM_INFO_BY_ICCID",param:"",preexec:"",found:true,isNew:false},
+  {s:14,phase:"p1",id:"INTX_GET_MASTER_MINOR_SIM_INFO",fm:"INTX_GET_MASTER_MINOR_SIM_INFO",param:"",preexec:"count(//SubscriberOffers[ExtendedInfo[Name=\"TR_MULTISIM_IND\" and (Value=\"RES\" or Value=\"RCM\")]]) > 0 or count([Value=\"REE\" or Value=\"RCE\"]) > 0",found:true,isNew:false},
+  {s:15,phase:"p1",id:"OMX_BIZ_VAL",fm:"OMX_BIZ_VAL",param:"",preexec:"",found:true,isNew:false},
+  {s:16,phase:"p1",id:"OMX_BRMS_DB",fm:"OMX_BRMS_DB",param:"",preexec:"",found:true,isNew:false},
+  {s:17,phase:"p2",id:"ATS_ENQUIRY_CAMPAIGN",fm:"ATS_ENQUIRY_CAMPAIGN",param:"",preexec:"",found:true,isNew:false},
+  {s:18,phase:"p2",id:"CCBS_GET_CUST_ACC_SUB_ID_ATS",fm:"CCBS_GET_CUST_ACC_SUB_ID",param:"SOURCE",preexec:"boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",found:true,isNew:false},
+  {s:19,phase:"p2",id:"CCBS_GET_ACCOUNT_HEADER_ATS",fm:"CCBS_GET_ACCOUNT_HEADER",param:"",preexec:"boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",found:true,isNew:false},
+  {s:20,phase:"p2",id:"CCBS_GET_AGREEMENT_HEADER_ATS",fm:"CCBS_GET_AGREEMENT_HEADER",param:"",preexec:"boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",found:true,isNew:false},
+  {s:21,phase:"p2",id:"CCBS_GET_SUBSCRIBER_HEADER_ATS",fm:"CCBS_GET_SUBSCRIBER_HEADER",param:"",preexec:"boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",found:true,isNew:false},
+  {s:22,phase:"p2",id:"CCBS_GET_CUSTOMER_HEADER_ATS",fm:"CCBS_GET_CUSTOMER_HEADER",param:"",preexec:"boolean(//Subscriber[ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",found:true,isNew:false},
+  {s:23,phase:"p2",id:"CCBS_GET_SUBS_INFO_ATS",fm:"CCBS_GET_SUBS_INFO",param:"",preexec:"boolean(//Subscriber[Status !=67 and Status !=76 and Status !=84 and ExtendedInfo[Name='FE_OR_CCBS' and Value='ATS']])",found:true,isNew:false},
+  {s:24,phase:"p2",id:"CCBS_GOD_ATS",fm:"CCBS_GOD",param:"",preexec:"count(//BundleInfo[ConvergenceType='MobileSoftBundle'])>0",found:true,isNew:false},
+  {s:25,phase:"p2",id:"ATS_CAMPAIGN_RULE_REMOVE_CAMPAIGN",fm:"ATS_CAMPAIGN_RULE_REMOVE_CAMPAIGN",param:"",preexec:"count(//BundleInfo[ConvergenceType='MobileSoftBundle'])>0",found:true,isNew:true},
+  {s:26,phase:"p2",id:"CCBS_RESOLVE_SOC_CODE_BRMS",fm:"CCBS_RESOLVE_SOC_CODE",param:"",preexec:"(count(//BundleInfo[ConvergenceType='MobileSoftBundle'])>0) or FE_OR_CCBS=BRMS/BRMS_REMOVE",found:true,isNew:false},
+  {s:27,phase:"p2",id:"OMX_RESOLVE_SOC_DATA",fm:"OMX_RESOLVE_SOC_DATA",param:"",preexec:"count(//BundleInfo[ConvergenceType='MobileSoftBundle'])>0",found:true,isNew:false},
+  {s:28,phase:"p3",id:"INTX_GET_TOTAL_OBLIGATION_INFO",fm:"INTX_GET_TOTAL_OBLIGATION_INFO",param:"",preexec:"CANCEL_TYPE=endbill and FE_OR_CCBS=BRMS_REMOVE",found:true,isNew:false},
+  {s:29,phase:"p3",id:"OMX_UPDATE_OFFER_PARAMETER",fm:"OMX_UPDATE_OFFER_PARAMETER",param:"ACCEPT_AMOUNT=100",preexec:"CANCEL_TYPE=endbill and FE_OR_CCBS=BRMS_REMOVE",found:false,isNew:false},
+  {s:30,phase:"p4",id:"CCBS_CHANGE_PACKAGE_SUBSCRIBER_REMOVE",fm:"CCBS_CHANGE_PACKAGE_SUBSCRIBER",param:"REMOVE|ACTIVITY_REASON=SYSREQ",preexec:"Complex: ServiceType=85/86/68 with ATS_REMOVE or BRMS_REMOVE or IOTBU or CBSC conditions",found:true,isNew:false},
+  {s:31,phase:"p4",id:"SBM_VALIDATE",fm:"SBM_VALIDATE",param:"",preexec:"ServiceType=86 with BRMS_REMOVE or ATS_REMOVE",found:true,isNew:false},
+  {s:32,phase:"p4",id:"SBM_CANCEL_DATA_PACK_IMMEDIATE",fm:"SBM_CANCEL_DATA_PACK_IMMEDIATE",param:"",preexec:"ServiceType=86, PackType=RC, BRMS_REMOVE or ATS_REMOVE",found:true,isNew:false},
+  {s:33,phase:"p4",id:"SBM_UPDATE_EXPIRED",fm:"SBM_UPDATE_EXPIRED",param:"",preexec:"ServiceType=86, PackType=OC, BRMS_REMOVE or ATS_REMOVE",found:true,isNew:false},
+  {s:34,phase:"p4",id:"SBM_BUY_DATA_PACK",fm:"SBM_BUY_DATA_PACK",param:"",preexec:"ServiceType=86 with FE_OR_CCBS=BRMS or ATS",found:true,isNew:false},
+  {s:35,phase:"p4",id:"BL_CREATE_CHARGE",fm:"BL_CREATE_CHARGE",param:"",preexec:"ServiceType=79 with FE_OR_CCBS=BRMS or ATS",found:true,isNew:false},
+  {s:36,phase:"p4",id:"CCBS_CHANGE_PACKAGE_SUBSCRIBER",fm:"CCBS_CHANGE_PACKAGE_SUBSCRIBER",param:"ADD|ACTIVITY_REASON=SYSREQ",preexec:"ServiceType=86 BRMS, or 85/86/68 ATS, or 85 BRMS",found:true,isNew:false},
+  {s:37,phase:"p5",id:"OMX_CAL_ORDER",fm:"OMX_CAL_ORDER",param:"",preexec:"not-ATS subscriber present",found:false,isNew:false},
+  {s:38,phase:"p5",id:"CCBS_UPDATE_BILLING_ARRANGEMENT",fm:"CCBS_UPDATE_BILLING_ARRANGEMENT",param:"DSD",preexec:"FINAL_BILL present and not-ATS",found:true,isNew:false},
+  {s:39,phase:"p5",id:"MCS_GET_PACKCODE_FINALL_BILL",fm:"MCS_GET_PACKCODE",param:"",preexec:"not-ATS and CANCEL_TYPE=endbill",found:true,isNew:false},
+  {s:40,phase:"p5",id:"MCS_CANCEL_AFTER_SALE_FINALL_BILL",fm:"MCS_CANCEL_AFTER_SALE",param:"",preexec:"not-ATS and CANCEL_TYPE=endbill",found:true,isNew:false},
+  {s:41,phase:"p5",id:"OMX_ADD_FUT_ORDER",fm:"OMX_ADD_FUT_ORDER",param:"FINALLY=Y",preexec:"EFF_TYPE=FUT and not-ATS",found:true,isNew:false},
+  {s:42,phase:"p5",id:"SBM_FUP_CHANGE_MEMBER",fm:"SBM_FUP_CHANGE_MEMBER",param:"REMOVE",preexec:"SPECIAL_OFFER_INDICATOR=FSH or FPL and not-ATS",found:true,isNew:false},
+  {s:43,phase:"p5",id:"AA_GET_SWITCH_FEATURE_OFFER",fm:"AA_GET_SWITCH_FEATURE_OFFER",param:"",preexec:"SubscriberType!=6A and not-ATS",found:true,isNew:false},
+  {s:44,phase:"p6",id:"CCBS_GOD",fm:"CCBS_GOD",param:"",preexec:"",found:true,isNew:false},
+  {s:45,phase:"p6",id:"OMX_CALC_ACTIVITY_REASON",fm:"OMX_CALC_ACTIVITY_REASON",param:"CANCEL",preexec:"OrderType=10 and not-ATS",found:true,isNew:false},
+  {s:46,phase:"p6",id:"CCBS_MSIM_CANCEL_SIM",fm:"CCBS_MSIM_CANCEL_SIM",param:"",preexec:"TR_MULTISIM_IND=RCM and not-ATS",found:true,isNew:false},
+  {s:47,phase:"p6",id:"OMX_POPULATE_MSIM_INFO",fm:"OMX_POPULATE_MSIM_INFO",param:"SPC=AUTO_CANCEL",preexec:"FE_OR_CCBS=CCBS and TR_MULTISIM_IND=RES/RCM and not-ATS",found:true,isNew:false},
+  {s:48,phase:"p6",id:"OMX_TRANSFORM_NETWORK_CMD_TO_IOT",fm:"OMX_TRANSFORM_NETWORK_CMD_TO_IOT",param:"",preexec:"SubscriberType=INB or ICA and not-ATS",found:true,isNew:false},
+  {s:49,phase:"p6",id:"OMX_GET_SRV_TRX_NO_MSIM_CCD",fm:"OMX_GET_SRV_TRX_NO_MSIM",param:"CCD",preexec:"MultiSIMInfo/Minor[Source=FE] and not-6A and not-ATS",found:true,isNew:false},
+  {s:50,phase:"p6",id:"AA_ACTIVATE_SUBS_MSIM",fm:"AA_ACTIVATE_SUBS_MSIM",param:"CCD|REMOVE",preexec:"MultiSIMInfo/Minor[Source=FE] and not-6A and not-ATS",found:true,isNew:false},
+  {s:51,phase:"p6",id:"OMX_GET_SRV_TRX_NO_CCD",fm:"OMX_GET_SRV_TRX_NO",param:"CCD",preexec:"not-6A and not-ATS and BRMS_REMOVE",found:true,isNew:false},
+  {s:52,phase:"p6",id:"AA_ACTIVATE_SUBS_CCD",fm:"AA_ACTIVATE_SUBS",param:"CCD",preexec:"not-6A and not-ATS and BRMS_REMOVE",found:true,isNew:false},
+  {s:53,phase:"p6",id:"OMX_GET_SRV_TRX_NO",fm:"OMX_GET_SRV_TRX_NO",param:"DSD",preexec:"not-6A and not-ATS",found:true,isNew:false},
+  {s:54,phase:"p6",id:"AA_ACTIVATE_SUBS",fm:"AA_ACTIVATE_SUBS",param:"DSD",preexec:"not-6A and not-ATS",found:true,isNew:false},
+  {s:55,phase:"p7",id:"TVS_REMOVE_COMPO_OTT",fm:"TVS_REMOVE_COMPO_OTT",param:"",preexec:"boolean(//Customer/ExtendedInfo[Name=\"TVS_CUSTOMER_NUMBER\"])",found:true,isNew:true},
+  {s:56,phase:"p7",id:"BDH_UPDATE_DIRECT_DEBIT_STATUS",fm:"BDH_UPDATE_DIRECT_DEBIT_STATUS",param:"",preexec:"FINAL_BILL present and string-length(RawAccountID)>0",found:true,isNew:false},
+  {s:57,phase:"p8",id:"CCBS_CANCEL_SUBS",fm:"CCBS_CANCEL_SUBS",param:"",preexec:"ActivityReason!=MNPHR/RFREOT and OrderType!=14/10 and not-ATS",found:true,isNew:true},
+  {s:58,phase:"p8",id:"CCBS_L9_UPDATE_MNP_ATTRIBUTES",fm:"CCBS_L9_UPDATE_MNP_ATTRIBUTES",param:"",preexec:"OrderType=10 and not-ATS",found:true,isNew:true},
+  {s:59,phase:"p8",id:"CCBS_UPDATE_MNP_REVERSAL_CANCEL",fm:"CCBS_UPDATE_MNP_REVERSAL_CANCEL",param:"",preexec:"ActivityReason=MNPHR or RFREOT and not-ATS",found:true,isNew:true},
+  {s:60,phase:"p8",id:"CCBS_APPLY_COLL_ACTIVITIES",fm:"CCBS_APPLY_COLL_ACTIVITIES",param:"CANCEL",preexec:"OrderType=14 and not-ATS",found:true,isNew:false},
+  {s:61,phase:"p8",id:"ASRM_INVOKE_MSISDN_RELEASE",fm:"ASRM_INVOKE_MSISDN",param:"ACTIVITY=RELEASE",preexec:"OrderType!=10 and ActivityReason!=MNPHR/RFREOT and not-ATS",found:true,isNew:false},
+  {s:62,phase:"p8",id:"ASRM_INVOKE_MSISDN_PORT_OUT_RELEASE",fm:"ASRM_INVOKE_MSISDN",param:"ACTIVITY=PORT OUT RELEASE",preexec:"OrderType=10 and not-ATS",found:true,isNew:false},
+  {s:63,phase:"p8",id:"ASRM_INVOKE_MSISDN_PORT_IN_REVERSE",fm:"ASRM_INVOKE_MSISDN",param:"ACTIVITY=PORT IN REVERSE",preexec:"ActivityReason=MNPHR or RFREOT and not-ATS",found:true,isNew:false},
+  {s:64,phase:"p8",id:"ASRM_INVOKE_SIM_RELEASE",fm:"ASRM_INVOKE_SIM",param:"ACTIVITY=RELEASE",preexec:"not-ATS",found:true,isNew:false},
+  {s:65,phase:"p8",id:"ASRM_INVOKE_MINOR_SIM_RELEASE",fm:"ASRM_INVOKE_MINOR_SIM",param:"ACTIVITY=RELEASE",preexec:"TR_MULTISIM_IND=RES/REE and not-ATS",found:true,isNew:false},
+  {s:66,phase:"p9",id:"CVSS_GET_EXISTING_PRODUCT",fm:"CVSS_GET_EXISTING_PRODUCT",param:"",preexec:"not-INB/ICA and not-ATS",found:true,isNew:false},
+  {s:67,phase:"p9",id:"CVSS_CANCEL_SUBS",fm:"CVSS_CANCEL_SUBS",param:"",preexec:"not-INB/ICA and not-ATS",found:true,isNew:false},
+  {s:68,phase:"p9",id:"STATUS_UPDATE_CREATING_PROFILE",fm:"STATUS_UPDATE_CREATING_PROFILE",param:"",preexec:"not-ATS",found:true,isNew:false},
+  {s:69,phase:"p9",id:"CREATE_TDS_PROFILE",fm:"CREATE_TDS_PROFILE",param:"",preexec:"FE_OR_CCBS=CCBS and ServiceType=85 and not-ATS",found:true,isNew:false},
+  {s:70,phase:"p9",id:"PSA_UPDATE_DEVICE",fm:"PSA_UPDATE_DEVICE",param:"srType=CANCEL|deviceStatus=COMPLETE",preexec:"SubscriberOffers[TR_SPECIAL_OFFER_IND=IOTBU]",found:true,isNew:false},
+  {s:71,phase:"p9",id:"TDG_CANCEL_SUBSCRIBER",fm:"TDG_CANCEL_SUBSCRIBER",param:"",preexec:"SubscriberOffers[TR_SPECIAL_OFFER_IND=IOTBU]",found:true,isNew:false},
+  {s:72,phase:"p9",id:"MCS_GET_PACKCODE",fm:"MCS_GET_PACKCODE",param:"",preexec:"not-ATS",found:true,isNew:false},
+  {s:73,phase:"p9",id:"MCS_CANCEL_AFTER_SALE",fm:"MCS_CANCEL_AFTER_SALE",param:"",preexec:"MCS_CANCEL_AFS=Y",found:true,isNew:false},
+  {s:74,phase:"p9",id:"CJ_QUERY_STATE",fm:"CJ_QUERY_STATE",param:"",preexec:"not-ATS",found:true,isNew:false},
+  {s:75,phase:"p9",id:"SFF_CANCEL_CALL_VERIFY_MOBILE",fm:"SFF_CANCEL_CALL_VERIFY_MOBILE",param:"",preexec:"CALL_VER_RESULT!=PASS and not-ATS",found:true,isNew:true},
+  {s:76,phase:"p9",id:"ATS_DEBUNDLE_CAMPAIGN",fm:"ATS_DEBUNDLE_CAMPAIGN",param:"",preexec:"count(BundleInfo[ConvergenceAction=DebundleCampaign or DebundleProductNumber])>0",found:true,isNew:false},
+  {s:77,phase:"p9",id:"OMX_GET_3CJ_SMS_MESSAGE_TEMPLATE",fm:"OMX_GET_3CJ_SMS_MESSAGE_TEMPLATE",param:"",preexec:"DebundleCampaign or DebundleProductNumber present",found:true,isNew:false},
+  {s:78,phase:"p9",id:"SEND_SMS_MESSAGE_3CJ",fm:"SEND_SMS_MESSAGE_3CJ",param:"",preexec:"DebundleCampaign or DebundleProductNumber present",found:true,isNew:false},
+  {s:79,phase:"p9",id:"APIGW_OPT_IN_OUT",fm:"APIGW_OPT_IN_OUT",param:"ACTION=0",preexec:"FE_OR_CCBS=CCBS and TR_OFFER_GROUP=CBSC",found:true,isNew:false}
+];
+
+const phaseLabels = {p1:"Ph1",p2:"Ph2",p3:"Ph3",p4:"Ph4",p5:"Ph5",p6:"Ph6",p7:"Ph7",p8:"Ph8",p9:"Ph9"};
+
+function renderTable(data) {
+  const tbody = document.getElementById('flowBody');
+  tbody.innerHTML = '';
+  data.forEach(a => {
+    const tr = document.createElement('tr');
+    if (a.preexec) tr.classList.add('has-preexec');
+    if (!a.found) tr.classList.add('not-found');
+    const fmHref = `../FMlogic/Request_${a.fm}.html`;
+    const fmCell = a.found
+      ? `<a class="fm-link" href="${fmHref}" target="_blank">${a.fm}</a>${a.isNew ? ' <span class="badge badge-new">NEW</span>' : ''}`
+      : `${a.fm} <span class="badge badge-notfound">NOT FOUND</span>`;
+    const params = a.param ? a.param.split('|').map(p=>`<span class="param-tag">${p}</span>`).join('') : '—';
+    const preexecCell = a.preexec ? `<div class="preexec-code">${a.preexec.length>100?a.preexec.slice(0,97)+'…':a.preexec}</div>` : '—';
+    const docBadge = a.found
+      ? `<a href="${fmHref}" target="_blank"><span class="badge badge-ok">✓ Doc</span></a>`
+      : `<span class="badge badge-notfound">⚠ None</span>`;
+    tr.innerHTML = `<td class="step-num">${a.s}</td><td><span class="phase-badge ${a.phase}">${phaseLabels[a.phase]}</span></td><td style="font-weight:500;color:#333">${a.id}</td><td>${fmCell}</td><td>${params}</td><td>${preexecCell}</td><td>${docBadge}</td>`;
+    tbody.appendChild(tr);
+  });
+}
+
+function filterTable() {
+  const q = document.getElementById('searchInput').value.toLowerCase();
+  const ph = document.getElementById('phaseFilter').value;
+  const filtered = activities.filter(a => {
+    const matchPhase = !ph || a.phase === ph;
+    const matchSearch = !q || a.id.toLowerCase().includes(q) || a.fm.toLowerCase().includes(q) || a.param.toLowerCase().includes(q);
+    return matchPhase && matchSearch;
+  });
+  renderTable(filtered);
+}
+
+// Build PreExecCheck section
+function buildPreExec() {
+  const container = document.getElementById('preexecBody');
+  const withPE = activities.filter(a => a.preexec);
+  withPE.forEach(a => {
+    const d = document.createElement('details');
+    d.innerHTML = `<summary>Step ${a.s} — ${a.id} <small style="font-weight:400;color:#888">[FM: ${a.fm}]</small></summary>
+      <div class="detail-body">
+        <pre class="xpath">${a.preexec}</pre>
+      </div>`;
+    container.appendChild(d);
+  });
+}
+
+// Build FM grid
+const uniqueFMs = {};
+activities.forEach(a => {
+  if (!uniqueFMs[a.fm]) uniqueFMs[a.fm] = {fm:a.fm, steps:[], found:a.found, isNew:a.isNew};
+  else if (a.isNew) uniqueFMs[a.fm].isNew = true;
+  uniqueFMs[a.fm].steps.push(a.s);
+});
+
+function buildFMGrid() {
+  const grid = document.getElementById('fmGrid');
+  Object.values(uniqueFMs).forEach(u => {
+    const card = document.createElement('div');
+    card.className = 'fm-card';
+    const badge = u.found ? (u.isNew ? '<span class="badge badge-new">NEW</span>' : '<span class="badge badge-ok">✓</span>') : '<span class="badge badge-notfound">NOT FOUND</span>';
+    const link = u.found ? `<a href="../FMlogic/Request_${u.fm}.html" target="_blank">View FM Documentation →</a>` : `<span style="color:#aaa;font-size:.75rem">No rule file (internal OMX)</span>`;
+    card.innerHTML = `<h4>${u.fm} ${badge}</h4><div class="fm-steps">Used in steps: ${u.steps.join(', ')}</div>${link}`;
+    grid.appendChild(card);
+  });
+}
+
+renderTable(activities);
+buildPreExec();
+buildFMGrid();
+</script>
+
+<footer style="text-align:center;padding:24px;color:#999;font-size:.75rem;border-top:1px solid var(--border);margin-top:20px;">
+  TRUE Corporation OMX · TIBCO BusinessEvents Order Journey Documentation · CANCEL_SUBSCRIBER · Generated 2026-09-23
+</footer>
+</body>
+</html>

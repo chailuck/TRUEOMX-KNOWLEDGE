@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_CCBS_CANCEL_SUBS</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#212121;font-size:14px}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;font-weight:700}
+.page-header p{opacity:.85;margin-top:6px;font-size:.95rem}
+.meta-row{display:flex;gap:24px;margin-top:14px;flex-wrap:wrap}
+.meta-item{background:rgba(255,255,255,.15);border-radius:6px;padding:4px 12px;font-size:.82rem}
+.container{max-width:1280px;margin:0 auto;padding:24px 32px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:20px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-size:1rem;font-weight:600;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.87rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{border-bottom:1px solid var(--border);padding:8px 12px;vertical-align:top}
+tr:hover td{background:#FAFAFA}
+code{background:rgba(139,0,0,.08);color:var(--true-dark);border-radius:4px;padding:1px 6px;font-family:'Cascadia Code',Consolas,monospace;font-size:.82rem}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-family:'Cascadia Code',Consolas,monospace;font-size:.83rem;border-left:3px solid var(--true-red)}
+.badge{display:inline-block;border-radius:4px;padding:2px 8px;font-size:.75rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-jms{background:#FFE0B2;color:#E65100}
+.step-list{list-style:none;counter-reset:steps}
+.step-list li{counter-increment:steps;padding:8px 0 8px 48px;position:relative;border-bottom:1px solid var(--border)}
+.step-list li::before{content:counter(steps);position:absolute;left:0;top:6px;background:var(--true-red);color:#fff;width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:.78rem;font-weight:700}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code',Consolas,monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.tree-arrow{color:#6c7086;margin:0 4px}
+footer{text-align:center;padding:20px;color:#888;font-size:.8rem;border-top:1px solid var(--border);margin-top:32px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CCBS_CANCEL_SUBS</h1>
+  <p>FM Logic Documentation — TIBCO BusinessEvents Rule</p>
+  <div class="meta-row">
+    <span class="meta-item">Target: <strong>CCBS</strong></span>
+    <span class="meta-item">Operation: <strong>CancelSubscriber</strong></span>
+    <span class="meta-item">Priority: <strong>5</strong></span>
+    <span class="meta-item">ForwardChain: <strong>true</strong></span>
+    <span class="meta-item">Generated: <strong>2026-09-23</strong></span>
+  </div>
+</div>
+<div class="container">
+
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>Sends a <strong>CancelSubscriber</strong> request to CCBS for each subscriber in the order. This is the core CCBS cancellation operation — it terminates the subscriber record in CCBS billing system, setting portOutIndicator (89=MNP, 78=standard) and an optional activity date (for back-dated cancellations).</p>
+    <p style="margin-top:8px">Used in <strong>CANCEL_SUBSCRIBER</strong> process — Step 57. Also used in other order types (126, 127, 129, 15, 16) with back-date support.</p>
+    <p style="margin-top:8px">Uses <strong>IntraActivitySequencing</strong> for fan-in completion — supports parallel CCBS calls across multiple subscribers.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CCBS_CANCEL_SUBS</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Author</td><td>awalia-t420</td></tr>
+      <tr><td>Dispatch pattern</td><td>Per-subscriber (ParentOU + ChildOU), uses IntraActivitySequencing</td></tr>
+      <tr><td>Parameter</td><td>ALT_CES — alternate CES override</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§3 — Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Type</th></tr>
+      <tr><td><code>orderRequest</code></td><td>Concepts.OrderRequest.OrderRequest</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td>Concepts.OM.ProcessConfig.Activity</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Condition</th></tr>
+      <tr><td>1</td><td><code>orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName</code></td></tr>
+      <tr><td>2</td><td><code>orderCurrentActivity.ActivityID == "CCBS_CANCEL_SUBS"</code></td></tr>
+      <tr><td>3</td><td><code>orderRequest.ProcessFlow.NextActivityID == "CCBS_CANCEL_SUBS"</code></td></tr>
+      <tr><td>4</td><td><code>orderCurrentActivity.Status == "WAITING"</code></td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol class="step-list">
+      <li>Resubmit check — if resubmit: <code>PurgePendingRequestsBeforeResubmit()</code></li>
+      <li>Fetch LogicalDate concept for back-date calculations</li>
+      <li>Get ALT_CES parameter from activity configuration</li>
+      <li>Compute back-date flag: true for OrderTypes 126, 127, 129, 15, 16</li>
+      <li>If back-date: compute <code>strBackDate</code> = EffectiveDate-1sec (or LogicalDate-1sec, or today-1sec)</li>
+      <li>Iterate ParentOU subscribers — skip already-responded (CompletionStatus==2)</li>
+      <li>Per-subscriber: evaluate PreExecCheck, compute activityDate (back-date vs EffectiveDate)</li>
+      <li>Create and assert CCBS_CANCEL_SUBS event via IntraActivitySequencing.ActionRequestEvent()</li>
+      <li>Repeat for ChildOU subscribers</li>
+      <li>After loops: <code>SendFirstRequestEvent()</code>, set Status="1", SendDataToDB</li>
+    </ol>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <div style="margin-bottom:12px">
+      <strong>§8.1 Order Type Dependencies:</strong> CANCEL_SUBSCRIBER (12, 57 step). Also used in order types 126/127/129/15/16 (move/change). PreExecCheck in CANCEL_SUBSCRIBER: ActivityReason!=MNPHR/RFREOT, OrderType!=14/10, not ATS path.
+    </div>
+    <div style="margin-bottom:12px">
+      <strong>§8.2 ESB / JMS Channel:</strong>
+      <table style="margin-top:6px">
+        <tr><th>Direction</th><th>Event</th><th>Schema</th></tr>
+        <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td>CCBS_CANCEL_SUBS</td><td>ns:CancelSubscriberRequest</td></tr>
+        <tr><td><span class="badge badge-jms">OUTBOUND</span></td><td>Logger</td><td>Audit</td></tr>
+      </table>
+    </div>
+    <div><strong>§8.3 Backend API:</strong> CCBS | CancelSubscriber | portOutIndicator: 89 (Channel=MNP) or 78 (other)</div>
+    <div style="margin-top:12px"><strong>§8.6 Global Variables:</strong> <code>IsEnableUserPass</code> — gates UserName/Password inclusion in event</div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§9 — Detailed Payload Build</div>
+  <div class="card-body">
+    <p><strong>Schema root:</strong> <code>ns:CancelSubscriberRequest</code></p>
+    <table style="margin-top:10px">
+      <tr><th>Field</th><th>Source</th><th>Condition</th></tr>
+      <tr><td><code>ns:subscriberIdInfo/ns:subscrNumber</code></td><td>ParentOU[i]/Subscriber[j]/SubscriberId</td><td>Always</td></tr>
+      <tr><td><code>ns:portOutInfo/ns:portOutIndicator</code></td><td>89 if Channel="MNP", else 78</td><td>Always</td></tr>
+      <tr><td><code>ns:actDateInfo/ns:activityDate</code></td><td>computed activityDate (back-date / EffectiveDate / empty)</td><td>If string-length &gt; 0</td></tr>
+      <tr><td><code>ns:ActivityInfo/ns:activityReason</code></td><td>SubscriberActivityInfo/ActivityReason or "CREQ"</td><td>Always</td></tr>
+      <tr><td><code>ns:ActivityInfo/ns:userText</code></td><td>OrderType=48: "created by MSISDN"; else CustomerActivityInfo/UserText; else SubscriberActivityInfo/UserText</td><td>Conditional</td></tr>
+      <tr><td>Event headers: CES</td><td>ALT_CES param: if Y → ExtendedInfo[ALT_CES]; else OrderData/CES</td><td>Conditional</td></tr>
+    </table>
+    <div style="margin-top:12px">
+      <strong>Back-date logic:</strong> <code>activityDate = if isOrderBackDate then (strBackDate if &gt;= OLD_BAN_DATE, else "") else (EffectiveDate if present, else "")</code>
+    </div>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — Output XML Hierarchy</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createEvent → event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">OrderPriority</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$refId</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">UserName / PassWord</span><span class="tree-cond">[if IsEnableUserPass=true]</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CES</span><span class="tree-arrow">←</span><span class="tree-src">ALT_CES or OrderData/CES</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">msisdn</span><span class="tree-arrow">←</span><span class="tree-src">subscriber/MSISDN</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload → ns:CancelSubscriberRequest</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:subscriberIdInfo/ns:subscrNumber</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberId</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:portOutInfo/ns:portOutIndicator</span><span class="tree-arrow">←</span><span class="tree-src">89 (MNP) / 78 (other)</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:actDateInfo/ns:activityDate</span><span class="tree-arrow">←</span><span class="tree-src">$activityDate</span><span class="badge badge-orange">Conditional (non-empty)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:ActivityInfo/ns:activityReason</span><span class="tree-arrow">←</span><span class="tree-src">ActivityReason or "CREQ"</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">ns:ActivityInfo/ns:userText</span><span class="tree-arrow">←</span><span class="tree-src">multi-priority: OT48 text / CustomerActivityInfo / SubscriberActivityInfo</span><span class="badge badge-orange">Conditional</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§11 — Audit Logging</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>OPERATION_NAME</td><td>CCBS_CANCEL_SUBS</td></tr>
+      <tr><td>AUDIT_TRACE</td><td>concat("Request Sent for RefId ", refId)</td></tr>
+      <tr><td>PROCESS_ID</td><td>concat(pid, "_REQ")</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§12 — Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Condition</th><th>Action</th></tr>
+      <tr><td>Requests sent</td><td>SendFirstRequestEvent(), Status="1" (RUNNING), SendDataToDB</td></tr>
+      <tr><td>All skipped</td><td>SkipActivity("4")</td></tr>
+      <tr><td>Exception</td><td>HandleActivityException</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§14 — Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>IntraActivitySequencing.PurgePendingRequestsBeforeResubmit()</code></td><td>Clear pending requests on resubmit</td></tr>
+      <tr><td><code>IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)</code></td><td>Send event + track in sequence</td></tr>
+      <tr><td><code>IntraActivitySequencing.SendFirstRequestEvent(activity)</code></td><td>Initiate the sequence after all events asserted</td></tr>
+      <tr><td><code>GetXMLForSubscriber(orderRequest, refId)</code></td><td>Serialize subscriber slice for XPath PreExecCheck</td></tr>
+      <tr><td><code>GetXMLForSubscriberInChildOU(orderRequest, refId, pouRefId)</code></td><td>Subscriber slice for ChildOU PreExecCheck</td></tr>
+      <tr><td><code>GetActivityParameterValueFromKey(activity, "ALT_CES")</code></td><td>Read ALT_CES parameter from config</td></tr>
+    </table>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§17 — Migration Notes</div>
+  <div class="card-body">
+    <p><strong>R1:</strong> portOutIndicator 89 (MNP channel) vs 78 (standard) — must be preserved exactly.</p>
+    <p style="margin-top:8px"><strong>R2:</strong> Back-date calculation for order types 126/127/129/15/16 — EffectiveDate-1sec logic is critical for billing correctness.</p>
+    <p style="margin-top:8px"><strong>R3:</strong> OLD_BAN_DATE guard prevents back-date before account activation — preserve this check.</p>
+    <p style="margin-top:8px"><strong>Risk:</strong> <span class="badge badge-orange">HIGH</span> — Core CCBS cancellation. Any mismatch in portOutIndicator or activityDate causes billing errors.</p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-header">§19 — Response Message Rule</div>
+  <div class="card-body">
+    <p><strong>§19.1 Overview:</strong> Creates <code>CCBSCancelSubsRes</code> object from CCBS response. Uses <code>IntraActivitySequencing.ActionResponseEvent()</code> for fan-in completion (replaces simple count-based logic).</p>
+    <p style="margin-top:8px"><strong>§19.2 Scope:</strong> eventResponse type = <code>Events.OMConsumers.OMXFM.Response.CCBS_CANCEL_SUBS</code></p>
+    <p style="margin-top:8px"><strong>§19.3 ResponseBase fields:</strong> ResponseCode ← eventResponse/ResponseCode, ResponseMessage ← ResponseMsg, CompletionStatus ← CompletionStatus, ReferenceId ← RefID</p>
+    <p style="margin-top:8px"><strong>§19.4 Fan-in:</strong> <code>IntraActivitySequencing.ActionResponseEvent(currActivity)</code> — delegates sequencing to helper</p>
+    <p style="margin-top:8px"><strong>§19.5 Audit:</strong> AUDIT_TRACE=concat("Response received for RefId ", RefID), PROCESS_ID=concat(pid,"_RES")</p>
+  </div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>
