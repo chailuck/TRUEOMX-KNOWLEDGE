@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>PREPAID_CHANGE_OWNER — Order Journey</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.9rem;font-weight:700}
+header p{opacity:.85;margin-top:6px;font-size:.95rem}
+.meta-row{display:flex;gap:16px;flex-wrap:wrap;margin-top:14px}
+.meta-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.8rem;font-weight:600}
+main{max-width:1400px;margin:32px auto;padding:0 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:28px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.85rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600;white-space:nowrap}
+td{padding:7px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover td{background:#fafafa}
+.precheck-row td{border-left:4px solid #F9A825;background:#FFFDE7}
+.precheck-row:hover td{background:#FFF8E1}
+pre,code{font-family:'Cascadia Code','Consolas',monospace}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:14px;overflow-x:auto;font-size:.8rem;line-height:1.5;border-left:3px solid var(--true-red)}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-amber{background:#FFF3E0;color:var(--warning)}
+.badge-new{background:linear-gradient(90deg,#FFD700,#FFA000);color:#3E2000;font-weight:800;font-size:.72rem}
+.fm-link{color:var(--true-dark);text-decoration:none;font-weight:600}
+.fm-link:hover{text-decoration:underline;color:var(--true-red)}
+details>summary{cursor:pointer;padding:10px 14px;background:#FFF8E1;border-radius:6px;font-weight:600;color:#5D4037;border-left:3px solid #F9A825;user-select:none}
+details[open]>summary{border-bottom:1px solid #FFE082;border-radius:6px 6px 0 0}
+.detail-body{padding:14px;background:#FFFDE7;border-radius:0 0 6px 6px}
+.fm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px}
+.fm-card{background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:14px}
+.fm-card-title{font-weight:700;font-size:.88rem;color:var(--true-dark);word-break:break-all}
+.fm-card-steps{font-size:.78rem;color:#555;margin-top:3px}
+.fm-card-link{display:inline-block;margin-top:8px;font-size:.78rem}
+.mermaid-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:8px;padding:16px;background:var(--card)}
+footer{text-align:center;padding:32px;color:#777;font-size:.82rem;border-top:1px solid var(--border);margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <div style="font-size:.78rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX &rsaquo; Order Journey</div>
+  <h1>PREPAID_CHANGE_OWNER</h1>
+  <p>Process Configuration for PREPAID_CHANGE_OWNER.</p>
+  <div class="meta-row">
+    <span class="meta-pill">9 Steps</span>
+    <span class="meta-pill">8 Unique FMs</span>
+    <span class="meta-pill">Entry: CRM_GET_LAST_ASSET_ROOT</span>
+    <span class="meta-pill">★ 1 New FM Doc</span>
+    <span class="meta-pill">Generated: 2026-09-23</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 Overview -->
+<div class="card">
+  <div class="card-header">§1 — Process Overview</div>
+  <div class="card-body">
+    <p>Prepaid change-of-ownership flow. First retrieves the SOURCE subscriber's current asset/component data from CRM, then checks whether the customer's identification has changed (<strong>OMX_SYNCE_IDENTIFICATION ★</strong> writes the <code>CHANGE_IDENTIFICATION</code> flag). Then executes a two-step CRM order sequence: <em>Disconnect</em> the old owner (orderType=D, command=DisChangeOwnerShip) → upsert new customer account → update status → <em>New</em> ownership order (orderType=N, command=NewChangeOwnerShip). Finally, if identification changed, queries MCS for the new pack code and optionally cancels after-sale packages.</p>
+    <table style="margin-top:16px;width:auto">
+      <tr><th>Phase</th><th>Steps</th><th>Description</th></tr>
+      <tr><td>Asset Discovery</td><td>1–2</td><td>Read current subscriber asset and component list from CRM</td></tr>
+      <tr><td>ID Change Detection</td><td>3</td><td>Sync identification; write CHANGE_IDENTIFICATION flag (Y/N)</td></tr>
+      <tr><td>Disconnect Old Owner</td><td>4</td><td>CRM DisChangeOwnerShip order (orderType=D)</td></tr>
+      <tr><td>Account Upsert &amp; Status</td><td>5–6</td><td>Upsert new customer account; update to CREATING_PROFILE status</td></tr>
+      <tr><td>New Ownership Order</td><td>7</td><td>CRM NewChangeOwnerShip order (orderType=N)</td></tr>
+      <tr><td>MCS ID Update</td><td>8–9</td><td>Get pack code (if ID changed); cancel after-sale (if MCS_CANCEL_AFS=Y)</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §2 Flow Table -->
+<div class="card">
+  <div class="card-header">§2 — Order Flow (9 Steps)</div>
+  <div class="card-body" style="overflow-x:auto">
+    <table>
+      <thead>
+        <tr><th>Step</th><th>Step ID</th><th>FM (ActivityID)</th><th>Parameter(s)</th><th>PreExecCheck</th><th>Previous</th><th>Next</th><th>FM Doc</th></tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>1</td><td>CRM_GET_LAST_ASSET_ROOT</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">CRM_GET_LAST_ASSET_ROOT</a></td>
+          <td><code>STATUS=Active</code></td><td>—</td><td>START</td><td>CRM_GET_ASSET_COMPONENT_LIST</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>2</td><td>CRM_GET_ASSET_COMPONENT_LIST</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">CRM_GET_ASSET_COMPONENT_LIST</a></td>
+          <td><code>STATUS=Active</code></td><td>—</td><td>CRM_GET_LAST_ASSET_ROOT</td><td>OMX_SYNCE_IDENTIFICATION</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>3</td><td>OMX_SYNCE_IDENTIFICATION</td>
+          <td><a class="fm-link" href="../FMlogic/Request_OMX_SYNCE_IDENTIFICATION.html">OMX_SYNCE_IDENTIFICATION</a> <span class="badge badge-new">★ NEW</span></td>
+          <td>—</td><td>—</td><td>CRM_GET_ASSET_COMPONENT_LIST</td><td>CRM_CREATE_ORDER_PREPAID_DISCONNECT</td>
+          <td><span class="badge badge-new">★ NEW</span></td>
+        </tr>
+        <tr>
+          <td>4</td><td>CRM_CREATE_ORDER_PREPAID_DISCONNECT</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">CRM_CREATE_ORDER_PREPAID</a></td>
+          <td><code>command=DisChangeOwnerShip | orderType=D | listOfRootLineItemAction=Delete | listOfRootLineItemStatus=Inactive | ignoreAssetRowId=Y | USE_ROWID_CRM=N</code></td>
+          <td>—</td><td>OMX_SYNCE_IDENTIFICATION</td><td>CRM_UPSERT_CUSTOMER_ACCOUNT</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>5</td><td>CRM_UPSERT_CUSTOMER_ACCOUNT</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_UPSERT_CUSTOMER_ACCOUNT.html">CRM_UPSERT_CUSTOMER_ACCOUNT</a></td>
+          <td><code>mode=OR | upsertAccountStatus=Active</code></td>
+          <td>—</td><td>CRM_CREATE_ORDER_PREPAID_DISCONNECT</td><td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>6</td><td>STATUS_UPDATE_CREATING_PROFILE</td>
+          <td><a class="fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">STATUS_UPDATE_CREATING_PROFILE</a></td>
+          <td>—</td><td>—</td><td>CRM_UPSERT_CUSTOMER_ACCOUNT</td><td>CRM_CREATE_ORDER_PREPAID</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr>
+          <td>7</td><td>CRM_CREATE_ORDER_PREPAID</td>
+          <td><a class="fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">CRM_CREATE_ORDER_PREPAID</a></td>
+          <td><code>command=NewChangeOwnerShip | orderType=N | listOfRootLineItemAction=Add | listOfRootLineItemStatus=Active | USE_ROWID_CRM=N</code></td>
+          <td>—</td><td>STATUS_UPDATE_CREATING_PROFILE</td><td>MCS_GET_PACKCODE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>8</td><td>MCS_GET_PACKCODE</td>
+          <td><a class="fm-link" href="../FMlogic/Request_MCS_GET_PACKCODE.html">MCS_GET_PACKCODE</a></td>
+          <td>—</td>
+          <td><code>boolean(//Customer/ExtendedInfo[Name='CHANGE_IDENTIFICATION' and Value='Y'])</code></td>
+          <td>CRM_CREATE_ORDER_PREPAID</td><td>MCS_CANCEL_AFTER_SALE</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+        <tr class="precheck-row">
+          <td>9</td><td>MCS_CANCEL_AFTER_SALE</td>
+          <td><a class="fm-link" href="../FMlogic/Request_MCS_CANCEL_AFTER_SALE.html">MCS_CANCEL_AFTER_SALE</a></td>
+          <td><code>USE_ROWID_CRM=Y</code></td>
+          <td><code>boolean(//Subscriber[ExtendedInfo[Name='MCS_CANCEL_AFS' and Value='Y']]) and boolean(//Customer/ExtendedInfo[Name='CHANGE_IDENTIFICATION' and Value='Y'])</code></td>
+          <td>MCS_GET_PACKCODE</td><td>END</td>
+          <td><span class="badge badge-green">✓ Generated</span></td>
+        </tr>
+      </tbody>
+    </table>
+    <p style="margin-top:10px;font-size:.8rem;color:#666">
+      <span style="border-left:4px solid #F9A825;padding-left:6px">Amber border = PreExecCheck present</span> &nbsp;
+      <span class="badge badge-new">★ NEW</span> = FM doc generated this run
+    </p>
+  </div>
+</div>
+
+<!-- §3 PreExecCheck -->
+<div class="card">
+  <div class="card-header">§3 — Conditional Execution Rules (PreExecCheck)</div>
+  <div class="card-body">
+
+    <details style="margin-bottom:10px" open>
+      <summary>Step 8 — MCS_GET_PACKCODE &nbsp;<span class="badge badge-green">FM: MCS_GET_PACKCODE</span></summary>
+      <div class="detail-body">
+        <pre><code>boolean(//Customer/ExtendedInfo[Name='CHANGE_IDENTIFICATION' and Value='Y'])</code></pre>
+        <p style="margin-top:8px;font-size:.85rem">Only retrieves pack code from MCS when <code>CHANGE_IDENTIFICATION=Y</code>, written by step 3 (OMX_SYNCE_IDENTIFICATION ★). Skipped when identification has not changed.</p>
+      </div>
+    </details>
+
+    <details style="margin-bottom:10px" open>
+      <summary>Step 9 — MCS_CANCEL_AFTER_SALE &nbsp;<span class="badge badge-green">FM: MCS_CANCEL_AFTER_SALE</span></summary>
+      <div class="detail-body">
+        <pre><code>boolean(//Subscriber[ExtendedInfo[Name='MCS_CANCEL_AFS' and Value='Y']])
+and boolean(//Customer/ExtendedInfo[Name='CHANGE_IDENTIFICATION' and Value='Y'])</code></pre>
+        <p style="margin-top:8px;font-size:.85rem">Cancels after-sale packages in MCS only when both conditions hold: subscriber has <code>MCS_CANCEL_AFS=Y</code> AND identification has changed. Parameter <code>USE_ROWID_CRM=Y</code>.</p>
+      </div>
+    </details>
+
+  </div>
+</div>
+
+<!-- §4 FM Index -->
+<div class="card">
+  <div class="card-header">§4 — FM Documentation Index (8 Unique ActivityIDs)</div>
+  <div class="card-body">
+    <div class="fm-grid">
+      <div class="fm-card">
+        <div class="fm-card-title">CRM_GET_LAST_ASSET_ROOT</div>
+        <div class="fm-card-steps">Steps: 1</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_CRM_GET_LAST_ASSET_ROOT.html">Request_CRM_GET_LAST_ASSET_ROOT.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">CRM_GET_ASSET_COMPONENT_LIST</div>
+        <div class="fm-card-steps">Steps: 2</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_CRM_GET_ASSET_COMPONENT_LIST.html">Request_CRM_GET_ASSET_COMPONENT_LIST.html</a>
+      </div>
+      <div class="fm-card" style="border-left:3px solid #FFA000;background:#FFFDE7">
+        <div class="fm-card-title" style="color:#5D4037">OMX_SYNCE_IDENTIFICATION <span class="badge badge-new">★ NEW</span></div>
+        <div class="fm-card-steps">Steps: 3</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_OMX_SYNCE_IDENTIFICATION.html">Request_OMX_SYNCE_IDENTIFICATION.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">CRM_CREATE_ORDER_PREPAID</div>
+        <div class="fm-card-steps">Steps: 4, 7</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_CRM_CREATE_ORDER_PREPAID.html">Request_CRM_CREATE_ORDER_PREPAID.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">CRM_UPSERT_CUSTOMER_ACCOUNT</div>
+        <div class="fm-card-steps">Steps: 5</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_CRM_UPSERT_CUSTOMER_ACCOUNT.html">Request_CRM_UPSERT_CUSTOMER_ACCOUNT.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">STATUS_UPDATE_CREATING_PROFILE</div>
+        <div class="fm-card-steps">Steps: 6</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_STATUS_UPDATE_CREATING_PROFILE.html">Request_STATUS_UPDATE_CREATING_PROFILE.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">MCS_GET_PACKCODE</div>
+        <div class="fm-card-steps">Steps: 8</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_MCS_GET_PACKCODE.html">Request_MCS_GET_PACKCODE.html</a>
+      </div>
+      <div class="fm-card">
+        <div class="fm-card-title">MCS_CANCEL_AFTER_SALE</div>
+        <div class="fm-card-steps">Steps: 9</div>
+        <a class="fm-card-link fm-link" href="../FMlogic/Request_MCS_CANCEL_AFTER_SALE.html">Request_MCS_CANCEL_AFTER_SALE.html</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §5 Sequence Diagram -->
+<div class="card">
+  <div class="card-header">§5 — Sequence Diagram (Mermaid)</div>
+  <div class="card-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+sequenceDiagram
+    participant O as OrderOrchestrator
+    participant CRM as CRM
+    participant OMX as OMX (internal)
+    participant MCS as MCS
+
+    O->>CRM: CRM_GET_LAST_ASSET_ROOT [STATUS=Active]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_GET_LAST_ASSET_ROOT
+    O->>CRM: CRM_GET_ASSET_COMPONENT_LIST [STATUS=Active]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_GET_ASSET_COMPONENT_LIST
+    O->>OMX: OMX_SYNCE_IDENTIFICATION
+    OMX-->>O: CHANGE_IDENTIFICATION written
+    Note over O,OMX: FM: OMX_SYNCE_IDENTIFICATION ★ NEW
+    O->>CRM: CRM_CREATE_ORDER_PREPAID_DISCONNECT [command=DisChangeOwnerShip|orderType=D]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_CREATE_ORDER_PREPAID
+    O->>CRM: CRM_UPSERT_CUSTOMER_ACCOUNT [mode=OR|upsertAccountStatus=Active]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_UPSERT_CUSTOMER_ACCOUNT
+    O->>OMX: STATUS_UPDATE_CREATING_PROFILE
+    OMX-->>O: response
+    Note over O,OMX: FM: STATUS_UPDATE_CREATING_PROFILE
+    O->>CRM: CRM_CREATE_ORDER_PREPAID [command=NewChangeOwnerShip|orderType=N]
+    CRM-->>O: response
+    Note over O,CRM: FM: CRM_CREATE_ORDER_PREPAID
+    opt CHANGE_IDENTIFICATION=Y
+        O->>MCS: MCS_GET_PACKCODE
+        MCS-->>O: response
+        Note over O,MCS: FM: MCS_GET_PACKCODE
+    end
+    opt MCS_CANCEL_AFS=Y and CHANGE_IDENTIFICATION=Y
+        O->>MCS: MCS_CANCEL_AFTER_SALE [USE_ROWID_CRM=Y]
+        MCS-->>O: response
+        Note over O,MCS: FM: MCS_CANCEL_AFTER_SALE
+    end
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- §6 Flow Diagram -->
+<div class="card">
+  <div class="card-header">§6 — Process Flow Diagram (Mermaid)</div>
+  <div class="card-body">
+    <div class="mermaid-wrap">
+      <div class="mermaid">
+flowchart TD
+    START([START]) --> S1[CRM_GET_LAST_ASSET_ROOT\nSTATUS=Active]
+    S1 --> S2[CRM_GET_ASSET_COMPONENT_LIST\nSTATUS=Active]
+    S2 --> S3[OMX_SYNCE_IDENTIFICATION ★\nWrites CHANGE_IDENTIFICATION Y/N]
+    S3 --> S4[CRM_CREATE_ORDER_PREPAID_DISCONNECT\ncommand=DisChangeOwnerShip - orderType=D]
+    S4 --> S5[CRM_UPSERT_CUSTOMER_ACCOUNT\nmode=OR - upsertAccountStatus=Active]
+    S5 --> S6[STATUS_UPDATE_CREATING_PROFILE]
+    S6 --> S7[CRM_CREATE_ORDER_PREPAID\ncommand=NewChangeOwnerShip - orderType=N]
+    S7 --> S8{MCS_GET_PACKCODE\nConditional: CHANGE_IDENTIFICATION=Y}
+    S8 --> S9{MCS_CANCEL_AFTER_SALE\nConditional: MCS_CANCEL_AFS=Y and CHANGE_IDENTIFICATION=Y}
+    S9 --> END([END])
+      </div>
+    </div>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
+<script>mermaid.initialize({startOnLoad:true,theme:'default',sequence:{mirrorActors:false},flowchart:{curve:'basis'}});</script>
+
+</main>
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation &middot; PREPAID_CHANGE_OWNER &middot; 2026-09-23</footer>
+</body>
+</html>

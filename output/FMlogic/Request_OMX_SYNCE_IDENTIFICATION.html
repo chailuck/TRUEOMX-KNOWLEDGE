@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Request_OMX_SYNCE_IDENTIFICATION</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:var(--bg);color:#1a1a1a;line-height:1.6}
+header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+header h1{font-size:1.8rem;font-weight:700}
+header p{opacity:.85;margin-top:6px;font-size:.95rem}
+.meta-row{display:flex;gap:20px;flex-wrap:wrap;margin-top:14px}
+.meta-pill{background:rgba(255,255,255,.15);border-radius:20px;padding:4px 14px;font-size:.8rem;font-weight:600}
+main{max-width:1280px;margin:32px auto;padding:0 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:10px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:700;font-size:.95rem;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:9px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:top}
+tr:hover{background:#fafafa}
+pre{background:var(--code-bg);color:var(--code-fg);border-radius:8px;padding:16px;overflow-x:auto;font-size:.82rem;line-height:1.55;border-left:3px solid var(--true-red)}
+code{font-family:'Cascadia Code','Consolas',monospace;font-size:.85rem}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-green{background:#E8F5E9;color:var(--success)}
+.badge-orange{background:#FFF3E0;color:var(--warning)}
+.badge-blue{background:#E3F0FD;color:var(--info)}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-purple{background:#F3E5F5;color:var(--skip)}
+.kw{color:#cba6f7}.ty{color:#89b4fa}.st{color:#a6e3a1}.cm{color:#6c7086}.nu{color:#fab387}.fn{color:#f38ba8}.xt{color:#89dceb}.xa{color:#f9e2af}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+footer{text-align:center;padding:32px;color:#777;font-size:.82rem;border-top:1px solid var(--border);margin-top:40px}
+</style>
+</head>
+<body>
+<header>
+  <div style="font-size:.8rem;opacity:.7;margin-bottom:6px">TRUE Corporation OMX &rsaquo; FM Logic Documentation</div>
+  <h1>Request_OMX_SYNCE_IDENTIFICATION</h1>
+  <p>Syncs customer identification data and writes CHANGE_IDENTIFICATION ExtendedInfo flag</p>
+  <div class="meta-row">
+    <span class="meta-pill">Activity: OMX_SYNCE_IDENTIFICATION</span>
+    <span class="meta-pill">Backend: OMX Internal</span>
+    <span class="meta-pill">No Outbound Call</span>
+    <span class="meta-pill">Author: usuf</span>
+    <span class="meta-pill">Generated: 2026-09-23</span>
+  </div>
+</header>
+<main>
+
+<!-- §1 -->
+<div class="card">
+  <div class="card-header">§1 — Overview &amp; Purpose</div>
+  <div class="card-body">
+    <p>A local computation rule with <strong>no outbound ESB/JMS call</strong>. Performs two tasks:</p>
+    <ol style="padding-left:20px;margin-top:10px;line-height:2">
+      <li><strong>Identification sync:</strong> Copies <code>CustomerGeneralInfo.Identification</code> and <code>CustomerGeneralInfo.IdentificationType</code> into <code>CustomerName.Identification</code> / <code>CustomerName.IdentificationType</code> (when both objects exist).</li>
+      <li><strong>Change-detection flag:</strong> Creates a <code>CustomerExtendedInfo</code> with <code>Name="CHANGE_IDENTIFICATION"</code>. Sets value to <code>"Y"</code> if the customer's current Identification differs from the old one (<code>ExtendedInfo[OLD_IDENTIFICATION]</code>); otherwise value stays <code>"N"</code>.</li>
+    </ol>
+    <p style="margin-top:10px">The <code>CHANGE_IDENTIFICATION=Y</code> flag gates both downstream MCS steps:
+      <strong>MCS_GET_PACKCODE</strong> and <strong>MCS_CANCEL_AFTER_SALE</strong> — they only execute when identification has changed.</p>
+  </div>
+</div>
+
+<!-- §2 -->
+<div class="card">
+  <div class="card-header">§2 — Rule Metadata</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Attribute</th><th>Value</th></tr>
+      <tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_OMX_SYNCE_IDENTIFICATION</code></td></tr>
+      <tr><td>Priority</td><td>5</td></tr>
+      <tr><td>ForwardChain</td><td>true</td></tr>
+      <tr><td>Activity ID</td><td>OMX_SYNCE_IDENTIFICATION</td></tr>
+      <tr><td>Backend</td><td><span class="badge badge-blue">OMX Internal — no outbound call</span></td></tr>
+      <tr><td>Pattern</td><td>Local Computation (no IntraActivitySequencing)</td></tr>
+      <tr><td>Author</td><td>usuf</td></tr>
+      <tr><td>Response Rulefunction</td><td><span class="badge badge-orange">None — rule calls NextActivity directly</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §3 -->
+<div class="card">
+  <div class="card-header">§3 — Working Memory — Declared Objects</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+      <tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order context — customer, identification, ExtendedInfo</td></tr>
+      <tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity state</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §4 -->
+<div class="card">
+  <div class="card-header">§4 — Rule Conditions (WHEN)</div>
+  <div class="card-body">
+    <pre><code><span class="kw">orderCurrentActivity</span>@extId == <span class="kw">orderRequest</span>.ProcessFlow.NextActivityName
+<span class="kw">orderCurrentActivity</span>.ActivityID == <span class="st">"OMX_SYNCE_IDENTIFICATION"</span>
+<span class="kw">orderRequest</span>.ProcessFlow.NextActivityID == <span class="st">"OMX_SYNCE_IDENTIFICATION"</span>
+<span class="kw">orderCurrentActivity</span>.Status == <span class="st">"WAITING"</span></code></pre>
+  </div>
+</div>
+
+<!-- §5 -->
+<div class="card">
+  <div class="card-header">§5 — Execution Flow</div>
+  <div class="card-body">
+    <ol style="padding-left:20px;line-height:2">
+      <li><strong>Identification sync</strong> (conditional): If <code>CustomerGeneralInfo != null</code> AND <code>CustomerName != null</code>:
+        <ul style="padding-left:20px">
+          <li>Copy <code>CustomerGeneralInfo.Identification</code> → <code>CustomerName.Identification</code></li>
+          <li>Copy <code>CustomerGeneralInfo.IdentificationType</code> → <code>CustomerName.IdentificationType</code></li>
+        </ul>
+      </li>
+      <li>Create <code>CustomerExtendedInfo</code> instance with <code>Name="CHANGE_IDENTIFICATION"</code>, <code>Value="N"</code> (default)</li>
+      <li>Read <code>OLD_IDENTIFICATION</code> from <code>Customer.ExtendedInfo</code> via XPath</li>
+      <li><strong>Change-detection</strong> (conditional): If <code>CustomerGeneralInfo != null</code> AND <code>Identification</code> is not blank AND <code>Identification != OLD_IDENTIFICATION</code>: set <code>Value = "Y"</code></li>
+      <li>Append <code>cusExtInf</code> to <code>Customer.ExtendedInfo</code> array</li>
+      <li>Call <code>NextActivity</code> to advance the process</li>
+      <li>Fire audit log event</li>
+    </ol>
+  </div>
+</div>
+
+<!-- §8 Dependencies -->
+<div class="card">
+  <div class="card-header">§8 — System &amp; Integration Dependencies</div>
+  <div class="card-body">
+    <div style="background:#F5E6E6;border-left:3px solid var(--true-red);padding:10px 14px;border-radius:4px;margin-bottom:14px">
+      <strong>No outbound backend call.</strong> This rule performs purely in-memory operations on the order request concept.
+    </div>
+
+    <p style="font-weight:700;margin-bottom:8px">§8.5 ExtendedInfo Fields</p>
+    <table>
+      <tr><th>Key</th><th>Level</th><th>Direction</th><th>Purpose</th></tr>
+      <tr><td>OLD_IDENTIFICATION</td><td>Customer</td><td>Input (read)</td><td>Previous identification number for comparison</td></tr>
+      <tr><td>CHANGE_IDENTIFICATION</td><td>Customer</td><td>Output (written)</td><td>"Y" if ID changed, "N" if same/absent; gates MCS_GET_PACKCODE and MCS_CANCEL_AFTER_SALE</td></tr>
+    </table>
+
+    <p style="font-weight:700;margin-top:16px;margin-bottom:8px">§8.4 BE Working Memory Fields</p>
+    <table>
+      <tr><th>Field Path</th><th>Direction</th><th>Notes</th></tr>
+      <tr><td><code>Customer.CustomerGeneralInfo.Identification</code></td><td>Read</td><td>New identification number</td></tr>
+      <tr><td><code>Customer.CustomerGeneralInfo.IdentificationType</code></td><td>Read</td><td>Identification type code</td></tr>
+      <tr><td><code>Customer.CustomerName.Identification</code></td><td>Written</td><td>Synced from CustomerGeneralInfo</td></tr>
+      <tr><td><code>Customer.CustomerName.IdentificationType</code></td><td>Written</td><td>Synced from CustomerGeneralInfo</td></tr>
+      <tr><td><code>Customer.ExtendedInfo[CHANGE_IDENTIFICATION]</code></td><td>Written (appended)</td><td>Change-detection flag for downstream steps</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §10 -->
+<div class="card">
+  <div class="card-header">§10 — XSLT Field Mapping — CustomerExtendedInfo Construction</div>
+  <div class="card-body">
+    <ul class="xslt-tree">
+      <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">object</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Name</span><span class="tree-arrow">←</span><span class="tree-src-static">'CHANGE_IDENTIFICATION'</span><span class="badge badge-green">Always</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Value</span><span class="tree-arrow">←</span><span class="tree-src-static">'N'</span><span class="badge badge-green">Default (set in XSLT)</span></div></li>
+              <li><div class="tree-row"><span class="tree-tag">Value</span><span class="tree-arrow">←</span><span class="tree-src-static">'Y'</span><span class="badge badge-orange">Conditional: Identification changed</span><span class="tree-cond">set after createInstance when ID differs from OLD_IDENTIFICATION</span></div></li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+    <p style="margin-top:10px;font-size:.8rem;color:#555">
+      <strong>Legend:</strong>
+      <span class="tree-src">green</span> = XPath/function source &nbsp;
+      <span class="tree-src-static">orange</span> = static/literal value &nbsp;
+      <span class="badge badge-green">Always</span> = always set &nbsp;
+      <span class="badge badge-orange">Conditional</span> = set after createInstance when change detected
+    </p>
+  </div>
+</div>
+
+<!-- §11 Audit -->
+<div class="card">
+  <div class="card-header">§11 — Audit Logging</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Field</th><th>Value</th></tr>
+      <tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code> <span class="badge badge-orange">Conditional</span></td></tr>
+      <tr><td>PROCESS_ID</td><td><code>concat($pid, "_RES")</code></td></tr>
+      <tr><td>COMPONENT_NAME</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+      <tr><td>OPERATION_NAME</td><td>"/Rules/OMConsumers/OMXOM/OMX_SYNCE_IDENTIFICATION"</td></tr>
+      <tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+      <tr><td>AUDIT_TRACE</td><td>"OMX_SYNCE_IDENTIFICATION Completed."</td></tr>
+      <tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+      <tr><td>payload</td><td>empty element (always included)</td></tr>
+    </table>
+    <p style="margin-top:8px;font-size:.85rem">Note: PROCESS_ID uses suffix <code>_RES</code> (not <code>_REQ</code>) since the rule advances the activity inline — there is no async request/response cycle.</p>
+  </div>
+</div>
+
+<!-- §12 Status -->
+<div class="card">
+  <div class="card-header">§12 — Activity Status Management</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Outcome</th><th>Call</th></tr>
+      <tr><td>Always (no skip path)</td><td><code>RuleFunctions.Helpers.NextActivity(orderRequest, orderCurrentActivity)</code></td></tr>
+    </table>
+    <p style="margin-top:8px;font-size:.85rem">No SkipActivity call — this rule always advances regardless of whether CHANGE_IDENTIFICATION is Y or N.</p>
+  </div>
+</div>
+
+<!-- §13 Exception -->
+<div class="card">
+  <div class="card-header">§13 — Exception / Error Handling</div>
+  <div class="card-body">
+    <pre><code><span class="kw">catch</span> (Exception ae) {
+    <span class="fn">RuleFunctions.Helpers.HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+}</code></pre>
+  </div>
+</div>
+
+<!-- §14 Helpers -->
+<div class="card">
+  <div class="card-header">§14 — Helper Functions Reference</div>
+  <div class="card-body">
+    <table>
+      <tr><th>Function</th><th>Purpose</th></tr>
+      <tr><td><code>RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(value)</code></td><td>Returns true if value is null, empty, or blank string</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.NextActivity(req, activity)</code></td><td>Advances process flow to next step</td></tr>
+      <tr><td><code>RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")</code></td><td>Standard exception handler</td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §15 Dependency Tree -->
+<div class="card">
+  <div class="card-header">§15 — Function Dependency Tree</div>
+  <div class="card-body">
+    <pre><code>Request_OMX_SYNCE_IDENTIFICATION
+├── (direct field copy: CustomerGeneralInfo → CustomerName)   [if both non-null]
+├── Instance.createInstance(CustomerExtendedInfo XSLT)
+│   └── XSLT: Name='CHANGE_IDENTIFICATION', Value='N'
+├── XPath.evalAsString(OLD_IDENTIFICATION from Customer.ExtendedInfo)
+├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(Identification)
+├── (Value = "Y")                                              [if Identification changed]
+├── (append cusExtInf to Customer.ExtendedInfo)
+├── RuleFunctions.Helpers.NextActivity(req, activity)
+├── Event.Ext.sendEventImmediate(Logger)
+└── RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")</code></pre>
+  </div>
+</div>
+
+<!-- §17 Migration -->
+<div class="card">
+  <div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+  <div class="card-body">
+    <table>
+      <tr><th>#</th><th>Requirement / Risk</th><th>Severity</th></tr>
+      <tr><td>R1</td><td>CHANGE_IDENTIFICATION flag gates MCS_GET_PACKCODE and MCS_CANCEL_AFTER_SALE — must be computed before those steps execute; sequencing dependency must be preserved</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+      <tr><td>R2</td><td>OLD_IDENTIFICATION is read from Customer.ExtendedInfo — must be populated by the caller before this step runs (typically from the original order request)</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R3</td><td>Identification sync copies to CustomerName — if the target platform has separate storage for CustomerName vs CustomerGeneralInfo, both update paths must be implemented</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+      <tr><td>R4</td><td>IsBlankOrStringNull helper used for null/blank detection — ensure equivalent null-safe comparison in target platform</td><td><span class="badge badge-green">[LOW]</span></td></tr>
+    </table>
+  </div>
+</div>
+
+<!-- §18 Source -->
+<div class="card">
+  <div class="card-header">§18 — Full Source Code</div>
+  <div class="card-body">
+    <pre><code><span class="kw">rule</span> <span class="ty">Rules.OMConsumers.OMXFM.Request.Request_OMX_SYNCE_IDENTIFICATION</span> {
+    <span class="kw">attribute</span> { priority = <span class="nu">5</span>; forwardChain = <span class="kw">true</span>; }
+    <span class="kw">declare</span> {
+        <span class="ty">Concepts.OrderRequest.OrderRequest</span> orderRequest;
+        <span class="ty">Concepts.OM.ProcessConfig.Activity</span> orderCurrentActivity;
+    }
+    <span class="kw">when</span> {
+        orderCurrentActivity@extId == orderRequest.ProcessFlow.NextActivityName;
+        orderCurrentActivity.ActivityID == <span class="st">"OMX_SYNCE_IDENTIFICATION"</span>;
+        orderRequest.ProcessFlow.NextActivityID == <span class="st">"OMX_SYNCE_IDENTIFICATION"</span>;
+        orderCurrentActivity.Status == <span class="st">"WAITING"</span>;
+    }
+    <span class="kw">then</span> {
+        <span class="kw">try</span> {
+            <span class="kw">if</span> (orderRequest.OrderData.Customer.CustomerGeneralInfo != <span class="kw">null</span>
+                &amp;&amp; orderRequest.OrderData.Customer.CustomerName != <span class="kw">null</span>) {
+                orderRequest.OrderData.Customer.CustomerName.Identification =
+                    orderRequest.OrderData.Customer.CustomerGeneralInfo.Identification;
+                orderRequest.OrderData.Customer.CustomerName.IdentificationType =
+                    orderRequest.OrderData.Customer.CustomerGeneralInfo.IdentificationType;
+            }
+
+            <span class="cm">/* Instance.createInstance(CustomerExtendedInfo XSLT — see §10) */</span>
+            <span class="cm">/* Name="CHANGE_IDENTIFICATION", Value="N" by default */</span>
+
+            String oldIdentification = XPath.evalAsString(<span class="st">"... $orderRequest/OrderData/Customer/ExtendedInfo[Name='OLD_IDENTIFICATION']/Value ..."</span>);
+
+            <span class="kw">if</span> (orderRequest.OrderData.Customer.CustomerGeneralInfo != <span class="kw">null</span>
+                &amp;&amp; !<span class="fn">IsBlankOrStringNull</span>(orderRequest.OrderData.Customer.CustomerGeneralInfo.Identification)
+                &amp;&amp; !String.equals(orderRequest.OrderData.Customer.CustomerGeneralInfo.Identification, oldIdentification)) {
+                cusExtInf.Value = <span class="st">"Y"</span>;
+            }
+
+            orderRequest.OrderData.Customer.ExtendedInfo[...] = cusExtInf;
+            <span class="fn">NextActivity</span>(orderRequest, orderCurrentActivity);
+            <span class="cm">/* fire Logger audit event — see §11 */</span>
+
+        } <span class="kw">catch</span> (Exception ae) {
+            <span class="fn">HandleActivityException</span>(orderRequest, orderCurrentActivity, ae, <span class="st">""</span>);
+        }
+    }
+}</code></pre>
+  </div>
+</div>
+
+</main>
+<footer>TRUE Corporation OMX &middot; TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

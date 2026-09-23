@@ -1,0 +1,433 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Request_CALCULATE_MNP_CREDIT_LIMIT</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;letter-spacing:.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:32px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover{background:#fdf5f5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 18px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre-wrap}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 6px;border-radius:3px}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.section-title{font-size:1rem;font-weight:700;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding-bottom:6px;margin-bottom:16px}
+ol.flow-list{padding-left:24px}ol.flow-list li{padding:4px 0}
+footer{background:var(--true-deep);color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:.8rem;margin-top:40px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_CALCULATE_MNP_CREDIT_LIMIT</h1>
+  <div class="subtitle">TIBCO BusinessEvents FM Logic — MNP Credit Limit Calculation (Account-level)</div>
+  <div class="meta-row">
+    <span class="meta-item">Backend: CES / OMX Credit Limit Service</span>
+    <span class="meta-item">Pattern: Account-level fan-out + IntraActivitySequencing</span>
+    <span class="meta-item">Author: mbausaka-t430</span>
+    <span class="meta-item">Generated: 2026-09-23</span>
+  </div>
+</div>
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header">§1 — Overview &amp; Purpose</div>
+<div class="card-body">
+<p>Calculates the MNP (Mobile Number Portability) credit limit for each account in the order. Factors in any International Roaming (IR) SOC (41601 or 41606) by adding <code>CalcIR=15000</code> to the limit request. Sends one request per account using <strong>IntraActivitySequencing</strong>.</p>
+<br>
+<p><strong>Two backend paths:</strong></p>
+<ul style="padding-left:20px;margin-top:6px">
+  <li><strong>GoldenDB=Y</strong> → <code>CES_CALCULATE_MNP_CREDIT_LIMIT</code> event (CES service)</li>
+  <li><strong>GoldenDB≠Y</strong> → <code>CALCULATE_MNP_CREDIT_LIMIT</code> event (standard OMX service)</li>
+</ul>
+<br>
+<p>The response handler writes back <code>PersonalCreditLimit</code> (rounded to nearest 100) and <code>CreditLimitWaiverInd</code> ("U" for VIP/HY accounts, "N" otherwise) to <code>Account.AccountManagementInfo</code>.</p>
+<br>
+<p>PreExecCheck in ProcessConfig gates this FM on <code>CustomerTypeInfo/Type != 73</code> (non-corporate) and <code>OrderType=7</code> (MNP).</p>
+</div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+<div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="card-body">
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_CALCULATE_MNP_CREDIT_LIMIT</code></td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>ForwardChain</td><td>true</td></tr>
+<tr><td>Activity ID</td><td>CALCULATE_MNP_CREDIT_LIMIT</td></tr>
+<tr><td>Backend</td><td>CES (GoldenDB path) or OMX Credit Limit Service (standard path)</td></tr>
+<tr><td>Pattern</td><td>Account-level fan-out with IntraActivitySequencing</td></tr>
+<tr><td>Author</td><td>mbausaka-t430</td></tr>
+<tr><td>Response Rulefunction</td><td>Response_CALCULATE_MNP_CREDIT_LIMIT</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+<div class="card-header">§3 — Working Memory — Declared Objects</div>
+<div class="card-body">
+<table>
+<tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order context</td></tr>
+<tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity state</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="card">
+<div class="card-header">§4 — Rule Conditions (WHEN)</div>
+<div class="card-body">
+<pre><span style="color:#cba6f7">orderCurrentActivity</span>@extId == <span style="color:#a6e3a1">orderRequest.ProcessFlow.NextActivityName</span>
+<span style="color:#cba6f7">orderCurrentActivity</span>.ActivityID == <span style="color:#fab387">"CALCULATE_MNP_CREDIT_LIMIT"</span>
+<span style="color:#cba6f7">orderRequest</span>.ProcessFlow.NextActivityID == <span style="color:#fab387">"CALCULATE_MNP_CREDIT_LIMIT"</span>
+<span style="color:#cba6f7">orderCurrentActivity</span>.Status == <span style="color:#fab387">"WAITING"</span></pre>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+<div class="card-header">§5 — Execution Flow</div>
+<div class="card-body">
+<ol class="flow-list">
+  <li>Detect resubmit: <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code></li>
+  <li>If resubmit: call <code>IAS.PurgePendingRequestsBeforeResubmit(orderCurrentActivity)</code></li>
+  <li>For each <code>Account[i]</code>:
+    <ul>
+      <li>Evaluate per-account PreExecCheck via <code>GetXMLForAccount(orderRequest, refId)</code></li>
+      <li>If chkRes="true":
+        <ul>
+          <li>Compute <code>SubCount</code> via XPath (count SubscriberOffers by AccountRefId in ParentOU/ChildOU)</li>
+          <li>Compute <code>CheckIR</code>: true if any SOC = 41601 or 41606; set <code>CalcIR=15000</code> if true</li>
+          <li>If <code>GoldenDB=Y</code>: create and assert <code>CES_CALCULATE_MNP_CREDIT_LIMIT</code> event, call <code>IAS.ActionRequestEvent</code></li>
+          <li>Else: create and assert <code>CALCULATE_MNP_CREDIT_LIMIT</code> event, call <code>IAS.ActionRequestEvent</code></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+  <li>If at least one request sent: call <code>IAS.SendFirstRequestEvent</code>, set status to "1", <code>SendDataToDB</code></li>
+  <li>If isSkipped: call <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></li>
+</ol>
+</div>
+</div>
+
+<!-- §7 Data Extraction -->
+<div class="card">
+<div class="card-header">§7 — Data Extraction &amp; XPath Computations</div>
+<div class="card-body">
+<p class="section-title">SubCount (subscriber offer count per account)</p>
+<pre>if(count($orderRequest/OrderData/Customer/ParentOU/Subscriber[AccountRefId=$refId]/SubscriberOffers)&gt;0)
+then count($orderRequest/OrderData/Customer/ParentOU/Subscriber[AccountRefId=$refId]/SubscriberOffers)
+else count($orderRequest/OrderData/Customer/ParentOU/ChildOU/Subscriber[AccountRefId=$refId]/SubscriberOffers)</pre>
+<br>
+<p class="section-title">CheckIR (IR SOC detection)</p>
+<pre>if(
+  ($orderRequest/OrderData/Customer/ParentOU/Subscriber[AccountRefId=$refId]/SubscriberOffers/Soc='41601')
+  or ($orderRequest/.../SubscriberOffers/RelatedOffersArray/Soc='41606')
+  or ChildOU equivalents
+) then true() else false()</pre>
+<p>→ If CheckIR=true: <code>CalcIR = 15000</code> (added to credit limit request)</p>
+<br>
+<p class="section-title">CreditLimitWaiverInd (in response handler)</p>
+<pre>"U" if (no RawAccountID AND (Type=70 OR SubType starts "HY" OR Grading != 'NON-TOP'))
+else "N"</pre>
+<br>
+<p class="section-title">PersonalCreditLimit (in response handler)</p>
+<pre>0.00 if (no RawAccountID AND (Type=70 OR SubType starts "HY")) OR Grading != 'NON-TOP'
+else if (has RawAccountID AND Grading='NON-TOP') then ceiling(CalCreditLimit/100)*100
+else ceiling(CalCreditLimit/100)*100</pre>
+<p>Result is rounded up to nearest 100.</p>
+</div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="card">
+<div class="card-header">§8 — System &amp; Integration Dependencies</div>
+<div class="card-body">
+<p class="section-title">§8.1 — Order Type Dependencies</p>
+<p>Used in MNP port-in flows only (PreExecCheck: <code>Type!=73 and OrderType=7</code>). Both GoldenDB and non-GoldenDB customer paths are handled.</p>
+<br>
+<p class="section-title">§8.2 — ESB / JMS Channel</p>
+<table>
+<tr><th>Path</th><th>Event</th><th>Condition</th></tr>
+<tr><td>GoldenDB</td><td><code>Events.OMConsumers.OMXFM.Request.CES_CALCULATE_MNP_CREDIT_LIMIT</code></td><td>GoldenDB=Y</td></tr>
+<tr><td>Standard</td><td><code>Events.OMConsumers.OMXFM.Request.CALCULATE_MNP_CREDIT_LIMIT</code></td><td>GoldenDB≠Y</td></tr>
+<tr><td>Response</td><td><code>Events.OMConsumers.OMXFM.Response.CALCULATE_MNP_CREDIT_LIMIT</code></td><td>Both paths</td></tr>
+</table>
+<br>
+<p class="section-title">§8.3 — Backend API Details</p>
+<table>
+<tr><th>System</th><th>Operation</th><th>Namespace</th></tr>
+<tr><td>CES (GoldenDB)</td><td>CalculateMNPCreditLimit</td><td><code>http://services.omx.truecorp.co.th/FM/CalculateMNPCreditLimitRequest</code></td></tr>
+<tr><td>Standard</td><td>CalculateMNPCreditLimit</td><td><code>http://services.omx.truecorp.co.th/FM/CalculateMNPCreditLimitRequest</code></td></tr>
+</table>
+<br>
+<p class="section-title">§8.4 — BE Working Memory Fields</p>
+<table>
+<tr><th>Field Path</th><th>Direction</th><th>Notes</th></tr>
+<tr><td><code>Customer.CustomerTypeInfo.Type</code></td><td><span class="badge badge-blue">Read</span></td><td>Sent as customerType</td></tr>
+<tr><td><code>Customer.CustomerGeneralInfo.Grading</code></td><td><span class="badge badge-blue">Read</span></td><td>Sent as grading; used in WaiverInd/PersonalCreditLimit logic</td></tr>
+<tr><td><code>Customer.Account[i].AccountID</code></td><td><span class="badge badge-blue">Read</span></td><td>Conditional — sent if non-empty</td></tr>
+<tr><td><code>Customer.Account[i].AccountManagementInfo.AccountSubType</code></td><td><span class="badge badge-blue">Read</span></td><td>Sent as accountSubType; HY prefix triggers WaiverInd "U"</td></tr>
+<tr><td><code>Customer.ParentOU/ChildOU.Subscriber.SubscriberOffers[ServiceType=80]</code></td><td><span class="badge badge-blue">Read</span></td><td>SOC codes for package context; IR SOC check (41601/41606)</td></tr>
+<tr><td><code>Customer.Account[i].AccountManagementInfo.CreditLimitWaiverInd</code></td><td><span class="badge badge-green">Written</span></td><td>Set in response handler: "U" or "N"</td></tr>
+<tr><td><code>Customer.Account[i].AccountManagementInfo.PersonalCreditLimit</code></td><td><span class="badge badge-green">Written</span></td><td>Set in response handler: ceiling(CalCreditLimit/100)*100</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="card">
+<div class="card-header">§9 — Detailed Payload Build</div>
+<div class="card-body">
+<p class="section-title">§9.6 — Core Payload — CalculateMNPCreditLimitRequest</p>
+<p>Namespace: <code>http://services.omx.truecorp.co.th/FM/CalculateMNPCreditLimitRequest</code> (prefix <code>ns1</code>)</p>
+<pre><span style="color:#89dceb">&lt;ns1:CalculateMNPCreditLimitRequest&gt;</span>
+  <span style="color:#89dceb">&lt;ns1:MNPCreditLimitAcc&gt;</span>
+    <span style="color:#89dceb">&lt;ns1:customerType&gt;</span>$orderRequest/OrderData/Customer/CustomerTypeInfo/Type<span style="color:#89dceb">&lt;/ns1:customerType&gt;</span>
+    <span style="color:#89dceb">&lt;ns1:grading&gt;</span>$orderRequest/OrderData/Customer/CustomerGeneralInfo/Grading<span style="color:#89dceb">&lt;/ns1:grading&gt;</span>
+    <span style="color:#6c7086">/* Conditional: if AccountID non-empty */</span>
+    <span style="color:#89dceb">&lt;ns1:accountId&gt;</span>$orderRequest/OrderData/Customer/Account[$var]/AccountID<span style="color:#89dceb">&lt;/ns1:accountId&gt;</span>
+    <span style="color:#89dceb">&lt;ns1:accountSubType&gt;</span>$orderRequest/OrderData/Customer/Account[$var]/AccountManagementInfo/AccountSubType<span style="color:#89dceb">&lt;/ns1:accountSubType&gt;</span>
+    <span style="color:#6c7086">/* for-each: ServiceType=80 SubscriberOffers for subscribers in this account (both ParentOU and ChildOU) */</span>
+    <span style="color:#89dceb">&lt;ns1:soc&gt;</span>Soc (from SubscriberOffers[ServiceType='80'])<span style="color:#89dceb">&lt;/ns1:soc&gt;</span>
+    <span style="color:#89dceb">&lt;ns1:CalCreditLimit&gt;</span>0<span style="color:#89dceb">&lt;/ns1:CalCreditLimit&gt;</span>
+    <span style="color:#89dceb">&lt;ns1:CalcIR&gt;</span>15000 (if IR SOC present) or 0<span style="color:#89dceb">&lt;/ns1:CalcIR&gt;</span>
+  <span style="color:#89dceb">&lt;/ns1:MNPCreditLimitAcc&gt;</span>
+<span style="color:#89dceb">&lt;/ns1:CalculateMNPCreditLimitRequest&gt;</span></pre>
+<p><strong>Note:</strong> <code>$var = number($i) + 1</code> (XPath is 1-based, Java loop is 0-based)</p>
+</div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="card">
+<div class="card-header">§10 — XSLT Field Mapping — Output XML Tree</div>
+<div class="card-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-orange">Conditional: if OrderPriority</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/Account[$var]/RefId</span><span class="badge badge-orange">Conditional: if RefId exists</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns1:CalculateMNPCreditLimitRequest</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">ns1:MNPCreditLimitAcc</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:customerType</span><span class="tree-arrow">←</span><span class="tree-src">Customer/CustomerTypeInfo/Type</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:grading</span><span class="tree-arrow">←</span><span class="tree-src">Customer/CustomerGeneralInfo/Grading</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:accountId</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/AccountID</span><span class="badge badge-orange">Conditional: tib:trim≠''</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:accountSubType</span><span class="tree-arrow">←</span><span class="tree-src">Account[$var]/AccountManagementInfo/AccountSubType</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:soc</span><span class="tree-arrow">←</span><span class="tree-src">SubscriberOffers[ServiceType='80']/Soc</span><span class="tree-cond">for-each: ParentOU + ChildOU subscribers</span><span class="badge badge-orange">Conditional: if offers exist</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:CalCreditLimit</span><span class="tree-arrow">←</span><span class="tree-src-static">0</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">ns1:CalcIR</span><span class="tree-arrow">←</span><span class="tree-src">$CalcIR (15000 if IR SOC 41601/41606, else 0)</span><span class="badge badge-green">Always</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+</div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+<div class="card-header">§11 — Audit Logging</div>
+<div class="card-body">
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code> [Conditional]</td></tr>
+<tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td></tr>
+<tr><td>OPERATION_NAME</td><td>"CALCULATE_MNP_CREDIT_LIMIT"</td></tr>
+<tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+<tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+<tr><td>AUDIT_TRACE</td><td>"Request Sent for CALCULATE_MNP_CREDIT_LIMIT"</td></tr>
+<tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+<tr><td>payload</td><td>Conditional on WritePayload="true"</td></tr>
+</table>
+<p style="margin-top:8px"><strong>Note:</strong> Sent via <code>Event.Ext.sendEventImmediate</code> (synchronous flush).</p>
+</div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="card">
+<div class="card-header">§12 — Activity Status Management</div>
+<div class="card-body">
+<table>
+<tr><th>Outcome</th><th>Status</th><th>Call</th></tr>
+<tr><td>At least one request sent</td><td>SENT <span class="badge badge-blue">"1"</span></td><td><code>IAS.SendFirstRequestEvent(orderCurrentActivity)</code> → <code>GetActivityStatusString("1", false)</code> → <code>SendDataToDB</code></td></tr>
+<tr><td>All accounts already responded</td><td>SKIPPED</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+</table>
+<p style="margin-top:8px"><strong>IntraActivitySequencing:</strong> uses <code>ActionRequestEvent</code> + <code>SendFirstRequestEvent</code> for sequential per-account delivery.</p>
+</div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="card">
+<div class="card-header">§13 — Exception / Error Handling</div>
+<div class="card-body">
+<pre>catch (Exception ae) {
+    RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "");
+}</pre>
+</div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card">
+<div class="card-header">§14 — Helper Functions Reference</div>
+<div class="card-body">
+<table>
+<tr><th>Function</th><th>Purpose</th></tr>
+<tr><td><code>RuleFunctions.Helpers.IntraActivitySequencing.PurgePendingRequestsBeforeResubmit(activity)</code></td><td>Clear pending queue on resubmit</td></tr>
+<tr><td><code>RuleFunctions.Helpers.GetXMLForAccount(orderRequest, refId)</code></td><td>Serialize account XML for PreExecCheck</td></tr>
+<tr><td><code>RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(value)</code></td><td>Null-safe blank check on GoldenDB flag</td></tr>
+<tr><td><code>RuleFunctions.Helpers.IntraActivitySequencing.ActionRequestEvent(reqEvent, activity)</code></td><td>Enqueue request event in IAS sequence</td></tr>
+<tr><td><code>RuleFunctions.Helpers.IntraActivitySequencing.SendFirstRequestEvent(activity)</code></td><td>Trigger the first request in the IAS queue</td></tr>
+<tr><td><code>RuleFunctions.Helpers.GetActivityStatusString("1", false)</code></td><td>Returns SENT status string</td></tr>
+<tr><td><code>RuleFunctions.Helpers.SendDataToDB(orderRequest)</code></td><td>Persist order state to DB</td></tr>
+<tr><td><code>RuleFunctions.Helpers.SkipActivity(req, activity, "4")</code></td><td>Skip this and 3 downstream activities</td></tr>
+<tr><td><code>RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")</code></td><td>Standard error handler</td></tr>
+<tr><td><code>RuleFunctions.Helpers.IntraActivitySequencing.ActionResponseEvent(currActivity)</code></td><td>Fan-in check in response handler</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+<div class="card-header">§15 — Function Dependency Tree</div>
+<div class="card-body">
+<pre>Request_CALCULATE_MNP_CREDIT_LIMIT
+├── [if isActResub] IAS.PurgePendingRequestsBeforeResubmit(orderCurrentActivity)
+├── [For each Account[i] not responded]
+│   ├── RuleFunctions.Helpers.GetXMLForAccount(orderRequest, refId)
+│   ├── XPath.execute(PreExecCheck, sXML)
+│   ├── XPath.evalAsInt(SubCount expression)
+│   ├── XPath.evalAsBoolean(CheckIR: SOC 41601/41606)
+│   ├── RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(GoldenDB)
+│   ├── [GoldenDB=Y path]
+│   │   ├── Event.createEvent("xslt://CES_CALCULATE_MNP_CREDIT_LIMIT")
+│   │   ├── Event.assertEvent(reqEvent)
+│   │   └── IAS.ActionRequestEvent(reqEvent, orderCurrentActivity)
+│   └── [Standard path]
+│       ├── Event.createEvent("xslt://CALCULATE_MNP_CREDIT_LIMIT")
+│       ├── Event.assertEvent(reqEvent)
+│       └── IAS.ActionRequestEvent(reqEvent, orderCurrentActivity)
+├── [if !isSkipped]
+│   ├── IAS.SendFirstRequestEvent(orderCurrentActivity)
+│   ├── GetActivityStatusString("1", false)
+│   └── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── [if isSkipped]
+│   └── RuleFunctions.Helpers.SkipActivity(req, activity, "4")
+└── RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")
+
+Response_CALCULATE_MNP_CREDIT_LIMIT
+├── Instance.createInstance("xslt://CalMNPCreditLimitRes")
+├── currActivity.Response[n] = activityRes
+├── [For matching Account[i]]
+│   ├── XPath.evalAsString(CreditLimitWaiverInd logic)
+│   └── XPath.evalAsDouble(PersonalCreditLimit logic)
+├── Event.Ext.sendEventImmediate(Logger)
+└── IAS.ActionResponseEvent(currActivity) → "true"/"false"</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+<div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="card-body">
+<table>
+<tr><th>#</th><th>Requirement / Risk</th><th>Severity</th></tr>
+<tr><td>R1</td><td>Dual backend: GoldenDB=Y → CES path, otherwise standard path — target platform must route based on GoldenDB flag</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+<tr><td>R2</td><td>IR SOC detection (41601 / 41606) adds CalcIR=15000 to credit limit — hardcoded SOC values must be parameterized in migration</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+<tr><td>R3</td><td>PersonalCreditLimit uses ceiling(x/100)*100 rounding; CreditLimitWaiverInd complex logic (Type=70, SubType=HY, Grading) — must be replicated exactly</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+<tr><td>R4</td><td>Account-level fan-out with IntraActivitySequencing — sequential delivery; target must preserve per-account ordering</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+<tr><td>R5</td><td>$var = $i + 1 (XPath 1-based vs Java 0-based index) — an off-by-one must be handled in the migrated Account reference</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+<tr><td>R6</td><td>SkipActivity("4") — skips 4 downstream activities; validate offset alignment in target process</td><td><span class="badge badge-blue">[LOW]</span></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="card">
+<div class="card-header">§19 — Response Message Rule</div>
+<div class="card-body">
+<p class="section-title">§19.1 — Overview</p>
+<p>Parses <code>CalculateMNPCreditLimitResponse</code> and writes <code>CreditLimitWaiverInd</code> and <code>PersonalCreditLimit</code> back to the matching account. Fan-in is managed by <code>IntraActivitySequencing.ActionResponseEvent</code> rather than manual count comparison.</p>
+<br>
+<p class="section-title">§19.2 — Scope Variables</p>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order context</td></tr>
+<tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.CALCULATE_MNP_CREDIT_LIMIT</code></td><td>Inbound credit limit response</td></tr>
+<tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity tracking</td></tr>
+</table>
+<br>
+<p class="section-title">§19.3 — ResponseBase: CalMNPCreditLimitRes</p>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">object</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">OMXUtils.generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CalCreditLimit</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:CalculateMNPCreditLimitResponse/ns:CalCreditLimit</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CreditLimitWaiverInd</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns:CalculateMNPCreditLimitResponse/ns:CreditLimitWaiverInd</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<br>
+<p class="section-title">§19.4 — Fan-in Completion</p>
+<p>Uses <code>RuleFunctions.Helpers.IntraActivitySequencing.ActionResponseEvent(currActivity)</code> — returns true when all accounts have responded (manages internal IAS counter). No manual ResponseCode count.</p>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>

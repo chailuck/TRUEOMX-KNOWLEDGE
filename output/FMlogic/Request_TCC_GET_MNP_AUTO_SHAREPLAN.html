@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Request_TCC_GET_MNP_AUTO_SHAREPLAN</title>
+<style>
+:root{--true-red:#CC0000;--true-dark:#8B0000;--true-deep:#5C0000;--true-light:#FF5252;--true-pale:#FFF5F5;--success:#2e7d32;--warning:#e65100;--info:#1565c0;--skip:#6a1b9a;--bg:#F9F9F9;--card:#FFFFFF;--border:#E0E0E0;--code-bg:#1e1e2e;--code-fg:#cdd6f4}
+*{box-sizing:border-box;margin:0;padding:0}body{font-family:'Segoe UI',sans-serif;background:var(--bg);color:#333;font-size:14px;line-height:1.6}
+.page-header{background:linear-gradient(135deg,var(--true-deep),var(--true-dark),var(--true-red));color:#fff;padding:32px 40px}
+.page-header h1{font-size:1.8rem;letter-spacing:.5px;margin-bottom:6px}
+.page-header .subtitle{opacity:.85;font-size:.95rem}
+.meta-row{display:flex;gap:24px;margin-top:12px;flex-wrap:wrap}
+.meta-item{background:rgba(255,255,255,.15);padding:4px 12px;border-radius:20px;font-size:.8rem}
+.content{max-width:1200px;margin:0 auto;padding:32px 24px}
+.card{background:var(--card);border:1px solid var(--border);border-radius:8px;margin-bottom:24px;overflow:hidden}
+.card-header{background:linear-gradient(90deg,var(--true-dark),var(--true-red));color:#fff;padding:12px 20px;font-weight:600;border-left:4px solid var(--true-light)}
+.card-body{padding:20px}
+table{width:100%;border-collapse:collapse;font-size:.88rem}
+th{background:#F5E6E6;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding:8px 12px;text-align:left;font-weight:600}
+td{padding:8px 12px;border-bottom:1px solid #f0e0e0;vertical-align:top}
+tr:hover{background:#fdf5f5}
+pre,code{font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+pre{background:var(--code-bg);color:var(--code-fg);padding:14px 18px;border-radius:6px;border-left:3px solid var(--true-red);overflow-x:auto;white-space:pre-wrap}
+code{background:#f5e6e6;color:var(--true-dark);padding:1px 6px;border-radius:3px}
+.badge{display:inline-block;padding:2px 9px;border-radius:12px;font-size:.75rem;font-weight:600}
+.badge-red{background:#FFE0E0;color:var(--true-dark)}
+.badge-green{background:#E8F5E9;color:#2e7d32}
+.badge-orange{background:#FFF3E0;color:#e65100}
+.badge-blue{background:#E3F0FD;color:#1565c0}
+.badge-purple{background:#F3E5F5;color:#6a1b9a}
+.badge-teal{background:#E0F2F1;color:#00695c}
+.badge-jms{background:#FFE0B2;color:#E65100;font-size:.72rem;padding:1px 7px;border-radius:10px}
+.badge-new{background:#fff3cd;color:#856404;border:1px solid #ffc107}
+ol.flow-list{padding-left:24px}
+ol.flow-list li{padding:4px 0}
+.xslt-tree{list-style:none;padding:0;margin:0;font-family:'Cascadia Code','Consolas',monospace;font-size:.83rem}
+.xslt-tree ul{list-style:none;padding-left:22px;margin:0;border-left:2px solid #e0c0c0}
+.xslt-tree li{position:relative;padding:3px 0 3px 14px}
+.xslt-tree li::before{content:'';position:absolute;left:-2px;top:12px;width:12px;height:2px;background:#e0c0c0}
+.tree-tag{color:#89dceb;font-weight:600}.tree-attr{color:#f9e2af}.tree-arrow{color:#6c7086;margin:0 6px}
+.tree-src{color:#a6e3a1;background:rgba(166,227,161,.1);padding:1px 6px;border-radius:4px}
+.tree-src-static{color:#fab387;background:rgba(250,179,135,.1);padding:1px 6px;border-radius:4px}
+.tree-cond{color:#cba6f7;font-size:.75rem;margin-left:6px}.tree-ns{color:#6c7086;font-size:.78rem}
+.tree-row{display:flex;align-items:baseline;gap:4px;flex-wrap:wrap;line-height:1.9}
+.section-title{font-size:1rem;font-weight:700;color:var(--true-dark);border-bottom:2px solid var(--true-red);padding-bottom:6px;margin-bottom:16px}
+footer{background:var(--true-deep);color:rgba(255,255,255,.7);text-align:center;padding:16px;font-size:.8rem;margin-top:40px}
+</style>
+</head>
+<body>
+<div class="page-header">
+  <h1>Request_TCC_GET_MNP_AUTO_SHAREPLAN</h1>
+  <div class="subtitle">TIBCO BusinessEvents FM Logic — TCC MNP Auto Shareplan Query</div>
+  <div class="meta-row">
+    <span class="meta-item">Backend: TCC getMnp900</span>
+    <span class="meta-item">Pattern: Subscriber-level fan-out</span>
+    <span class="meta-item">Author: MalineeS.</span>
+    <span class="meta-item">Generated: 2026-09-23</span>
+  </div>
+</div>
+<div class="content">
+
+<!-- §1 Overview -->
+<div class="card">
+<div class="card-header">§1 — Overview &amp; Purpose</div>
+<div class="card-body">
+<p>Queries the TCC <strong>getMnp900</strong> API once per subscriber (in ParentOU and ChildOU) to obtain the MNP auto shareplan assignment. For each subscriber whose MNP porting MSISDN maps to a shared plan, the response returns the <strong>mainNumber</strong> (the shareplan's lucky/main number). This is then written as a <code>SHAREPLAN_MAIN_NUMBER</code> ExtendedInfo entry on the subscriber, so downstream steps can provision the shareplan correctly.</p>
+<br>
+<p>The rule iterates all <code>ParentOU.Subscriber[]</code> and <code>ParentOU.ChildOU.Subscriber[]</code> entries. It fires only when the subscriber has not yet received a successful response. If all subscribers are already resolved it calls <code>SkipActivity("4")</code>.</p>
+</div>
+</div>
+
+<!-- §2 Rule Metadata -->
+<div class="card">
+<div class="card-header">§2 — Rule Metadata &amp; Attributes</div>
+<div class="card-body">
+<table>
+<tr><th>Attribute</th><th>Value</th></tr>
+<tr><td>Rule Name</td><td><code>Rules.OMConsumers.OMXFM.Request.Request_TCC_GET_MNP_AUTO_SHAREPLAN</code></td></tr>
+<tr><td>Priority</td><td>5</td></tr>
+<tr><td>ForwardChain</td><td>true</td></tr>
+<tr><td>Activity ID</td><td>TCC_GET_MNP_AUTO_SHAREPLAN</td></tr>
+<tr><td>Backend</td><td>TCC (getMnp900 API — MNP auto shareplan lookup)</td></tr>
+<tr><td>Pattern</td><td>Subscriber-level fan-out (no IntraActivitySequencing — uses direct Event.sendEvent)</td></tr>
+<tr><td>Author</td><td>MalineeS.</td></tr>
+<tr><td>Response Rulefunction</td><td>Response_TCC_GET_MNP_AUTO_SHAREPLAN</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §3 Working Memory -->
+<div class="card">
+<div class="card-header">§3 — Working Memory — Declared Objects</div>
+<div class="card-body">
+<table>
+<tr><th>Variable</th><th>Concept Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order context</td></tr>
+<tr><td><code>orderCurrentActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Current activity state (RequestCount, Response[], Status)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §4 Rule Conditions -->
+<div class="card">
+<div class="card-header">§4 — Rule Conditions (WHEN)</div>
+<div class="card-body">
+<pre><span style="color:#cba6f7">orderCurrentActivity</span>@extId == <span style="color:#a6e3a1">orderRequest.ProcessFlow.NextActivityName</span>
+<span style="color:#cba6f7">orderCurrentActivity</span>.ActivityID == <span style="color:#fab387">"TCC_GET_MNP_AUTO_SHAREPLAN"</span>
+<span style="color:#cba6f7">orderRequest</span>.ProcessFlow.NextActivityID == <span style="color:#fab387">"TCC_GET_MNP_AUTO_SHAREPLAN"</span>
+<span style="color:#cba6f7">orderCurrentActivity</span>.Status == <span style="color:#fab387">"WAITING"</span></pre>
+</div>
+</div>
+
+<!-- §5 Execution Flow -->
+<div class="card">
+<div class="card-header">§5 — Execution Flow</div>
+<div class="card-body">
+<ol class="flow-list">
+  <li>Detect resubmit: <code>isActResub = (RequestCount &gt; 0 &amp;&amp; IsOrderResubmitted)</code></li>
+  <li>Load next activity config (<code>Instance.getByExtIdByUri</code>) for PreExecCheck</li>
+  <li>Iterate <code>ParentOU[i].Subscriber[j]</code>:
+    <ul>
+      <li>Skip if subscriber already has a successful response (CompletionStatus=2, matched by RefId)</li>
+      <li>Evaluate PreExecCheck XPath via <code>GetXMLForSubscriber</code> if defined</li>
+      <li>If chkRes="true": build and send <code>TCC_GET_MNP_AUTO_SHAREPLAN</code> event</li>
+      <li>Increment <code>RequestCount</code> (if not resubmit)</li>
+    </ul>
+  </li>
+  <li>Iterate <code>ParentOU[i].ChildOU[k].Subscriber[j]</code> (same logic, uses <code>GetXMLForSubscriberInChildOU</code>)</li>
+  <li>If no requests sent (<code>isSkipped=true</code>): call <code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></li>
+  <li>Else: set <code>Status = GetActivityStatusString("1", false)</code>, call <code>SendDataToDB</code></li>
+  <li>Send audit log event</li>
+</ol>
+<br>
+<p><strong>Note:</strong> A commented-out variant references <code>TCC_GET_SHAREPLAN_MAIN_NUMBER</code> event (with <code>ns2</code> namespace) — the active code uses the <code>TCC_GET_MNP_AUTO_SHAREPLAN</code> event exclusively.</p>
+</div>
+</div>
+
+<!-- §8 System Dependencies -->
+<div class="card">
+<div class="card-header">§8 — System &amp; Integration Dependencies</div>
+<div class="card-body">
+<p class="section-title">§8.1 — Order Type Dependencies</p>
+<p>Used in MNP port-in flows (MNP_PORT_IN_EXT, step 10). Triggered unconditionally — all subscribers in the order are processed.</p>
+<br>
+<p class="section-title">§8.2 — ESB / JMS Channel</p>
+<table>
+<tr><th>Direction</th><th>Event Type</th><th>Destination</th><th>Protocol</th></tr>
+<tr><td><span class="badge badge-orange">OUTBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Request.TCC_GET_MNP_AUTO_SHAREPLAN</code></td><td>TCC getMnp900 service</td><td>JMS / ESB</td></tr>
+<tr><td><span class="badge badge-blue">INBOUND</span></td><td><code>Events.OMConsumers.OMXFM.Response.TCC_GET_MNP_AUTO_SHAREPLAN</code></td><td>Response channel</td><td>JMS</td></tr>
+</table>
+<br>
+<p class="section-title">§8.3 — Backend API Details</p>
+<table>
+<tr><th>System</th><th>Operation</th><th>Namespace</th></tr>
+<tr><td>TCC</td><td>getMnp900</td><td><code>http://service.profiles.ads.truecorp.co.th/</code></td></tr>
+</table>
+<br>
+<p class="section-title">§8.4 — BE Working Memory Fields</p>
+<table>
+<tr><th>Field Path</th><th>Direction</th><th>Notes</th></tr>
+<tr><td><code>Customer.ParentOU[].Subscriber[].MSISDN</code></td><td><span class="badge badge-blue">Read</span></td><td>Porting MSISDN — becomes mnpNumber in request</td></tr>
+<tr><td><code>Customer.CustomerGeneralInfo.Identification</code></td><td><span class="badge badge-blue">Read</span></td><td>Thai ID — becomes thaiId in request</td></tr>
+<tr><td><code>Customer.ParentOU[].Subscriber[].ExtendedInfo[SHAREPLAN_MAIN_NUMBER]</code></td><td><span class="badge badge-green">Written</span></td><td>Appended by response handler when mainNumber non-blank</td></tr>
+<tr><td><code>orderCurrentActivity.Response[]</code></td><td><span class="badge badge-green">Written</span></td><td>TCC_GetSharedPlanMainNumberRes appended per response</td></tr>
+<tr><td><code>orderCurrentActivity.RequestCount</code></td><td><span class="badge badge-green">Written</span></td><td>Incremented once per subscriber request sent</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §9 Payload Build -->
+<div class="card">
+<div class="card-header">§9 — Detailed Payload Build</div>
+<div class="card-body">
+<p class="section-title">§9.4 — Payload Root Element</p>
+<p>Namespace: <code>http://service.profiles.ads.truecorp.co.th/</code> (prefix <code>ns</code>)<br>Root: <code>&lt;ns:getMnp900&gt;</code> → <code>&lt;MnpRequest&gt;</code></p>
+<br>
+<p class="section-title">§9.5 — Conditional vs Always-Sent Fields</p>
+<table>
+<tr><th>Field</th><th>Condition</th><th>Source</th></tr>
+<tr><td><code>JMSPriority</code></td><td>Always</td><td><code>$orderRequest/OrderPriority</code></td></tr>
+<tr><td><code>JMSCorrelationID</code></td><td>Always</td><td><code>$orderRequest/OrderData/OMXTrackingId</code></td></tr>
+<tr><td><code>OrderID</code></td><td>Always</td><td><code>$orderRequest/OrderData/OrderID</code></td></tr>
+<tr><td><code>RefID</code></td><td>If pOuSub/cOuSub.RefId exists</td><td><code>$pOuSub/RefId</code> or <code>$cOuSub/RefId</code></td></tr>
+<tr><td><code>OrderType</code></td><td>Always</td><td><code>$orderRequest/OrderData/OrderType</code></td></tr>
+<tr><td><code>luckyNumber</code></td><td>Always</td><td>Empty string literal ('')</td></tr>
+<tr><td><code>mnpNumber</code></td><td>Always</td><td><code>$pOuSub/MSISDN</code> (or cOuSub)</td></tr>
+<tr><td><code>thaiId</code></td><td>Always</td><td><code>$orderRequest/OrderData/Customer/CustomerGeneralInfo/Identification</code></td></tr>
+</table>
+<br>
+<p class="section-title">§9.7 — Sample Generated XML</p>
+<pre><span style="color:#89dceb">&lt;createEvent&gt;</span>
+  <span style="color:#89dceb">&lt;event&gt;</span>
+    <span style="color:#89dceb">&lt;JMSPriority&gt;</span>5<span style="color:#89dceb">&lt;/JMSPriority&gt;</span>
+    <span style="color:#89dceb">&lt;JMSCorrelationID&gt;</span>OMX-TRK-20241001-001<span style="color:#89dceb">&lt;/JMSCorrelationID&gt;</span>
+    <span style="color:#89dceb">&lt;OrderID&gt;</span>987654321<span style="color:#89dceb">&lt;/OrderID&gt;</span>
+    <span style="color:#89dceb">&lt;RefID&gt;</span>REF-SUB-001<span style="color:#89dceb">&lt;/RefID&gt;</span>
+    <span style="color:#89dceb">&lt;OrderType&gt;</span>7<span style="color:#89dceb">&lt;/OrderType&gt;</span>
+    <span style="color:#89dceb">&lt;payload&gt;</span>
+      <span style="color:#89dceb">&lt;ns:getMnp900&gt;</span>
+        <span style="color:#89dceb">&lt;MnpRequest&gt;</span>
+          <span style="color:#89dceb">&lt;luckyNumber/&gt;</span>
+          <span style="color:#89dceb">&lt;mnpNumber&gt;</span>0812345678<span style="color:#89dceb">&lt;/mnpNumber&gt;</span>
+          <span style="color:#89dceb">&lt;thaiId&gt;</span>1100100123456<span style="color:#89dceb">&lt;/thaiId&gt;</span>
+        <span style="color:#89dceb">&lt;/MnpRequest&gt;</span>
+      <span style="color:#89dceb">&lt;/ns:getMnp900&gt;</span>
+    <span style="color:#89dceb">&lt;/payload&gt;</span>
+  <span style="color:#89dceb">&lt;/event&gt;</span>
+<span style="color:#89dceb">&lt;/createEvent&gt;</span></pre>
+<br>
+<p class="section-title">§9.8 — XSLT Stylesheet (ParentOU Subscriber Variant)</p>
+<pre><span style="color:#89dceb">&lt;xsl:stylesheet</span> <span style="color:#f9e2af">xmlns:xsl</span>=<span style="color:#a6e3a1">"http://www.w3.org/1999/XSL/Transform"</span>
+    <span style="color:#f9e2af">xmlns:ns</span>=<span style="color:#a6e3a1">"http://service.profiles.ads.truecorp.co.th/"</span>
+    <span style="color:#f9e2af">version</span>=<span style="color:#a6e3a1">"1.0"</span><span style="color:#89dceb">&gt;</span>
+  <span style="color:#6c7086">/* params: orderRequest, pOuSub */</span>
+  <span style="color:#89dceb">&lt;xsl:param</span> <span style="color:#f9e2af">name</span>=<span style="color:#a6e3a1">"orderRequest"</span><span style="color:#89dceb">/&gt;</span>
+  <span style="color:#89dceb">&lt;xsl:param</span> <span style="color:#f9e2af">name</span>=<span style="color:#a6e3a1">"pOuSub"</span><span style="color:#89dceb">/&gt;</span>
+  <span style="color:#6c7086">/* ChildOU variant uses cOuSub instead */</span>
+  <span style="color:#89dceb">&lt;xsl:template</span> <span style="color:#f9e2af">match</span>=<span style="color:#a6e3a1">"/"</span><span style="color:#89dceb">&gt;</span>
+    <span style="color:#89dceb">&lt;createEvent&gt;&lt;event&gt;</span>
+      <span style="color:#89dceb">&lt;JMSPriority&gt;</span>$orderRequest/OrderPriority<span style="color:#89dceb">&lt;/JMSPriority&gt;</span>
+      <span style="color:#89dceb">&lt;JMSCorrelationID&gt;</span>$orderRequest/OrderData/OMXTrackingId<span style="color:#89dceb">&lt;/JMSCorrelationID&gt;</span>
+      <span style="color:#89dceb">&lt;OrderID&gt;</span>$orderRequest/OrderData/OrderID<span style="color:#89dceb">&lt;/OrderID&gt;</span>
+      <span style="color:#6c7086">/* Conditional: if $pOuSub/RefId */</span>
+      <span style="color:#89dceb">&lt;RefID&gt;</span>$pOuSub/RefId<span style="color:#89dceb">&lt;/RefID&gt;</span>
+      <span style="color:#89dceb">&lt;OrderType&gt;</span>$orderRequest/OrderData/OrderType<span style="color:#89dceb">&lt;/OrderType&gt;</span>
+      <span style="color:#89dceb">&lt;payload&gt;&lt;ns:getMnp900&gt;&lt;MnpRequest&gt;</span>
+        <span style="color:#89dceb">&lt;luckyNumber/&gt;</span>  <span style="color:#6c7086">/* always empty */</span>
+        <span style="color:#89dceb">&lt;mnpNumber&gt;</span>$pOuSub/MSISDN<span style="color:#89dceb">&lt;/mnpNumber&gt;</span>
+        <span style="color:#89dceb">&lt;thaiId&gt;</span>$orderRequest/OrderData/Customer/CustomerGeneralInfo/Identification<span style="color:#89dceb">&lt;/thaiId&gt;</span>
+      <span style="color:#89dceb">&lt;/MnpRequest&gt;&lt;/ns:getMnp900&gt;&lt;/payload&gt;</span>
+    <span style="color:#89dceb">&lt;/event&gt;&lt;/createEvent&gt;</span>
+  <span style="color:#89dceb">&lt;/xsl:template&gt;</span>
+<span style="color:#89dceb">&lt;/xsl:stylesheet&gt;</span></pre>
+</div>
+</div>
+
+<!-- §10 XSLT Field Mapping Tree -->
+<div class="card">
+<div class="card-header">§10 — XSLT Field Mapping — Output XML Tree</div>
+<div class="card-body">
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createEvent</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">event</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-tag">JMSPriority</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderPriority</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">JMSCorrelationID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OMXTrackingId</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderID</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderID</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">RefID</span><span class="tree-arrow">←</span><span class="tree-src">$pOuSub/RefId</span><span class="badge badge-orange">Conditional: if RefId exists</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">OrderType</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/OrderType</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">payload</span></div>
+            <ul>
+              <li><div class="tree-row"><span class="tree-tag">ns:getMnp900</span><span class="tree-ns">[http://service.profiles.ads.truecorp.co.th/]</span></div>
+                <ul>
+                  <li><div class="tree-row"><span class="tree-tag">MnpRequest</span></div>
+                    <ul>
+                      <li><div class="tree-row"><span class="tree-tag">luckyNumber</span><span class="tree-arrow">←</span><span class="tree-src-static">'' (empty)</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">mnpNumber</span><span class="tree-arrow">←</span><span class="tree-src">$pOuSub/MSISDN</span><span class="badge badge-green">Always</span></div></li>
+                      <li><div class="tree-row"><span class="tree-tag">thaiId</span><span class="tree-arrow">←</span><span class="tree-src">$orderRequest/OrderData/Customer/CustomerGeneralInfo/Identification</span><span class="badge badge-green">Always</span></div></li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<br><small><strong>Legend:</strong> <span class="badge badge-green">Always</span> = unconditional &nbsp; <span class="badge badge-orange">Conditional</span> = inside xsl:if &nbsp; <span style="color:#a6e3a1">green</span> = XPath source &nbsp; <span style="color:#fab387">orange</span> = static literal</small>
+</div>
+</div>
+
+<!-- §11 Audit Logging -->
+<div class="card">
+<div class="card-header">§11 — Audit Logging</div>
+<div class="card-body">
+<table>
+<tr><th>Field</th><th>Value</th></tr>
+<tr><td>ESBUUID</td><td><code>$orderRequest/OrderData/OMXTrackingId</code> [Conditional]</td></tr>
+<tr><td>PROCESS_ID</td><td><code>concat($pid, "_REQ")</code></td></tr>
+<tr><td>COMPONENT_NAME</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_CEP</code></td></tr>
+<tr><td>OPERATION_NAME</td><td>"TCC_GET_MNP_AUTO_SHAREPLAN"</td></tr>
+<tr><td>TARGET_SYSTEM</td><td><code>$globalVariables/OMX_COMMON/Component_Name/OMX_FM</code></td></tr>
+<tr><td>LOG_LEVEL</td><td>INFO</td></tr>
+<tr><td>AUDIT_TRACE</td><td>"Request Sent for TCC_GET_MNP_AUTO_SHAREPLAN"</td></tr>
+<tr><td>AUDIT_TS</td><td><code>tib:format-dateTime('yyyy-MM-dd HH:mm:ss.SSS', current-dateTime())</code></td></tr>
+<tr><td>payload</td><td>Conditional on <code>$globalVariables/OMX_OM/WritePayload="true"</code></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §12 Activity Status -->
+<div class="card">
+<div class="card-header">§12 — Activity Status Management</div>
+<div class="card-body">
+<table>
+<tr><th>Outcome</th><th>Status</th><th>Call</th></tr>
+<tr><td>At least one request sent</td><td>SENT <span class="badge badge-blue">"1"</span></td><td><code>GetActivityStatusString("1", false)</code> + <code>SendDataToDB</code></td></tr>
+<tr><td>All subscribers already responded</td><td>SKIPPED</td><td><code>SkipActivity(orderRequest, orderCurrentActivity, "4")</code></td></tr>
+</table>
+<p style="margin-top:8px"><strong>Note:</strong> No IntraActivitySequencing used — RequestCount incremented manually, status set directly.</p>
+</div>
+</div>
+
+<!-- §13 Exception Handling -->
+<div class="card">
+<div class="card-header">§13 — Exception / Error Handling</div>
+<div class="card-body">
+<pre>catch (Exception ae) {
+    RuleFunctions.Helpers.HandleActivityException(orderRequest, orderCurrentActivity, ae, "");
+}</pre>
+</div>
+</div>
+
+<!-- §14 Helper Functions -->
+<div class="card">
+<div class="card-header">§14 — Helper Functions Reference</div>
+<div class="card-body">
+<table>
+<tr><th>Function</th><th>Purpose</th></tr>
+<tr><td><code>RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId)</code></td><td>Serialize ParentOU subscriber XML for PreExecCheck evaluation</td></tr>
+<tr><td><code>RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(orderRequest, refId, parentRefId)</code></td><td>Serialize ChildOU subscriber XML for PreExecCheck evaluation</td></tr>
+<tr><td><code>RuleFunctions.Helpers.GetActivityStatusString("1", false)</code></td><td>Returns status string for "SENT" state</td></tr>
+<tr><td><code>RuleFunctions.Helpers.SendDataToDB(orderRequest)</code></td><td>Persist order state to database</td></tr>
+<tr><td><code>RuleFunctions.Helpers.SkipActivity(req, activity, "4")</code></td><td>Skip this activity and advance 4 steps</td></tr>
+<tr><td><code>RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")</code></td><td>Standard error handler</td></tr>
+<tr><td><code>RuleFunctions.Helpers.BRMS.IsBlankOrStringNull(value)</code></td><td>Null-safe blank check (used in response handler)</td></tr>
+</table>
+</div>
+</div>
+
+<!-- §15 Function Dependency Tree -->
+<div class="card">
+<div class="card-header">§15 — Function Dependency Tree</div>
+<div class="card-body">
+<pre>Request_TCC_GET_MNP_AUTO_SHAREPLAN
+├── Instance.getByExtIdByUri(NextActivityName)
+├── [For each ParentOU.Subscriber]
+│   ├── RuleFunctions.Helpers.GetXMLForSubscriber(orderRequest, refId)
+│   ├── XPath.execute(PreExecCheck, sXML)
+│   ├── Event.createEvent("xslt://TCC_GET_MNP_AUTO_SHAREPLAN") [pOuSub XSLT]
+│   ├── Event.sendEvent(reqEvent)
+│   └── orderCurrentActivity.RequestCount++
+├── [For each ChildOU.Subscriber]
+│   ├── RuleFunctions.Helpers.GetXMLForSubscriberInChildOU(orderRequest, refId, parentRefId)
+│   ├── XPath.execute(PreExecCheck, sXML)
+│   ├── Event.createEvent("xslt://TCC_GET_MNP_AUTO_SHAREPLAN") [cOuSub XSLT]
+│   ├── Event.sendEvent(reqEvent)
+│   └── orderCurrentActivity.RequestCount++
+├── [if !isSkipped]
+│   ├── GetActivityStatusString("1", false)
+│   └── RuleFunctions.Helpers.SendDataToDB(orderRequest)
+├── [if isSkipped]
+│   └── RuleFunctions.Helpers.SkipActivity(req, activity, "4")
+├── Event.sendEvent(Logger event)
+└── RuleFunctions.Helpers.HandleActivityException(req, activity, ae, "")</pre>
+</div>
+</div>
+
+<!-- §17 Migration Notes -->
+<div class="card">
+<div class="card-header">§17 — Migration Notes &amp; Recommendations</div>
+<div class="card-body">
+<table>
+<tr><th>#</th><th>Requirement / Risk</th><th>Severity</th></tr>
+<tr><td>R1</td><td>Subscriber-level fan-out: one request per subscriber — must preserve per-subscriber RefId correlation in the response</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+<tr><td>R2</td><td>SHAREPLAN_MAIN_NUMBER ExtendedInfo on subscriber is read by downstream provisioning steps — must be written before those steps execute</td><td><span class="badge badge-red">[HIGH]</span></td></tr>
+<tr><td>R3</td><td>TCC getMnp900 API: <code>luckyNumber</code> always sent as empty string; mainNumber in response is the assignable lucky/shareplan number — distinct concepts</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+<tr><td>R4</td><td>Dual subscriber path (ParentOU vs ChildOU) — both paths produce same SHAREPLAN_MAIN_NUMBER ExtendedInfo structure; migration must handle both hierarchies</td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+<tr><td>R5</td><td>No IntraActivitySequencing — manual RequestCount management; fan-in via <code>count(Response[ResponseCode ends with "000"]) == RequestCount</code></td><td><span class="badge badge-orange">[MEDIUM]</span></td></tr>
+<tr><td>R6</td><td>SkipActivity("4") — skips exactly 4 activities downstream; migration must validate the activity chain offset matches</td><td><span class="badge badge-blue">[LOW]</span></td></tr>
+<tr><td>R7</td><td>Commented-out TCC_GET_SHAREPLAN_MAIN_NUMBER variant indicates a prior service version — verify TCC API version in target environment</td><td><span class="badge badge-blue">[LOW]</span></td></tr>
+</table>
+</div>
+</div>
+
+<!-- §19 Response Rule -->
+<div class="card">
+<div class="card-header">§19 — Response Message Rule</div>
+<div class="card-body">
+<p class="section-title">§19.1 — Overview</p>
+<p>Parses the TCC getMnp900 API response. Extracts <code>mainNumber</code> (lucky number / shareplan main MSISDN) and writes it as <code>SHAREPLAN_MAIN_NUMBER</code> ExtendedInfo on the matching subscriber. Performs fan-in: returns "true" when all request counts are successfully responded.</p>
+<br>
+<p class="section-title">§19.2 — Scope Variables</p>
+<table>
+<tr><th>Variable</th><th>Type</th><th>Role</th></tr>
+<tr><td><code>orderRequest</code></td><td><code>Concepts.OrderRequest.OrderRequest</code></td><td>Full order context</td></tr>
+<tr><td><code>eventResponse</code></td><td><code>Events.OMConsumers.OMXFM.Response.TCC_GET_MNP_AUTO_SHAREPLAN</code></td><td>Inbound TCC response event</td></tr>
+<tr><td><code>currActivity</code></td><td><code>Concepts.OM.ProcessConfig.Activity</code></td><td>Activity tracking (RequestCount, Response[])</td></tr>
+</table>
+<br>
+<p class="section-title">§19.3 — ResponseBase Concept: TCC_GetSharedPlanMainNumberRes</p>
+<ul class="xslt-tree">
+  <li><div class="tree-row"><span class="tree-tag">createObject</span></div>
+    <ul>
+      <li><div class="tree-row"><span class="tree-tag">object</span></div>
+        <ul>
+          <li><div class="tree-row"><span class="tree-attr">@extId</span><span class="tree-arrow">←</span><span class="tree-src">ns2:generateTrackingID()</span><span class="badge badge-green">Always</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseCode</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseCode</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ResponseMessage</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/ResponseMsg</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">CompletionStatus</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/CompletionStatus</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">ReferenceId</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/RefID</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">mnpNumber</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns4:MNPAutoShareplanResponse/ns4:response-data/ns4:mnp-auto-shareplan-list/ns4:mnp-number</span><span class="badge badge-orange">Conditional</span></div></li>
+          <li><div class="tree-row"><span class="tree-tag">mainNumber</span><span class="tree-arrow">←</span><span class="tree-src">$eventResponse/payload/ns4:MNPAutoShareplanResponse/ns4:response-data/ns4:mnp-auto-shareplan-list/ns4:lucky-number</span><span class="badge badge-orange">Conditional</span></div></li>
+        </ul>
+      </li>
+    </ul>
+  </li>
+</ul>
+<br>
+<p class="section-title">§19.4 — Post-Response Logic: SHAREPLAN_MAIN_NUMBER ExtendedInfo</p>
+<p>If <code>activityRes.mainNumber</code> is not blank/null:</p>
+<ul style="padding-left:20px;margin-top:8px">
+  <li>Search <code>ParentOU[].Subscriber[]</code> for subscriber whose <code>RefId == activityRes.ReferenceId</code></li>
+  <li>Create <code>SubscriberExtendedInfo</code>:
+    <ul style="padding-left:16px">
+      <li><code>extId = concat($eventResponse/RefID, ":SHAREPLAN_MAIN_NUMBER:", $activityRes/mnpNumber)</code></li>
+      <li><code>Name = "SHAREPLAN_MAIN_NUMBER"</code></li>
+      <li><code>Value = $activityRes/mainNumber</code></li>
+    </ul>
+  </li>
+  <li>Append to <code>pOuSub.ExtendedInfo[]</code></li>
+</ul>
+<br>
+<p class="section-title">§19.5 — Fan-in Completion Logic</p>
+<pre>int successResponseCount = count($currActivity/Response[tib:right(tib:trim(ResponseCode), 3) = "000"])
+if (currActivity.RequestCount == successResponseCount) return "true"
+else return "false"</pre>
+<p>Returns "true" (all subscribers responded with success code ending in "000") to signal completion to the orchestrator.</p>
+</div>
+</div>
+
+</div>
+<footer>TRUE Corporation OMX · TIBCO BusinessEvents FM Logic Documentation</footer>
+</body>
+</html>
